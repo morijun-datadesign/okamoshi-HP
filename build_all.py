@@ -370,12 +370,11 @@ def build_sitemap():
     pages = [
         {"loc": f"{BASE_URL}/", "priority": "1.0", "changefreq": "weekly"},
         {"loc": f"{BASE_URL}/index.html", "priority": "1.0", "changefreq": "weekly"},
-        {"loc": f"{BASE_URL}/apply.html", "priority": "0.9", "changefreq": "monthly"},
-        {"loc": f"{BASE_URL}/schools.html", "priority": "0.8", "changefreq": "monthly"},
-        {"loc": f"{BASE_URL}/blog.html", "priority": "0.8", "changefreq": "daily"},
-        {"loc": f"{BASE_URL}/blog-detail.html", "priority": "0.7", "changefreq": "monthly"},
-        {"loc": f"{BASE_URL}/privacy.html", "priority": "0.3", "changefreq": "yearly"},
-        {"loc": f"{BASE_URL}/tokushoho.html", "priority": "0.3", "changefreq": "yearly"},
+        {"loc": f"{BASE_URL}/apply", "priority": "0.9", "changefreq": "monthly"},
+        {"loc": f"{BASE_URL}/schools", "priority": "0.8", "changefreq": "monthly"},
+        {"loc": f"{BASE_URL}/blog", "priority": "0.8", "changefreq": "daily"},
+        {"loc": f"{BASE_URL}/privacy", "priority": "0.3", "changefreq": "yearly"},
+        {"loc": f"{BASE_URL}/tokushoho", "priority": "0.3", "changefreq": "yearly"},
     ]
 
     xml_items = []
@@ -395,6 +394,24 @@ def build_sitemap():
     with open("sitemap.xml", "w", encoding="utf-8") as f:
         f.write(sitemap_xml)
     print("✓ sitemap.xml 生成完了")
+
+# ----------------------------------------------------
+# SYNC DIRECTORY INDEX.HTML (無限リダイレクト防止対策)
+# ----------------------------------------------------
+def sync_clean_url_directories():
+    import shutil
+    pages_to_sync = {
+        'apply': 'apply.html',
+        'schools': 'schools.html',
+        'blog': 'blog.html',
+        'privacy': 'privacy.html',
+        'tokushoho': 'tokushoho.html'
+    }
+    for d, src in pages_to_sync.items():
+        if os.path.exists(src):
+            os.makedirs(d, exist_ok=True)
+            shutil.copy(src, os.path.join(d, 'index.html'))
+    print("✓ ディレクトリ別 index.html 生成完了 (/apply, /schools 等で200即答対応)")
 
 
 # ----------------------------------------------------
@@ -448,6 +465,7 @@ def audit_all_pages():
 # Run full build
 build_index()
 build_sitemap()
+sync_clean_url_directories()
 audit_all_pages()
 
 print("\n==================================================")

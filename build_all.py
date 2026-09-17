@@ -246,6 +246,34 @@ def build_index():
     ]
   }}
   </script>
+  <style>
+    @keyframes slideInRight {{
+      0% {{
+        opacity: 0;
+        transform: translateX(36px);
+      }}
+      100% {{
+        opacity: 1;
+        transform: translateX(0);
+      }}
+    }}
+    @keyframes slideInLeft {{
+      0% {{
+        opacity: 0;
+        transform: translateX(-36px);
+      }}
+      100% {{
+        opacity: 1;
+        transform: translateX(0);
+      }}
+    }}
+    .slide-in-right {{
+      animation: slideInRight 320ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }}
+    .slide-in-left {{
+      animation: slideInLeft 320ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }}
+  </style>
 </head>
 <body class="bg-background font-body-md text-body-md text-on-surface antialiased min-h-screen flex flex-col justify-between selection:bg-primary/20 selection:text-primary pt-16 sm:pt-20">
 
@@ -254,7 +282,7 @@ def build_index():
   <main class="flex-1 w-full flex flex-col items-center">
     {hero_section}
 
-    <section class="w-full max-w-[75rem] mx-auto px-4 sm:px-gutter-desktop py-space-xl sm:py-space-2xl" id="exam-tabs-section">
+    <section class="w-full max-w-[75rem] mx-auto px-4 sm:px-gutter-desktop py-space-xl sm:py-space-2xl overflow-hidden" id="exam-tabs-section">
       <div class="space-y-space-md mb-space-lg text-center max-w-3xl mx-auto">
         <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-fixed text-on-primary-fixed-variant text-xs font-bold shadow-xs">
           <span class="material-symbols-outlined text-sm">fact_check</span>
@@ -306,7 +334,7 @@ def build_index():
         </button>
       </div>
 
-      <div class="w-full" id="tab-panels-container">
+      <div class="w-full max-w-[75rem] mx-auto overflow-hidden relative min-h-[400px]" id="tab-panels-container">
         {panel_chu3}
         {panel_chu12}
         {panel_sho6}
@@ -326,16 +354,30 @@ def build_index():
         'sho6': {{ inactiveText: 'text-secondary', inactiveBg: 'bg-surface-container-highest', activeBg: 'bg-[#fe8357]' }}
       }};
 
+      const tabOrder = ['chu3', 'chu12', 'sho6'];
+      let currentTabKey = 'chu3';
+
       window.switchExamTab = function(tabKey) {{
-        const tabs = ['chu3', 'chu12', 'sho6'];
-        tabs.forEach(function(key) {{
+        if (tabKey === currentTabKey && document.getElementById('tab-panel-' + tabKey)?.classList.contains('block')) {{
+          return;
+        }}
+
+        const prevIndex = tabOrder.indexOf(currentTabKey);
+        const nextIndex = tabOrder.indexOf(tabKey);
+        // 右側タブへの移動なら右からスライドイン、左側タブへの移動なら左からスライドイン
+        const isMovingRight = nextIndex > prevIndex;
+        const animClass = isMovingRight ? 'slide-in-right' : 'slide-in-left';
+
+        tabOrder.forEach(function(key) {{
           const panel = document.getElementById('tab-panel-' + key);
           const btn = document.getElementById('tab-btn-' + key);
 
           if (key === tabKey) {{
             if (panel) {{
-              panel.classList.remove('hidden');
-              panel.classList.add('block');
+              panel.classList.remove('hidden', 'slide-in-right', 'slide-in-left');
+              // アニメーションのリトリガーを確実にするためオフセットアクセス
+              void panel.offsetWidth;
+              panel.classList.add('block', animClass);
             }}
             if (btn) {{
               btn.setAttribute('aria-selected', 'true');
@@ -351,6 +393,7 @@ def build_index():
             }}
           }} else {{
             if (panel) {{
+              panel.classList.remove('slide-in-right', 'slide-in-left');
               panel.classList.add('hidden');
               panel.classList.remove('block');
             }}
@@ -371,6 +414,8 @@ def build_index():
             }}
           }}
         }});
+
+        currentTabKey = tabKey;
       }};
     }})();
   </script>

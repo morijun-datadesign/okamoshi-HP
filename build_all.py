@@ -148,9 +148,32 @@ def build_index():
     m_sho6 = re.search(r'(<div[^>]*id=[\"\']tab-panel-sho6[\"\'].*?)(?=<div[^>]*id=[\"\']tab-panel-chu|<section id=[\"\']features)', c6, re.DOTALL)
     panel_sho6 = m_sho6.group(1).strip() if m_sho6 else ''
 
-    panel_chu3 = re.sub(r'class=[\"\']tab-panel[^\"\']*[\"\']', 'class="tab-panel block transition-all duration-300 space-y-space-xl"', panel_chu3, count=1)
-    panel_chu12 = re.sub(r'class=[\"\']tab-panel[^\"\']*[\"\']', 'class="tab-panel hidden transition-all duration-300 space-y-space-xl"', panel_chu12, count=1)
-    panel_sho6 = re.sub(r'class=[\"\']tab-panel[^\"\']*[\"\']', 'class="tab-panel hidden transition-all duration-300 space-y-space-xl"', panel_sho6, count=1)
+    def clean_and_balance_panel(raw_panel, panel_id, is_active=False):
+        # 早期に閉じてしまう </section> を除去
+        idx_sec = raw_panel.find('</section>')
+        if idx_sec != -1:
+            raw_panel = raw_panel[:idx_sec]
+        
+        # open/close div タグの数を完全に一致させる
+        open_count = len(re.findall(r'<div\b', raw_panel))
+        close_count = len(re.findall(r'</div>', raw_panel))
+        if close_count < open_count:
+            raw_panel += '</div>' * (open_count - close_count)
+        elif close_count > open_count:
+            for _ in range(close_count - open_count):
+                last_idx = raw_panel.rfind('</div>')
+                if last_idx != -1:
+                    raw_panel = raw_panel[:last_idx] + raw_panel[last_idx+6:]
+
+        # クラスを同一の幅制限とレスポンシブパディングで統一
+        display_class = "block" if is_active else "hidden"
+        unified_class = f'class="tab-panel {display_class} w-full max-w-[75rem] mx-auto transition-all duration-300 space-y-space-xl"'
+        raw_panel = re.sub(r'class=[\"\']tab-panel[^\"\']*[\"\']', unified_class, raw_panel, count=1)
+        return raw_panel
+
+    panel_chu3 = clean_and_balance_panel(panel_chu3, 'chu3', is_active=True)
+    panel_chu12 = clean_and_balance_panel(panel_chu12, 'chu12', is_active=False)
+    panel_sho6 = clean_and_balance_panel(panel_sho6, 'sho6', is_active=False)
 
     m_hero = re.search(r'(<!--\s*1\.\s*HERO SECTION\s*-->.*?)(?=<!--\s*2\.\s*NEXT EXAM)', c3, re.DOTALL)
     hero_section = m_hero.group(1).strip() if m_hero else ''

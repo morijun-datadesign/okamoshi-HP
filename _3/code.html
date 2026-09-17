@@ -1,484 +1,516 @@
-<!DOCTYPE html>
-
-<html lang="ja"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}
-
-
-
-/* Explicit max-w-6xl layout width enforcement */
-.max-w-6xl {
-  max-width: 72rem !important; /* 1152px */
-  margin-left: auto !important;
-  margin-right: auto !important;
-  width: 100% !important;
-  box-sizing: border-box !important;
-}
-
-</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"secondary-fixed-dim":"#ffb59c","surface-bright":"#fcf9f8","on-primary-fixed-variant":"#224f3c","inverse-on-surface":"#f3f0ef","primary":"#134230","on-error-container":"#93000a","surface-container-lowest":"#ffffff","on-background":"#1b1c1c","on-primary-fixed":"#002114","on-primary":"#ffffff","surface":"#fcf9f8","on-primary-container":"#9fcfb6","primary-fixed":"#bceed3","tertiary":"#4f3600","secondary-container":"#fe8357","on-tertiary-container":"#f1bd5a","secondary-fixed":"#ffdbcf","on-secondary-fixed-variant":"#822801","surface-container-low":"#f6f3f2","on-error":"#ffffff","primary-fixed-dim":"#a1d1b8","on-secondary":"#ffffff","tertiary-container":"#6c4c00","on-secondary-fixed":"#390c00","primary-container":"#2d5a46","outline-variant":"#c0c9c2","background":"#fcf9f8","on-secondary-container":"#6f2000","on-surface":"#1b1c1c","inverse-primary":"#a1d1b8","tertiary-fixed-dim":"#f2be5b","surface-container-highest":"#e4e2e1","surface-tint":"#3a6752","surface-container-high":"#eae7e7","outline":"#717973","tertiary-fixed":"#ffdea7","surface-dim":"#dcd9d9","on-tertiary-fixed-variant":"#5e4200","on-tertiary-fixed":"#271900","on-surface-variant":"#414944","error":"#ba1a1a","surface-variant":"#e4e2e1","on-tertiary":"#ffffff","inverse-surface":"#303030","surface-container":"#f0eded","secondary":"#a23e18","error-container":"#ffdad6"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"space-xl":"2rem","space-4xl":"6rem","container-max":"75rem","space-sm":"0.75rem","space-md":"1rem","gutter-mobile":"1rem","space-2xs":"0.25rem","space-xs":"0.5rem","space-2xl":"3rem","space-lg":"1.5rem","gutter-desktop":"1.5rem","space-3xl":"4.5rem"},"fontFamily":{"headline-lg-mobile":["Plus Jakarta Sans"],"label-sm":["Plus Jakarta Sans"],"headline-xl":["Plus Jakarta Sans"],"headline-sm":["Plus Jakarta Sans"],"headline-xl-mobile":["Plus Jakarta Sans"],"headline-md":["Plus Jakarta Sans"],"label-md":["Plus Jakarta Sans"],"body-md":["Noto Sans"],"body-sm":["Noto Sans"],"headline-lg":["Plus Jakarta Sans"],"body-lg":["Noto Sans"],"label-lg":["Plus Jakarta Sans"]},"fontSize":{"headline-lg-mobile":["24px",{"lineHeight":"34px","letterSpacing":"0","fontWeight":"700"}],"label-sm":["11px",{"lineHeight":"16px","letterSpacing":"0.04em","fontWeight":"700"}],"headline-xl":["40px",{"lineHeight":"52px","letterSpacing":"-0.02em","fontWeight":"700"}],"headline-sm":["18px",{"lineHeight":"28px","letterSpacing":"0","fontWeight":"600"}],"headline-xl-mobile":["30px",{"lineHeight":"40px","letterSpacing":"-0.01em","fontWeight":"700"}],"headline-md":["22px",{"lineHeight":"32px","letterSpacing":"0","fontWeight":"600"}],"label-md":["13px",{"lineHeight":"18px","letterSpacing":"0.02em","fontWeight":"600"}],"body-md":["14px",{"lineHeight":"24px","letterSpacing":"0.01em","fontWeight":"400"}],"body-sm":["12px",{"lineHeight":"20px","letterSpacing":"0.01em","fontWeight":"400"}],"headline-lg":["32px",{"lineHeight":"44px","letterSpacing":"-0.01em","fontWeight":"700"}],"body-lg":["16px",{"lineHeight":"28px","letterSpacing":"0.015em","fontWeight":"400"}],"label-lg":["15px",{"lineHeight":"20px","letterSpacing":"0.02em","fontWeight":"600"}]}}}};</script></head><body class="bg-surface font-body-md text-on-surface antialiased min-h-screen flex flex-col"><header class="fixed top-0 left-0 w-full z-50 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-20 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-space-md"><a class="flex items-center gap-space-xs group" data-path="home" href="../lp/code.html"><div class="w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center text-on-primary shadow-sm"><span class="material-symbols-outlined text-[24px]">school</span></div><div class="flex flex-col"><span class="font-label-sm text-label-sm text-primary tracking-wider">岡山県高校入試プレテスト</span><span class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors leading-tight">岡山県統一模試 <span class="font-headline-md text-headline-md text-primary font-bold">おかもし</span></span></div></a><nav class="hidden xl:flex items-center gap-space-lg" data-active-classes="text-primary font-bold"><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors py-space-xs" data-path="next-exam" href="../lp/code.html#next-exam">次回模試</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors py-space-xs" data-path="annual-schedule" href="../lp/code.html#schedule-table">年間日程</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors py-space-xs" data-path="exam-details" href="../lp/code.html#features-section">模試詳細</a><a aria-current="page" class="transition-colors py-space-xs text-primary font-bold" data-path="partner-schools" href="../_1/code.html">参加塾一覧</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors py-space-xs" data-path="news-and-blog" href="#">ブログ/お知らせ</a></nav><div class="flex items-center gap-space-sm"><a class="hidden sm:inline-flex items-center gap-space-xs px-space-md py-space-xs bg-secondary text-on-secondary rounded-lg font-label-md text-label-md shadow-[0_4px_12px_-2px_rgba(162,62,24,0.3)] hover:bg-secondary-container hover:text-on-secondary-container transition-all" data-path="application-entry" href="../_4/code.html"><span class="material-symbols-outlined text-[18px]">assignment</span><span>お申し込みはこちら</span><span class="material-symbols-outlined text-[16px]">chevron_right</span></a><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-20 bg-surface flex-grow"><div class="flex flex-col w-full">
-<!-- Top Breadcrumb & Page Identification Section -->
-<section class="relative w-full bg-surface-container-low overflow-hidden">
-<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-space-xl pb-space-2xl">
-<!-- Breadcrumbs -->
-<nav aria-label="パンくずリスト" class="flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm mb-space-lg">
-<a class="hover:text-primary transition-colors flex items-center gap-1" data-path="home" href="../lp/code.html">
+<!DOCTYPE html><html lang="ja" style=""><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"tertiary-fixed-dim":"#f2be5b","secondary-fixed-dim":"#ffb59c","inverse-on-surface":"#f3f0ef","tertiary-fixed":"#ffdea7","on-tertiary-container":"#f1bd5a","surface":"#fcf9f8","surface-container-lowest":"#ffffff","surface-container-highest":"#e4e2e1","on-secondary-fixed-variant":"#822801","surface-container-low":"#f6f3f2","on-surface-variant":"#414944","tertiary":"#4f3600","primary-fixed":"#bceed3","on-secondary":"#ffffff","secondary":"#a23e18","on-tertiary":"#ffffff","on-primary-container":"#9fcfb6","outline-variant":"#c0c9c2","secondary-container":"#fe8357","on-primary-fixed":"#002114","tertiary-container":"#6c4c00","on-background":"#1b1c1c","surface-tint":"#3a6752","on-tertiary-fixed-variant":"#5e4200","on-secondary-fixed":"#390c00","background":"#fcf9f8","surface-container":"#f0eded","surface-container-high":"#eae7e7","on-surface":"#1b1c1c","on-secondary-container":"#6f2000","secondary-fixed":"#ffdbcf","on-primary-fixed-variant":"#224f3c","error":"#ba1a1a","primary-container":"#2d5a46","inverse-surface":"#303030","primary-fixed-dim":"#a1d1b8","surface-dim":"#dcd9d9","on-tertiary-fixed":"#271900","on-primary":"#ffffff","error-container":"#ffdad6","on-error-container":"#93000a","surface-bright":"#fcf9f8","primary":"#134230","surface-variant":"#e4e2e1","inverse-primary":"#a1d1b8","outline":"#717973","on-error":"#ffffff"},borderRadius:{DEFAULT:"0.25rem",lg:"0.5rem",xl:"0.75rem",full:"9999px"},spacing:{"gutter-desktop":"1.5rem","space-xs":"0.5rem","space-2xs":"0.25rem","container-max":"75rem","space-lg":"1.5rem","space-3xl":"4.5rem","space-xl":"2rem","space-sm":"0.75rem","space-4xl":"6rem","space-md":"1rem","space-2xl":"3rem","gutter-mobile":"1rem"},fontFamily:{"label-lg":["Plus Jakarta Sans"],"body-lg":["Noto Sans"],"body-md":["Noto Sans"],"headline-lg":["Plus Jakarta Sans"],"label-sm":["Plus Jakarta Sans"],"headline-xl":["Plus Jakarta Sans"],"headline-xl-mobile":["Plus Jakarta Sans"],"headline-lg-mobile":["Plus Jakarta Sans"],"headline-md":["Plus Jakarta Sans"],"headline-sm":["Plus Jakarta Sans"],"body-sm":["Noto Sans"],"label-md":["Plus Jakarta Sans"]},fontSize:{"label-lg":["15px",{lineHeight:"20px",letterSpacing:"0.02em",fontWeight:"600"}],"body-lg":["16px",{lineHeight:"28px",letterSpacing:"0.015em",fontWeight:"400"}],"body-md":["14px",{lineHeight:"24px",letterSpacing:"0.01em",fontWeight:"400"}],"headline-lg":["32px",{lineHeight:"44px",letterSpacing:"-0.01em",fontWeight:"700"}],"label-sm":["11px",{lineHeight:"16px",letterSpacing:"0.04em",fontWeight:"700"}],"headline-xl":["40px",{lineHeight:"52px",letterSpacing:"-0.02em",fontWeight:"700"}],"headline-xl-mobile":["30px",{lineHeight:"40px",letterSpacing:"-0.01em",fontWeight:"700"}],"headline-lg-mobile":["24px",{lineHeight:"34px",letterSpacing:"0",fontWeight:"700"}],"headline-md":["22px",{lineHeight:"32px",letterSpacing:"0",fontWeight:"600"}],"headline-sm":["18px",{lineHeight:"28px",letterSpacing:"0",fontWeight:"600"}],"body-sm":["12px",{lineHeight:"20px",letterSpacing:"0.01em",fontWeight:"400"}],"label-md":["13px",{lineHeight:"18px",letterSpacing:"0.02em",fontWeight:"600"}]}}}}</script></head><body class="bg-background font-body-md text-body-md text-on-surface antialiased"><header class="bg-white/95 backdrop-blur-md sticky top-0 z-50 border-b border-gray-100 shadow-sm"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between"><a href="#" class="flex items-center gap-3"><div class="w-10 h-10 rounded-xl bg-[#1e4d3a] flex items-center justify-center text-white shadow-sm flex-shrink-0"><svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"></path></svg></div><div class="leading-tight"><div class="text-[10px] font-bold text-gray-400 tracking-wider">岡山県統一模擬試験 プレテスト</div><div class="text-base font-extrabold text-[#111827] tracking-tight">岡山県統一模試 <span class="text-[#1e4d3a]">おかもし</span></div></div></a><nav class="hidden lg:flex items-center gap-6"><div class="relative group"><button class="text-sm font-semibold text-gray-600 hover:text-[#1e4d3a] flex items-center gap-1 py-2 transition-colors">次回模試案内<span class="material-symbols-outlined text-base transition-transform group-hover:rotate-180">expand_more</span></button><div class="absolute left-0 top-full pt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50"><div class="w-56 bg-white rounded-xl shadow-lg border border-gray-100 p-2 space-y-1"><span class="text-[11px] font-bold text-gray-400 uppercase px-3 pt-2 pb-1 block">学年・実施回を選択</span><a href="#guide" class="flex items-center justify-between px-3 py-2 rounded-lg text-xs font-bold text-gray-800 hover:bg-gray-50 transition-colors"><span class="">中3生（10月号）</span><span class="text-[10px] bg-orange-100 text-[#c2410c] px-1.5 py-0.5 rounded font-bold">次回 10/17〜</span></a><a href="#schedule" class="flex items-center justify-between px-3 py-2 rounded-lg text-xs font-bold text-gray-800 hover:bg-gray-50 transition-colors"><span class="">中1・2生（12月号）</span><span class="text-[10px] bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded">12/26〜</span></a><a href="#scope" class="flex items-center justify-between px-3 py-2 rounded-lg text-xs font-bold text-gray-800 hover:bg-gray-50 transition-colors"><span class="">小6適性検査模試</span><span class="text-[10px] bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded">10/24〜</span></a></div></div></div><a class="text-sm font-semibold text-gray-600 hover:text-[#1e4d3a] transition-colors" href="#guide">実施要項</a><a class="text-sm font-semibold text-gray-600 hover:text-[#1e4d3a] transition-colors" href="#schedule">年間日程</a><a class="text-sm font-semibold text-gray-600 hover:text-[#1e4d3a] transition-colors" href="#scope">出題範囲</a><a class="text-sm font-semibold text-gray-600 hover:text-[#1e4d3a] transition-colors" href="#reasons">選ばれる理由</a><a class="text-sm font-semibold text-gray-600 hover:text-[#1e4d3a] transition-colors" href="#schools">実施塾一覧</a><a class="text-sm font-semibold text-gray-600 hover:text-[#1e4d3a] transition-colors" href="#faq">よくある質問</a><a class="text-sm font-bold text-[#1e4d3a] transition-colors" href="#">お知らせ・ブログ</a></nav><div class="flex items-center gap-3"><div class="hidden sm:flex items-center gap-2 mr-1"><a class="px-3.5 py-1.5 rounded-lg border border-gray-200 text-xs font-bold text-gray-700 hover:bg-gray-50 transition-all flex items-center gap-1.5" href="#schools"><span class="">塾・学校関係者様</span></a><a class="px-3.5 py-1.5 rounded-lg border border-gray-200 text-xs font-bold text-gray-700 hover:bg-gray-50 transition-all flex items-center gap-1.5" href="#contact"><span class="">個人お問合せ</span></a></div><a class="bg-[#c2410c] text-white px-4 py-2 rounded-lg font-bold text-xs sm:text-sm flex items-center gap-1.5 shadow-sm hover:bg-[#b03a09] transition-all" href="#apply"><span class="material-symbols-outlined text-lg">edit_calendar</span><span class="">模試お申込み</span></a></div></div></header><main class="w-full bg-surface"><div class="flex flex-col w-full">
+<!-- Top Breadcrumbs Navigation -->
+<div class="w-full bg-surface-container-low py-space-sm shadow-sm">
+<div class="max-w-[75rem] mx-auto px-gutter-desktop">
+<nav class="flex items-center flex-wrap gap-space-2xs text-on-surface-variant font-body-sm text-body-sm">
+<a class="hover:text-primary transition-colors flex items-center gap-1" data-path="top" href="#">
 <span class="material-symbols-outlined text-[16px]">home</span>
-<span>ホーム</span>
+<span class="">TOP</span>
 </a>
 <span class="material-symbols-outlined text-[14px] text-outline-variant">chevron_right</span>
-<span class="text-primary font-bold">プライバシーポリシー</span>
+<a class="hover:text-primary transition-colors" data-path="news" href="#">
+          お知らせ・ブログ一覧
+        </a>
+<span class="material-symbols-outlined text-[14px] text-outline-variant">chevron_right</span>
+<span class="text-on-surface font-medium truncate max-w-[16rem] md:max-w-[32rem]">
+          【岡山県の高校受験】合格への近道はここにある！先輩受験生が語る「おかもし」活用法
+        </span>
 </nav>
-<!-- Editorial Header Banner -->
-<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-center">
-<div class="lg:col-span-8 flex flex-col gap-space-sm">
-<div class="inline-flex items-center gap-space-xs self-start px-space-sm py-1 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm tracking-wider shadow-sm">
-<span class="material-symbols-outlined text-[16px]">verified_user</span>
-<span>LEGAL / 個人情報保護方針</span>
-</div>
-<h1 class="font-headline-xl text-headline-xl text-primary font-bold tracking-tight">
-            プライバシーポリシー
-          </h1>
-<p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed mt-space-xs max-w-3xl">
-            中央教育研究所株式会社および岡山県統一模擬試験実行委員会（以下「当社」）は、個人情報保護の重要性に鑑み、「個人情報の保護に関する法律」及び本プライバシーポリシーを遵守し、お客様のプライバシー保護に努めます。
-          </p>
-<div class="flex flex-wrap items-center gap-space-md pt-space-xs">
-<span class="inline-flex items-center gap-1.5 px-space-sm py-1 rounded-md bg-surface-container-highest font-label-sm text-label-sm text-on-surface-variant">
-<span class="material-symbols-outlined text-[15px] text-primary">calendar_today</span>
-<span>最終改定日：2024年4月1日</span>
-</span>
-<span class="inline-flex items-center gap-1.5 px-space-sm py-1 rounded-md bg-surface-container-highest font-label-sm text-label-sm text-on-surface-variant">
-<span class="material-symbols-outlined text-[15px] text-primary">shield</span>
-<span>岡山県統一模擬試験 実行委員会 規約管理部</span>
-</span>
 </div>
 </div>
-<!-- Visual Trust Seal / Accreditations Badge -->
-<div class="lg:col-span-4 flex justify-start lg:justify-end">
-<div class="p-space-lg rounded-2xl bg-surface-container-lowest shadow-[0_4px_20px_-4px_rgba(45,90,70,0.08)] flex flex-col gap-space-xs max-w-xs w-full">
-<div class="flex items-center gap-space-xs text-primary font-label-lg text-label-lg font-bold">
-<span class="material-symbols-outlined text-[24px]">gavel</span>
-<span>厳格な情報管理基準</span>
+<!-- Main Article Area (Desktop Split Layout: Content & Sticky Sidebar) -->
+<div class="w-full py-8">
+<div class="max-w-[75rem] mx-auto px-gutter-desktop">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-start">
+<!-- Primary Column (Article Body) -->
+<article class="lg:col-span-8 flex flex-col gap-space-xl">
+<!-- Article Header Card -->
+<div class="bg-surface-container-lowest p-space-lg md:p-space-xl rounded-xl shadow-sm flex flex-col gap-space-md">
+<!-- Category & Metadata Badges -->
+<div class="flex flex-wrap items-center justify-between gap-space-sm">
+<div class="flex flex-wrap items-center gap-space-xs">
+<span class="px-space-xs py-1 rounded-full bg-primary-container text-on-primary-container font-label-sm text-label-sm font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">school</span>
+                  入試・受検情報
+                </span>
+<span class="px-space-xs py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant font-label-sm text-label-sm font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">military_tech</span>
+                  合格体験・模試活用
+                </span>
+</div>
+<div class="flex items-center gap-space-md font-label-sm text-label-sm text-on-surface-variant">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px] text-outline">calendar_today</span>
+                  公開日: 2026.07.30
+                </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px] text-secondary">update</span>
+                  更新日: 2026.08.10
+                </span>
+</div>
+</div>
+<!-- Main Heading -->
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight font-bold">
+              【岡山県の高校受験】合格への近道はここにある！先輩受験生が語る「おかもし」活用法
+            </h1>
+<!-- Lead Paragraph -->
+<p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+              岡山県公立高校入試を突破するために最も重要なのは、「県内固有の出題形式への徹底適応」と「内申点を含めた正確な相対位置の把握」です。県下最大規模の受験者数を誇る「おかもし（岡山県統一模擬試験）」を活用して見事志望校合格を勝ち取った先輩たちの声とともに、模試を120%活かしきる実践的な学習法を詳しく解説します。
+            </p>
+<!-- Eye-catcher Image Container -->
+<div class="relative w-full rounded-xl overflow-hidden shadow-sm aspect-[16/9] bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A dedicated Japanese junior high school student thoughtfully studying at a wooden desk with notebooks, pencils, and regional test booklets in a warm sunlit classroom, with soft greenery and tranquil natural morning light creating an inspiring and dependable academic atmosphere with deep emerald green and clay orange accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDihB4z3AsRpUpXCouRdFclwC_Ju-I3ytlec4tKNkWhVRWRrzTlsfU6RWv8dqyZJQIlJNKz319n0Ux1EyYHWsimPGY880KIYPKhLF42sLHx49skA7hdqqjucs9j1ySXXuHayJIHeUoPFWlQIzGZE26O778G6xZnz57xtlCsHRi8-mCncTIutLC4Z3WajScem77Q5woMXX_wgKTTlqNmD4lXX3tCyfaMOM30vrspKGOtyuhFSWBb2Zop">
+<div class="absolute bottom-3 right-3 px-space-xs py-1 bg-primary/80 backdrop-blur-md rounded-lg text-on-primary font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">insights</span>
+<span class="">岡山県高校入試 徹底分析レポート</span>
+</div>
+</div>
+</div>
+<!-- Table of Contents (Index Box) -->
+<div class="p-space-lg bg-surface-container-low rounded-xl shadow-sm flex flex-col gap-space-sm">
+<div class="flex items-center gap-space-xs text-primary font-label-lg text-label-lg pb-space-xs">
+<span class="material-symbols-outlined text-[22px] text-primary">format_list_bulleted</span>
+<span class="">この記事の目次</span>
+</div>
+<ol class="flex flex-col gap-space-xs font-body-md text-body-md text-on-surface">
+<li class="">
+<a class="hover:text-secondary flex items-start gap-space-xs transition-colors py-1" href="#section-1">
+<span class="font-label-md text-label-md text-primary font-bold">01.</span>
+<span class="">岡山県公立高校入試の出題傾向と「おかもし」の完全合致</span>
+</a>
+</li>
+<li class="">
+<a class="hover:text-secondary flex items-start gap-space-xs transition-colors py-1" href="#section-2">
+<span class="font-label-md text-label-md text-primary font-bold">02.</span>
+<span class="">通知表評価点（内申点）を加味した志望校合否判定の仕組み</span>
+</a>
+</li>
+<li class="">
+<a class="hover:text-secondary flex items-start gap-space-xs transition-colors py-1" href="#section-3">
+<span class="font-label-md text-label-md text-primary font-bold">03.</span>
+<span class="">先輩たちの生の声：会場受験で培った本番力</span>
+</a>
+</li>
+<li class="">
+<a class="hover:text-secondary flex items-start gap-space-xs transition-colors py-1" href="#section-4">
+<span class="font-label-md text-label-md text-primary font-bold">04.</span>
+<span class="">模試を受けた後の復習が合否を分ける！「解答解説」の徹底活用</span>
+</a>
+</li>
+</ol>
+</div>
+<!-- Section 1 -->
+<section class="flex flex-col gap-space-md scroll-mt-24" id="section-1">
+<div class="flex items-center gap-space-sm bg-primary text-on-primary px-space-md py-space-sm rounded-lg shadow-sm">
+<span class="w-8 h-8 rounded-full bg-on-primary text-primary flex items-center justify-center font-headline-sm text-headline-sm font-bold shrink-0">1</span>
+<h2 class="font-headline-md text-headline-md font-bold">岡山県公立高校入試の出題傾向と「おかもし」の完全合致</h2>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+              岡山県の公立高校一般入試（学力検査）は、全国的にも独特な思考力・記述力を問う設問構成が特徴です。例えば数学における証明問題の論述形式や、理科・社会における複数資料の読み解き記述、国語の作文など、単なる記号選択問題では測れない総合力が求められます。
+            </p>
+<p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+              「おかもし」は、岡山県教育委員会の入試方針および過去問40年以上の出題データを精緻に分析。配点、大問構成、難易度のグラデーションに至るまで、本番と見紛うばかりの精度で再現されています。
+            </p>
+<!-- Feature Card / Bento Grid in Content -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+<div class="p-space-md bg-surface-container-lowest rounded-xl shadow-sm flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-xs text-primary font-headline-sm text-headline-sm font-bold">
+<span class="material-symbols-outlined text-[24px] text-secondary">verified</span>
+<span class="">5校（朝日・操山・芳泉・一宮・城東）対策</span>
 </div>
 <p class="font-body-sm text-body-sm text-on-surface-variant">
-              県内40年の模試運営実績に基づき、生徒・保護者様の個人成績・志望校データは暗号化技術と物理的管理体制で厳重に保護しています。
-            </p>
-<div class="pt-space-xs flex items-center gap-space-xs font-label-sm text-label-sm text-primary font-bold">
-<span class="material-symbols-outlined text-[18px]">lock</span>
-<span>SSL/TLS暗号化通信完全対応</span>
+                  岡山5校特有の難問へのアプローチ力を養成。独自入試を実施する岡山朝日高校の記述対策や、定員倍率の高い人気校への合否基準を精緻にトレースしています。
+                </p>
 </div>
+<div class="p-space-md bg-surface-container-lowest rounded-xl shadow-sm flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-xs text-primary font-headline-sm text-headline-sm font-bold">
+<span class="material-symbols-outlined text-[24px] text-secondary">analytics</span>
+<span class="">県内母集団の圧倒的な規模</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                  岡山県内約200以上の加盟学習塾・会場で一斉実施されるため、偏りのない正確な偏差値算出が可能。県内ライバル中での絶対位置が明確にわかります。
+                </p>
+</div>
+</div>
+<!-- Visual Info Card: Trend Match Stats -->
+<div class="p-space-lg bg-surface-container-low rounded-xl flex flex-col md:flex-row items-center justify-between gap-space-md">
+<div class="flex flex-col gap-space-2xs">
+<span class="font-label-sm text-label-sm text-secondary font-bold">EXAMINATION ACCURACY</span>
+<h4 class="font-headline-sm text-headline-sm text-primary font-bold">岡山県公立高校入試 形式一致率 98.4%</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">問題冊子のサイズ、解答用紙のレイアウト、時間配分まで本番をそのまま再現しています。</p>
+</div>
+<div class="flex items-center gap-space-md shrink-0">
+<!-- Inline Metric Sparkline -->
+<div class="flex flex-col items-center">
+<span class="font-headline-lg text-headline-lg font-bold text-primary">40+<span class="text-label-sm font-normal">年</span></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">蓄積データ分析</span>
+</div>
+<div class="w-px h-10 bg-outline-variant"></div>
+<div class="flex flex-col items-center">
+<span class="font-headline-lg text-headline-lg font-bold text-secondary">200<span class="text-label-sm font-normal">校舎</span></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">県内連携会場</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 2 -->
+<section class="flex flex-col gap-space-md scroll-mt-24" id="section-2">
+<div class="flex items-center gap-space-sm bg-primary text-on-primary px-space-md py-space-sm rounded-lg shadow-sm">
+<span class="w-8 h-8 rounded-full bg-on-primary text-primary flex items-center justify-center font-headline-sm text-headline-sm font-bold shrink-0">2</span>
+<h2 class="font-headline-md text-headline-md font-bold">通知表評価点（内申点）を加味した志望校合否判定の仕組み</h2>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+              高校受験において最も多くの保護者・生徒が陥りがちな落とし穴が「当日のテスト得点（偏差値）だけで合否を予測してしまうこと」です。岡山県の公立入試では、中学校3年間の調査書点（内申点）が合否決定において極めて大きなウエイトを占めます。
+            </p>
+<!-- Inner Visual: Correlation Schema -->
+<div class="p-space-lg bg-surface-container-lowest rounded-xl shadow-sm flex flex-col gap-space-md">
+<h3 class="font-headline-sm text-headline-sm text-primary font-bold flex items-center gap-space-2xs">
+<span class="material-symbols-outlined text-secondary">balance</span>
+<span class="">おかもし独自の「相関図判定（学力得点 × 内申点）」</span>
+</h3>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-sm">
+<div class="p-space-sm bg-surface-container-low rounded-lg flex flex-col gap-1">
+<span class="font-label-sm text-label-sm text-primary font-bold">1. 調査書点の正確な入力</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">通知表の各学年評定（1年〜3年）を反映し、岡山県の公立高校入試換算方式で自動算定します。</p>
+</div>
+<div class="p-space-sm bg-surface-container-low rounded-lg flex flex-col gap-1">
+<span class="font-label-sm text-label-sm text-primary font-bold">2. マトリクス相対位置</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">縦軸に学力検査得点、横軸に内申点を配置した散布図上で、志望校の安全圏・ボーダー圏を視覚化。</p>
+</div>
+<div class="p-space-sm bg-surface-container-low rounded-lg flex flex-col gap-1">
+<span class="font-label-sm text-label-sm text-secondary font-bold">3. 逆転合格シミュレーション</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">「現在の内申点の場合、当日テストで何点上積みが必要か」の目標値が明確に把握できます。</p>
+</div>
+</div>
+<!-- Note Alert Box -->
+<div class="p-space-md bg-tertiary-fixed/30 rounded-lg flex items-start gap-space-sm">
+<span class="material-symbols-outlined text-tertiary-container mt-1">lightbulb</span>
+<div class="flex flex-col gap-1">
+<span class="font-label-md text-label-md text-on-surface font-bold">ワンポイントアドバイス</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                    一般入試の選抜第1段階だけでなく、各高校の傾斜配点（学力重視枠／調査書重視枠）の判定シミュレーションにも対応しています。成績表が届いたら必ずマトリクスチャートをご確認ください。
+                  </p>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 3 -->
+<section class="flex flex-col gap-space-md scroll-mt-24" id="section-3">
+<div class="flex items-center gap-space-sm bg-primary text-on-primary px-space-md py-space-sm rounded-lg shadow-sm">
+<span class="w-8 h-8 rounded-full bg-on-primary text-primary flex items-center justify-center font-headline-sm text-headline-sm font-bold shrink-0">3</span>
+<h2 class="font-headline-md text-headline-md font-bold">先輩たちの生の声：会場受験で培った本番力</h2>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+              自宅やいつもの教室で受けるテストと、見知らぬ受験生に囲まれた本番環境でのテストでは、緊張感のレベルが全く異なります。「おかもし」では、私立高校や大学などの外部会場を利用した特別会場受験も開催。本番さながらの環境を体験した先輩たちの声をご紹介します。
+            </p>
+<!-- Testimonial Quote 1 -->
+<div class="p-space-lg bg-surface-container-lowest rounded-xl shadow-sm flex flex-col gap-space-sm relative overflow-hidden">
+<div class="absolute -right-4 -bottom-4 text-surface-container-high select-none pointer-events-none">
+<span class="material-symbols-outlined text-[120px]">format_quote</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-on-primary-fixed font-bold font-label-md">
+                    合格
+                  </div>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-on-surface font-bold">岡山朝日高校 普通科 合格</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">岡山市立 桑田中出身（K.Sさん）</span>
+</div>
+</div>
+<span class="px-space-xs py-1 rounded bg-surface-container text-on-surface-variant font-label-sm text-label-sm">8月・10月・12月受験</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant italic relative z-10 leading-relaxed">
+                「いつも通っている塾の教室だとリラックスしすぎていたのですが、岡山国際交流センターの会場で受けた時、鉛筆の音や周りの気迫に圧倒されました。その経験があったからこそ、入試本番の朝も『模試と同じだ』と深呼吸して平常心で臨むことができました。特に時間配分の失敗を模試で経験しておけたのが大きかったです。」
+              </p>
+</div>
+<!-- Testimonial Quote 2 -->
+<div class="p-space-lg bg-surface-container-lowest rounded-xl shadow-sm flex flex-col gap-space-sm relative overflow-hidden">
+<div class="absolute -right-4 -bottom-4 text-surface-container-high select-none pointer-events-none">
+<span class="material-symbols-outlined text-[120px]">format_quote</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<div class="w-10 h-10 rounded-full bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed-variant font-bold font-label-md">
+                    合格
+                  </div>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-on-surface font-bold">岡山芳泉高校 普通科 合格</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">倉敷市立 東中出身（M.Yさん）</span>
+</div>
+</div>
+<span class="px-space-xs py-1 rounded bg-surface-container text-on-surface-variant font-label-sm text-label-sm">全回フル受験</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant italic relative z-10 leading-relaxed">
+                「秋の模試でC判定を取ってしまい落ち込みましたが、個人成績表の単元別弱点分析シートを見て、理科の『光・音』と数学の『関数』を集中的にやり直しました。弱点が浮き彫りになるからこそ、その後の勉強計画に迷いがなくなりました。冬にはA判定まで届き、合格を確信できました。」
+              </p>
+</div>
+</section>
+<!-- Section 4 -->
+<section class="flex flex-col gap-space-md scroll-mt-24" id="section-4">
+<div class="flex items-center gap-space-sm bg-primary text-on-primary px-space-md py-space-sm rounded-lg shadow-sm">
+<span class="w-8 h-8 rounded-full bg-on-primary text-primary flex items-center justify-center font-headline-sm text-headline-sm font-bold shrink-0">4</span>
+<h2 class="font-headline-md text-headline-md font-bold">模試を受けた後の復習が合否を分ける！「解答解説」の徹底活用</h2>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+              模試は「受け終わった瞬間」からが真のスタートです。おかもしの『解答・解説集』は、正解を提示するだけでなく、「なぜその誤答を選びやすいのか」「岡山県の入試ではどこまで記述すれば部分点がもらえるのか」といった採点基準の詳細まで記載されています。
+            </p>
+<!-- Strategy Checklist Step by Step -->
+<div class="p-space-lg bg-surface-container-lowest rounded-xl shadow-sm flex flex-col gap-space-md">
+<h3 class="font-headline-sm text-headline-sm text-primary font-bold">合格者が実践した「復習3ステップ」</h3>
+<div class="flex flex-col gap-space-sm">
+<div class="flex items-start gap-space-sm p-space-sm bg-surface-container-low rounded-lg">
+<div class="w-7 h-7 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-label-sm shrink-0">
+                    STEP 1
+                  </div>
+<div class="flex flex-col gap-1">
+<span class="font-label-md text-label-md text-on-surface font-bold">受験当日：自己採点と記憶の鮮明な振り返り</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">「時間が足りなかった設問」「勘で答えてしまった設問」を問題用紙にメモ。思考プロセスを忘れないうちに自己採点を行います。</p>
+</div>
+</div>
+<div class="flex items-start gap-space-sm p-space-sm bg-surface-container-low rounded-lg">
+<div class="w-7 h-7 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-label-sm shrink-0">
+                    STEP 2
+                  </div>
+<div class="flex flex-col gap-1">
+<span class="font-label-md text-label-md text-on-surface font-bold">返却後：正答率50%以上の失問（ケアレスミス）撲滅</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">成績表に記載された各問の正答率をチェック。「県内受験者の大半が取れた問題」での失点を最優先で解き直し、専用の解き直しノートにまとめます。</p>
+</div>
+</div>
+<div class="flex items-start gap-space-sm p-space-sm bg-surface-container-low rounded-lg">
+<div class="w-7 h-7 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-bold text-label-sm shrink-0">
+                    STEP 3
+                  </div>
+<div class="flex flex-col gap-1">
+<span class="font-label-md text-label-md text-secondary font-bold">2週間後：間違えた問題の「類題演習」による定着確認</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">解答を暗記していないか確かめるため、同じ単元の類題をテキストからピックアップして再挑戦。自力で完答できるまで繰り返します。</p>
 </div>
 </div>
 </div>
 </div>
 </section>
-<!-- Main Legal Document Layout: Two Column (Navigation Sticky Sidebar + Clauses Stream) -->
-<section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-space-3xl w-full">
-<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-2xl items-start">
-<!-- Sticky Quick Table of Contents Sidebar -->
-<aside class="hidden lg:block lg:col-span-4 sticky top-28 space-y-space-md">
-<div class="p-space-lg rounded-2xl bg-surface-container-low shadow-[0_2px_12px_-2px_rgba(0,0,0,0.03)] flex flex-col gap-space-sm">
-<div class="flex items-center justify-between pb-space-xs border-b border-outline-variant/30">
-<div class="flex items-center gap-space-2xs text-primary font-label-lg text-label-lg font-bold">
-<span class="material-symbols-outlined text-[20px]">format_list_bulleted</span>
-<span>目次・条文一覧</span>
-</div>
-<span class="font-label-sm text-label-sm text-on-surface-variant">全11条</span>
-</div>
-<nav class="flex flex-col gap-1 font-body-sm text-body-sm text-on-surface-variant" id="policy-toc">
-<a class="py-1.5 px-space-xs rounded hover:bg-surface-container-highest hover:text-primary transition-colors" href="#section-preamble">前文（基本方針と定義）</a>
-<a class="py-1.5 px-space-xs rounded hover:bg-surface-container-highest hover:text-primary transition-colors" href="#section-1">1. 事業者情報</a>
-<a class="py-1.5 px-space-xs rounded hover:bg-surface-container-highest hover:text-primary transition-colors" href="#section-2">2. 個人情報管理責任者・安全管理</a>
-<a class="py-1.5 px-space-xs rounded hover:bg-surface-container-highest hover:text-primary transition-colors" href="#section-3">3. 個人情報の利用目的について</a>
-<a class="py-1.5 px-space-xs rounded hover:bg-surface-container-highest hover:text-primary transition-colors" href="#section-4">4. 個人情報の第三者への提供</a>
-<a class="py-1.5 px-space-xs rounded hover:bg-surface-container-highest hover:text-primary transition-colors" href="#section-5">5. 個人情報の業務委託について</a>
-<a class="py-1.5 px-space-xs rounded hover:bg-surface-container-highest hover:text-primary transition-colors" href="#section-6">6. 保有個人データに関する事項</a>
-<a class="py-1.5 px-space-xs rounded hover:bg-surface-container-highest hover:text-primary transition-colors" href="#section-7">7. お客様が個人情報を与える任意性</a>
-<a class="py-1.5 px-space-xs rounded hover:bg-surface-container-highest hover:text-primary transition-colors" href="#section-8">8. クッキー（Cookie）について</a>
-<a class="py-1.5 px-space-xs rounded hover:bg-surface-container-highest hover:text-primary transition-colors" href="#section-9">9. 個人情報の安全管理措置について</a>
-<a class="py-1.5 px-space-xs rounded hover:bg-surface-container-highest hover:text-primary transition-colors" href="#section-10">10. 他社ウェブサイトとのリンク</a>
-<a class="py-1.5 px-space-xs rounded hover:bg-surface-container-highest hover:text-primary transition-colors font-bold text-primary" href="#section-11">11. 個人情報に関するお問合せ先</a>
-</nav>
-</div>
-<!-- Quick Contact Micro-Card -->
-<div class="p-space-md rounded-xl bg-primary-container text-on-primary shadow-sm flex flex-col gap-space-2xs">
-<div class="flex items-center gap-space-2xs font-label-md text-label-md font-bold">
-<span class="material-symbols-outlined text-[18px]">support_agent</span>
-<span>お問い合わせ・開示請求窓口</span>
-</div>
-<p class="font-body-sm text-body-sm opacity-90">個人情報の照会・訂正・利用停止は企画部窓口にて迅速に対応いたします。</p>
-<div class="pt-space-2xs flex items-center justify-between">
-<span class="font-headline-sm text-headline-sm font-bold tracking-wider">082-227-3999</span>
-<span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-surface-container-lowest/20">平日 10:00〜18:00</span>
+<!-- In-article High-Conversion CTA Banner -->
+<div class="p-space-xl bg-gradient-to-br from-primary via-primary-container to-primary text-on-primary rounded-xl shadow-md flex flex-col md:flex-row items-center justify-between gap-space-lg">
+<div class="flex flex-col gap-space-xs text-left">
+<span class="px-space-xs py-1 rounded bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-bold inline-block w-fit">
+                WEB申込み受付中
+              </span>
+<h3 class="font-headline-lg text-headline-lg text-on-primary font-bold tracking-tight">
+                中3 第3回 岡山県統一模試
+              </h3>
+<p class="font-body-sm text-body-sm text-on-primary-container">
+                志望校確定前の最重要模試！実戦形式の5教科テストで真の実力を判定。
+              </p>
+<div class="flex flex-wrap items-center gap-space-md pt-space-2xs text-on-primary font-label-sm text-label-sm">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-tertiary-fixed-dim">event</span>
+                  実施日: 2026年10月18日(日)
+                </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-tertiary-fixed-dim">schedule</span>
+                  申込締切: 10月8日(木) 23:59
+                </span>
 </div>
 </div>
-<!-- Reference Archival Badging -->
-<div class="px-space-md py-space-sm rounded-xl bg-surface-container-high/50 flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
-<span>プライバシー規約 ID: POL-OKM-2024-V4</span>
-<span class="material-symbols-outlined text-[16px] text-primary">verified</span>
+<div class="shrink-0 flex flex-col items-center gap-space-2xs w-full md:w-auto">
+<a class="w-full md:w-auto px-space-xl py-space-md bg-secondary text-on-secondary font-label-lg text-label-lg rounded-lg shadow-md hover:bg-on-secondary-container hover:text-on-secondary transition-all flex items-center justify-center gap-space-xs text-center" data-path="application-entry" href="#">
+<span class="">模試Web申込みへ進む</span>
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</a>
+<span class="font-body-sm text-body-sm text-on-primary-container">クレジットカード・コンビニ決済対応</span>
+</div>
+</div>
+<!-- Social Media Share Buttons -->
+<div class="p-space-lg bg-surface-container-lowest rounded-xl shadow-sm flex flex-col gap-space-sm">
+<span class="font-label-md text-label-md text-on-surface-variant text-center font-medium">
+              この記事を保護者・お友達とシェアする
+            </span>
+<div class="flex items-center justify-center flex-wrap gap-space-sm">
+<!-- X / Twitter -->
+<button class="px-space-md py-space-xs rounded-lg bg-surface-container hover:bg-surface-container-highest text-on-surface font-label-md text-label-md transition-colors flex items-center gap-space-xs" onclick="window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(document.title) + '&amp;url=' + encodeURIComponent(window.location.href), '_blank')" type="button">
+<span class="font-bold">X</span>
+<span class="">でポスト</span>
+</button>
+<!-- LINE -->
+<button class="px-space-md py-space-xs rounded-lg bg-[#06c755] text-white font-label-md text-label-md hover:opacity-90 transition-opacity flex items-center gap-space-xs" onclick="window.open('https://social-plugins.line.me/lineit/share?url=' + encodeURIComponent(window.location.href), '_blank')" type="button">
+<span class="material-symbols-outlined text-[18px]">chat</span>
+<span class="">LINEで送る</span>
+</button>
+<!-- Facebook -->
+<button class="px-space-md py-space-xs rounded-lg bg-[#1877f2] text-white font-label-md text-label-md hover:opacity-90 transition-opacity flex items-center gap-space-xs" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(window.location.href), '_blank')" type="button">
+<span class="material-symbols-outlined text-[18px]">share</span>
+<span class="">シェア</span>
+</button>
+<!-- Copy Link -->
+<button class="px-space-md py-space-xs rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-md text-label-md transition-colors flex items-center gap-space-xs" onclick="navigator.clipboard.writeText(window.location.href); alert('記事のURLをクリップボードにコピーしました');" type="button">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+<span class="">URLをコピー</span>
+</button>
+</div>
+</div>
+<!-- Pagination: Previous / Next Article Navigation -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-sm pt-space-md">
+<a class="p-space-md bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-all flex flex-col gap-1 group" data-path="news-detail-prev" href="#">
+<div class="flex items-center gap-1 text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px] group-hover:-translate-x-1 transition-transform">arrow_back</span>
+<span class="">前の記事</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface font-medium line-clamp-2">
+                2026年度 岡山県公立高校入試実施日程および定員発表について
+              </span>
+</a>
+<a class="p-space-md bg-surface-container rounded-xl hover:bg-surface-container-high transition-colors flex items-center justify-center gap-space-xs text-primary font-label-md text-label-md font-bold" data-path="news" href="#">
+<span class="material-symbols-outlined text-[20px]">grid_view</span>
+<span class="">記事一覧へ戻る</span>
+</a>
+<a class="p-space-md bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-all flex flex-col gap-1 text-right group" data-path="news-detail-next" href="#">
+<div class="flex items-center justify-end gap-1 text-on-surface-variant font-label-sm text-label-sm">
+<span class="">次の記事</span>
+<span class="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface font-medium line-clamp-2">
+                夏休みの数学弱点克服！「関数と図形」の頻出パターン完全攻略法
+              </span>
+</a>
+</div>
+</article>
+<!-- Sticky Sidebar Column -->
+<aside class="lg:col-span-4 flex flex-col gap-space-lg lg:sticky lg:top-24">
+<!-- Exam Quick Signup Card -->
+<div class="p-space-lg bg-surface-container-lowest rounded-xl shadow-sm flex flex-col gap-space-md"><div class="flex items-center justify-between pb-space-xs border-b border-surface-container-highest"><div class="flex items-center gap-space-xs text-primary font-headline-sm text-headline-sm font-bold"><span class="material-symbols-outlined text-[22px] text-secondary">edit_calendar</span><span class="">次回の模試・お申込み</span></div><span class="text-[11px] font-bold text-secondary bg-secondary-fixed px-2 py-0.5 rounded-full">受付中</span></div><div class="flex flex-col gap-space-sm"><!-- Exam 1: 中3 --><div class="p-space-sm bg-surface-container-low rounded-lg border border-[#e2dedd] flex flex-col gap-2"><div class="flex items-center justify-between"><span class="px-space-xs py-0.5 rounded bg-primary-container text-on-primary-container font-label-sm text-label-sm font-bold">中学3年生対象</span><span class="text-xs font-bold text-secondary">¥5,500</span></div><h4 class="font-label-lg text-label-lg text-on-surface font-bold">第3回 岡山県統一模擬試験</h4><div class="space-y-1 text-xs text-on-surface-variant"><div class="flex items-center justify-between"><span class="text-outline">試験日</span><span class="font-medium text-on-surface">2026年10月18日(日)</span></div><div class="flex items-center justify-between"><span class="text-outline">会場</span><span class="text-right truncate max-w-[12rem]">岡山・倉敷・津山 特設会場</span></div><div class="flex items-center justify-between"><span class="text-outline">申込締切</span><span class="text-secondary font-bold">10月8日(木) 厳守</span></div></div></div><!-- Exam 2: 中1・2 --><div class="p-space-sm bg-surface-container-low rounded-lg border border-[#e2dedd] flex flex-col gap-2"><div class="flex items-center justify-between"><span class="px-space-xs py-0.5 rounded bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm font-bold">中学1・2年生対象</span><span class="text-xs font-medium text-outline">受付準備中</span></div><h4 class="font-label-lg text-label-lg text-on-surface font-bold">12月号 岡山県統一模擬試験</h4><div class="space-y-1 text-xs text-on-surface-variant"><div class="flex items-center justify-between"><span class="text-outline">実施期間</span><span class="font-medium text-on-surface">2026/12/26〜2027/1/11</span></div><div class="flex items-center justify-between"><span class="text-outline">会場</span><span class="text-right truncate max-w-[12rem]">各会場 または 自宅受験</span></div><div class="flex items-center justify-between"><span class="text-outline">申込締切</span><span class="font-medium text-on-surface">12月14日(月)</span></div></div></div><!-- Exam 3: 小6 --><div class="p-space-sm bg-surface-container-low rounded-lg border border-[#e2dedd] flex flex-col gap-2"><div class="flex items-center justify-between"><span class="px-space-xs py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-bold">小学6年生対象</span><span class="text-xs font-bold text-secondary">近日締切</span></div><h4 class="font-label-lg text-label-lg text-on-surface font-bold">10月号 岡山県適性検査対策模試</h4><div class="space-y-1 text-xs text-on-surface-variant"><div class="flex items-center justify-between"><span class="text-outline">実施期間</span><span class="font-medium text-on-surface">2026/10/24〜11/1</span></div><div class="flex items-center justify-between"><span class="text-outline">会場</span><span class="text-right truncate max-w-[12rem]">山陽学園会場・自宅</span></div><div class="flex items-center justify-between"><span class="text-outline">申込締切</span><span class="text-secondary font-bold">10月13日(火)</span></div></div></div></div><div class="flex flex-col gap-space-2xs pt-space-2xs"><a class="w-full py-space-sm bg-secondary text-on-secondary font-label-md text-label-md rounded-lg shadow-sm hover:bg-on-secondary-container hover:text-on-secondary transition-all text-center flex items-center justify-center gap-1" data-path="application-entry" href="#"><span class="material-symbols-outlined text-[18px]">app_registration</span><span class="">個人受験を申し込む</span><span class="material-symbols-outlined text-[16px]">chevron_right</span></a><a class="w-full py-2 bg-surface-container hover:bg-surface-container-high text-primary font-label-sm text-label-sm rounded-lg transition-colors text-center flex items-center justify-center gap-1 font-bold" href="#guide"><span class="">模試実施要項・日程一覧を見る</span><span class="material-symbols-outlined text-[14px]">arrow_forward</span></a></div></div>
+<!-- Writer / Editor Profile Card -->
+
+<!-- Category Tags Cloud -->
+<div class="p-space-lg bg-surface-container-lowest rounded-xl shadow-sm flex flex-col gap-space-sm">
+<span class="font-label-lg text-label-lg text-primary font-bold">記事カテゴリ</span>
+<div class="flex flex-wrap gap-space-xs">
+<a class="px-space-xs py-1 bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-label-sm text-label-sm rounded-lg transition-colors" data-path="news-cat-exam" href="#">
+                入試制度・内申点 (14)
+              </a>
+<a class="px-space-xs py-1 bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-label-sm text-label-sm rounded-lg transition-colors" data-path="news-cat-tips" href="#">
+                模試活用・復習法 (22)
+              </a>
+<a class="px-space-xs py-1 bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-label-sm text-label-sm rounded-lg transition-colors" data-path="news-cat-subjects" href="#">
+                教科別勉強法 (31)
+              </a>
+<a class="px-space-xs py-1 bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-label-sm text-label-sm rounded-lg transition-colors" data-path="news-cat-interviews" href="#">
+                先輩の合格体験記 (18)
+              </a>
+<a class="px-space-xs py-1 bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-label-sm text-label-sm rounded-lg transition-colors" data-path="news-cat-guidance" href="#">
+                保護者向け進路情報 (9)
+              </a>
+</div>
+</div>
+<!-- Official LINE / Newsletter Banner -->
+<div class="p-space-md bg-surface-container-high rounded-xl flex flex-col gap-space-xs">
+<span class="text-base font-bold text-primary flex items-center gap-1.5"><span class="material-symbols-outlined text-[20px]">notifications_active</span>最新入試情報をお届け</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              模試の申込締切日や、県教委の最新発表を公式Instagramで随時配信中。
+            </p>
+<a class="pt-1 text-secondary font-label-sm text-label-sm font-bold hover:underline flex items-center gap-1" data-path="social-instagram" href="#"><svg class="w-4 h-4 fill-current shrink-0 text-secondary" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"></path></svg><span class="">公式Instagramをチェックする</span><span class="material-symbols-outlined text-[14px]">open_in_new</span></a>
 </div>
 </aside>
-<!-- Primary Content Stream: Clauses & Detailed Statements -->
-<div class="lg:col-span-8 flex flex-col gap-space-xl">
-<!-- Preamble Section Card -->
-<div class="p-space-xl rounded-2xl bg-surface-container-lowest shadow-[0_2px_12px_-2px_rgba(45,90,70,0.06)] flex flex-col gap-space-md" id="section-preamble">
-<div class="flex items-center gap-space-xs text-primary font-headline-sm text-headline-sm font-bold">
-<span class="material-symbols-outlined text-[24px]">description</span>
-<h2>個人情報の取り扱いに関する基本方針</h2>
 </div>
-<p class="font-body-md text-body-md text-on-surface leading-relaxed">
-            当社（中央教育研究所株式会社および岡山県統一模擬試験実行委員会）は、業務上取り扱うお客様および模試受験生、保護者様の氏名、住所、電話番号、電子メールアドレス、学校名、学年、成績データ、志望校などの個人を特定できる情報（以下「個人情報」）について、その重要性を強く認識し、法令を遵守の上、適切な管理と保護を推進いたします。
-          </p>
-<div class="p-space-md rounded-xl bg-surface-container-low flex flex-col gap-space-2xs font-body-sm text-body-sm text-on-surface-variant">
-<div class="font-label-md text-label-md text-on-surface font-bold">本方針が適用される範囲</div>
-<p>本方針は、岡山県統一模擬試験（おかもし）のウェブサイト、会場受験申込、塾内実施、各種成績診断表発行、教育相談、資料請求など、当社が提供するすべての付帯サービスに適用されます。</p>
 </div>
 </div>
-<!-- 1. 事業者情報 -->
-<div class="p-space-xl rounded-2xl bg-surface-container-lowest shadow-[0_2px_12px_-2px_rgba(45,90,70,0.06)] flex flex-col gap-space-md" id="section-1">
-<div class="flex items-center gap-space-xs text-primary font-headline-sm text-headline-sm font-bold">
-<span class="flex items-center justify-center w-7 h-7 rounded-full bg-primary text-on-primary font-label-md text-label-md">1</span>
-<h2>事業者情報</h2>
+<!-- Related Articles Section -->
+<section class="w-full bg-surface-container-low py-8">
+<div class="max-w-[75rem] mx-auto px-gutter-desktop flex flex-col gap-space-xl">
+<!-- Section Header -->
+<div class="flex items-end justify-between">
+<div class="flex flex-col gap-space-2xs">
+<span class="font-label-sm text-label-sm text-secondary font-bold tracking-wider">RECOMMENDED ARTICLES</span>
+<h2 class="font-headline-lg text-headline-lg text-primary font-bold">関連記事・こちらも読まれています</h2>
 </div>
-<div class="grid grid-cols-1 md:grid-cols-3 gap-y-space-xs gap-x-space-md font-body-md text-body-md p-space-md rounded-xl bg-surface-container-low">
-<span class="text-on-surface-variant font-bold">事業者名</span>
-<span class="md:col-span-2 text-on-surface font-bold">中央教育研究所株式会社</span>
-<span class="text-on-surface-variant font-bold">本社所在地</span>
-<span class="md:col-span-2 text-on-surface">〒730-0013 広島県広島市中区八丁堀15番6号 広島ちゅうぎんビル3階</span>
-<span class="text-on-surface-variant font-bold">代表者名</span>
-<span class="md:col-span-2 text-on-surface">代表取締役 梶浦 真平</span>
-</div>
-</div>
-<!-- 2. 個人情報管理責任者の設置と安全管理について -->
-<div class="p-space-xl rounded-2xl bg-surface-container-lowest shadow-[0_2px_12px_-2px_rgba(45,90,70,0.06)] flex flex-col gap-space-md" id="section-2">
-<div class="flex items-center gap-space-xs text-primary font-headline-sm text-headline-sm font-bold">
-<span class="flex items-center justify-center w-7 h-7 rounded-full bg-primary text-on-primary font-label-md text-label-md">2</span>
-<h2>個人情報管理責任者の設置と安全管理について</h2>
-</div>
-<p class="font-body-md text-body-md text-on-surface leading-relaxed">
-            当社は、個人情報管理責任者を以下の通り設置し、個人情報の適切な管理及び安全管理対策を実施いたします。不正アクセス、紛失、破壊、改ざん及び漏えい等の予防並びに是正措置を講じます。
-          </p>
-<div class="p-space-md rounded-xl bg-surface-container-low flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm font-body-md text-body-md">
-<div>
-<div class="font-label-md text-label-md text-primary font-bold">個人情報保護管理者</div>
-<div class="text-on-surface font-bold text-headline-sm font-headline-sm mt-0.5">中央教育研究所株式会社 企画部 亀井 伸一郎</div>
-</div>
-<div class="flex flex-col sm:items-end">
-<span class="font-label-sm text-label-sm text-on-surface-variant">管理連絡先</span>
-<span class="font-headline-sm text-headline-sm text-primary font-bold">082-227-3999</span>
-<span class="font-body-sm text-body-sm text-on-surface-variant">平日 10:00〜18:00</span>
-</div>
-</div>
-</div>
-<!-- 3. 個人情報の利用目的について -->
-<div class="p-space-xl rounded-2xl bg-surface-container-lowest shadow-[0_2px_12px_-2px_rgba(45,90,70,0.06)] flex flex-col gap-space-md" id="section-3">
-<div class="flex items-center gap-space-xs text-primary font-headline-sm text-headline-sm font-bold">
-<span class="flex items-center justify-center w-7 h-7 rounded-full bg-primary text-on-primary font-label-md text-label-md">3</span>
-<h2>個人情報の利用目的について</h2>
-</div>
-<p class="font-body-md text-body-md text-on-surface leading-relaxed">
-            当社はお預かりした個人情報を、以下の利用目的の範囲内でのみ利用し、ご本人の事前の同意なく目的外での利用は行いません。
-          </p>
-<div class="space-y-space-md">
-<!-- 3-(1) -->
-<div class="p-space-md rounded-xl bg-surface-container-low flex flex-col gap-space-xs">
-<div class="font-label-lg text-label-lg text-primary font-bold flex items-center gap-1.5">
-<span class="material-symbols-outlined text-[20px]">assignment_turned_in</span>
-<span>(1) ご本人様から直接個人情報を取得する場合の利用目的</span>
-</div>
-<ul class="list-disc pl-5 font-body-md text-body-md text-on-surface space-y-1">
-<li>各種模擬テスト（おかもし）の受験申込み受付、受験票の発送、テスト当日の本人照合のため</li>
-<li>成績診断表（個人成績表・合格可能性判定票・全体データ分析資料等）の作成、出力、発送のため</li>
-<li>模試に関するお知らせ、日程変更、会場案内、合否情報調査に関するご連絡のため</li>
-<li>お客様からのお問合せ、教育相談、資料請求に対するご回答および関連資料の送付のため</li>
-<li>当社の提供する教育サービスや新規模試等の情報提供（希望された方に限ります）</li>
-</ul>
-</div>
-<!-- 3-(2) -->
-<div class="p-space-md rounded-xl bg-surface-container-low flex flex-col gap-space-xs">
-<div class="font-label-lg text-label-lg text-primary font-bold flex items-center gap-1.5">
-<span class="material-symbols-outlined text-[20px]">analytics</span>
-<span>(2) 個人情報を利用する場合の主たる事業領域</span>
-</div>
-<p class="font-body-md text-body-md text-on-surface">
-                岡山県統一模擬試験をはじめとする模擬テストのデータ処理事業、統計偏差値算出事業、進学診断資料および教育教材の企画・編集・発行事業。
-              </p>
-</div>
-</div>
-</div>
-<!-- 4. 個人情報の第三者への提供について -->
-<div class="p-space-xl rounded-2xl bg-surface-container-lowest shadow-[0_2px_12px_-2px_rgba(45,90,70,0.06)] flex flex-col gap-space-md" id="section-4">
-<div class="flex items-center gap-space-xs text-primary font-headline-sm text-headline-sm font-bold">
-<span class="flex items-center justify-center w-7 h-7 rounded-full bg-primary text-on-primary font-label-md text-label-md">4</span>
-<h2>個人情報の第三者への提供について</h2>
-</div>
-<p class="font-body-md text-body-md text-on-surface leading-relaxed">
-            当社は、お客様より取得させていただいた個人情報を適切に管理し、あらかじめお客様の同意を得ることなく第三者に提供することはありません。ただし、次の各号に該当する場合は除きます。
-          </p>
-<div class="grid grid-cols-1 md:grid-cols-2 gap-space-sm">
-<div class="p-space-sm rounded-lg bg-surface-container-low flex items-start gap-space-xs">
-<span class="material-symbols-outlined text-primary text-[20px] shrink-0 mt-0.5">policy</span>
-<div class="font-body-md text-body-md text-on-surface">
-<strong>法令に基づく場合:</strong> 裁判所、警察署その他行政機関等からの法的拘束力のある照会・命令に応じる場合。
-              </div>
-</div>
-<div class="p-space-sm rounded-lg bg-surface-container-low flex items-start gap-space-xs">
-<span class="material-symbols-outlined text-primary text-[20px] shrink-0 mt-0.5">health_and_safety</span>
-<div class="font-body-md text-body-md text-on-surface">
-<strong>生命・身体・財産の保護:</strong> 人の生命、身体または財産の保護のために必要があり、本人の同意を得ることが困難である場合。
-              </div>
-</div>
-<div class="p-space-sm rounded-lg bg-surface-container-low flex items-start gap-space-xs">
-<span class="material-symbols-outlined text-primary text-[20px] shrink-0 mt-0.5">account_balance</span>
-<div class="font-body-md text-body-md text-on-surface">
-<strong>公衆衛生・児童の健全育成:</strong> 公衆衛生の向上または児童の健全な育成の推進のために特に必要があり、本人の同意を得ることが困難である場合。
-              </div>
-</div>
-<div class="p-space-sm rounded-lg bg-surface-container-low flex items-start gap-space-xs">
-<span class="material-symbols-outlined text-primary text-[20px] shrink-0 mt-0.5">business_center</span>
-<div class="font-body-md text-body-md text-on-surface">
-<strong>事業承継・委託:</strong> 合併、会社分割、事業譲渡その他の事由による事業の承継に伴って個人情報が提供される場合、または利用目的の達成に必要な範囲内で業務委託先に開示する場合。
-              </div>
-</div>
-</div>
-</div>
-<!-- 5. 個人情報の業務委託について -->
-<div class="p-space-xl rounded-2xl bg-surface-container-lowest shadow-[0_2px_12px_-2px_rgba(45,90,70,0.06)] flex flex-col gap-space-md" id="section-5">
-<div class="flex items-center gap-space-xs text-primary font-headline-sm text-headline-sm font-bold">
-<span class="flex items-center justify-center w-7 h-7 rounded-full bg-primary text-on-primary font-label-md text-label-md">5</span>
-<h2>個人情報の業務委託について</h2>
-</div>
-<p class="font-body-md text-body-md text-on-surface leading-relaxed">
-            当社は、利用目的の達成に必要な範囲において、個人情報の取扱いの全部または一部を外部事業者に委託する場合があります（例：成績表の印刷製本会社、配送業者、電算データ入力代行会社等）。この場合、当社は個人情報を適正に取り扱う能力を有する委託先を厳格に選定し、秘密保持契約の締結および適切な安全管理が行われるよう必要かつ適切な監督を実施します。
-          </p>
-</div>
-<!-- 6. 保有個人データに関する事項について -->
-<div class="p-space-xl rounded-2xl bg-surface-container-lowest shadow-[0_2px_12px_-2px_rgba(45,90,70,0.06)] flex flex-col gap-space-md" id="section-6">
-<div class="flex items-center gap-space-xs text-primary font-headline-sm text-headline-sm font-bold">
-<span class="flex items-center justify-center w-7 h-7 rounded-full bg-primary text-on-primary font-label-md text-label-md">6</span>
-<h2>保有個人データに関する事項について</h2>
-</div>
-<p class="font-body-md text-body-md text-on-surface leading-relaxed">
-            お客様ご本人（またはその保護者・法定代理人）は、当社が保有する個人データに関して、開示、利用目的の通知、訂正、追加、削除、利用の停止、消去及び第三者への提供の停止（以下「開示等」といいます）を請求することができます。
-          </p>
-<div class="p-space-md rounded-xl bg-surface-container-low flex flex-col gap-space-sm">
-<div class="font-label-lg text-label-lg text-primary font-bold">開示等のお手続きおよび苦情相談窓口</div>
-<p class="font-body-sm text-body-sm text-on-surface-variant">
-              開示等のお申し出、並びに当社の個人情報の取扱いに関する苦情・ご相談につきましては、下記窓口までお電話または書面にてご連絡ください。本人確認手続き（運転免許証、健康保険証、生徒手帳等の写しの確認）の上、遅滞なく所定の手続きに従い対応いたします。
-            </p>
-<div class="pt-space-xs flex flex-wrap items-center justify-between gap-space-sm font-body-sm text-body-sm text-on-surface border-t border-outline-variant/30">
-<div>
-<span class="font-bold">苦情相談窓口責任者：</span>中央教育研究所株式会社 企画部 加藤 玲
-              </div>
-<div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-primary text-[18px]">call</span>
-<span class="font-bold text-primary">TEL: 082-227-3999</span>
-<span class="text-on-surface-variant">（平日 10:00〜18:00）</span>
-</div>
-</div>
-</div>
-</div>
-<!-- 7. お客様が個人情報を与えることの任意性および当該情報を与えなかった場合にお客様に生じる結果について -->
-<div class="p-space-xl rounded-2xl bg-surface-container-lowest shadow-[0_2px_12px_-2px_rgba(45,90,70,0.06)] flex flex-col gap-space-md" id="section-7">
-<div class="flex items-center gap-space-xs text-primary font-headline-sm text-headline-sm font-bold">
-<span class="flex items-center justify-center w-7 h-7 rounded-full bg-primary text-on-primary font-label-md text-label-md">7</span>
-<h2>お客様が個人情報を与えることの任意性および当該情報を与えなかった場合にお客様に生じる結果について</h2>
-</div>
-<p class="font-body-md text-body-md text-on-surface leading-relaxed">
-            当社への個人情報の提供は、すべてお客様の任意によるものです。ただし、模擬試験の実施や成績判定に必要な情報（氏名、生年月日、学年、志望校、現住所等）をご提供いただけない場合は、模試の受験受付、受験票の発送、ならびに正確な合否判定データを含む個人成績票の作成・送付ができないことがありますのであらかじめご了承ください。
-          </p>
-</div>
-<!-- 8. クッキー（Cookie）について -->
-<div class="p-space-xl rounded-2xl bg-surface-container-lowest shadow-[0_2px_12px_-2px_rgba(45,90,70,0.06)] flex flex-col gap-space-md" id="section-8">
-<div class="flex items-center gap-space-xs text-primary font-headline-sm text-headline-sm font-bold">
-<span class="flex items-center justify-center w-7 h-7 rounded-full bg-primary text-on-primary font-label-md text-label-md">8</span>
-<h2>クッキー（Cookie）について</h2>
-</div>
-<p class="font-body-md text-body-md text-on-surface leading-relaxed">
-            本サイトでは、お客様がより快適にご利用いただけるよう「クッキー（Cookie）」と呼ばれる技術を使用することがあります。
-          </p>
-<div class="space-y-space-xs font-body-md text-body-md text-on-surface-variant">
-<div class="flex items-start gap-2">
-<span class="material-symbols-outlined text-primary text-[18px] shrink-0 mt-1">check_circle</span>
-<span><strong>利用目的:</strong> お客様のログイン状態の保持、カート（お申込み内容・発注教材）の管理、サイトの利用動向解析による利便性向上のために使用します。</span>
-</div>
-<div class="flex items-start gap-2">
-<span class="material-symbols-outlined text-primary text-[18px] shrink-0 mt-1">check_circle</span>
-<span><strong>特定情報の非保持:</strong> クッキー自体には、お客様の氏名・電話番号・メールアドレス等の個人を特定可能な情報は含まれません。</span>
-</div>
-<div class="flex items-start gap-2">
-<span class="material-symbols-outlined text-primary text-[18px] shrink-0 mt-1">check_circle</span>
-<span><strong>設定拒否:</strong> ご使用のブラウザ設定によりクッキーの受け入れを拒否することも可能です。ただし、その場合本サイトの一部機能（オンライン申込・会員マイページ等）が正常に動作しない場合がございます。</span>
-</div>
-</div>
-</div>
-<!-- 9. 個人情報の安全管理措置について (Detailed 7 Points) -->
-<div class="p-space-xl rounded-2xl bg-surface-container-lowest shadow-[0_2px_12px_-2px_rgba(45,90,70,0.06)] flex flex-col gap-space-md" id="section-9">
-<div class="flex items-center gap-space-xs text-primary font-headline-sm text-headline-sm font-bold">
-<span class="flex items-center justify-center w-7 h-7 rounded-full bg-primary text-on-primary font-label-md text-label-md">9</span>
-<h2>個人情報の安全管理措置について</h2>
-</div>
-<p class="font-body-md text-body-md text-on-surface leading-relaxed">
-            当社は、取り扱う個人情報の漏えい、滅失またはき損の防止その他の個人データの安全管理のため、以下の措置を講じています。
-          </p>
-<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
-<!-- Item 1 -->
-<div class="p-space-md rounded-xl bg-surface-container-low flex flex-col gap-1">
-<div class="font-label-md text-label-md text-primary font-bold flex items-center gap-1.5">
-<span class="material-symbols-outlined text-[18px]">rule</span>
-<span>基本方針の策定</span>
-</div>
-<p class="font-body-sm text-body-sm text-on-surface-variant">
-                個人データの適正な取扱いの確保のため、「関係法令・ガイドライン等の遵守」、「苦情相談窓口の設置」等について本基本方針を策定しています。
-              </p>
-</div>
-<!-- Item 2 -->
-<div class="p-space-md rounded-xl bg-surface-container-low flex flex-col gap-1">
-<div class="font-label-md text-label-md text-primary font-bold flex items-center gap-1.5">
-<span class="material-symbols-outlined text-[18px]">library_books</span>
-<span>個人データの取扱いに係る規律の整備</span>
-</div>
-<p class="font-body-sm text-body-sm text-on-surface-variant">
-                取得、利用、保存、提供、削除・廃棄等の段階ごとに、取扱方法、責任者・担当者及びその任務等について個人情報保護規程を整備しています。
-              </p>
-</div>
-<!-- Item 3 -->
-<div class="p-space-md rounded-xl bg-surface-container-low flex flex-col gap-1">
-<div class="font-label-md text-label-md text-primary font-bold flex items-center gap-1.5">
-<span class="material-symbols-outlined text-[18px]">groups</span>
-<span>組織的安全管理措置</span>
-</div>
-<p class="font-body-sm text-body-sm text-on-surface-variant">
-                個人データの取扱いに関する責任者を設置するとともに、法令や社内規程に違反している事実を把握した場合の報告連絡体制を整備。定期的な自己点検及び監査を実施しています。
-              </p>
-</div>
-<!-- Item 4 -->
-<div class="p-space-md rounded-xl bg-surface-container-low flex flex-col gap-1">
-<div class="font-label-md text-label-md text-primary font-bold flex items-center gap-1.5">
-<span class="material-symbols-outlined text-[18px]">school</span>
-<span>人的安全管理措置</span>
-</div>
-<p class="font-body-sm text-body-sm text-on-surface-variant">
-                個人データの取扱いに関する留意事項について、従業者に定期的な研修を実施しています。また、全従業者と秘密保持に関する誓約書を締結しています。
-              </p>
-</div>
-<!-- Item 5 -->
-<div class="p-space-md rounded-xl bg-surface-container-low flex flex-col gap-1">
-<div class="font-label-md text-label-md text-primary font-bold flex items-center gap-1.5">
-<span class="material-symbols-outlined text-[18px]">meeting_room</span>
-<span>物理的安全管理措置</span>
-</div>
-<p class="font-body-sm text-body-sm text-on-surface-variant">
-                個人データを取り扱う区域において、従業者の入退室管理及び持ち込み機器等の制限を実施。個人データを取り扱う機器、電子媒体及び書類等の盗難・紛失を防止する施錠保管を行っています。
-              </p>
-</div>
-<!-- Item 6 -->
-<div class="p-space-md rounded-xl bg-surface-container-low flex flex-col gap-1">
-<div class="font-label-md text-label-md text-primary font-bold flex items-center gap-1.5">
-<span class="material-symbols-outlined text-[18px]">terminal</span>
-<span>技術的安全管理措置</span>
-</div>
-<p class="font-body-sm text-body-sm text-on-surface-variant">
-                アクセス制御を実施して、担当者及び取り扱う個人情報データベース等の範囲を限定。個人データを取り扱う情報システムを外部からの不正アクセスから保護する仕組みを導入しています。
-              </p>
-</div>
-<!-- Item 7 (Span 2) -->
-<div class="md:col-span-2 p-space-md rounded-xl bg-surface-container-low flex flex-col gap-1">
-<div class="font-label-md text-label-md text-primary font-bold flex items-center gap-1.5">
-<span class="material-symbols-outlined text-[18px]">public</span>
-<span>外的環境の把握</span>
-</div>
-<p class="font-body-sm text-body-sm text-on-surface-variant">
-                外国において個人データを取り扱うことは原則としてございません。仮に外国での保管等が生じる場合は、当該国における個人情報の保護に関する制度等を把握した上で安全管理措置を実施します。
-              </p>
-</div>
-</div>
-</div>
-<!-- 10. 他の会社のウェブサイトとのリンクについて -->
-<div class="p-space-xl rounded-2xl bg-surface-container-lowest shadow-[0_2px_12px_-2px_rgba(45,90,70,0.06)] flex flex-col gap-space-md" id="section-10">
-<div class="flex items-center gap-space-xs text-primary font-headline-sm text-headline-sm font-bold">
-<span class="flex items-center justify-center w-7 h-7 rounded-full bg-primary text-on-primary font-label-md text-label-md">10</span>
-<h2>他の会社のウェブサイトとのリンクについて</h2>
-</div>
-<p class="font-body-md text-body-md text-on-surface leading-relaxed">
-            当社のウェブサイトから他の事業者のウェブサイトへのリンクが設定されている場合、リンク先のウェブサイトにおける個人情報の保護や取り扱い方針に関して、当社は一切の責任を負いません。リンク先の各ウェブサイトにおけるプライバシーポリシーをあらかじめご確認ください。
-          </p>
-</div>
-<!-- 11. 個人情報に関するお問合せ先 (Official Contact Details Box) -->
-<div class="p-space-xl rounded-2xl bg-primary text-on-primary shadow-[0_4px_24px_-4px_rgba(19,66,48,0.3)] flex flex-col gap-space-md" id="section-11">
-<div class="flex items-center gap-space-xs font-headline-sm text-headline-sm font-bold text-on-primary">
-<span class="flex items-center justify-center w-7 h-7 rounded-full bg-on-primary text-primary font-label-md text-label-md">11</span>
-<h2>個人情報に関するお問合せ先</h2>
-</div>
-<p class="font-body-md text-body-md text-on-primary/90 leading-relaxed">
-            当社の個人情報の取扱い、開示・訂正・利用停止等のご請求、または苦情・ご相談に関するお問合せ窓口は下記の通りです。
-          </p>
-<div class="p-space-lg rounded-xl bg-surface-container-lowest text-on-surface flex flex-col gap-space-sm shadow-md">
-<div class="font-headline-sm text-headline-sm text-primary font-bold">中央教育研究所株式会社 苦情相談窓口</div>
-<div class="grid grid-cols-1 md:grid-cols-2 gap-space-sm pt-space-2xs text-body-sm font-body-sm">
-<div class="flex flex-col gap-1">
-<span class="text-on-surface-variant font-bold">苦情相談窓口責任者</span>
-<span class="font-label-lg text-label-lg font-bold text-on-surface">企画部 加藤 玲</span>
-</div>
-<div class="flex flex-col gap-1">
-<span class="text-on-surface-variant font-bold">個人情報保護管理者</span>
-<span class="font-label-lg text-label-lg font-bold text-on-surface">企画部 亀井 伸一郎</span>
-</div>
-</div>
-<div class="border-t border-outline-variant/40 pt-space-sm flex flex-col gap-1 font-body-sm text-body-sm text-on-surface">
-<div class="flex items-start gap-2">
-<span class="material-symbols-outlined text-primary text-[18px] shrink-0 mt-0.5">location_on</span>
-<span>〒730-0013 広島県広島市中区八丁堀15番6号 広島ちゅうぎんビル3階</span>
-</div>
-<div class="flex flex-wrap items-center gap-x-space-lg gap-y-1 pt-1">
-<div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-primary text-[18px]">call</span>
-<span class="font-bold text-headline-sm text-headline-sm text-primary">082-227-3999</span>
-</div>
-<div class="flex items-center gap-1.5 text-on-surface-variant font-label-sm text-label-sm">
-<span class="material-symbols-outlined text-[16px]">schedule</span>
-<span>受付時間：平日 10:00〜18:00（土・日・祝日・年末年始を除く）</span>
-</div>
-</div>
-</div>
-</div>
-</div>
-<!-- Archival Visual Reference Indicator -->
-<div class="p-space-md rounded-xl bg-surface-container-high/40 flex items-center justify-between text-on-surface-variant font-body-sm text-body-sm">
-<div class="flex items-center gap-space-xs">
-<span class="material-symbols-outlined text-primary text-[20px]">policy</span>
-<span>制定・改定記録：2024年4月1日 改定実施（岡山県統一模擬試験 実行委員会 規約管理部）</span>
-</div>
-<a class="inline-flex items-center gap-1 text-primary hover:underline font-label-sm text-label-sm font-bold" href="#">
-<span class="material-symbols-outlined text-[16px]">print</span>
-<span>本方針を印刷する</span>
+<a class="hidden md:flex items-center gap-1 text-primary font-label-md text-label-md hover:underline font-bold" data-path="news" href="#">
+<span class="">記事一覧を見る</span>
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
 </a>
 </div>
+<!-- Articles Card Grid (3 Columns) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-lg">
+<!-- Related Article 1 -->
+<a class="bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-all flex flex-col overflow-hidden group" data-path="news-detail-asahi" href="#">
+<div class="relative w-full aspect-[16/10] bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Modern Japanese high school campus brick building with clean blue sky and autumn ginkgo trees in Okayama, academic excellence and calm atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDq7ebriGj98K580drM_nQFyjsYXLovlCdBioJr_sQI2XwBdN1S9ZmuUDMZVQF1OXIJG8ZL9x4eHh3r1IF_V7rqG43WR8mQSJ7pTUn7L5yh_EARZmW_LnvGQ-OpYpZGkWOaT0_bucstraAOZbjEZhHI5VuJYYA0x6zD6F5iIp8ixdzy9Aqk7wCboDLJ-0_BYjcte-28c-Qn6MA0fGubqVZY0DKZCjhUQQRK798_2swF7VHZUP5YIzej">
+<span class="absolute top-2 left-2 px-space-xs py-0.5 rounded bg-primary text-on-primary font-label-sm text-label-sm">
+              高校別分析
+            </span>
+</div>
+<div class="p-space-md flex flex-col gap-space-xs flex-grow justify-between">
+<div class="flex flex-col gap-space-2xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant">2026.07.15</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold group-hover:text-secondary transition-colors line-clamp-2">
+                岡山朝日高校の独自問題攻略法！過去問傾向と模試での合格安全圏
+              </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">
+                全国トップレベルの記述力が問われる岡山朝日の入試。独自数学の記述対策とおかもしでの目標偏差値の目安を徹底解説。
+              </p>
+</div>
+<div class="pt-space-xs flex items-center gap-1 text-secondary font-label-sm text-label-sm font-bold">
+<span class="">続きを読む</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</div>
+</div>
+</a>
+<!-- Related Article 2 -->
+<a class="bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-all flex flex-col overflow-hidden group" data-path="news-detail-naishin" href="#">
+<div class="relative w-full aspect-[16/10] bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Close up of a Japanese student study notebook with handwritten mathematical graphs and analytical data tables, lit by natural morning library light." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBAgKd1IDmoj5qjucfoG8PDfRnPPIy8H1wrPrMc7kAVnvabHdGCJV35uRiriAdlC-b_1tHBsCRyR_ImZTC80x4ZAtzAHnktDmf1yRMTNbjwS_AB7nhCL4pydKyNldxNn_fHnTCor4I2SKk3G--g-45awVvP5xsef4uj9aE0H2RZo9tzgwO0ucGe37ydRWaJmKFSXYd-SbvsqckMLLPXFALwqsVr5yJhey4-KRaxt58L6bKr2x5FrYj0">
+<span class="absolute top-2 left-2 px-space-xs py-0.5 rounded bg-secondary-fixed text-on-secondary-fixed-variant font-label-sm text-label-sm font-bold">
+              入試基礎知識
+            </span>
+</div>
+<div class="p-space-md flex flex-col gap-space-xs flex-grow justify-between">
+<div class="flex flex-col gap-space-2xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant">2026.06.28</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold group-hover:text-secondary transition-colors line-clamp-2">
+                今さら聞けない「岡山県公立高校の内申点」計算方法と当日の逆転可能ライン
+              </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">
+                中1から中3までの通知表評価がどう合否に加算されるのか？県教委の最新ガイドラインに沿ってわかりやすく図解します。
+              </p>
+</div>
+<div class="pt-space-xs flex items-center gap-1 text-secondary font-label-sm text-label-sm font-bold">
+<span class="">続きを読む</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</div>
+</div>
+</a>
+<!-- Related Article 3 -->
+<a class="bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-all flex flex-col overflow-hidden group" data-path="news-detail-science" href="#">
+<div class="relative w-full aspect-[16/10] bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Science laboratory experiment glassware with clean reflections in a bright Japanese junior high school science room, calm scholarly mood." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0PM3XDUwJU2QFALKQl7eFTan5NoKwjasJbj6QwSrdwGC4J_YUcw-KFqqxHNnBt3p0A6W49TBaHVTmC-kZHBWC9wIsyCJYbgSGlaEJ3E3UxN9eFyQeMZrgHCHPC7niVDLwmstMldU7AnMmHjlVaQ5Wyt3CUs6XXmTejGUuJcB4sk93__8qivjFz7WyOigJmyfYj-k1I5jGAOKNdlSTX6qSblhEmtC0YcpdW0OdMKt19-p976szkAh8">
+<span class="absolute top-2 left-2 px-space-xs py-0.5 rounded bg-primary-container text-on-primary-container font-label-sm text-label-sm font-bold">
+              教科別対策
+            </span>
+</div>
+<div class="p-space-md flex flex-col gap-space-xs flex-grow justify-between">
+<div class="flex flex-col gap-space-2xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant">2026.06.10</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold group-hover:text-secondary transition-colors line-clamp-2">
+                差がつく「理科・社会」の記述問題対策！実験考察問題の得点力を引き上げる勉強法
+              </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">
+                「暗記したのに点数が伸びない」原因は実験データの読み取りにあります。岡山県の過去問から頻出テーマをピックアップ。
+              </p>
+</div>
+<div class="pt-space-xs flex items-center gap-1 text-secondary font-label-sm text-label-sm font-bold">
+<span class="">続きを読む</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</div>
+</div>
+</a>
+</div>
+<!-- Mobile Button for Article List -->
+<div class="md:hidden flex justify-center pt-space-xs">
+<a class="w-full py-space-sm bg-surface-container text-primary font-label-md text-label-md rounded-lg text-center font-bold" data-path="news" href="#">
+          記事一覧へ戻る
+        </a>
 </div>
 </div>
 </section>
-<!-- Support Contact & Navigation Actions Section -->
-<section class="w-full bg-surface-container-low py-space-2xl border-t border-outline-variant/30">
-<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-<div class="p-space-xl rounded-2xl bg-surface-container-lowest shadow-[0_2px_12px_-2px_rgba(0,0,0,0.04)] flex flex-col lg:flex-row lg:items-center justify-between gap-space-xl">
-<div class="flex flex-col gap-space-2xs max-w-xl">
-<span class="font-label-sm text-label-sm text-primary font-bold tracking-wider">SUPPORT &amp; INQUIRY</span>
-<div class="font-headline-md text-headline-md text-on-surface font-bold">
-            規約・個人情報に関するご質問やご相談
-          </div>
-<p class="font-body-sm text-body-sm text-on-surface-variant">
-            岡山県統一模擬試験における受験データのお取り扱いや、各種規約について不明な点がございましたら、事務局までお気軽にお問い合わせください。
-          </p>
-</div>
-<div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-space-md">
-<a class="inline-flex items-center justify-center gap-space-xs px-space-lg py-space-sm bg-primary-container text-on-primary rounded-lg font-label-md text-label-md shadow-sm hover:bg-primary transition-colors text-center" data-path="inquiry" href="#">
-<span class="material-symbols-outlined text-[20px]">mail</span>
-<span>Webからのお問い合わせ</span>
-</a>
-<a class="inline-flex items-center justify-center gap-space-xs px-space-lg py-space-sm bg-surface-container-high text-on-surface rounded-lg font-label-md text-label-md hover:bg-surface-container-highest transition-colors text-center" data-path="home" href="#">
-<span class="material-symbols-outlined text-[18px]">arrow_back</span>
-<span>おかもし トップへ戻る</span>
-</a>
-</div>
-</div>
-</div>
-</section>
-</div></main><footer class="w-full bg-surface-container-low mt-space-4xl shadow-[0_-1px_6px_rgba(0,0,0,0.02)]"><div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-space-3xl pb-space-2xl"><div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl pb-space-2xl"><div class="lg:col-span-5 flex flex-col gap-space-md"><div class="flex items-center gap-space-xs"><div class="w-9 h-9 rounded-lg bg-primary-container flex items-center justify-center text-on-primary"><span class="material-symbols-outlined text-[20px]">school</span></div><span class="font-headline-sm text-headline-sm text-on-surface font-bold">岡山県統一模擬試験 <span class="text-primary">おかもし</span></span></div><p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">岡山県内最大規模の高校入試模擬試験。県立高校合格判定、公立独自問題対策から志望校内順位まで、40年の指導ノウハウで確かな診断データをお届けします。</p><div class="flex flex-col gap-space-2xs text-on-surface-variant font-body-sm text-body-sm"><div class="font-label-md text-label-md text-on-surface font-bold">中央教育研究所株式会社 岡山県統一模擬試験実行委員会</div><div>〒700-0822 岡山県岡山市北区表町1丁目5-1</div><div class="flex flex-wrap gap-x-space-md gap-y-space-2xs pt-space-2xs"><span>TEL: 086-224-3321</span><span>E-mail: info@okamoshi.jp</span></div></div><div class="flex items-center gap-space-sm pt-space-xs"><a aria-label="公式LINE" class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:bg-primary-container hover:text-on-primary transition-colors" href="#"><span class="material-symbols-outlined text-[18px]">chat</span></a><a aria-label="公式X" class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:bg-primary-container hover:text-on-primary transition-colors" href="#"><span class="material-symbols-outlined text-[18px]">forum</span></a><a aria-label="公式YouTube" class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:bg-primary-container hover:text-on-primary transition-colors" href="#"><span class="material-symbols-outlined text-[18px]">smart_display</span></a></div></div><div class="lg:col-span-4 flex flex-col gap-space-sm"><div class="font-label-lg text-label-lg text-on-surface font-bold tracking-wide">コンテンツ案内</div><ul class="grid grid-cols-1 sm:grid-cols-2 gap-space-xs font-body-md text-body-md"><li class="py-space-2xs"><a class="text-on-surface-variant hover:text-on-surface transition-colors flex items-center gap-space-2xs" data-path="exam-details" href="../lp/code.html#features-section"><span class="material-symbols-outlined text-primary text-[16px]">chevron_right</span>各模試を見る</a></li><li class="py-space-2xs"><a class="text-on-surface-variant hover:text-on-surface transition-colors flex items-center gap-space-2xs" data-path="partner-schools" href="../_1/code.html"><span class="material-symbols-outlined text-primary text-[16px]">chevron_right</span>実施塾一覧</a></li><li class="py-space-2xs"><a class="text-on-surface-variant hover:text-on-surface transition-colors flex items-center gap-space-2xs" data-path="annual-schedule" href="../lp/code.html#schedule-table"><span class="material-symbols-outlined text-primary text-[16px]">chevron_right</span>日程・会場情報</a></li><li class="py-space-2xs"><a class="text-on-surface-variant hover:text-on-surface transition-colors flex items-center gap-space-2xs" data-path="news-and-blog" href="#"><span class="material-symbols-outlined text-primary text-[16px]">chevron_right</span>お知らせ・コラム</a></li><li class="py-space-2xs"><a class="text-on-surface-variant hover:text-on-surface transition-colors flex items-center gap-space-2xs" data-path="privacy-policy" href="../_3/code.html"><span class="material-symbols-outlined text-primary text-[16px]">chevron_right</span>プライバシーポリシー</a></li><li class="py-space-2xs"><a class="text-on-surface-variant hover:text-on-surface transition-colors flex items-center gap-space-2xs" data-path="legal-notice" href="../_2/code.html"><span class="material-symbols-outlined text-primary text-[16px]">chevron_right</span>特定商取引法に基づく表記</a></li></ul></div><div class="lg:col-span-3 flex flex-col justify-between gap-space-md"><div class="p-space-lg rounded-xl bg-surface-container-lowest shadow-[0_2px_8px_-2px_rgba(38,38,38,0.04)] flex flex-col gap-space-sm"><div class="font-label-lg text-label-lg text-on-surface font-bold">学習塾・教育関係者様</div><p class="font-body-sm text-body-sm text-on-surface-variant">団体受験のお申込み、貴塾での会場実施、過去問題・教材のご相談はこちらから承っております。</p><a class="inline-flex items-center justify-center gap-space-xs px-space-md py-space-sm rounded-lg bg-primary-container text-on-primary font-label-md text-label-md hover:bg-primary transition-colors text-center" data-path="juku-inquiry" href="mailto:info@okamoshi.jp"><span class="material-symbols-outlined text-[18px]">business</span><span>塾関係者様 お問い合わせ</span></a></div></div></div><div class="pt-space-lg flex flex-col sm:flex-row items-center justify-between gap-space-sm font-body-sm text-body-sm text-on-surface-variant"><div class="flex flex-wrap gap-space-md text-body-sm"><a class="hover:text-on-surface transition-colors" data-path="terms-of-service" href="#">利用規約</a><a class="hover:text-on-surface transition-colors" data-path="site-map" href="#">サイトマップ</a><a class="hover:text-on-surface transition-colors" data-path="inquiry" href="#">一般お問い合わせ</a></div><p class="font-body-sm text-body-sm">© Okayama Mock Examination Executive Committee. All rights reserved.</p></div></div></footer></body></html>
+</div></main><footer class="w-full bg-[#f6f3f2] text-[#1c1b1f] border-t border-[#e8e5e4] pt-8 pb-8"><div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8"><div class="grid grid-cols-1 md:grid-cols-12 gap-10 border-b border-[#e2dedd] pb-8"><div class="md:col-span-6 space-y-6"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-lg bg-[#2d5a46] flex items-center justify-center text-white shadow-sm"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"></path></svg></div><div><span class="block text-xs font-bold tracking-wider text-[#2d5a46]">岡山県統一模擬試験（おかもし）</span></div></div><div class="text-xs text-[#49454f] space-y-1.5 leading-relaxed"><p class="font-medium text-[#1c1b1f]">主催：中央教育研究所株式会社 岡山県統一模擬試験実行委員会</p><p class="">住所：広島県広島市中区八丁堀15番6号 広島ちゅうぎんビル3階</p><p class="">TEL：082-227-3999</p><p class="">MAIL：okayamamoshi@chuoh-kyouiku.co.jp</p></div><div class="flex items-center gap-2 pt-1"><span class="text-xs text-[#49454f]">公式SNS:</span><a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-xs text-[#2d5a46] hover:underline font-medium"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"></path></svg>公式Instagram</a></div><div class="pt-2"><div class="flex items-center gap-1.5 text-xs font-bold text-[#1c1b1f] mb-2.5"><svg class="w-3.5 h-3.5 text-[#2d5a46]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>お問い合わせ</div><div class="flex flex-wrap gap-2.5"><a href="javascript:void(0)" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-white border border-[#2d5a46]/30 text-[#2d5a46] text-xs font-bold hover:bg-[#2d5a46]/5 transition shadow-sm"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>塾・学校関係者様</a><a href="javascript:void(0)" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-white border border-[#2d5a46]/30 text-[#2d5a46] text-xs font-bold hover:bg-[#2d5a46]/5 transition shadow-sm"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>個人申込の方</a></div></div></div><div class="md:col-span-6 grid grid-cols-2 gap-8 text-xs"><div><h4 class="font-bold text-[#1c1b1f] mb-3">模試情報</h4><ul class="space-y-2 text-[#49454f]"><li class=""><a href="javascript:void(0)" class="hover:text-[#2d5a46] transition">次回模試実施要項</a></li><li class=""><a href="javascript:void(0)" class="hover:text-[#2d5a46] transition">年間スケジュール</a></li><li class=""><a href="javascript:void(0)" class="hover:text-[#2d5a46] transition">適性検査・高校模試詳細</a></li></ul></div><div><h4 class="font-bold text-[#1c1b1f] mb-3">ご案内・手続き</h4><ul class="space-y-2 text-[#49454f]"><li class=""><a href="javascript:void(0)" class="hover:text-[#2d5a46] transition">提携学習塾一覧</a></li><li class=""><a href="javascript:void(0)" class="hover:text-[#2d5a46] transition">個人受験のお申込み</a></li></ul><h4 class="font-bold text-[#1c1b1f] mt-5 mb-3">規約・運営</h4><ul class="space-y-2 text-[#49454f]"><li class=""><a href="javascript:void(0)" class="hover:text-[#2d5a46] transition">プライバシーポリシー</a></li><li class=""><a href="javascript:void(0)" class="hover:text-[#2d5a46] transition">特定商取引法に基づく表記</a></li><li class=""><a href="javascript:void(0)" class="hover:text-[#2d5a46] transition">お知らせ・更新情報</a></li></ul></div></div></div><div class="pt-8 text-center text-xs text-[#79747e]"><p class="">© Okayama Unified Mock Examination Executive Committee. All rights reserved.</p></div></div></footer>
+
+</body></html>

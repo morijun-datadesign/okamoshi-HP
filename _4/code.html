@@ -1,568 +1,621 @@
-<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{width:100vw;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}
-
-
-
-/* Explicit max-w-6xl layout width enforcement */
-.max-w-6xl {
-  max-width: 72rem !important; /* 1152px */
-  margin-left: auto !important;
-  margin-right: auto !important;
-  width: 100% !important;
-  box-sizing: border-box !important;
-}
-
-</style><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">tailwind.config = {
-  darkMode: "class",
-  theme: {
-    extend: {
-      colors: {
-        "outline": "#717973",
-        "on-primary-container": "#9fcfb6",
-        "surface-bright": "#fcf9f8",
-        "on-surface": "#1b1c1c",
-        "surface": "#fcf9f8",
-        "surface-container-lowest": "#ffffff",
-        "on-secondary": "#ffffff",
-        "on-tertiary-container": "#f1bd5a",
-        "secondary-container": "#fe8357",
-        "inverse-on-surface": "#f3f0ef",
-        "on-error-container": "#93000a",
-        "outline-variant": "#c0c9c2",
-        "surface-container-highest": "#e4e2e1",
-        "on-tertiary-fixed-variant": "#5e4200",
-        "primary-fixed-dim": "#a1d1b8",
-        "error": "#ba1a1a",
-        "surface-tint": "#3a6752",
-        "on-secondary-fixed-variant": "#822801",
-        "inverse-primary": "#a1d1b8",
-        "on-tertiary": "#ffffff",
-        "tertiary": "#4f3600",
-        "secondary-fixed-dim": "#ffb59c",
-        "surface-variant": "#e4e2e1",
-        "background": "#fcf9f8",
-        "secondary": "#a23e18",
-        "on-primary-fixed": "#002114",
-        "surface-container": "#f0eded",
-        "primary": "#134230",
-        "surface-container-low": "#f6f3f2",
-        "inverse-surface": "#303030",
-        "on-primary": "#ffffff",
-        "secondary-fixed": "#ffdbcf",
-        "on-primary-fixed-variant": "#224f3c",
-        "primary-container": "#2d5a46",
-        "error-container": "#ffdad6",
-        "on-secondary-fixed": "#390c00",
-        "on-surface-variant": "#414944",
-        "primary-fixed": "#bceed3",
-        "on-error": "#ffffff",
-        "on-background": "#1b1c1c",
-        "on-secondary-container": "#6f2000",
-        "tertiary-fixed": "#ffdea7",
-        "tertiary-container": "#6c4c00",
-        "surface-dim": "#dcd9d9",
-        "tertiary-fixed-dim": "#f2be5b",
-        "surface-container-high": "#eae7e7",
-        "on-tertiary-fixed": "#271900"
-      },
-      borderRadius: {
-        "DEFAULT": "0.25rem",
-        "lg": "0.5rem",
-        "xl": "0.75rem",
-        "full": "9999px"
-      },
-      spacing: {
-        "gutter-desktop": "1.5rem",
-        "space-2xs": "0.25rem",
-        "space-lg": "1.5rem",
-        "space-2xl": "3rem",
-        "space-sm": "0.75rem",
-        "space-3xl": "4.5rem",
-        "space-xs": "0.5rem",
-        "space-md": "1rem",
-        "gutter-mobile": "1rem",
-        "space-xl": "2rem",
-        "space-4xl": "6rem",
-        "container-max": "75rem"
-      },
-      fontFamily: {
-        "label-md": ["Plus Jakarta Sans", "Noto Sans JP", "sans-serif"],
-        "label-lg": ["Plus Jakarta Sans", "Noto Sans JP", "sans-serif"],
-        "headline-md": ["Plus Jakarta Sans", "Noto Sans JP", "sans-serif"],
-        "headline-lg": ["Plus Jakarta Sans", "Noto Sans JP", "sans-serif"],
-        "body-md": ["Noto Sans JP", "sans-serif"],
-        "headline-xl": ["Plus Jakarta Sans", "Noto Sans JP", "sans-serif"],
-        "headline-xl-mobile": ["Plus Jakarta Sans", "Noto Sans JP", "sans-serif"],
-        "body-lg": ["Noto Sans JP", "sans-serif"],
-        "body-sm": ["Noto Sans JP", "sans-serif"],
-        "label-sm": ["Plus Jakarta Sans", "Noto Sans JP", "sans-serif"],
-        "headline-sm": ["Plus Jakarta Sans", "Noto Sans JP", "sans-serif"],
-        "headline-lg-mobile": ["Plus Jakarta Sans", "Noto Sans JP", "sans-serif"]
-      }
-    }
-  }
-};</script></head><body class="bg-surface font-body-md text-body-md text-on-surface flex flex-col min-h-screen selection:bg-secondary-fixed selection:text-secondary"><header class="sticky top-0 w-full z-50 bg-surface-container-lowest/95 backdrop-blur-md border-b border-outline-variant/30 shadow-sm"><div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-20 px-gutter-desktop flex items-center justify-between"><div class="flex items-center gap-8"><a class="flex items-center gap-3 group" data-path="exam-home" href="../lp/code.html"><div class="w-11 h-11 rounded-xl bg-primary flex items-center justify-center text-on-primary shadow-sm group-hover:bg-primary-container transition-colors"><span class="font-headline-md text-headline-md font-extrabold tracking-tight">岡</span></div><div class="flex flex-col"><div class="flex items-baseline gap-2"><span class="font-headline-md text-[20px] text-primary font-bold tracking-tight">おかもし</span><span class="font-label-sm text-[11px] bg-primary/10 text-primary-container font-bold px-2 py-0.5 rounded-full">岡山県統一模擬試験</span></div><span class="font-body-sm text-[11px] text-on-surface-variant">岡山県最大規模・公立高校入試完全準拠Web受付</span></div></a><nav class="hidden lg:flex items-center gap-6 text-on-surface font-label-md"><a class="hover:text-primary-container transition-colors py-2" data-path="exam-schedule" href="../lp/code.html#next-exam">次回模試・日程</a><a class="hover:text-primary-container transition-colors py-2" data-path="exam-features" href="../lp/code.html#features-section">模試の特長</a><a class="hover:text-primary-container transition-colors py-2" data-path="exam-schools" href="../_1/code.html">参加塾一覧</a><a class="hover:text-primary-container transition-colors py-2" data-path="exam-faq" href="../lp/code.html#features-section">よくある質問</a></nav></div><div class="flex items-center gap-4"><div class="hidden md:flex flex-col items-end"><span class="font-label-sm text-[11px] text-on-surface-variant flex items-center gap-1"><span class="material-symbols-outlined text-[14px] text-primary-container">support_agent</span>お申込み相談・窓口</span><span class="font-headline-sm text-headline-sm font-bold text-primary">086-224-8111</span></div><a class="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-xl bg-secondary text-on-secondary font-label-md hover:bg-secondary-container transition-colors shadow-sm shadow-secondary/20" data-path="exam-application" href="#examOptionGroup"><span class="material-symbols-outlined text-[18px]">edit_note</span><span class="font-bold">Webお申込み</span></a><div class="w-9 h-9 rounded-full bg-surface-container text-on-surface flex items-center justify-center"><span class="material-symbols-outlined text-[20px]">person</span></div></div></div></header><main class="flex flex-col relative w-full pt-16 pb-28 bg-surface"><div class="w-full flex flex-col"><!-- Desktop Subheader & Breadcrumbs --><div class="w-full bg-surface-container-low border-b border-outline-variant/20 py-4 px-gutter-desktop"><div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row md:items-center md:justify-between gap-3"><div class="flex flex-col gap-1"><div class="flex items-center gap-2 text-on-surface-variant font-label-sm text-[12px]"><a class="hover:text-primary transition-colors" data-path="exam-home" href="../lp/code.html">おかもしTOP</a><span class="material-symbols-outlined text-[14px]">chevron_right</span><a class="hover:text-primary transition-colors" data-path="exam-schedule" href="../lp/code.html#next-exam">日程・お申込み</a><span class="material-symbols-outlined text-[14px]">chevron_right</span><span class="text-primary font-bold">Webエントリー</span></div><h1 class="font-headline-lg text-headline-lg font-bold text-primary tracking-tight">模試Webお申込みフォーム</h1><p class="font-body-md text-on-surface-variant text-[14px]">岡山県統一模擬試験（中学生）および岡山県立中学適性検査対策模試（小6）のオンラインエントリー</p></div><div class="flex items-center gap-3 bg-surface-container-lowest px-4 py-2.5 rounded-xl border border-outline-variant/30 shadow-2xs"><span class="material-symbols-outlined text-primary-container text-[24px]">verified_user</span><div class="flex flex-col"><span class="font-label-sm text-[11px] text-on-surface-variant">所要時間：約3〜5分</span><span class="font-label-md text-primary font-bold text-[13px]">即時受験枠確保・志望校判定対応</span></div></div></div></div><!-- Desktop Step Progress Bar --><div class="w-full bg-surface-container-lowest border-b border-outline-variant/20 py-5 px-gutter-desktop shadow-2xs"><div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8"><div class="relative flex items-center justify-between"><div class="absolute left-10 right-10 top-1/2 -translate-y-1/2 h-1 bg-surface-container-highest -z-0"></div><div class="absolute left-10 w-1/4 top-1/2 -translate-y-1/2 h-1 bg-primary-container -z-0"></div><!-- Step 1 Active --><div class="flex items-center gap-3 bg-surface-container-lowest px-3 z-10"><div class="w-9 h-9 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-headline-md text-[14px] font-extrabold shadow-sm ring-4 ring-primary-fixed/40">1</div><div class="flex flex-col"><span class="font-label-md font-bold text-primary-container text-[14px]">STEP 1 情報入力</span><span class="font-body-sm text-[11px] text-on-surface-variant">模試・会場・生徒情報</span></div></div><!-- Step 2 Upcoming --><div class="flex items-center gap-3 bg-surface-container-lowest px-3 z-10"><div class="w-9 h-9 rounded-full bg-surface-container text-on-surface-variant flex items-center justify-center font-headline-md text-[14px] font-bold">2</div><div class="flex flex-col"><span class="font-label-md font-bold text-on-surface-variant text-[14px]">STEP 2 内容確認</span><span class="font-body-sm text-[11px] text-outline">ご入力内容の最終確認</span></div></div><!-- Step 3 Upcoming --><div class="flex items-center gap-3 bg-surface-container-lowest px-3 z-10"><div class="w-9 h-9 rounded-full bg-surface-container text-on-surface-variant flex items-center justify-center font-headline-md text-[14px] font-bold">3</div><div class="flex flex-col"><span class="font-label-md font-bold text-on-surface-variant text-[14px]">STEP 3 完了</span><span class="font-body-sm text-[11px] text-outline">エントリー完了・受験番号発行</span></div></div></div></div></div><!-- Main Responsive 2-Column Application Container --><div class="max-w-5xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8"><form class="flex flex-col gap-8" id="applicationForm" onsubmit="event.preventDefault(); alert('入力内容確認画面へ進みます');"><div class="flex flex-col gap-6"><!-- Banner Card --><div class="rounded-xl overflow-hidden border border-outline-variant/30 shadow-sm bg-surface-container-lowest flex flex-col md:flex-row items-center"><div class="relative w-full md:w-56 h-36 shrink-0 overflow-hidden bg-primary-container"><img alt="おかもし申込みフォーム案内" class="w-full h-full object-cover object-top opacity-85 hover:opacity-95 transition-opacity mix-blend-luminosity" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsG1S4x8ArFQVInvhFDJjhJyqgIqEszAV-OnmYHZBDKyapafyLWOaBkiVq8LYoR7WrumQLDgsXe6KlEINRe8YaxrdPXuwlp7rVmTQgLN7pFh3ze3UIgdyDlcQkQh6ASMgF_RgZb7frm8VLn80amjoZ-sWdDW6QrIztsshvlyVlrbakegCWGuTa5YBUeGJFX1fdijOBTBIjkc5Qa6BeO85sgnwTIPTZlB8S1v2CnT670iYD9raDvbMiHe9sxD03U5rlMw"><div class="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-primary via-primary/40 to-transparent flex items-end md:items-center p-4"><span class="font-label-sm text-[11px] bg-secondary px-2.5 py-1 rounded-full text-on-secondary font-bold shadow-sm">公式エントリー受付中</span></div></div><div class="p-4 flex-1 flex flex-col justify-center gap-1"><h3 class="font-headline-sm text-headline-sm font-bold text-primary">岡山県統一模擬試験 受検枠をWebでスピード確保</h3><p class="font-body-sm text-[13px] text-on-surface-variant">会場受験・自宅受験のどちらも選択可能。志望校合格可能性判定および科目別詳細分析表をお届けします。</p></div></div><!-- SECTION 1: 希望模試・受験形式の選択 --><div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30 shadow-sm flex flex-col gap-6"><div class="flex items-center justify-between pb-3 border-b border-surface-container"><div class="flex items-center gap-2"><span class="w-7 h-7 rounded-md bg-primary-container text-on-primary flex items-center justify-center font-label-md font-bold text-[13px]">1</span><h2 class="font-headline-md text-[20px] font-bold text-primary">希望模試・受験形式の選択</h2></div><span class="font-label-sm text-[12px] text-on-surface-variant">複数模試の一括申込みが可能です</span></div><div class="flex flex-col gap-5"><!-- STEP 1-1: 学年選択 --><div class="flex flex-col gap-2"><div class="flex items-center justify-between"><label class="font-label-md text-label-md text-on-surface font-bold flex items-center gap-2"><span class="w-5 h-5 rounded-full bg-primary/10 text-primary flex items-center justify-center text-[11px] font-extrabold">①</span>STEP 1-1 まず学年を選択してください</label><span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span></div><div class="grid grid-cols-3 gap-3"><label class="flex flex-col items-center justify-center p-3 rounded-xl bg-surface-container-low border border-outline-variant/20 cursor-pointer hover:bg-surface-container transition-all text-center has-[:checked]:bg-primary-fixed/40 has-[:checked]:border-primary-container has-[:checked]:ring-2 has-[:checked]:ring-primary-container"><input class="sr-only" name="filter_grade" type="radio" value="elem6"><span class="font-headline-md text-headline-md font-extrabold text-on-surface leading-tight">小6</span><span class="font-label-sm text-[11px] text-on-surface-variant mt-1">適性検査対策</span></label><label class="flex flex-col items-center justify-center p-3 rounded-xl bg-surface-container-low border border-outline-variant/20 cursor-pointer hover:bg-surface-container transition-all text-center has-[:checked]:bg-primary-fixed/40 has-[:checked]:border-primary-container has-[:checked]:ring-2 has-[:checked]:ring-primary-container"><input class="sr-only" name="filter_grade" type="radio" value="jh12"><span class="font-headline-md text-headline-md font-extrabold text-on-surface leading-tight">中1・2</span><span class="font-label-sm text-[11px] text-on-surface-variant mt-1">基礎・実力診断</span></label><label class="flex flex-col items-center justify-center p-3 rounded-xl bg-surface-container-low border border-outline-variant/20 cursor-pointer hover:bg-surface-container transition-all text-center has-[:checked]:bg-primary-fixed/40 has-[:checked]:border-primary-container has-[:checked]:ring-2 has-[:checked]:ring-primary-container"><input checked="" class="sr-only" name="filter_grade" type="radio" value="jh3"><span class="font-headline-md text-headline-md font-extrabold text-primary-container leading-tight">中3</span><span class="font-label-sm text-[10px] bg-secondary text-on-secondary px-2 py-0.5 rounded-full font-bold mt-1">高校入試・人気</span></label></div></div><!-- STEP 1-2: 対象模試の選択 --><div class="flex flex-col gap-3 pt-3 border-t border-surface-container/60"><div class="flex items-center justify-between"><label class="font-label-md text-label-md text-on-surface font-bold flex items-center gap-2"><span class="w-5 h-5 rounded-full bg-primary/10 text-primary flex items-center justify-center text-[11px] font-extrabold">②</span>STEP 1-2 お申込み模試と受験会場の選択（複数選択可）</label><span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span></div><div class="flex flex-col gap-3" id="examOptionGroup">
-  <!-- 中3生用 模試選択肢 -->
-  <div id="examGroup-jh3" class="flex flex-col gap-3">
-    <!-- Card 1: 8月号 -->
-    <div class="exam-card relative flex flex-col p-4 rounded-xl bg-surface-container-low border-2 border-primary-container shadow-sm gap-3" data-grade="jh3" data-name="8月号 岡山県統一模擬試験" data-price="5500" data-date="8/23(日)">
-      <label class="flex items-start justify-between gap-3 cursor-pointer">
-        <div class="flex items-start gap-3 flex-1">
-          <input checked="" class="exam-checkbox mt-1 w-5 h-5 text-primary-container accent-primary-container rounded shrink-0" name="exam_selection" value="jh3_8" type="checkbox">
-          <div class="flex flex-col">
-            <div class="flex items-center gap-2 mb-1">
-              <span class="bg-primary text-on-primary font-label-sm text-[11px] px-2 py-0.5 rounded-full font-bold">中3対象</span>
-              <span class="bg-secondary text-on-secondary font-label-sm text-[10px] px-2 py-0.5 rounded-full font-bold">人気・おすすめ</span>
-            </div>
-            <span class="font-headline-sm text-[16px] font-bold text-on-surface leading-snug">岡山県統一模擬試験 8月号</span>
-            <div class="flex items-center gap-4 mt-1 text-on-surface-variant font-body-sm text-[13px] flex-wrap">
-              <span>実施日: <strong class="text-primary font-bold">8/23(日)</strong></span>
-              <span>申込締切: <strong class="text-secondary font-bold">8/16(日)</strong></span>
-            </div>
-          </div>
-        </div>
-        <div class="flex flex-col items-end shrink-0">
-          <span class="font-headline-sm text-[18px] font-extrabold text-primary-container">¥5,500</span>
-          <span class="font-body-sm text-[11px] text-on-surface-variant">税込</span>
-        </div>
-      </label>
-      <div class="venue-row pt-3 border-t border-outline-variant/30 grid grid-cols-1 md:grid-cols-12 gap-2 items-center">
-        <label class="md:col-span-4 font-label-sm text-[12px] font-bold text-primary-container flex items-center gap-1">
-          <span class="material-symbols-outlined text-[16px]">apartment</span>受験方法・希望会場
-        </label>
-        <div class="md:col-span-8 relative">
-          <select class="venue-select w-full h-11 pl-3 pr-9 bg-surface-container-lowest text-on-surface rounded-lg font-body-sm text-body-sm appearance-none border border-outline-variant/40 focus:outline-none focus:ring-2 focus:ring-primary-container shadow-2xs">
-            <option selected="" value="岡山会場（岡山大学 津島キャンパス）">岡山会場（会場受験 - 岡山大学 津島キャンパス / 山陽学園）</option>
-            <option value="倉敷会場（倉敷商工会議所）">倉敷会場（会場受験 - 倉敷商工会議所）</option>
-            <option value="津山会場（美作大学）">津山会場（会場受験 - 美作大学）</option>
-            <option value="自宅受験（問題冊子郵送）">自宅受験（問題冊子郵送・期日内答案返送）</option>
-          </select>
-          <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant text-[18px]">expand_more</span>
-        </div>
+<!DOCTYPE html><html lang="ja" style=""><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{width:100vw;margin:0;padding:0;}body{overscroll-behavior:none;font-family:'Noto Sans JP',sans-serif;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "secondary-container": "#fe8357", "on-error-container": "#93000a", "inverse-on-surface": "#f3f0ef", "on-secondary-container": "#6f2000", "surface-container-highest": "#e4e2e1", "on-primary-fixed": "#002114", "primary-fixed-dim": "#a1d1b8", "tertiary-fixed-dim": "#f2be5b", "on-background": "#1b1c1c", "surface-bright": "#fcf9f8", "primary": "#134230", "tertiary-container": "#6c4c00", "on-tertiary-fixed-variant": "#5e4200", "tertiary-fixed": "#ffdea7", "surface-container-low": "#f6f3f2", "surface-container": "#f0eded", "on-primary-fixed-variant": "#224f3c", "error-container": "#ffdad6", "on-secondary-fixed-variant": "#822801", "on-secondary-fixed": "#390c00", "surface-container-lowest": "#ffffff", "on-primary-container": "#9fcfb6", "on-surface": "#1b1c1c", "tertiary": "#4f3600", "surface-dim": "#dcd9d9", "on-tertiary-container": "#f1bd5a", "surface": "#fcf9f8", "secondary": "#a23e18", "secondary-fixed-dim": "#ffb59c", "on-secondary": "#ffffff", "secondary-fixed": "#ffdbcf", "surface-tint": "#3a6752", "on-tertiary": "#ffffff", "error": "#ba1a1a", "inverse-primary": "#a1d1b8", "surface-container-high": "#eae7e7", "on-surface-variant": "#414944", "primary-fixed": "#bceed3", "background": "#fcf9f8", "on-primary": "#ffffff", "outline-variant": "#c0c9c2", "on-error": "#ffffff", "surface-variant": "#e4e2e1", "primary-container": "#2d5a46", "inverse-surface": "#303030", "on-tertiary-fixed": "#271900", "outline": "#717973" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "space-2xl": "3rem", "space-md": "1rem", "space-xl": "2rem", "space-xs": "0.5rem", "space-4xl": "6rem", "space-lg": "1.5rem", "gutter-desktop": "1.5rem", "space-sm": "0.75rem", "container-max": "75rem", "space-2xs": "0.25rem", "space-3xl": "4.5rem", "gutter-mobile": "1rem" }, fontFamily: { "headline-xl": ["Plus Jakarta Sans", "Noto Sans JP"], "label-sm": ["Plus Jakarta Sans", "Noto Sans JP"], "label-lg": ["Plus Jakarta Sans", "Noto Sans JP"], "headline-md": ["Plus Jakarta Sans", "Noto Sans JP"], "headline-sm": ["Plus Jakarta Sans", "Noto Sans JP"], "headline-lg-mobile": ["Plus Jakarta Sans", "Noto Sans JP"], "label-md": ["Plus Jakarta Sans", "Noto Sans JP"], "headline-xl-mobile": ["Plus Jakarta Sans", "Noto Sans JP"], "body-sm": ["Noto Sans", "Noto Sans JP"], "body-md": ["Noto Sans", "Noto Sans JP"], "headline-lg": ["Plus Jakarta Sans", "Noto Sans JP"], "body-lg": ["Noto Sans", "Noto Sans JP"] }, fontSize: { "headline-xl": ["40px", { "lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "label-sm": ["11px", { "lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "700" }], "label-lg": ["15px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "600" }], "headline-md": ["22px", { "lineHeight": "32px", "letterSpacing": "0", "fontWeight": "600" }], "headline-sm": ["18px", { "lineHeight": "28px", "letterSpacing": "0", "fontWeight": "600" }], "headline-lg-mobile": ["24px", { "lineHeight": "34px", "letterSpacing": "0", "fontWeight": "700" }], "label-md": ["13px", { "lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "600" }], "headline-xl-mobile": ["30px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }], "body-sm": ["12px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "400" }], "body-md": ["14px", { "lineHeight": "24px", "letterSpacing": "0.01em", "fontWeight": "400" }], "headline-lg": ["32px", { "lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "700" }], "body-lg": ["16px", { "lineHeight": "28px", "letterSpacing": "0.015em", "fontWeight": "400" }] } } } };</script></head><body class="bg-surface text-on-surface flex flex-col min-h-screen selection:bg-primary-fixed selection:text-on-primary-fixed"><header class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-xl shadow-[0_1px_12px_rgba(19,66,48,0.06)] pt-safe"><div class="h-16 px-gutter-mobile flex items-center justify-between gap-space-sm"><div class="flex items-center gap-space-xs"><button aria-label="前の画面へ戻る" class="w-11 h-11 flex items-center justify-center rounded-full text-on-surface hover:bg-surface-container-low transition-colors" onclick="history.back()" type="button"><span class="material-symbols-outlined text-[22px]">arrow_back</span></button><a class="flex items-center gap-space-xs select-none" href="#"><div class="w-9 h-9 rounded-lg bg-primary flex items-center justify-center shadow-[0_2px_6px_rgba(19,66,48,0.18)]"><span class="material-symbols-outlined text-primary-fixed text-[22px]">school</span></div><div class="flex flex-col justify-center leading-tight"><span class="font-label-sm text-label-sm text-on-surface-variant font-medium tracking-tight">岡山県統一模擬試験</span><span class="font-headline-sm text-headline-sm text-primary font-bold tracking-tight">おかもし</span></div></a></div><div class="flex items-center gap-space-2xs"><a aria-label="お問い合わせ" class="w-11 h-11 flex items-center justify-center rounded-full text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors" href="#"><span class="material-symbols-outlined text-[22px]">mail</span></a><button aria-label="メニューを開く" class="w-11 h-11 flex items-center justify-center rounded-full text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors" type="button"><span class="material-symbols-outlined text-[24px]">menu</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shadow-sm ml-space-2xs"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div><div class="px-gutter-mobile pb-space-xs hidden"><h1 class="font-label-md text-label-md text-on-surface font-semibold truncate">Blog Post Detail</h1></div></header><main class="flex flex-col relative w-full pt-16 bg-surface"><div class="flex flex-col w-full">
+<!-- Reading Progress Bar (Fixed beneath header) -->
+<div class="sticky top-16 z-40 w-full bg-surface-container-high h-1">
+<div class="bg-secondary h-1 w-0 transition-all duration-150" id="read-progress"></div>
+</div>
+<article class="w-full px-gutter-mobile space-y-space-lg pt-space-md">
+<!-- 1. Breadcrumbs -->
+<nav aria-label="パンくずリスト" class="w-full overflow-x-auto">
+<ol class="flex items-center gap-space-2xs text-body-sm font-body-sm text-outline whitespace-nowrap">
+<li class="">
+<a class="hover:text-primary transition-colors flex items-center gap-1" href="#">
+<span class="material-symbols-outlined text-[16px]">home</span>
+<span class="">TOP</span>
+</a>
+</li>
+<li class=""><span class="material-symbols-outlined text-[14px]">chevron_right</span></li>
+<li class="">
+<a class="hover:text-primary transition-colors" href="#">お知らせ・ブログ一覧</a>
+</li>
+<li class=""><span class="material-symbols-outlined text-[14px]">chevron_right</span></li>
+<li class="text-on-surface font-medium truncate max-w-[160px]">
+          【岡山県の高校受験】合格への近道はここにある！先輩受験生が語る「おかもし」活用法
+        </li>
+</ol>
+</nav>
+<!-- 2. Article Header -->
+<header class="space-y-space-sm">
+<!-- Category Badges & Meta -->
+<div class="flex flex-wrap items-center gap-space-2xs">
+<span class="inline-flex items-center px-space-xs py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm font-bold">
+          入試・受験情報
+        </span>
+<span class="inline-flex items-center px-space-xs py-0.5 rounded-full bg-surface-container-high text-primary font-label-sm text-label-sm font-bold">
+          合格体験記・模試活用
+        </span>
+</div>
+<!-- Dates -->
+<div class="flex items-center gap-space-md font-label-sm text-label-sm text-outline">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]">calendar_today</span>
+          2026.07.30 公開
+        </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]">update</span>
+          2026.08.10 更新
+        </span>
+</div>
+<!-- Main Headline -->
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary font-bold leading-tight">
+        【岡山県の高校受験】合格への近道はここにある！先輩受験生が語る「おかもし」活用法
+      </h1>
+<!-- Lead Paragraph -->
+<div class="p-space-md rounded-xl bg-surface-container-low text-on-surface-variant font-body-md text-body-md leading-relaxed shadow-sm">
+        岡山県公立高校入試を突破するために最も重要なのは、<strong>「県内固有の出題形式への徹底適応」</strong>と<strong>「内申点を含めた正確な相対位置の把握」</strong>です。県下最大規模の受験者数を誇る「おかもし（岡山県統一模擬試験）」を活用して見事志望校合格を勝ち取った先輩たちの声とともに、模試を120%活かしきる実践的な学習法を詳しく解説します。
       </div>
-    </div>
+<!-- Hero Eyecatch Image with Caption -->
+<div class="space-y-space-2xs pt-space-2xs">
+<div class="relative w-full rounded-xl overflow-hidden shadow-sm aspect-[16/10] bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Japanese junior high school students wearing neat navy school uniforms studying earnestly with notebooks and test papers in a warm sunlight-filled classroom in Okayama, academic natural atmosphere, peaceful focus, candid documentary photography with moss-green and terracotta undertones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCb3jGp3_QpEPecJ7XYSJYvezQyGPbUX-J3rSeElt7vPhRT_maY1wZyl0SsiG3GHBzy05EUq6Dj09ozTNjaFvKnb7VrJusgFZL6XGgMO4TQWj0WrqYAICKtvjOGnlLoLJfKujN6rH1hP01tseSv7xGrQ4G5XhExUWEacQDQF5Ok02NWz3H_BTNcqDDkBCS7mc1OQnL9oOV8XeLgQGSiLxJHNYdPrtLBKiUfDUgKQn8ysMKtWlWy0G-V">
+<div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-primary/90 via-primary/50 to-transparent p-space-sm pt-space-lg">
+<span class="inline-flex items-center gap-1 text-on-primary font-label-sm text-label-sm font-semibold tracking-wider">
+<span class="material-symbols-outlined text-[16px] text-tertiary-fixed">analytics</span>
+              岡山県高校入試 徹底分析レポート
+            </span>
+</div>
+</div>
+<p class="font-label-sm text-label-sm text-outline text-right pr-1">写真：模試本番を想定した演習に取り組む岡山県内の受験生</p>
+</div>
+</header>
+<!-- 3. Next Exam Inline Banner Card -->
 
-    <!-- Card 2: 10月号 -->
-    <div class="exam-card relative flex flex-col p-4 rounded-xl bg-surface-container-low border-2 border-primary-container shadow-sm gap-3" data-grade="jh3" data-name="10月号 岡山県統一模擬試験" data-price="5500" data-date="11/1(日)">
-      <label class="flex items-start justify-between gap-3 cursor-pointer">
-        <div class="flex items-start gap-3 flex-1">
-          <input checked="" class="exam-checkbox mt-1 w-5 h-5 text-primary-container accent-primary-container rounded shrink-0" name="exam_selection" value="jh3_10" type="checkbox">
-          <div class="flex flex-col">
-            <div class="flex items-center gap-2 mb-1">
-              <span class="bg-primary text-on-primary font-label-sm text-[11px] px-2 py-0.5 rounded-full font-bold">中3対象</span>
-              <span class="bg-secondary text-on-secondary font-label-sm text-[10px] px-2 py-0.5 rounded-full font-bold">次回模試</span>
+<!-- 4. Table of Contents Accordion -->
+<details class="group rounded-xl bg-surface-container-low p-space-md shadow-sm open:pb-space-md" open="">
+<summary class="flex items-center justify-between cursor-pointer list-none select-none">
+<span class="flex items-center gap-space-xs font-headline-sm text-headline-sm text-primary font-bold">
+<span class="material-symbols-outlined text-[22px] text-primary">format_list_bulleted</span>
+          この記事の目次
+        </span>
+<span class="material-symbols-outlined text-outline transition-transform duration-200 group-open:rotate-180">
+          expand_more
+        </span>
+</summary>
+<ol class="mt-space-sm space-y-2 font-body-sm text-body-sm text-on-surface border-t-0 pt-space-xs">
+<li class="">
+<a class="flex items-start gap-2 p-2 rounded hover:bg-surface-container transition-colors text-primary font-medium" href="#sec-01">
+<span class="w-5 h-5 rounded-full bg-primary-fixed text-primary font-bold text-[11px] flex items-center justify-center shrink-0 mt-0.5">01</span>
+<span class="">岡山県公立高校入試の出題傾向と「おかもし」の完全合致</span>
+</a>
+</li>
+<li class="">
+<a class="flex items-start gap-2 p-2 rounded hover:bg-surface-container transition-colors text-primary font-medium" href="#sec-02">
+<span class="w-5 h-5 rounded-full bg-primary-fixed text-primary font-bold text-[11px] flex items-center justify-center shrink-0 mt-0.5">02</span>
+<span class="">通知表評価点（内申点）を加味した志望校合否判定の仕組み</span>
+</a>
+</li>
+<li class="">
+<a class="flex items-start gap-2 p-2 rounded hover:bg-surface-container transition-colors text-primary font-medium" href="#sec-03">
+<span class="w-5 h-5 rounded-full bg-primary-fixed text-primary font-bold text-[11px] flex items-center justify-center shrink-0 mt-0.5">03</span>
+<span class="">先輩たちの生の声：会場受験で培った本番力</span>
+</a>
+</li>
+<li class="">
+<a class="flex items-start gap-2 p-2 rounded hover:bg-surface-container transition-colors text-primary font-medium" href="#sec-04">
+<span class="w-5 h-5 rounded-full bg-primary-fixed text-primary font-bold text-[11px] flex items-center justify-center shrink-0 mt-0.5">04</span>
+<span class="">模試を受けた後の復習が合否を分ける！「解答解説」の徹底活用</span>
+</a>
+</li>
+</ol>
+</details>
+<!-- 5. Body Sections -->
+<div class="space-y-space-2xl text-on-surface">
+<!-- SECTION 01 -->
+<section class="space-y-space-md" id="sec-01">
+<div class="space-y-space-2xs">
+<span class="font-label-sm text-label-sm text-secondary font-bold tracking-widest uppercase">Chapter 01</span>
+<h2 class="font-headline-md text-headline-md text-primary font-bold leading-tight">
+            岡山県公立高校入試の出題傾向と「おかもし」の完全合致
+          </h2>
+</div>
+<p class="font-body-md text-body-md text-on-surface leading-relaxed">
+          岡山県の公立高校一般入試は、国語の作文記述、数学の証明問題・空間図形、理科の実験手順考察、英語の長文対話文など、<strong>全国的にも独自色の強い思考力重視の設問構成</strong>が特徴です。市販の一般的な全国共通模試ではカバーしきれない地域特有の傾向を、おかもし作問チームは過去40年以上にわたり精緻にトレースしています。
+        </p>
+<!-- 2 Big Feature Cards (Mobile Stack) -->
+<div class="space-y-space-sm">
+<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm space-y-space-2xs">
+<div class="w-9 h-9 rounded-lg bg-primary-fixed flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">military_tech</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-primary font-bold">
+              岡山5校（朝日・操山・芳泉・一宮・城東）完全対策
+            </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+              難関上位校のボーダーライン選抜で差がつく長文記述設問や高難度思考問題の配点を忠実に再現。部分点採点基準も公立入試開示基準に準拠しています。
+            </p>
+</div>
+<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm space-y-space-2xs">
+<div class="w-9 h-9 rounded-lg bg-secondary-fixed flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[20px]">groups</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-primary font-bold">
+              県内母集団の圧倒的な規模と信頼度
+            </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+              県内の主要進学塾・公立生が数千名規模で同時受験。母集団の偏りが極小なため、偏差値・順位が本番の一般入試序列に極めて肉薄します。
+            </p>
+</div>
+</div>
+<!-- Highlight Numbers Metric Grid -->
+<div class="grid grid-cols-3 gap-2 bg-surface-container-low p-space-sm rounded-xl">
+<div class="text-center bg-surface-container-lowest py-space-sm px-1 rounded-lg shadow-sm">
+<span class="block font-label-sm text-label-sm text-outline">形式一致率</span>
+<span class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary">98.4<span class="text-label-sm">%</span></span>
+<span class="block font-label-sm text-label-sm text-on-surface-variant">公立入試準拠</span>
+</div>
+<div class="text-center bg-surface-container-lowest py-space-sm px-1 rounded-lg shadow-sm">
+<span class="block font-label-sm text-label-sm text-outline">蓄積分析</span>
+<span class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary">40<span class="text-label-sm">年+</span></span>
+<span class="block font-label-sm text-label-sm text-on-surface-variant">入試ビッグデータ</span>
+</div>
+<div class="text-center bg-surface-container-lowest py-space-sm px-1 rounded-lg shadow-sm">
+<span class="block font-label-sm text-label-sm text-outline">県内連携</span>
+<span class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-secondary">200<span class="text-label-sm">校舎</span></span>
+<span class="block font-label-sm text-label-sm text-on-surface-variant">会場ネットワーク</span>
+</div>
+</div>
+</section>
+<!-- SECTION 02 -->
+<section class="space-y-space-md" id="sec-02">
+<div class="space-y-space-2xs">
+<span class="font-label-sm text-label-sm text-secondary font-bold tracking-widest uppercase">Chapter 02</span>
+<h2 class="font-headline-md text-headline-md text-primary font-bold leading-tight">
+            通知表評価点（内申点）を加味した志望校合否判定の仕組み
+          </h2>
+</div>
+<p class="font-body-md text-body-md text-on-surface leading-relaxed">
+          岡山県公立高校入試の最大の特徴は、<strong>「調査書の内申点（各学年評価の合算）」と「当日の学力検査得点」を掛け合わせた相関判定</strong>が行われる点です。テストの得点が高くても内申点が足りない場合、あるいはその逆のケースでも、合否ラインは大きく変動します。
+        </p>
+<!-- 3 Correlation Points List -->
+<div class="space-y-space-xs">
+<div class="flex items-start gap-space-sm p-space-sm rounded-xl bg-surface-container-lowest shadow-sm">
+<div class="w-7 h-7 rounded-full bg-primary text-on-primary font-bold font-label-sm text-label-sm flex items-center justify-center shrink-0">
+              1
             </div>
-            <span class="font-headline-sm text-[16px] font-bold text-on-surface leading-snug">岡山県統一模擬試験 10月号</span>
-            <div class="flex items-center gap-4 mt-1 text-on-surface-variant font-body-sm text-[13px] flex-wrap">
-              <span>実施日: <strong class="text-primary font-bold">11/1(日)</strong></span>
-              <span>申込締切: <strong class="text-secondary font-bold">10/25(日)</strong></span>
+<div class="space-y-1">
+<h4 class="font-label-lg text-label-lg text-primary font-bold">中1〜中3調査書評価点の正確入力</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                模試申込時に通知表評価を入力することで、岡山県教育委員会が公表する内申点換算ルール（特別活動等の加味含む）に基づき忠実に算出します。
+              </p>
+</div>
+</div>
+<div class="flex items-start gap-space-sm p-space-sm rounded-xl bg-surface-container-lowest shadow-sm">
+<div class="w-7 h-7 rounded-full bg-primary text-on-primary font-bold font-label-sm text-label-sm flex items-center justify-center shrink-0">
+              2
             </div>
-          </div>
-        </div>
-        <div class="flex flex-col items-end shrink-0">
-          <span class="font-headline-sm text-[18px] font-extrabold text-primary-container">¥5,500</span>
-          <span class="font-body-sm text-[11px] text-on-surface-variant">税込</span>
-        </div>
-      </label>
-      <div class="venue-row pt-3 border-t border-outline-variant/30 grid grid-cols-1 md:grid-cols-12 gap-2 items-center">
-        <label class="md:col-span-4 font-label-sm text-[12px] font-bold text-primary-container flex items-center gap-1">
-          <span class="material-symbols-outlined text-[16px]">mail</span>受験方法・希望会場
-        </label>
-        <div class="md:col-span-8 relative">
-          <select class="venue-select w-full h-11 pl-3 pr-9 bg-surface-container-lowest text-on-surface rounded-lg font-body-sm text-body-sm appearance-none border border-outline-variant/40 focus:outline-none focus:ring-2 focus:ring-primary-container shadow-2xs">
-            <option value="岡山会場（岡山大学 津島キャンパス）">岡山会場（会場受験 - 岡山大学 津島キャンパス）</option>
-            <option value="倉敷会場（倉敷商工会議所）">倉敷会場（会場受験 - 倉敷商工会議所）</option>
-            <option value="津山会場（美作大学）">津山会場（会場受験 - 美作大学）</option>
-            <option selected="" value="自宅受験（問題冊子郵送）">自宅受験（問題冊子郵送・期日内答案返送）</option>
-          </select>
-          <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant text-[18px]">expand_more</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Card 3: 12月号 -->
-    <div class="exam-card relative flex flex-col p-4 rounded-xl bg-surface-container-low border border-outline-variant/30 hover:border-outline-variant/60 shadow-2xs gap-3" data-grade="jh3" data-name="12月号 岡山県統一模擬試験" data-price="5500" data-date="12/27(日)">
-      <label class="flex items-start justify-between gap-3 cursor-pointer">
-        <div class="flex items-start gap-3 flex-1">
-          <input class="exam-checkbox mt-1 w-5 h-5 text-primary-container accent-primary-container rounded shrink-0" name="exam_selection" value="jh3_12" type="checkbox">
-          <div class="flex flex-col">
-            <div class="flex items-center gap-2 mb-1">
-              <span class="bg-surface-container-high text-on-surface-variant font-label-sm text-[11px] px-2 py-0.5 rounded-full font-bold">中3対象</span>
+<div class="space-y-1">
+<h4 class="font-label-lg text-label-lg text-primary font-bold">マトリクス相関図上の「現在地」特定</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                個人成績表に印字される「相関図グラフ」により、志望校を受験予定のライバルたちの中で自分がどの領域（安全圏・第1選考ゾーン・当落線上）に位置するか一目瞭然です。
+              </p>
+</div>
+</div>
+<div class="flex items-start gap-space-sm p-space-sm rounded-xl bg-surface-container-lowest shadow-sm">
+<div class="w-7 h-7 rounded-full bg-primary text-on-primary font-bold font-label-sm text-label-sm flex items-center justify-center shrink-0">
+              3
             </div>
-            <span class="font-headline-sm text-[16px] font-bold text-on-surface leading-snug">岡山県統一模擬試験 12月号</span>
-            <div class="flex items-center gap-4 mt-1 text-on-surface-variant font-body-sm text-[13px] flex-wrap">
-              <span>実施日: <strong class="text-on-surface">12/27(日)</strong></span>
-              <span>申込締切: <strong class="text-secondary">12/14(月)</strong></span>
-            </div>
-          </div>
-        </div>
-        <div class="flex flex-col items-end shrink-0">
-          <span class="font-headline-sm text-[18px] font-bold text-on-surface-variant">¥5,500</span>
-          <span class="font-body-sm text-[11px] text-on-surface-variant">税込</span>
-        </div>
-      </label>
-      <div class="venue-row pt-3 border-t border-outline-variant/20 grid grid-cols-1 md:grid-cols-12 gap-2 items-center opacity-50">
-        <label class="md:col-span-4 font-label-sm text-[12px] font-bold text-on-surface-variant flex items-center gap-1">
-          <span class="material-symbols-outlined text-[16px]">apartment</span>受験方法・希望会場
-        </label>
-        <div class="md:col-span-8 relative">
-          <select class="venue-select w-full h-11 pl-3 pr-9 bg-surface-container-low text-on-surface-variant rounded-lg font-body-sm text-body-sm appearance-none border border-outline-variant/30 focus:outline-none" disabled="">
-            <option value="岡山会場（岡山大学 津島キャンパス）">岡山会場（会場受験 - 岡山大学 津島キャンパス）</option>
-            <option value="倉敷会場（倉敷商工会議所）">倉敷会場（会場受験 - 倉敷商工会議所）</option>
-            <option value="津山会場（美作大学）">津山会場（会場受験 - 美作大学）</option>
-            <option value="自宅受験（問題冊子郵送）">自宅受験（問題冊子郵送・期日内答案返送）</option>
-          </select>
-          <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant text-[18px]">expand_more</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 中1・2生用 模試選択肢 -->
-  <div id="examGroup-jh12" class="flex flex-col gap-3 hidden">
-    <!-- Card: 中1・2 12月号 -->
-    <div class="exam-card relative flex flex-col p-4 rounded-xl bg-surface-container-low border-2 border-primary-container shadow-sm gap-3" data-grade="jh12" data-name="12月号 岡山県統一模擬試験（中1・2生）" data-price="4400" data-date="12/6(日)">
-      <label class="flex items-start justify-between gap-3 cursor-pointer">
-        <div class="flex items-start gap-3 flex-1">
-          <input class="exam-checkbox mt-1 w-5 h-5 text-primary-container accent-primary-container rounded shrink-0" name="exam_selection" value="jh12_12" type="checkbox">
-          <div class="flex flex-col">
-            <div class="flex items-center gap-2 mb-1">
-              <span class="bg-primary text-on-primary font-label-sm text-[11px] px-2 py-0.5 rounded-full font-bold">中1・2生対象</span>
-              <span class="bg-secondary text-on-secondary font-label-sm text-[10px] px-2 py-0.5 rounded-full font-bold">次回模試</span>
-            </div>
-            <span class="font-headline-sm text-[16px] font-bold text-on-surface leading-snug">岡山県統一模擬試験 12月号（中1・2生）</span>
-            <div class="flex items-center gap-4 mt-1 text-on-surface-variant font-body-sm text-[13px] flex-wrap">
-              <span>実施日: <strong class="text-primary font-bold">12/6(日)</strong></span>
-              <span>申込締切: <strong class="text-secondary font-bold">11/24(火)</strong></span>
-            </div>
-            <p class="text-xs text-on-surface-variant mt-1 leading-relaxed">教科書準拠の基礎・標準問題で現時点の高校入試実力を診断。弱点克服に最適です。</p>
-          </div>
-        </div>
-        <div class="flex flex-col items-end shrink-0">
-          <span class="font-headline-sm text-[18px] font-extrabold text-primary-container">¥4,400</span>
-          <span class="font-body-sm text-[11px] text-on-surface-variant">税込</span>
-        </div>
-      </label>
-      <div class="venue-row pt-3 border-t border-outline-variant/30 grid grid-cols-1 md:grid-cols-12 gap-2 items-center">
-        <label class="md:col-span-4 font-label-sm text-[12px] font-bold text-primary-container flex items-center gap-1">
-          <span class="material-symbols-outlined text-[16px]">apartment</span>受験方法・希望会場
-        </label>
-        <div class="md:col-span-8 relative">
-          <select class="venue-select w-full h-11 pl-3 pr-9 bg-surface-container-lowest text-on-surface rounded-lg font-body-sm text-body-sm appearance-none border border-outline-variant/40 focus:outline-none focus:ring-2 focus:ring-primary-container shadow-2xs">
-            <option selected="" value="岡山会場（岡山大学 津島キャンパス）">岡山会場（会場受験 - 岡山大学 津島キャンパス）</option>
-            <option value="倉敷会場（倉敷商工会議所）">倉敷会場（会場受験 - 倉敷商工会議所）</option>
-            <option value="津山会場（美作大学）">津山会場（会場受験 - 美作大学）</option>
-            <option value="自宅受験（問題冊子郵送）">自宅受験（問題冊子郵送・期日内答案返送）</option>
-          </select>
-          <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant text-[18px]">expand_more</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 小6生用 模試選択肢（適性検査対策模試） -->
-  <div id="examGroup-elem6" class="flex flex-col gap-3 hidden">
-    <!-- Card: 小6 適性検査 10月号 -->
-    <div class="exam-card relative flex flex-col p-4 rounded-xl bg-surface-container-low border-2 border-primary-container shadow-sm gap-3" data-grade="elem6" data-name="10月号 岡山県適性検査対策模試（小6生）" data-price="5500" data-date="10/24(土)〜11/1(日)">
-      <label class="flex items-start justify-between gap-3 cursor-pointer">
-        <div class="flex items-start gap-3 flex-1">
-          <input class="exam-checkbox mt-1 w-5 h-5 text-primary-container accent-primary-container rounded shrink-0" name="exam_selection" value="elem6_10" type="checkbox">
-          <div class="flex flex-col">
-            <div class="flex items-center gap-2 mb-1">
-              <span class="bg-primary text-on-primary font-label-sm text-[11px] px-2 py-0.5 rounded-full font-bold">小6生対象</span>
-              <span class="bg-secondary text-on-secondary font-label-sm text-[10px] px-2 py-0.5 rounded-full font-bold">次回・大人気</span>
-            </div>
-            <span class="font-headline-sm text-[16px] font-bold text-on-surface leading-snug">小6生対象 岡山県適性検査対策模試 10月号</span>
-            <div class="flex items-center gap-4 mt-1 text-on-surface-variant font-body-sm text-[13px] flex-wrap">
-              <span>実施期間: <strong class="text-primary font-bold">10/24(土)〜11/1(日) (会場実施日: 11/1(日))</strong></span>
-              <span>申込締切: <strong class="text-secondary font-bold">10/13(火)</strong></span>
-            </div>
-            <p class="text-xs text-on-surface-variant mt-1 leading-relaxed">岡山大安寺・岡山操山・天城・津山中受検の完全対策。適性Ⅰ・適性Ⅱの思考力・記述力を判定。</p>
-          </div>
-        </div>
-        <div class="flex flex-col items-end shrink-0">
-          <span class="font-headline-sm text-[18px] font-extrabold text-primary-container">¥5,500</span>
-          <span class="font-body-sm text-[11px] text-on-surface-variant">税込</span>
-        </div>
-      </label>
-      <div class="venue-row pt-3 border-t border-outline-variant/30 grid grid-cols-1 md:grid-cols-12 gap-2 items-center">
-        <label class="md:col-span-4 font-label-sm text-[12px] font-bold text-primary-container flex items-center gap-1">
-          <span class="material-symbols-outlined text-[16px]">apartment</span>受験方法・希望会場
-        </label>
-        <div class="md:col-span-8 relative">
-          <select class="venue-select w-full h-11 pl-3 pr-9 bg-surface-container-lowest text-on-surface rounded-lg font-body-sm text-body-sm appearance-none border border-outline-variant/40 focus:outline-none focus:ring-2 focus:ring-primary-container shadow-2xs">
-            <option selected="" value="山陽学園中学校（会場受験 11/1）">山陽学園中学校（会場受験 - 2026年11月1日(日)実施）</option>
-            <option value="自宅受験（問題冊子郵送）">自宅受験（問題冊子郵送・10/24〜11/1実施・期日内答案返送）</option>
-          </select>
-          <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant text-[18px]">expand_more</span>
-        </div>
-      </div>
-    </div>
-  </div>
+<div class="space-y-1">
+<h4 class="font-label-lg text-label-lg text-primary font-bold">当日必要得点の「逆転合格シミュレーション」</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                「今の内申点なら本番の学力検査で何点取れば合格圏に入るか」を明確な数値目標として提示。あと何点伸ばすべきかが具体化します。
+              </p>
 </div>
 </div>
 </div>
-<!-- SECTION 2: 受験生情報 --><div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30 shadow-sm flex flex-col gap-6"><div class="flex items-center gap-2 pb-3 border-b border-surface-container"><span class="w-7 h-7 rounded-md bg-primary-container text-on-primary flex items-center justify-center font-label-md font-bold text-[13px]">2</span><h2 class="font-headline-md text-[20px] font-bold text-primary">受験生情報</h2></div><div class="grid grid-cols-1 md:grid-cols-2 gap-5"><!-- 学年 --><div class="flex flex-col gap-1.5 md:col-span-2"><div class="flex items-center justify-between"><label class="font-label-md text-label-md text-on-surface font-bold" for="studentGrade">学年</label><span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span></div><div class="relative"><select class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-body-md border border-outline-variant/30 appearance-none focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="studentGrade" required=""><option disabled="" value="">選択してください</option><option selected="" value="jh3">中学3年生</option><option value="jh2">中学2年生</option><option value="jh1">中学1年生</option><option value="elem6">小学6年生</option></select><span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant">expand_more</span></div></div><!-- 生徒氏名 --><div class="flex flex-col gap-1.5"><div class="flex items-center justify-between"><span class="font-label-md text-label-md text-on-surface font-bold">生徒氏名（漢字）</span><span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span></div><div class="grid grid-cols-2 gap-3"><div><input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-body-md border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" placeholder="姓（例: 岡山）" required="" type="text"></div><div><input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-body-md border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" placeholder="名（例: 太郎）" required="" type="text"></div></div></div><!-- 生徒氏名フリガナ --><div class="flex flex-col gap-1.5"><div class="flex items-center justify-between"><span class="font-label-md text-label-md text-on-surface font-bold">生徒氏名（フリガナ）</span><span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span></div><div class="grid grid-cols-2 gap-3"><div><input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-body-md border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" placeholder="セイ（例: オカヤマ）" required="" type="text"></div><div><input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-body-md border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" placeholder="メイ（例: タロウ）" required="" type="text"></div></div></div><!-- 性別 --><div class="flex flex-col gap-1.5 md:col-span-2"><div class="flex items-center justify-between"><span class="font-label-md text-label-md text-on-surface font-bold">性別</span><span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span></div><div class="grid grid-cols-3 gap-3"><label class="flex items-center justify-center gap-2 h-11 rounded-lg bg-surface-container-low border border-outline-variant/30 text-on-surface cursor-pointer has-[:checked]:bg-primary-fixed/40 has-[:checked]:border-primary-container transition-colors"><input checked="" class="w-4 h-4 text-primary-container accent-primary-container" name="gender" type="radio" value="male"><span class="font-label-md text-label-md">男性</span></label><label class="flex items-center justify-center gap-2 h-11 rounded-lg bg-surface-container-low border border-outline-variant/30 text-on-surface cursor-pointer has-[:checked]:bg-primary-fixed/40 has-[:checked]:border-primary-container transition-colors"><input class="w-4 h-4 text-primary-container accent-primary-container" name="gender" type="radio" value="female"><span class="font-label-md text-label-md">女性</span></label><label class="flex items-center justify-center gap-2 h-11 rounded-lg bg-surface-container-low border border-outline-variant/30 text-on-surface cursor-pointer has-[:checked]:bg-primary-fixed/40 has-[:checked]:border-primary-container transition-colors"><input class="w-4 h-4 text-primary-container accent-primary-container" name="gender" type="radio" value="no_answer"><span class="font-label-md text-label-md text-[13px]">回答しない</span></label></div></div><!-- 在籍校名 --><div class="flex flex-col gap-1.5 md:col-span-2"><div class="flex items-center justify-between"><label class="font-label-md text-label-md text-on-surface font-bold" for="currentSchool">在籍中学校・小学校名</label><span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span></div><input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-body-md border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="currentSchool" placeholder="例: 岡山市立操南中学校" required="" type="text"></div></div></div><!-- SECTION 3: 保護者・ご連絡先情報 --><div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30 shadow-sm flex flex-col gap-6"><div class="flex items-center gap-2 pb-3 border-b border-surface-container"><span class="w-7 h-7 rounded-md bg-primary-container text-on-primary flex items-center justify-center font-label-md font-bold text-[13px]">3</span><h2 class="font-headline-md text-[20px] font-bold text-primary">保護者・ご連絡先情報</h2></div><div class="grid grid-cols-1 md:grid-cols-2 gap-5"><!-- 保護者氏名 --><div class="flex flex-col gap-1.5 md:col-span-2"><div class="flex items-center justify-between"><span class="font-label-md text-label-md text-on-surface font-bold">保護者氏名</span><span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span></div><div class="grid grid-cols-2 gap-3"><div><input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-body-md border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" placeholder="保護者 姓" required="" type="text"></div><div><input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-body-md border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" placeholder="保護者 名" required="" type="text"></div></div></div><!-- メールアドレス --><div class="flex flex-col gap-1.5"><div class="flex items-center justify-between"><label class="font-label-md text-label-md text-on-surface font-bold" for="parentEmail">メールアドレス</label><span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span></div><input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-body-md border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="parentEmail" placeholder="example@domain.com" required="" type="email"><p class="font-body-sm text-[11px] text-on-surface-variant flex items-center gap-1"><span class="material-symbols-outlined text-[14px] text-primary-container">info</span>携帯キャリアメール非推奨</p></div><!-- メールアドレス確認 --><div class="flex flex-col gap-1.5"><div class="flex items-center justify-between"><label class="font-label-md text-label-md text-on-surface font-bold" for="parentEmailConfirm">メールアドレス（確認用）</label><span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span></div><input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-body-md border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="parentEmailConfirm" placeholder="もう一度ご入力ください" required="" type="email"></div><!-- 電話番号 --><div class="flex flex-col gap-1.5 md:col-span-2"><div class="flex items-center justify-between"><label class="font-label-md text-label-md text-on-surface font-bold" for="parentTel">電話番号（日中連絡先）</label><span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span></div><input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-body-md border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="parentTel" placeholder="09012345678（ハイフンなし可）" required="" type="tel"></div><!-- 郵便番号 + 自動入力ボタン --><div class="flex flex-col gap-1.5"><div class="flex items-center justify-between"><label class="font-label-md text-label-md text-on-surface font-bold" for="postalCode">郵便番号</label><span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span></div><div class="flex gap-2"><input class="flex-1 h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-body-md border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="postalCode" maxlength="8" placeholder="7000822" required="" type="text"><button class="px-4 h-11 bg-primary hover:bg-primary-container text-on-primary font-label-sm text-label-sm rounded-lg transition-colors shadow-sm shrink-0 flex items-center gap-1" onclick="fillMockAddress()" type="button"><span class="material-symbols-outlined text-[16px]">location_searching</span>住所自動入力</button></div></div><!-- 都道府県 --><div class="flex flex-col gap-1.5"><div class="flex items-center justify-between"><label class="font-label-md text-label-md text-on-surface font-bold" for="prefecture">都道府県</label><span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span></div><div class="relative"><select class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-body-md border border-outline-variant/30 appearance-none focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="prefecture" required=""><option selected="" value="okayama">岡山県</option><option value="hiroshima">広島県</option><option value="kagawa">香川県</option><option value="hyogo">兵庫県</option><option value="tottori">鳥取県</option><option value="other">その他都道府県</option></select><span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant">expand_more</span></div></div><!-- 市区町村・番地 --><div class="flex flex-col gap-1.5 md:col-span-2"><div class="flex items-center justify-between"><label class="font-label-md text-label-md text-on-surface font-bold" for="addressLine1">市区町村・番地</label><span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span></div><input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-body-md border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="addressLine1" placeholder="例: 岡山市北区表町1丁目5-1" required="" type="text"></div><!-- 建物名・部屋番号 --><div class="flex flex-col gap-1.5 md:col-span-2"><div class="flex items-center justify-between"><label class="font-label-md text-label-md text-on-surface font-bold" for="addressLine2">建物名・部屋番号</label><span class="bg-surface-container-high text-on-surface-variant font-label-sm text-[10px] px-2 py-0.5 rounded-full font-bold">任意</span></div><input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-body-md border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="addressLine2" placeholder="例: 岡山教育ビル 3F" type="text"></div></div></div><!-- SECTION 4: お支払い方法の選択 --><div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30 shadow-sm flex flex-col gap-6"><div class="flex items-center gap-2 pb-3 border-b border-surface-container"><span class="w-7 h-7 rounded-md bg-primary-container text-on-primary flex items-center justify-center font-label-md font-bold text-[13px]">4</span><h2 class="font-headline-md text-[20px] font-bold text-primary">お支払い方法の選択</h2></div><div class="grid grid-cols-1 md:grid-cols-2 gap-4"><!-- クレジットカード決済 --><label class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/30 cursor-pointer hover:bg-surface-container flex flex-col justify-between gap-3 transition-all has-[:checked]:bg-primary-fixed/40 has-[:checked]:border-primary-container has-[:checked]:ring-1 has-[:checked]:ring-primary-container"><div class="flex items-center justify-between"><div class="flex items-center gap-2"><input checked="" class="w-4 h-4 text-primary-container accent-primary-container shrink-0" name="payment_method" type="radio" value="credit_card"><div class="flex flex-col"><span class="font-label-md font-bold text-on-surface text-[15px]">クレジットカード決済</span><span class="font-body-sm text-[11px] text-primary-container font-bold">即時決済・決済手数料 0円</span></div></div><span class="material-symbols-outlined text-primary-container text-[24px]">credit_card</span></div><div class="flex items-center gap-1.5 pl-6 text-on-surface-variant font-label-sm text-[11px]"><span class="px-2 py-0.5 bg-surface-container-lowest border border-outline-variant/30 rounded font-bold text-[10px]">VISA</span><span class="px-2 py-0.5 bg-surface-container-lowest border border-outline-variant/30 rounded font-bold text-[10px]">Mastercard</span><span class="px-2 py-0.5 bg-surface-container-lowest border border-outline-variant/30 rounded font-bold text-[10px]">JCB</span><span class="px-2 py-0.5 bg-surface-container-lowest border border-outline-variant/30 rounded font-bold text-[10px]">AMEX</span></div></label><!-- コンビニ決済 --><label class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/30 cursor-pointer hover:bg-surface-container flex flex-col justify-between gap-3 transition-all has-[:checked]:bg-primary-fixed/40 has-[:checked]:border-primary-container has-[:checked]:ring-1 has-[:checked]:ring-primary-container"><div class="flex items-center justify-between"><div class="flex items-center gap-2"><input class="w-4 h-4 text-primary-container accent-primary-container shrink-0" name="payment_method" type="radio" value="convenience_store"><div class="flex flex-col"><span class="font-label-md font-bold text-on-surface text-[15px]">コンビニ決済</span><span class="font-body-sm text-[11px] text-on-surface-variant">6日以内にお支払い（手数料はお客様負担）</span></div></div><span class="material-symbols-outlined text-tertiary-container text-[24px]">storefront</span></div><div class="flex items-center gap-1.5 pl-6 text-on-surface-variant font-label-sm text-[11px] flex-wrap"><span class="px-2 py-0.5 bg-surface-container-lowest border border-outline-variant/30 rounded text-[10px]">セブンイレブン</span><span class="px-2 py-0.5 bg-surface-container-lowest border border-outline-variant/30 rounded text-[10px]">ファミリーマート</span><span class="px-2 py-0.5 bg-surface-container-lowest border border-outline-variant/30 rounded text-[10px]">ローソン</span></div></label></div></div></div><!-- SUMMARY CARD --><div class="flex flex-col gap-4"><div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/30 shadow-md flex flex-col gap-5"><div class="flex items-center justify-between pb-3 border-b border-surface-container"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-primary-container text-[22px]">receipt_long</span><h3 class="font-headline-sm text-headline-sm font-bold text-primary">お申し込みサマリー</h3></div><span class="font-label-sm text-[11px] bg-primary-fixed text-on-primary-fixed font-bold px-2.5 py-0.5 rounded-full">中3 高校入試対策</span></div><!-- Itemized Selection --><div class="flex flex-col gap-3"><span id="sidebar-selected-count" class="font-label-sm text-[12px] text-on-surface-variant font-bold">選択中の模試（2回分）</span><div id="sidebar-itemized-list" class="flex flex-col gap-2 bg-surface-container-low p-4 rounded-lg border border-outline-variant/20"></div></div></div><!-- Calculation --><div class="flex flex-col gap-2 pt-2 border-t border-surface-container">
-  <div class="flex items-center justify-between text-[13px] text-on-surface-variant">
-    <span>小計（税抜）</span>
-    <span id="sidebar-subtotal">¥10,000</span>
-  </div>
-  <div class="flex items-center justify-between text-[13px] text-on-surface-variant">
-    <span>消費税（10%）</span>
-    <span id="sidebar-tax">¥1,000</span>
-  </div>
-  <div class="flex items-baseline justify-between pt-3 border-t border-outline-variant/30 text-primary-container">
-    <span class="font-bold text-on-surface text-[15px]">お支払い合計</span>
-    <div class="flex items-baseline gap-1">
-      <span id="sidebar-total" class="font-headline-lg text-headline-lg font-extrabold">¥11,000</span>
-      <span class="text-[12px] font-bold">(税込)</span>
-    </div>
-  </div>
-</div><!-- Terms & Agreements --><div class="pt-2 flex flex-col gap-2"><label class="flex items-start gap-2.5 cursor-pointer select-none text-[13px] text-on-surface leading-relaxed p-3 rounded-lg bg-surface-container-low"><input checked="" class="mt-0.5 w-4 h-4 text-primary-container accent-primary-container shrink-0 rounded focus:ring-primary-container" id="agreeTermsSticky" required="" type="checkbox"><span class=""><a class="text-primary-container font-bold underline hover:text-primary" data-path="privacy-policy" href="#">「個人情報の取扱い」</a>および<a class="text-primary-container font-bold underline hover:text-primary" data-path="commercial-transactions" href="#">「特定商取引法表記」</a>に同意する</span></label></div><!-- CTA Button --><button class="w-full py-4 rounded-xl bg-secondary hover:bg-secondary-container text-on-secondary font-headline-sm text-headline-sm font-extrabold tracking-wide shadow-md shadow-secondary/20 transition-all flex items-center justify-center gap-2 active:scale-[0.99]" type="submit"><span class="">入力内容の確認へ進む</span><span class="material-symbols-outlined text-[20px]">arrow_forward</span></button><a class="w-full py-1 text-center text-on-surface-variant hover:text-primary font-label-sm text-[12px] transition-colors" data-path="exam-home" href="../lp/code.html">← お申込みをやり直す（トップへ）</a></div><!-- Trust & Help Box --><div class="bg-surface-container-low rounded-xl p-4 border border-outline-variant/30 flex flex-col md:flex-row md:items-center md:justify-between gap-3"><div class="flex items-center gap-2 text-on-surface-variant text-[12px]"><span class="material-symbols-outlined text-primary-container text-[18px]">lock</span><span class="">SSL 256bit 暗号化通信で保護されています</span></div><div class="flex flex-col gap-0.5"><span class="font-label-sm text-[11px] text-on-surface-variant">お申込みに関するお問い合わせ・キャンセル規定</span><a class="font-bold text-primary hover:underline text-[14px] flex items-center gap-1" href="tel:086-224-8111"><span class="material-symbols-outlined text-[16px]">call</span>086-224-8111（平日 10:00〜18:00）</a></div></div></div></div></form></div></div><script>
-  function fillMockAddress() {
-    var zipInput = document.getElementById('postalCode');
-    var addressInput = document.getElementById('addressLine1');
-    if (zipInput && addressInput) {
-      zipInput.value = '700-0822';
-      addressInput.value = '岡山市北区表町1丁目5-1';
-      addressInput.focus();
-    }
-  }
-
-  (function() {
-    // Grade configurations
-    const gradeConfigs = {
-      'jh3': {
-        groupId: 'examGroup-jh3',
-        defaultSelectValue: 'jh3',
-        badgeText: '中3 高校入試対策',
-        badgeClass: 'bg-primary-fixed-dim text-on-primary-fixed'
-      },
-      'jh12': {
-        groupId: 'examGroup-jh12',
-        defaultSelectValue: 'jh2',
-        badgeText: '中1・2 基礎・実力対策',
-        badgeClass: 'bg-secondary-fixed-dim text-on-secondary-fixed'
-      },
-      'elem6': {
-        groupId: 'examGroup-elem6',
-        defaultSelectValue: 'elem6',
-        badgeText: '小6 適性検査対策',
-        badgeClass: 'bg-tertiary-fixed-dim text-on-tertiary-fixed'
-      }
-    };
-
-    function updateCardVisuals(card, isChecked) {
-      const venueRow = card.querySelector('.venue-row');
-      const venueSelect = card.querySelector('.venue-select');
-      if (isChecked) {
-        card.classList.remove('border-outline-variant/30', 'hover:border-outline-variant/60', 'shadow-2xs');
-        card.classList.add('border-2', 'border-primary-container', 'shadow-sm');
-        if (venueRow) {
-          venueRow.classList.remove('opacity-50');
-          venueRow.classList.add('border-outline-variant/30');
-          venueRow.classList.remove('border-outline-variant/20');
+<!-- One-point Advice Callout -->
+<div class="p-space-md rounded-xl bg-primary-fixed/30 text-on-primary-fixed-variant space-y-space-2xs shadow-sm">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[20px] text-primary">lightbulb</span>
+<span class="font-label-lg text-label-lg font-bold text-primary">おかもしワンポイントアドバイス</span>
+</div>
+<p class="font-body-sm text-body-sm leading-relaxed">
+            岡山県入試では、学力上位校ほど当日テストの比重が高くなる傾斜配点や独自問題を実施する場合があります。おかもしの個人成績表は、高校ごとの最新傾斜配点にも自動対応して判定を出力しています。
+          </p>
+</div>
+</section>
+<!-- SECTION 03 -->
+<section class="space-y-space-md" id="sec-03">
+<div class="space-y-space-2xs">
+<span class="font-label-sm text-label-sm text-secondary font-bold tracking-widest uppercase">Chapter 03</span>
+<h2 class="font-headline-md text-headline-md text-primary font-bold leading-tight">
+            先輩たちの生の声：会場受験で培った本番力
+          </h2>
+</div>
+<p class="font-body-md text-body-md text-on-surface leading-relaxed">
+          自宅や通い慣れた塾の教室で受けるテストと、大勢の見知らぬ受験生が集まる外部公開会場での受験では、受けるプレッシャーがまったく異なります。本番で力を発揮した先輩たちの体験談です。
+        </p>
+<!-- Testimonial Card 1 -->
+<div class="rounded-xl bg-surface-container-lowest p-space-md shadow-sm space-y-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="w-12 h-12 rounded-full overflow-hidden shrink-0 bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Close up portrait of a polite cheerful Japanese high school boy in school uniform smiling warmly against soft natural library background, candid real student aesthetic, warm earth tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0xcMfcZw4f6WBojml1EttgO-qK5HChTr6QatE2hmpe5nUN4Fe6fdGKYj4xYKzXhB6q0Td2X3WKRMlm1NpMp20LLilJ3URs_siNRjZ0Yeh79eDENrj682jW7xVkKfNthN0XFFETQ0P85b3jhqBFCQG9ys_RpTzAt3AxagiphuXqH--_fjQehXYDt0M3g8zfVt08eigBBb--YkatTW0igzqQB_snfFHccunjwoWRLd6lEQq9EevdH56">
+</div>
+<div>
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-primary text-on-primary font-bold">合格</span>
+<span class="font-headline-sm text-headline-sm font-bold text-primary">岡山朝日高校 普通科</span>
+</div>
+<p class="font-label-sm text-label-sm text-outline mt-0.5">岡山市立 桑田中出身 K.Sさん（8月・10月・12月受験）</p>
+</div>
+</div>
+<blockquote class="font-body-sm text-body-sm text-on-surface leading-relaxed bg-surface-container-low p-space-sm rounded-lg relative">
+<span class="material-symbols-outlined text-[24px] text-primary/20 absolute -top-2 left-1">format_quote</span>
+<p class="relative z-10 pt-1">
+              「いつも通っている塾の教室だとリラックスしすぎていたのですが、<strong>岡山国際交流センターの会場で受けた時、鉛筆の音や周りの気迫に圧倒されました。</strong>初回は手が震えて数学の時間配分を失敗。でもその苦い経験があったからこそ、秋以降はルーティンを決めて本番も平常心で臨めました。」
+            </p>
+</blockquote>
+</div>
+<!-- Testimonial Card 2 -->
+<div class="rounded-xl bg-surface-container-lowest p-space-md shadow-sm space-y-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="w-12 h-12 rounded-full overflow-hidden shrink-0 bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Warm smiling portrait of an authentic Japanese teenage girl wearing a smart school blazer indoors, bright natural morning light, earnest and thoughtful student demeanor" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCoPbwWhDF5hPMO5kE9cMb7e89fcGHmWI3RGXTBoFK0hzwKr60PcuKEsPNCW9IVogJmOQpVR8NW4nfsR7XEwlnhRZzp2HelSKO4csgdyj3OcE8GDScq5IZOnsOzUbVjvB3lcSfUDsrPQoYahiL82GnkMVwg5i-TNkiJ4R-xtIuEyAtjRifRFXmZ68Q1_oGi9K9BUSZUkuKINXS4glWhiPg0p_696A3HOVbgC3eC46cBbVGSmQTVS1K9">
+</div>
+<div>
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-primary text-on-primary font-bold">合格</span>
+<span class="font-headline-sm text-headline-sm font-bold text-primary">岡山芳泉高校 普通科</span>
+</div>
+<p class="font-label-sm text-label-sm text-outline mt-0.5">倉敷市立 東中出身 M.Yさん（全回フル受験）</p>
+</div>
+</div>
+<blockquote class="font-body-sm text-body-sm text-on-surface leading-relaxed bg-surface-container-low p-space-sm rounded-lg relative">
+<span class="material-symbols-outlined text-[24px] text-primary/20 absolute -top-2 left-1">format_quote</span>
+<p class="relative z-10 pt-1">
+              「秋の模試でC判定を取ってしまい落ち込みましたが、個人成績表の単元別弱点分析シートを見て<strong>『理科の天体と英語の英作文で12点落としている』</strong>ことが具体的に判明。そこだけを塾の先生と集中特訓した結果、冬にはA判定に届き、自信を持って本番に挑めました！」
+            </p>
+</blockquote>
+</div>
+</section>
+<!-- SECTION 04 -->
+<section class="space-y-space-md" id="sec-04">
+<div class="space-y-space-2xs">
+<span class="font-label-sm text-label-sm text-secondary font-bold tracking-widest uppercase">Chapter 04</span>
+<h2 class="font-headline-md text-headline-md text-primary font-bold leading-tight">
+            模試を受けた後の復習が合否を分ける！「解答解説」の徹底活用
+          </h2>
+</div>
+<p class="font-body-md text-body-md text-on-surface leading-relaxed">
+          「受けて終わり」にする受験生と、「模試を最良のテキスト」として解き直す受験生とでは、その後の2ヶ月で偏差値5以上の開きが生まれます。合格者たちが実践していた<strong>復習の黄金3ステップ</strong>を習慣化しましょう。
+        </p>
+<!-- 3 Steps Stacked Cards -->
+<div class="space-y-space-sm">
+<!-- Step 1 -->
+<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col gap-space-2xs">
+<div class="flex items-center gap-space-xs">
+<span class="px-2 py-0.5 rounded bg-secondary text-on-secondary font-label-sm text-label-sm font-bold">STEP 1</span>
+<span class="font-label-md text-label-md text-secondary font-bold">受験当日中</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-primary font-bold">自己採点と記憶が鮮明な振り返り</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+              「迷った選択肢」「時間配分が足りなくなった原因」を覚えているうちに自己採点。問題用紙にメモした解法プロセスのどこで止まったかを可視化します。
+            </p>
+</div>
+<!-- Step 2 -->
+<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col gap-space-2xs">
+<div class="flex items-center gap-space-xs">
+<span class="px-2 py-0.5 rounded bg-primary text-on-primary font-label-sm text-label-sm font-bold">STEP 2</span>
+<span class="font-label-md text-label-md text-primary font-bold">成績表返却直後</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-primary font-bold">「正答率50%以上」の失問を徹底撲滅</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+              受験者全体の正答率が高い問題（配当☆マーク付き）を落としている部分が、最優先の伸びしろです。解説集の別解・解法テクニックを熟読します。
+            </p>
+</div>
+<!-- Step 3 -->
+<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col gap-space-2xs">
+<div class="flex items-center gap-space-xs">
+<span class="px-2 py-0.5 rounded bg-tertiary-container text-on-tertiary-container font-label-sm text-label-sm font-bold">STEP 3</span>
+<span class="font-label-md text-label-md text-tertiary font-bold">模試2週間後</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-primary font-bold">間違えた問題の「自力再解答」と類題演習</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+              解答を見ずに真っ白な紙にもう一度満点が取れるか再現。さらに教科書・問題集から同パターンの類題を3問解くことで定着を盤石にします。
+            </p>
+</div>
+</div>
+</section>
+</div>
+<!-- 6. In-Article CTA Banner -->
+<section class="mt-space-2xl rounded-2xl bg-gradient-to-br from-primary via-primary-container to-primary text-on-primary p-space-lg shadow-xl space-y-space-md relative overflow-hidden">
+<div class="space-y-space-2xs">
+<span class="inline-flex items-center gap-1 px-space-xs py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-bold">
+<span class="material-symbols-outlined text-[15px]">timer</span>
+          WEB申込み受付中
+        </span>
+<h2 class="font-headline-md text-headline-md font-bold text-on-primary leading-tight">
+          中3 第3回 岡山県統一模擬試験
+        </h2>
+<p class="font-body-sm text-body-sm text-primary-fixed-dim leading-relaxed">
+          志望校確定前の最重要模試！実戦形式の5教科で真の実力を判定。公立入試本番を想定した会場で、岡山県下のライバルと競い合おう。
+        </p>
+</div>
+<div class="bg-surface-container-lowest/10 backdrop-blur-sm p-space-sm rounded-xl space-y-1 font-body-sm text-body-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-fixed text-[18px]">event</span>
+<span class="text-on-primary font-semibold">実施日：2026年10月18日(日)</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-fixed text-[18px]">location_on</span>
+<span class="text-on-primary truncate">岡山・倉敷・津山・総社各特設会場</span>
+</div>
+</div>
+<a class="w-full flex items-center justify-center gap-space-2xs py-3.5 px-space-md rounded-xl bg-secondary text-on-secondary font-label-lg text-label-lg font-bold shadow-lg hover:opacity-95 active:scale-[0.99] transition-transform" href="#">
+<span class="">模試Web申込みへ進む</span>
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</a>
+</section>
+<!-- 7. Social Share Section -->
+<section class="space-y-space-sm pt-space-md">
+<div class="flex items-center gap-2 justify-center">
+<span class="h-[1px] w-8 bg-outline-variant"></span>
+<span class="font-label-sm text-label-sm text-outline font-bold tracking-wider">この記事をシェアする</span>
+<span class="h-[1px] w-8 bg-outline-variant"></span>
+</div>
+<div class="grid grid-cols-4 gap-space-2xs">
+<button aria-label="Xでポスト" class="flex flex-col items-center justify-center gap-1 py-2.5 px-1 rounded-xl bg-surface-container hover:bg-surface-container-high transition-colors text-on-surface" type="button">
+<span class="font-bold text-[14px] leading-none">𝕏</span>
+<span class="font-label-sm text-[10px]">ポスト</span>
+</button>
+<button aria-label="LINEで送る" class="flex flex-col items-center justify-center gap-1 py-2.5 px-1 rounded-xl bg-surface-container hover:bg-surface-container-high transition-colors text-on-surface" type="button">
+<span class="material-symbols-outlined text-[18px] text-[#06C755]">chat</span>
+<span class="font-label-sm text-[10px]">LINE</span>
+</button>
+<button aria-label="シェア" class="flex flex-col items-center justify-center gap-1 py-2.5 px-1 rounded-xl bg-surface-container hover:bg-surface-container-high transition-colors text-on-surface" id="native-share-btn" type="button">
+<span class="material-symbols-outlined text-[18px] text-primary">share</span>
+<span class="font-label-sm text-[10px]">シェア</span>
+</button>
+<button aria-label="URLをコピー" class="flex flex-col items-center justify-center gap-1 py-2.5 px-1 rounded-xl bg-surface-container hover:bg-surface-container-high transition-colors text-on-surface" id="copy-url-btn" type="button">
+<span class="material-symbols-outlined text-[18px] text-outline">link</span>
+<span class="font-label-sm text-[10px]" id="copy-label">URLコピー</span>
+</button>
+</div>
+</section>
+<!-- 8. Prev / List / Next Navigation -->
+<nav aria-label="前後記事ナビゲーション" class="space-y-space-2xs pt-space-md">
+<div class="grid grid-cols-2 gap-space-2xs">
+<a class="p-space-sm rounded-xl bg-surface-container-lowest shadow-sm hover:bg-surface-container transition-colors flex flex-col justify-between min-w-0" href="#">
+<span class="flex items-center gap-1 font-label-sm text-label-sm text-outline">
+<span class="material-symbols-outlined text-[14px]">arrow_back</span>
+            前の記事
+          </span>
+<span class="font-body-sm text-body-sm text-on-surface font-medium line-clamp-2 mt-1">
+            2026年度 岡山県公立高校入試日程・募集定員の最新変更点まとめ
+          </span>
+</a>
+<a class="p-space-sm rounded-xl bg-surface-container-lowest shadow-sm hover:bg-surface-container transition-colors flex flex-col justify-between min-w-0 text-right" href="#">
+<span class="flex items-center justify-end gap-1 font-label-sm text-label-sm text-outline">
+            次の記事
+            <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</span>
+<span class="font-body-sm text-body-sm text-on-surface font-medium line-clamp-2 mt-1">
+            中3夏休みの学習計画術：基礎固めと応用演習の黄金バランス
+          </span>
+</a>
+</div>
+<div class="text-center pt-space-2xs">
+<a class="inline-flex items-center gap-1 px-space-md py-2 rounded-full bg-surface-container text-primary font-label-md text-label-md font-bold hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined text-[18px]">grid_view</span>
+          お知らせ・ブログ一覧へ戻る
+        </a>
+</div>
+</nav>
+<!-- 9. Related Articles (こちらも読まれています) -->
+<section class="space-y-space-md pt-space-lg">
+<div class="flex items-center justify-between">
+<h2 class="font-headline-sm text-headline-sm text-primary font-bold flex items-center gap-space-2xs">
+<span class="material-symbols-outlined text-[22px] text-primary">auto_stories</span>
+          関連記事・こちらも人気
+        </h2>
+</div>
+<div class="space-y-space-sm">
+<!-- Card 1 -->
+<a class="flex gap-space-sm p-space-sm rounded-xl bg-surface-container-lowest shadow-sm hover:bg-surface-container-low transition-colors group" href="#">
+<div class="w-24 h-20 rounded-lg overflow-hidden shrink-0 bg-surface-container">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Japanese high school textbooks, open notebook with mathematical formulas, pencil and timer placed neatly on wooden study desk, focused exam preparation atmosphere" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCtnIUL23JziybqvaycD1zCJRqZxVYS5sA_rw5818nQR8Y45RtWdazUpHqR4TtghniheaG4yyt1Krjsiet9MA0JQIXB5lGpsi5mlotJHuqQRP_dMQ7h1ph_PdjjIg7-vlvhMz_4l4YVw7FGO3Owy-cD1T5Bl-gdquN3ZC1YzrHMnJbllmHTrCJpcyKHGvxt7RoIu5SHL6k-gzTRS4E1_l7jDgTfHrhscm22mDmEbi3LDg6Jv5AqqAHG">
+</div>
+<div class="flex flex-col justify-between min-w-0 flex-1">
+<div class="space-y-1">
+<span class="inline-block px-1.5 py-0.5 rounded bg-surface-container text-primary font-label-sm text-[10px] font-bold">高校別対策</span>
+<h3 class="font-body-sm text-body-sm text-on-surface font-bold leading-snug line-clamp-2 group-hover:text-primary transition-colors">
+                岡山朝日高校の独自問題攻略法！過去問傾向と模試での合格安全圏
+              </h3>
+</div>
+<span class="font-label-sm text-label-sm text-outline">2026.07.18</span>
+</div>
+</a>
+<!-- Card 2 -->
+<a class="flex gap-space-sm p-space-sm rounded-xl bg-surface-container-lowest shadow-sm hover:bg-surface-container-low transition-colors group" href="#">
+<div class="w-24 h-20 rounded-lg overflow-hidden shrink-0 bg-surface-container">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Japanese student report card document and official educational score papers laid on wooden table with red checking pen, clean academic lighting, serious evaluation context" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAshnYyiAEZPy2dtmaNDrtSa6zLU2XJqbAZGpo5l_UHL34AJJJmwALMlfdq3_zj9jmCxBDhdRUy5Fdp1DkiaIWR-VW4jP_qnaPEZVpBb6kLi6slzRHWlvWz3VrihL57S5JIrbkSNJqAy64x8ggoASXbnpgIjfOXzce2bCNUc065EPK_pGkyI8Z6Dx3lrQrZtIM0eqcaZNptbYCYaB62zcIwxa-RRy_rZlt4j5YUnMfWVgmOCiu7CdJw">
+</div>
+<div class="flex flex-col justify-between min-w-0 flex-1">
+<div class="space-y-1">
+<span class="inline-block px-1.5 py-0.5 rounded bg-surface-container text-primary font-label-sm text-[10px] font-bold">内申点・制度</span>
+<h3 class="font-body-sm text-body-sm text-on-surface font-bold leading-snug line-clamp-2 group-hover:text-primary transition-colors">
+                今さら聞けない「岡山県公立高校の内申点」計算方法と当日の逆転可能ライン
+              </h3>
+</div>
+<span class="font-label-sm text-label-sm text-outline">2026.06.25</span>
+</div>
+</a>
+<!-- Card 3 -->
+<a class="flex gap-space-sm p-space-sm rounded-xl bg-surface-container-lowest shadow-sm hover:bg-surface-container-low transition-colors group" href="#">
+<div class="w-24 h-20 rounded-lg overflow-hidden shrink-0 bg-surface-container">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Close-up of laboratory science glass beakers, microscope, and colorful diagrams in Japanese junior high school science workbook, bright inquisitive setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCu5Jjcf_kx3OfrFj4ATTP9wBUSfmk3TbUVAwd9litW4sw99pK50m1hd0ECW_T_RryWj6e5ycjwN0Awsdg7rI4rPzILRYcik83W1WKyTyDFFNkC9fmjDtaCEWSvAFG2lxR6z1sqasbeqOEkym3o-XdFC7ZkBR51FdZy0_HitL9HjYZJsDXZrMxcelGYmDvZq0mM1KaUb-HvXPozdEF0FgjLt3xlL_QfXOqugJnZt90MaiOe_F2fkJtO">
+</div>
+<div class="flex flex-col justify-between min-w-0 flex-1">
+<div class="space-y-1">
+<span class="inline-block px-1.5 py-0.5 rounded bg-surface-container text-primary font-label-sm text-[10px] font-bold">教科別学習法</span>
+<h3 class="font-body-sm text-body-sm text-on-surface font-bold leading-snug line-clamp-2 group-hover:text-primary transition-colors">
+                差がつく「理科・社会」の記述問題対策！実験考察問題の得点力を引き上げる復習法
+              </h3>
+</div>
+<span class="font-label-sm text-label-sm text-outline">2026.06.12</span>
+</div>
+</a>
+</div>
+</section>
+<!-- 10. Article Category Tags & Cloud -->
+<section class="space-y-space-sm pt-space-md pb-space-lg">
+<h2 class="font-headline-sm text-headline-sm text-primary font-bold flex items-center gap-space-2xs">
+<span class="material-symbols-outlined text-[20px] text-primary">sell</span>
+        関連タグ・カテゴリー一覧
+      </h2>
+<div class="flex flex-wrap gap-space-2xs">
+<a class="px-3 py-1.5 rounded-full bg-surface-container hover:bg-primary-fixed hover:text-primary text-on-surface-variant font-label-sm text-label-sm transition-colors" href="#">
+          # 岡山公立高校入試
+        </a>
+<a class="px-3 py-1.5 rounded-full bg-surface-container hover:bg-primary-fixed hover:text-primary text-on-surface-variant font-label-sm text-label-sm transition-colors" href="#">
+          # 模試活用法
+        </a>
+<a class="px-3 py-1.5 rounded-full bg-surface-container hover:bg-primary-fixed hover:text-primary text-on-surface-variant font-label-sm text-label-sm transition-colors" href="#">
+          # 岡山朝日高校
+        </a>
+<a class="px-3 py-1.5 rounded-full bg-surface-container hover:bg-primary-fixed hover:text-primary text-on-surface-variant font-label-sm text-label-sm transition-colors" href="#">
+          # 岡山芳泉高校
+        </a>
+<a class="px-3 py-1.5 rounded-full bg-surface-container hover:bg-primary-fixed hover:text-primary text-on-surface-variant font-label-sm text-label-sm transition-colors" href="#">
+          # 内申点計算
+        </a>
+<a class="px-3 py-1.5 rounded-full bg-surface-container hover:bg-primary-fixed hover:text-primary text-on-surface-variant font-label-sm text-label-sm transition-colors" href="#">
+          # 合格体験記
+        </a>
+<a class="px-3 py-1.5 rounded-full bg-surface-container hover:bg-primary-fixed hover:text-primary text-on-surface-variant font-label-sm text-label-sm transition-colors" href="#">
+          # 中3受験対策
+        </a>
+<a class="px-3 py-1.5 rounded-full bg-surface-container hover:bg-primary-fixed hover:text-primary text-on-surface-variant font-label-sm text-label-sm transition-colors" href="#">
+          # 解答解説復習
+        </a>
+</div>
+</section>
+</article>
+<!-- Micro-interactions Script -->
+<script>
+    (function () {
+      // Reading progress bar calculation
+      const progressBar = document.getElementById('read-progress');
+      window.addEventListener('scroll', () => {
+        const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+        if (totalHeight > 0) {
+          const progress = (window.scrollY / totalHeight) * 100;
+          progressBar.style.width = `${Math.min(100, Math.max(0, progress))}%`;
         }
-        if (venueSelect) {
-          venueSelect.removeAttribute('disabled');
-          venueSelect.classList.remove('bg-surface-container-low', 'text-on-surface-variant');
-          venueSelect.classList.add('bg-surface-container-lowest', 'text-on-surface');
-        }
-      } else {
-        card.classList.remove('border-2', 'border-primary-container', 'shadow-sm');
-        card.classList.add('border', 'border-outline-variant/30', 'hover:border-outline-variant/60', 'shadow-2xs');
-        if (venueRow) {
-          venueRow.classList.add('opacity-50');
-          venueRow.classList.remove('border-outline-variant/30');
-          venueRow.classList.add('border-outline-variant/20');
-        }
-        if (venueSelect) {
-          venueSelect.setAttribute('disabled', 'disabled');
-          venueSelect.classList.add('bg-surface-container-low', 'text-on-surface-variant');
-          venueSelect.classList.remove('bg-surface-container-lowest', 'text-on-surface');
-        }
-      }
-    }
+      }, { passive: true });
 
-    function calculateOrderSummary() {
-      const activeGradeRadio = document.querySelector('input[name="filter_grade"]:checked');
-      if (!activeGradeRadio) return;
-      const currentGrade = activeGradeRadio.value;
-
-      const activeGroup = document.getElementById('examGroup-' + currentGrade);
-      if (!activeGroup) return;
-
-      const checkedBoxes = activeGroup.querySelectorAll('.exam-checkbox:checked');
-      const itemizedList = document.getElementById('sidebar-itemized-list');
-      const selectedCount = document.getElementById('sidebar-selected-count');
-      const subtotalEl = document.getElementById('sidebar-subtotal');
-      const taxEl = document.getElementById('sidebar-tax');
-      const totalEl = document.getElementById('sidebar-total');
-      const gradeBadge = document.getElementById('sidebar-grade-badge');
-
-      const config = gradeConfigs[currentGrade] || gradeConfigs['jh3'];
-      if (gradeBadge) {
-        gradeBadge.textContent = config.badgeText;
-        gradeBadge.className = 'font-bold px-2.5 py-0.5 rounded-full ' + config.badgeClass;
-      }
-
-      if (selectedCount) {
-        selectedCount.textContent = '選択中の模試（' + checkedBoxes.length + '回分）';
-      }
-
-      let total = 0;
-      let htmlItems = '';
-
-      checkedBoxes.forEach(function(cb, index) {
-        const card = cb.closest('.exam-card');
-        const name = card.getAttribute('data-name');
-        const price = parseInt(card.getAttribute('data-price') || '5500', 10);
-        const venueSelect = card.querySelector('.venue-select');
-        const venueText = venueSelect ? venueSelect.options[venueSelect.selectedIndex].text : '希望会場';
-
-        total += price;
-
-        if (index > 0) {
-          htmlItems += '<div class="h-px bg-outline-variant/20 my-1"></div>';
-        }
-        htmlItems += '<div class="flex items-start justify-between text-[14px]">' +
-          '<div class="flex flex-col">' +
-            '<span class="font-bold text-on-surface">' + name + '</span>' +
-            '<span class="text-[12px] text-on-surface-variant">' + venueText + '</span>' +
-          '</div>' +
-          '<span class="font-bold text-primary">¥' + price.toLocaleString() + '</span>' +
-        '</div>';
-      });
-
-      if (checkedBoxes.length === 0) {
-        htmlItems = '<p class="text-xs text-secondary font-bold text-center py-2">※受検する模試にチェックを入れてください</p>';
-      }
-
-      if (itemizedList) {
-        itemizedList.innerHTML = htmlItems;
-      }
-
-      const subtotal = Math.round(total / 1.1);
-      const tax = total - subtotal;
-
-      if (subtotalEl) subtotalEl.textContent = '¥' + subtotal.toLocaleString();
-      if (taxEl) taxEl.textContent = '¥' + tax.toLocaleString();
-      if (totalEl) totalEl.textContent = '¥' + total.toLocaleString();
-    }
-
-    window.setFormGrade = function(gradeKey, syncStudentSelect) {
-      // Normalize grade keys
-      if (gradeKey === 'sho6' || gradeKey === 'elem') gradeKey = 'elem6';
-      if (gradeKey === 'chu12' || gradeKey === 'jh1' || gradeKey === 'jh2') gradeKey = 'jh12';
-      if (gradeKey === 'chu3') gradeKey = 'jh3';
-
-      if (!gradeConfigs[gradeKey]) {
-        gradeKey = 'jh3';
-      }
-
-      // 1. Check radio button
-      const radio = document.querySelector('input[name="filter_grade"][value="' + gradeKey + '"]');
-      if (radio) {
-        radio.checked = true;
-      }
-
-      // 2. Switch visible exam group
-      Object.keys(gradeConfigs).forEach(function(key) {
-        const group = document.getElementById(gradeConfigs[key].groupId);
-        if (group) {
-          if (key === gradeKey) {
-            group.classList.remove('hidden');
-            // If none checked in this group, check the first one
-            const checked = group.querySelectorAll('.exam-checkbox:checked');
-            if (checked.length === 0) {
-              const firstCheckbox = group.querySelector('.exam-checkbox');
-              if (firstCheckbox) {
-                firstCheckbox.checked = true;
-                updateCardVisuals(firstCheckbox.closest('.exam-card'), true);
-              }
+      // Native share button
+      const shareBtn = document.getElementById('native-share-btn');
+      if (shareBtn) {
+        shareBtn.addEventListener('click', async () => {
+          if (navigator.share) {
+            try {
+              await navigator.share({
+                title: '【岡山県の高校受験】合格への近道はここにある！先輩受験生が語る「おかもし」活用法',
+                url: window.location.href
+              });
+            } catch (e) {
+              // Share cancelled or dismissed
             }
           } else {
-            group.classList.add('hidden');
-          }
-        }
-      });
-
-      // 3. Sync studentGrade select in Section 2
-      if (syncStudentSelect !== false) {
-        const studentSelect = document.getElementById('studentGrade');
-        if (studentSelect) {
-          if (gradeKey === 'elem6') {
-            studentSelect.value = 'elem6';
-          } else if (gradeKey === 'jh3') {
-            studentSelect.value = 'jh3';
-          } else if (gradeKey === 'jh12') {
-            if (studentSelect.value !== 'jh1' && studentSelect.value !== 'jh2') {
-              studentSelect.value = 'jh2';
-            }
-          }
-        }
-      }
-
-      // 4. Recalculate summary
-      calculateOrderSummary();
-    };
-
-    document.addEventListener('DOMContentLoaded', function() {
-      // Radio change listener
-      const gradeRadios = document.querySelectorAll('input[name="filter_grade"]');
-      gradeRadios.forEach(function(r) {
-        r.addEventListener('change', function() {
-          window.setFormGrade(this.value, true);
-        });
-      });
-
-      // Student Grade select change listener (bidirectional sync)
-      const studentSelect = document.getElementById('studentGrade');
-      if (studentSelect) {
-        studentSelect.addEventListener('change', function() {
-          const val = this.value;
-          if (val === 'elem6') {
-            window.setFormGrade('elem6', false);
-          } else if (val === 'jh1' || val === 'jh2') {
-            window.setFormGrade('jh12', false);
-          } else if (val === 'jh3') {
-            window.setFormGrade('jh3', false);
+            copyUrlFallback();
           }
         });
       }
 
-      // Checkbox and venue select listeners
-      const allCheckboxes = document.querySelectorAll('.exam-checkbox');
-      allCheckboxes.forEach(function(cb) {
-        cb.addEventListener('change', function() {
-          const card = this.closest('.exam-card');
-          updateCardVisuals(card, this.checked);
-          calculateOrderSummary();
-        });
-      });
-
-      const allVenueSelects = document.querySelectorAll('.venue-select');
-      allVenueSelects.forEach(function(vs) {
-        vs.addEventListener('change', function() {
-          calculateOrderSummary();
-        });
-      });
-
-      // Check URL parameters for grade
-      try {
-        const params = new URLSearchParams(window.location.search);
-        const gParam = params.get('grade');
-        if (gParam) {
-          window.setFormGrade(gParam, true);
-        } else {
-          // Default
-          window.setFormGrade('jh3', true);
+      // Copy URL micro-interaction
+      const copyBtn = document.getElementById('copy-url-btn');
+      const copyLabel = document.getElementById('copy-label');
+      function copyUrlFallback() {
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(window.location.href).then(() => {
+            if (copyLabel) copyLabel.textContent = '完了!';
+            setTimeout(() => {
+              if (copyLabel) copyLabel.textContent = 'URLコピー';
+            }, 2000);
+          });
         }
-      } catch (e) {
-        window.setFormGrade('jh3', true);
       }
-    });
-  })();
-</script></main><nav class="fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface-container-lowest/95 backdrop-blur-md border-t border-outline-variant/30 shadow-[0_-4px_20px_rgba(19,66,48,0.06)] md:hidden" data-active-classes="text-primary-container font-bold"><div class="flex flex-col w-full"><div class="px-gutter-mobile pt-space-xs pb-space-xs bg-surface-container-high/60 flex items-center justify-between"><div class="flex items-center gap-space-xs"><span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span><span class="font-label-sm text-label-sm text-on-surface">次回模試：<strong class="text-secondary font-extrabold">8/23(日)</strong> 申込受付中</span></div><span class="font-label-sm text-label-sm text-on-surface-variant">締切: 8/16(日)</span></div><div class="px-gutter-mobile py-space-xs flex items-center gap-space-sm"><div class="flex items-center justify-around flex-1"><a aria-current="page" class="flex flex-col items-center justify-center w-14 h-12 transition-colors gap-0.5 text-primary-container font-bold" data-path="exam-home" href="../lp/code.html"><span class="material-symbols-outlined text-[22px]">home</span><span class="font-label-sm text-[10px]">ホーム</span></a><a class="flex flex-col items-center justify-center w-14 h-12 text-on-surface-variant hover:text-primary-container transition-colors gap-0.5" data-path="exam-schedule" href="../lp/code.html#next-exam"><span class="material-symbols-outlined text-[22px]">calendar_month</span><span class="font-label-sm text-[10px]">日程・会場</span></a><a class="flex flex-col items-center justify-center w-14 h-12 text-on-surface-variant hover:text-primary-container transition-colors gap-0.5" data-path="exam-features" href="../lp/code.html#features-section"><span class="material-symbols-outlined text-[22px]">school</span><span class="font-label-sm text-[10px]">特長・出題</span></a></div><a class="flex-1 flex items-center justify-center gap-space-xs h-12 px-space-md rounded-xl bg-secondary hover:bg-secondary-container text-on-secondary font-label-md text-label-md tracking-wide shadow-md shadow-secondary/20 transition-all active:scale-[0.98]" data-path="exam-application" href="#examOptionGroup"><span class="material-symbols-outlined text-[20px]">edit_note</span><span class="font-bold">お申込みはこちら</span></a></div></div></nav>
+      if (copyBtn) {
+        copyBtn.addEventListener('click', copyUrlFallback);
+      }
+    })();
+  </script>
+</div><footer class="w-full bg-[#f6f3f2] text-[#1c1b1f] pt-10 pb-8 px-4 border-t border-[#e2dfde] text-xs">
+  <div class="max-w-md mx-auto space-y-8">
+    <!-- Brand Info -->
+    <div class="space-y-3">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-lg bg-[#2d5a46] text-white flex items-center justify-center">
+          <span class="material-symbols-outlined text-lg">school</span>
+        </div>
+        <span class="font-bold text-base text-[#2d5a46]">岡山県統一模擬試験（おかもし）</span>
+      </div>
+      <div class="text-[#49454f] leading-relaxed text-xs">
+        <p class="font-bold">主催：中央教育研究所株式会社 岡山県統一模擬試験実行委員会</p>
+        <p class="">〒700-0824 岡山県岡山市北区内山下1丁目3-12 志徳ビル4F</p>
+        <p class="">TEL：086-227-3999</p>
+        <p class="">MAIL：okayamamoshi@chuoh-kyouiku.co.jp</p>
+      </div>
+      <div class="flex items-center gap-4 pt-2">
+        <a href="#" class="flex items-center gap-1 text-[#49454f] hover:text-[#2d5a46]">
+          <span class="material-symbols-outlined text-sm">photo_camera</span>
+          <span class="font-bold text-xs">公式Instagram</span>
+        </a>
+      </div>
+    </div>
 
+    <!-- Contact Buttons -->
+    <div class="grid grid-cols-2 gap-3 pt-2">
+      <a href="#" class="flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-lg border border-[#2d5a46] text-[#2d5a46] font-bold text-xs bg-white text-center shadow-sm">
+        <span class="material-symbols-outlined text-base">domain</span>
+        <span class="">塾関係者様</span>
+      </a>
+      <a href="#" class="flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-lg border border-[#2d5a46] text-[#2d5a46] font-bold text-xs bg-white text-center shadow-sm">
+        <span class="material-symbols-outlined text-base">person</span>
+        <span class="">個人申込の方</span>
+      </a>
+    </div>
+
+    <!-- Navigation Links -->
+    <div class="grid grid-cols-2 gap-4 pt-4 border-t border-[#e2dfde]">
+      <div class="space-y-2">
+        <p class="font-bold text-[#1c1b1f] mb-1">模試情報</p>
+        <p class=""><a href="#" class="text-[#49454f] hover:text-[#2d5a46]">次回模試実施要項</a></p>
+        <p class=""><a href="#" class="text-[#49454f] hover:text-[#2d5a46]">年間スケジュール</a></p>
+        <p class=""><a href="#" class="text-[#49454f] hover:text-[#2d5a46]">過去問・高校模試詳細</a></p>
+      </div>
+      <div class="space-y-2">
+        <p class="font-bold text-[#1c1b1f] mb-1">ご案内・手続き</p>
+        <p class=""><a href="#" class="text-[#49454f] hover:text-[#2d5a46]">提携学習塾一覧</a></p>
+        <p class=""><a href="#" class="text-[#49454f] hover:text-[#2d5a46]">個人受験のお申込み</a></p>
+      </div>
+    </div>
+
+    <!-- Legal Links -->
+    <div class="pt-4 border-t border-[#e2dfde] space-y-2">
+      <p class="font-bold text-[#1c1b1f] mb-1">規約・運営</p>
+      <div class="flex flex-wrap gap-x-4 gap-y-1 text-[#49454f]">
+        <a href="#" class="hover:text-[#2d5a46]">プライバシーポリシー</a>
+        <a href="#" class="hover:text-[#2d5a46]">特定商取引に基づく表記</a>
+        <a href="#" class="hover:text-[#2d5a46]">お知らせ・更新情報</a>
+      </div>
+    </div>
+
+    <!-- Copyright -->
+    <div class="pt-6 border-t border-[#e2dfde] text-center text-[#79747e] text-[11px]">
+      <p class="">© Okayama Mock Examination Executive Committee. All rights reserved.</p>
+    </div>
+  </div>
+</footer></main>
 
 </body></html>

@@ -1,0 +1,12 @@
+/*
+  X-Frame-Options: SAMEORIGIN
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), microphone=(), camera=()
+
+# 静的アセットのキャッシュ設定
+/js/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate

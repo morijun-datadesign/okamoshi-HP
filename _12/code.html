@@ -1,0 +1,622 @@
+<!DOCTYPE html><html lang="ja" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<title>模試Webお申込みフォーム | 岡山県統一模擬試験 おかもし</title>
+<!-- Tailwind CSS CDN with forms and container queries plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration for Okayama Academic Trust Palette -->
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              DEFAULT: '#2d5a46', /* Okayama Academic Deep Green */
+              dark: '#1e3d2f',
+              light: '#f0fdf4',
+              surface: '#eaf4ee',
+              border: '#4ade80'
+            },
+            cta: {
+              DEFAULT: '#a33a10', /* Terracotta CTA button */
+              hover: '#872f0c'
+            },
+            badge: {
+              required: '#b91c1c', /* Required Red badge */
+              optional: '#6b7280'
+            }
+          },
+          fontFamily: {
+            sans: ['"Noto Sans JP"', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style data-purpose="base-styling">
+    body {
+      font-family: 'Noto Sans JP', sans-serif;
+      background-color: #f8faf9;
+      color: #333333;
+      -webkit-tap-highlight-color: transparent;
+    }
+    input[type="text"], input[type="email"], input[type="tel"], select {
+      font-size: 15px !important;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+<!-- BEGIN: MobileHeader -->
+<header class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm" data-purpose="main-header">
+<div class="px-3.5 py-2.5 flex items-center justify-between">
+<!-- Logo and Site Name -->
+<div class="flex items-center space-x-2">
+<div class="w-8 h-8 rounded-full bg-[#2d5a46] flex items-center justify-center text-white flex-shrink-0">
+<!-- Academic Cap Icon -->
+<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+<path d="M12 3L1 9L12 15L21 10.09V17H23V9M5 13.18V17.18L12 21L19 17.18V13.18L12 17L5 13.18Z"></path>
+</svg>
+</div>
+<div class="leading-tight">
+<div class="flex items-center space-x-1">
+<span class="text-xs font-bold text-gray-900 tracking-tight">岡山県統一模擬試験</span>
+<span class="bg-[#dcfce7] text-[#166534] text-[9px] font-bold px-1.5 py-0.2 rounded-sm border border-[#86efac]">おかもし</span>
+</div>
+<p class="text-[9px] text-gray-500 font-normal">岡山の高校受験・県立中受験 模試ポータル</p>
+</div>
+</div>
+<!-- Action & Menu Buttons -->
+<div class="flex items-center space-x-1.5">
+<a class="bg-[#a33a10] active:bg-[#872f0c] text-white text-[11px] font-bold px-2.5 py-1.5 rounded-full flex items-center shadow-sm" href="#summary">
+<svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+          お申込
+        </a>
+<button aria-label="メニューを開く" class="p-1.5 text-gray-600 rounded-md active:bg-gray-100" type="button">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+</div>
+</header>
+<!-- END: MobileHeader -->
+<!-- BEGIN: MainContent -->
+<main class="flex-grow max-w-lg mx-auto w-full px-3.5 py-4 space-y-4">
+<!-- BEGIN: BreadcrumbAndTitle -->
+<section class="space-y-2" data-purpose="page-title-section">
+<!-- Breadcrumbs -->
+<nav class="flex items-center text-[10px] text-gray-500 space-x-1 overflow-x-auto whitespace-nowrap">
+<span class="">おかもしTOP</span>
+<span class="text-gray-400">&gt;</span>
+<span class="">日程・お申込み</span>
+<span class="text-gray-400">&gt;</span>
+<span class="text-[#2d5a46] font-medium">Webエントリー</span>
+</nav>
+<!-- Main Page Title -->
+<div class="flex flex-col gap-1.5">
+<h1 class="text-xl font-bold text-gray-900 tracking-tight">お申込みフォーム</h1>
+<!-- Info Pill -->
+<div class="self-start inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-800 text-[11px] font-semibold px-2.5 py-1 rounded-full border border-emerald-200">
+<svg class="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+<path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" fill-rule="evenodd"></path>
+</svg>
+<span class="">所要時間: 約3〜5分</span>
+<span class="text-emerald-300">|</span>
+<span class="text-emerald-700">即時受験枠確保</span>
+</div>
+</div>
+</section>
+<!-- END: BreadcrumbAndTitle -->
+<!-- BEGIN: StepIndicator -->
+<section class="bg-white rounded-xl p-3 border border-gray-200 shadow-sm" data-purpose="step-progress-indicator">
+<div class="grid grid-cols-3 gap-1 relative">
+<!-- Step 1 (Active) -->
+<div class="flex flex-col items-center text-center">
+<div class="w-6 h-6 rounded-full bg-[#2d5a46] text-white text-xs font-bold flex items-center justify-center shadow-sm">
+            1
+          </div>
+<span class="text-[11px] font-bold text-[#2d5a46] mt-1">STEP 1 情報入力</span>
+<span class="text-[9px] text-gray-500 leading-tight">模試・会場・生徒情報</span>
+</div>
+<!-- Step 2 -->
+<div class="flex flex-col items-center text-center opacity-70">
+<div class="w-6 h-6 rounded-full bg-gray-200 text-gray-600 text-xs font-bold flex items-center justify-center">
+            2
+          </div>
+<span class="text-[11px] font-medium text-gray-600 mt-1">STEP 2 内容確認</span>
+<span class="text-[9px] text-gray-400 leading-tight">入力内容の最終確認</span>
+</div>
+<!-- Step 3 -->
+<div class="flex flex-col items-center text-center opacity-70">
+<div class="w-6 h-6 rounded-full bg-gray-200 text-gray-600 text-xs font-bold flex items-center justify-center">
+            3
+          </div>
+<span class="text-[11px] font-medium text-gray-600 mt-1">STEP 3 完了</span>
+<span class="text-[9px] text-gray-400 leading-tight">エントリー・番号発行</span>
+</div>
+</div>
+</section>
+<!-- END: StepIndicator -->
+<!-- BEGIN: FormContent -->
+<form class="space-y-4" id="entry-form" onsubmit="event.preventDefault();">
+<!-- ============================================== -->
+<!-- SECTION 1: 希望模試・受験形式の選択 -->
+<!-- ============================================== -->
+<section class="bg-white rounded-xl p-4 border border-gray-200 shadow-sm space-y-4" data-purpose="exam-selection-section">
+<!-- Section Header -->
+<div class="flex items-start justify-between border-b border-gray-100 pb-2.5">
+<div class="flex items-center space-x-2">
+<span class="w-5 h-5 rounded bg-[#2d5a46] text-white font-bold text-xs flex items-center justify-center">1</span>
+<h2 class="text-sm font-bold text-gray-900">希望模試・受験形式の選択</h2>
+</div>
+<span class="text-[10px] text-gray-500 mt-0.5">複数一括申込可</span>
+</div>
+<!-- STEP 1-1 学年選択 -->
+<div class="space-y-2">
+<div class="flex items-center justify-between">
+<label class="text-xs font-bold text-gray-800 flex items-center">
+<span class="w-3.5 h-3.5 rounded-full border border-gray-400 text-gray-600 text-[10px] flex items-center justify-center mr-1">①</span>
+              STEP 1-1 まず学年を選択してください
+            </label>
+<span class="bg-[#c2410c] text-white text-[10px] font-bold px-1.5 py-0.5 rounded">必須</span>
+</div>
+<!-- Grade Selection Pills -->
+<div class="grid grid-cols-3 gap-2">
+<button class="py-2 text-xs font-medium rounded-lg border border-gray-300 bg-gray-50 text-gray-700 hover:bg-gray-100" type="button">
+              小6
+            </button>
+<button class="py-2 text-xs font-medium rounded-lg border border-gray-300 bg-gray-50 text-gray-700 hover:bg-gray-100" type="button">
+              中1・2
+            </button>
+<button class="py-2 text-xs font-bold rounded-lg border-2 border-[#2d5a46] bg-emerald-50 text-[#1e3d2f] shadow-sm" type="button">
+              中3
+            </button>
+</div>
+</div>
+<!-- STEP 1-2 模試・会場一覧 -->
+<div class="space-y-2.5 pt-1">
+<div class="flex items-center justify-between">
+<label class="text-xs font-bold text-gray-800 flex items-center">
+<span class="w-3.5 h-3.5 rounded-full border border-gray-400 text-gray-600 text-[10px] flex items-center justify-center mr-1">②</span>
+              STEP 1-2 お申込み模試と会場の選択
+            </label>
+<span class="bg-[#c2410c] text-white text-[10px] font-bold px-1.5 py-0.5 rounded">必須</span>
+</div>
+<!-- Exam Card 1: Selected (8月号) -->
+<div class="rounded-lg border-2 border-[#2d5a46] bg-[#f2f8f4] p-3 space-y-2.5">
+<div class="flex items-start justify-between">
+<label class="flex items-start space-x-2 cursor-pointer flex-1">
+<input checked="" class="mt-0.5 w-4 h-4 text-[#2d5a46] rounded border-gray-300 focus:ring-[#2d5a46]" type="checkbox">
+<div class="space-y-0.5">
+<div class="flex items-center space-x-1.5">
+<span class="bg-[#1e3d2f] text-white text-[9px] font-bold px-1 rounded">中3対象</span>
+<span class="text-xs font-bold text-gray-900">岡山県統一模擬試験 8月号</span>
+</div>
+<div class="text-[10px] text-gray-600 flex flex-wrap gap-x-2">
+<span class="">実施日: <strong class="text-gray-800">8/23(日)</strong></span>
+<span class="">申込締切: <strong class="text-red-700">8/16(日)</strong></span>
+</div>
+</div>
+</label>
+<div class="text-right">
+<div class="text-xs font-bold text-[#1e3d2f]">¥5,500</div>
+<div class="text-[9px] text-gray-500">税込</div>
+</div>
+</div>
+<!-- Venue selector -->
+<div class="bg-white rounded-md border border-gray-200 p-1.5 flex items-center space-x-1.5">
+<span class="text-[10px] text-gray-500 flex-shrink-0 flex items-center">
+<svg class="w-3.5 h-3.5 mr-0.5 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+<path clip-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" fill-rule="evenodd"></path>
+</svg>
+                会場:
+              </span>
+<select class="w-full text-xs font-medium text-gray-800 border-none p-0 focus:ring-0 bg-transparent">
+<option selected="">岡山会場（岡山大学 津島キャンパス / 山陽学園）</option>
+<option>倉敷会場（倉敷市民会館）</option>
+<option>自宅受験（問題郵送・期日内返送）</option>
+</select>
+</div>
+</div>
+<!-- Exam Card 2: Selected (10月号) -->
+<div class="rounded-lg border-2 border-[#2d5a46] bg-[#f2f8f4] p-3 space-y-2.5">
+<div class="flex items-start justify-between">
+<label class="flex items-start space-x-2 cursor-pointer flex-1">
+<input checked="" class="mt-0.5 w-4 h-4 text-[#2d5a46] rounded border-gray-300 focus:ring-[#2d5a46]" type="checkbox">
+<div class="space-y-0.5">
+<div class="flex items-center space-x-1.5">
+<span class="bg-[#1e3d2f] text-white text-[9px] font-bold px-1 rounded">中3対象</span>
+<span class="text-xs font-bold text-gray-900">岡山県統一模擬試験 10月号</span>
+</div>
+<div class="text-[10px] text-gray-600 flex flex-wrap gap-x-2">
+<span class="">実施日: <strong class="text-gray-800">11/1(日)</strong></span>
+<span class="">申込締切: <strong class="text-red-700">10/25(日)</strong></span>
+</div>
+</div>
+</label>
+<div class="text-right">
+<div class="text-xs font-bold text-[#1e3d2f]">¥5,500</div>
+<div class="text-[9px] text-gray-500">税込</div>
+</div>
+</div>
+<!-- Venue selector -->
+<div class="bg-white rounded-md border border-gray-200 p-1.5 flex items-center space-x-1.5">
+<span class="text-[10px] text-gray-500 flex-shrink-0 flex items-center">
+<svg class="w-3.5 h-3.5 mr-0.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+                形式:
+              </span>
+<select class="w-full text-xs font-medium text-gray-800 border-none p-0 focus:ring-0 bg-transparent">
+<option selected="">自宅受験（問題冊子郵送・期日内答案返送）</option>
+<option>岡山会場（岡山大学 津島キャンパス）</option>
+<option>倉敷会場（倉敷商工会議所）</option>
+</select>
+</div>
+</div>
+<!-- Exam Card 3: Unselected (12月号) -->
+<div class="rounded-lg border border-gray-200 bg-white p-3 space-y-2 opacity-85">
+<div class="flex items-start justify-between">
+<label class="flex items-start space-x-2 cursor-pointer flex-1">
+<input class="mt-0.5 w-4 h-4 text-[#2d5a46] rounded border-gray-300 focus:ring-[#2d5a46]" type="checkbox">
+<div class="space-y-0.5">
+<div class="flex items-center space-x-1.5">
+<span class="bg-gray-400 text-white text-[9px] font-bold px-1 rounded">中3対象</span>
+<span class="text-xs font-bold text-gray-800">岡山県統一模擬試験 12月号</span>
+</div>
+<div class="text-[10px] text-gray-500 flex flex-wrap gap-x-2">
+<span class="">実施日: 12/27(日)</span>
+<span class="">申込締切: 12/14(月)</span>
+</div>
+</div>
+</label>
+<div class="text-right">
+<div class="text-xs font-bold text-gray-600">¥5,500</div>
+<div class="text-[9px] text-gray-400">税込</div>
+</div>
+</div>
+<!-- Inactive selection notice -->
+<div class="bg-gray-50 rounded-md border border-dashed border-gray-200 p-2 text-center">
+<span class="text-[10px] text-gray-400">チェックを入れると会場が選択できます</span>
+</div>
+</div>
+</div>
+</section>
+<!-- ============================================== -->
+<!-- SECTION 2: 受験生情報 -->
+<!-- ============================================== -->
+<section class="bg-white rounded-xl p-4 border border-gray-200 shadow-sm space-y-3.5" data-purpose="student-info-section">
+<div class="flex items-center space-x-2 border-b border-gray-100 pb-2">
+<span class="w-5 h-5 rounded bg-[#2d5a46] text-white font-bold text-xs flex items-center justify-center">2</span>
+<h2 class="text-sm font-bold text-gray-900">受験生情報</h2>
+</div>
+<!-- 学年選択 -->
+<div class="space-y-1">
+<div class="flex justify-between items-center">
+<label class="text-xs font-semibold text-gray-700">学年</label>
+<span class="bg-[#c2410c] text-white text-[9px] font-bold px-1.5 py-0.2 rounded">必須</span>
+</div>
+<select class="w-full text-xs rounded-lg border-gray-300 bg-gray-50/50 focus:border-[#2d5a46] focus:ring-[#2d5a46] py-2 px-2.5">
+<option selected="">中学3年生</option>
+<option>中学2年生</option>
+<option>中学1年生</option>
+<option>小学6年生</option>
+</select>
+</div>
+<!-- 生徒氏名（漢字） -->
+<div class="space-y-1">
+<div class="flex justify-between items-center">
+<label class="text-xs font-semibold text-gray-700">生徒氏名（漢字）</label>
+<span class="bg-[#c2410c] text-white text-[9px] font-bold px-1.5 py-0.2 rounded">必須</span>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<input class="text-xs rounded-lg border-gray-300 bg-gray-50/50 focus:border-[#2d5a46] focus:ring-[#2d5a46] py-2 px-2.5" placeholder="姓 (例: 岡山)" type="text" value="岡山">
+<input class="text-xs rounded-lg border-gray-300 bg-gray-50/50 focus:border-[#2d5a46] focus:ring-[#2d5a46] py-2 px-2.5" placeholder="名 (例: 太郎)" type="text" value="太郎">
+</div>
+</div>
+<!-- 生徒氏名（フリガナ） -->
+<div class="space-y-1">
+<div class="flex justify-between items-center">
+<label class="text-xs font-semibold text-gray-700">生徒氏名（フリガナ）</label>
+<span class="bg-[#c2410c] text-white text-[9px] font-bold px-1.5 py-0.2 rounded">必須</span>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<input class="text-xs rounded-lg border-gray-300 bg-gray-50/50 focus:border-[#2d5a46] focus:ring-[#2d5a46] py-2 px-2.5" placeholder="セイ (例: オカヤマ)" type="text" value="オカヤマ">
+<input class="text-xs rounded-lg border-gray-300 bg-gray-50/50 focus:border-[#2d5a46] focus:ring-[#2d5a46] py-2 px-2.5" placeholder="メイ (例: タロウ)" type="text" value="タロウ">
+</div>
+</div>
+<!-- 性別 -->
+<div class="space-y-1">
+<div class="flex justify-between items-center">
+<label class="text-xs font-semibold text-gray-700">性別</label>
+<span class="bg-[#c2410c] text-white text-[9px] font-bold px-1.5 py-0.2 rounded">必須</span>
+</div>
+<div class="grid grid-cols-3 gap-2">
+<label class="flex items-center justify-center py-2 px-2 border-2 border-[#2d5a46] bg-emerald-50 text-[#1e3d2f] rounded-lg text-xs font-bold cursor-pointer">
+<input checked="" class="w-3.5 h-3.5 text-[#2d5a46] focus:ring-[#2d5a46] mr-1.5" name="gender" type="radio" value="male">
+              男性
+            </label>
+<label class="flex items-center justify-center py-2 px-2 border border-gray-300 bg-white text-gray-700 rounded-lg text-xs font-medium cursor-pointer">
+<input class="w-3.5 h-3.5 text-[#2d5a46] focus:ring-[#2d5a46] mr-1.5" name="gender" type="radio" value="female">
+              女性
+            </label>
+<label class="flex items-center justify-center py-2 px-1 border border-gray-300 bg-white text-gray-700 rounded-lg text-xs font-medium cursor-pointer">
+<input class="w-3.5 h-3.5 text-[#2d5a46] focus:ring-[#2d5a46] mr-1.5" name="gender" type="radio" value="other">
+              回答しない
+            </label>
+</div>
+</div>
+<!-- 在籍中学校・小学校名 -->
+<div class="space-y-1">
+<div class="flex justify-between items-center">
+<label class="text-xs font-semibold text-gray-700">在籍中学校・小学校名</label>
+<span class="bg-[#c2410c] text-white text-[9px] font-bold px-1.5 py-0.2 rounded">必須</span>
+</div>
+<input class="w-full text-xs rounded-lg border-gray-300 bg-gray-50/50 focus:border-[#2d5a46] focus:ring-[#2d5a46] py-2 px-2.5" placeholder="例: 岡山市立操南中学校" type="text" value="岡山市立操南中学校">
+</div>
+</section>
+<!-- ============================================== -->
+<!-- SECTION 3: 保護者・ご連絡先情報 -->
+<!-- ============================================== -->
+<section class="bg-white rounded-xl p-4 border border-gray-200 shadow-sm space-y-3.5" data-purpose="parent-contact-section">
+<div class="flex items-center space-x-2 border-b border-gray-100 pb-2">
+<span class="w-5 h-5 rounded bg-[#2d5a46] text-white font-bold text-xs flex items-center justify-center">3</span>
+<h2 class="text-sm font-bold text-gray-900">保護者・ご連絡先情報</h2>
+</div>
+<!-- 保護者氏名 -->
+<div class="space-y-1">
+<div class="flex justify-between items-center">
+<label class="text-xs font-semibold text-gray-700">保護者氏名</label>
+<span class="bg-[#c2410c] text-white text-[9px] font-bold px-1.5 py-0.2 rounded">必須</span>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<input class="text-xs rounded-lg border-gray-300 bg-gray-50/50 focus:border-[#2d5a46] focus:ring-[#2d5a46] py-2 px-2.5" placeholder="保護者 姓" type="text" value="岡山">
+<input class="text-xs rounded-lg border-gray-300 bg-gray-50/50 focus:border-[#2d5a46] focus:ring-[#2d5a46] py-2 px-2.5" placeholder="保護者 名" type="text" value="一郎">
+</div>
+</div>
+<!-- メールアドレス -->
+<div class="space-y-1">
+<div class="flex justify-between items-center">
+<label class="text-xs font-semibold text-gray-700">メールアドレス</label>
+<span class="bg-[#c2410c] text-white text-[9px] font-bold px-1.5 py-0.2 rounded">必須</span>
+</div>
+<input class="w-full text-xs rounded-lg border-gray-300 bg-gray-50/50 focus:border-[#2d5a46] focus:ring-[#2d5a46] py-2 px-2.5" placeholder="example@domain.com" type="email" value="okayama.entry@example.jp">
+<p class="text-[10px] text-gray-500 flex items-center pt-0.5">
+<svg class="w-3 h-3 mr-1 text-gray-400 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+            携帯キャリアメール非推奨 (届かない場合があります)
+          </p>
+</div>
+<!-- メールアドレス（確認用） -->
+<div class="space-y-1">
+<div class="flex justify-between items-center">
+<label class="text-xs font-semibold text-gray-700">メールアドレス（確認用）</label>
+<span class="bg-[#c2410c] text-white text-[9px] font-bold px-1.5 py-0.2 rounded">必須</span>
+</div>
+<input class="w-full text-xs rounded-lg border-gray-300 bg-gray-50/50 focus:border-[#2d5a46] focus:ring-[#2d5a46] py-2 px-2.5" placeholder="もう一度ご入力ください" type="email" value="okayama.entry@example.jp">
+</div>
+<!-- 電話番号 -->
+<div class="space-y-1">
+<div class="flex justify-between items-center">
+<label class="text-xs font-semibold text-gray-700">電話番号（日中連絡先）</label>
+<span class="bg-[#c2410c] text-white text-[9px] font-bold px-1.5 py-0.2 rounded">必須</span>
+</div>
+<input class="w-full text-xs rounded-lg border-gray-300 bg-gray-50/50 focus:border-[#2d5a46] focus:ring-[#2d5a46] py-2 px-2.5" placeholder="09012345678（ハイフンなし可）" type="tel" value="09012345678">
+</div>
+<!-- 郵便番号 & 住所自動入力 -->
+<div class="space-y-1">
+<div class="flex justify-between items-center">
+<label class="text-xs font-semibold text-gray-700">郵便番号</label>
+<span class="bg-[#c2410c] text-white text-[9px] font-bold px-1.5 py-0.2 rounded">必須</span>
+</div>
+<div class="flex space-x-2">
+<input class="w-1/2 text-xs rounded-lg border-gray-300 bg-gray-50/50 focus:border-[#2d5a46] focus:ring-[#2d5a46] py-2 px-2.5" placeholder="7000822" type="text" value="7000822">
+<button class="w-1/2 bg-[#1e3d2f] active:bg-[#14281f] text-white text-xs font-bold rounded-lg px-2 flex items-center justify-center space-x-1 shadow-sm" type="button">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="">住所自動入力</span>
+</button>
+</div>
+</div>
+<!-- 都道府県 -->
+<div class="space-y-1">
+<div class="flex justify-between items-center">
+<label class="text-xs font-semibold text-gray-700">都道府県</label>
+<span class="bg-[#c2410c] text-white text-[9px] font-bold px-1.5 py-0.2 rounded">必須</span>
+</div>
+<select class="w-full text-xs rounded-lg border-gray-300 bg-gray-50/50 focus:border-[#2d5a46] focus:ring-[#2d5a46] py-2 px-2.5">
+<option selected="">岡山県</option>
+<option>広島県</option>
+<option>香川県</option>
+<option>鳥取県</option>
+<option>兵庫県</option>
+<option>その他</option>
+</select>
+</div>
+<!-- 市区町村・番地 -->
+<div class="space-y-1">
+<div class="flex justify-between items-center">
+<label class="text-xs font-semibold text-gray-700">市区町村・番地</label>
+<span class="bg-[#c2410c] text-white text-[9px] font-bold px-1.5 py-0.2 rounded">必須</span>
+</div>
+<input class="w-full text-xs rounded-lg border-gray-300 bg-gray-50/50 focus:border-[#2d5a46] focus:ring-[#2d5a46] py-2 px-2.5" placeholder="例: 岡山市北区表町1丁目5-1" type="text" value="岡山市北区表町1丁目5-1">
+</div>
+<!-- 建物名・部屋番号 -->
+<div class="space-y-1">
+<div class="flex justify-between items-center">
+<label class="text-xs font-semibold text-gray-700">建物名・部屋番号</label>
+<span class="bg-gray-400 text-white text-[9px] font-medium px-1.5 py-0.2 rounded">任意</span>
+</div>
+<input class="w-full text-xs rounded-lg border-gray-300 bg-gray-50/50 focus:border-[#2d5a46] focus:ring-[#2d5a46] py-2 px-2.5" placeholder="例: 岡山教育ビル 3F" type="text" value="岡山教育ビル 3F">
+</div>
+</section>
+<!-- ============================================== -->
+<!-- SECTION 4: お支払い方法の選択 -->
+<!-- ============================================== -->
+<section class="bg-white rounded-xl p-4 border border-gray-200 shadow-sm space-y-3.5" data-purpose="payment-selection-section">
+<div class="flex items-center space-x-2 border-b border-gray-100 pb-2">
+<span class="w-5 h-5 rounded bg-[#2d5a46] text-white font-bold text-xs flex items-center justify-center">4</span>
+<h2 class="text-sm font-bold text-gray-900">お支払い方法の選択</h2>
+</div>
+<div class="space-y-2.5">
+<!-- クレジットカード決済 (選択中) -->
+<label class="block rounded-lg border-2 border-[#2d5a46] bg-[#f2f8f4] p-3 cursor-pointer shadow-sm relative">
+<div class="flex items-start justify-between">
+<div class="flex items-start space-x-2.5">
+<input checked="" class="mt-0.5 text-[#2d5a46] focus:ring-[#2d5a46]" name="payment_method" type="radio" value="credit_card">
+<div>
+<div class="flex items-center space-x-1.5">
+<span class="text-xs font-bold text-gray-900">クレジットカード決済</span>
+</div>
+<p class="text-[10px] text-emerald-800 font-medium mt-0.5">即時決済・決済手数料 0円</p>
+</div>
+</div>
+<svg class="w-6 h-6 text-gray-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>
+</svg>
+</div>
+<!-- Card Brands -->
+<div class="flex items-center space-x-1.5 mt-2.5 pt-2 border-t border-emerald-100 text-[10px] text-gray-500 font-medium">
+<span class="bg-white border border-gray-200 px-1.5 py-0.5 rounded text-[9px] font-bold">VISA</span>
+<span class="bg-white border border-gray-200 px-1.5 py-0.5 rounded text-[9px] font-bold">Mastercard</span>
+<span class="bg-white border border-gray-200 px-1.5 py-0.5 rounded text-[9px] font-bold">JCB</span>
+<span class="bg-white border border-gray-200 px-1.5 py-0.5 rounded text-[9px] font-bold">AMEX</span>
+</div>
+</label>
+<!-- コンビニ決済 (非選択) -->
+<label class="block rounded-lg border border-gray-200 bg-white p-3 cursor-pointer opacity-85">
+<div class="flex items-start justify-between">
+<div class="flex items-start space-x-2.5">
+<input class="mt-0.5 text-[#2d5a46] focus:ring-[#2d5a46]" name="payment_method" type="radio" value="convenience_store">
+<div>
+<div class="text-xs font-bold text-gray-800">コンビニ決済</div>
+<p class="text-[10px] text-gray-500 mt-0.5">お支払い期限: <span class="font-bold text-gray-700">2026/10/8</span> (4日以内)</p>
+</div>
+</div>
+<svg class="w-6 h-6 text-amber-700 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>
+</svg>
+</div>
+<!-- Convenience Store Brands -->
+<div class="flex items-center space-x-1.5 mt-2 pt-2 border-t border-gray-100 text-[10px] text-gray-500">
+<span class="bg-gray-100 px-1.5 py-0.5 rounded text-[9px]">セブンイレブン</span>
+<span class="bg-gray-100 px-1.5 py-0.5 rounded text-[9px]">ファミリーマート</span>
+<span class="bg-gray-100 px-1.5 py-0.5 rounded text-[9px]">ローソン</span>
+</div>
+<p class="text-[9px] text-amber-800 mt-1.5">※期限までに入金が確認できない場合、自動キャンセルとなります。</p>
+</label>
+</div>
+</section>
+<!-- ============================================== -->
+<!-- SECTION 5: お申し込みサマリー -->
+<!-- ============================================== -->
+<section class="bg-white rounded-xl p-4 border border-gray-200 shadow-sm space-y-4" data-purpose="order-summary-section" id="summary">
+<div class="flex items-center space-x-2 border-b border-gray-100 pb-2">
+<svg class="w-4 h-4 text-[#2d5a46]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<h2 class="text-sm font-bold text-gray-900">お申し込みサマリー</h2>
+</div>
+<div class="space-y-3">
+<div class="flex items-center justify-between">
+<span class="text-xs text-gray-600 font-medium">選択中の模試</span>
+<span class="bg-emerald-100 text-[#166534] text-[10px] font-bold px-2 py-0.5 rounded-full">2回分</span>
+</div>
+<!-- Items list -->
+<div class="space-y-2 text-xs divide-y divide-gray-100">
+<div class="flex justify-between items-start pt-1">
+<div>
+<p class="font-bold text-gray-800">8月号 岡山県統一模擬試験</p>
+<p class="text-[10px] text-gray-500">会場: 岡山会場 (8/23)</p>
+</div>
+<span class="font-bold text-gray-900">¥5,500</span>
+</div>
+<div class="flex justify-between items-start pt-2">
+<div>
+<p class="font-bold text-gray-800">10月号 岡山県統一模擬試験</p>
+<p class="text-[10px] text-gray-500">形式: 自宅受験 (11/1)</p>
+</div>
+<span class="font-bold text-gray-900">¥5,500</span>
+</div>
+</div>
+<!-- Total divider -->
+<div class="border-t-2 border-dashed border-gray-200 pt-3">
+<div class="flex justify-between items-baseline">
+<span class="text-xs font-bold text-gray-700">お支払い合計</span>
+<div class="text-right">
+<span class="text-xl font-extrabold text-[#1e3d2f]">¥11,000</span>
+<span class="text-xs text-gray-500 font-normal">（税込）</span>
+</div>
+</div>
+</div>
+<!-- Selected payment breakdown -->
+<div class="bg-gray-50 rounded-lg p-2.5 flex justify-between items-center text-xs text-gray-600">
+<span class="">お支払い方法</span>
+<span class="font-medium text-gray-800 flex items-center">
+<svg class="w-3.5 h-3.5 mr-1 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+              クレジットカード決済</span>
+</div>
+<!-- Agreement Checkbox -->
+<div class="pt-2">
+<label class="flex items-start space-x-2 text-xs text-gray-700 cursor-pointer">
+<input checked="" class="mt-0.5 w-4 h-4 text-[#2d5a46] rounded border-gray-300 focus:ring-[#2d5a46]" type="checkbox">
+<span class="text-[11px] leading-relaxed">
+<a class="text-[#2d5a46] underline font-semibold" href="#">個人情報の取扱い</a> および <a class="text-[#2d5a46] underline font-semibold" href="#">特定商取引法表記</a> に同意する
+              </span>
+</label>
+</div>
+<!-- Big Terracotta CTA Button -->
+<button class="w-full bg-[#a33a10] active:bg-[#872f0c] text-white py-3.5 px-4 rounded-xl font-bold text-sm flex items-center justify-center space-x-2 shadow-md transition duration-150" type="button">
+<span class="">入力内容の確認へ進む</span>
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+</button>
+<!-- Back link -->
+<div class="text-center pt-1">
+<a class="text-xs text-gray-500 hover:text-gray-800 inline-flex items-center" href="#">
+<svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M10 19l-7-7m0 0l7-7m-7 7h18" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+              お申込みをやり直す（トップへ）
+            </a>
+</div>
+</div>
+</section>
+<!-- SSL Security Badge -->
+<div class="flex items-center justify-center space-x-1.5 text-gray-400 text-[11px] py-2" data-purpose="ssl-guarantee">
+<svg class="w-3.5 h-3.5 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+<path clip-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" fill-rule="evenodd"></path>
+</svg>
+<span class="">SSL 256bit 暗号化通信で保護されています</span>
+</div>
+</form>
+<!-- END: FormContent -->
+</main>
+<!-- END: MainContent -->
+<!-- BEGIN: MobileFooter -->
+<footer class="bg-gray-100 border-t border-gray-200 mt-6 py-6 text-center text-xs text-gray-500 space-y-2">
+<div class="flex justify-center space-x-4 text-[11px]">
+<a class="hover:underline" href="#">利用規約</a>
+<span class="">•</span>
+<a class="hover:underline" href="#">特定商取引法に基づく表記</a>
+<span class="">•</span>
+<a class="hover:underline" href="#">プライバシーポリシー</a>
+</div>
+<p class="text-[10px] text-gray-400">© 岡山県統一模擬試験会 (おかもし) All Rights Reserved.</p>
+</footer>
+<!-- END: MobileFooter -->
+
+
+</body></html>

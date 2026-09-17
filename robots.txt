@@ -1,0 +1,5 @@
+# robots.txt for 岡山県統一模擬試験（おかもし）
+User-agent: *
+Allow: /
+
+Sitemap: https://okamoshi.pages.dev/sitemap.xml

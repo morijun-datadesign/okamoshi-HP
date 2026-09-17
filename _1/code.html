@@ -1,2043 +1,523 @@
-<!DOCTYPE html>
-
-<html lang="ja"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}
-
-
-
-/* Explicit max-w-6xl layout width enforcement */
-.max-w-6xl {
-  max-width: 72rem !important; /* 1152px */
-  margin-left: auto !important;
-  margin-right: auto !important;
-  width: 100% !important;
-  box-sizing: border-box !important;
-}
-
-</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"secondary-fixed-dim":"#ffb59c","surface-bright":"#fcf9f8","on-primary-fixed-variant":"#224f3c","inverse-on-surface":"#f3f0ef","primary":"#134230","on-error-container":"#93000a","surface-container-lowest":"#ffffff","on-background":"#1b1c1c","on-primary-fixed":"#002114","on-primary":"#ffffff","surface":"#fcf9f8","on-primary-container":"#9fcfb6","primary-fixed":"#bceed3","tertiary":"#4f3600","secondary-container":"#fe8357","on-tertiary-container":"#f1bd5a","secondary-fixed":"#ffdbcf","on-secondary-fixed-variant":"#822801","surface-container-low":"#f6f3f2","on-error":"#ffffff","primary-fixed-dim":"#a1d1b8","on-secondary":"#ffffff","tertiary-container":"#6c4c00","on-secondary-fixed":"#390c00","primary-container":"#2d5a46","outline-variant":"#c0c9c2","background":"#fcf9f8","on-secondary-container":"#6f2000","on-surface":"#1b1c1c","inverse-primary":"#a1d1b8","tertiary-fixed-dim":"#f2be5b","surface-container-highest":"#e4e2e1","surface-tint":"#3a6752","surface-container-high":"#eae7e7","outline":"#717973","tertiary-fixed":"#ffdea7","surface-dim":"#dcd9d9","on-tertiary-fixed-variant":"#5e4200","on-tertiary-fixed":"#271900","on-surface-variant":"#414944","error":"#ba1a1a","surface-variant":"#e4e2e1","on-tertiary":"#ffffff","inverse-surface":"#303030","surface-container":"#f0eded","secondary":"#a23e18","error-container":"#ffdad6"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"space-xl":"2rem","space-4xl":"6rem","container-max":"75rem","space-sm":"0.75rem","space-md":"1rem","gutter-mobile":"1rem","space-2xs":"0.25rem","space-xs":"0.5rem","space-2xl":"3rem","space-lg":"1.5rem","gutter-desktop":"1.5rem","space-3xl":"4.5rem"},"fontFamily":{"headline-lg-mobile":["Plus Jakarta Sans"],"label-sm":["Plus Jakarta Sans"],"headline-xl":["Plus Jakarta Sans"],"headline-sm":["Plus Jakarta Sans"],"headline-xl-mobile":["Plus Jakarta Sans"],"headline-md":["Plus Jakarta Sans"],"label-md":["Plus Jakarta Sans"],"body-md":["Noto Sans"],"body-sm":["Noto Sans"],"headline-lg":["Plus Jakarta Sans"],"body-lg":["Noto Sans"],"label-lg":["Plus Jakarta Sans"]},"fontSize":{"headline-lg-mobile":["24px",{"lineHeight":"34px","letterSpacing":"0","fontWeight":"700"}],"label-sm":["11px",{"lineHeight":"16px","letterSpacing":"0.04em","fontWeight":"700"}],"headline-xl":["40px",{"lineHeight":"52px","letterSpacing":"-0.02em","fontWeight":"700"}],"headline-sm":["18px",{"lineHeight":"28px","letterSpacing":"0","fontWeight":"600"}],"headline-xl-mobile":["30px",{"lineHeight":"40px","letterSpacing":"-0.01em","fontWeight":"700"}],"headline-md":["22px",{"lineHeight":"32px","letterSpacing":"0","fontWeight":"600"}],"label-md":["13px",{"lineHeight":"18px","letterSpacing":"0.02em","fontWeight":"600"}],"body-md":["14px",{"lineHeight":"24px","letterSpacing":"0.01em","fontWeight":"400"}],"body-sm":["12px",{"lineHeight":"20px","letterSpacing":"0.01em","fontWeight":"400"}],"headline-lg":["32px",{"lineHeight":"44px","letterSpacing":"-0.01em","fontWeight":"700"}],"body-lg":["16px",{"lineHeight":"28px","letterSpacing":"0.015em","fontWeight":"400"}],"label-lg":["15px",{"lineHeight":"20px","letterSpacing":"0.02em","fontWeight":"600"}]}}}};</script></head><body class="bg-surface font-body-md text-on-surface antialiased min-h-screen flex flex-col"><header class="fixed top-0 left-0 w-full z-50 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-20 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-space-md"><a class="flex items-center gap-space-xs group" data-path="home" href="../lp/code.html"><div class="w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center text-on-primary shadow-sm"><span class="material-symbols-outlined text-[24px]">school</span></div><div class="flex flex-col"><span class="font-label-sm text-label-sm text-primary tracking-wider">岡山県高校入試プレテスト</span><span class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors leading-tight">岡山県統一模試 <span class="font-headline-md text-headline-md text-primary font-bold">おかもし</span></span></div></a><nav class="hidden xl:flex items-center gap-space-lg" data-active-classes="text-primary font-bold"><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors py-space-xs" data-path="next-exam" href="../lp/code.html#next-exam">次回模試</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors py-space-xs" data-path="annual-schedule" href="../lp/code.html#schedule-table">年間日程</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors py-space-xs" data-path="exam-details" href="../lp/code.html#features-section">模試詳細</a><a aria-current="page" class="transition-colors py-space-xs text-primary font-bold" data-path="partner-schools" href="../_1/code.html">参加塾一覧</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors py-space-xs" data-path="news-and-blog" href="#">ブログ/お知らせ</a></nav><div class="flex items-center gap-space-sm"><a class="hidden sm:inline-flex items-center gap-space-xs px-space-md py-space-xs bg-secondary text-on-secondary rounded-lg font-label-md text-label-md shadow-[0_4px_12px_-2px_rgba(162,62,24,0.3)] hover:bg-secondary-container hover:text-on-secondary-container transition-all" data-path="application-entry" href="../_4/code.html"><span class="material-symbols-outlined text-[18px]">assignment</span><span>お申し込みはこちら</span><span class="material-symbols-outlined text-[16px]">chevron_right</span></a><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-20 bg-surface flex-grow"><div class="flex flex-col w-full">
-<!-- Breadcrumb Navigation -->
-<div class="w-full bg-surface-container-low border-none">
-<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-space-sm">
-<nav aria-label="パンくずリスト" class="flex items-center gap-space-xs text-on-surface-variant font-body-sm text-body-sm">
-<a class="hover:text-primary transition-colors flex items-center gap-1" data-path="home" href="../lp/code.html">
-<span class="material-symbols-outlined text-[16px]">home</span>
-<span>TOP</span>
+<!DOCTYPE html><html lang="ja" class="" data-stitch-anim-opacity="true" style="height: 100%; min-height: 100%; width: 100%; background-color: rgb(252, 249, 248); opacity: 0; visibility: visible;" data-stitch-orig-opacity="1"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"tertiary-fixed-dim":"#f2be5b","secondary-fixed-dim":"#ffb59c","inverse-on-surface":"#f3f0ef","tertiary-fixed":"#ffdea7","on-tertiary-container":"#f1bd5a","surface":"#fcf9f8","surface-container-lowest":"#ffffff","surface-container-highest":"#e4e2e1","on-secondary-fixed-variant":"#822801","surface-container-low":"#f6f3f2","on-surface-variant":"#414944","tertiary":"#4f3600","primary-fixed":"#bceed3","on-secondary":"#ffffff","secondary":"#a23e18","on-tertiary":"#ffffff","on-primary-container":"#9fcfb6","outline-variant":"#c0c9c2","secondary-container":"#fe8357","on-primary-fixed":"#002114","tertiary-container":"#6c4c00","on-background":"#1b1c1c","surface-tint":"#3a6752","on-tertiary-fixed-variant":"#5e4200","on-secondary-fixed":"#390c00","background":"#fcf9f8","surface-container":"#f0eded","surface-container-high":"#eae7e7","on-surface":"#1b1c1c","on-secondary-container":"#6f2000","secondary-fixed":"#ffdbcf","on-primary-fixed-variant":"#224f3c","error":"#ba1a1a","primary-container":"#2d5a46","inverse-surface":"#303030","primary-fixed-dim":"#a1d1b8","surface-dim":"#dcd9d9","on-tertiary-fixed":"#271900","on-primary":"#ffffff","error-container":"#ffdad6","on-error-container":"#93000a","surface-bright":"#fcf9f8","primary":"#134230","surface-variant":"#e4e2e1","inverse-primary":"#a1d1b8","outline":"#717973","on-error":"#ffffff"},borderRadius:{DEFAULT:"0.25rem",lg:"0.5rem",xl:"0.75rem",full:"9999px"},spacing:{"gutter-desktop":"1.5rem","space-xs":"0.5rem","space-2xs":"0.25rem","container-max":"75rem","space-lg":"1.5rem","space-3xl":"4.5rem","space-xl":"2rem","space-sm":"0.75rem","space-4xl":"6rem","space-md":"1rem","space-2xl":"3rem","gutter-mobile":"1rem"},fontFamily:{"label-lg":["Plus Jakarta Sans"],"body-lg":["Noto Sans"],"body-md":["Noto Sans"],"headline-lg":["Plus Jakarta Sans"],"label-sm":["Plus Jakarta Sans"],"headline-xl":["Plus Jakarta Sans"],"headline-xl-mobile":["Plus Jakarta Sans"],"headline-lg-mobile":["Plus Jakarta Sans"],"headline-md":["Plus Jakarta Sans"],"headline-sm":["Plus Jakarta Sans"],"body-sm":["Noto Sans"],"label-md":["Plus Jakarta Sans"]},fontSize:{"label-lg":["15px",{lineHeight:"20px",letterSpacing:"0.02em",fontWeight:"600"}],"body-lg":["16px",{lineHeight:"28px",letterSpacing:"0.015em",fontWeight:"400"}],"body-md":["14px",{lineHeight:"24px",letterSpacing:"0.01em",fontWeight:"400"}],"headline-lg":["32px",{lineHeight:"44px",letterSpacing:"-0.01em",fontWeight:"700"}],"label-sm":["11px",{lineHeight:"16px",letterSpacing:"0.04em",fontWeight:"700"}],"headline-xl":["40px",{lineHeight:"52px",letterSpacing:"-0.02em",fontWeight:"700"}],"headline-xl-mobile":["30px",{lineHeight:"40px",letterSpacing:"-0.01em",fontWeight:"700"}],"headline-lg-mobile":["24px",{lineHeight:"34px",letterSpacing:"0",fontWeight:"700"}],"headline-md":["22px",{lineHeight:"32px",letterSpacing:"0",fontWeight:"600"}],"headline-sm":["18px",{lineHeight:"28px",letterSpacing:"0",fontWeight:"600"}],"body-sm":["12px",{lineHeight:"20px",letterSpacing:"0.01em",fontWeight:"400"}],"label-md":["13px",{lineHeight:"18px",letterSpacing:"0.02em",fontWeight:"600"}]}}}}</script></head><body class="bg-background font-body-md text-body-md text-on-surface antialiased" style="min-height: 100vh; width: 100%; opacity: 1; visibility: visible; display: block; background-color: rgb(252, 249, 248);"><header class="fixed top-0 left-0 right-0 z-50 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-20 max-w-[75rem] mx-auto px-gutter-desktop flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-md shrink-0"><a class="flex items-center gap-space-xs group" data-path="top" href="#"><div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-on-primary shadow-sm"><span class="material-symbols-outlined text-[24px]">school</span></div><div class="flex flex-col"><span class="font-label-sm text-label-sm text-primary tracking-wider">岡山県高校入試プレテスト</span><span class="font-headline-sm text-headline-sm text-primary tracking-tight font-bold group-hover:text-primary-container transition-colors">岡山県統一模試 <span class="font-headline-sm text-headline-sm text-secondary font-bold">おかもし</span></span></div></a></div><nav class="hidden xl:flex items-center gap-space-xs" data-active-classes="bg-primary-container text-on-primary-container font-bold rounded-lg"><a class="px-space-xs py-space-2xs text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-colors" data-path="upcoming-exam" href="#">次回模試案内</a><a class="px-space-xs py-space-2xs text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-colors" data-path="exam-guidelines" href="#">実施要項</a><a class="px-space-xs py-space-2xs text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-colors" data-path="annual-schedule" href="#">年間日程</a><a class="px-space-xs py-space-2xs text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-colors" data-path="exam-scope" href="#">出題範囲</a><a class="px-space-xs py-space-2xs text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-colors" data-path="why-choose" href="#">選ばれる理由</a><a class="px-space-xs py-space-2xs text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-colors" data-path="partner-schools" href="#">実施塾一覧</a><a class="px-space-xs py-space-2xs text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-colors" data-path="faq" href="#">よくある質問</a><a aria-current="page" class="px-space-xs py-space-2xs transition-colors bg-primary-container text-on-primary-container font-bold rounded-lg" data-path="news" href="#">お知らせ</a></nav><div class="flex items-center gap-space-xs shrink-0"><div class="hidden md:flex items-center gap-space-xs"><a class="px-space-sm py-space-xs text-primary font-label-sm text-label-sm rounded-lg hover:bg-primary-fixed hover:text-on-primary-fixed transition-colors text-center whitespace-nowrap" data-path="inquiry-schools" href="#">塾・学校関係者</a><a class="px-space-sm py-space-xs text-on-surface-variant font-label-sm text-label-sm rounded-lg hover:bg-surface-container-high hover:text-on-surface transition-colors text-center whitespace-nowrap" data-path="inquiry-individuals" href="#">個人お問合せ</a></div><a class="flex items-center gap-space-2xs px-space-md py-space-xs bg-secondary text-on-secondary font-label-md text-label-md rounded-lg shadow-[0_4px_12px_rgba(162,62,24,0.25)] hover:bg-on-secondary-container hover:text-on-secondary transition-all shrink-0" data-path="application-entry" href="#"><span class="material-symbols-outlined text-[18px]">edit_calendar</span><span class="">模試申込み</span></a><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-20 bg-surface"><div class="flex flex-col w-full">
+<!-- Micro Breadcrumb & Atmospheric Top Strip -->
+<section class="w-full bg-surface-container-low/70 py-space-sm">
+<div class="max-w-[75rem] mx-auto px-gutter-desktop">
+<nav class="flex items-center gap-space-xs font-label-sm text-label-sm text-on-surface-variant">
+<a class="hover:text-primary transition-colors flex items-center gap-space-2xs" data-path="top" href="#">
+<span class="material-symbols-outlined text-[14px]">home</span>
+<span class="">TOP</span>
 </a>
 <span class="material-symbols-outlined text-[14px] text-outline">chevron_right</span>
-<span aria-current="page" class="text-on-surface font-semibold">実施塾一覧</span>
+<span class="text-primary font-bold">お知らせ・ブログ一覧</span>
+</nav>
+</div>
+</section>
+<!-- Editorial Page Title Banner -->
+<section class="relative w-full overflow-hidden bg-surface py-space-lg">
+<div class="absolute -right-20 -top-24 w-96 h-96 bg-primary-fixed/20 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute left-1/3 -bottom-32 w-80 h-80 bg-secondary-fixed/20 rounded-full blur-3xl pointer-events-none"></div>
+<div class="max-w-[75rem] mx-auto px-gutter-desktop relative z-10">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-lg">
+<div class="flex flex-col gap-space-xs max-w-3xl">
+
+<h1 class="font-headline-xl text-headline-xl text-primary font-bold tracking-tight">
+            お知らせ・お役立ちブログ
+          </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mt-space-2xs leading-relaxed">
+            岡山県統一模擬試験（おかもし）の実施要項・重要なお知らせや、岡山県の高校入試・県立中高一貫校受検に役立つ受験情報・学習コラムをお届けします。
+          </p>
+</div>
+<!-- Academic Authority Mini Data Badge -->
+<div class="shrink-0 p-space-md bg-surface-container-lowest rounded-xl shadow-sm flex items-center gap-space-md">
+<div class="w-12 h-12 rounded-lg bg-primary-container text-on-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[26px]">analytics</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">岡山県内最大規模模試</span>
+<span class="font-headline-sm text-headline-sm text-primary font-bold">年間 18,000+ 人受験</span>
+</div>
+</div>
+</div>
+<!-- Segmented Category Filter Strip -->
+<div class="flex flex-wrap items-center gap-space-xs p-space-2xs bg-surface-container-low rounded-xl mt-space-md">
+<button class="category-btn px-space-md py-space-xs bg-primary text-on-primary font-label-md text-label-md rounded-lg shadow-sm transition-all flex items-center gap-space-2xs" data-filter="all" type="button">
+<span class="material-symbols-outlined text-[16px]">grid_view</span>
+<span class="">すべて</span>
+</button>
+<button class="category-btn px-space-md py-space-xs bg-surface-container-lowest text-on-surface-variant hover:text-primary hover:bg-surface-container-high font-label-md text-label-md rounded-lg transition-all flex items-center gap-space-2xs" data-filter="important" type="button">
+<span class="material-symbols-outlined text-[16px] text-secondary">campaign</span>
+<span class="">重要なお知らせ</span>
+</button>
+<button class="category-btn px-space-md py-space-xs bg-surface-container-lowest text-on-surface-variant hover:text-primary hover:bg-surface-container-high font-label-md text-label-md rounded-lg transition-all flex items-center gap-space-2xs" data-filter="exam-info" type="button">
+<span class="material-symbols-outlined text-[16px] text-primary">school</span>
+<span class="">入試・受検情報</span>
+</button>
+<button class="category-btn px-space-md py-space-xs bg-surface-container-lowest text-on-surface-variant hover:text-primary hover:bg-surface-container-high font-label-md text-label-md rounded-lg transition-all flex items-center gap-space-2xs" data-filter="column" type="button">
+<span class="material-symbols-outlined text-[16px] text-tertiary-container">menu_book</span>
+<span class="">模試活用法・学習コラム</span>
+</button>
+<button class="category-btn px-space-md py-space-xs bg-surface-container-lowest text-on-surface-variant hover:text-primary hover:bg-surface-container-high font-label-md text-label-md rounded-lg transition-all flex items-center gap-space-2xs" data-filter="schedule" type="button">
+<span class="material-symbols-outlined text-[16px] text-primary">calendar_month</span>
+<span class="">実施要項・日程</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Featured Pick-up Highlight (Bento Editorial Card) -->
+<section class="w-full bg-surface pb-6">
+<div class="max-w-[75rem] mx-auto px-gutter-desktop">
+<div class="relative bg-surface-container-lowest rounded-xl shadow-md overflow-hidden group hover:shadow-xl transition-all duration-300">
+<div class="grid grid-cols-1 lg:grid-cols-12 items-stretch">
+<!-- Image Split with Deep Tone -->
+<div class="lg:col-span-6 relative overflow-hidden bg-primary h-80 md:h-full">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90" data-alt="Quiet and bright Japanese mock examination hall in Okayama with junior high school students focused on test booklets under gentle morning window sunlight, warm academic atmosphere with earthy wood desks and deep green school accents" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6xlEasRGIYDs0aMSY_2xmIiKipy01AfojnFUvHgmbdmqWObeLT_LVcvtCq8ALpq7ImgeDkLR2PiRpBAK2W5ShFBzdRKQMunMRPPcAXApLvOaBESlFqa_84xrk1tL3cossrAVr2D725mlhVn-BjA8tC7o2eLloEh9PDAY1rNachCrC1A5MLyAIgAvdY08rqxI0AX_YTg-R7wDKAbD_YYIWCHtsLYb3xX-SmPsEHoXkH3TQqywAnLqP">
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 via-transparent to-transparent"></div>
+<div class="absolute top-space-md left-space-md flex flex-wrap items-center gap-space-2xs">
+<span class="px-space-sm py-space-2xs bg-secondary text-on-secondary font-label-sm text-label-sm font-bold rounded-full shadow-sm flex items-center gap-space-2xs">
+<span class="material-symbols-outlined text-[14px]">notifications_active</span>
+<span class="">注目記事</span>
+</span>
+<span class="px-space-sm py-space-2xs bg-surface-container-lowest/90 text-primary font-label-sm text-label-sm font-bold rounded-full backdrop-blur-sm">
+                2026年度10月号
+              </span>
+</div>
+<div class="absolute bottom-space-md left-space-md text-on-primary">
+<span class="font-label-sm text-label-sm opacity-80">対象学年: 中学3年生</span>
+<p class="font-headline-sm text-headline-sm font-bold">志望校判定模試 本番直前プレテスト</p>
+</div>
+</div>
+<!-- Content Split -->
+<div class="lg:col-span-6 flex flex-col justify-between bg-surface-container-lowest p-6 md:p-7">
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-space-sm text-on-surface-variant font-label-sm text-label-sm">
+<span class="flex items-center gap-space-2xs font-body-sm text-body-sm text-outline">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+<span class="">2026.09.04 公開</span>
+</span>
+<span class="inline-block w-1.5 h-1.5 rounded-full bg-outline-variant"></span>
+<span class="text-secondary font-bold">重要なお知らせ</span>
+</div>
+<a class="group-hover:text-primary transition-colors" data-path="news-detail-oct-2026" href="#">
+<h2 class="font-headline-lg text-headline-lg font-bold text-on-surface leading-snug">
+                  2026年度 10月号 中学3年生おかもし実施要項を公開しました（会場・自宅受験）
+                </h2>
+</a>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                秋の本格的受験期突入に合わせて実施される「中3・第2回岡山県統一模試」。県立普通科トップ高（朝日・操山・芳泉・一宮）から私立有力校まで、岡山県高校入試の出題傾向と配点基準を完全踏襲した実践判定を行います。会場受験・自宅受験の受付を開始しました。
+              </p>
+<!-- Schedule Mini Matrix Tag -->
+<div class="grid grid-cols-2 sm:grid-cols-3 gap-space-xs p-space-sm bg-surface-container-low rounded-lg font-body-sm text-body-sm">
+<div>
+<span class="text-on-surface-variant block font-label-sm text-label-sm">試験日</span>
+<strong class="text-primary font-bold">10月11日(日)</strong>
+</div>
+<div>
+<span class="text-on-surface-variant block font-label-sm text-label-sm">申込締切</span>
+<strong class="text-secondary font-bold">9月29日(火)</strong>
+</div>
+<div class="col-span-2 sm:col-span-1">
+<span class="text-on-surface-variant block font-label-sm text-label-sm">成績返却</span>
+<strong class="text-on-surface font-bold">10月23日(金)順次</strong>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between pt-2">
+<a class="inline-flex items-center gap-space-2xs font-label-lg text-label-lg text-primary hover:text-primary-container font-bold group-hover:translate-x-1 transition-all" data-path="news-detail-oct-2026" href="#">
+<span class="">詳細・要項を読む</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</a>
+<a class="px-space-md py-space-xs bg-secondary text-on-secondary font-label-md text-label-md rounded-lg shadow-sm hover:bg-on-secondary-container transition-all flex items-center gap-space-2xs" data-path="application-entry" href="#">
+<span class="material-symbols-outlined text-[16px]">edit_calendar</span>
+<span class="">模試を申込む</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Main Articles Grid & Aside Section -->
+<section class="w-full bg-surface-container-low py-space-xl">
+<div class="max-w-[75rem] mx-auto px-gutter-desktop">
+<div class="flex items-center justify-between pb-space-lg">
+<div class="flex items-center gap-space-sm">
+<div class="w-2.5 h-8 bg-primary rounded-full"></div>
+<h2 class="font-headline-md text-headline-md text-primary font-bold">
+            新着記事・アーカイブ
+          </h2>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">全 48 件中 1〜6 件を表示</span>
+</div>
+<!-- 3-Column Card Mosaic Grid -->
+<div class="flex flex-col gap-space-sm">
+  <!-- Article Card 1 -->
+  <article class="flex flex-col sm:flex-row bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group p-space-xs sm:p-space-sm gap-space-sm items-center">
+    <div class="relative w-full sm:w-48 md:w-56 h-32 shrink-0 rounded-lg overflow-hidden bg-surface-container">
+      <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A clean student desktop setup with stationery, credit card and digital tablet showing convenience store payment barcode screen for entrance exam fee, bright modern editorial mood" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsNNSSYVNzAFgLU3zxYiPy5NxY9NtLwv_fCnTn9bHNDDUv59jwUkb7OEKwDZMSUXqHzKd5RAKKkYM_uTU5D-UTk77LJpU4ANtGOH5Iw_oCv4Lg66kAVk5Xa5oHTRTE4SW72Kx0WfrEdMNcHWejONucKPSiOlqhY2DMkDW_ruWxiUo8atkrjG44-8jWlHZA9h1Yc5accnyvoiL66Yvz1MX5gqTfC4CBPpdOQzLHxJOc_EgkYTE8oIR-">
+      <div class="absolute top-space-2xs left-space-2xs">
+        <span class="px-space-2xs py-py-space-2xs bg-surface-container-lowest/95 text-primary font-label-sm text-label-sm font-bold rounded shadow-sm">
+          トピックス
+        </span>
+      </div>
+    </div>
+    <div class="flex flex-col flex-1 justify-between gap-space-2xs w-full py-space-2xs pr-space-xs">
+      <div class="flex flex-col gap-space-2xs">
+        <div class="flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm">
+          <span class="flex items-center gap-space-2xs font-body-sm text-body-sm text-outline">
+            <span class="material-symbols-outlined text-[14px]">calendar_today</span>
+            <span class="">2026.08.19</span>
+          </span>
+          <span class="inline-block w-1.5 h-1.5 rounded-full bg-outline-variant"></span>
+          <span class="text-outline font-label-sm text-label-sm">受験手続き・事務</span>
+        </div>
+        <a class="group-hover:text-primary transition-colors" data-path="news-article-payment-guide" href="#">
+          <h3 class="font-headline-sm text-headline-sm font-bold text-on-surface leading-snug line-clamp-1">
+            おかもし 決済用リンクおよびコンビニ決済手順について
+          </h3>
+        </a>
+        <p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-1 sm:line-clamp-2 leading-relaxed">
+          個人受験お申し込み時にお選びいただけるクレジットカード決済、およびセブンイレブン・ファミリーマート・ローソン等でのコンビニ店頭払込の確定フローをご案内します。
+        </p>
+      </div>
+      <div class="flex items-center justify-end pt-space-2xs">
+        <a class="text-secondary font-label-sm text-label-sm font-bold flex items-center gap-space-2xs group-hover:translate-x-1 transition-transform" data-path="news-article-payment-guide" href="#">
+          <span class="">詳細を読む</span>
+          <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+        </a>
+      </div>
+    </div>
+  </article>
+  <!-- Article Card 2 -->
+  <article class="flex flex-col sm:flex-row bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group p-space-xs sm:p-space-sm gap-space-sm items-center">
+    <div class="relative w-full sm:w-48 md:w-56 h-32 shrink-0 rounded-lg overflow-hidden bg-surface-container">
+      <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Japanese high school students celebrating success in Okayama, smile with textbooks outside historic brick school building in gentle sunlight, deep moss and terra-cotta tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCIjHH52f3xsOJ3SeSnHiUMQHd5h5w0sR-Rld4CmIPonNyRjRKwz1yiuXc3py4BGg6rHaTBwmRvXsFqFr2Sqzea8MLU8gVnNqQQ_yi4ovFPXH6MswHMzleTyJoP8MIyYoev1VpR0vKlA_5m8RscE5TcmPb_Fhr2-OLCUSiEdcT7VgdpI5AH3phqTBbhCuPVGTpPuWvzm_exqjfk7LJl7Op4V2cbg7EAEfmWHrz4WNOw2A47M-LF6u1j">
+      <div class="absolute top-space-2xs left-space-2xs">
+        <span class="px-space-2xs py-py-space-2xs bg-primary-container text-on-primary-container font-label-sm text-label-sm font-bold rounded shadow-sm">
+          入試・受検情報
+        </span>
+      </div>
+    </div>
+    <div class="flex flex-col flex-1 justify-between gap-space-2xs w-full py-space-2xs pr-space-xs">
+      <div class="flex flex-col gap-space-2xs">
+        <div class="flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm">
+          <span class="flex items-center gap-space-2xs font-body-sm text-body-sm text-outline">
+            <span class="material-symbols-outlined text-[14px]">calendar_today</span>
+            <span class="">2026.07.30</span>
+          </span>
+          <span class="inline-block w-1.5 h-1.5 rounded-full bg-outline-variant"></span>
+          <span class="text-outline font-label-sm text-label-sm">合格体験記・学習法</span>
+        </div>
+        <a class="group-hover:text-primary transition-colors" data-path="news-article-senior-interview" href="#">
+          <h3 class="font-headline-sm text-headline-sm font-bold text-on-surface leading-snug line-clamp-1">
+            【岡山県の高校受験】合格への近道はここにある！先輩受験生が語る『おかもし』活用法
+          </h3>
+        </a>
+        <p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-1 sm:line-clamp-2 leading-relaxed">
+          岡山朝日高校・岡山芳泉高校に現役合格を果たした先輩たちにインタビュー。判定データの推移をどう分析し、秋以降の弱点克服へ繋げたかの実体験レポート。
+        </p>
+      </div>
+      <div class="flex items-center justify-end pt-space-2xs">
+        <a class="text-secondary font-label-sm text-label-sm font-bold flex items-center gap-space-2xs group-hover:translate-x-1 transition-transform" data-path="news-article-senior-interview" href="#">
+          <span class="">詳細を読む</span>
+          <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+        </a>
+      </div>
+    </div>
+  </article>
+  <!-- Article Card 3 -->
+  <article class="flex flex-col sm:flex-row bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group p-space-xs sm:p-space-sm gap-space-sm items-center">
+    <div class="relative w-full sm:w-48 md:w-56 h-32 shrink-0 rounded-lg overflow-hidden bg-surface-container">
+      <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Quiet intense examination room setting with test booklets, pencils and analog clock showing official exam time, peaceful academic concentration in warm Japanese educational aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4Ko4ztH0TGrEYNKSrhmpTCyr-cD3PXIMShV-YahCDMGeEDGDmrSDHelf0rBCvX388sBFXglNTZMYWN4bjqJ8TVgUWzZo7LQo7MJMZvrT3VTJMFVBKpTdJQa85EhI10V1I2F-wYfIdDbAyu3uXxJbHxpMEgTokvR9WSnr9i5v-ug5u0KJfku9sMlbF2tXlvtO8mLKosqIXPla6wiqH9jel9LTgZzn2RvLk4_o8OryXKhFXF9hugHwJ">
+      <div class="absolute top-space-2xs left-space-2xs">
+        <span class="px-space-2xs py-py-space-2xs bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-bold rounded shadow-sm">
+          学習コラム
+        </span>
+      </div>
+    </div>
+    <div class="flex flex-col flex-1 justify-between gap-space-2xs w-full py-space-2xs pr-space-xs">
+      <div class="flex flex-col gap-space-2xs">
+        <div class="flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm">
+          <span class="flex items-center gap-space-2xs font-body-sm text-body-sm text-outline">
+            <span class="material-symbols-outlined text-[14px]">calendar_today</span>
+            <span class="">2026.07.21</span>
+          </span>
+          <span class="inline-block w-1.5 h-1.5 rounded-full bg-outline-variant"></span>
+          <span class="text-outline font-label-sm text-label-sm">受験メンタル対策</span>
+        </div>
+        <a class="group-hover:text-primary transition-colors" data-path="news-article-hall-exam-benefit" href="#">
+          <h3 class="font-headline-sm text-headline-sm font-bold text-on-surface leading-snug line-clamp-1">
+            おかもし 会場受験のススメ 〜本番さながらの空気感と『しんどい』の先にある成長〜
+          </h3>
+        </a>
+        <p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-1 sm:line-clamp-2 leading-relaxed">
+          自宅受験では体験できない周囲の緊張感、マークミスへの配慮、時間配分のプレッシャー。本番当日に本来の実力を発揮するためのメンタルトレーニング論。
+        </p>
+      </div>
+      <div class="flex items-center justify-end pt-space-2xs">
+        <a class="text-secondary font-label-sm text-label-sm font-bold flex items-center gap-space-2xs group-hover:translate-x-1 transition-transform" data-path="news-article-hall-exam-benefit" href="#">
+          <span class="">詳細を読む</span>
+          <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+        </a>
+      </div>
+    </div>
+  </article>
+  <!-- Article Card 4 -->
+  <article class="flex flex-col sm:flex-row bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group p-space-xs sm:p-space-sm gap-space-sm items-center">
+    <div class="relative w-full sm:w-48 md:w-56 h-32 shrink-0 rounded-lg overflow-hidden bg-surface-container">
+      <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Elementary school 6th grade Japanese student diligently solving aptitude test worksheets with notebook and compass ruler on oak desk, calm educational library daylight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_RyGui2dp6pwnKedw0uSxzZJiSIelHIxJrxIVIRkDiLyqBF1u11ZycpTB-d2M9GlxnRmKUF0ocNIoWfbV64KU0ZdNbDgc8hOYPXDSJllgAwwFTuPiqIJtk7YUM8bZ2Qpt8tlD6kNNVuTlVDZGtac0zCsCpJNvve-a8c20UT_vATkmr5K2QRN-t34ijPuvgkUgGjPw4rr0Ok5ADeDJjBIwWY41cGGs_MCL-EqRApG_ju-8bdNTRVJD">
+      <div class="absolute top-space-2xs left-space-2xs">
+        <span class="px-space-2xs py-py-space-2xs bg-primary text-on-primary font-label-sm text-label-sm font-bold rounded shadow-sm">
+          実施要項
+        </span>
+      </div>
+    </div>
+    <div class="flex flex-col flex-1 justify-between gap-space-2xs w-full py-space-2xs pr-space-xs">
+      <div class="flex flex-col gap-space-2xs">
+        <div class="flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm">
+          <span class="flex items-center gap-space-2xs font-body-sm text-body-sm text-outline">
+            <span class="material-symbols-outlined text-[14px]">calendar_today</span>
+            <span class="">2026.07.13</span>
+          </span>
+          <span class="inline-block w-1.5 h-1.5 rounded-full bg-outline-variant"></span>
+          <span class="text-outline font-label-sm text-label-sm">県立中高一貫校受検</span>
+        </div>
+        <a class="group-hover:text-primary transition-colors" data-path="news-article-elementary-exam" href="#">
+          <h3 class="font-headline-sm text-headline-sm font-bold text-on-surface leading-snug line-clamp-1">
+            小6生対象 岡山県適性検査対策模試 9月号 実施要項・出題範囲のご案内
+          </h3>
+        </a>
+        <p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-1 sm:line-clamp-2 leading-relaxed">
+          岡山大安寺中等教育学校・岡山操山中・倉敷天城中の公立中高一貫校受検に対応した適性検査Ⅰ・Ⅱの模試概要。読解力・論理的思考力の到達度を精密測定します。
+        </p>
+      </div>
+      <div class="flex items-center justify-end pt-space-2xs">
+        <a class="text-secondary font-label-sm text-label-sm font-bold flex items-center gap-space-2xs group-hover:translate-x-1 transition-transform" data-path="news-article-elementary-exam" href="#">
+          <span class="">詳細を読む</span>
+          <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+        </a>
+      </div>
+    </div>
+  </article>
+  <!-- Article Card 5 -->
+  <article class="flex flex-col sm:flex-row bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group p-space-xs sm:p-space-sm gap-space-sm items-center">
+    <div class="relative w-full sm:w-48 md:w-56 h-32 shrink-0 rounded-lg overflow-hidden bg-surface-container">
+      <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Japanese high school academic report cards, statistical bell curve charts, school recommendation documents on refined minimal office desk with fountain pen" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBER3dl2bSesq7hzylGQlzHqZ2tkVezLOssHjuPtkUSxuRA_hdvrXmoExwq7U3mpJeWa8gtIiDo1A1zxZ13VbKIvzOPWriOrHgBFcaFPeV9m2kbcyT5mXbbpKTZBbKHww2cKJYI28T9NNHOARVe0zkPdXFQgdsRzuxWeougtiZOTTF5OZRuhddk9d--C6unwm0hZHAUArzAKW45L78dSp7egN5ObRCE4cCpcnuHWuLdQHBUxiEwTdKK">
+      <div class="absolute top-space-2xs left-space-2xs">
+        <span class="px-space-2xs py-py-space-2xs bg-primary-container text-on-primary-container font-label-sm text-label-sm font-bold rounded shadow-sm">
+          入試・受検情報
+        </span>
+      </div>
+    </div>
+    <div class="flex flex-col flex-1 justify-between gap-space-2xs w-full py-space-2xs pr-space-xs">
+      <div class="flex flex-col gap-space-2xs">
+        <div class="flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm">
+          <span class="flex items-center gap-space-2xs font-body-sm text-body-sm text-outline">
+            <span class="material-symbols-outlined text-[14px]">calendar_today</span>
+            <span class="">2026.06.28</span>
+          </span>
+          <span class="inline-block w-1.5 h-1.5 rounded-full bg-outline-variant"></span>
+          <span class="text-outline font-label-sm text-label-sm">岡山県入試制度研究</span>
+        </div>
+        <a class="group-hover:text-primary transition-colors" data-path="news-article-naishinten-analysis" href="#">
+          <h3 class="font-headline-sm text-headline-sm font-bold text-on-surface leading-snug line-clamp-1">
+            岡山朝日高校・操山高校・芳泉高校の志望校判定基準と内申点（通知表評価点）の重要性
+          </h3>
+        </a>
+        <p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-1 sm:line-clamp-2 leading-relaxed">
+          岡山県公立高校入試の選抜比率（学力検査と調査書）を徹底解説。おかもし独自の『内申点加味型合格可能性判定』がなぜ保護者や進路指導に信頼されるのかを紐解きます。
+        </p>
+      </div>
+      <div class="flex items-center justify-end pt-space-2xs">
+        <a class="text-secondary font-label-sm text-label-sm font-bold flex items-center gap-space-2xs group-hover:translate-x-1 transition-transform" data-path="news-article-naishinten-analysis" href="#">
+          <span class="">詳細を読む</span>
+          <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+        </a>
+      </div>
+    </div>
+  </article>
+  <!-- Article Card 6 -->
+  <article class="flex flex-col sm:flex-row bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group p-space-xs sm:p-space-sm gap-space-sm items-center">
+    <div class="relative w-full sm:w-48 md:w-56 h-32 shrink-0 rounded-lg overflow-hidden bg-surface-container">
+      <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Teacher gently explaining exam diagnostic radar chart sheet to attentive Japanese student and parent in bright wooden consultation booth, trustworthy academic atmosphere" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmRNjkULsUOOKOzy90r7eDwSXDMu-2gxIid5tcWUT0Xt6aAmHtd5ArtgY23QLNFpbjzZZY2k1BZiD0FbcKBX3QTs8vKeWS0rqspoNs57V1cHZv3tG2_A8XeTFw4fOfla41IbtEu7J8a7Z_lvjMoM2il6wPFzmXjEbet5m6yCiwA4NWN6-adJPizN6QKWfaJmPANae6igs-A-kzIitvqZ8FTamMUx_LZMjfItiqpNnVexGUi9ytOcPA">
+      <div class="absolute top-space-2xs left-space-2xs">
+        <span class="px-space-2xs py-py-space-2xs bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-bold rounded shadow-sm">
+          模試活用法
+        </span>
+      </div>
+    </div>
+    <div class="flex flex-col flex-1 justify-between gap-space-2xs w-full py-space-2xs pr-space-xs">
+      <div class="flex flex-col gap-space-2xs">
+        <div class="flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm">
+          <span class="flex items-center gap-space-2xs font-body-sm text-body-sm text-outline">
+            <span class="material-symbols-outlined text-[14px]">calendar_today</span>
+            <span class="">2026.06.15</span>
+          </span>
+          <span class="inline-block w-1.5 h-1.5 rounded-full bg-outline-variant"></span>
+          <span class="text-outline font-label-sm text-label-sm">成績表活用マニュアル</span>
+        </div>
+        <a class="group-hover:text-primary transition-colors" data-path="news-article-report-analysis" href="#">
+          <h3 class="font-headline-sm text-headline-sm font-bold text-on-surface leading-snug line-clamp-1">
+            返却された『学力診断シート』の正しい見方と、弱点克服への学習サイクル
+          </h3>
+        </a>
+        <p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-1 sm:line-clamp-2 leading-relaxed">
+          偏差値や判定記号に一喜一憂するだけで終わらせない。大問・小問別の正答率マトリクスを用いた『復習すべき優先単元のあぶり出し方』を専門指導員がレクチャー。
+        </p>
+      </div>
+      <div class="flex items-center justify-end pt-space-2xs">
+        <a class="text-secondary font-label-sm text-label-sm font-bold flex items-center gap-space-2xs group-hover:translate-x-1 transition-transform" data-path="news-article-report-analysis" href="#">
+          <span class="">詳細を読む</span>
+          <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+        </a>
+      </div>
+    </div>
+  </article>
+</div>
+<!-- Pagination Component -->
+<div class="flex items-center justify-center pt-space-lg">
+<nav class="flex items-center gap-space-xs bg-surface-container-lowest p-space-xs rounded-xl shadow-sm">
+<button aria-label="前へ" class="w-10 h-10 rounded-lg flex items-center justify-center text-outline hover:text-on-surface hover:bg-surface-container transition-colors disabled:opacity-40" disabled="" type="button">
+<span class="material-symbols-outlined text-[20px]">chevron_left</span>
+</button>
+<a class="w-10 h-10 rounded-lg bg-primary text-on-primary font-label-md text-label-md font-bold flex items-center justify-center shadow-sm" href="#">1</a>
+<a class="w-10 h-10 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container font-label-md text-label-md font-bold flex items-center justify-center transition-colors" href="#">2</a>
+<a class="w-10 h-10 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container font-label-md text-label-md font-bold flex items-center justify-center transition-colors" href="#">3</a>
+<span class="w-8 h-10 flex items-center justify-center text-outline font-label-md text-label-md">…</span>
+<a class="w-10 h-10 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container font-label-md text-label-md font-bold flex items-center justify-center transition-colors" href="#">8</a>
+<a aria-label="次へ" class="w-10 h-10 rounded-lg flex items-center justify-center text-primary hover:bg-surface-container transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</a>
 </nav>
 </div>
 </div>
-<!-- Page Header & Academic Intro -->
-<section class="w-full relative overflow-hidden bg-gradient-to-b from-surface-container-low via-surface to-surface pt-space-2xl pb-space-xl">
-<!-- Subtle Japanese geometry aura in the corner -->
-<div class="absolute -top-16 -right-16 w-96 h-96 rounded-full bg-primary/5 blur-3xl pointer-events-none"></div>
-<div class="absolute top-1/2 left-0 w-80 h-80 rounded-full bg-secondary/5 blur-3xl pointer-events-none"></div>
-<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-<div class="flex flex-col gap-space-sm max-w-3xl">
-<div class="inline-flex items-center gap-space-xs self-start px-space-sm py-1 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm">
-<span class="material-symbols-outlined text-[15px]" style="font-variation-settings: 'FILL' 1;">domain_verification</span>
-<span>岡山県内 110教室以上と連携</span>
-</div>
-<h1 class="font-headline-xl text-headline-xl text-on-surface tracking-tight">
-          実施塾一覧
-        </h1>
-<p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
-          岡山県統一模擬試験、ならびに岡山県適性検査模試は、岡山県内の多くの学習塾・教室で実施されています。信頼できる地域の塾でいつもの学習リズムのまま本番テストを体験いただけます。
-        </p>
-</div>
-</div>
 </section>
-<!-- Dual Guidance Cards (Bento style contrasting pathways) -->
-<section class="w-full pb-space-3xl">
-<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg">
-<!-- Card 1: 塾に通われていない方の受験方法 -->
-<div class="lg:col-span-7 bg-surface-container-lowest rounded-xl p-space-lg lg:p-space-xl shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
-<div class="absolute top-0 left-0 right-0 h-1.5 bg-primary-container"></div>
-<div>
-<div class="flex items-center gap-space-xs mb-space-sm">
-<span class="w-7 h-7 rounded-lg bg-primary-fixed text-on-primary-fixed flex items-center justify-center font-label-md text-label-md font-bold">1</span>
-<span class="font-label-sm text-label-sm text-primary tracking-widest uppercase">General Applicants</span>
-</div>
-<h2 class="font-headline-md text-headline-md text-on-surface font-bold mb-space-md">
-              塾に通われていない方の受験方法
-            </h2>
-<p class="font-body-md text-body-md text-on-surface-variant mb-space-md leading-relaxed">
-              以下の<span class="font-bold text-on-surface">3つのタイプ</span>からご都合に合わせた受検形態を選択いただけます。
-            </p>
-<div class="grid grid-cols-1 sm:grid-cols-3 gap-space-xs mb-space-md">
-<div class="bg-surface-container-low rounded-lg p-space-sm flex flex-col items-center text-center gap-1">
-<span class="material-symbols-outlined text-primary text-[24px]">location_city</span>
-<span class="font-label-md text-label-md text-on-surface font-bold">① 会場で受験</span>
-<span class="font-body-sm text-body-sm text-on-surface-variant">公開本会場での受験</span>
-</div>
-<div class="bg-surface-container-low rounded-lg p-space-sm flex flex-col items-center text-center gap-1">
-<span class="material-symbols-outlined text-primary text-[24px]">home</span>
-<span class="font-label-md text-label-md text-on-surface font-bold">② 自宅で受験</span>
-<span class="font-body-sm text-body-sm text-on-surface-variant">問題郵送・自宅解答</span>
-</div>
-<div class="bg-surface-container-low rounded-lg p-space-sm flex flex-col items-center text-center gap-1">
-<span class="material-symbols-outlined text-primary text-[24px]">school</span>
-<span class="font-label-md text-label-md text-on-surface font-bold">③ お近くの塾</span>
-<span class="font-body-sm text-body-sm text-on-surface-variant">提携教室での受検</span>
-</div>
-</div>
-<div class="space-y-space-sm text-on-surface-variant font-body-md text-body-md mb-space-lg">
-<div class="p-space-sm rounded-lg bg-surface-container">
-<div class="font-label-md text-label-md text-on-surface font-bold flex items-center gap-1.5 mb-1">
-<span class="material-symbols-outlined text-[18px] text-primary">feed</span>
-<span>「① 会場」「② 自宅」で受験する場合</span>
-</div>
-<p class="font-body-sm text-body-sm text-on-surface-variant">
-                  当サイトのお申し込みフォームより直接オンラインにてお手続きいただけます。
-                </p>
-</div>
-<div class="p-space-sm rounded-lg bg-surface-container">
-<div class="font-label-md text-label-md text-on-surface font-bold flex items-center gap-1.5 mb-1">
-<span class="material-symbols-outlined text-[18px] text-primary">storefront</span>
-<span>「③ お近くの学習塾・教室」で受験する場合</span>
-</div>
-<p class="font-body-sm text-body-sm text-on-surface-variant">
-                  下部の実施塾一覧をご確認いただき、最寄りの塾へ直接お電話にて「外部一般生の受験が可能か」をお問い合わせください。
-                </p>
-<div class="mt-2 pt-2 border-t border-outline-variant/30 flex items-start gap-1.5 text-primary">
-<span class="material-symbols-outlined text-[16px] shrink-0 mt-0.5" style="font-variation-settings: 'FILL' 1;">verified</span>
-<span class="font-body-sm text-body-sm text-on-surface-variant">
-<strong class="text-primary font-semibold">メリット：</strong> 個人成績票の返却時に、志望校合否診断や今後の学習法に関する具体的な対面アドバイスを受けられます。
-                  </span>
-</div>
-</div>
-</div>
-</div>
-<div class="pt-space-xs">
-<a class="inline-flex items-center justify-between w-full sm:w-auto gap-space-md px-space-lg py-space-sm bg-secondary text-on-secondary rounded-lg font-label-md text-label-md shadow-[0_4px_12px_-2px_rgba(162,62,24,0.3)] hover:bg-secondary-container hover:text-on-secondary-container transition-all group-hover:translate-x-0.5" data-path="application-entry" href="../_4/code.html">
-<span class="flex items-center gap-space-xs">
-<span class="material-symbols-outlined text-[18px]">how_to_reg</span>
-<span>個人お申し込みフォームへ進む</span>
-</span>
-<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
-</a>
-</div>
-</div>
-<!-- Card 2: すでに学習塾に通っている方の受験方法 -->
-<div class="lg:col-span-5 bg-surface-container-lowest rounded-xl p-space-lg lg:p-space-xl shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
-<div class="absolute top-0 left-0 right-0 h-1.5 bg-secondary"></div>
-<div>
-<div class="flex items-center gap-space-xs mb-space-sm">
-<span class="w-7 h-7 rounded-lg bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center font-label-md text-label-md font-bold">2</span>
-<span class="font-label-sm text-label-sm text-secondary tracking-widest uppercase">Enrolled Students</span>
-</div>
-<h2 class="font-headline-md text-headline-md text-on-surface font-bold mb-space-md">
-              すでに学習塾に通っている方の受験方法
-            </h2>
-<div class="space-y-space-md text-on-surface-variant font-body-md text-body-md">
-<div class="flex gap-space-sm items-start">
-<div class="w-8 h-8 rounded-full bg-primary-fixed/60 text-primary flex items-center justify-center shrink-0 mt-0.5">
-<span class="material-symbols-outlined text-[18px]">check</span>
-</div>
-<div>
-<h3 class="font-label-lg text-label-lg text-on-surface font-bold">担当の先生にお声がけください</h3>
-<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
-                    通塾先が「おかもし」や「適性検査模試」を実施している場合は、塾内での団体受検枠でお申し込みいただけます。受検日程や費用等の詳細は通塾先の先生へ直接ご確認ください。
-                  </p>
-</div>
-</div>
-<div class="flex gap-space-sm items-start">
-<div class="w-8 h-8 rounded-full bg-surface-container-highest text-on-surface-variant flex items-center justify-center shrink-0 mt-0.5">
-<span class="material-symbols-outlined text-[18px]">info</span>
-</div>
-<div>
-<h3 class="font-label-lg text-label-lg text-on-surface font-bold">塾で模試を実施していない場合</h3>
-<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
-                    通われている教室で模試の実施がない場合は、個人受検生として本サイトのフォームより会場または自宅受検をお申し込みいただけます。
-                  </p>
-</div>
-</div>
-<!-- Quick note box -->
-<div class="p-space-sm rounded-lg bg-surface-container-low text-on-surface-variant font-body-sm text-body-sm flex gap-2">
-<span class="material-symbols-outlined text-secondary text-[18px] shrink-0 mt-0.5">lightbulb</span>
-<span>受検日程や時間割は各教室によって異なる場合があります。必ず事前に各塾の窓口までお問い合わせください。</span>
-</div>
-</div>
-</div>
-<div class="pt-space-lg">
-<a class="inline-flex items-center gap-space-xs text-primary font-label-md text-label-md hover:underline" href="#district-anchor">
-<span>提携塾を下記一覧で確認する</span>
-<span class="material-symbols-outlined text-[16px]">arrow_downward</span>
-</a>
-</div>
-</div>
-</div>
-</div>
-</section>
-<!-- Interactive District Nav & Filter Bar -->
-<section class="w-full sticky top-20 z-40 bg-surface/95 backdrop-blur-md py-space-sm shadow-sm" id="district-anchor">
-<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-space-sm">
-<!-- District Pills -->
-<div class="flex items-center gap-space-2xs overflow-x-auto w-full md:w-auto pb-1 md:pb-0 scrollbar-none" id="districtTabs">
-<a class="px-space-md py-space-xs rounded-full bg-primary text-on-primary font-label-md text-label-md font-bold whitespace-nowrap shadow-sm hover:opacity-90 transition-all flex items-center gap-1.5 district-nav-btn active" href="#area-okayama">
-<span>岡山・東備学区</span>
-<span class="w-5 h-5 rounded-full bg-white/20 text-white font-label-sm text-label-sm inline-flex items-center justify-center">58</span>
-</a>
-<a class="px-space-md py-space-xs rounded-full bg-surface-container text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface transition-all whitespace-nowrap flex items-center gap-1.5 district-nav-btn" href="#area-kurashiki">
-<span>倉敷学区</span>
-<span class="w-5 h-5 rounded-full bg-surface-container-highest text-on-surface font-label-sm text-label-sm inline-flex items-center justify-center">30</span>
-</a>
-<a class="px-space-md py-space-xs rounded-full bg-surface-container text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface transition-all whitespace-nowrap flex items-center gap-1.5 district-nav-btn" href="#area-mimasaka">
-<span>美作学区</span>
-<span class="w-5 h-5 rounded-full bg-surface-container-highest text-on-surface font-label-sm text-label-sm inline-flex items-center justify-center">24</span>
-</a>
-<a class="px-space-md py-space-xs rounded-full bg-surface-container text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface transition-all whitespace-nowrap flex items-center gap-1.5 district-nav-btn" href="#area-seibi">
-<span>西備学区</span>
-<span class="w-5 h-5 rounded-full bg-surface-container-highest text-on-surface font-label-sm text-label-sm inline-flex items-center justify-center">7</span>
-</a>
-</div>
-<!-- Quick Search Input -->
-<div class="w-full md:w-72 relative">
-<span class="material-symbols-outlined text-outline absolute left-3 top-1/2 -translate-y-1/2 text-[18px]">search</span>
-<input class="w-full pl-9 pr-3 py-1.5 bg-surface-container-lowest text-on-surface rounded-lg font-body-sm text-body-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-outline" id="jukuSearch" placeholder="塾名・教室名で絞り込み..." type="text"/>
-</div>
-</div>
-</section>
-<!-- School Directory Tables Section -->
-<section class="w-full py-space-xl">
-<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col gap-space-2xl">
-<!-- Area 1: 岡山・東備学区 -->
-<div class="district-section scroll-mt-36" id="area-okayama">
-<div class="flex flex-col sm:flex-row sm:items-end justify-between gap-space-xs mb-space-md">
-<div class="flex items-center gap-space-sm">
-<div class="w-2.5 h-8 bg-primary rounded-full"></div>
-<div>
-<span class="font-label-sm text-label-sm text-primary tracking-wider uppercase font-bold">District 01</span>
-<h2 class="font-headline-lg text-headline-lg text-on-surface font-bold">岡山・東備学区</h2>
-</div>
-</div>
-<span class="font-body-sm text-body-sm text-on-surface-variant">岡山市・瀬戸内市・備前市・赤磐市 ほか</span>
-</div>
-<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
-<div class="overflow-x-auto">
-<table class="w-full text-left border-collapse">
-<thead>
-<tr class="bg-primary-container text-on-primary">
-<th class="py-space-sm px-space-md font-label-md text-label-md w-7/12" scope="col">学習塾・教室名（教室サイトリンク）</th>
-<th class="py-space-sm px-space-md font-label-md text-label-md w-5/12" scope="col">電話番号</th>
-</tr>
-</thead>
-<tbody class="divide-y divide-surface-container text-on-surface font-body-md text-body-md" id="tableOkayama">
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>R.studyroom</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:080-3890-7171">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>080-3890-7171</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>ＥＣＣジュニア 操山教室</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-287-8581">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-287-8581</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>ＩＴＴＯ個別指導学院岡山津島校</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-214-3266">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-214-3266</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>ＩＴＴＯ個別指導学院岡山益野校</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-944-8325">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-944-8325</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>ＩＴＴＯ個別指導学院岡山三門校</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-250-5236">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-250-5236</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>ＡＵアカデミースクール</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-278-5931">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-278-5931</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>岡山進学校</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-252-5410">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-252-5410</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>学習塾Ｋ・Ｒ・Ｉ</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-255-3508">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-255-3508</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>学習塾ＳＴＡＮＤ ＵＰ福成教室</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-230-2017">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-230-2017</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>学習塾ＳＴＡＮＤ ＵＰ福浜中前教室</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-250-2366">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-250-2366</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>学習塾ＳＴＡＮＤ ＵＰ一宮教室</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-250-5755">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-250-5755</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>学研一宮教室</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-284-7855">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-284-7855</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>学研カンナあさ顔教室</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:050-3577-7730">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>050-3577-7730</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>ＫＬＣセミナー大元校</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-222-1955">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-222-1955</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>ＫＬＣセミナー岡山校</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-231-6338">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-231-6338</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>ＫＬＣセミナー庭瀬校</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-250-2815">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-250-2815</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>ＫＬＣセミナー芳泉校</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-242-5199">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-242-5199</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>ＫＬＣセミナー御野校</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-242-3771">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-242-3771</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>京進の個別指導スクール・ワン大元駅前教室</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-805-7155">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-805-7155</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>京進の個別指導スクール・ワン西大寺教室</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-207-2310">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-207-2310</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>公友塾ｋｉｉ＋</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:080-2890-2518">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>080-2890-2518</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>個人別指導塾さだのば</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:080-4551-5785">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>080-4551-5785</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>高学舎</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-264-7277">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-264-7277</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>個別指導Ａｘｉｓ</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:0120-505-554">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>0120-505-554</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>個別指導学院ヒーローズ益野校</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-246-5153">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-246-5153</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>個別指導学院ヒーローズ妹尾校</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-239-8696">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-239-8696</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>個別指導学習塾スタディサポート</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-201-3352">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-201-3352</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>松陰塾岡山操南校</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-250-3430">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-250-3430</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>進学個別塾ＡＬＬーＵＰ大元教室</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:070-1485-7098">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>070-1485-7098</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>進学個別塾ＡＬＬーＵＰ原尾島教室</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:070-6480-8263">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>070-6480-8263</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>進学個別塾ＡＬＬーＵＰ西長教室</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:070-6550-4180">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>070-6550-4180</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>進学個別塾ＡＬＬーＵＰ高島教室</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:090-1682-8768">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>090-1682-8768</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>進学個別塾ＡＬＬーＵＰ浜教室</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:0120-988-587">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>0120-988-587</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>進学塾サンライズ</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-255-3519">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-255-3519</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>進学塾 サイズ</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-223-3434">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-223-3434</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>スタッド平島教室</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-297-4613">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-297-4613</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>スタッド早津教室</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:080-2945-3321">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>080-2945-3321</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>スタッド横井上教室</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-294-1106">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-294-1106</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>田中学習会大元校</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-245-2700">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-245-2700</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>田中学習会岡山伊島校</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-251-1110">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-251-1110</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>田中学習会岡山芳泉校</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-244-8777">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-244-8777</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>田中学習会高島校</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-206-5556">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-206-5556</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>田中学習会福浜校</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-263-4600">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-263-4600</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>田中学習会益野校</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-201-6833">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-201-6833</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>堤学習塾</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:090-9875-0471">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>090-9875-0471</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>寺学校中尾塾</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-24-8980">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-24-8980</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>特進ゼミ</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-225-5417">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-225-5417</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>ふたば塾</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-230-0256">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-230-0256</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>トライプラス平島校</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-206-6081">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-206-6081</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>能開センター</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:0120-13-3719">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>0120-13-3719</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>ＨＡＴＡ英語教室</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:090-3746-6968">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>090-3746-6968</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>放課後塾</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-952-4419">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-952-4419</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>学習塾Fit岡山芳田校</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-244-8633">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-244-8633</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>ポケット</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:090-2001-3888">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>090-2001-3888</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>明光義塾北畝教室</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-455-1519">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-455-1519</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>明光義塾児島教室</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-473-0508">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-473-0508</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>めぶき学習塾</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-238-4281">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-238-4281</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>ユアサイド個別サポート学習塾</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-259-0781">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-259-0781</span>
-</a>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-<!-- Area 2: 倉敷学区 -->
-<div class="district-section scroll-mt-36" id="area-kurashiki">
-<div class="flex flex-col sm:flex-row sm:items-end justify-between gap-space-xs mb-space-md">
-<div class="flex items-center gap-space-sm">
-<div class="w-2.5 h-8 bg-primary rounded-full"></div>
-<div>
-<span class="font-label-sm text-label-sm text-primary tracking-wider uppercase font-bold">District 02</span>
-<h2 class="font-headline-lg text-headline-lg text-on-surface font-bold">倉敷学区</h2>
-</div>
-</div>
-<span class="font-body-sm text-body-sm text-on-surface-variant">倉敷市・総社市・都窪郡 ほか</span>
-</div>
-<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
-<div class="overflow-x-auto">
-<table class="w-full text-left border-collapse">
-<thead>
-<tr class="bg-primary-container text-on-primary">
-<th class="py-space-sm px-space-md font-label-md text-label-md w-7/12" scope="col">学習塾・教室名（教室サイトリンク）</th>
-<th class="py-space-sm px-space-md font-label-md text-label-md w-5/12" scope="col">電話番号</th>
-</tr>
-</thead>
-<tbody class="divide-y divide-surface-container text-on-surface font-body-md text-body-md" id="tableKurashiki">
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>ＩＴＴＯ個別指導学院 老松校</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-425-1901">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-425-1901</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>井原進学塾</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-450-6600">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-450-6600</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>ＡＩゼミ笹沖校</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-434-9301">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-434-9301</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>学習塾Fit倉敷茶屋町校</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-476-0111">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-476-0111</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>ＫＬＣセミナー倉敷校</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-426-6036">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-426-6036</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>ＫＬＣセミナー大高校</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-430-2161">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-430-2161</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>個別指導学院ヒーローズ茶屋町校</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-454-4700">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-454-4700</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>個別指導塾 仁</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-441-9980">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-441-9980</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>個別指導ビーチ</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-441-0552">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-441-0552</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<span class="font-bold">Ｓｍｉｌｅ</span>
-</td>
-<td class="py-space-sm px-space-md text-on-surface-variant font-body-sm text-body-sm">
-<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant">直接お問い合わせ</span>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>誠泉塾</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-522-4119">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-522-4119</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>多胡志学館</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:070-7566-3567">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>070-7566-3567</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>田中学習会倉敷駅前校</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-421-9000">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-421-9000</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>田中学習会連島校</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-446-5566">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-446-5566</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>田中学習会倉敷福田校</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-450-0100">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-450-0100</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>田中学習会船穂校</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-427-4488">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-427-4488</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>とと塾</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-697-5499">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-697-5499</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>トライプラス倉敷笹沖校</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-441-8637">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-441-8637</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>トライプラス倉敷四十瀬校</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-486-3975">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-486-3975</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>なる塾</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-474-5833">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-474-5833</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>Hau'oli study room</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:090-5261-3141">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>090-5261-3141</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>浜崎学習塾</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-483-0960">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-483-0960</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>ポピーまるまる支部 まる英語教室</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:080-3872-2914">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>080-3872-2914</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>晴風塾</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-473-0508">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-473-0508</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>明和ゼミ</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-466-7876">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-466-7876</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>矢部そろばん教室</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:090-6438-4780">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>090-6438-4780</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>柚木進学ゼミ</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-456-6516">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-456-6516</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>リピート学習塾</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-465-2629">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-465-2629</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>トライプラス 倉敷中町校</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-486-5858">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-486-5858</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>トライプラス 新倉敷駅前校</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:086-525-7730">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>086-525-7730</span>
-</a>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-<!-- Area 3: 美作学区 -->
-<div class="district-section scroll-mt-36" id="area-mimasaka">
-<div class="flex flex-col sm:flex-row sm:items-end justify-between gap-space-xs mb-space-md">
-<div class="flex items-center gap-space-sm">
-<div class="w-2.5 h-8 bg-primary rounded-full"></div>
-<div>
-<span class="font-label-sm text-label-sm text-primary tracking-wider uppercase font-bold">District 03</span>
-<h2 class="font-headline-lg text-headline-lg text-on-surface font-bold">美作学区</h2>
-</div>
-</div>
-<span class="font-body-sm text-body-sm text-on-surface-variant">津山市・真庭市・美作市・久米郡 ほか</span>
-</div>
-<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
-<div class="overflow-x-auto">
-<table class="w-full text-left border-collapse">
-<thead>
-<tr class="bg-primary-container text-on-primary">
-<th class="py-space-sm px-space-md font-label-md text-label-md w-7/12" scope="col">学習塾・教室名（教室サイトリンク）</th>
-<th class="py-space-sm px-space-md font-label-md text-label-md w-5/12" scope="col">電話番号</th>
-</tr>
-</thead>
-<tbody class="divide-y divide-surface-container text-on-surface font-body-md text-body-md" id="tableMimasaka">
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>安部塾津山西教室</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:0868-28-5666">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>0868-28-5666</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>安部塾久米南教室</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:0867-28-4777">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>0867-28-4777</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>石川学習塾</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:0868-23-5714">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>0868-23-5714</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>栄心塾 大崎教室</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:0868-26-8415">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>0868-26-8415</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>江越塾</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:0868-24-5419">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>0868-24-5419</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>大手町学習塾</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:0868-23-6589">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>0868-23-6589</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>大橋塾</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:0866-52-5133">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>0866-52-5133</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>岡山ゼミナール</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:0868-72-0172">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>0868-72-0172</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>学習塾てるこや</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:0868-20-1090">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>0868-20-1090</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>川崎学習塾</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:0868-26-4325">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>0868-26-4325</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>川崎学習塾林田教室</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:0868-24-4959">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>0868-24-4959</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>向学塾</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:0867-45-7281">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>0867-45-7281</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>ＪＥＭ ｊｕｋｕ</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:0867-42-0962">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>0867-42-0962</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>自立学習塾ＲＥＤ津山教室</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:0868-22-0030">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>0868-22-0030</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>たいら塾</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:0868-38-1755">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>0868-38-1755</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>高野学習塾</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:090-8603-8180">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>090-8603-8180</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>津山高校津山中学ゼミ</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:0868-25-2515">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>0868-25-2515</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>巴塾</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:0868-32-3839">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>0868-32-3839</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>中島塾</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:0868-23-1600">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>0868-23-1600</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>春松学習塾</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:0868-78-4235">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>0868-78-4235</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>明光義塾津山北教室</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:0868-23-1255">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>0868-23-1255</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>明光義塾津山高野教室</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:0868-20-1850">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>0868-20-1850</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>明進塾</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:0868-28-2508">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>0868-28-2508</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>雄貴塾</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:0867-42-2290">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>0867-42-2290</span>
-</a>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-<!-- Area 4: 西備学区 -->
-<div class="district-section scroll-mt-36" id="area-seibi">
-<div class="flex flex-col sm:flex-row sm:items-end justify-between gap-space-xs mb-space-md">
-<div class="flex items-center gap-space-sm">
-<div class="w-2.5 h-8 bg-primary rounded-full"></div>
-<div>
-<span class="font-label-sm text-label-sm text-primary tracking-wider uppercase font-bold">District 04</span>
-<h2 class="font-headline-lg text-headline-lg text-on-surface font-bold">西備学区</h2>
-</div>
-</div>
-<span class="font-body-sm text-body-sm text-on-surface-variant">笠岡市・井原市・浅口市 ほか</span>
-</div>
-<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
-<div class="overflow-x-auto">
-<table class="w-full text-left border-collapse">
-<thead>
-<tr class="bg-primary-container text-on-primary">
-<th class="py-space-sm px-space-md font-label-md text-label-md w-7/12" scope="col">学習塾・教室名（教室サイトリンク）</th>
-<th class="py-space-sm px-space-md font-label-md text-label-md w-5/12" scope="col">電話番号</th>
-</tr>
-</thead>
-<tbody class="divide-y divide-surface-container text-on-surface font-body-md text-body-md" id="tableSeibi">
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>いけだ理数塾</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:0865-75-0705">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>0865-75-0705</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>泉ゼミナール</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:0865-63-1333">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>0865-63-1333</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>学習教室中塚</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:050-3574-1357">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>050-3574-1357</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>笠岡子別指導塾とりゼミ</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:090-9412-3300">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>090-9412-3300</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>小林塾</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:0865-63-2855">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>0865-63-2855</span>
-</a>
-</td>
-</tr>
-<tr class="bg-surface-container-low/40 hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>昭殊塾</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:0865-44-2209">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>0865-44-2209</span>
-</a>
-</td>
-</tr>
-<tr class="hover:bg-primary-fixed/20 transition-colors juku-row">
-<td class="py-space-sm px-space-md font-medium text-primary">
-<a class="inline-flex items-center gap-1 hover:underline" href="#">
-<span>プライベートスクール ｅｉｎｓ</span>
-<span class="material-symbols-outlined text-[14px]">open_in_new</span>
-</a>
-</td>
-<td class="py-space-sm px-space-md font-mono text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-1.5" href="tel:090-4653-2158">
-<span class="material-symbols-outlined text-[16px] text-outline">call</span>
-<span>090-4653-2158</span>
-</a>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-</div>
-</section>
-<!-- Educational & Institutional Partner CTA Banner (Pre-footer) -->
-<section class="w-full py-space-3xl">
-<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-<div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary via-primary-container to-[#1a4f3b] text-on-primary p-space-xl lg:p-space-2xl shadow-xl">
-<!-- Academic Decorative Watermark Badge -->
-<div class="absolute -right-8 -bottom-10 opacity-10 pointer-events-none text-white">
-<span class="material-symbols-outlined text-[240px]">history_edu</span>
-</div>
-<div class="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-space-xl">
-<div class="flex flex-col gap-space-xs max-w-2xl">
-<div class="inline-flex items-center gap-1.5 px-space-sm py-0.5 rounded-full bg-white/10 backdrop-blur-md text-primary-fixed font-label-sm text-label-sm w-fit">
-<span class="material-symbols-outlined text-[16px]">handshake</span>
-<span>教育機関・学習塾運営者様へ</span>
-</div>
-<h2 class="font-headline-lg text-headline-lg text-white font-bold leading-tight">
-              岡山県統一模擬試験（おかもし）・適性検査模試の<br class="hidden sm:inline"/>提携・団体受検・一括導入のご相談
-            </h2>
-<p class="font-body-md text-body-md text-primary-fixed-dim leading-relaxed">
-              県内公立トップ校合格データ40年の信頼。貴塾でのテスト会場実施、過年度診断データの提供、外部生集客や進路指導支援など、地域教育の発展に向けた柔軟なアライアンスを承っております。
-            </p>
-</div>
-<div class="shrink-0 w-full sm:w-auto">
-<a class="inline-flex items-center justify-center gap-space-xs w-full sm:w-auto px-space-xl py-space-md bg-secondary text-on-secondary rounded-xl font-label-lg text-label-lg shadow-[0_8px_20px_-4px_rgba(162,62,24,0.4)] hover:bg-secondary-container hover:text-on-secondary-container transition-all text-center" data-path="juku-inquiry" href="mailto:info@okamoshi.jp">
-<span class="material-symbols-outlined text-[20px]">corporate_fare</span>
-<span>提携・団体受験のご相談・お問い合わせ</span>
-<span class="material-symbols-outlined text-[18px]">chevron_right</span>
-</a>
-</div>
-</div>
-</div>
-</div>
-</section>
-<!-- Script for quick search filtering and smooth tab highlighting -->
-<script>
-    (function() {
-      // Dynamic Search Filter
-      const searchInput = document.getElementById('jukuSearch');
-      if (searchInput) {
-        searchInput.addEventListener('input', function(e) {
-          const query = e.target.value.toLowerCase().trim();
-          const rows = document.querySelectorAll('.juku-row');
-          
-          rows.forEach(function(row) {
-            const text = row.textContent.toLowerCase();
-            if (!query || text.includes(query)) {
-              row.style.display = '';
-            } else {
-              row.style.display = 'none';
-            }
-          });
-        });
-      }
+<!-- Editorial Value & Diagnostic Insight Feature Banner -->
+<section class="w-full bg-surface relative overflow-hidden py-space-lg py-space-xl">
+<div class="max-w-[75rem] mx-auto px-gutter-desktop">
+<div class="bg-gradient-to-r from-primary to-primary-container rounded-2xl p-space-xl lg:p-space-2xl text-on-primary shadow-lg relative overflow-hidden">
+<div class="absolute -right-12 -bottom-16 w-80 h-80 bg-white/5 rounded-full pointer-events-none"></div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-center relative z-10">
+<div class="lg:col-span-8 flex flex-col gap-space-sm">
 
-      // Tab Switch Active Style
-      const navBtns = document.querySelectorAll('.district-nav-btn');
-      navBtns.forEach(function(btn) {
-        btn.addEventListener('click', function() {
-          navBtns.forEach(function(b) {
+<h2 class="font-bold leading-tight font-headline-md text-headline-md">
+              岡山県高校入試<br class="hidden sm:inline">正確無比な志望校判定をすべての受験生へ。
+            </h2>
+<p class="font-body-md text-body-md text-on-primary-container max-w-2xl leading-relaxed">
+              おかもし実行委員会では、最新の県入試動向分析や過去問解読セミナーのレポートを定期配信しています。保護者向け進路選択ガイドや科目別学習法も随時更新中。
+            </p>
+</div>
+<div class="lg:col-span-4 flex flex-col sm:flex-row lg:flex-col gap-space-sm justify-end">
+<a class="px-space-lg py-space-sm bg-surface-container-lowest text-primary font-label-md text-label-md font-bold rounded-lg text-center hover:bg-surface-container-high transition-colors shadow-sm flex items-center justify-center gap-space-2xs" data-path="annual-schedule" href="#">
+<span class="material-symbols-outlined text-[18px]">event_note</span>
+<span class="">2026年度 年間日程表</span>
+</a>
+<a class="px-space-lg py-space-sm bg-primary-fixed/20 text-on-primary font-label-md text-label-md font-bold rounded-lg text-center hover:bg-primary-fixed/30 transition-colors flex items-center justify-center gap-space-2xs" data-path="score-reports" href="#">
+<span class="material-symbols-outlined text-[18px]">assessment</span>
+<span class="">学力診断シートの特長</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Related Links & High-Conversion Action Footer Strip -->
+<section class="w-full bg-surface-container-low py-space-xl">
+<div class="max-w-[75rem] mx-auto px-gutter-desktop">
+<div class="text-center pb-space-xl">
+<span class="font-label-sm text-label-sm text-secondary font-bold tracking-widest uppercase">QUICK ACTION &amp; RESOURCES</span>
+<h2 class="font-headline-md text-headline-md text-primary font-bold mt-space-2xs">
+          おすすめ・関連ナビゲーション
+        </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">受験準備やお近くの提携塾のご確認はこちらから</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-lg">
+<!-- Quick Card 1: Exam Application -->
+<a class="group p-space-xl bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between" data-path="application-entry" href="#">
+<div class="flex items-start justify-between gap-space-sm">
+<div class="w-12 h-12 rounded-xl bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[26px]">how_to_reg</span>
+</div>
+<span class="px-space-xs py-space-2xs bg-secondary/10 text-secondary font-label-sm text-label-sm font-bold rounded">Web受付中</span>
+</div>
+<div class="mt-space-md">
+<h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-secondary font-bold transition-colors">
+              次回模試のお申込みはこちら
+            </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-space-xs leading-relaxed">
+              24時間オンラインでお申込み完了。クレジットカード・コンビニ決済対応。会場受験・自宅受験を選択いただけます。
+            </p>
+</div>
+<div class="pt-space-md flex items-center gap-space-2xs text-secondary font-label-md text-label-md font-bold group-hover:translate-x-1 transition-transform">
+<span class="">申込みフォームへ進む</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</div>
+</a>
+<!-- Quick Card 2: Partner Schools -->
+<a class="group p-space-xl bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between" data-path="partner-schools" href="#">
+<div class="flex items-start justify-between gap-space-sm">
+<div class="w-12 h-12 rounded-xl bg-primary-fixed text-on-primary-fixed flex items-center justify-center group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[26px]">location_city</span>
+</div>
+<span class="px-space-xs py-space-2xs bg-primary/10 text-primary font-label-sm text-label-sm font-bold rounded">県内120教室以上</span>
+</div>
+<div class="mt-space-md">
+<h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary font-bold transition-colors">
+              岡山県内提携塾一覧を見る
+            </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-space-xs leading-relaxed">
+              岡山市・倉敷市・津山市など県内各地の提携塾会場をエリア別で検索。通塾中の方は塾経由のお申込みも可能です。
+            </p>
+</div>
+<div class="pt-space-md flex items-center gap-space-2xs text-primary font-label-md text-label-md font-bold group-hover:translate-x-1 transition-transform">
+<span class="">提携校・会場リストを見る</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</div>
+</a>
+<!-- Quick Card 3: Social & Study Advice -->
+<a class="group p-space-xl bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between" data-path="social-instagram" href="#">
+<div class="flex items-start justify-between gap-space-sm">
+<div class="w-12 h-12 rounded-xl bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[26px]">photo_camera</span>
+</div>
+<span class="px-space-xs py-space-2xs bg-tertiary-container/10 text-tertiary font-label-sm text-label-sm font-bold rounded">毎週更新</span>
+</div>
+<div class="mt-space-md">
+<h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-tertiary font-bold transition-colors">
+              公式Instagram @okamoshi
+            </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-space-xs leading-relaxed">
+              入試ワンポイント解説、英単語ミニクイズ、願書提出締切リマインドなど受験生・保護者向け情報をリアルタイム発信中。
+            </p>
+</div>
+<div class="pt-space-md flex items-center gap-space-2xs text-tertiary font-label-md text-label-md font-bold group-hover:translate-x-1 transition-transform">
+<span class="">Instagramを見る</span>
+<span class="material-symbols-outlined text-[18px]">open_in_new</span>
+</div>
+</a>
+</div>
+</div>
+</section>
+<!-- Inline Tab Filter Micro-Interaction Logic -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const filterBtns = document.querySelectorAll('.category-btn');
+      filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          filterBtns.forEach(b => {
             b.classList.remove('bg-primary', 'text-on-primary', 'shadow-sm');
-            b.classList.add('bg-surface-container', 'text-on-surface-variant');
+            b.classList.add('bg-surface-container-lowest', 'text-on-surface-variant');
           });
-          btn.classList.remove('bg-surface-container', 'text-on-surface-variant');
           btn.classList.add('bg-primary', 'text-on-primary', 'shadow-sm');
+          btn.classList.remove('bg-surface-container-lowest', 'text-on-surface-variant');
         });
       });
-    })();
+    });
   </script>
-</div></main><footer class="w-full bg-surface-container-low mt-space-4xl shadow-[0_-1px_6px_rgba(0,0,0,0.02)]"><div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-space-3xl pb-space-2xl"><div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl pb-space-2xl"><div class="lg:col-span-5 flex flex-col gap-space-md"><div class="flex items-center gap-space-xs"><div class="w-9 h-9 rounded-lg bg-primary-container flex items-center justify-center text-on-primary"><span class="material-symbols-outlined text-[20px]">school</span></div><span class="font-headline-sm text-headline-sm text-on-surface font-bold">岡山県統一模擬試験 <span class="text-primary">おかもし</span></span></div><p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">岡山県内最大規模の高校入試模擬試験。県立高校合格判定、公立独自問題対策から志望校内順位まで、40年の指導ノウハウで確かな診断データをお届けします。</p><div class="flex flex-col gap-space-2xs text-on-surface-variant font-body-sm text-body-sm"><div class="font-label-md text-label-md text-on-surface font-bold">中央教育研究所株式会社 岡山県統一模擬試験実行委員会</div><div>〒700-0822 岡山県岡山市北区表町1丁目5-1</div><div class="flex flex-wrap gap-x-space-md gap-y-space-2xs pt-space-2xs"><span>TEL: 086-224-3321</span><span>E-mail: info@okamoshi.jp</span></div></div><div class="flex items-center gap-space-sm pt-space-xs"><a aria-label="公式LINE" class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:bg-primary-container hover:text-on-primary transition-colors" href="#"><span class="material-symbols-outlined text-[18px]">chat</span></a><a aria-label="公式X" class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:bg-primary-container hover:text-on-primary transition-colors" href="#"><span class="material-symbols-outlined text-[18px]">forum</span></a><a aria-label="公式YouTube" class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:bg-primary-container hover:text-on-primary transition-colors" href="#"><span class="material-symbols-outlined text-[18px]">smart_display</span></a></div></div><div class="lg:col-span-4 flex flex-col gap-space-sm"><div class="font-label-lg text-label-lg text-on-surface font-bold tracking-wide">コンテンツ案内</div><ul class="grid grid-cols-1 sm:grid-cols-2 gap-space-xs font-body-md text-body-md"><li class="py-space-2xs"><a class="text-on-surface-variant hover:text-on-surface transition-colors flex items-center gap-space-2xs" data-path="exam-details" href="../lp/code.html#features-section"><span class="material-symbols-outlined text-primary text-[16px]">chevron_right</span>各模試を見る</a></li><li class="py-space-2xs"><a class="text-on-surface-variant hover:text-on-surface transition-colors flex items-center gap-space-2xs" data-path="partner-schools" href="../_1/code.html"><span class="material-symbols-outlined text-primary text-[16px]">chevron_right</span>実施塾一覧</a></li><li class="py-space-2xs"><a class="text-on-surface-variant hover:text-on-surface transition-colors flex items-center gap-space-2xs" data-path="annual-schedule" href="../lp/code.html#schedule-table"><span class="material-symbols-outlined text-primary text-[16px]">chevron_right</span>日程・会場情報</a></li><li class="py-space-2xs"><a class="text-on-surface-variant hover:text-on-surface transition-colors flex items-center gap-space-2xs" data-path="news-and-blog" href="#"><span class="material-symbols-outlined text-primary text-[16px]">chevron_right</span>お知らせ・コラム</a></li><li class="py-space-2xs"><a class="text-on-surface-variant hover:text-on-surface transition-colors flex items-center gap-space-2xs" data-path="privacy-policy" href="../_3/code.html"><span class="material-symbols-outlined text-primary text-[16px]">chevron_right</span>プライバシーポリシー</a></li><li class="py-space-2xs"><a class="text-on-surface-variant hover:text-on-surface transition-colors flex items-center gap-space-2xs" data-path="legal-notice" href="../_2/code.html"><span class="material-symbols-outlined text-primary text-[16px]">chevron_right</span>特定商取引法に基づく表記</a></li></ul></div><div class="lg:col-span-3 flex flex-col justify-between gap-space-md"><div class="p-space-lg rounded-xl bg-surface-container-lowest shadow-[0_2px_8px_-2px_rgba(38,38,38,0.04)] flex flex-col gap-space-sm"><div class="font-label-lg text-label-lg text-on-surface font-bold">学習塾・教育関係者様</div><p class="font-body-sm text-body-sm text-on-surface-variant">団体受験のお申込み、貴塾での会場実施、過去問題・教材のご相談はこちらから承っております。</p><a class="inline-flex items-center justify-center gap-space-xs px-space-md py-space-sm rounded-lg bg-primary-container text-on-primary font-label-md text-label-md hover:bg-primary transition-colors text-center" data-path="juku-inquiry" href="mailto:info@okamoshi.jp"><span class="material-symbols-outlined text-[18px]">business</span><span>塾関係者様 お問い合わせ</span></a></div></div></div><div class="pt-space-lg flex flex-col sm:flex-row items-center justify-between gap-space-sm font-body-sm text-body-sm text-on-surface-variant"><div class="flex flex-wrap gap-space-md text-body-sm"><a class="hover:text-on-surface transition-colors" data-path="terms-of-service" href="#">利用規約</a><a class="hover:text-on-surface transition-colors" data-path="site-map" href="#">サイトマップ</a><a class="hover:text-on-surface transition-colors" data-path="inquiry" href="#">一般お問い合わせ</a></div><p class="font-body-sm text-body-sm">© Okayama Mock Examination Executive Committee. All rights reserved.</p></div></div></footer></body></html>
+</div></main><footer class="w-full bg-surface-container-low flex flex-col items-center mt-space-xl"><div class="w-full max-w-[75rem] mx-auto px-gutter-desktop pt-12 md:pt-16 pb-8"><div class="grid grid-cols-1 md:grid-cols-12 gap-space-2xl items-start pb-space-2xl border-b border-outline-variant/40"><div class="md:col-span-5 space-y-space-sm"><div class="flex items-center gap-space-xs"><span class="w-8 h-8 rounded-lg bg-primary-container text-on-primary flex items-center justify-center shadow-sm"><span class="material-symbols-outlined text-label-lg">history_edu</span></span><span class="font-headline-sm text-headline-sm text-primary font-bold">岡山県統一模擬試験（おかもし）</span></div><p class="text-body-md text-on-surface-variant leading-relaxed">主催 : 中央教育研究所株式会社<br>岡山県統一模擬試験実行委員会<br>住所 : 広島県広島市中区八丁堀15番6号 広島ちゅうぎんビル3階<br>TEL : 082-227-3999<br>MAIL : okayamamoshi@chuoh-kyouiku.co.jp</p><div class="pt-space-xs flex items-center gap-space-md"><span class="font-label-sm text-label-sm text-on-surface-variant">公式SNS:</span><a class="inline-flex items-center gap-space-2xs text-on-surface-variant hover:text-primary transition-colors font-label-sm text-label-sm" data-path="social-instagram" href="#"><span class="material-symbols-outlined text-headline-sm">photo_camera</span>公式Instagram</a></div><div class="pt-3 space-y-2"><div class="font-label-md text-xs sm:text-sm font-bold text-on-surface flex items-center gap-1"><span class="material-symbols-outlined text-sm text-primary">contact_support</span>お問い合わせ</div><div class="flex flex-wrap sm:flex-nowrap gap-2 min-w-0"><a class="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg font-bold text-xs transition-all text-center shadow-sm border whitespace-nowrap bg-[#e8f5ee] text-primary border-primary/20 hover:bg-[#d8ede1]" data-path="inquiry-schools" href="#"><span class="material-symbols-outlined text-base">corporate_fare</span>塾・学校関係者様</a><a class="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg font-bold text-xs transition-all text-center shadow-sm border whitespace-nowrap bg-[#e8f5ee] text-primary border-primary/20 hover:bg-[#d8ede1]" data-path="inquiry-individuals" href="#"><span class="material-symbols-outlined text-base">mail</span>個人申込の方</a></div></div></div><div class="md:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-space-lg"><div class="space-y-space-xs"><div class="font-label-md text-label-md text-on-surface font-bold">模試情報</div><ul class="space-y-space-xs"><li class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors"><a data-path="upcoming-exam" href="#" class="">次回模試実施要項</a></li><li class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors"><a data-path="annual-schedule" href="#" class="">年間スケジュール</a></li><li class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors"><a data-path="exam-scope" href="#" class="">出題範囲・判定基準</a></li></ul></div><div class="space-y-space-xs"><div class="font-label-md text-label-md text-on-surface font-bold">ご案内・手続き</div><ul class="space-y-space-xs"><li class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors"><a data-path="partner-schools" href="#" class="">提携学習塾一覧</a></li><li class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors"><a data-path="application-entry" href="#" class="">個人受験のお申込み</a></li><li class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors"><a data-path="faq" href="#" class="">よくあるご質問</a></li></ul></div><div class="space-y-space-xs"><div class="font-label-md text-label-md text-on-surface font-bold">規約・運営</div><ul class="space-y-space-xs"><li class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors"><a data-path="privacy-policy" href="#" class="">プライバシーポリシー</a></li><li class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors"><a data-path="tokushoho" href="#" class="">特定商取引法に基づく表記</a></li><li class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors"><a data-path="news" href="#" class="">お知らせ・更新情報</a></li></ul></div></div></div><div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-body-sm text-on-surface-variant"><div class="flex flex-wrap items-center gap-space-md font-body-sm text-body-sm"><a class="hover:text-primary transition-colors" data-path="privacy-policy" href="#">プライバシーポリシー</a><span class="text-outline-variant">|</span><a class="hover:text-primary transition-colors" data-path="tokushoho" href="#">特定商取引法に基づく表記</a></div><p class="font-body-sm text-body-sm text-outline text-center sm:text-right">© Okayama Unified Mock Examination Executive Committee. All rights reserved.</p></div></div></footer>
+
+
+
+
+
+</body></html>

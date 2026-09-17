@@ -165,9 +165,9 @@ def build_index():
                 if last_idx != -1:
                     raw_panel = raw_panel[:last_idx] + raw_panel[last_idx+6:]
 
-        # クラスを同一の幅制限とレスポンシブパディングで統一
+        # クラスを同一の幅制限とグリッドセル配置（重なりスライド用）で統一
         display_class = "block" if is_active else "hidden"
-        unified_class = f'class="tab-panel {display_class} w-full max-w-[75rem] mx-auto transition-all duration-300 space-y-space-xl"'
+        unified_class = f'class="tab-panel {display_class} col-start-1 row-start-1 w-full max-w-[75rem] mx-auto space-y-space-xl"'
         raw_panel = re.sub(r'class=[\"\']tab-panel[^\"\']*[\"\']', unified_class, raw_panel, count=1)
         return raw_panel
 
@@ -180,6 +180,9 @@ def build_index():
 
     m_rest = re.search(r'(<!--\s*3\.\s*DETAILS.*?)(?=</main>)', c3, re.DOTALL)
     rest_section = m_rest.group(1).strip() if m_rest else ''
+
+    # 古いタブ切り替えスクリプトを除去して競合・重複を防止
+    rest_section = re.sub(r'<script>.*?</script>', '', rest_section, flags=re.DOTALL)
 
     # Clean up internal links
     hero_section = hero_section.replace('data-path="apply"', 'href="apply.html"')
@@ -247,31 +250,64 @@ def build_index():
   }}
   </script>
   <style>
-    @keyframes slideInRight {{
+    @keyframes slideInFromRight {{
       0% {{
         opacity: 0;
-        transform: translateX(36px);
+        transform: translateX(100%);
       }}
       100% {{
         opacity: 1;
         transform: translateX(0);
       }}
     }}
-    @keyframes slideInLeft {{
+    @keyframes slideOutToLeft {{
+      0% {{
+        opacity: 1;
+        transform: translateX(0);
+      }}
+      100% {{
+        opacity: 0;
+        transform: translateX(-100%);
+      }}
+    }}
+    @keyframes slideInFromLeft {{
       0% {{
         opacity: 0;
-        transform: translateX(-36px);
+        transform: translateX(-100%);
       }}
       100% {{
         opacity: 1;
         transform: translateX(0);
       }}
     }}
-    .slide-in-right {{
-      animation: slideInRight 320ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    @keyframes slideOutToRight {{
+      0% {{
+        opacity: 1;
+        transform: translateX(0);
+      }}
+      100% {{
+        opacity: 0;
+        transform: translateX(100%);
+      }}
     }}
-    .slide-in-left {{
-      animation: slideInLeft 320ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
+    .anim-slide-in-right {{
+      animation: slideInFromRight 380ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      z-index: 2;
+    }}
+    .anim-slide-out-left {{
+      animation: slideOutToLeft 380ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      z-index: 1;
+      pointer-events: none;
+    }}
+    .anim-slide-in-left {{
+      animation: slideInFromLeft 380ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      z-index: 2;
+    }}
+    .anim-slide-out-right {{
+      animation: slideOutToRight 380ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      z-index: 1;
+      pointer-events: none;
     }}
   </style>
 </head>
@@ -334,7 +370,7 @@ def build_index():
         </button>
       </div>
 
-      <div class="w-full max-w-[75rem] mx-auto overflow-hidden relative min-h-[400px]" id="tab-panels-container">
+      <div class="w-full max-w-[75rem] mx-auto overflow-hidden relative grid grid-cols-1 grid-rows-1" id="tab-panels-container">
         {panel_chu3}
         {panel_chu12}
         {panel_sho6}
@@ -356,66 +392,83 @@ def build_index():
 
       const tabOrder = ['chu3', 'chu12', 'sho6'];
       let currentTabKey = 'chu3';
+      let isAnimating = false;
 
       window.switchExamTab = function(tabKey) {{
         if (tabKey === currentTabKey && document.getElementById('tab-panel-' + tabKey)?.classList.contains('block')) {{
           return;
         }}
+        if (isAnimating) return;
 
-        const prevIndex = tabOrder.indexOf(currentTabKey);
+        const prevKey = currentTabKey;
+        const prevIndex = tabOrder.indexOf(prevKey);
         const nextIndex = tabOrder.indexOf(tabKey);
-        // 右側タブへの移動なら右からスライドイン、左側タブへの移動なら左からスライドイン
         const isMovingRight = nextIndex > prevIndex;
-        const animClass = isMovingRight ? 'slide-in-right' : 'slide-in-left';
 
+        const currentPanel = document.getElementById('tab-panel-' + prevKey);
+        const nextPanel = document.getElementById('tab-panel-' + tabKey);
+        if (!nextPanel) return;
+
+        isAnimating = true;
+
+        const outClass = isMovingRight ? 'anim-slide-out-left' : 'anim-slide-out-right';
+        const inClass = isMovingRight ? 'anim-slide-in-right' : 'anim-slide-in-left';
+
+        // 1. ボタンのスタイル切り替え
         tabOrder.forEach(function(key) {{
-          const panel = document.getElementById('tab-panel-' + key);
           const btn = document.getElementById('tab-btn-' + key);
+          if (!btn) return;
 
           if (key === tabKey) {{
-            if (panel) {{
-              panel.classList.remove('hidden', 'slide-in-right', 'slide-in-left');
-              // アニメーションのリトリガーを確実にするためオフセットアクセス
-              void panel.offsetWidth;
-              panel.classList.add('block', animClass);
-            }}
-            if (btn) {{
-              btn.setAttribute('aria-selected', 'true');
-              btn.className = 'tab-btn w-full p-4 sm:p-5 rounded-2xl transition-all duration-200 flex items-center justify-between gap-3 bg-primary text-on-primary shadow-lg ring-2 ring-primary/20 font-bold cursor-pointer border border-primary text-left hover:-translate-y-0.5 focus:outline-none';
-              
-              const title = btn.querySelector('.tab-title');
-              const desc = btn.querySelector('.tab-desc');
-              const badge = btn.querySelector('.tab-badge');
+            btn.setAttribute('aria-selected', 'true');
+            btn.className = 'tab-btn w-full p-4 sm:p-5 rounded-2xl transition-all duration-200 flex items-center justify-between gap-3 bg-primary text-on-primary shadow-lg ring-2 ring-primary/20 font-bold cursor-pointer border border-primary text-left hover:-translate-y-0.5 focus:outline-none';
+            
+            const title = btn.querySelector('.tab-title');
+            const desc = btn.querySelector('.tab-desc');
+            const badge = btn.querySelector('.tab-badge');
 
-              if (title) title.className = 'tab-title text-base sm:text-lg font-bold text-white tracking-tight';
-              if (desc) desc.className = 'tab-desc text-xs sm:text-sm text-primary-fixed font-normal truncate';
-              if (badge) badge.className = 'tab-badge px-3 py-1 rounded-full text-xs font-bold text-white shrink-0 shadow-xs bg-[#fe8357]';
-            }}
+            if (title) title.className = 'tab-title text-base sm:text-lg font-bold text-white tracking-tight';
+            if (desc) desc.className = 'tab-desc text-xs sm:text-sm text-primary-fixed font-normal truncate';
+            if (badge) badge.className = 'tab-badge px-3 py-1 rounded-full text-xs font-bold text-white shrink-0 shadow-xs bg-[#fe8357]';
           }} else {{
-            if (panel) {{
-              panel.classList.remove('slide-in-right', 'slide-in-left');
-              panel.classList.add('hidden');
-              panel.classList.remove('block');
-            }}
-            if (btn) {{
-              btn.setAttribute('aria-selected', 'false');
-              btn.className = 'tab-btn w-full p-4 sm:p-5 rounded-2xl transition-all duration-200 flex items-center justify-between gap-3 bg-surface-container-lowest text-on-surface hover:bg-surface-container-low font-bold cursor-pointer border border-outline-variant/30 shadow-sm text-left hover:-translate-y-0.5 focus:outline-none';
+            btn.setAttribute('aria-selected', 'false');
+            btn.className = 'tab-btn w-full p-4 sm:p-5 rounded-2xl transition-all duration-200 flex items-center justify-between gap-3 bg-surface-container-lowest text-on-surface hover:bg-surface-container-low font-bold cursor-pointer border border-outline-variant/30 shadow-sm text-left hover:-translate-y-0.5 focus:outline-none';
 
-              const title = btn.querySelector('.tab-title');
-              const desc = btn.querySelector('.tab-desc');
-              const badge = btn.querySelector('.tab-badge');
+            const title = btn.querySelector('.tab-title');
+            const desc = btn.querySelector('.tab-desc');
+            const badge = btn.querySelector('.tab-badge');
 
-              if (title) title.className = 'tab-title text-base sm:text-lg font-bold text-on-surface tracking-tight';
-              if (desc) desc.className = 'tab-desc text-xs sm:text-sm text-on-surface-variant font-normal truncate';
-              if (badge) {{
-                const cfg = badgeConfig[key] || {{ inactiveText: 'text-on-surface-variant', inactiveBg: 'bg-surface-container-highest' }};
-                badge.className = 'tab-badge px-3 py-1 rounded-full text-xs font-bold shrink-0 border border-outline-variant/30 ' + cfg.inactiveBg + ' ' + cfg.inactiveText;
-              }}
+            if (title) title.className = 'tab-title text-base sm:text-lg font-bold text-on-surface tracking-tight';
+            if (desc) desc.className = 'tab-desc text-xs sm:text-sm text-on-surface-variant font-normal truncate';
+            if (badge) {{
+              const cfg = badgeConfig[key] || {{ inactiveText: 'text-on-surface-variant', inactiveBg: 'bg-surface-container-highest' }};
+              badge.className = 'tab-badge px-3 py-1 rounded-full text-xs font-bold shrink-0 border border-outline-variant/30 ' + cfg.inactiveBg + ' ' + cfg.inactiveText;
             }}
           }}
         }});
 
+        // 2. ダイナミックな 100% スライド（退場と登場の同時実行）
+        nextPanel.classList.remove('hidden', 'anim-slide-in-right', 'anim-slide-in-left', 'anim-slide-out-left', 'anim-slide-out-right');
+        void nextPanel.offsetWidth;
+        nextPanel.classList.add('block', inClass);
+
+        if (currentPanel && currentPanel !== nextPanel) {{
+          currentPanel.classList.remove('anim-slide-in-right', 'anim-slide-in-left', 'anim-slide-out-left', 'anim-slide-out-right');
+          void currentPanel.offsetWidth;
+          currentPanel.classList.add(outClass);
+        }}
+
         currentTabKey = tabKey;
+
+        // 3. アニメーション完了時のクリーンアップ
+        setTimeout(function() {{
+          if (currentPanel && currentPanel !== nextPanel) {{
+            currentPanel.classList.remove('block', outClass);
+            currentPanel.classList.add('hidden');
+          }}
+          nextPanel.classList.remove(inClass);
+          isAnimating = false;
+        }}, 390);
       }};
     }})();
   </script>

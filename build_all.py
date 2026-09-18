@@ -41,14 +41,14 @@ tailwind_config_block = """
             "surface-tint": "#3a6752",
             "surface-container-high": "#eae7e7",
             "surface-container-low": "#f6f3f2",
-            "background": "#fcf9f8",
+            "background": "#f8fafc",
             "surface-container": "#f0eded",
             "on-tertiary-container": "#f1bd5a",
             "surface-variant": "#e4e2e1",
             "on-primary-fixed-variant": "#224f3c",
             "on-tertiary-fixed-variant": "#5e4200",
             "tertiary": "#4f3600",
-            "surface-bright": "#fcf9f8",
+            "surface-bright": "#ffffff",
             "inverse-primary": "#a1d1b8",
             "tertiary-fixed-dim": "#f2be5b",
             "on-secondary": "#ffffff",
@@ -64,7 +64,7 @@ tailwind_config_block = """
             "primary-fixed-dim": "#a1d1b8",
             "primary-fixed": "#bceed3",
             "on-secondary-container": "#6f2000",
-            "surface": "#fcf9f8",
+            "surface": "#f8fafc",
             "primary": "#134230",
             "on-tertiary-fixed": "#271900",
             "inverse-surface": "#303030",
@@ -131,6 +131,99 @@ def optimize_images_in_html(html_text):
 # ----------------------------------------------------
 # A. BUILD INDEX.HTML (中3・中1・2・小6 統合トップページ)
 # ----------------------------------------------------
+def extract_direct_children(html):
+    depth = 0
+    start = -1
+    children = []
+    for m in re.finditer(r'(<div\b[^>]*>|</div>)', html):
+        tag = m.group(0)
+        if tag.startswith('<div'):
+            if depth == 0:
+                start = m.start()
+            depth += 1
+        else:
+            depth -= 1
+            if depth == 0 and start != -1:
+                children.append(html[start:m.end()])
+                start = -1
+    return children
+
+def modernize_panel(raw_panel, panel_key):
+    m_wrap = re.search(r'<div class=["\']bg-surface-container-lowest[^"\']*["\']>', raw_panel)
+    if not m_wrap:
+        return raw_panel
+    
+    wrap_prefix = raw_panel[:m_wrap.start()]
+    inner = raw_panel[m_wrap.end():]
+    last_close = inner.rfind('</div>')
+    if last_close == -1:
+        return raw_panel
+    inner_content = inner[:last_close]
+    wrap_suffix = inner[last_close+6:]
+
+    children = extract_direct_children(inner_content)
+    if not children:
+        return raw_panel
+
+    groups = []
+    if panel_key == 'chu3' and len(children) >= 7:
+        groups = [
+            [children[0]],
+            [children[1]],
+            [children[2]],
+            [children[3], children[4]],
+            [children[5], children[6]]
+        ]
+    else:
+        groups = [[c] for c in children]
+
+    card_chunks = []
+    for i, grp in enumerate(groups):
+        chunk = ''.join(grp)
+        chunk = re.sub(r'\bpt-[24]\s+border-t\s+border-surface-container\b', '', chunk)
+        chunk = re.sub(r'\bborder-t\s+border-surface-container\b', '', chunk)
+
+        if i == 0:
+            if panel_key == 'chu3':
+                catch_text = '<span class="inline-block">志望校決定の秋！</span><span class="inline-block">合格に向けて今必要な「あと◯点」を掴む！</span>'
+            elif panel_key == 'chu12':
+                catch_text = '<span class="inline-block">中1・2の冬が分岐点！</span><span class="inline-block">基礎固めと入試を見据えた実力測定で差をつける！</span>'
+            else:
+                catch_text = '<span class="inline-block">岡山県立中等教育学校・中学校受検 完全対策！</span><span class="inline-block">志望校合格への突破口を開く特化型模試</span>'
+
+            chunk = re.sub(
+                r'<div class=["\']rounded-2xl bg-surface-container-low[^"\']*["\']>.*?</div>(?=</div>)',
+                f'<div class="rounded-xl bg-emerald-50/70 p-3.5 sm:p-4 text-center border border-emerald-200/60 shadow-2xs mt-2"><p class="font-headline-lg text-base sm:text-xl md:text-2xl text-primary font-bold tracking-tight leading-snug">{catch_text}</p></div>',
+                chunk,
+                flags=re.DOTALL
+            )
+            chunk = chunk.replace('border-outline-variant/30', 'border-slate-100')
+
+        elif i == 1:
+            chunk = chunk.replace('whitespace-nowrap', '')
+            chunk = re.sub(
+                r'class=["\']font-bold text-[a-z0-9\s:-]+ text-primary whitespace-nowrap["\']',
+                'class="font-bold text-lg sm:text-2xl tracking-tight text-primary flex flex-wrap items-baseline gap-x-1.5"',
+                chunk
+            )
+            chunk = re.sub(
+                r'class=["\']font-bold text-xl sm:text-2xl tracking-tight text-primary["\']',
+                'class="font-bold text-lg sm:text-2xl tracking-tight text-primary flex flex-wrap items-baseline gap-x-1.5"',
+                chunk
+            )
+
+        chunk = chunk.replace('bg-surface-container-low border border-outline-variant/30', 'bg-slate-50/80 border border-slate-200/70')
+        chunk = chunk.replace('border-surface-container/60', 'border-slate-200/60')
+        chunk = chunk.replace('border-surface-container', 'border-slate-200/60')
+
+        card_html = f'<div class="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-slate-100/80 space-y-4">\n{chunk}\n</div>'
+        card_chunks.append(card_html)
+
+    new_inner = '\n'.join(card_chunks)
+    new_wrapper = f'<div class="bg-transparent md:bg-white rounded-none md:rounded-3xl p-0 md:p-8 lg:p-10 border-0 md:border md:border-slate-200/80 shadow-none md:shadow-sm space-y-4 sm:space-y-6">\n{new_inner}\n</div>'
+    return wrap_prefix + new_wrapper + wrap_suffix
+
+
 def build_index():
     with open('lp_3_1/code.html', 'r', encoding='utf-8') as f:
         c3 = f.read()
@@ -174,6 +267,10 @@ def build_index():
     panel_chu3 = clean_and_balance_panel(panel_chu3, 'chu3', is_active=True)
     panel_chu12 = clean_and_balance_panel(panel_chu12, 'chu12', is_active=False)
     panel_sho6 = clean_and_balance_panel(panel_sho6, 'sho6', is_active=False)
+
+    panel_chu3 = modernize_panel(panel_chu3, 'chu3')
+    panel_chu12 = modernize_panel(panel_chu12, 'chu12')
+    panel_sho6 = modernize_panel(panel_sho6, 'sho6')
 
     m_hero = re.search(r'(<!--\s*1\.\s*HERO SECTION\s*-->.*?)(?=<!--\s*2\.\s*NEXT EXAM)', c3, re.DOTALL)
     hero_section = m_hero.group(1).strip() if m_hero else ''
@@ -309,9 +406,12 @@ def build_index():
       z-index: 1;
       pointer-events: none;
     }}
+      body {{
+      background-color: #f8fafc !important;
+    }}
   </style>
 </head>
-<body class="bg-background font-body-md text-body-md text-on-surface antialiased min-h-screen flex flex-col justify-between selection:bg-primary/20 selection:text-primary pt-16 sm:pt-20">
+<body class="bg-slate-50 font-body-md text-body-md text-slate-800 antialiased min-h-screen flex flex-col justify-between selection:bg-primary/20 selection:text-primary pt-16 sm:pt-20">
 
   {header_html}
 
@@ -346,7 +446,7 @@ def build_index():
         </button>
 
         <button type="button" id="tab-btn-chu12" onclick="switchExamTab('chu12')" role="tab" aria-selected="false" aria-controls="tab-panel-chu12"
-          class="tab-btn w-full p-4 sm:p-5 rounded-2xl transition-all duration-200 flex items-center justify-between gap-3 bg-surface-container-lowest text-on-surface hover:bg-surface-container-low font-bold cursor-pointer border border-outline-variant/30 shadow-sm text-left hover:-translate-y-0.5 focus:outline-none">
+          class="tab-btn w-full p-4 sm:p-5 rounded-2xl transition-all duration-200 flex items-center justify-between gap-3 bg-white text-slate-800 hover:bg-slate-100/70 font-bold cursor-pointer border border-slate-200/80 shadow-xs text-left hover:-translate-y-0.5 focus:outline-none">
           <div class="flex flex-col min-w-0">
             <div class="flex items-center gap-2 mb-1">
               <span class="tab-title text-base sm:text-lg font-bold text-on-surface tracking-tight">中1・2 おかもし</span>
@@ -358,7 +458,7 @@ def build_index():
         </button>
 
         <button type="button" id="tab-btn-sho6" onclick="switchExamTab('sho6')" role="tab" aria-selected="false" aria-controls="tab-panel-sho6"
-          class="tab-btn w-full p-4 sm:p-5 rounded-2xl transition-all duration-200 flex items-center justify-between gap-3 bg-surface-container-lowest text-on-surface hover:bg-surface-container-low font-bold cursor-pointer border border-outline-variant/30 shadow-sm text-left hover:-translate-y-0.5 focus:outline-none">
+          class="tab-btn w-full p-4 sm:p-5 rounded-2xl transition-all duration-200 flex items-center justify-between gap-3 bg-white text-slate-800 hover:bg-slate-100/70 font-bold cursor-pointer border border-slate-200/80 shadow-xs text-left hover:-translate-y-0.5 focus:outline-none">
           <div class="flex flex-col min-w-0">
             <div class="flex items-center gap-2 mb-1">
               <span class="tab-title text-base sm:text-lg font-bold text-on-surface tracking-tight">小6 適性検査模試</span>
@@ -432,7 +532,7 @@ def build_index():
             if (badge) badge.className = 'tab-badge px-3 py-1 rounded-full text-xs font-bold text-white shrink-0 shadow-xs bg-[#fe8357]';
           }} else {{
             btn.setAttribute('aria-selected', 'false');
-            btn.className = 'tab-btn w-full p-4 sm:p-5 rounded-2xl transition-all duration-200 flex items-center justify-between gap-3 bg-surface-container-lowest text-on-surface hover:bg-surface-container-low font-bold cursor-pointer border border-outline-variant/30 shadow-sm text-left hover:-translate-y-0.5 focus:outline-none';
+            btn.className = 'tab-btn w-full p-4 sm:p-5 rounded-2xl transition-all duration-200 flex items-center justify-between gap-3 bg-white text-slate-800 hover:bg-slate-100/70 font-bold cursor-pointer border border-slate-200/80 shadow-xs text-left hover:-translate-y-0.5 focus:outline-none';
 
             const title = btn.querySelector('.tab-title');
             const desc = btn.querySelector('.tab-desc');
@@ -584,7 +684,27 @@ def audit_all_pages():
     return all_passed
 
 # Run full build
+def update_other_pages_styling():
+    pages = ['schools.html', 'tokushoho.html', 'privacy.html', 'blog.html', 'blog-detail.html', 'apply.html']
+    for p in pages:
+        if not os.path.exists(p):
+            continue
+        with open(p, 'r', encoding='utf-8') as f:
+            c = f.read()
+        
+        c = c.replace('"background": "#fcf9f8"', '"background": "#f8fafc"')
+        c = c.replace('"surface": "#fcf9f8"', '"surface": "#f8fafc"')
+        c = re.sub(r'<body class=["\']bg-background', '<body class="bg-slate-50', c)
+        
+        if 'background-color: #f8fafc' not in c:
+            c = c.replace('</head>', '  <style>body { background-color: #f8fafc !important; }</style>\n</head>')
+
+        with open(p, 'w', encoding='utf-8') as f:
+            f.write(c)
+    print("✓ 全下層ページの背景色を bg-slate-50 (#f8fafc) に統一完了")
+
 build_index()
+update_other_pages_styling()
 build_sitemap()
 sync_clean_url_directories()
 audit_all_pages()

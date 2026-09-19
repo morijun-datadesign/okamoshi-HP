@@ -1,0 +1,496 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"secondary-fixed-dim":"#ffb59c","surface-bright":"#fcf9f8","on-primary-fixed-variant":"#224f3c","inverse-on-surface":"#f3f0ef","primary":"#134230","on-error-container":"#93000a","surface-container-lowest":"#ffffff","on-background":"#1b1c1c","on-primary-fixed":"#002114","on-primary":"#ffffff","surface":"#fcf9f8","on-primary-container":"#9fcfb6","primary-fixed":"#bceed3","tertiary":"#4f3600","secondary-container":"#fe8357","on-tertiary-container":"#f1bd5a","secondary-fixed":"#ffdbcf","on-secondary-fixed-variant":"#822801","surface-container-low":"#f6f3f2","on-error":"#ffffff","primary-fixed-dim":"#a1d1b8","on-secondary":"#ffffff","tertiary-container":"#6c4c00","on-secondary-fixed":"#390c00","primary-container":"#2d5a46","outline-variant":"#c0c9c2","background":"#fcf9f8","on-secondary-container":"#6f2000","on-surface":"#1b1c1c","inverse-primary":"#a1d1b8","tertiary-fixed-dim":"#f2be5b","surface-container-highest":"#e4e2e1","surface-tint":"#3a6752","surface-container-high":"#eae7e7","outline":"#717973","tertiary-fixed":"#ffdea7","surface-dim":"#dcd9d9","on-tertiary-fixed-variant":"#5e4200","on-tertiary-fixed":"#271900","on-surface-variant":"#414944","error":"#ba1a1a","surface-variant":"#e4e2e1","on-tertiary":"#ffffff","inverse-surface":"#303030","surface-container":"#f0eded","secondary":"#a23e18","error-container":"#ffdad6"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"space-xl":"2rem","space-4xl":"6rem","container-max":"75rem","space-sm":"0.75rem","space-md":"1rem","gutter-mobile":"1rem","space-2xs":"0.25rem","space-xs":"0.5rem","space-2xl":"3rem","space-lg":"1.5rem","gutter-desktop":"1.5rem","space-3xl":"4.5rem"},"fontFamily":{"headline-lg-mobile":["Plus Jakarta Sans"],"label-sm":["Plus Jakarta Sans"],"headline-xl":["Plus Jakarta Sans"],"headline-sm":["Plus Jakarta Sans"],"headline-xl-mobile":["Plus Jakarta Sans"],"headline-md":["Plus Jakarta Sans"],"label-md":["Plus Jakarta Sans"],"body-md":["Noto Sans"],"body-sm":["Noto Sans"],"headline-lg":["Plus Jakarta Sans"],"body-lg":["Noto Sans"],"label-lg":["Plus Jakarta Sans"]},"fontSize":{"headline-lg-mobile":["24px",{"lineHeight":"34px","letterSpacing":"0","fontWeight":"700"}],"label-sm":["11px",{"lineHeight":"16px","letterSpacing":"0.04em","fontWeight":"700"}],"headline-xl":["40px",{"lineHeight":"52px","letterSpacing":"-0.02em","fontWeight":"700"}],"headline-sm":["18px",{"lineHeight":"28px","letterSpacing":"0","fontWeight":"600"}],"headline-xl-mobile":["30px",{"lineHeight":"40px","letterSpacing":"-0.01em","fontWeight":"700"}],"headline-md":["22px",{"lineHeight":"32px","letterSpacing":"0","fontWeight":"600"}],"label-md":["13px",{"lineHeight":"18px","letterSpacing":"0.02em","fontWeight":"600"}],"body-md":["14px",{"lineHeight":"24px","letterSpacing":"0.01em","fontWeight":"400"}],"body-sm":["12px",{"lineHeight":"20px","letterSpacing":"0.01em","fontWeight":"400"}],"headline-lg":["32px",{"lineHeight":"44px","letterSpacing":"-0.01em","fontWeight":"700"}],"body-lg":["16px",{"lineHeight":"28px","letterSpacing":"0.015em","fontWeight":"400"}],"label-lg":["15px",{"lineHeight":"20px","letterSpacing":"0.02em","fontWeight":"600"}]}}}};</script></head><body class="bg-surface font-body-md text-on-surface antialiased min-h-screen flex flex-col"><header class="fixed top-0 left-0 w-full z-50 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-20 max-w-[75rem] mx-auto px-gutter-mobile lg:px-gutter-desktop flex items-center justify-between gap-space-md"><a class="flex items-center gap-space-xs group" data-path="home" href="#"><div class="w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center text-on-primary shadow-sm"><span class="material-symbols-outlined text-[24px]">school</span></div><div class="flex flex-col"><span class="font-label-sm text-label-sm text-primary tracking-wider">岡山県高校入試プレテスト</span><span class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors leading-tight">岡山県統一模試 <span class="font-headline-md text-headline-md text-primary font-bold">おかもし</span></span></div></a><nav class="hidden xl:flex items-center gap-space-lg" data-active-classes="text-primary font-bold"><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors py-space-xs" data-path="next-exam" href="#">次回模試</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors py-space-xs" data-path="annual-schedule" href="#">年間日程</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors py-space-xs" data-path="exam-details" href="#">模試詳細</a><a aria-current="page" class="transition-colors py-space-xs text-primary font-bold" data-path="partner-schools" href="#">参加塾一覧</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors py-space-xs" data-path="news-and-blog" href="#">ブログ/お知らせ</a></nav><div class="flex items-center gap-space-sm"><a class="hidden sm:inline-flex items-center gap-space-xs px-space-md py-space-xs bg-secondary text-on-secondary rounded-lg font-label-md text-label-md shadow-[0_4px_12px_-2px_rgba(162,62,24,0.3)] hover:bg-secondary-container hover:text-on-secondary-container transition-all" data-path="application-entry" href="#"><span class="material-symbols-outlined text-[18px]">assignment</span><span class="">お申し込みはこちら</span><span class="material-symbols-outlined text-[16px]">chevron_right</span></a><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-20 bg-surface flex-grow"><div class="flex flex-col w-full">
+<!-- Breadcrumb Navigation -->
+<nav aria-label="パンくずリスト" class="w-full px-gutter-mobile pt-space-md pb-space-xs">
+<ol class="flex items-center flex-wrap gap-space-2xs font-label-sm text-label-sm text-on-surface-variant">
+<li class="flex items-center gap-space-2xs">
+<a class="hover:text-primary transition-colors flex items-center gap-space-2xs" data-path="home" href="#">
+<span class="material-symbols-outlined text-[14px]">home</span>
+<span class="">TOP</span>
+</a>
+</li>
+<li class="flex items-center text-outline-variant">
+<span class="material-symbols-outlined text-[12px]">chevron_right</span>
+</li>
+<li class="text-primary font-bold">
+<span class="">お知らせ・ブログ一覧</span>
+</li>
+</ol>
+</nav>
+<!-- Header & Title Module -->
+<section class="w-full px-gutter-mobile pt-space-xs pb-space-md">
+<div class="flex flex-col gap-space-sm">
+<div class="inline-flex items-center gap-space-xs px-space-sm py-space-2xs rounded-full bg-primary-fixed text-on-primary-fixed self-start shadow-sm">
+<span class="material-symbols-outlined text-[16px] text-primary" style="font-variation-settings: &quot;FILL&quot; 1;">verified</span>
+<span class="font-label-sm text-label-sm tracking-wide">岡山県内最大規模模試 年間 18,000+ 人受験</span>
+</div>
+<div class="flex flex-col gap-space-xs">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface font-bold tracking-tight leading-snug">
+          お知らせ・<span class="text-primary">お役立ちブログ</span>
+</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+          岡山県統一模擬試験（おかもし）の実施要項・重要なお知らせや、岡山県の高校入試・県立中高一貫校受検に役立つ受験情報・学習コラムをお届けします。
+        </p>
+</div>
+</div>
+</section>
+<!-- Horizontal Scrolling Category Chips -->
+<section class="w-full pb-space-md">
+<div class="flex items-center gap-space-xs px-gutter-mobile overflow-x-auto no-scrollbar py-space-2xs" id="categoryTabs">
+<button class="category-pill shrink-0 px-space-md py-space-xs rounded-full bg-primary text-on-primary font-label-md text-label-md shadow-sm transition-all" data-filter="all" type="button">
+        すべて
+      </button>
+<button class="category-pill shrink-0 px-space-md py-space-xs rounded-full bg-surface-container-high text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-highest transition-all" data-filter="important" type="button">
+        重要なお知らせ
+      </button>
+<button class="category-pill shrink-0 px-space-md py-space-xs rounded-full bg-surface-container-high text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-highest transition-all" data-filter="exam-info" type="button">
+        入試・受検情報
+      </button>
+<button class="category-pill shrink-0 px-space-md py-space-xs rounded-full bg-surface-container-high text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-highest transition-all" data-filter="study-tips" type="button">
+        模試活用法・学習コラム
+      </button>
+<button class="category-pill shrink-0 px-space-md py-space-xs rounded-full bg-surface-container-high text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-highest transition-all" data-filter="guidelines" type="button">
+        実施要項・日程
+      </button>
+</div>
+</section>
+<!-- Featured Article (注目記事) -->
+<section class="w-full px-gutter-mobile pb-space-lg">
+<div class="relative w-full rounded-xl bg-surface-container-lowest shadow-sm overflow-hidden flex flex-col">
+<!-- Accent terracotta bar -->
+<div class="h-1.5 w-full bg-secondary"></div>
+<!-- Top Badges & Meta -->
+<div class="px-space-md pt-space-md flex items-center justify-between gap-space-xs">
+<div class="flex items-center gap-space-2xs">
+<span class="inline-flex items-center gap-space-2xs px-space-xs py-space-2xs rounded bg-secondary text-on-secondary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[13px]">stars</span>
+<span class="">注目記事</span>
+</span>
+<span class="px-space-xs py-space-2xs rounded bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm">
+            2026年度10月号
+          </span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary font-bold">重要なお知らせ</span>
+</div>
+<!-- Featured Image Container -->
+<div class="p-space-md pb-0">
+<div class="relative w-full h-44 rounded-lg overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Japanese middle school students diligently concentrating on their exam papers in a serene bright classroom, bathed in warm natural afternoon sunlight, focused atmosphere, subtle moss green uniform details, professional academic documentary photography" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpOxkJyQP5bCIZKv8LwcPFK36ysalX_cPuYdCG82yF8G7lzc5WWI4tuSJUd7hfDfMbVIegvItTUhcxdjFbyD_aTJd4ery8wxoWqIyaDbgcVAW0T8bM8cJZcpAhhKQX9Lb_77PVbwnx24dpEA9WZ2yZkFMZyYuFvroU3Z0SP5QzRVEH6_zI0yLnbBZE24disz5uNX932mLqaHugsOfN3Rb7vifcIP14BvIMZ-tz8ed95LkeK_L4vIIO">
+<div class="absolute bottom-2 left-2 px-space-xs py-space-2xs bg-surface/90 backdrop-blur-sm rounded font-label-sm text-label-sm text-on-surface flex items-center gap-space-2xs shadow-sm">
+<span class="material-symbols-outlined text-primary text-[14px]">calendar_today</span>
+<span class="">2026.09.04 公開</span>
+</div>
+</div>
+</div>
+<!-- Content -->
+<div class="p-space-md flex flex-col gap-space-sm">
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-bold leading-snug">
+          2026年度10月号 中学3年生おかもし実施要項を公開しました（会場・自宅受験）
+        </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+          秋の本格受験期突入に合わせて実施される「中3・第2回岡山統一模試」。県立普通科トップ高から私立有力校まで、岡山県高校入試の出題傾向と配点基準を完全踏襲した実践判定を行います。
+        </p>
+<!-- Summary Key Milestones (Mini Matrix) -->
+<div class="rounded-lg bg-surface-container-low p-space-sm flex flex-col gap-space-xs">
+<div class="flex items-center justify-between text-body-sm font-body-sm">
+<span class="flex items-center gap-space-2xs text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-[16px]">edit_calendar</span>
+<span class="">試験日</span>
+</span>
+<span class="font-bold text-on-surface">10月11日(日)</span>
+</div>
+<div class="flex items-center justify-between text-body-sm font-body-sm">
+<span class="flex items-center gap-space-2xs text-secondary">
+<span class="material-symbols-outlined text-[16px]">timer</span>
+<span class="">申込締切</span>
+</span>
+<span class="font-bold text-secondary">9月29日(火) 23:59迄</span>
+</div>
+<div class="flex items-center justify-between text-body-sm font-body-sm">
+<span class="flex items-center gap-space-2xs text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-[16px]">mark_email_read</span>
+<span class="">成績返却</span>
+</span>
+<span class="font-bold text-on-surface">10月23日(金) 順次発送</span>
+</div>
+</div>
+<!-- Action CTAs -->
+<div class="grid grid-cols-2 gap-space-xs pt-space-xs">
+<a class="flex items-center justify-center gap-space-2xs py-space-xs px-space-xs rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-sm text-label-sm transition-colors text-center" data-path="exam-details-oct" href="#">
+<span class="">詳細・要項を読む</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</a>
+<a class="flex items-center justify-center gap-space-2xs py-space-xs px-space-xs rounded-lg bg-secondary hover:bg-secondary-container text-on-secondary font-label-sm text-label-sm shadow-sm transition-all text-center" data-path="application-entry" href="#">
+<span class="material-symbols-outlined text-[15px]">assignment_turned_in</span>
+<span class="">模試を申込む</span>
+</a>
+</div>
+</div>
+</div>
+</section>
+<!-- Recent Articles & Archive Feed -->
+<section class="w-full px-gutter-mobile pb-space-xl flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<div class="w-2 h-5 rounded-full bg-primary"></div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">新着記事・アーカイブ</h3>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">全 48 件中 1〜6 件</span>
+</div>
+<!-- Article Cards List -->
+<div class="flex flex-col gap-space-sm" id="articleList">
+<!-- Card 1 -->
+<a class="group block w-full rounded-xl bg-surface-container-lowest p-space-md shadow-sm transition-all hover:bg-surface-bright" data-path="article-1" href="#">
+<div class="flex items-start gap-space-sm">
+<div class="w-20 h-20 shrink-0 rounded-lg overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Clean Japanese payment receipts and convenience store terminal receipt with calm notebook in subtle moss desk background, warm lighting, educational finance theme" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDFO6PZ_Q8MisKy2yZ0IEdLhYUUm7LHRbVxGUTV55x2YZHlZoUKwmaR0ZdJNMb8rpQMWsuY2-5hhNkyi-IXo4sSfT8VtwAjAV1ay2MMCS9RdYDyZm03ekPqj9ikKGTDhEc92IJb5Isk1FjDMwBebLeOavi6zsiHrOAMGdELWIg7gkMkwA_mgGwWYTHlQfPmKWdVFCESRezNapUearjX0qsA6SdYUt4PDBuJy0LUo4pUnWWPSS9ob4JS">
+</div>
+<div class="flex flex-col flex-1 min-w-0 gap-space-2xs">
+<div class="flex items-center gap-space-xs">
+<span class="px-space-xs py-0.5 rounded bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm truncate">
+                受験手続き・事務
+              </span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">2026.08.19</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface font-bold leading-snug line-clamp-2 group-hover:text-primary transition-colors">
+              おかもし 決済用リンクおよびコンビニ決済手順について
+            </h4>
+<div class="flex items-center text-primary font-label-sm text-label-sm gap-space-2xs mt-auto pt-1">
+<span class="">詳細を見る</span>
+<span class="material-symbols-outlined text-[14px] group-hover:translate-x-1 transition-transform">chevron_right</span>
+</div>
+</div>
+</div>
+</a>
+<!-- Card 2 -->
+<a class="group block w-full rounded-xl bg-surface-container-lowest p-space-md shadow-sm transition-all hover:bg-surface-bright" data-path="article-2" href="#">
+<div class="flex items-start gap-space-sm">
+<div class="w-20 h-20 shrink-0 rounded-lg overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Japanese high school students discussing study strategies happily around a library wooden desk with stationery, uplifting warm sunbeams, inspiring scholarly atmosphere" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCitxUBXfk8X0gEWRZZ2ZtUGIe_WnWxSDMwhkeu_8p4sKMycbhb69ScJeI22O-OVaXd_deZXvMHMNFTfLl2yYSTt16K-mGumFqUIDZgkd0dh4EBknOpcKaExqgUTV84NDnrZNMGvtxBLWGozDeOIPNx5XnO9IGH3C5oZttXDM64dL9hMNb--BO2Ln28-AMayIUTJ1Py39Y1yLywI7B9Dbh0HUOOdMOxg16ZlNddyth1uap6as2g3ISR">
+</div>
+<div class="flex flex-col flex-1 min-w-0 gap-space-2xs">
+<div class="flex items-center gap-space-xs">
+<span class="px-space-xs py-0.5 rounded bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm truncate">
+                合格体験記・学習法
+              </span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">2026.07.30</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface font-bold leading-snug line-clamp-2 group-hover:text-primary transition-colors">
+              【岡山県の高校受験】合格への近道はここにある！先輩受験生が語る『おかもし』活用法
+            </h4>
+<div class="flex items-center text-primary font-label-sm text-label-sm gap-space-2xs mt-auto pt-1">
+<span class="">先輩の声を読む</span>
+<span class="material-symbols-outlined text-[14px] group-hover:translate-x-1 transition-transform">chevron_right</span>
+</div>
+</div>
+</div>
+</a>
+<!-- Card 3 -->
+<a class="group block w-full rounded-xl bg-surface-container-lowest p-space-md shadow-sm transition-all hover:bg-surface-bright" data-path="article-3" href="#">
+<div class="flex items-start gap-space-sm">
+<div class="w-20 h-20 shrink-0 rounded-lg overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="A focused student sitting in a large organized lecture exam hall taking an exam with concentration, deep green chalkboard background, serious academic atmosphere" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbcNl2n4c1kqsfRnQQ3tar4_XD6TW81c_OBmfe4wGN9Xh3E6JrwcnkJZ92zeJegJtK311PfAL7aGb-mZpgqonKXEAP1wthPtViH8gjjIpWxG9EctyF0ghY0qE72OrZT0SMFpTVE3A4ezhbg8LCn2pa4V1AAktGPRnxWGWAdsO3PbjYysPrTl886CxXE2FLFeOGM43z6RaiWhaIoisMrYtaQC3_o0tZf7kLF1qTlK_IN-VIXBkLQZFZ">
+</div>
+<div class="flex flex-col flex-1 min-w-0 gap-space-2xs">
+<div class="flex items-center gap-space-xs">
+<span class="px-space-xs py-0.5 rounded bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm truncate">
+                受験メンタル対策
+              </span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">2026.07.21</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface font-bold leading-snug line-clamp-2 group-hover:text-primary transition-colors">
+              おかもし 会場受験のススメ 〜本番さながらの空気感と『しんどい』の先にある成長〜
+            </h4>
+<div class="flex items-center text-primary font-label-sm text-label-sm gap-space-2xs mt-auto pt-1">
+<span class="">詳細を見る</span>
+<span class="material-symbols-outlined text-[14px] group-hover:translate-x-1 transition-transform">chevron_right</span>
+</div>
+</div>
+</div>
+</a>
+<!-- Card 4 -->
+<a class="group block w-full rounded-xl bg-surface-container-lowest p-space-md shadow-sm transition-all hover:bg-surface-bright" data-path="article-4" href="#">
+<div class="flex items-start gap-space-sm">
+<div class="w-20 h-20 shrink-0 rounded-lg overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Elementary school student with backpack studying logic diagrams and charts with pencil, modern minimalist Japanese study room, warm terracotta accent tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuALioxtnZgIA7b_4-mU-PkIVaSZ02sqQVcdxEJCcmTOwN5l5bzcjly-XrVd6HkRljkMeefZjtBC7j98qctqaNWd3BSHEQrLBqBHKWtkF71hSl_vkodD4FfiIvl6Irq7yfF9wpEflN6U4hWsxG2Xa8oaOmHAJIQWZf0YoBeWykTlNTu7r5ZCiez5liBXbDcmk4orfVyyrtG1x7LDF9pUJXvWAlIB26phPz8MlrMirLHEtWMxUecnb9GO">
+</div>
+<div class="flex flex-col flex-1 min-w-0 gap-space-2xs">
+<div class="flex items-center gap-space-xs">
+<span class="px-space-xs py-0.5 rounded bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm truncate">
+                県立中高一貫校受検
+              </span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">2026.07.13</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface font-bold leading-snug line-clamp-2 group-hover:text-primary transition-colors">
+              小6生対象 岡山県適性検査対策模試 9月号 実施要項・出題範囲のご案内
+            </h4>
+<div class="flex items-center text-primary font-label-sm text-label-sm gap-space-2xs mt-auto pt-1">
+<span class="">要項を見る</span>
+<span class="material-symbols-outlined text-[14px] group-hover:translate-x-1 transition-transform">chevron_right</span>
+</div>
+</div>
+</div>
+</a>
+<!-- Card 5 -->
+<a class="group block w-full rounded-xl bg-surface-container-lowest p-space-md shadow-sm transition-all hover:bg-surface-bright" data-path="article-5" href="#">
+<div class="flex items-start gap-space-sm">
+<div class="w-20 h-20 shrink-0 rounded-lg overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Prestigious Japanese high school gate framed by traditional pine trees in Okayama, calm clear blue sky, academic achievement symbol, serene editorial photo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsZLggTqeak1y1LQTZ9J7fd6pUbLhwd6W9aC5GWNojwtelDdS8jhgOv6ZWHHYJ26FaYHkKnk0PVib-qhOOE8shVU8XYML8aq5VZV9NkDe3CWTg28dW6HiUiSlqkgqMvWOyxphDGgWN6VqNP9uNp8Eo6c8NKloVViPLotbzscebgcS3UIQW8jlcPLISXryhIjHP4dfMEhTscmexLDVX8HIPgOzjQWHNxATJsxfIyXFMPBU-o9Pt4fFh">
+</div>
+<div class="flex flex-col flex-1 min-w-0 gap-space-2xs">
+<div class="flex items-center gap-space-xs">
+<span class="px-space-xs py-0.5 rounded bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm truncate">
+                岡山県入試制度研究
+              </span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">2026.06.28</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface font-bold leading-snug line-clamp-2 group-hover:text-primary transition-colors">
+              岡山朝日高校・操山高校・芳泉高校の志望校判定基準と内申点（通知表評価点）の重要性
+            </h4>
+<div class="flex items-center text-primary font-label-sm text-label-sm gap-space-2xs mt-auto pt-1">
+<span class="">分析記事を読む</span>
+<span class="material-symbols-outlined text-[14px] group-hover:translate-x-1 transition-transform">chevron_right</span>
+</div>
+</div>
+</div>
+</a>
+<!-- Card 6 -->
+<a class="group block w-full rounded-xl bg-surface-container-lowest p-space-md shadow-sm transition-all hover:bg-surface-bright" data-path="article-6" href="#">
+<div class="flex items-start gap-space-sm">
+<div class="w-20 h-20 shrink-0 rounded-lg overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Detailed academic evaluation score sheet with analytical radar graphs, red grading annotations, and study planner on a clean wooden desk, top-down perspective" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDl8Nxy9iSbfDzVvMfKSuuuikmXDtDR4mS8B0-wlcrHzJd19QrBF7Q3-9zbqVxDKRdqA8C7ggbpD45ao53xQ5Ke6xsQgAUB1KiIWljGr_sftOm7LbVxXWJKK_Z-tTrZvV4rHRiQclP1m7trMnwGRLrEXQHoRS1Stby_5sRz9hviwh8tHkt2iiXdd-unIB4rpIsBz-Xh66OR22Y6w6XpltnMg3mD0heCJLwP65VqbMGw4YT15wSZDiSt">
+</div>
+<div class="flex flex-col flex-1 min-w-0 gap-space-2xs">
+<div class="flex items-center gap-space-xs">
+<span class="px-space-xs py-0.5 rounded bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm truncate">
+                成績表活用マニュアル
+              </span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">2026.06.15</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface font-bold leading-snug line-clamp-2 group-hover:text-primary transition-colors">
+              返却された『学力診断シート』の正しい見方と、弱点克服への学習サイクル
+            </h4>
+<div class="flex items-center text-primary font-label-sm text-label-sm gap-space-2xs mt-auto pt-1">
+<span class="">マニュアルを見る</span>
+<span class="material-symbols-outlined text-[14px] group-hover:translate-x-1 transition-transform">chevron_right</span>
+</div>
+</div>
+</div>
+</a>
+</div>
+<!-- Pagination Module -->
+<div class="w-full py-space-sm flex items-center justify-center gap-space-xs">
+<button aria-label="前のページ" class="w-10 h-10 rounded-lg bg-surface-container text-outline flex items-center justify-center cursor-not-allowed" disabled="" type="button">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<button class="w-10 h-10 rounded-lg bg-primary text-on-primary font-label-md text-label-md flex items-center justify-center shadow-sm" type="button">
+        1
+      </button>
+<button class="w-10 h-10 rounded-lg bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest font-label-md text-label-md flex items-center justify-center transition-colors" type="button">
+        2
+      </button>
+<button class="w-10 h-10 rounded-lg bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest font-label-md text-label-md flex items-center justify-center transition-colors" type="button">
+        3
+      </button>
+<span class="w-8 h-10 text-on-surface-variant font-body-md text-body-md flex items-center justify-center">
+        ...
+      </span>
+<button class="w-10 h-10 rounded-lg bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest font-label-md text-label-md flex items-center justify-center transition-colors" type="button">
+        8
+      </button>
+<button aria-label="次のページ" class="w-10 h-10 rounded-lg bg-surface-container-high text-on-surface hover:bg-surface-container-highest flex items-center justify-center transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+</section>
+<!-- Deep Green Mission Banner -->
+<section class="w-full px-gutter-mobile pb-space-2xl">
+<div class="relative w-full rounded-2xl bg-primary text-on-primary p-space-lg overflow-hidden shadow-md">
+<!-- Ambient Decorative Circles -->
+<div class="absolute -right-8 -bottom-8 w-44 h-44 rounded-full bg-primary-container opacity-40 pointer-events-none"></div>
+<div class="absolute -left-6 -top-6 w-28 h-28 rounded-full bg-primary-fixed opacity-10 pointer-events-none"></div>
+<div class="relative z-10 flex flex-col gap-space-md">
+<div class="inline-flex items-center gap-space-2xs px-space-xs py-space-2xs rounded bg-on-primary/10 text-primary-fixed font-label-sm text-label-sm self-start">
+<span class="material-symbols-outlined text-[14px]">school</span>
+<span class="">40年の指導ノウハウ</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-primary font-bold leading-tight">
+          岡山県高校入試<br>
+          正確無比な志望校判定を<br>
+          すべての受験生へ。
+        </h3>
+<p class="font-body-sm text-body-sm text-primary-fixed-dim leading-relaxed">
+          岡山県統一模試は、長年蓄積された県内最大級の追跡調査データをもとに、合格ラインを精緻に割り出します。
+        </p>
+<div class="flex flex-col gap-space-xs pt-space-2xs">
+<a class="flex items-center justify-between px-space-md py-space-sm rounded-lg bg-surface-container-lowest text-primary font-label-md text-label-md hover:bg-surface-bright shadow-sm transition-colors" data-path="annual-schedule" href="#">
+<span class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[18px]">calendar_month</span>
+<span class="">2026年度 年間日程表</span>
+</span>
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</a>
+<a class="flex items-center justify-between px-space-md py-space-sm rounded-lg bg-primary-container text-on-primary font-label-md text-label-md hover:bg-primary-container/80 transition-colors" data-path="exam-details" href="#">
+<span class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[18px]">analytics</span>
+<span class="">学力診断シートの特長</span>
+</span>
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</a>
+</div>
+</div>
+</div>
+</section>
+<!-- Recommended & Related Navigation (おすすめ・関連ナビゲーション) -->
+<section class="w-full px-gutter-mobile pb-space-xl flex flex-col gap-space-md">
+<div class="flex items-center gap-space-xs">
+<div class="w-2 h-5 rounded-full bg-secondary"></div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">おすすめ・関連ナビゲーション</h3>
+</div>
+<div class="flex flex-col gap-space-sm">
+<!-- Related Card 1 -->
+<a class="group flex flex-col w-full rounded-xl bg-surface-container-lowest p-space-md shadow-sm transition-all hover:bg-surface-bright" data-path="application-entry" href="#">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<div class="w-10 h-10 rounded-lg bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed">
+<span class="material-symbols-outlined text-[22px]">app_registration</span>
+</div>
+<div class="flex flex-col">
+<span class="inline-flex items-center gap-1 font-label-sm text-label-sm text-secondary font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span>
+                Web受付中
+              </span>
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold">次回模試のお申込みはこちら</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-secondary group-hover:translate-x-1 transition-all">chevron_right</span>
+</div>
+<div class="mt-space-sm pt-space-xs flex items-center justify-between font-label-sm text-label-sm text-secondary font-bold">
+<span class="">申込みフォームへ進む</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</div>
+</a>
+<!-- Related Card 2 -->
+<a class="group flex flex-col w-full rounded-xl bg-surface-container-lowest p-space-md shadow-sm transition-all hover:bg-surface-bright" data-path="partner-schools" href="#">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<div class="w-10 h-10 rounded-lg bg-primary-fixed flex items-center justify-center text-on-primary-fixed">
+<span class="material-symbols-outlined text-[22px]">apartment</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-primary font-bold">県内120教室以上</span>
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold">岡山県内提携塾一覧を見る</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary group-hover:translate-x-1 transition-all">chevron_right</span>
+</div>
+<div class="mt-space-sm pt-space-xs flex items-center justify-between font-label-sm text-label-sm text-primary font-bold">
+<span class="">提携校・会場リストを見る</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</div>
+</a>
+<!-- Related Card 3 -->
+<a class="group flex flex-col w-full rounded-xl bg-surface-container-lowest p-space-md shadow-sm transition-all hover:bg-surface-bright" href="https://instagram.com" rel="noopener noreferrer" target="_blank">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<div class="w-10 h-10 rounded-lg bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed">
+<span class="material-symbols-outlined text-[22px]">photo_camera</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-tertiary font-bold">公式SNS（毎週更新）</span>
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold">公式Instagram @okamoshi</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-tertiary group-hover:translate-x-1 transition-all">open_in_new</span>
+</div>
+<div class="mt-space-sm pt-space-xs flex items-center justify-between font-label-sm text-label-sm text-tertiary font-bold">
+<span class="">Instagramを見る</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</div>
+</a>
+</div>
+</section>
+<!-- Interactive Filter Micro-interaction Script -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const pills = document.querySelectorAll('#categoryTabs .category-pill');
+      pills.forEach(pill => {
+        pill.addEventListener('click', () => {
+          pills.forEach(p => {
+            p.classList.remove('bg-primary', 'text-on-primary', 'shadow-sm');
+            p.classList.add('bg-surface-container-high', 'text-on-surface-variant');
+          });
+          pill.classList.remove('bg-surface-container-high', 'text-on-surface-variant');
+          pill.classList.add('bg-primary', 'text-on-primary', 'shadow-sm');
+        });
+      });
+    });
+  </script>
+</div></main><footer class="bg-surface-container-low text-on-surface-variant border-t border-outline-variant/30 pt-8 pb-12 mt-12">
+  <div class="max-w-md mx-auto px-4">
+    <!-- Brand & Organizer Info -->
+    <div class="mb-6">
+      <div class="flex items-center gap-2 mb-3 text-primary">
+        <span class="material-symbols-outlined text-2xl">school</span>
+        <span class="font-bold text-base text-on-surface">岡山県統一模擬試験（おかもし）</span>
+      </div>
+      <div class="text-xs leading-relaxed space-y-1 text-on-surface-variant">
+        <p class=""><span class="font-bold">主催：</span>中央教育研究所株式会社 岡山県統一模擬試験実行委員会</p>
+        <p class="">〒700-0824 岡山県岡山市北区内山下1丁目3-12 志徳ビル4F</p>
+        <p class="">TEL：086-227-3999</p>
+        <p class="">MAIL：okayamamoshi@chuoh-kyouiku.co.jp</p>
+      </div>
+      <div class="mt-3">
+        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs text-on-surface hover:text-primary transition-colors font-medium">
+          <span class="material-symbols-outlined text-sm">photo_camera</span>
+          公式Instagram
+        </a>
+      </div>
+    </div>
+
+    <!-- Inquiry Action Buttons (2 buttons side by side) -->
+    <div class="grid grid-cols-2 gap-2 mb-6">
+      <a href="#contact-cram" class="flex items-center justify-center gap-1.5 py-2.5 px-2 bg-surface-container-lowest border border-primary/30 text-primary hover:bg-primary/5 rounded-lg text-xs font-bold transition-all shadow-sm">
+        <span class="material-symbols-outlined text-sm">apartment</span>
+        塾関係者様
+      </a>
+      <a href="#contact-individual" class="flex items-center justify-center gap-1.5 py-2.5 px-2 bg-surface-container-lowest border border-primary/30 text-primary hover:bg-primary/5 rounded-lg text-xs font-bold transition-all shadow-sm">
+        <span class="material-symbols-outlined text-sm">person</span>
+        個人申込の方
+      </a>
+    </div>
+
+    <!-- Links Grid (2 columns: 模試情報 & ご案内・手続き) -->
+    <div class="grid grid-cols-2 gap-4 py-4 border-y border-outline-variant/30 text-xs">
+      <div>
+        <h4 class="font-bold text-on-surface mb-2 text-xs">模試情報</h4>
+        <ul class="space-y-1.5 text-on-surface-variant">
+          <li class=""><a href="#" class="hover:text-primary transition-colors">次回模試実施要項</a></li>
+          <li class=""><a href="#" class="hover:text-primary transition-colors">年間スケジュール</a></li>
+          <li class=""><a href="#" class="hover:text-primary transition-colors">過去問・高校模試詳細</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-bold text-on-surface mb-2 text-xs">ご案内・手続き</h4>
+        <ul class="space-y-1.5 text-on-surface-variant">
+          <li class=""><a href="#" class="hover:text-primary transition-colors">提携学習塾一覧</a></li>
+          <li class=""><a href="#" class="hover:text-primary transition-colors">個人受験のお申込み</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Terms & Copyright -->
+    <div class="mt-6 text-center text-xs space-y-3 text-outline">
+      <div class="flex flex-wrap justify-center gap-x-4 gap-y-1">
+        <a href="#" class="hover:text-primary transition-colors">プライバシーポリシー</a>
+        <span class="">|</span>
+        <a href="#" class="hover:text-primary transition-colors">特定商取引法に基づく表記</a>
+        <span class="">|</span>
+        <a href="#" class="hover:text-primary transition-colors">お知らせ・更新情報</a>
+      </div>
+      <p class="text-[11px]">© Okayama Mock Examination Executive Committee. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+</body></html>

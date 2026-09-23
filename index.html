@@ -1267,7 +1267,9 @@
         apply_btn_text: '中3おかもし（10月号）に申し込む',
         apply_url: 'apply.html?grade=chu3',
         schedule_html: '<p>会場受験: 山陽学園中学校 / 2026年10月19日(日)<br>自宅受験: 10/11(土)〜10/19(日)</p>',
-        guideline_html: ''
+        guideline_html: '',
+        venue_exam_html: '<p>■ 受験票等の発送</p><p>10月13日(火) 頃発送予定</p><p>同封物：受験当日のご案内、受験票、志望校記入用紙、志望校コード表</p><p>■ 会場・実施日</p><p>岡山会場：山陽学園中学校・高等学校（2026年11月1日(日)）</p><p>津山会場：美作高等学校（2026年10月25日(日)）</p><p>■ 当日時参照物</p><p>・制服着用 ・筆記用具（鉛筆・消しゴム・定規・コンパス） ・受験票 ・志望校記入用紙 ・昼食 ・飲料 ・上履き</p><p>※志望校記入用紙と受験票は事前にご郵送いたします。当日必ずお持ちください。</p><p>■ 当日の時間割（5教科）</p><p>受付 9:30 〜 9:50</p><p>注意 9:55 〜 10:10</p><p>社会（45分） 10:10 〜 10:55</p><p>数学（45分） 11:05 〜 11:50</p><p>昼食（35分） 11:50 〜 12:25</p><p>国語（45分） 12:25 〜 13:10</p><p>英語（45分） 13:20 〜 14:05</p><p>理科（45分） 14:15 〜 15:00</p><p>解散予定 15:10頃</p><p>※試験終了後、詳細な解答・解説集を受験者全員にお渡しいたします。</p><p>■ 成績表のご返却予定</p><p>2026年11月12日(木) 発送予定</p><p>個人成績表を発送いたします。</p><p>ご自宅到着は翌週になる場合がございます。</p>',
+        home_exam_html: '<p>■ 問題用紙等の発送</p><p>10月13日(火) 頃発送予定</p><p>■ 実施期間</p><p>2026年10月17日(土) 〜 11月1日(日)</p><p>期間内のご都合に合わせて受験いただけます。</p><p>■ 答案提出締め切り</p><p>2026年11月4日(水) 指定業者必着</p><p>答案用紙は期日までに同封の返送用封筒にて指定業者宛ご郵送ください。</p><p>※期日を超えての到着は採点・判定ができませんのでご注意ください。</p><p>■ 成績表のご返却予定</p><p>2026年11月12日(木) 発送予定</p><p>個人成績表を発送いたします。</p><p>ご自宅到着は翌週になる場合がございます。</p>'
       }]
     },
     {
@@ -1406,6 +1408,304 @@
     return '<div style="display:flex;flex-direction:column;width:100%;">' + rows.join('') + '</div>';
   }
 
+  /* -----------------------------------------------------------------------
+     4-1. 実施要項（会場/自宅）のカード自動パース
+  ----------------------------------------------------------------------- */
+  function parseGuidelineCards(rawHTML, mode) {
+    if (!rawHTML) return '';
+    var text = rawHTML
+      .replace(/<\/(p|div|li|tr|h[1-6])>/gi, '\n')
+      .replace(/<br\s*\/?>/gi, '\n')
+      .replace(/<[^>]+>/g, '')
+      .replace(/&nbsp;/g, ' ')
+      .replace(/&amp;/g, '&');
+
+    var lines = text.split('\n')
+      .map(function(l) { return l.trim(); })
+      .filter(function(l) { return l.length > 0; });
+
+    if (!lines.length) return '';
+
+    var cards = [];
+    var currentCard = null;
+
+    for (var i = 0; i < lines.length; i++) {
+      var line = lines[i];
+      if (line.indexOf('■') === 0) {
+        var cardTitle = line.replace(/^■\s*/, '').trim();
+        currentCard = { title: cardTitle, items: [] };
+        cards.push(currentCard);
+      } else {
+        if (!currentCard) {
+          currentCard = { title: '', items: [] };
+          cards.push(currentCard);
+        }
+        currentCard.items.push(line);
+      }
+    }
+
+    var cardHTMLList = [];
+    var timetableRegex = /^(.+?)\s+((?:\d{1,2}:\d{2}\s*[〜~-]\s*\d{1,2}:\d{2}|\d{1,2}:\d{2}頃?))$/;
+
+    for (var c = 0; c < cards.length; c++) {
+      var card = cards[c];
+      var title = card.title;
+      var items = card.items;
+
+      var icon = 'info';
+      if (/発送|受験票|問題用紙/.test(title)) icon = 'mark_email_read';
+      else if (/会場|実施日|場所/.test(title)) icon = 'location_on';
+      else if (/持参物|持ち物|参照物/.test(title)) icon = 'backpack';
+      else if (/時間割|スケジュール/.test(title)) icon = 'schedule';
+      else if (/期間|実施期間/.test(title)) icon = 'calendar_today';
+      else if (/締め切り|提出|期日/.test(title)) icon = 'event';
+      else if (/返却|成績/.test(title)) icon = 'calendar_month';
+      else if (/出題範囲|教科|科目/.test(title)) icon = 'menu_book';
+
+      var cardInner = [];
+      if (title) {
+        cardInner.push(
+          '<div class="font-bold text-xs sm:text-sm text-on-surface flex items-center gap-1.5">' +
+            '<span class="material-symbols-outlined text-base text-primary">' + icon + '</span>' +
+            '<span>' + title + '</span>' +
+          '</div>'
+        );
+      }
+
+      var inTimetable = false;
+      var timetableItems = [];
+      var inList = false;
+      var listItems = [];
+
+      var flushTimetable = function() {
+        if (!timetableItems.length) return;
+        var rows = timetableItems.map(function(t, idx) {
+          var isLast = idx === timetableItems.length - 1;
+          var borderClass = isLast ? '' : 'border-b border-surface-container/60';
+          return '<div class="flex justify-between items-center py-1.5 ' + borderClass + '">' +
+                   '<span class="font-bold text-on-surface">' + t.label + '</span>' +
+                   '<span class="font-bold text-on-surface">' + t.time + '</span>' +
+                 '</div>';
+        }).join('');
+        cardInner.push('<div class="bg-surface-container-low rounded-xl p-3 space-y-0.5 text-xs sm:text-[13px]">' + rows + '</div>');
+        timetableItems = [];
+        inTimetable = false;
+      };
+
+      var flushList = function() {
+        if (!listItems.length) return;
+        var pList = listItems.map(function(l) {
+          if (l.indexOf('※') === 0) {
+            return '<p class="text-secondary font-bold leading-relaxed text-xs pt-1">' + l + '</p>';
+          }
+          return '<p class="text-on-surface leading-relaxed">' + l + '</p>';
+        }).join('');
+        cardInner.push('<div class="bg-surface-container-low rounded-xl p-3 space-y-1.5 text-xs sm:text-[13px]">' + pList + '</div>');
+        listItems = [];
+        inList = false;
+      };
+
+      for (var j = 0; j < items.length; j++) {
+        var it = items[j];
+        var ttMatch = it.match(timetableRegex);
+
+        if (ttMatch) {
+          flushList();
+          inTimetable = true;
+          timetableItems.push({ label: ttMatch[1].trim(), time: ttMatch[2].trim() });
+          continue;
+        } else if (inTimetable) {
+          flushTimetable();
+        }
+
+        if (it.indexOf('・') === 0 || (/持参物|持ち物|参照物/.test(title) && it.indexOf('※') !== 0)) {
+          inList = true;
+          listItems.push(it);
+          continue;
+        } else if (inList) {
+          if (it.indexOf('※') === 0) {
+            listItems.push(it);
+            flushList();
+            continue;
+          } else {
+            flushList();
+          }
+        }
+
+        var venueDateMatch = it.match(/^(.+?[：:])\s*(.+?)(?:（|\()(.+?)(?:）|\))$/);
+        if (venueDateMatch) {
+          cardInner.push(
+            '<div class="space-y-1 pt-0.5 pb-1 border-b border-surface-container/50 last:border-b-0">' +
+              '<div class="font-bold text-sm sm:text-base text-on-surface">' + venueDateMatch[1] + ' ' + venueDateMatch[2] + '</div>' +
+              '<div class="font-bold text-secondary text-sm sm:text-base">' + venueDateMatch[3] + '</div>' +
+            '</div>'
+          );
+          continue;
+        }
+
+        if (/(?:発送予定|頃発送|必着|実施期間)/.test(it) || (/\d+月\d+日|\d{4}年/.test(it) && /[〜~-]/.test(it))) {
+          var colorClass = (mode === 'home' && /実施期間/.test(title)) ? 'text-secondary' : 'text-primary';
+          var formattedIt = it;
+          if (/指定業者必着/.test(formattedIt)) {
+            formattedIt = formattedIt.replace(/指定業者必着/, '<span class="text-xs sm:text-sm font-bold text-primary bg-primary/10 px-2 py-0.5 rounded ml-2">指定業者必着</span>');
+          }
+          cardInner.push('<div class="' + colorClass + ' font-bold text-base sm:text-lg">' + formattedIt + '</div>');
+          continue;
+        }
+
+        if (it.indexOf('※') === 0) {
+          cardInner.push('<p class="text-[11px] sm:text-xs text-on-surface-variant leading-relaxed">' + it + '</p>');
+          continue;
+        }
+
+        cardInner.push('<p class="text-xs sm:text-[13px] text-on-surface-variant leading-relaxed">' + it + '</p>');
+      }
+
+      flushTimetable();
+      flushList();
+
+      cardHTMLList.push(
+        '<div class="bg-white rounded-xl p-3.5 sm:p-4 shadow-xs border border-outline-variant/10 space-y-2">' +
+          cardInner.join('') +
+        '</div>'
+      );
+    }
+
+    return cardHTMLList.join('');
+  }
+
+  /* -----------------------------------------------------------------------
+     4-2. 実施要項セクション全体のHTML構築
+  ----------------------------------------------------------------------- */
+  function buildGuidelineSectionHTML(session) {
+    var venueHTML = session.venue_exam_html || '';
+    var homeHTML = session.home_exam_html || '';
+    var legacyHTML = session.guideline_html || '';
+
+    if (venueHTML || homeHTML) {
+      var venueCards = parseGuidelineCards(venueHTML, 'venue');
+      var homeCards = parseGuidelineCards(homeHTML, 'home');
+
+      var hasVenue = !!venueCards;
+      var hasHome = !!homeCards;
+
+      if (!hasVenue && !hasHome) {
+        return legacyHTML
+          ? '<div class="space-y-4 pt-4 border-t border-surface-container"><div class="flex items-center gap-2 pb-2 border-b border-surface-container/60"><span class="w-2.5 h-6 bg-primary rounded-xs inline-block"></span><h4 class="font-headline-lg text-xl sm:text-2xl text-on-surface font-bold tracking-tight">実施要項</h4></div><div class="prose max-w-none text-on-surface text-sm sm:text-base leading-relaxed">' + legacyHTML + '</div></div>'
+          : '';
+      }
+
+      var tabsHTML = '';
+      if (hasVenue && hasHome) {
+        tabsHTML =
+          '<div class="inline-flex p-1 bg-surface-container-high rounded-xl text-xs sm:text-sm font-bold exam-mode-tablist shrink-0">' +
+            '<button type="button" class="exam-mode-tab-btn active px-3 sm:px-3.5 py-1.5 rounded-lg transition-all bg-primary text-white shadow-xs cursor-pointer" onclick="switchExamModeTab(this, \'all\')">すべて</button>' +
+            '<button type="button" class="exam-mode-tab-btn px-3 sm:px-3.5 py-1.5 rounded-lg transition-all text-on-surface-variant hover:text-on-surface cursor-pointer" onclick="switchExamModeTab(this, \'venue\')">会場受験</button>' +
+            '<button type="button" class="exam-mode-tab-btn px-3 sm:px-3.5 py-1.5 rounded-lg transition-all text-on-surface-variant hover:text-on-surface cursor-pointer" onclick="switchExamModeTab(this, \'home\')">自宅受験</button>' +
+          '</div>';
+      }
+
+      var venueCol = hasVenue
+        ? '<div class="guideline-column guideline-col-venue w-full bg-surface-container-low rounded-2xl p-4 sm:p-5 space-y-3 border border-outline-variant/20 shadow-sm">' +
+            '<div class="pb-0.5">' +
+              '<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary text-white text-xs font-bold shadow-xs">' +
+                '<span class="material-symbols-outlined text-sm">apartment</span>' +
+                '<span>会場受験</span>' +
+              '</span>' +
+            '</div>' +
+            venueCards +
+          '</div>'
+        : '';
+
+      var homeCol = hasHome
+        ? '<div class="guideline-column guideline-col-home w-full bg-surface-container-low rounded-2xl p-4 sm:p-5 space-y-3 border border-outline-variant/20 shadow-sm">' +
+            '<div class="pb-0.5">' +
+              '<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary text-white text-xs font-bold shadow-xs">' +
+                '<span class="material-symbols-outlined text-sm">home</span>' +
+                '<span>自宅受験</span>' +
+              '</span>' +
+            '</div>' +
+            homeCards +
+          '</div>'
+        : '';
+
+      var gridColsClass = (hasVenue && hasHome) ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1';
+
+      return (
+        '<div class="space-y-4 pt-4 border-t border-surface-container guideline-section">' +
+          '<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-surface-container/60">' +
+            '<div class="flex items-center gap-2">' +
+              '<span class="w-2.5 h-6 bg-primary rounded-xs inline-block"></span>' +
+              '<h4 class="font-headline-lg text-xl sm:text-2xl text-on-surface font-bold tracking-tight">実施要項</h4>' +
+            '</div>' +
+            tabsHTML +
+          '</div>' +
+          '<div class="grid ' + gridColsClass + ' gap-4 items-start pt-2 w-full guideline-grid">' +
+            venueCol +
+            homeCol +
+          '</div>' +
+        '</div>'
+      );
+    }
+
+    if (legacyHTML) {
+      return (
+        '<div class="space-y-4 pt-4 border-t border-surface-container">' +
+          '<div class="flex items-center gap-2 pb-2 border-b border-surface-container/60">' +
+            '<span class="w-2.5 h-6 bg-primary rounded-xs inline-block"></span>' +
+            '<h4 class="font-headline-lg text-xl sm:text-2xl text-on-surface font-bold tracking-tight">実施要項</h4>' +
+          '</div>' +
+          '<div class="prose max-w-none text-on-surface text-sm sm:text-base leading-relaxed">' + legacyHTML + '</div>' +
+        '</div>'
+      );
+    }
+
+    return '';
+  }
+
+  /* -----------------------------------------------------------------------
+     4-3. 実施要項（会場/自宅）タブ切り替え
+  ----------------------------------------------------------------------- */
+  window.switchExamModeTab = function(btn, mode) {
+    var section = btn.closest('.guideline-section');
+    if (!section) return;
+    var buttons = section.querySelectorAll('.exam-mode-tab-btn');
+    for (var i = 0; i < buttons.length; i++) {
+      var b = buttons[i];
+      b.classList.remove('bg-primary', 'text-white', 'shadow-xs', 'active');
+      b.classList.add('text-on-surface-variant');
+    }
+    btn.classList.add('bg-primary', 'text-white', 'shadow-xs', 'active');
+    btn.classList.remove('text-on-surface-variant');
+
+    var grid = section.querySelector('.guideline-grid');
+    var colVenue = section.querySelector('.guideline-col-venue');
+    var colHome = section.querySelector('.guideline-col-home');
+
+    if (mode === 'all') {
+      if (colVenue) colVenue.classList.remove('hidden');
+      if (colHome) colHome.classList.remove('hidden');
+      if (grid) {
+        grid.classList.remove('grid-cols-1');
+        grid.classList.add('grid-cols-1', 'md:grid-cols-2');
+      }
+    } else if (mode === 'venue') {
+      if (colVenue) colVenue.classList.remove('hidden');
+      if (colHome) colHome.classList.add('hidden');
+      if (grid) {
+        grid.classList.remove('md:grid-cols-2');
+        grid.classList.add('grid-cols-1');
+      }
+    } else if (mode === 'home') {
+      if (colVenue) colVenue.classList.add('hidden');
+      if (colHome) colHome.classList.remove('hidden');
+      if (grid) {
+        grid.classList.remove('md:grid-cols-2');
+        grid.classList.add('grid-cols-1');
+      }
+    }
+  };
+
   function buildPanelHTML(gradeData, session) {
     if (!session) {
       return '<div class="py-12 text-center text-on-surface-variant font-bold text-base"><span class="material-symbols-outlined text-4xl mb-3 block text-outline">event_busy</span>現在受付中の模試はございません。<br><span class="text-sm font-medium mt-2 block">次回の案内は決まり次第こちらでお知らせします。</span></div>';
@@ -1422,6 +1722,8 @@
     var applyUrl      = session.apply_url || 'apply.html';
     var scheduleHTML  = session.schedule_html || '';
     var guidelineHTML = session.guideline_html || '';
+    var venueExamHTML = session.venue_exam_html || '';
+    var homeExamHTML  = session.home_exam_html || '';
 
     var announceBadge = announceText
       ? '<span class="inline-flex items-center gap-1.5 px-3 py-1.5 md:px-3.5 rounded-full text-primary border border-[#cbe8ba] shadow-sm self-center whitespace-nowrap text-xs sm:text-sm font-bold" style="background-color: rgb(238, 248, 226);"><span class="material-symbols-outlined text-primary text-base sm:text-lg shrink-0">campaign</span><span class="inline md:hidden">受付中です</span><span class="hidden md:inline">' + announceText + '</span></span>'
@@ -1446,9 +1748,7 @@
       ? '<div class="flex items-baseline justify-center gap-1.5"><span class="text-sm text-on-surface font-medium">受験料</span><span class="text-4xl font-bold text-on-surface">' + fee + '</span><span class="text-sm text-on-surface font-medium">円(税込)</span></div><div class="text-xs text-on-surface-variant font-medium">' + feeNote + '</div>'
       : '';
 
-    var guidelineBlock = guidelineHTML
-      ? '<div class="space-y-space-lg pt-4 border-t border-surface-container"><div class="flex items-center gap-2 pb-2 border-b border-surface-container/60"><span class="w-2.5 h-6 bg-primary rounded-xs inline-block"></span><h4 class="font-headline-lg text-[24px] text-on-surface font-bold tracking-tight">実施要項</h4></div><div class="prose max-w-none text-on-surface text-sm sm:text-base leading-relaxed">' + guidelineHTML + '</div></div>'
-      : '';
+    var guidelineBlock = buildGuidelineSectionHTML(session);
 
     return [
       '<div class="bg-transparent md:bg-surface-container-lowest rounded-none md:rounded-3xl p-0 md:p-6 lg:p-8 shadow-none md:shadow-sm border-0 md:border md:border-outline-variant/30 space-y-6">',

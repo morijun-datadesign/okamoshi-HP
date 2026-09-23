@@ -1434,7 +1434,9 @@
 
     var gradeData = null;
     for (var i = 0; i < (guidesData || []).length; i++) {
-      if (guidesData[i].grade_code === gradeCode) { gradeData = guidesData[i]; break; }
+      var gc = (guidesData[i].grade_code || '').trim().toLowerCase();
+      var gc2 = (gradeCode || '').trim().toLowerCase();
+      if (gc === gc2) { gradeData = guidesData[i]; break; }
     }
 
     if (!gradeData) {
@@ -1445,7 +1447,8 @@
     var sessions = gradeData.sessions || [];
     var activeSession = null;
     for (var j = 0; j < sessions.length; j++) {
-      if (sessions[j].is_active === true) { activeSession = sessions[j]; break; }
+      var ia = sessions[j].is_active;
+      if (ia === true || ia === 'true') { activeSession = sessions[j]; break; }
     }
     if (!activeSession) activeSession = sessions[0] || null;
 
@@ -1477,7 +1480,7 @@
     var url = 'https://' + EXAM_GUIDES_CONFIG.serviceDomain
             + '.microcms.io/api/v1/'
             + EXAM_GUIDES_CONFIG.endpoint
-            + '?limit=20';
+            + '?limit=100';
     fetch(url, { headers: { 'X-MICROCMS-API-KEY': EXAM_GUIDES_CONFIG.apiKey } })
       .then(function (res) {
         if (!res.ok) throw new Error('HTTP ' + res.status);

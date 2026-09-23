@@ -1359,29 +1359,44 @@
         if (cm) { badgeText = cm[1].trim(); rest = line.slice(cm[0].length).trim(); }
       }
 
-      /* 2. 日付抽出 */
+      /* 2. 日付抽出（右側に赤太字で配置する日付を確実に抽出） */
       var dateText = '';
       var venueText = rest;
 
-      var m;
-      m = rest.match(/[（(](\d{4}年\d{1,2}月\d{1,2}日[（(][日月火水木金土][）)])[ \u3000]*[）)]/);
-      if (m) { dateText = m[1]; venueText = rest.slice(0, m.index).trim(); }
-      else {
-        m = rest.match(/(\d{1,2}\/\d{1,2}[（(][日月火水木金土][）)][〜～]\d{1,2}\/\d{1,2}[（(][日月火水木金土][）)])/);
-        if (m) { dateText = m[1]; venueText = rest.slice(0, m.index).trim(); }
-        else {
-          m = rest.match(/(\d{4}年\d{1,2}月\d{1,2}日[（(][日月火水木金土][）)])/);
-          if (m) { dateText = m[1]; venueText = rest.slice(0, m.index).trim(); }
-          else {
-            m = rest.match(/(\d{1,2}\/\d{1,2}[（(][日月火水木金土][）)])/);
-            if (m) { dateText = m[1]; venueText = rest.slice(0, m.index).trim(); }
-            else {
-              m = rest.match(/([（(][\d月年日土日月火水木金〜～/]+[）)]\s*$)/);
-              if (m) { dateText = m[1]; venueText = rest.slice(0, m.index).trim(); }
-            }
-          }
+      var datePatterns = [
+        // 1. 外括弧あり： （YYYY年M月D日(曜)）
+        /[（(](\d{4}年\d{1,2}月\d{1,2}日[（(][日月火水木金土][）)])[ \u3000]*[）)]\s*$/,
+        // 2. 外括弧あり： （M月D日(曜)） ← ここが抜けていたため会場行の日付が学校名末尾に残っていた
+        /[（(](\d{1,2}月\d{1,2}日[（(][日月火水木金土][）)])[ \u3000]*[）)]\s*$/,
+        // 3. 外括弧あり： （M/D(曜)〜M/D(曜)）
+        /[（(](\d{1,2}\/\d{1,2}[（(][日月火水木金土][）)][〜～~]\d{1,2}\/\d{1,2}[（(][日月火水木金土][）)])[ \u3000]*[）)]\s*$/,
+        // 4. 外括弧あり： （YYYY年M月D日） または （M月D日）
+        /[（(](\d{4}年\d{1,2}月\d{1,2}日)[）)]\s*$/,
+        /[（(](\d{1,2}月\d{1,2}日)[）)]\s*$/,
+        // 5. 外括弧なし： YYYY年M月D日(曜)
+        /(\d{4}年\d{1,2}月\d{1,2}日[（(][日月火水木金土][）)])\s*$/,
+        // 6. 外括弧なし： M月D日(曜)
+        /(\d{1,2}月\d{1,2}日[（(][日月火水木金土][）)])\s*$/,
+        // 7. 外括弧なし： M/D(曜)〜M/D(曜)
+        /(\d{1,2}\/\d{1,2}[（(][日月火水木金土][）)][〜～~]\d{1,2}\/\d{1,2}[（(][日月火水木金土][）)])\s*$/,
+        // 8. 外括弧なし： M/D〜M/D
+        /(\d{1,2}\/\d{1,2}[〜～~]\d{1,2}\/\d{1,2})\s*$/,
+        // 9. 外括弧なし： YYYY年M月D日 または M月D日
+        /(\d{4}年\d{1,2}月\d{1,2}日)\s*$/,
+        /(\d{1,2}月\d{1,2}日)\s*$/,
+        // 10. 単一スラッシュ日付： M/D(曜)
+        /(\d{1,2}\/\d{1,2}[（(][日月火水木金土][）)])\s*$/
+      ];
+
+      for (var pi = 0; pi < datePatterns.length; pi++) {
+        var dm = venueText.match(datePatterns[pi]);
+        if (dm) {
+          dateText = dm[1].trim();
+          venueText = venueText.slice(0, dm.index).trim();
+          break;
         }
       }
+      venueText = venueText.replace(/[\/／\s]+$/, '').trim();
 
       /* 3. バッジ色 */
       var bg = (badgeText && HOME_RE.test(badgeText)) ? '#4a3b10' : '#0b4a32';

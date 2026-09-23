@@ -187,7 +187,7 @@
       </div>
 
       <a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors py-1 whitespace-nowrap" href="schools_PC.html">参加塾一覧</a>
-      <a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors py-1 whitespace-nowrap" href="blog.html">ブログ / お知らせ</a>
+      <a class="font-label-md text-label-md text-primary font-bold transition-colors py-1 whitespace-nowrap" href="news.html">ブログ / お知らせ</a>
     </nav>
 
     <!-- Header Actions & Mobile Menu Button -->
@@ -197,7 +197,7 @@
           <span class="material-symbols-outlined text-sm text-primary">contact_support</span>問合せ:
         </span>
         <div class="flex flex-col gap-1">
-          <a class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] leading-tight font-bold text-primary bg-primary-fixed/20 hover:bg-primary-fixed/30 border border-primary/20 transition-all whitespace-nowrap shadow-sm" href="schools.html#partner-contact">
+          <a class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] leading-tight font-bold text-primary bg-primary-fixed/20 hover:bg-primary-fixed/30 border border-primary/20 transition-all whitespace-nowrap shadow-sm" href="schools_PC.html#partner-contact">
             <span class="material-symbols-outlined text-[13px]">corporate_fare</span>塾・学校関係者様
           </a>
           <a class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] leading-tight font-bold text-on-surface bg-surface-container hover:bg-surface-container-high border border-outline-variant/30 transition-all whitespace-nowrap shadow-sm" href="apply.html#contact">
@@ -241,7 +241,7 @@
       <a href="schools_PC.html" class="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-container text-on-surface font-bold text-sm transition-colors">
         <span class="material-symbols-outlined text-primary text-xl">storefront</span>参加塾一覧
       </a>
-      <a href="blog.html" class="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-container text-on-surface font-bold text-sm transition-colors">
+      <a href="news.html" class="flex items-center gap-3 p-3 rounded-xl bg-primary/10 text-primary font-bold text-sm transition-colors">
         <span class="material-symbols-outlined text-primary text-xl">newspaper</span>ブログ / お知らせ
       </a>
       <a href="apply.html" class="flex items-center gap-3 p-3 rounded-xl bg-secondary/10 text-secondary font-bold text-sm hover:bg-secondary/20 transition-colors">
@@ -251,7 +251,7 @@
 
     <div class="pt-4 border-t border-surface-container/60 space-y-2">
       <div class="text-xs font-bold text-on-surface-variant px-2">お問い合わせ窓口</div>
-      <a href="schools.html#partner-contact" class="flex items-center gap-2 p-2.5 rounded-lg border border-primary/20 bg-primary-fixed/20 text-primary text-xs font-bold">
+      <a href="schools_PC.html#partner-contact" class="flex items-center gap-2 p-2.5 rounded-lg border border-primary/20 bg-primary-fixed/20 text-primary text-xs font-bold">
         <span class="material-symbols-outlined text-base">corporate_fare</span>塾・学校関係者様 お問い合わせ
       </a>
       <a href="apply.html#contact" class="flex items-center gap-2 p-2.5 rounded-lg border border-outline-variant/30 bg-surface-container text-on-surface text-xs font-bold">
@@ -272,7 +272,7 @@
 <section class="w-full bg-surface-container-low/70 py-space-sm">
 <div class="max-w-[75rem] mx-auto px-gutter-desktop">
 <nav class="flex items-center gap-space-xs font-label-sm text-label-sm text-on-surface-variant">
-<a class="hover:text-primary transition-colors flex items-center gap-space-2xs" data-path="top" href="blog-detail.html">
+<a class="hover:text-primary transition-colors flex items-center gap-space-2xs" data-path="top" href="index.html">
 <span class="material-symbols-outlined text-[14px]">home</span>
 <span class="">TOP</span>
 </a>
@@ -391,11 +391,11 @@
 </div>
 </div>
 <div class="flex items-center justify-between pt-2">
-<a class="inline-flex items-center gap-space-2xs font-label-lg text-label-lg text-primary hover:text-primary-container font-bold group-hover:translate-x-1 transition-all" data-path="news-detail-oct-2026" href="blog-detail.html">
+<a class="inline-flex items-center gap-space-2xs font-label-lg text-label-lg text-primary hover:text-primary-container font-bold group-hover:translate-x-1 transition-all" data-path="news-detail-oct-2026" href="detail.html?id=oct-2026-guide">
 <span class="">詳細・要項を読む</span>
 <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
 </a>
-<a class="px-space-md py-space-xs bg-secondary text-on-secondary font-label-md text-label-md rounded-lg shadow-sm hover:bg-on-secondary-container transition-all flex items-center gap-space-2xs" data-path="application-entry" href="blog-detail.html">
+<a class="px-space-md py-space-xs bg-secondary text-on-secondary font-label-md text-label-md rounded-lg shadow-sm hover:bg-on-secondary-container transition-all flex items-center gap-space-2xs" data-path="application-entry" href="apply.html">
 <span class="material-symbols-outlined text-[16px]">edit_calendar</span>
 <span class="">模試を申込む</span>
 </a>
@@ -415,10 +415,10 @@
             新着記事・アーカイブ
           </h2>
 </div>
-<span class="font-label-sm text-label-sm text-on-surface-variant">全 48 件中 1〜6 件を表示</span>
+<span id="articles-count-badge" class="font-label-sm text-label-sm text-on-surface-variant">全 7 件中 1〜6 件を表示</span>
 </div>
 <!-- 3-Column Card Mosaic Grid -->
-<div class="flex flex-col gap-space-sm">
+<div id="articles-list-container" class="flex flex-col gap-space-sm">
   <!-- Article Card 1 -->
   <article class="flex flex-col sm:flex-row bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group p-space-xs sm:p-space-sm gap-space-sm items-center">
     <div class="relative w-full sm:w-48 md:w-56 h-32 shrink-0 rounded-lg overflow-hidden bg-surface-container">
@@ -859,7 +859,7 @@
               <a href="tokushoho.html">特定商取引法に基づく表記</a>
             </li>
             <li class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors">
-              <a href="blog.html">お知らせ・更新情報</a>
+              <a href="news.html">お知らせ・更新情報</a>
             </li>
           </ul>
         </div>
@@ -873,48 +873,300 @@
   </div>
 </footer>
 
-  <script src="js/common.js"></script>
-  <script src="js/microcms.js"></script>
+  <!-- ==================================================== -->
+  <!-- microCMS 連携 & カテゴリ動的フィルタリング スクリプト -->
+  <!-- ==================================================== -->
   <script>
-    document.addEventListener('DOMContentLoaded', async function() {
-      if (typeof MicroCMS === 'undefined') return;
-      const data = await MicroCMS.getBlogList(9);
-      if (data && data.contents && data.contents.length > 0) {
-        const container = document.getElementById('blog-posts-container');
-        if (!container) return;
-        
-        container.innerHTML = data.contents.map(post => {
-          const thumb = post.eyecatch ? MicroCMS.optimizeImage(post.eyecatch.url, { width: 600, height: 400 }) : 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=600&q=80';
-          const pubDate = new Date(post.publishedAt || post.createdAt).toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '.');
-          const cat = post.category ? post.category.name : 'お知らせ';
-          return `
-            <article class="group flex flex-col bg-surface-container-lowest rounded-2xl overflow-hidden border border-outline-variant/30 hover:border-primary/40 shadow-sm hover:shadow-md transition-all duration-300">
-              <a href="blog-detail.html?id=${post.id}" class="block relative aspect-[16/10] overflow-hidden bg-surface-container">
-                <img src="${thumb}" alt="${post.title}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                <span class="absolute top-3 left-3 px-2.5 py-0.5 rounded-full text-xs font-bold bg-surface/90 text-primary backdrop-blur-sm shadow-xs">${cat}</span>
-              </a>
-              <div class="p-5 sm:p-6 flex flex-col flex-1 justify-between">
-                <div class="space-y-2.5">
-                  <div class="text-xs text-on-surface-variant flex items-center gap-1.5">
-                    <span class="material-symbols-outlined text-sm">calendar_today</span>
-                    <time datetime="${post.publishedAt || post.createdAt}">${pubDate}</time>
-                  </div>
-                  <h3 class="font-headline-sm text-base sm:text-lg font-bold text-on-surface group-hover:text-primary transition-colors leading-snug line-clamp-2">
-                    <a href="blog-detail.html?id=${post.id}">${post.title}</a>
-                  </h3>
-                  <p class="text-xs sm:text-sm text-on-surface-variant line-clamp-2 leading-relaxed">
-                    ${post.description || ''}
-                  </p>
-                </div>
-                <div class="pt-4 mt-4 border-t border-surface-container/60 flex items-center justify-between text-xs font-bold text-primary">
-                  <span>記事を読む</span>
-                  <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
-                </div>
-              </div>
-            </article>
-          `;
-        }).join('');
+    // 1. microCMS 接続設定（後から差し替え可能）
+    const MICROCMS_CONFIG = {
+      serviceDomain: 'YOUR_SERVICE_DOMAIN', // 例: okayama-moshi
+      apiKey: 'YOUR_API_KEY',               // microCMSのAPIキー（GET専用）
+      endpoint: 'blogs'                     // エンドポイント名
+    };
+
+    // 2. カテゴリのマッピング定義
+    const CATEGORY_MAP = {
+      all: { label: 'すべて', filterValue: '' },
+      important: { label: '重要なお知らせ', filterValue: '重要なお知らせ' },
+      'exam-info': { label: '入試・受検情報', filterValue: '入試・受検情報' },
+      column: { label: '模試活用法・学習コラム', filterValue: '模試活用法・学習コラム' },
+      schedule: { label: '実施要項・日程', filterValue: '実施要項・日程' }
+    };
+
+    // 3. 静的モックデータ（フォールバック用：microCMS未設定時や通信エラー時に表示）
+    const FALLBACK_POSTS = [
+      {
+        id: 'oct-2026-guide',
+        category: 'important',
+        categoryLabel: '重要なお知らせ',
+        badgeClass: 'bg-secondary text-on-secondary',
+        date: '2026.09.04',
+        subCategory: '重要なお知らせ',
+        title: '2026年度 10月号 中学3年生おかもし実施要項を公開しました（会場・自宅受験）',
+        description: '秋の本格的受験期突入に合わせて実施される「中3・第2回岡山県統一模試」。県立普通科トップ高から私立有力校まで、岡山県高校入試の出題傾向と配点基準を完全踏襲した実践判定を行います。',
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB6xlEasRGIYDs0aMSY_2xmIiKipy01AfojnFUvHgmbdmqWObeLT_LVcvtCq8ALpq7ImgeDkLR2PiRpBAK2W5ShFBzdRKQMunMRPPcAXApLvOaBESlFqa_84xrk1tL3cossrAVr2D725mlhVn-BjA8tC7o2eLloEh9PDAY1rNachCrC1A5MLyAIgAvdY08rqxI0AX_YTg-R7wDKAbD_YYIWCHtsLYb3xX-SmPsEHoXkH3TQqywAnLqP'
+      },
+      {
+        id: 'payment-guide',
+        category: 'important',
+        categoryLabel: 'トピックス',
+        badgeClass: 'bg-surface-container-lowest/95 text-primary',
+        date: '2026.08.19',
+        subCategory: '受験手続き・事務',
+        title: 'おかもし 決済用リンクおよびコンビニ決済手順について',
+        description: '個人受験お申し込み時にお選びいただけるクレジットカード決済、およびセブンイレブン・ファミリーマート・ローソン等でのコンビニ店頭払込の確定フローをご案内します。',
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBsNNSSYVNzAFgLU3zxYiPy5NxY9NtLwv_fCnTn9bHNDDUv59jwUkb7OEKwDZMSUXqHzKd5RAKKkYM_uTU5D-UTk77LJpU4ANtGOH5Iw_oCv4Lg66kAVk5Xa5oHTRTE4SW72Kx0WfrEdMNcHWejONucKPSiOlqhY2DMkDW_ruWxiUo8atkrjG44-8jWlHZA9h1Yc5accnyvoiL66Yvz1MX5gqTfC4CBPpdOQzLHxJOc_EgkYTE8oIR-'
+      },
+      {
+        id: 'senior-interview',
+        category: 'exam-info',
+        categoryLabel: '入試・受検情報',
+        badgeClass: 'bg-primary-container text-on-primary-container',
+        date: '2026.07.30',
+        subCategory: '合格体験記・学習法',
+        title: '【岡山県の高校受験】合格への近道はここにある！先輩受験生が語る『おかもし』活用法',
+        description: '岡山朝日高校・岡山芳泉高校に現役合格を果たした先輩たちにインタビュー。判定データの推移をどう分析し、秋以降の弱点克服へ繋げたかの実体験レポート。',
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCIjHH52f3xsOJ3SeSnHiUMQHd5h5w0sR-Rld4CmIPonNyRjRKwz1yiuXc3py4BGg6rHaTBwmRvXsFqFr2Sqzea8MLU8gVnNqQQ_yi4ovFPXH6MswHMzleTyJoP8MIyYoev1VpR0vKlA_5m8RscE5TcmPb_Fhr2-OLCUSiEdcT7VgdpI5AH3phqTBbhCuPVGTpPuWvzm_exqjfk7LJl7Op4V2cbg7EAEfmWHrz4WNOw2A47M-LF6u1j'
+      },
+      {
+        id: 'asahi-guide',
+        category: 'exam-info',
+        categoryLabel: '高校別分析',
+        badgeClass: 'bg-primary text-on-primary',
+        date: '2026.07.15',
+        subCategory: '県立トップ高対策',
+        title: '岡山朝日高校の独自問題攻略法！過去問傾向と模試での合格安全圏',
+        description: '全国トップレベルの記述力が問われる岡山朝日の入試。独自数学の記述対策とおかもしでの目標偏差値の目安を徹底解説。',
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDq7ebriGj98K580drM_nQFyjsYXLovlCdBioJr_sQI2XwBdN1S9ZmuUDMZVQF1OXIJG8ZL9x4eHh3r1IF_V7rqG43WR8mQSJ7pTUn7L5yh_EARZmW_LnvGQ-OpYpZGkWOaT0_bucstraAOZbjEZhHI5VuJYYA0x6zD6F5iIp8ixdzy9Aqk7wCboDLJ-0_BYjcte-28c-Qn6MA0fGubqVZY0DKZCjhUQQRK798_2swF7VHZUP5YIzej'
+      },
+      {
+        id: 'naishin-calc',
+        category: 'column',
+        categoryLabel: '入試基礎知識',
+        badgeClass: 'bg-secondary-fixed text-on-secondary-fixed-variant',
+        date: '2026.06.28',
+        subCategory: '制度解説',
+        title: '今さら聞けない「岡山県公立高校の内申点」計算方法と当日の逆転可能ライン',
+        description: '中1から中3までの通知表評価がどう合否に加算されるのか？県教委の最新ガイドラインに沿ってわかりやすく図解します。',
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBAgKd1IDmoj5qjucfoG8PDfRnPPIy8H1wrPrMc7kAVnvabHdGCJV35uRiriAdlC-b_1tHBsCRyR_ImZTC80x4ZAtzAHnktDmf1yRMTNbjwS_AB7nhCL4pydKyNldxNn_fHnTCor4I2SKk3G--g-45awVvP5xsef4uj9aE0H2RZo9tzgwO0ucGe37ydRWaJmKFSXYd-SbvsqckMLLPXFALwqsVr5yJhey4-KRaxt58L6bKr2x5FrYj0'
+      },
+      {
+        id: 'report-analysis',
+        category: 'column',
+        categoryLabel: '成績表活用マニュアル',
+        badgeClass: 'bg-primary-container text-on-primary-container',
+        date: '2026.06.15',
+        subCategory: '復習法',
+        title: '返却された『学力診断シート』の正しい見方と、弱点克服への学習サイクル',
+        description: '偏差値や判定記号に一喜一憂するだけで終わらせない。大問・小問別の正答率マトリクスを用いた『復習すべき優先単元のあぶり出し方』を専門指導員がレクチャー。',
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuC4Ko4ztH0TGrEYNKSrhmpTCyr-cD3PXIMShV-YahCDMGeEDGDmrSDHelf0rBCvX388sBFXglNTZMYWN4bjqJ8TVgUWzZo7LQo7MJMZvrT3VTJMFVBKpTdJQa85EhI10V1I2F-wYfIdDbAyu3uXxJbHxpMEgTokvR9WSnr9i5v-ug5u0KJfku9sMlbF2tXlvtO8mLKosqIXPla6wiqH9jel9LTgZzn2RvLk4_o8OryXKhFXF9hugHwJ'
+      },
+      {
+        id: 'schedule-2026',
+        category: 'schedule',
+        categoryLabel: '実施要項・日程',
+        badgeClass: 'bg-secondary text-on-secondary',
+        date: '2026.05.10',
+        subCategory: '年間スケジュール',
+        title: '2026年度 岡山県統一模擬試験（中3・中1/2・小6）年間日程一覧を公開しました',
+        description: '高校入試・適性検査対策の各実施号における試験日、申込受付期間、成績発送予定日を掲載しています。計画的な受験対策にご活用ください。',
+        image: 'https://images.unsplash.com/photo-1506784365847-bbad939e9335?auto=format&fit=crop&w=600&q=80'
       }
+    ];
+
+    let currentCategory = 'all';
+
+    // 4. 記事カード HTML 生成
+    function createPostCardHTML(post) {
+      const badgeCls = post.badgeClass || 'bg-primary-container text-on-primary-container';
+      const categoryText = post.categoryLabel || (post.category && post.category.name) || 'お知らせ';
+      const subCat = post.subCategory || categoryText;
+      const pubDate = post.date || (post.publishedAt ? new Date(post.publishedAt).toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '.') : '');
+      const thumb = post.image || (post.eyecatch && post.eyecatch.url) || 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=600&q=80';
+
+      return `
+        <article class="flex flex-col sm:flex-row bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group p-space-xs sm:p-space-sm gap-space-sm items-center">
+          <div class="relative w-full sm:w-48 md:w-56 h-32 shrink-0 rounded-lg overflow-hidden bg-surface-container">
+            <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="${thumb}" alt="${post.title}" loading="lazy">
+            <div class="absolute top-space-2xs left-space-2xs">
+              <span class="px-space-2xs py-0.5 ${badgeCls} font-label-sm text-label-sm font-bold rounded shadow-sm text-xs">
+                ${categoryText}
+              </span>
+            </div>
+          </div>
+          <div class="flex flex-col flex-1 justify-between gap-space-2xs w-full py-space-2xs pr-space-xs">
+            <div class="flex flex-col gap-space-2xs">
+              <div class="flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm">
+                <span class="flex items-center gap-space-2xs font-body-sm text-body-sm text-outline">
+                  <span class="material-symbols-outlined text-[14px]">calendar_today</span>
+                  <span>${pubDate}</span>
+                </span>
+                <span class="inline-block w-1.5 h-1.5 rounded-full bg-outline-variant"></span>
+                <span class="text-outline font-label-sm text-label-sm">${subCat}</span>
+              </div>
+              <a class="group-hover:text-primary transition-colors" href="detail.html?id=${post.id}">
+                <h3 class="font-headline-sm text-headline-sm font-bold text-on-surface leading-snug line-clamp-1">
+                  ${post.title}
+                </h3>
+              </a>
+              <p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-1 sm:line-clamp-2 leading-relaxed">
+                ${post.description || ''}
+              </p>
+            </div>
+            <div class="flex items-center justify-end pt-space-2xs">
+              <a class="text-secondary font-label-sm text-label-sm font-bold flex items-center gap-space-2xs group-hover:translate-x-1 transition-transform" href="detail.html?id=${post.id}">
+                <span>詳細を読む</span>
+                <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+              </a>
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    // 5. microCMS から記事を取得、またはフォールバックから描画
+    async function loadArticles(categoryKey = 'all') {
+      currentCategory = categoryKey;
+      const container = document.getElementById('articles-list-container');
+      const countBadge = document.getElementById('articles-count-badge');
+      if (!container) return;
+
+      // ローディング状態
+      container.innerHTML = `
+        <div class="p-8 text-center text-on-surface-variant flex flex-col items-center gap-2">
+          <div class="w-8 h-8 border-3 border-primary border-t-transparent rounded-full animate-spin"></div>
+          <span class="text-sm font-medium">記事を読み込んでいます...</span>
+        </div>
+      `;
+
+      // microCMSの設定があるか判定
+      const hasMicroCMSConfig = MICROCMS_CONFIG.serviceDomain && 
+                                MICROCMS_CONFIG.serviceDomain !== 'YOUR_SERVICE_DOMAIN' &&
+                                MICROCMS_CONFIG.apiKey && 
+                                MICROCMS_CONFIG.apiKey !== 'YOUR_API_KEY';
+
+      let posts = [];
+      let totalCount = 0;
+
+      if (hasMicroCMSConfig) {
+        try {
+          let url = `https://${MICROCMS_CONFIG.serviceDomain}.microcms.io/api/v1/${MICROCMS_CONFIG.endpoint}?orders=-publishedAt&limit=20`;
+          const catInfo = CATEGORY_MAP[categoryKey];
+          if (catInfo && catInfo.filterValue) {
+            // microCMSのクエリパラメータ filters=category[equals]XXX
+            url += `&filters=category[equals]${encodeURIComponent(catInfo.filterValue)}`;
+          }
+
+          const res = await fetch(url, {
+            headers: { 'X-MICROCMS-API-KEY': MICROCMS_CONFIG.apiKey }
+          });
+
+          if (res.ok) {
+            const data = await res.json();
+            posts = data.contents || [];
+            totalCount = data.totalCount || posts.length;
+          } else {
+            console.warn('microCMS fetch returned non-200, falling back to mock data:', res.status);
+            posts = getFallbackPosts(categoryKey);
+            totalCount = posts.length;
+          }
+        } catch (err) {
+          console.warn('microCMS fetch failed, falling back to mock data:', err);
+          posts = getFallbackPosts(categoryKey);
+          totalCount = posts.length;
+        }
+      } else {
+        // 設定定数が初期値の場合はフォールバックを使用
+        posts = getFallbackPosts(categoryKey);
+        totalCount = posts.length;
+      }
+
+      // 件数表示の更新
+      if (countBadge) {
+        countBadge.textContent = `全 ${totalCount} 件中 1〜${posts.length} 件を表示`;
+      }
+
+      // レンダリング
+      if (posts.length === 0) {
+        container.innerHTML = `
+          <div class="bg-surface-container-lowest p-8 rounded-xl text-center text-on-surface-variant border border-outline-variant/30">
+            <span class="material-symbols-outlined text-4xl text-outline mb-2">article</span>
+            <p class="font-bold text-base text-on-surface">該当する記事が見つかりませんでした</p>
+            <p class="text-xs text-on-surface-variant mt-1">別のカテゴリを選択するか、後ほどご確認ください。</p>
+          </div>
+        `;
+      } else {
+        container.innerHTML = posts.map(createPostCardHTML).join('');
+      }
+    }
+
+    // フォールバック用の記事フィルタ
+    function getFallbackPosts(categoryKey) {
+      if (!categoryKey || categoryKey === 'all') {
+        return FALLBACK_POSTS;
+      }
+      return FALLBACK_POSTS.filter(post => post.category === categoryKey);
+    }
+
+    // 6. カテゴリボタンのイベント設定 & アクティブUI更新
+    function setupCategoryButtons() {
+      const buttons = document.querySelectorAll('.category-btn');
+      buttons.forEach(btn => {
+        btn.addEventListener('click', function() {
+          const filter = this.getAttribute('data-filter') || 'all';
+
+          // ボタンのアクティブ状態を更新
+          buttons.forEach(b => {
+            b.classList.remove('bg-primary', 'text-on-primary', 'shadow-sm');
+            b.classList.add('bg-surface-container-lowest', 'text-on-surface-variant', 'hover:text-primary', 'hover:bg-surface-container-high');
+          });
+          this.classList.remove('bg-surface-container-lowest', 'text-on-surface-variant', 'hover:text-primary', 'hover:bg-surface-container-high');
+          this.classList.add('bg-primary', 'text-on-primary', 'shadow-sm');
+
+          // 記事再取得・再描画
+          loadArticles(filter);
+        });
+      });
+    }
+
+    // 7. ヘッダードロップダウン & SPメニューのトグルスクリプト
+    function toggleNextExamDropdown(event) {
+      event.stopPropagation();
+      const dropdown = document.getElementById('nav-next-exam-dropdown');
+      const chevron = document.getElementById('nav-next-exam-chevron');
+      if (!dropdown) return;
+      const isOpen = !dropdown.classList.contains('hidden');
+      dropdown.classList.toggle('hidden', isOpen);
+      if (chevron) chevron.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+    }
+
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      const icon = document.getElementById('mobile-menu-icon');
+      if (!menu) return;
+      const isOpen = !menu.classList.contains('hidden');
+      menu.classList.toggle('hidden', isOpen);
+      if (icon) icon.textContent = isOpen ? 'menu' : 'close';
+    }
+
+    function selectNavExamTab(examId) {
+      window.location.href = `index.html#exam-tabs-section`;
+    }
+
+    document.addEventListener('click', function(e) {
+      const container = document.getElementById('nav-next-exam-container');
+      const dropdown = document.getElementById('nav-next-exam-dropdown');
+      const chevron = document.getElementById('nav-next-exam-chevron');
+      if (container && !container.contains(e.target) && dropdown && !dropdown.classList.contains('hidden')) {
+        dropdown.classList.add('hidden');
+        if (chevron) chevron.style.transform = 'rotate(0deg)';
+      }
+    });
+
+    // 8. 初期読み込み
+    document.addEventListener('DOMContentLoaded', function() {
+      setupCategoryButtons();
+      loadArticles('all');
     });
   </script>
 </body>

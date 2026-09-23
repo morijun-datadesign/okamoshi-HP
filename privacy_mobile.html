@@ -1,119 +1,214 @@
-<!DOCTYPE html><html lang="ja"><head>
-<meta charset="utf-8">
-<meta content="width=device-width, initial-scale=1.0" name="viewport">
-<title>岡山県統一模擬試験 おかもし - プライバシーポリシー</title>
-<!-- Tailwind CSS CDN with plugins -->
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<!-- Google Fonts for Plus Jakarta Sans and Noto Sans JP -->
-<link href="https://fonts.googleapis.com" rel="preconnect">
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet">
-<script>
+<!DOCTYPE html>
+<html lang="ja" class="scroll-smooth">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>プライバシーポリシー | 岡山県統一模擬試験（おかもし）</title>
+  <meta name="description" content="中央教育研究所株式会社および岡山県統一模擬試験実行委員会（おかもし）のプライバシーポリシー（個人情報保護方針）です。個人情報の取り扱い、利用目的、安全管理措置等について掲載しています。">
+  <link rel="canonical" href="https://okamoshi.pages.dev/privacy.html">
+  
+  <!-- OGP -->
+  <meta property="og:title" content="プライバシーポリシー | 岡山県統一模擬試験（おかもし）">
+  <meta property="og:description" content="岡山県統一模擬試験（おかもし）のプライバシーポリシー（個人情報保護方針）です。">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://okamoshi.pages.dev/privacy.html">
+  <meta property="og:site_name" content="岡山県統一模擬試験（おかもし）">
+  <meta name="twitter:card" content="summary">
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script id="tailwind-config">
     tailwind.config = {
+      darkMode: "class",
       theme: {
         extend: {
           colors: {
-            brand: {
-              green: '#2d5a46',
-              'green-dark': '#1e3d30',
-              'green-light': '#edf4f0',
-              terracotta: '#c2410c',
-              'terracotta-dark': '#9a3412',
-              bg: '#fbf9f8',
-              surface: '#ffffff',
-              border: '#e2e8f0',
-              subtle: '#64748b'
-            }
+            "tertiary-container": "#6c4c00",
+            "outline-variant": "#c0c9c2",
+            "error": "#ba1a1a",
+            "on-error": "#ffffff",
+            "on-tertiary": "#ffffff",
+            "outline": "#717973",
+            "surface-dim": "#dcd9d9",
+            "on-surface": "#1b1c1c",
+            "on-secondary-fixed-variant": "#822801",
+            "surface-tint": "#3a6752",
+            "surface-container-high": "#eae7e7",
+            "surface-container-low": "#f6f3f2",
+            "background": "#f8fafc",
+            "surface-container": "#f0eded",
+            "on-tertiary-container": "#f1bd5a",
+            "surface-variant": "#e4e2e1",
+            "on-primary-fixed-variant": "#224f3c",
+            "on-tertiary-fixed-variant": "#5e4200",
+            "tertiary": "#4f3600",
+            "surface-bright": "#fcf9f8",
+            "inverse-primary": "#a1d1b8",
+            "tertiary-fixed-dim": "#f2be5b",
+            "on-secondary": "#ffffff",
+            "on-surface-variant": "#414944",
+            "on-primary-fixed": "#002114",
+            "on-secondary-fixed": "#390c00",
+            "surface-container-lowest": "#ffffff",
+            "on-error-container": "#93000a",
+            "on-background": "#1b1c1c",
+            "error-container": "#ffdad6",
+            "primary-container": "#2d5a46",
+            "secondary-fixed-dim": "#ffb59c",
+            "primary-fixed-dim": "#a1d1b8",
+            "primary-fixed": "#bceed3",
+            "on-secondary-container": "#6f2000",
+            "surface": "#f8fafc",
+            "primary": "#134230",
+            "on-tertiary-fixed": "#271900",
+            "inverse-surface": "#303030",
+            "tertiary-fixed": "#ffdea7",
+            "secondary-container": "#fe8357",
+            "inverse-on-surface": "#f3f0ef",
+            "secondary": "#a23e18",
+            "on-primary": "#ffffff",
+            "secondary-fixed": "#ffdbcf",
+            "surface-container-highest": "#e4e2e1",
+            "on-primary-container": "#9fcfb6"
           },
           fontFamily: {
-            sans: ['"Noto Sans JP"', '"Plus Jakarta Sans"', 'sans-serif'],
+            "body-md": ["Noto Sans JP", "sans-serif"],
+            "headline-xl": ["Plus Jakarta Sans", "Noto Sans JP", "sans-serif"],
+            "headline-sm": ["Plus Jakarta Sans", "Noto Sans JP", "sans-serif"],
+            "headline-md": ["Plus Jakarta Sans", "Noto Sans JP", "sans-serif"],
+            "label-md": ["Plus Jakarta Sans", "Noto Sans JP", "sans-serif"],
+            "body-sm": ["Noto Sans JP", "sans-serif"]
           }
         }
       }
-    }
+    };
   </script>
-<style data-purpose="custom-typography">
-    body {
-      font-family: 'Noto Sans JP', sans-serif;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      background-color: #fbf9f8;
-      color: #1e293b;
-    }
-    .text-balance {
-      text-wrap: balance;
-    }
+
+  <style>
+    body { background-color: #f8fafc !important; }
   </style>
 </head>
-<body class="bg-brand-bg text-slate-800 min-h-screen flex flex-col justify-between selection:bg-brand-green selection:text-white">
-<!-- BEGIN: MainHeader -->
-<header class="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
-<div class="px-4 py-2.5 flex items-center justify-between">
-<!-- Site Logo & Subtitle -->
-<a class="flex items-center gap-2 text-slate-800 no-underline" href="#">
-<div class="w-8 h-8 rounded bg-brand-green flex items-center justify-center text-white font-bold text-sm shadow-sm">
-<svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
-<path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"></path>
-</svg>
-</div>
-<div class="leading-tight">
-<div class="text-[10px] text-slate-500 font-medium">岡山県高校・県立中受検プレテスト</div>
-<div class="text-xs font-bold text-slate-900 tracking-tight">岡山県統一模擬試験 <span class="text-brand-green font-extrabold">おかもし</span></div>
-</div>
-</a>
-<!-- Header Action Buttons -->
-<div class="flex items-center gap-2">
-<a class="bg-brand-terracotta hover:bg-brand-terracotta-dark text-white text-xs font-bold py-1.5 px-3 rounded-full flex items-center shadow transition-colors" href="#">
-          受験申込
-          <svg class="w-3.5 h-3.5 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-<path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
-</svg>
-</a>
-<button aria-label="メニューを開く" class="p-1.5 text-slate-700 hover:text-slate-900 focus:outline-none" type="button">
-<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-<path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-</svg>
-</button>
-</div>
-</div>
-</header>
-<!-- END: MainHeader -->
-<!-- BEGIN: Breadcrumb -->
-<nav class="bg-slate-100/80 px-4 py-2 text-[11px] text-slate-500 border-b border-slate-200">
-<ol class="flex items-center space-x-1.5 list-none p-0 m-0">
-<li class=""><a class="hover:underline text-slate-600" href="#">TOP</a></li>
-<li class=""><span class="text-slate-400">/</span></li>
-<li class="text-slate-800 font-medium">プライバシーポリシー</li>
-</ol>
-</nav>
-<!-- END: Breadcrumb -->
-<!-- BEGIN: MainContent -->
-<main class="px-4 py-6 max-w-lg mx-auto w-full space-y-4">
-<!-- Page Title & Header Info Block -->
-<div class="space-y-3">
-<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-semibold">
-<svg class="w-3.5 h-3.5 text-emerald-700" fill="currentColor" viewBox="0 0 20 20">
-<path clip-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
-</svg>
+<body class="bg-slate-50 font-body-md text-on-surface antialiased min-h-screen flex flex-col justify-between selection:bg-primary/20 selection:text-primary pt-16">
+
+  <!-- Unified Mobile Header (Exact match with 中3おかもしページ) -->
+  <header class="fixed top-0 w-full z-50 bg-surface/95 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.06)] border-b border-outline-variant/20">
+    <div class="h-16 px-4 flex items-center justify-between gap-2">
+      <!-- Logo -->
+      <a href="index.html" class="flex items-center gap-2 min-w-0">
+        <div class="w-9 h-9 rounded-lg bg-primary flex items-center justify-center text-on-primary font-bold shrink-0 shadow-sm">
+          <span class="material-symbols-outlined text-xl">school</span>
+        </div>
+        <div class="flex items-center gap-1.5 min-w-0">
+          <span class="font-headline-sm text-base text-primary tracking-tight font-bold truncate">岡山県統一模擬試験</span>
+          <span class="text-[11px] px-2 py-0.5 bg-primary-fixed text-on-primary-fixed-variant rounded-full font-bold shrink-0">おかもし</span>
+        </div>
+      </a>
+
+      <!-- Header Actions -->
+      <div class="flex items-center gap-2 shrink-0">
+        <a class="inline-flex items-center justify-center px-3.5 py-1.5 rounded-full bg-secondary text-on-secondary font-bold text-xs shadow-sm hover:bg-secondary-container transition-all whitespace-nowrap" href="apply.html">
+          <span class="material-symbols-outlined mr-1 text-sm">edit_document</span>
+          <span>お申込み</span>
+        </a>
+        <!-- Hamburger Button -->
+        <button type="button" onclick="toggleMobileMenu()" aria-label="メニューを開く" class="w-9 h-9 flex items-center justify-center rounded-lg text-on-surface hover:bg-surface-container transition-colors focus:outline-none">
+          <span id="mobile-menu-icon" class="material-symbols-outlined text-2xl">menu</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Drawer / Dropdown Menu -->
+    <div id="mobile-menu" class="hidden w-full bg-surface-container-lowest border-b border-outline-variant/30 shadow-2xl transition-all duration-300 px-4 py-6 space-y-4 max-h-[85vh] overflow-y-auto">
+      <div class="space-y-1 pb-4 border-b border-surface-container/60">
+        <div class="text-xs font-bold text-on-surface-variant px-2 py-1">次回模試実施要項</div>
+        <button type="button" onclick="selectNavExamTab('chu3')" class="w-full flex items-center justify-between p-3 rounded-xl bg-surface-container-low hover:bg-surface-container text-left transition-colors">
+          <span class="text-sm font-bold text-on-surface">中3 おかもし (10月号)</span>
+          <span class="px-2 py-0.5 rounded-full text-xs font-bold text-white bg-[#c2410c]">表示</span>
+        </button>
+        <button type="button" onclick="selectNavExamTab('chu2')" class="w-full flex items-center justify-between p-3 rounded-xl bg-surface-container-low hover:bg-surface-container text-left transition-colors">
+          <span class="text-sm font-bold text-on-surface">中2 おかもし (12月号)</span>
+          <span class="px-2 py-0.5 rounded-full text-xs font-bold text-secondary bg-surface-container-highest">表示</span>
+        </button>
+        <button type="button" onclick="selectNavExamTab('chu1')" class="w-full flex items-center justify-between p-3 rounded-xl bg-surface-container-low hover:bg-surface-container text-left transition-colors">
+          <span class="text-sm font-bold text-on-surface">中1 おかもし (12月号)</span>
+          <span class="px-2 py-0.5 rounded-full text-xs font-bold text-secondary bg-surface-container-highest">表示</span>
+        </button>
+        <button type="button" onclick="selectNavExamTab('sho6')" class="w-full flex items-center justify-between p-3 rounded-xl bg-surface-container-low hover:bg-surface-container text-left transition-colors">
+          <span class="text-sm font-bold text-on-surface">小6 適性検査対策模試 (10月号)</span>
+          <span class="px-2 py-0.5 rounded-full text-xs font-bold text-secondary bg-surface-container-highest">表示</span>
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 gap-2">
+        <a href="schools_PC.html" class="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-container text-on-surface font-bold text-sm transition-colors">
+          <span class="material-symbols-outlined text-primary text-xl">storefront</span>参加塾一覧
+        </a>
+        <a href="index.html#student-voices" class="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-container text-on-surface font-bold text-sm transition-colors">
+          <span class="material-symbols-outlined text-primary text-xl">newspaper</span>ブログ / お知らせ
+        </a>
+        <a href="apply.html" class="flex items-center gap-3 p-3 rounded-xl bg-secondary/10 text-secondary font-bold text-sm hover:bg-secondary/20 transition-colors">
+          <span class="material-symbols-outlined text-xl">edit_document</span>個人受験Webお申込み
+        </a>
+      </div>
+
+      <div class="pt-4 border-t border-surface-container/60 space-y-2">
+        <div class="text-xs font-bold text-on-surface-variant px-2">お問い合わせ窓口</div>
+        <a href="apply.html#partner-contact" class="flex items-center gap-2 p-2.5 rounded-lg border border-primary/20 bg-primary-fixed/20 text-primary text-xs font-bold">
+          <span class="material-symbols-outlined text-base">corporate_fare</span>塾・学校関係者様 お問い合わせ
+        </a>
+        <a href="apply.html#contact" class="flex items-center gap-2 p-2.5 rounded-lg border border-outline-variant/30 bg-surface-container text-on-surface text-xs font-bold">
+          <span class="material-symbols-outlined text-base">mail</span>個人申込の方 お問い合わせ
+        </a>
+      </div>
+
+      <div class="pt-2 flex items-center justify-between text-xs text-on-surface-variant px-2">
+        <a href="privacy.html" class="hover:underline text-primary font-bold">プライバシーポリシー</a>
+        <a href="tokushoho.html" class="hover:underline">特定商取引法</a>
+      </div>
+    </div>
+  </header>
+  <!-- END: MainHeader -->
+
+  <!-- BEGIN: Breadcrumb -->
+  <nav class="bg-surface-container-low px-4 py-2 text-[11px] text-on-surface-variant border-b border-outline-variant/20">
+    <ol class="flex items-center space-x-1.5 list-none p-0 m-0">
+      <li><a class="hover:underline text-on-surface-variant hover:text-primary transition-colors flex items-center gap-0.5" href="index.html"><span class="material-symbols-outlined text-xs">home</span>TOP</a></li>
+      <li><span class="text-outline-variant">/</span></li>
+      <li class="text-primary font-bold">プライバシーポリシー</li>
+    </ol>
+  </nav>
+  <!-- END: Breadcrumb -->
+
+  <!-- BEGIN: MainContent -->
+  <main class="px-4 py-6 max-w-lg mx-auto w-full space-y-4">
+    <!-- Page Title & Header Info Block -->
+    <div class="space-y-3">
+      <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary-fixed text-on-primary-fixed-variant text-[11px] font-bold border border-primary/20">
+        <span class="material-symbols-outlined text-xs text-primary">verified_user</span>
         個人情報保護 法令遵守
       </div>
-<h1 class="text-2xl font-black text-slate-900 tracking-tight">特定商取引・プライバシーポリシー</h1>
-<p class="text-xs text-slate-600 leading-relaxed">
+      <h1 class="text-2xl font-black text-on-surface tracking-tight">プライバシーポリシー</h1>
+      <p class="text-xs text-on-surface-variant leading-relaxed">
         中央教育研究所株式会社および岡山県統一模擬試験実行委員会（以下「当社」）は、個人情報保護の重要性に鑑み、「個人情報の保護に関する法律」及び本プライバシーポリシーを遵守し、お客様のプライバシー保護に努めます。
       </p>
-<!-- Meta Badges -->
-<div class="flex flex-wrap items-center gap-2 pt-1 text-[11px] text-slate-600">
-<span class="inline-flex items-center gap-1 bg-white border border-slate-200 rounded-md px-2 py-1 shadow-xs">
-<svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-<path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-</svg>
+      <!-- Meta Badges -->
+      <div class="flex flex-wrap items-center gap-2 pt-1 text-[11px] text-on-surface-variant">
+        <span class="inline-flex items-center gap-1 bg-surface-container-lowest border border-outline-variant/30 rounded-md px-2 py-1 shadow-xs">
+          <span class="material-symbols-outlined text-xs text-primary">calendar_today</span>
           最終改定日: 2024年4月1日
         </span>
-<span class="bg-white border border-slate-200 rounded-md px-2 py-1 shadow-xs">
+        <span class="inline-flex items-center gap-1 bg-surface-container-lowest border border-outline-variant/30 rounded-md px-2 py-1 shadow-xs">
+          <span class="material-symbols-outlined text-xs text-primary">shield</span>
           中央教育研究所株式会社 監修
         </span>
-</div>
-</div>
+      </div>
+    </div>
 <!-- BEGIN: Card 1 - 基本方針 -->
 <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm divide-y divide-slate-100 space-y-6 [&amp;&gt;*]:pt-6 first:[&amp;&gt;*]:pt-0" data-purpose="unified-policy-card">
   <!-- Basic Policy -->
@@ -492,87 +587,98 @@
 </main>
 <!-- END: MainContent -->
 <!-- BEGIN: MainFooter -->
-<footer class="bg-white border-t border-slate-200 pt-8 pb-10 mt-8">
-<div class="px-4 max-w-lg mx-auto space-y-6">
-<!-- Organization Info -->
-<div class="space-y-3">
-<div class="flex items-center gap-2">
-<div class="w-7 h-7 rounded bg-brand-green flex items-center justify-center text-white font-bold text-xs">
-            岡
+  <!-- Unified Mobile Footer (Exact match with 中3おかもしページ) -->
+  <footer class="bg-surface-container-low border-t border-outline-variant/30 pt-8 pb-12 mt-10">
+    <div class="px-4 max-w-lg mx-auto space-y-6">
+      <!-- Organization Info -->
+      <div class="space-y-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-on-primary font-bold text-xs shadow-sm">
+            <span class="material-symbols-outlined text-lg">school</span>
           </div>
-<span class="font-bold text-sm text-slate-900 tracking-tight">岡山県統一模擬試験（おかもし）</span>
-</div>
-<div class="text-[11px] text-slate-500 space-y-1 pl-1 leading-relaxed">
-<p class="">主催：中央教育研究所株式会社 岡山県統一模擬試験実行委員会</p>
-<p class="">住所：広島県広島市中区八丁堀15番6号 広島ちゅうぎんビル3階</p>
-<p class="">TEL：082-227-3999</p>
-<p class="">MAIL：<a class="text-slate-600 hover:underline" href="mailto:okayamamoshi@chuoh-kyouiku.co.jp">okayamamoshi@chuoh-kyouiku.co.jp</a></p>
-</div>
-<!-- Social Media Link -->
-<div>
-<a class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-slate-300 text-slate-700 text-xs font-semibold hover:bg-slate-50 transition-colors" href="#">
-<svg class="w-3.5 h-3.5 text-pink-600 fill-current" viewBox="0 0 24 24">
-<path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"></path>
-</svg>
-<span class="">公式Instagram</span>
-</a>
-</div>
-</div>
-<!-- Footer Inquiry Split Buttons -->
-<div class="space-y-2 pt-2 border-t border-slate-100">
-<div class="text-[11px] font-bold text-slate-700">お問い合わせ</div>
-<div class="grid grid-cols-2 gap-2">
-<a class="flex items-center justify-center gap-1 py-2 px-2 border border-brand-green/30 bg-emerald-50/50 hover:bg-emerald-50 text-brand-green font-bold text-xs rounded-xl transition-colors" href="#">
-<svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-<path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-</svg>
-            塾・学校関係者様
-          </a>
-<a class="flex items-center justify-center gap-1 py-2 px-2 border border-brand-green/30 bg-emerald-50/50 hover:bg-emerald-50 text-brand-green font-bold text-xs rounded-xl transition-colors" href="#">
-<svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-<path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-</svg>
-            個人申込の方
-          </a>
-</div>
-</div>
-<!-- Footer Navigation Matrix -->
-<div class="grid grid-cols-2 gap-4 text-xs pt-2 border-t border-slate-100">
-<div class="space-y-2">
-<div class="font-bold text-slate-800 text-[11px] border-l-2 border-brand-green pl-1.5">模試情報</div>
-<ul class="space-y-1.5 text-[11px] text-slate-500 list-none p-0 m-0">
-<li class=""><a class="hover:text-slate-800" href="#">次回模試実施要項</a></li>
-<li class=""><a class="hover:text-slate-800" href="#">年間スケジュール</a></li>
-<li class=""><a class="hover:text-slate-800" href="#">適性検査・高校模試詳細</a></li>
-</ul>
-</div>
-<div class="space-y-3">
-<div class="space-y-1.5">
-<div class="font-bold text-slate-800 text-[11px] border-l-2 border-brand-green pl-1.5">ご案内・手続き</div>
-<ul class="space-y-1.5 text-[11px] text-slate-500 list-none p-0 m-0">
-<li class=""><a class="hover:text-slate-800" href="#">提携学習塾一覧</a></li>
-<li class=""><a class="hover:text-slate-800" href="#">個人受験のお申込み</a></li>
-</ul>
-</div>
-<div class="space-y-1.5 pt-1">
-<div class="font-bold text-slate-800 text-[11px] border-l-2 border-brand-green pl-1.5">規約・運営</div>
-<ul class="space-y-1.5 text-[11px] text-slate-500 list-none p-0 m-0">
-<li class=""><a class="text-brand-green font-semibold underline" href="#">プライバシーポリシー</a></li>
-<li class=""><a class="hover:text-slate-800" href="#">特定商取引法に基づく表記</a></li>
-<li class=""><a class="hover:text-slate-800" href="#">お知らせ・更新情報</a></li>
-</ul>
-</div>
-</div>
-</div>
-<!-- Copyright Section -->
-<div class="pt-4 border-t border-slate-200 text-center">
-<div class="text-[10px] text-slate-400">
-          © Okayama Unified Mock Examination Executive Committee. All rights reserved.
+          <div class="text-base font-bold text-primary">岡山県統一模擬試験（おかもし）</div>
         </div>
-</div>
-</div>
-</footer>
-<!-- END: MainFooter -->
+        <div class="text-xs text-on-surface-variant leading-relaxed pl-10 space-y-1">
+          <p>主催：中央教育研究所株式会社<br>岡山県統一模擬試験実行委員会</p>
+          <p>住所：広島県広島市中区八丁堀15番6号 広島ちゅうぎんビル3階</p>
+          <p>TEL：082-227-3999</p>
+          <p>MAIL：<a href="mailto:okayamamoshi@chuoh-kyouiku.co.jp" class="underline">okayamamoshi@chuoh-kyouiku.co.jp</a></p>
+        </div>
+      </div>
 
+      <!-- SNS -->
+      <div class="pl-10">
+        <a href="https://www.instagram.com/okayamamoshi/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs font-medium text-on-surface-variant bg-surface-container hover:bg-surface-container-high border border-outline-variant/30 rounded-full px-3 py-1.5 transition-colors">
+          <span class="material-symbols-outlined text-base text-pink-600">photo_camera</span>
+          <span>公式Instagram</span>
+        </a>
+      </div>
 
-</body></html>
+      <!-- Contact Buttons -->
+      <div class="space-y-2 pt-1">
+        <div class="text-xs font-bold text-on-surface pl-1">お問い合わせ</div>
+        <div class="grid grid-cols-2 gap-2">
+          <a href="apply.html#partner-contact" class="flex items-center justify-center gap-1 py-2 px-2 rounded-lg border border-primary/20 bg-[#e8f5ee] text-[#134230] text-xs font-bold shadow-sm active:scale-95 transition-all text-center">
+            <span class="material-symbols-outlined text-sm">corporate_fare</span>
+            <span class="truncate">塾・学校関係者様</span>
+          </a>
+          <a href="apply.html#contact" class="flex items-center justify-center gap-1 py-2 px-2 rounded-lg border border-primary/20 bg-[#e8f5ee] text-[#134230] text-xs font-bold shadow-sm active:scale-95 transition-all text-center">
+            <span class="material-symbols-outlined text-sm">mail</span>
+            <span class="truncate">個人申込の方</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Navigation links (2 columns) -->
+      <div class="grid grid-cols-2 gap-4 pt-3 border-t border-outline-variant/20 text-xs text-on-surface-variant">
+        <div class="space-y-2">
+          <div class="font-bold text-on-surface mb-1">模試情報</div>
+          <div><a href="index.html#exam-tabs-section" class="hover:text-primary hover:underline">次回模試実施要項</a></div>
+          <div><a href="index.html#schedule-section" class="hover:text-primary hover:underline">年間スケジュール</a></div>
+          <div><a href="index.html#features-section" class="hover:text-primary hover:underline">適性検査・高校模試詳細</a></div>
+        </div>
+        <div class="space-y-2">
+          <div class="font-bold text-on-surface mb-1">ご案内・手続き</div>
+          <div><a href="schools_PC.html" class="hover:text-primary hover:underline">提携学習塾一覧</a></div>
+          <div><a href="apply.html" class="hover:text-primary hover:underline">個人受験のお申込み</a></div>
+          <div class="font-bold text-on-surface pt-2 mb-1">規約・運営</div>
+          <div><a href="privacy.html" class="text-primary font-bold underline">プライバシーポリシー</a></div>
+          <div><a href="tokushoho.html" class="hover:text-primary hover:underline">特定商取引法に基づく表記</a></div>
+        </div>
+      </div>
+
+      <!-- Copyright -->
+      <div class="pt-3 text-center border-t border-outline-variant/20">
+        <p class="text-[11px] text-on-surface-variant">
+          &copy; 中央教育研究所株式会社 岡山県統一模擬試験実行委員会 All Rights Reserved.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Interactive Scripts -->
+  <script>
+    (function() {
+      window.toggleMobileMenu = function() {
+        const menu = document.getElementById('mobile-menu');
+        const icon = document.getElementById('mobile-menu-icon');
+        if (!menu) return;
+        const isHidden = menu.classList.contains('hidden');
+        if (isHidden) {
+          menu.classList.remove('hidden');
+          if (icon) icon.textContent = 'close';
+        } else {
+          menu.classList.add('hidden');
+          if (icon) icon.textContent = 'menu';
+        }
+      };
+
+      window.selectNavExamTab = function(grade) {
+        window.location.href = 'index.html#next-exam';
+      };
+    })();
+  </script>
+  <script src="js/common.js"></script>
+  <script src="js/microcms.js"></script>
+</body>
+</html>

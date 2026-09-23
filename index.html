@@ -1332,49 +1332,80 @@
   function formatScheduleHTML(raw) {
     if (!raw) return '<span class="text-on-surface-variant">日程情報は準備中です</span>';
 
-    // <br> / <br/> / \n を統一して行分割
-    var lines = raw.replace(/<br\s*\/?>/gi, '\n').replace(/<\/p>/gi, '\n').replace(/<[^>]+>/g, '').split('\n');
+    var plain = raw
+      .replace(/<br\s*\/?>/gi, '\n')
+      .replace(/<\/p>/gi, '\n')
+      .replace(/<p[^>]*>/gi, '')
+      .replace(/<[^>]+>/g, '');
 
-    var rows = [];
+    var lines = plain.split('\n');
+    var rows  = [];
+    var HOME_RE = /自宅|在宅|郵送|home/i;
+
     lines.forEach(function (line) {
       line = line.trim();
       if (!line) return;
 
-      // 【...】を抽出
-      var badgeMatch = line.match(/^【([^】]+)】/);
-      var badge = '';
-      var rest  = line;
-      if (badgeMatch) {
-        badge = badgeMatch[1];
-        rest  = line.slice(badgeMatch[0].length).trim();
+      /* 1. バッジ抽出 */
+      var badgeText = '';
+      var rest = line;
+      var bm = line.match(/^【([^】]+)】/);
+      if (bm) { badgeText = bm[1]; rest = line.slice(bm[0].length).trim(); }
+
+      /* 2. 日付抽出（優先順位: 全角括弧付き → スラッシュ範囲 → スラッシュ単体 → 年月日） */
+      var dateText = '';
+      var venueText = rest;
+
+      var m;
+      // （YYYY年M月D日(X)）
+      m = rest.match(/[（(](\d{4}年\d{1,2}月\d{1,2}日[（(][日月火水木金土][）)])[ 　]*[）)]/);
+      if (m) { dateText = m[1]; venueText = rest.slice(0, m.index).trim(); }
+      else {
+        // スラッシュ範囲 10/17(土)〜11/1(日)
+        m = rest.match(/(\d{1,2}\/\d{1,2}[（(][日月火水木金土][）)][〜～]\d{1,2}\/\d{1,2}[（(][日月火水木金土][）)])/);
+        if (m) { dateText = m[1]; venueText = rest.slice(0, m.index).trim(); }
+        else {
+          // 年月日 YYYY年M月D日(X)
+          m = rest.match(/(\d{4}年\d{1,2}月\d{1,2}日[（(][日月火水木金土][）)])/);
+          if (m) { dateText = m[1]; venueText = rest.slice(0, m.index).trim(); }
+          else {
+            // スラッシュ単体 M/D(X)
+            m = rest.match(/(\d{1,2}\/\d{1,2}[（(][日月火水木金土][）)])/);
+            if (m) { dateText = m[1]; venueText = rest.slice(0, m.index).trim(); }
+          }
+        }
       }
 
-      // 日付パターンを赤太字に変換（YYYY年M月D日(X) / M/D(X) / M/D〜M/D など）
-      rest = rest.replace(
-        /(\d{4}年\d{1,2}月\d{1,2}日[（(][日月火水木金土][）)]|\d{1,2}\/\d{1,2}[（(][日月火水木金土][）)](?:[〜～]\d{1,2}\/\d{1,2}[（(][日月火水木金土][）)])?)/g,
-        '<strong style="color:#a23e18;font-weight:700;">$1</strong>'
-      );
+      /* 3. バッジ色 */
+      var bg = (badgeText && HOME_RE.test(badgeText)) ? '#4a3b10' : '#0b4a32';
 
-      var badgeHTML = badge
-        ? '<span style="display:inline-block;background:#0b4a32;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.78em;font-weight:700;white-space:nowrap;line-height:1.6;">' + badge + '</span>'
-        : '<span style="display:inline-block;width:4px;"></span>';
+      var badgeHTML = badgeText
+        ? '<span style="display:inline-flex;align-items:center;justify-content:center;background:' + bg + ';color:#fff;padding:3px 10px;border-radius:5px;font-size:0.8em;font-weight:700;white-space:nowrap;min-width:68px;text-align:center;">' + badgeText + '</span>'
+        : '<span style="display:inline-block;min-width:68px;"></span>';
 
+      var venueHTML = venueText
+        ? '<span style="font-size:0.93em;color:#1b1c1c;font-weight:500;">' + venueText + '</span>'
+        : '';
+
+      var dateHTML = dateText
+        ? '<span style="font-size:0.93em;font-weight:700;color:#a63815;white-space:nowrap;">' + dateText + '</span>'
+        : '';
+
+      /* 4. 行HTML */
       rows.push(
-        '<div style="display:grid;grid-template-columns:auto 1fr;gap:6px 10px;align-items:start;padding:5px 0;border-bottom:1px solid rgba(0,0,0,0.06);">'
-        + '<div style="padding-top:1px;">' + badgeHTML + '</div>'
-        + '<div style="font-size:0.9em;line-height:1.7;">' + rest + '</div>'
+        '<div style="display:flex;align-items:center;gap:10px 12px;padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.07);">'
+          + '<div style="flex-shrink:0;">' + badgeHTML + '</div>'
+          + '<div style="flex:1 1 0%;min-width:0;">' + venueHTML + '</div>'
+          + '<div style="flex-shrink:0;text-align:right;">' + dateHTML + '</div>'
         + '</div>'
       );
     });
 
-    return rows.length
-      ? '<div style="display:flex;flex-direction:column;">' + rows.join('') + '</div>'
-      : '<span class="text-on-surface-variant">日程情報は準備中です</span>';
+    if (!rows.length) return '<span class="text-on-surface-variant">日程情報は準備中です</span>';
+    rows[rows.length - 1] = rows[rows.length - 1].replace('border-bottom:1px solid rgba(0,0,0,0.07);', 'border-bottom:none;');
+    return '<div style="display:flex;flex-direction:column;width:100%;">' + rows.join('') + '</div>';
   }
 
-  /* -----------------------------------------------------------------------
-     4. パネルHTML生成
-  ----------------------------------------------------------------------- */
   function buildPanelHTML(gradeData, session) {
     if (!session) {
       return '<div class="py-12 text-center text-on-surface-variant font-bold text-base"><span class="material-symbols-outlined text-4xl mb-3 block text-outline">event_busy</span>現在受付中の模試はございません。<br><span class="text-sm font-medium mt-2 block">次回の案内は決まり次第こちらでお知らせします。</span></div>';

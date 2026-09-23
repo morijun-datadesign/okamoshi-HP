@@ -150,7 +150,8 @@
     .entry-content > * + * {
       margin-top: 1.5rem;
     }
-    .entry-content h2 {
+    .entry-content > h2,
+    .entry-content section > h2 {
       font-size: 1.5rem;
       font-weight: 700;
       line-height: 1.4;
@@ -162,6 +163,20 @@
       margin-top: 3rem !important;
       margin-bottom: 1.25rem;
       scroll-margin-top: 6rem;
+    }
+    /* 背景がグリーンのタイトルバー（.bg-primary）内の見出し（白文字・余白や枠線リセット） */
+    .bg-primary h2,
+    .entry-content .bg-primary h2,
+    .entry-content [class*="bg-primary"] h2 {
+      font-size: 1.25rem !important;
+      font-weight: 700 !important;
+      line-height: 1.4 !important;
+      color: #ffffff !important;
+      background: transparent !important;
+      border: none !important;
+      border-radius: 0 !important;
+      padding: 0 !important;
+      margin: 0 !important;
     }
     .entry-content h3 {
       font-size: 1.25rem;
@@ -496,7 +511,7 @@
 <section class="flex flex-col gap-space-md scroll-mt-24" id="section-1">
 <div class="flex items-center gap-space-sm bg-primary text-on-primary px-space-md py-space-sm rounded-lg shadow-sm">
 <span class="w-8 h-8 rounded-full bg-on-primary text-primary flex items-center justify-center font-headline-sm text-headline-sm font-bold shrink-0">1</span>
-<h2 class="font-headline-md text-headline-md font-bold">岡山県公立高校入試の出題傾向と「おかもし」の完全合致</h2>
+<h2 class="font-headline-md text-headline-md font-bold text-white" style="color: #ffffff !important; margin: 0 !important; padding: 0 !important; background: transparent !important; border: none !important;">岡山県公立高校入試の出題傾向と「おかもし」の完全合致</h2>
 </div>
 <p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
               岡山県の公立高校一般入試（学力検査）は、全国的にも独特な思考力・記述力を問う設問構成が特徴です。例えば数学における証明問題の論述形式や、理科・社会における複数資料の読み解き記述、国語の作文など、単なる記号選択問題では測れない総合力が求められます。
@@ -550,7 +565,7 @@
 <section class="flex flex-col gap-space-md scroll-mt-24" id="section-2">
 <div class="flex items-center gap-space-sm bg-primary text-on-primary px-space-md py-space-sm rounded-lg shadow-sm">
 <span class="w-8 h-8 rounded-full bg-on-primary text-primary flex items-center justify-center font-headline-sm text-headline-sm font-bold shrink-0">2</span>
-<h2 class="font-headline-md text-headline-md font-bold">通知表評価点（内申点）を加味した志望校合否判定の仕組み</h2>
+<h2 class="font-headline-md text-headline-md font-bold text-white" style="color: #ffffff !important; margin: 0 !important; padding: 0 !important; background: transparent !important; border: none !important;">通知表評価点（内申点）を加味した志望校合否判定の仕組み</h2>
 </div>
 <p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
               高校受験において最も多くの保護者・生徒が陥りがちな落とし穴が「当日のテスト得点（偏差値）だけで合否を予測してしまうこと」です。岡山県の公立入試では、中学校3年間の調査書点（内申点）が合否決定において極めて大きなウエイトを占めます。
@@ -591,7 +606,7 @@
 <section class="flex flex-col gap-space-md scroll-mt-24" id="section-3">
 <div class="flex items-center gap-space-sm bg-primary text-on-primary px-space-md py-space-sm rounded-lg shadow-sm">
 <span class="w-8 h-8 rounded-full bg-on-primary text-primary flex items-center justify-center font-headline-sm text-headline-sm font-bold shrink-0">3</span>
-<h2 class="font-headline-md text-headline-md font-bold">先輩たちの生の声：会場受験で培った本番力</h2>
+<h2 class="font-headline-md text-headline-md font-bold text-white" style="color: #ffffff !important; margin: 0 !important; padding: 0 !important; background: transparent !important; border: none !important;">先輩たちの生の声：会場受験で培った本番力</h2>
 </div>
 <p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
               自宅やいつもの教室で受けるテストと、見知らぬ受験生に囲まれた本番環境でのテストでは、緊張感のレベルが全く異なります。「おかもし」では、私立高校や大学などの外部会場を利用した特別会場受験も開催。本番さながらの環境を体験した先輩たちの声をご紹介します。
@@ -643,7 +658,7 @@
 <section class="flex flex-col gap-space-md scroll-mt-24" id="section-4">
 <div class="flex items-center gap-space-sm bg-primary text-on-primary px-space-md py-space-sm rounded-lg shadow-sm">
 <span class="w-8 h-8 rounded-full bg-on-primary text-primary flex items-center justify-center font-headline-sm text-headline-sm font-bold shrink-0">4</span>
-<h2 class="font-headline-md text-headline-md font-bold">模試を受けた後の復習が合否を分ける！「解答解説」の徹底活用</h2>
+<h2 class="font-headline-md text-headline-md font-bold text-white" style="color: #ffffff !important; margin: 0 !important; padding: 0 !important; background: transparent !important; border: none !important;">模試を受けた後の復習が合否を分ける！「解答解説」の徹底活用</h2>
 </div>
 <p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
               模試は「受け終わった瞬間」からが真のスタートです。おかもしの『解答・解説集』は、正解を提示するだけでなく、「なぜその誤答を選びやすいのか」「岡山県の入試ではどこまで記述すれば部分点がもらえるのか」といった採点基準の詳細まで記載されています。

@@ -1326,6 +1326,53 @@
   var _examGuidesCache = null;
 
   /* -----------------------------------------------------------------------
+     4-0. schedule_html 整形関数
+     【岡山会場】等のバッジ変換 + 日付強調 + グリッドレイアウト
+  ----------------------------------------------------------------------- */
+  function formatScheduleHTML(raw) {
+    if (!raw) return '<span class="text-on-surface-variant">日程情報は準備中です</span>';
+
+    // <br> / <br/> / \n を統一して行分割
+    var lines = raw.replace(/<br\s*\/?>/gi, '\n').replace(/<\/p>/gi, '\n').replace(/<[^>]+>/g, '').split('\n');
+
+    var rows = [];
+    lines.forEach(function (line) {
+      line = line.trim();
+      if (!line) return;
+
+      // 【...】を抽出
+      var badgeMatch = line.match(/^【([^】]+)】/);
+      var badge = '';
+      var rest  = line;
+      if (badgeMatch) {
+        badge = badgeMatch[1];
+        rest  = line.slice(badgeMatch[0].length).trim();
+      }
+
+      // 日付パターンを赤太字に変換（YYYY年M月D日(X) / M/D(X) / M/D〜M/D など）
+      rest = rest.replace(
+        /(\d{4}年\d{1,2}月\d{1,2}日[（(][日月火水木金土][）)]|\d{1,2}\/\d{1,2}[（(][日月火水木金土][）)](?:[〜～]\d{1,2}\/\d{1,2}[（(][日月火水木金土][）)])?)/g,
+        '<strong style="color:#a23e18;font-weight:700;">$1</strong>'
+      );
+
+      var badgeHTML = badge
+        ? '<span style="display:inline-block;background:#0b4a32;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.78em;font-weight:700;white-space:nowrap;line-height:1.6;">' + badge + '</span>'
+        : '<span style="display:inline-block;width:4px;"></span>';
+
+      rows.push(
+        '<div style="display:grid;grid-template-columns:auto 1fr;gap:6px 10px;align-items:start;padding:5px 0;border-bottom:1px solid rgba(0,0,0,0.06);">'
+        + '<div style="padding-top:1px;">' + badgeHTML + '</div>'
+        + '<div style="font-size:0.9em;line-height:1.7;">' + rest + '</div>'
+        + '</div>'
+      );
+    });
+
+    return rows.length
+      ? '<div style="display:flex;flex-direction:column;">' + rows.join('') + '</div>'
+      : '<span class="text-on-surface-variant">日程情報は準備中です</span>';
+  }
+
+  /* -----------------------------------------------------------------------
      4. パネルHTML生成
   ----------------------------------------------------------------------- */
   function buildPanelHTML(gradeData, session) {
@@ -1392,7 +1439,7 @@
           // mobile
           '<div class="block md:hidden space-y-3.5">',
             '<div class="bg-white rounded-2xl border border-outline-variant/30 p-5 shadow-xs">',
-              '<div class="text-sm font-medium text-on-surface leading-relaxed">' + (scheduleHTML || '<span class="text-on-surface-variant">日程情報は準備中です</span>') + '</div>',
+              '<div class="text-sm font-medium text-on-surface leading-relaxed">' + formatScheduleHTML(scheduleHTML) + '</div>',
               mobileDeadline,
             '</div>',
             '<div class="bg-white rounded-2xl border border-outline-variant/30 p-5 shadow-xs flex flex-col items-center gap-3 text-center">',
@@ -1408,7 +1455,7 @@
                   '<span class="flex items-center gap-1.5 text-primary font-bold text-sm sm:text-base"><span class="material-symbols-outlined text-base sm:text-lg text-primary">location_on</span>受験会場と実施日</span>',
                   deadlineTag,
                 '</div>',
-                '<div class="py-2 text-sm sm:text-base text-on-surface leading-relaxed">' + (scheduleHTML || '<span class="text-on-surface-variant">日程情報は準備中です</span>') + '</div>',
+                '<div class="py-2 text-sm sm:text-base text-on-surface leading-relaxed">' + formatScheduleHTML(scheduleHTML) + '</div>',
               '</div>',
             '</div>',
             '<div class="w-full md:col-span-3 flex flex-col justify-between p-4 sm:p-5 rounded-2xl bg-surface-container-low border border-outline-variant/30 shadow-sm gap-3.5">',

@@ -1380,15 +1380,15 @@
       var bg = (badgeText && HOME_RE.test(badgeText)) ? '#4a3b10' : '#0b4a32';
 
       var badgeHTML = badgeText
-        ? '<span style="display:inline-flex;align-items:center;justify-content:center;background:' + bg + ';color:#fff;padding:3px 10px;border-radius:5px;font-size:0.8em;font-weight:700;white-space:nowrap;min-width:68px;text-align:center;">' + badgeText + '</span>'
+        ? '<span style="display:inline-flex;align-items:center;justify-content:center;background:' + bg + ';color:#fff;padding:4px 12px;border-radius:5px;font-size:0.88em;font-weight:700;white-space:nowrap;min-width:76px;text-align:center;">' + badgeText + '</span>'
         : '<span style="display:inline-block;min-width:68px;"></span>';
 
       var venueHTML = venueText
-        ? '<span style="font-size:0.93em;color:#1b1c1c;font-weight:500;">' + venueText + '</span>'
+        ? '<span style="font-size:1.06em;color:#1b1c1c;font-weight:500;">' + venueText + '</span>'
         : '';
 
       var dateHTML = dateText
-        ? '<span style="font-size:0.93em;font-weight:700;color:#a63815;white-space:nowrap;">' + dateText + '</span>'
+        ? '<span style="font-size:1.1em;font-weight:700;color:#a63815;white-space:nowrap;">' + dateText + '</span>'
         : '';
 
       /* 4. 行HTML */

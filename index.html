@@ -1334,9 +1334,9 @@
     }
     var gradeLabel    = gradeData.grade_name || (gradeData.grade_label ? gradeData.grade_label + '生' : '');
     var sessionLabel  = session.issue_name || session.session_label || '';
-    var announceText  = session.announce_text || '';
+    var announceText  = session.notice_text || session.announce_text || '';
     var title         = session.title || gradeData.exam_name || '';
-    var catchcopy     = session.catchcopy || '';
+    var catchcopy     = session.catchphrase || session.catchcopy || '';
     var deadline      = session.deadline || '';
     var fee           = session.fee || '';
     var feeNote       = session.fee_note || '会場・自宅共通';

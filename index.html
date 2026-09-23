@@ -1256,10 +1256,10 @@
   ----------------------------------------------------------------------- */
   var FALLBACK_EXAM_GUIDES = [
     {
-      id: 'fg-chu3', grade_code: 'c3', grade_label: '中3',
+      id: 'fg-chu3', grade_code: 'c3', grade_label: '中3', grade_name: '中3生',
       exam_name: '岡山県統一模擬試験（おかもし）',
       sessions: [{
-        session_label: '10月号', is_active: true,
+        session_label: '10月号', issue_name: '10月号', is_active: true,
         announce_text: 'ただいま10月号のお申し込みを受付中です',
         title: '岡山県統一模擬試験（おかもし）',
         catchcopy: '志望校決定の秋！合格に向けて今必要な「あと◯点」を掴む！',
@@ -1271,10 +1271,10 @@
       }]
     },
     {
-      id: 'fg-chu2', grade_code: 'c2', grade_label: '中2',
+      id: 'fg-chu2', grade_code: 'c2', grade_label: '中2', grade_name: '中2生',
       exam_name: '岡山県統一模擬試験（おかもし）',
       sessions: [{
-        session_label: '12月号', is_active: true,
+        session_label: '12月号', issue_name: '12月号', is_active: true,
         announce_text: 'ただいま12月号のお申し込みを受付中です',
         title: '岡山県統一模擬試験（おかもし）',
         catchcopy: '中学2年の今が実力を測る絶好のチャンス！',
@@ -1286,10 +1286,10 @@
       }]
     },
     {
-      id: 'fg-chu1', grade_code: 'c1', grade_label: '中1',
+      id: 'fg-chu1', grade_code: 'c1', grade_label: '中1', grade_name: '中1生',
       exam_name: '岡山県統一模擬試験（おかもし）',
       sessions: [{
-        session_label: '12月号', is_active: true,
+        session_label: '12月号', issue_name: '12月号', is_active: true,
         announce_text: 'ただいま12月号のお申し込みを受付中です',
         title: '岡山県統一模擬試験（おかもし）',
         catchcopy: '中学1年の冬、学力の「現在地」を把握しよう！',
@@ -1301,10 +1301,10 @@
       }]
     },
     {
-      id: 'fg-sho6', grade_code: 's6', grade_label: '小6',
+      id: 'fg-sho6', grade_code: 's6', grade_label: '小6', grade_name: '小6生',
       exam_name: '岡山県立中高一貫校 適性検査対策模試',
       sessions: [{
-        session_label: '10月号', is_active: true,
+        session_label: '10月号', issue_name: '10月号', is_active: true,
         announce_text: 'ただいま10月号のお申し込みを受付中です',
         title: '岡山県立中高一貫校 適性検査対策模試',
         catchcopy: '岡山県立中等教育学校・中学校受検 完全対策！志望校合格への突破口を開く特化型模試',
@@ -1332,8 +1332,8 @@
     if (!session) {
       return '<div class="py-12 text-center text-on-surface-variant font-bold text-base"><span class="material-symbols-outlined text-4xl mb-3 block text-outline">event_busy</span>現在受付中の模試はございません。<br><span class="text-sm font-medium mt-2 block">次回の案内は決まり次第こちらでお知らせします。</span></div>';
     }
-    var gradeLabel    = gradeData.grade_label || '';
-    var sessionLabel  = session.session_label || '';
+    var gradeLabel    = gradeData.grade_name || (gradeData.grade_label ? gradeData.grade_label + '生' : '');
+    var sessionLabel  = session.issue_name || session.session_label || '';
     var announceText  = session.announce_text || '';
     var title         = session.title || gradeData.exam_name || '';
     var catchcopy     = session.catchcopy || '';
@@ -1376,8 +1376,8 @@
       '<div class="bg-transparent md:bg-surface-container-lowest rounded-none md:rounded-3xl p-0 md:p-6 lg:p-8 shadow-none md:shadow-sm border-0 md:border md:border-outline-variant/30 space-y-6">',
         '<div class="flex flex-col gap-3">',
           '<div class="flex flex-wrap items-center gap-2 sm:gap-3">',
-            '<span class="inline-flex items-center justify-center px-3.5 md:px-4 py-1.5 rounded-full md:rounded-xl bg-primary text-white font-bold text-sm md:text-xl shrink-0 shadow-sm leading-none">' + gradeLabel + '生</span>',
-            '<span class="inline-flex items-center justify-center px-3.5 md:px-4 py-1.5 rounded-full md:rounded-xl bg-primary text-white font-bold text-sm md:text-xl shrink-0 shadow-sm leading-none">' + sessionLabel + '</span>',
+            '<span class="inline-flex items-center justify-center px-3.5 md:px-4 py-1.5 rounded-full md:rounded-xl bg-primary text-white font-bold text-sm md:text-xl shrink-0 shadow-sm leading-none">' + gradeLabel + '</span>',
+            sessionLabel ? '<span class="inline-flex items-center justify-center px-3.5 md:px-4 py-1.5 rounded-full md:rounded-xl bg-primary text-white font-bold text-sm md:text-xl shrink-0 shadow-sm leading-none">' + sessionLabel + '</span>' : '',
             announceBadge,
           '</div>',
           '<h3 class="text-2xl sm:text-3xl font-bold text-primary tracking-tight pt-1">' + title + '</h3>',
@@ -1451,8 +1451,11 @@
 
     // タブバッジ更新
     var tabBadge = document.querySelector('#tab-btn-' + tabKey + ' .tab-badge');
-    if (tabBadge && activeSession && activeSession.session_label) {
-      tabBadge.textContent = activeSession.session_label;
+    var badgeLabel = (activeSession && (activeSession.issue_name || activeSession.session_label)) || '';
+    if (tabBadge && badgeLabel) {
+      tabBadge.textContent = badgeLabel;
+    } else if (tabBadge && !badgeLabel) {
+      tabBadge.style.display = 'none';
     }
 
     panel.innerHTML = buildPanelHTML(gradeData, activeSession);

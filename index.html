@@ -1328,31 +1328,109 @@
   var _examGuidesCache = null;
 
   /* -----------------------------------------------------------------------
-     4-0. 会場・実施日 整形関数（テキスト形式・デザイン差し戻し）
-     （1行目・太字）会場名 ： 学校名
-     （2行目・赤茶色）日付
-     会場間に区切り線
+     4-0. 実施日程「受験会場と実施日」整形関数
+      バッジ形式（緑 or 茶）+ 会場名 + 右揃え日付（赤太字）
+      ※ 実施要項カード内の「会場・実施日」は formatVenueTextCards を使用
   ----------------------------------------------------------------------- */
   function formatScheduleHTML(raw) {
     if (!raw) return '<span class="text-on-surface-variant">日程情報は準備中です</span>';
 
     var plain = raw
       .replace(/<br\s*\/?>/gi, '\n')
-      .replace(/<\/(?:p|div|li|tr)>/gi, '\n')
+      .replace(/<\/p>/gi, '\n')
       .replace(/<p[^>]*>/gi, '')
       .replace(/<[^>]+>/g, '');
 
     var lines = plain.split('\n');
-    var venueItems = [];
+    var rows  = [];
+    var HOME_RE = /自宅|在宅|郵送|home/i;
 
     lines.forEach(function (line) {
+      line = line.trim();
+      if (!line) return;
+
+      /* 1. バッジ抽出 */
+      var badgeText = '';
+      var rest = line;
+      var bm = line.match(/^【([^】]+)】/);
+      if (bm) { badgeText = bm[1]; rest = line.slice(bm[0].length).trim(); }
+      else {
+        var cm = line.match(/^([^：:]+)[：:]\s*/);
+        if (cm) { badgeText = cm[1].trim(); rest = line.slice(cm[0].length).trim(); }
+      }
+
+      /* 2. 日付抽出 */
+      var dateText = '';
+      var venueText = rest;
+
+      var m;
+      m = rest.match(/[（(](\d{4}年\d{1,2}月\d{1,2}日[（(][日月火水木金土][）)])[ \u3000]*[）)]/);
+      if (m) { dateText = m[1]; venueText = rest.slice(0, m.index).trim(); }
+      else {
+        m = rest.match(/(\d{1,2}\/\d{1,2}[（(][日月火水木金土][）)][〜～]\d{1,2}\/\d{1,2}[（(][日月火水木金土][）)])/);
+        if (m) { dateText = m[1]; venueText = rest.slice(0, m.index).trim(); }
+        else {
+          m = rest.match(/(\d{4}年\d{1,2}月\d{1,2}日[（(][日月火水木金土][）)])/);
+          if (m) { dateText = m[1]; venueText = rest.slice(0, m.index).trim(); }
+          else {
+            m = rest.match(/(\d{1,2}\/\d{1,2}[（(][日月火水木金土][）)])/);
+            if (m) { dateText = m[1]; venueText = rest.slice(0, m.index).trim(); }
+            else {
+              m = rest.match(/([（(][\d月年日土日月火水木金〜～/]+[）)]\s*$)/);
+              if (m) { dateText = m[1]; venueText = rest.slice(0, m.index).trim(); }
+            }
+          }
+        }
+      }
+
+      /* 3. バッジ色 */
+      var bg = (badgeText && HOME_RE.test(badgeText)) ? '#4a3b10' : '#0b4a32';
+
+      var badgeHTML = badgeText
+        ? '<span style="display:inline-flex;align-items:center;justify-content:center;background:' + bg + ';color:#fff;padding:4px 12px;border-radius:5px;font-size:0.88em;font-weight:700;white-space:nowrap;min-width:76px;text-align:center;">' + badgeText + '</span>'
+        : '<span style="display:inline-block;min-width:68px;"></span>';
+
+      var venueHTML = venueText
+        ? '<span style="font-size:1.06em;color:#1b1c1c;font-weight:500;">' + venueText + '</span>'
+        : '';
+
+      var dateHTML = dateText
+        ? '<span style="font-size:1.1em;font-weight:700;color:#a63815;white-space:nowrap;">' + dateText + '</span>'
+        : '';
+
+      /* 4. 行HTML */
+      rows.push(
+        '<div style="display:flex;align-items:center;gap:10px 12px;padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.07);">'
+          + '<div style="flex-shrink:0;">' + badgeHTML + '</div>'
+          + '<div style="flex:1 1 0%;min-width:0;">' + venueHTML + '</div>'
+          + '<div style="flex-shrink:0;text-align:right;">' + dateHTML + '</div>'
+        + '</div>'
+      );
+    });
+
+    if (!rows.length) return '<span class="text-on-surface-variant">日程情報は準備中です</span>';
+    rows[rows.length - 1] = rows[rows.length - 1].replace('border-bottom:1px solid rgba(0,0,0,0.07);', 'border-bottom:none;');
+    return '<div style="display:flex;flex-direction:column;width:100%;">' + rows.join('') + '</div>';
+  }
+
+  /* -----------------------------------------------------------------------
+     4-0b. 実施要項「会場・実施日」カード用テキスト形式関数
+      （1行目・太字）会場名 ： 学校名
+      （2行目・赤茶色）日付
+      会場間に区切り線
+  ----------------------------------------------------------------------- */
+  function formatVenueTextCards(rawLines) {
+    if (!rawLines || !rawLines.length) return '<span class="text-on-surface-variant">会場情報は準備中です</span>';
+
+    var venueItems = [];
+
+    rawLines.forEach(function (line) {
       line = line.trim();
       if (!line) return;
 
       var dateText = '';
       var rest = line;
 
-      // 日付抽出（括弧付き優先）
       var patternsParen = [
         /[（(](\d{4}年\d{1,2}月\d{1,2}日[（(][日月火水木金土][）)])[）)]\s*$/,
         /[（(](\d{1,2}月\d{1,2}日[（(][日月火水木金土][）)])[）)]\s*$/,
@@ -1391,7 +1469,6 @@
 
       rest = rest.replace(/[/／\s]+$/, '').trim();
 
-      // 会場名と学校名
       var areaName = '';
       var schoolName = '';
 
@@ -1422,7 +1499,7 @@
       }
     });
 
-    if (!venueItems.length) return '<span class="text-on-surface-variant">日程情報は準備中です</span>';
+    if (!venueItems.length) return '<span class="text-on-surface-variant">会場情報は準備中です</span>';
 
     var htmlParts = [];
     venueItems.forEach(function (item, idx) {
@@ -1432,18 +1509,19 @@
       var isLast = (idx === venueItems.length - 1);
       var mb = isLast ? 'margin-bottom: 0;' : 'margin-bottom: 16px;';
       var venueLine = item.venue
-        ? '<p style="font-weight: bold; font-size: 16px; margin-bottom: 4px; color: #1b1c1c;">' + item.venue + '</p>'
+        ? '<p style="font-weight: bold; font-size: 15px; margin-bottom: 4px; color: #1b1c1c;">' + item.venue + '</p>'
         : '';
       var dateLine = item.date
-        ? '<p style="color: #a63815; font-weight: bold; font-size: 15px; margin-left: 2em; ' + mb + '">' + item.date + '</p>'
+        ? '<p style="color: #a63815; font-weight: bold; font-size: 14px; margin-left: 1.5em; ' + mb + '">' + item.date + '</p>'
         : '';
       htmlParts.push(venueLine + dateLine);
     });
 
-    return '<div class="venue-schedule-list" style="width: 100%;">' + htmlParts.join('') + '</div>';
+    return '<div class="venue-text-list" style="width: 100%;">' + htmlParts.join('') + '</div>';
   }
 
 /* -----------------------------------------------------------------------
+     4-1./* -----------------------------------------------------------------------
      4-1. 実施要項（会場/自宅）のカード自動パース
   ----------------------------------------------------------------------- */
   function parseGuidelineCards(rawHTML, mode) {
@@ -1509,8 +1587,8 @@
       }
 
       if (isVenueDateCard) {
-        // 会場・実施日カードは formatScheduleHTML と同一のテキスト形式で描画
-        cardInner.push(formatScheduleHTML(items.join('\n')));
+        // 会場・実施日カードはテキスト形式（formatVenueTextCards）で描画
+        cardInner.push(formatVenueTextCards(items));
         cardHTMLList.push(
           '<div class="bg-white rounded-xl p-3.5 sm:p-4 shadow-xs border border-outline-variant/10 space-y-2">' +
             cardInner.join('') +
@@ -1830,7 +1908,7 @@
             '<div class="w-full md:col-span-9 flex flex-col justify-between p-4 sm:p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 shadow-sm gap-4">',
               '<div class="space-y-2">',
                 '<div class="flex items-center justify-between flex-wrap gap-2 pb-2 border-b border-surface-container/70">',
-                  '<span class="flex items-center text-primary font-bold text-sm sm:text-base">受験会場と実施日</span>',
+                  '<span class="flex items-center gap-1.5 text-primary font-bold text-sm sm:text-base"><span class="material-symbols-outlined text-base sm:text-lg text-primary">location_on</span>受験会場と実施日</span>',
                   deadlineTag,
                 '</div>',
                 '<div class="py-2 text-sm sm:text-base text-on-surface leading-relaxed">' + formatScheduleHTML(scheduleHTML) + '</div>',

@@ -1237,7 +1237,275 @@
     loadLatestNews();
   }
 </script>
+<!-- =====================================================================
+     exam-guides microCMS 連携: 学年別模試案内の動的描画
+     ===================================================================== -->
+<script>
+(function () {
+  /* -----------------------------------------------------------------------
+     1. 設定
+  ----------------------------------------------------------------------- */
+  var EXAM_GUIDES_CONFIG = {
+    serviceDomain: 'okamoshi-blog',
+    apiKey: '4qO3xGjs5W1r7zolbBgAX2KXP8VEUooOpMtc',
+    endpoint: 'exam-guides'
+  };
 
+  /* -----------------------------------------------------------------------
+     2. フォールバックデータ（API未接続時 / エラー時）
+  ----------------------------------------------------------------------- */
+  var FALLBACK_EXAM_GUIDES = [
+    {
+      id: 'fg-chu3', grade_code: 'c3', grade_label: '中3',
+      exam_name: '岡山県統一模擬試験（おかもし）',
+      sessions: [{
+        session_label: '10月号', is_active: true,
+        announce_text: 'ただいま10月号のお申し込みを受付中です',
+        title: '岡山県統一模擬試験（おかもし）',
+        catchcopy: '志望校決定の秋！合格に向けて今必要な「あと◯点」を掴む！',
+        deadline: '2026年10月6日(火)', fee: '4,500', fee_note: '会場・自宅共通',
+        apply_btn_text: '中3おかもし（10月号）に申し込む',
+        apply_url: 'apply.html?grade=chu3',
+        schedule_html: '<p>会場受験: 山陽学園中学校 / 2026年10月19日(日)<br>自宅受験: 10/11(土)〜10/19(日)</p>',
+        guideline_html: ''
+      }]
+    },
+    {
+      id: 'fg-chu2', grade_code: 'c2', grade_label: '中2',
+      exam_name: '岡山県統一模擬試験（おかもし）',
+      sessions: [{
+        session_label: '12月号', is_active: true,
+        announce_text: 'ただいま12月号のお申し込みを受付中です',
+        title: '岡山県統一模擬試験（おかもし）',
+        catchcopy: '中学2年の今が実力を測る絶好のチャンス！',
+        deadline: '2026年11月10日(火)', fee: '4,500', fee_note: '会場・自宅共通',
+        apply_btn_text: '中2おかもし（12月号）に申し込む',
+        apply_url: 'apply.html?grade=chu2',
+        schedule_html: '<p>会場受験: 山陽学園中学校 / 2026年12月14日(日)<br>自宅受験: 12/6(土)〜12/14(日)</p>',
+        guideline_html: ''
+      }]
+    },
+    {
+      id: 'fg-chu1', grade_code: 'c1', grade_label: '中1',
+      exam_name: '岡山県統一模擬試験（おかもし）',
+      sessions: [{
+        session_label: '12月号', is_active: true,
+        announce_text: 'ただいま12月号のお申し込みを受付中です',
+        title: '岡山県統一模擬試験（おかもし）',
+        catchcopy: '中学1年の冬、学力の「現在地」を把握しよう！',
+        deadline: '2026年11月10日(火)', fee: '4,500', fee_note: '会場・自宅共通',
+        apply_btn_text: '中1おかもし（12月号）に申し込む',
+        apply_url: 'apply.html?grade=chu1',
+        schedule_html: '<p>会場受験: 山陽学園中学校 / 2026年12月14日(日)<br>自宅受験: 12/6(土)〜12/14(日)</p>',
+        guideline_html: ''
+      }]
+    },
+    {
+      id: 'fg-sho6', grade_code: 's6', grade_label: '小6',
+      exam_name: '岡山県立中高一貫校 適性検査対策模試',
+      sessions: [{
+        session_label: '10月号', is_active: true,
+        announce_text: 'ただいま10月号のお申し込みを受付中です',
+        title: '岡山県立中高一貫校 適性検査対策模試',
+        catchcopy: '岡山県立中等教育学校・中学校受検 完全対策！志望校合格への突破口を開く特化型模試',
+        deadline: '2026年10月13日(火)', fee: '5,500', fee_note: '会場・自宅共通',
+        apply_btn_text: '小6適性検査模試に申し込む',
+        apply_url: 'apply.html?grade=sho6',
+        schedule_html: '<p>会場受験: 山陽学園中学校 / 2026年11月1日(日)<br>自宅受験: 10/24(土)〜11/1(日)</p>',
+        guideline_html: ''
+      }]
+    }
+  ];
 
+  /* -----------------------------------------------------------------------
+     3. タブキーと grade_code のマッピング
+  ----------------------------------------------------------------------- */
+  var GRADE_CODE_MAP = { 'chu3': 'c3', 'chu2': 'c2', 'chu1': 'c1', 'sho6': 's6' };
 
+  /* キャッシュ */
+  var _examGuidesCache = null;
+
+  /* -----------------------------------------------------------------------
+     4. パネルHTML生成
+  ----------------------------------------------------------------------- */
+  function buildPanelHTML(gradeData, session) {
+    if (!session) {
+      return '<div class="py-12 text-center text-on-surface-variant font-bold text-base"><span class="material-symbols-outlined text-4xl mb-3 block text-outline">event_busy</span>現在受付中の模試はございません。<br><span class="text-sm font-medium mt-2 block">次回の案内は決まり次第こちらでお知らせします。</span></div>';
+    }
+    var gradeLabel    = gradeData.grade_label || '';
+    var sessionLabel  = session.session_label || '';
+    var announceText  = session.announce_text || '';
+    var title         = session.title || gradeData.exam_name || '';
+    var catchcopy     = session.catchcopy || '';
+    var deadline      = session.deadline || '';
+    var fee           = session.fee || '';
+    var feeNote       = session.fee_note || '会場・自宅共通';
+    var applyBtnText  = session.apply_btn_text || 'お申し込みはこちら';
+    var applyUrl      = session.apply_url || 'apply.html';
+    var scheduleHTML  = session.schedule_html || '';
+    var guidelineHTML = session.guideline_html || '';
+
+    var announceBadge = announceText
+      ? '<span class="inline-flex items-center gap-1.5 px-3 py-1.5 md:px-3.5 rounded-full text-primary border border-[#cbe8ba] shadow-sm self-center whitespace-nowrap text-xs sm:text-sm font-bold" style="background-color: rgb(238, 248, 226);"><span class="material-symbols-outlined text-primary text-base sm:text-lg shrink-0">campaign</span><span class="inline md:hidden">受付中です</span><span class="hidden md:inline">' + announceText + '</span></span>'
+      : '';
+
+    var catchcopyBlock = catchcopy
+      ? '<div class="w-full rounded-xl md:rounded-2xl bg-white md:bg-surface-container-low py-3.5 px-4 md:p-space-lg text-center shadow-xs md:shadow-sm border border-outline-variant/30 md:border-outline-variant/20"><p class="font-headline-lg text-base sm:text-2xl text-on-surface font-bold tracking-wide">' + catchcopy + '</p></div>'
+      : '';
+
+    var deadlineTag = deadline
+      ? '<span class="inline-flex items-center px-3 py-1 rounded-md bg-[#fef2f2] text-on-surface border border-[#fca5a5]/40 font-bold text-[16px]">申込締切日: ' + deadline + '</span>'
+      : '';
+
+    var mobileDeadline = deadline
+      ? '<div class="text-center pt-3 mt-2 border-t border-surface-container"><span class="text-sm font-bold text-on-surface">申込締切日: ' + deadline + '</span></div>'
+      : '';
+
+    var feeBlock = fee
+      ? '<div class="flex-1 flex flex-col items-center justify-center py-1"><div class="flex items-baseline justify-center gap-1"><span class="text-3xl sm:text-4xl lg:text-[40px] font-bold text-on-surface font-headline-xl tracking-tight">' + fee + '</span><span class="text-xs sm:text-sm text-on-surface font-bold">円(税込)</span></div></div>'
+      : '';
+    var mobileFeeBlock = fee
+      ? '<div class="flex items-baseline justify-center gap-1.5"><span class="text-sm text-on-surface font-medium">受験料</span><span class="text-4xl font-bold text-on-surface">' + fee + '</span><span class="text-sm text-on-surface font-medium">円(税込)</span></div><div class="text-xs text-on-surface-variant font-medium">' + feeNote + '</div>'
+      : '';
+
+    var guidelineBlock = guidelineHTML
+      ? '<div class="space-y-space-lg pt-4 border-t border-surface-container"><div class="flex items-center gap-2 pb-2 border-b border-surface-container/60"><span class="w-2.5 h-6 bg-primary rounded-xs inline-block"></span><h4 class="font-headline-lg text-[24px] text-on-surface font-bold tracking-tight">実施要項</h4></div><div class="prose max-w-none text-on-surface text-sm sm:text-base leading-relaxed">' + guidelineHTML + '</div></div>'
+      : '';
+
+    return [
+      '<div class="bg-transparent md:bg-surface-container-lowest rounded-none md:rounded-3xl p-0 md:p-6 lg:p-8 shadow-none md:shadow-sm border-0 md:border md:border-outline-variant/30 space-y-6">',
+        '<div class="flex flex-col gap-3">',
+          '<div class="flex flex-wrap items-center gap-2 sm:gap-3">',
+            '<span class="inline-flex items-center justify-center px-3.5 md:px-4 py-1.5 rounded-full md:rounded-xl bg-primary text-white font-bold text-sm md:text-xl shrink-0 shadow-sm leading-none">' + gradeLabel + '生</span>',
+            '<span class="inline-flex items-center justify-center px-3.5 md:px-4 py-1.5 rounded-full md:rounded-xl bg-primary text-white font-bold text-sm md:text-xl shrink-0 shadow-sm leading-none">' + sessionLabel + '</span>',
+            announceBadge,
+          '</div>',
+          '<h3 class="text-2xl sm:text-3xl font-bold text-primary tracking-tight pt-1">' + title + '</h3>',
+          '<div class="border-b border-surface-container pt-1"></div>',
+        '</div>',
+        catchcopyBlock,
+        '<div class="space-y-4 pt-1">',
+          '<div class="flex items-center gap-2">',
+            '<span class="w-2.5 h-6 bg-primary rounded-xs inline-block"></span>',
+            '<h4 class="font-headline-lg text-xl sm:text-2xl text-on-surface font-bold tracking-tight">実施日程</h4>',
+          '</div>',
+          // mobile
+          '<div class="block md:hidden space-y-3.5">',
+            '<div class="bg-white rounded-2xl border border-outline-variant/30 p-5 shadow-xs">',
+              '<div class="text-sm font-medium text-on-surface leading-relaxed">' + (scheduleHTML || '<span class="text-on-surface-variant">日程情報は準備中です</span>') + '</div>',
+              mobileDeadline,
+            '</div>',
+            '<div class="bg-white rounded-2xl border border-outline-variant/30 p-5 shadow-xs flex flex-col items-center gap-3 text-center">',
+              mobileFeeBlock,
+              '<a class="w-full py-3.5 px-6 rounded-xl bg-[#a23e18] text-white font-bold text-base shadow-sm hover:opacity-95 transition-all text-center flex items-center justify-center gap-2" href="' + applyUrl + '">' + applyBtnText + '<span class="material-symbols-outlined text-base">arrow_forward</span></a>',
+            '</div>',
+          '</div>',
+          // desktop
+          '<div class="hidden md:grid md:grid-cols-12 gap-4 sm:gap-5 items-stretch w-full">',
+            '<div class="w-full md:col-span-9 flex flex-col justify-between p-4 sm:p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 shadow-sm gap-4">',
+              '<div class="space-y-2">',
+                '<div class="flex items-center justify-between flex-wrap gap-2 pb-2 border-b border-surface-container/70">',
+                  '<span class="flex items-center gap-1.5 text-primary font-bold text-sm sm:text-base"><span class="material-symbols-outlined text-base sm:text-lg text-primary">location_on</span>受験会場と実施日</span>',
+                  deadlineTag,
+                '</div>',
+                '<div class="py-2 text-sm sm:text-base text-on-surface leading-relaxed">' + (scheduleHTML || '<span class="text-on-surface-variant">日程情報は準備中です</span>') + '</div>',
+              '</div>',
+            '</div>',
+            '<div class="w-full md:col-span-3 flex flex-col justify-between p-4 sm:p-5 rounded-2xl bg-surface-container-low border border-outline-variant/30 shadow-sm gap-3.5">',
+              '<div class="flex items-center justify-between gap-1 pb-1 w-full"><span class="flex items-center gap-1 text-primary font-bold text-sm sm:text-base whitespace-nowrap"><span class="material-symbols-outlined text-base sm:text-lg text-primary">payments</span>受験料</span><span class="text-[11px] sm:text-xs text-on-surface-variant whitespace-nowrap">' + feeNote + '</span></div>',
+              feeBlock,
+              '<div class="w-full flex justify-center"><a class="w-full inline-flex items-center justify-center gap-1.5 py-3 px-2 sm:px-3 rounded-xl bg-secondary text-on-secondary font-label-lg text-xs sm:text-sm font-bold shadow-[0_4px_14px_-2px_rgba(200,90,50,0.35)] hover:bg-secondary-container hover:text-on-secondary transition-all text-center tracking-tight whitespace-nowrap" href="' + applyUrl + '"><span>' + applyBtnText + '</span><span class="material-symbols-outlined text-base">arrow_forward</span></a></div>',
+            '</div>',
+          '</div>',
+        '</div>',
+        guidelineBlock,
+      '</div>'
+    ].join('');
+  }
+
+  /* -----------------------------------------------------------------------
+     5. 指定タブのパネルを更新
+  ----------------------------------------------------------------------- */
+  function renderExamGuidePanel(tabKey, guidesData) {
+    var gradeCode = GRADE_CODE_MAP[tabKey];
+    if (!gradeCode) return;
+    var panel = document.getElementById('tab-panel-' + tabKey);
+    if (!panel) return;
+
+    var gradeData = null;
+    for (var i = 0; i < (guidesData || []).length; i++) {
+      if (guidesData[i].grade_code === gradeCode) { gradeData = guidesData[i]; break; }
+    }
+
+    if (!gradeData) {
+      panel.innerHTML = '<div class="py-12 text-center text-on-surface-variant">この学年の案内情報が見つかりませんでした。</div>';
+      return;
+    }
+
+    var sessions = gradeData.sessions || [];
+    var activeSession = null;
+    for (var j = 0; j < sessions.length; j++) {
+      if (sessions[j].is_active === true) { activeSession = sessions[j]; break; }
+    }
+    if (!activeSession) activeSession = sessions[0] || null;
+
+    // タブバッジ更新
+    var tabBadge = document.querySelector('#tab-btn-' + tabKey + ' .tab-badge');
+    if (tabBadge && activeSession && activeSession.session_label) {
+      tabBadge.textContent = activeSession.session_label;
+    }
+
+    panel.innerHTML = buildPanelHTML(gradeData, activeSession);
+  }
+
+  /* -----------------------------------------------------------------------
+     6. 全学年パネルを一括更新
+  ----------------------------------------------------------------------- */
+  function renderAllPanels(guidesData) {
+    ['chu3', 'chu2', 'chu1', 'sho6'].forEach(function (key) {
+      renderExamGuidePanel(key, guidesData);
+    });
+  }
+
+  /* -----------------------------------------------------------------------
+     7. microCMS から exam-guides を fetch
+  ----------------------------------------------------------------------- */
+  function loadExamGuides() {
+    var url = 'https://' + EXAM_GUIDES_CONFIG.serviceDomain
+            + '.microcms.io/api/v1/'
+            + EXAM_GUIDES_CONFIG.endpoint
+            + '?limit=20';
+    fetch(url, { headers: { 'X-MICROCMS-API-KEY': EXAM_GUIDES_CONFIG.apiKey } })
+      .then(function (res) {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.json();
+      })
+      .then(function (data) {
+        if (data && data.contents && data.contents.length > 0) {
+          _examGuidesCache = data.contents;
+        } else {
+          _examGuidesCache = FALLBACK_EXAM_GUIDES;
+        }
+        renderAllPanels(_examGuidesCache);
+      })
+      .catch(function (err) {
+        console.warn('[exam-guides] microCMS取得失敗。フォールバックデータを使用します:', err);
+        _examGuidesCache = FALLBACK_EXAM_GUIDES;
+        renderAllPanels(_examGuidesCache);
+      });
+  }
+
+  /* -----------------------------------------------------------------------
+     8. switchExamTab をラップ（タブ切り替え時にも動的描画）
+  ----------------------------------------------------------------------- */
+  document.addEventListener('DOMContentLoaded', function () {
+    var _origSwitch = window.switchExamTab;
+    window.switchExamTab = function (tabKey) {
+      if (typeof _origSwitch === 'function') { _origSwitch(tabKey); }
+      if (_examGuidesCache) { renderExamGuidePanel(tabKey, _examGuidesCache); }
+    };
+    loadExamGuides();
+  });
+})();
+</script>
 </body></html>

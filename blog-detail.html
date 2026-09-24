@@ -1436,12 +1436,26 @@
       }
 
       // 本文HTMLの反映（リッチエディタのHTMLタグを流し込み）
-      if (post.content) {
-        const contentBody = document.getElementById('entry-content-body');
-        if (contentBody) {
+      const contentBody = document.getElementById('entry-content-body');
+      if (contentBody) {
+        if (post.content) {
           contentBody.innerHTML = post.content;
+        } else {
+          // フォールバック時: 本文なしの場合は焼き込み本文を隠してプレースホルダー表示
+          contentBody.innerHTML = `
+            <section class="flex flex-col gap-space-md">
+              <p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+                ${post.description || ''}
+              </p>
+              <div class="p-space-lg bg-surface-container-low rounded-xl text-center flex flex-col items-center gap-space-sm">
+                <span class="material-symbols-outlined text-4xl text-outline">article</span>
+                <p class="font-body-md text-body-md text-on-surface-variant">この記事の詳細はmicroCMS連携後にご覧いただけます。</p>
+              </div>
+            </section>
+          `;
         }
       }
+
 
       // 目次の再生成
       generateTableOfContents();
@@ -1454,9 +1468,19 @@
       const params = new URLSearchParams(window.location.search);
       const articleId = params.get('id');
 
-      const hasMicroCMSConfig = MICROCMS_CONFIG.serviceDomain && 
+      // IDが指定されている場合は焼き込み本文を即座にクリア（他記事への誤表示防止）
+      if (articleId) {
+        const contentBody = document.getElementById('entry-content-body');
+        if (contentBody) {
+          contentBody.innerHTML = '<div class="p-8 text-center text-on-surface-variant flex flex-col items-center gap-2"><div class="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div><span class="text-sm font-medium mt-2">記事を読み込んでいます...</span></div>';
+        }
+        const titleEl = document.getElementById('article-title');
+        if (titleEl) titleEl.textContent = '読み込み中...';
+      }
+
+      const hasMicroCMSConfig = MICROCMS_CONFIG.serviceDomain &&
                                 MICROCMS_CONFIG.serviceDomain !== 'YOUR_SERVICE_DOMAIN' &&
-                                MICROCMS_CONFIG.apiKey && 
+                                MICROCMS_CONFIG.apiKey &&
                                 MICROCMS_CONFIG.apiKey !== 'YOUR_API_KEY';
 
       if (articleId && hasMicroCMSConfig) {
@@ -1478,8 +1502,16 @@
       // フォールバック処理
       if (articleId && DETAIL_FALLBACK_POSTS[articleId]) {
         renderPostDetail(DETAIL_FALLBACK_POSTS[articleId]);
+      } else if (articleId) {
+        // IDはあるがフォールバックにも存在しない場合
+        const contentBody = document.getElementById('entry-content-body');
+        if (contentBody) {
+          contentBody.innerHTML = '<div class="p-8 text-center text-on-surface-variant flex flex-col items-center gap-space-sm rounded-xl bg-surface-container-low"><span class="material-symbols-outlined text-4xl text-outline">article</span><p class="font-bold text-base text-on-surface mt-2">記事が見つかりませんでした</p><p class="text-sm mt-1">URLを確認するか、<a href=\"news.html\" class=\"text-primary underline\">記事一覧</a>からお探しください。</p></div>';
+        }
+        const titleEl = document.getElementById('article-title');
+        if (titleEl) titleEl.textContent = '記事が見つかりませんでした';
       } else {
-        // ID未指定または未定義の場合はデフォルトの既存モック記事の目次を生成
+        // ID未指定：デフォルトの焼き込み記事を表示（開発確認用）
         generateTableOfContents();
       }
     }

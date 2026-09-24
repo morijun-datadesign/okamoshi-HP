@@ -1832,16 +1832,6 @@
           : '';
       }
 
-      var tabsHTML = '';
-      if (hasVenue && hasHome) {
-        tabsHTML =
-          '<div class="inline-flex p-1 bg-surface-container-high rounded-xl text-xs sm:text-sm font-bold exam-mode-tablist shrink-0">' +
-            '<button type="button" class="exam-mode-tab-btn active px-3 sm:px-3.5 py-1.5 rounded-lg transition-all bg-primary text-white shadow-xs cursor-pointer" onclick="switchExamModeTab(this, \'all\')">すべて</button>' +
-            '<button type="button" class="exam-mode-tab-btn px-3 sm:px-3.5 py-1.5 rounded-lg transition-all text-on-surface-variant hover:text-on-surface cursor-pointer" onclick="switchExamModeTab(this, \'venue\')">会場受験</button>' +
-            '<button type="button" class="exam-mode-tab-btn px-3 sm:px-3.5 py-1.5 rounded-lg transition-all text-on-surface-variant hover:text-on-surface cursor-pointer" onclick="switchExamModeTab(this, \'home\')">自宅受験</button>' +
-          '</div>';
-      }
-
       var venueCol = hasVenue
         ? '<div class="guideline-column guideline-col-venue w-full bg-surface-container-low rounded-2xl p-4 sm:p-5 space-y-3 border border-outline-variant/20 shadow-sm">' +
             '<div class="pb-0.5">' +
@@ -1870,12 +1860,9 @@
 
       return (
         '<div class="space-y-4 pt-4 border-t border-surface-container guideline-section">' +
-          '<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-surface-container/60">' +
-            '<div class="flex items-center gap-2">' +
-              '<span class="w-2.5 h-6 bg-primary rounded-xs inline-block"></span>' +
-              '<h4 class="font-headline-lg text-xl sm:text-2xl text-on-surface font-bold tracking-tight">実施要項</h4>' +
-            '</div>' +
-            tabsHTML +
+          '<div class="flex items-center gap-2 pb-2 border-b border-surface-container/60">' +
+            '<span class="w-2.5 h-6 bg-primary rounded-xs inline-block"></span>' +
+            '<h4 class="font-headline-lg text-xl sm:text-2xl text-on-surface font-bold tracking-tight">実施要項</h4>' +
           '</div>' +
           '<div class="grid ' + gridColsClass + ' gap-4 items-start pt-2 w-full guideline-grid">' +
             venueCol +

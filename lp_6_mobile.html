@@ -5,7 +5,18 @@
   #nav-contact-container:hover #nav-contact-chevron,
   #nav-contact-container.is-open #nav-contact-chevron { transform: rotate(180deg) !important; }
 </style>
-</head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased w-full min-h-screen flex flex-col items-center justify-start overflow-x-hidden" style="min-height: 100vh; width: 100%; margin: 0px auto; padding: 0px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; text-align: left; background-color: rgb(252, 249, 248); color: rgb(28, 27, 31); opacity: 1;">  <header class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+<style>
+/* FAQ Accordion Styles */
+.faq-item { transition: border-color 0.2s ease, box-shadow 0.2s ease; }
+.faq-question { cursor: pointer; user-select: none; width: 100%; text-align: left; }
+.faq-chevron { transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1); will-change: transform; }
+.faq-item.is-open .faq-chevron { transform: rotate(180deg); }
+.faq-answer { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+.faq-item.is-open .faq-answer { grid-template-rows: 1fr; }
+.faq-answer-inner { overflow: hidden; }
+.faq-answer-content { opacity: 0; transform: translateY(-4px); transition: opacity 0.2s ease, transform 0.2s ease; }
+.faq-item.is-open .faq-answer-content { opacity: 1; transform: translateY(0); }
+</style></head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased w-full min-h-screen flex flex-col items-center justify-start overflow-x-hidden" style="min-height: 100vh; width: 100%; margin: 0px auto; padding: 0px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; text-align: left; background-color: rgb(252, 249, 248); color: rgb(28, 27, 31); opacity: 1;">  <header class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
     <div class="h-16 sm:h-[4.5rem] max-w-[75rem] mx-auto px-4 sm:px-6 flex items-center justify-between gap-3 lg:gap-4 xl:gap-8">
       <a href="index.html" class="flex items-center gap-2.5 sm:gap-3 min-w-0 shrink-0">
         <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-primary flex items-center justify-center text-on-primary font-headline-md font-bold shrink-0">
@@ -77,7 +88,188 @@
 <section class="w-full bg-surface-container-low py-space-3xl border-t border-surface-container" id="features-section"><div class="max-w-[75rem] mx-auto sm:px-gutter-desktop space-y-space-2xl px-3.5"><div class="text-center max-w-3xl mx-auto space-y-space-xs"><h2 class="text-2xl sm:text-headline-lg font-headline-lg text-on-surface font-bold tracking-tight">岡山県立中高一貫校 適性検査対策模試が<br class="hidden sm:inline">選ばれる3つのポイント</h2><p class="text-sm sm:text-body-lg font-body-lg text-on-surface-variant leading-relaxed">県立中受検（岡山大安寺・岡山操山・倉敷天城）の完全網羅と、精緻な合格判定・復習システム。<br class="hidden sm:inline">ただ点数を出すだけでなく、本番で合格を勝ち取るための確かな理由があります。</p></div><div class="space-y-space-2xl lg:flex-row"><div class="bg-surface-container-lowest rounded-3xl p-5 sm:p-space-xl lg:p-space-2xl border border-outline-variant/30 shadow-md flex flex-col lg:flex-row gap-space-xl items-stretch"><div class="flex-1 flex flex-col justify-between space-y-space-md"><div class="space-y-space-sm"><div class="flex items-center gap-2"><span class="px-3.5 py-1 rounded-lg bg-primary text-white font-bold text-xs sm:text-sm tracking-wide shadow-sm flex items-center gap-1"><span class="material-symbols-outlined text-base">task_alt</span>POINT 01</span><span class="text-sm sm:text-base font-bold tracking-wide text-on-surface">岡山県入試の徹底分析</span></div><h3 class="text-xl sm:text-2xl lg:text-3xl font-bold text-on-surface tracking-tight leading-snug">本番さながらの出題問題<span class="block text-base sm:text-lg font-medium text-primary mt-1">出題傾向・難易度・問題用紙の体裁まで岡山県入試を精密再現</span></h3><p class="text-sm sm:text-base text-on-surface-variant leading-relaxed">最新の岡山県立中等教育学校・中学校の適性検査出題傾向を徹底分析。単なる知識の暗記では解けない、岡山県受検特有の「思考力・判断力・表現力」を問う記述問題や資料分析問題にも徹底して合わせています。</p><div class="space-y-2.5 pt-1"><div class="p-3 sm:p-space-sm rounded-xl bg-surface-container-low border border-surface-container space-y-1"><div class="flex items-center gap-2"><span class="px-2 py-0.5 rounded bg-primary text-white text-xs font-bold shrink-0">適性検査Ⅰ</span><span class="font-bold text-sm sm:text-base text-on-surface">文系・読解表現・作文の完全シミュレーション</span></div><p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed pl-1">岡山県立中高一貫校の独自形式・配点・時間配分を精密に再現。文章読解力や自らの考えを論理的に表現する記述・作文力を徹底的に鍛えます。</p></div><div class="p-3 sm:p-space-sm rounded-xl bg-surface-container-low border border-surface-container space-y-1"><div class="flex items-center gap-2"><span class="px-2 py-0.5 rounded bg-surface-container-highest text-primary text-xs font-bold shrink-0">適性検査Ⅱ</span><span class="font-bold text-sm sm:text-base text-on-surface">理系・資料分析・論理的思考力の客観判定</span></div><p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed pl-1">算数・理科の枠組みを超えた複合的なグラフ・実験データの読み解きや、条件整理と規則性の考察力を本番形式で診断します。</p></div></div></div><div class="pt-2 border-t border-surface-container flex flex-wrap items-center gap-2"></div></div><div class="w-full lg:w-[420px] shrink-0 flex flex-col justify-center"><div class="relative w-full h-full min-h-[260px] sm:min-h-[300px] rounded-2xl overflow-hidden shadow-md"><img alt="岡山県統一模擬試験 問題用紙" class="w-full h-full object-cover object-center" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyoeLrzY5eHTf1oGqssIoKITVJxkgdI-BMeb_umMVDZVLziZg2wHIOwukdNHqSmo-TrRa1PiH4LD6o8Xc1ert8Zi4u8Y9pum7o0YcU-HtH7OHD8rIvQ54gc2LDcmIAshqdiudsfGy8H0A18aivJbvP97blilmtXQBVzgC7xL9lW_PWSJorm6C5En1209H60RxVH3o_2MaBr9J8GD5mU6jsm0N4YfuTAJ2tsp1YzEUZUzdETM6tZ6wI6zVewCxS57j5vuyKtxQwUJtUVg"></div></div></div><div class="bg-surface-container-lowest rounded-3xl p-5 sm:p-space-xl lg:p-space-2xl border border-outline-variant/30 shadow-md flex flex-col lg:flex-row gap-space-xl items-stretch"><div class="flex-1 flex flex-col justify-between space-y-space-md"><div class="space-y-space-sm"><div class="flex items-center gap-2"><span class="px-3.5 py-1 rounded-lg text-white font-bold text-xs sm:text-sm tracking-wide shadow-sm flex items-center gap-1 bg-primary"><span class="material-symbols-outlined text-base">task_alt</span>POINT 02</span><span class="text-sm sm:text-base font-bold tracking-wide">入試内申点も加味した高精度判定</span></div><h3 class="text-xl sm:text-2xl lg:text-3xl font-bold text-on-surface tracking-tight leading-snug">結果を詳細に分析した学力診断シート<span class="block text-base sm:text-lg font-medium text-tertiary mt-1">志望校合格可能性から科目ごとの弱点分野まで一目瞭然の精密レポート</span></h3><p class="text-sm sm:text-base text-on-surface-variant leading-relaxed">個人成績表は、単なる点数や全県偏差値の提示にとどまりません。適性検査＋調査書の総合判定に対応し、本番入試に最も近い高精度の合否可能性（A〜E判定）を算出します。</p><div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1"><div class="p-3 rounded-xl bg-surface-container-low border border-surface-container space-y-1"><div class="flex items-center gap-1.5 font-bold text-sm text-primary"><span class="material-symbols-outlined text-base">analytics</span>総合成績・県内順位</div><p class="text-sm text-on-surface-variant leading-relaxed">総合得点・総合偏差値・全県順位に加え、グラフで全受検者における自身の客観的な位置を把握。</p></div><div class="p-3 rounded-xl bg-surface-container-low border border-surface-container space-y-1"><div class="flex items-center gap-1.5 font-bold text-sm text-on-surface"><span class="material-symbols-outlined text-base">checklist</span>小問別正誤</div><p class="text-on-surface-variant leading-relaxed text-sm">大問別の得点はもちろんのこと、小問すべての得点・正誤・平均正答率を網羅。どこが弱点になっているかを逃さずチェック。</p></div><div class="sm:col-span-2 p-3 rounded-xl bg-surface-container-low border border-surface-container space-y-1"><div class="flex items-center gap-1.5 font-bold text-sm text-secondary"><span class="material-symbols-outlined text-base">how_to_reg</span>県立中高一貫校判定<span class="inline-flex items-center text-xs font-bold px-2.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 shadow-sm ml-1.5">適性検査+調査書で総合判定</span></div><div class="space-y-1.5 pt-1 text-sm text-on-surface-variant leading-relaxed"><div class="flex items-start gap-1"><span class="text-primary font-bold">・</span><span class=""><b>岡山県立中高一貫校すべてに対応：</b>岡山大安寺中等教育学校、岡山操山中学校、倉敷天城中学校の受検合否判定を精密に算出。</span></div><div class="flex items-start gap-1"><span class="text-primary font-bold">・</span><span class=""><b>本番入試に直結した判定基準：</b>適性検査Ⅰ・Ⅱの得点偏差値に加え、小学校の調査書換算点も加味した総合判定を実施。</span></div><div class="flex items-start gap-1"><span class="text-primary font-bold">・</span><span class=""><b>設問別・領域別の詳細診断：</b>読解力・思考力・記述力・データ分析力の各領域ごとの強みと克服ポイントを明確化。</span></div></div></div></div></div><div class="pt-2 border-t border-surface-container flex flex-wrap items-center gap-2"></div></div><div class="w-full lg:w-[420px] shrink-0 flex flex-col justify-center"><div class="relative w-full h-full min-h-[260px] sm:min-h-[300px] rounded-2xl overflow-hidden shadow-md"><img alt="おかもし成績表サンプル（学力診断シート）" class="w-full h-full object-contain object-center rounded-2xl bg-white p-1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAI1eEp3_qLtOYcdxooYuhzSlDWmtvXyVfZirma7wmc1QzDVSsjc9IdUqx0TNorwN5MUjoPVR6brDORz5vUHDOAM2ikBK7a4395x2br2y6B_CiDg4qVB7MuYOFsi4y0w4z3Ev8SPSePllWEeP_OUFiP4PxScmXifNIsjJoWCg4yZoOUJSMF_O1dRV6iL-j6T-p8tHqbAUwtjT7EFxpGzNINg1yU7avJAmyDtqTbAkr_v92GcgQ5mfs9rDp0KBd3ZwQgjg"></div></div></div><div class="bg-surface-container-lowest rounded-3xl p-5 sm:p-space-xl lg:p-space-2xl border border-outline-variant/30 shadow-md flex flex-col gap-space-xl items-stretch lg:flex-row"><div class="flex-1 flex flex-col justify-between space-y-space-md"><div class="space-y-space-sm"><div class="flex items-center gap-2"><span class="px-3.5 py-1 rounded-lg bg-primary text-on-primary font-bold text-xs sm:text-sm tracking-wide shadow-sm flex items-center gap-1"><span class="material-symbols-outlined text-base">task_alt</span>POINT 03</span><span class="text-sm sm:text-base font-bold tracking-wide">復習・弱点克服を完全サポート</span></div><h3 class="text-xl sm:text-2xl lg:text-3xl font-bold text-on-surface tracking-tight leading-snug">詳しくよく分かる解答解説<span class="block text-base sm:text-lg font-medium text-secondary mt-1">模試は解いた後が最重要。復習効率を劇的に高める丁寧な全問解説</span></h3><p class="text-sm sm:text-base text-on-surface-variant leading-relaxed">模試の最大の価値は「受検後の解き直し」にあります。単に正解を示すだけでなく、「なぜその解法を選択するのか」「受検生が間違えやすい落とし穴はどこか」を徹底解説した別冊を配付。自宅での自学自習で疑問を残しません。</p><div class="space-y-2.5 pt-1"><div class="p-3 sm:p-space-sm rounded-xl bg-surface-container-low border border-surface-container space-y-1"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-secondary text-base">check_circle</span><span class="font-bold text-sm sm:text-base text-on-surface">疑問を残さない途中式・ステップ解説と重要着眼点</span></div><p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed pl-6">適性検査特有の思考プロセスや条件整理の道筋、記述問題のポイントを丁寧に図解。復習時に理解が深まる解説構成です。</p></div><div class="p-3 sm:p-space-sm rounded-xl bg-surface-container-low border border-surface-container space-y-1"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-secondary text-base">check_circle</span><span class="font-bold text-sm sm:text-base text-on-surface">自学自習を完結させる、圧倒的に詳しい網羅的な解説</span></div><p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed pl-6">大問から小問に至るまで、考え方の道筋が詳しく記載されています。受検後の自己採点や復習において、「読んで納得できる」レベルの詳しさ。家庭学習でスムーズに解き直しを完結させることができます。</p></div></div></div><div class="pt-2 border-t border-surface-container flex flex-wrap items-center gap-2"></div></div><div class="w-full lg:w-[420px] shrink-0 flex flex-col justify-center"><div class="relative w-full h-full min-h-[260px] sm:min-h-[300px] rounded-2xl overflow-hidden shadow-md"><img alt="岡山県統一模擬試験 解答と解説冊子" class="w-full h-full object-cover object-center" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjc7W9Xy59CrZCYqZmrXyItCyioUYP8uAxJO7xGCzfO9AV_Eh9ONQZGS2CDcINs4hAzoGm1tQ572PrZHhs48JyXXPtySZfoYmYJjDqunjMWzFZevtFzuL8Brlp_ELg6rNEFMfHUBOOC3196uSiPnh7PMpIkbPzqf5JhPLgUlwvJ_-R_vGj8ISUjjeuLMkXqIAoGd9ir6kSu2oeuWqAL7z7W59IyV1N48ZnFUaB6k1bhH7JCiRTQOFfJH6WtgcDhVQERQVHki5MzHPUTQ"></div></div></div><div class="rounded-2xl bg-gradient-to-r from-primary via-primary-container to-primary text-white p-5 sm:p-space-xl shadow-lg flex flex-col md:flex-row items-center justify-between gap-space-md"><div class="space-y-1 text-center md:text-left"><div class="inline-flex items-center gap-1 px-3 py-0.5 rounded-full bg-white/20 text-xs font-bold"><span class="material-symbols-outlined text-sm">thumb_up</span>県内塾・進路指導の現場で圧倒的支持</div><div class="text-lg sm:text-xl font-bold tracking-wide">受けるたびに弱点が埋まり、志望校への合格力がグングン伸びる。</div><p class="text-xs sm:text-sm text-white/80 leading-relaxed">「おかもし」だからこそ手に入る、岡山県立中受検特化の出題精度と復習価値をぜひ体験してください。</p></div><div class="shrink-0 w-full md:w-auto"><a class="inline-flex items-center justify-center gap-2 w-full md:w-auto px-space-xl py-3 rounded-xl bg-secondary text-white font-bold text-sm sm:text-base shadow-[0_6px_16px_-2px_rgba(200,90,50,0.32)] hover:bg-secondary-container transition-all text-center whitespace-nowrap transform hover:-translate-y-0.5" href="#next-exam"><span class="material-symbols-outlined text-xl">edit_calendar</span>次回模試に申し込む<span class="material-symbols-outlined text-sm">arrow_forward</span></a></div></div></div></div></section>
 <!-- 4. ANNUAL SCHEDULE (FULL SCHEDULE TABLES DERIVED FROM IMAGE 3) -->
 <!-- 5. PARTNER JUKU INVITATION BANNER -->
-<section class="w-full bg-surface py-space-3xl border-t border-surface-container" id="faq"><div class="max-w-[75rem] mx-auto sm:px-gutter-desktop space-y-space-2xl px-3.5"><div class="text-center max-w-3xl mx-auto space-y-space-xs"><h2 class="text-2xl sm:text-headline-lg font-headline-lg text-on-surface font-bold tracking-tight">よくあるご質問</h2><p class="text-sm sm:text-body-lg font-body-lg text-on-surface-variant leading-relaxed">おかもしの受験や手続きに関して、保護者様・生徒様から多く寄せられるご質問と回答をまとめました。</p></div><div class="max-w-4xl mx-auto space-y-4"><div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/30 shadow-sm overflow-hidden"><div class="p-4 sm:p-5 flex items-start justify-between gap-3 bg-surface-container-low/40"><div class="flex items-start gap-3"><span class="w-7 h-7 rounded-full border border-primary/30 text-primary font-bold text-sm flex items-center justify-center shrink-0 bg-surface-container-lowest shadow-sm mt-0.5">Q</span><span class="font-bold text-base sm:text-lg text-on-surface leading-snug">1回でも受験できますか？（途中からでも受験できますか？）</span></div><span class="material-symbols-outlined text-on-surface-variant text-xl shrink-0 mt-0.5">keyboard_arrow_up</span></div><div class="px-4 pb-5 sm:px-5 sm:pb-6 pt-2 flex items-start gap-3 bg-surface-container-lowest"><span class="w-7 h-7 rounded-full border border-secondary/30 text-secondary font-bold text-sm flex items-center justify-center shrink-0 bg-surface-container-lowest shadow-sm mt-0.5">A</span><p class="text-sm sm:text-base text-on-surface-variant leading-relaxed pt-0.5">はい、できます。いずれのどの回でも受験いただけます。</p></div></div><div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/30 shadow-sm overflow-hidden"><div class="p-4 sm:p-5 flex items-start justify-between gap-3 bg-surface-container-low/40"><div class="flex items-start gap-3"><span class="w-7 h-7 rounded-full border border-primary/30 text-primary font-bold text-sm flex items-center justify-center shrink-0 bg-surface-container-lowest shadow-sm mt-0.5">Q</span><span class="font-bold text-base sm:text-lg text-on-surface leading-snug">申し込みはどんな方法がありますか？</span></div><span class="material-symbols-outlined text-on-surface-variant text-xl shrink-0 mt-0.5">keyboard_arrow_up</span></div><div class="px-4 pb-5 sm:px-5 sm:pb-6 pt-2 flex items-start gap-3 bg-surface-container-lowest"><span class="w-7 h-7 rounded-full border border-secondary/30 text-secondary font-bold text-sm flex items-center justify-center shrink-0 bg-surface-container-lowest shadow-sm mt-0.5">A</span><p class="text-sm sm:text-base text-on-surface-variant leading-relaxed pt-0.5">ホームページからの申込みになります。クレジットカード決済、コンビニ決済の2つの方法があります。</p></div></div><div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/30 shadow-sm overflow-hidden"><div class="p-4 sm:p-5 flex items-start justify-between gap-3 bg-surface-container-low/40"><div class="flex items-start gap-3"><span class="w-7 h-7 rounded-full border border-primary/30 text-primary font-bold text-sm flex items-center justify-center shrink-0 bg-surface-container-lowest shadow-sm mt-0.5">Q</span><span class="font-bold text-base sm:text-lg text-on-surface leading-snug">受験申し込み後、都合により試験当日欠席した場合はどうなりますか？</span></div><span class="material-symbols-outlined text-on-surface-variant text-xl shrink-0 mt-0.5">keyboard_arrow_up</span></div><div class="px-4 pb-5 sm:px-5 sm:pb-6 pt-2 flex items-start gap-3 bg-surface-container-lowest"><span class="w-7 h-7 rounded-full border border-secondary/30 text-secondary font-bold text-sm flex items-center justify-center shrink-0 bg-surface-container-lowest shadow-sm mt-0.5">A</span><p class="text-sm sm:text-base text-on-surface-variant leading-relaxed pt-0.5">問題冊子を郵送いたします。</p></div></div><div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/30 shadow-sm overflow-hidden"><div class="p-4 sm:p-5 flex items-start justify-between gap-3 bg-surface-container-low/40"><div class="flex items-start gap-3"><span class="w-7 h-7 rounded-full border border-primary/30 text-primary font-bold text-sm flex items-center justify-center shrink-0 bg-surface-container-lowest shadow-sm mt-0.5">Q</span><span class="font-bold text-base sm:text-lg text-on-surface leading-snug">会場受験と自宅受験の違いについて教えてください。</span></div><span class="material-symbols-outlined text-on-surface-variant text-xl shrink-0 mt-0.5">keyboard_arrow_up</span></div><div class="px-4 pb-5 sm:px-5 sm:pb-6 pt-2 flex items-start gap-3 bg-surface-container-lowest"><span class="w-7 h-7 rounded-full border border-secondary/30 text-secondary font-bold text-sm flex items-center justify-center shrink-0 bg-surface-container-lowest shadow-sm mt-0.5">A</span><p class="text-sm sm:text-base text-on-surface-variant leading-relaxed pt-0.5">会場受験は各実施日に会場にお越しいただき、受験していただきます。自宅受験は事前に問題用紙を郵送させていただき、実施日に受験いただきます。</p></div></div><div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/30 shadow-sm overflow-hidden"><div class="p-4 sm:p-5 flex items-start justify-between gap-3 bg-surface-container-low/40"><div class="flex items-start gap-3"><span class="w-7 h-7 rounded-full border border-primary/30 text-primary font-bold text-sm flex items-center justify-center shrink-0 bg-surface-container-lowest shadow-sm mt-0.5">Q</span><span class="font-bold text-base sm:text-lg text-on-surface leading-snug">試験は何時からですか？</span></div><span class="material-symbols-outlined text-on-surface-variant text-xl shrink-0 mt-0.5">keyboard_arrow_up</span></div><div class="px-4 pb-5 sm:px-5 sm:pb-6 pt-2 flex items-start gap-3 bg-surface-container-lowest"><span class="w-7 h-7 rounded-full border border-secondary/30 text-secondary font-bold text-sm flex items-center justify-center shrink-0 bg-surface-container-lowest shadow-sm mt-0.5">A</span><p class="text-sm sm:text-base text-on-surface-variant leading-relaxed pt-0.5">模試により、また実施回により異なります。詳細決まりましたら当ホームページお知らせに実施時間も含めて実施要項を掲載いたします。そちらをご覧ください。</p></div></div><div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/30 shadow-sm overflow-hidden"><div class="p-4 sm:p-5 flex items-start justify-between gap-3 bg-surface-container-low/40"><div class="flex items-start gap-3"><span class="w-7 h-7 rounded-full border border-primary/30 text-primary font-bold text-sm flex items-center justify-center shrink-0 bg-surface-container-lowest shadow-sm mt-0.5">Q</span><span class="font-bold text-base sm:text-lg text-on-surface leading-snug">試験当日の持参物は？（会場受験時）</span></div><span class="material-symbols-outlined text-on-surface-variant text-xl shrink-0 mt-0.5">keyboard_arrow_up</span></div><div class="px-4 pb-5 sm:px-5 sm:pb-6 pt-2 flex items-start gap-3 bg-surface-container-lowest"><span class="w-7 h-7 rounded-full border border-secondary/30 text-secondary font-bold text-sm flex items-center justify-center shrink-0 bg-surface-container-lowest shadow-sm mt-0.5">A</span><p class="text-sm sm:text-base text-on-surface-variant leading-relaxed pt-0.5">筆記用具、定規、コンパス、昼食、受験票・志望校記入用紙・志望校コード表をご用意ください。（会場によって上履きが必要です）</p></div></div><div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/30 shadow-sm overflow-hidden"><div class="p-4 sm:p-5 flex items-start justify-between gap-3 bg-surface-container-low/40"><div class="flex items-start gap-3"><span class="w-7 h-7 rounded-full border border-primary/30 text-primary font-bold text-sm flex items-center justify-center shrink-0 bg-surface-container-lowest shadow-sm mt-0.5">Q</span><span class="font-bold text-base sm:text-lg text-on-surface leading-snug">おかもしでは、総合判定に通知表評価点が必要とのことですが、わからない場合どうなりますか？</span></div><span class="material-symbols-outlined text-on-surface-variant text-xl shrink-0 mt-0.5">keyboard_arrow_up</span></div><div class="px-4 pb-5 sm:px-5 sm:pb-6 pt-2 flex items-start gap-3 bg-surface-container-lowest"><span class="w-7 h-7 rounded-full border border-secondary/30 text-secondary font-bold text-sm flex items-center justify-center shrink-0 bg-surface-container-lowest shadow-sm mt-0.5">A</span><p class="text-sm sm:text-base text-on-surface-variant leading-relaxed pt-0.5">学力診断シートの総合判定に目安が表示されます。より精度の高い総合判定をするために通知票評価点は必要となりますので、事前にお伝えいただけるようご準備ください。</p></div></div><div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/30 shadow-sm overflow-hidden"><div class="p-4 sm:p-5 flex items-start justify-between gap-3 bg-surface-container-low/40"><div class="flex items-start gap-3"><span class="w-7 h-7 rounded-full border border-primary/30 text-primary font-bold text-sm flex items-center justify-center shrink-0 bg-surface-container-lowest shadow-sm mt-0.5">Q</span><span class="font-bold text-base sm:text-lg text-on-surface leading-snug">ホームページから申し込みをしましたが、おかもしからの案内メールが届きません。</span></div><span class="material-symbols-outlined text-on-surface-variant text-xl shrink-0 mt-0.5">keyboard_arrow_up</span></div><div class="px-4 pb-5 sm:px-5 sm:pb-6 pt-2 flex items-start gap-3 bg-surface-container-lowest"><span class="w-7 h-7 rounded-full border border-secondary/30 text-secondary font-bold text-sm flex items-center justify-center shrink-0 bg-surface-container-lowest shadow-sm mt-0.5">A</span><p class="text-sm sm:text-base text-on-surface-variant leading-relaxed pt-0.5">受信が拒否されていることが考えられます。メールアドレス info-okamoshi@rakugaku.co.jp の受信ができるようメール設定の上、ご連絡ください。</p></div></div><div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/30 shadow-sm overflow-hidden"><div class="p-4 sm:p-5 flex items-start justify-between gap-3 bg-surface-container-low/40"><div class="flex items-start gap-3"><span class="w-7 h-7 rounded-full border border-primary/30 text-primary font-bold text-sm flex items-center justify-center shrink-0 bg-surface-container-lowest shadow-sm mt-0.5">Q</span><span class="font-bold text-base sm:text-lg text-on-surface leading-snug">試験の申し込みのキャンセルはできますか？</span></div><span class="material-symbols-outlined text-on-surface-variant text-xl shrink-0 mt-0.5">keyboard_arrow_up</span></div><div class="px-4 pb-5 sm:px-5 sm:pb-6 pt-2 flex items-start gap-3 bg-surface-container-lowest"><span class="w-7 h-7 rounded-full border border-secondary/30 text-secondary font-bold text-sm flex items-center justify-center shrink-0 bg-surface-container-lowest shadow-sm mt-0.5">A</span><p class="text-sm sm:text-base text-on-surface-variant leading-relaxed pt-0.5">原則として、受験料のご返金を伴うキャンセルは受け付けておりません。予めご了承ください。</p></div></div></div></div></section><section class="w-full max-w-[75rem] mx-auto py-space-xl sm:px-gutter-desktop px-3.5">
+<section class="w-full bg-surface py-space-3xl border-t border-surface-container" id="faq">
+  <div class="max-w-[75rem] mx-auto px-4 sm:px-gutter-desktop space-y-space-2xl">
+    <div class="text-center max-w-3xl mx-auto space-y-space-xs">
+      <h2 class="text-2xl sm:text-headline-lg font-headline-lg text-on-surface font-bold tracking-tight">よくあるご質問</h2>
+      <p class="text-sm sm:text-body-lg font-body-lg text-on-surface-variant leading-relaxed">おかもしの受験や手続きに関して、保護者様・生徒様から多く寄せられるご質問と回答をまとめました。</p>
+    </div>
+    <div class="max-w-4xl mx-auto space-y-4">
+
+      <!-- Item 1 -->
+      <div class="faq-item bg-surface-container-lowest rounded-2xl border border-outline-variant/30 shadow-sm overflow-hidden transition-all duration-200">
+        <button type="button" class="faq-question w-full text-left p-4 sm:p-5 flex items-start justify-between gap-3 bg-surface-container-low/40 hover:bg-surface-container-low/70 cursor-pointer select-none transition-colors" onclick="toggleFaq(this)" aria-expanded="false">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full border border-primary/30 text-primary font-bold text-sm flex items-center justify-center shrink-0 bg-surface-container-lowest shadow-sm mt-0.5">Q</span>
+            <span class="font-bold text-base sm:text-lg text-on-surface leading-snug">1回でも受験できますか？（途中からでも受験できますか？）</span>
+          </div>
+          <span class="faq-chevron material-symbols-outlined text-on-surface-variant text-xl shrink-0 mt-0.5">keyboard_arrow_down</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="faq-answer-content px-4 pb-5 sm:px-5 sm:pb-6 pt-3 flex items-start gap-3 bg-surface-container-lowest border-t border-outline-variant/10">
+              <span class="w-7 h-7 rounded-full border border-secondary/30 text-secondary font-bold text-sm flex items-center justify-center shrink-0 bg-surface-container-lowest shadow-sm mt-0.5">A</span>
+              <p class="text-sm sm:text-base text-on-surface-variant leading-relaxed pt-0.5">はい、できます。いずれのどの回でも受験いただけます。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Item 2 -->
+      <div class="faq-item bg-surface-container-lowest rounded-2xl border border-outline-variant/30 shadow-sm overflow-hidden transition-all duration-200">
+        <button type="button" class="faq-question w-full text-left p-4 sm:p-5 flex items-start justify-between gap-3 bg-surface-container-low/40 hover:bg-surface-container-low/70 cursor-pointer select-none transition-colors" onclick="toggleFaq(this)" aria-expanded="false">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full border border-primary/30 text-primary font-bold text-sm flex items-center justify-center shrink-0 bg-surface-container-lowest shadow-sm mt-0.5">Q</span>
+            <span class="font-bold text-base sm:text-lg text-on-surface leading-snug">申し込みはどんな方法がありますか？</span>
+          </div>
+          <span class="faq-chevron material-symbols-outlined text-on-surface-variant text-xl shrink-0 mt-0.5">keyboard_arrow_down</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="faq-answer-content px-4 pb-5 sm:px-5 sm:pb-6 pt-3 flex items-start gap-3 bg-surface-container-lowest border-t border-outline-variant/10">
+              <span class="w-7 h-7 rounded-full border border-secondary/30 text-secondary font-bold text-sm flex items-center justify-center shrink-0 bg-surface-container-lowest shadow-sm mt-0.5">A</span>
+              <p class="text-sm sm:text-base text-on-surface-variant leading-relaxed pt-0.5">ホームページからの申込みになります。クレジットカード決済、コンビニ決済の2つの方法があります。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Item 3 -->
+      <div class="faq-item bg-surface-container-lowest rounded-2xl border border-outline-variant/30 shadow-sm overflow-hidden transition-all duration-200">
+        <button type="button" class="faq-question w-full text-left p-4 sm:p-5 flex items-start justify-between gap-3 bg-surface-container-low/40 hover:bg-surface-container-low/70 cursor-pointer select-none transition-colors" onclick="toggleFaq(this)" aria-expanded="false">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full border border-primary/30 text-primary font-bold text-sm flex items-center justify-center shrink-0 bg-surface-container-lowest shadow-sm mt-0.5">Q</span>
+            <span class="font-bold text-base sm:text-lg text-on-surface leading-snug">受験申し込み後、都合により試験当日欠席した場合はどうなりますか？</span>
+          </div>
+          <span class="faq-chevron material-symbols-outlined text-on-surface-variant text-xl shrink-0 mt-0.5">keyboard_arrow_down</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="faq-answer-content px-4 pb-5 sm:px-5 sm:pb-6 pt-3 flex items-start gap-3 bg-surface-container-lowest border-t border-outline-variant/10">
+              <span class="w-7 h-7 rounded-full border border-secondary/30 text-secondary font-bold text-sm flex items-center justify-center shrink-0 bg-surface-container-lowest shadow-sm mt-0.5">A</span>
+              <p class="text-sm sm:text-base text-on-surface-variant leading-relaxed pt-0.5">問題冊子を郵送いたします。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Item 4 -->
+      <div class="faq-item bg-surface-container-lowest rounded-2xl border border-outline-variant/30 shadow-sm overflow-hidden transition-all duration-200">
+        <button type="button" class="faq-question w-full text-left p-4 sm:p-5 flex items-start justify-between gap-3 bg-surface-container-low/40 hover:bg-surface-container-low/70 cursor-pointer select-none transition-colors" onclick="toggleFaq(this)" aria-expanded="false">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full border border-primary/30 text-primary font-bold text-sm flex items-center justify-center shrink-0 bg-surface-container-lowest shadow-sm mt-0.5">Q</span>
+            <span class="font-bold text-base sm:text-lg text-on-surface leading-snug">会場受験と自宅受験の違いについて教えてください。</span>
+          </div>
+          <span class="faq-chevron material-symbols-outlined text-on-surface-variant text-xl shrink-0 mt-0.5">keyboard_arrow_down</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="faq-answer-content px-4 pb-5 sm:px-5 sm:pb-6 pt-3 flex items-start gap-3 bg-surface-container-lowest border-t border-outline-variant/10">
+              <span class="w-7 h-7 rounded-full border border-secondary/30 text-secondary font-bold text-sm flex items-center justify-center shrink-0 bg-surface-container-lowest shadow-sm mt-0.5">A</span>
+              <p class="text-sm sm:text-base text-on-surface-variant leading-relaxed pt-0.5">会場受験は各実施日に会場にお越しいただき、受験していただきます。自宅受験は事前に問題用紙を郵送させていただき、実施日に受験いただきます。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Item 5 -->
+      <div class="faq-item bg-surface-container-lowest rounded-2xl border border-outline-variant/30 shadow-sm overflow-hidden transition-all duration-200">
+        <button type="button" class="faq-question w-full text-left p-4 sm:p-5 flex items-start justify-between gap-3 bg-surface-container-low/40 hover:bg-surface-container-low/70 cursor-pointer select-none transition-colors" onclick="toggleFaq(this)" aria-expanded="false">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full border border-primary/30 text-primary font-bold text-sm flex items-center justify-center shrink-0 bg-surface-container-lowest shadow-sm mt-0.5">Q</span>
+            <span class="font-bold text-base sm:text-lg text-on-surface leading-snug">試験は何時からですか？</span>
+          </div>
+          <span class="faq-chevron material-symbols-outlined text-on-surface-variant text-xl shrink-0 mt-0.5">keyboard_arrow_down</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="faq-answer-content px-4 pb-5 sm:px-5 sm:pb-6 pt-3 flex items-start gap-3 bg-surface-container-lowest border-t border-outline-variant/10">
+              <span class="w-7 h-7 rounded-full border border-secondary/30 text-secondary font-bold text-sm flex items-center justify-center shrink-0 bg-surface-container-lowest shadow-sm mt-0.5">A</span>
+              <p class="text-sm sm:text-base text-on-surface-variant leading-relaxed pt-0.5">模試により、また実施回により異なります。詳細決まりましたら当ホームページお知らせに実施時間も含めて実施要項を掲載いたします。そちらをご覧ください。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Item 6 -->
+      <div class="faq-item bg-surface-container-lowest rounded-2xl border border-outline-variant/30 shadow-sm overflow-hidden transition-all duration-200">
+        <button type="button" class="faq-question w-full text-left p-4 sm:p-5 flex items-start justify-between gap-3 bg-surface-container-low/40 hover:bg-surface-container-low/70 cursor-pointer select-none transition-colors" onclick="toggleFaq(this)" aria-expanded="false">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full border border-primary/30 text-primary font-bold text-sm flex items-center justify-center shrink-0 bg-surface-container-lowest shadow-sm mt-0.5">Q</span>
+            <span class="font-bold text-base sm:text-lg text-on-surface leading-snug">試験当日の持参物は？（会場受験時）</span>
+          </div>
+          <span class="faq-chevron material-symbols-outlined text-on-surface-variant text-xl shrink-0 mt-0.5">keyboard_arrow_down</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="faq-answer-content px-4 pb-5 sm:px-5 sm:pb-6 pt-3 flex items-start gap-3 bg-surface-container-lowest border-t border-outline-variant/10">
+              <span class="w-7 h-7 rounded-full border border-secondary/30 text-secondary font-bold text-sm flex items-center justify-center shrink-0 bg-surface-container-lowest shadow-sm mt-0.5">A</span>
+              <p class="text-sm sm:text-base text-on-surface-variant leading-relaxed pt-0.5">筆記用具、定規、コンパス、昼食、受験票・志望校記入用紙・志望校コード表をご用意ください。（会場によって上履きが必要です）</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Item 7 -->
+      <div class="faq-item bg-surface-container-lowest rounded-2xl border border-outline-variant/30 shadow-sm overflow-hidden transition-all duration-200">
+        <button type="button" class="faq-question w-full text-left p-4 sm:p-5 flex items-start justify-between gap-3 bg-surface-container-low/40 hover:bg-surface-container-low/70 cursor-pointer select-none transition-colors" onclick="toggleFaq(this)" aria-expanded="false">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full border border-primary/30 text-primary font-bold text-sm flex items-center justify-center shrink-0 bg-surface-container-lowest shadow-sm mt-0.5">Q</span>
+            <span class="font-bold text-base sm:text-lg text-on-surface leading-snug">おかもしでは、総合判定に通知表評価点が必要とのことですが、わからない場合どうなりますか？</span>
+          </div>
+          <span class="faq-chevron material-symbols-outlined text-on-surface-variant text-xl shrink-0 mt-0.5">keyboard_arrow_down</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="faq-answer-content px-4 pb-5 sm:px-5 sm:pb-6 pt-3 flex items-start gap-3 bg-surface-container-lowest border-t border-outline-variant/10">
+              <span class="w-7 h-7 rounded-full border border-secondary/30 text-secondary font-bold text-sm flex items-center justify-center shrink-0 bg-surface-container-lowest shadow-sm mt-0.5">A</span>
+              <p class="text-sm sm:text-base text-on-surface-variant leading-relaxed pt-0.5">学力診断シートの総合判定に目安が表示されます。より精度の高い総合判定をするために通知票評価点は必要となりますので、事前にお伝えいただけるようご準備ください。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Item 8 -->
+      <div class="faq-item bg-surface-container-lowest rounded-2xl border border-outline-variant/30 shadow-sm overflow-hidden transition-all duration-200">
+        <button type="button" class="faq-question w-full text-left p-4 sm:p-5 flex items-start justify-between gap-3 bg-surface-container-low/40 hover:bg-surface-container-low/70 cursor-pointer select-none transition-colors" onclick="toggleFaq(this)" aria-expanded="false">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full border border-primary/30 text-primary font-bold text-sm flex items-center justify-center shrink-0 bg-surface-container-lowest shadow-sm mt-0.5">Q</span>
+            <span class="font-bold text-base sm:text-lg text-on-surface leading-snug">ホームページから申し込みをしましたが、おかもしからの案内メールが届きません。</span>
+          </div>
+          <span class="faq-chevron material-symbols-outlined text-on-surface-variant text-xl shrink-0 mt-0.5">keyboard_arrow_down</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="faq-answer-content px-4 pb-5 sm:px-5 sm:pb-6 pt-3 flex items-start gap-3 bg-surface-container-lowest border-t border-outline-variant/10">
+              <span class="w-7 h-7 rounded-full border border-secondary/30 text-secondary font-bold text-sm flex items-center justify-center shrink-0 bg-surface-container-lowest shadow-sm mt-0.5">A</span>
+              <p class="text-sm sm:text-base text-on-surface-variant leading-relaxed pt-0.5">受信が拒否されていることが考えられます。メールアドレス info-okamoshi@rakugaku.co.jp の受信ができるようメール設定の上、ご連絡ください。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Item 9 -->
+      <div class="faq-item bg-surface-container-lowest rounded-2xl border border-outline-variant/30 shadow-sm overflow-hidden transition-all duration-200">
+        <button type="button" class="faq-question w-full text-left p-4 sm:p-5 flex items-start justify-between gap-3 bg-surface-container-low/40 hover:bg-surface-container-low/70 cursor-pointer select-none transition-colors" onclick="toggleFaq(this)" aria-expanded="false">
+          <div class="flex items-start gap-3">
+            <span class="w-7 h-7 rounded-full border border-primary/30 text-primary font-bold text-sm flex items-center justify-center shrink-0 bg-surface-container-lowest shadow-sm mt-0.5">Q</span>
+            <span class="font-bold text-base sm:text-lg text-on-surface leading-snug">試験の申し込みのキャンセルはできますか？</span>
+          </div>
+          <span class="faq-chevron material-symbols-outlined text-on-surface-variant text-xl shrink-0 mt-0.5">keyboard_arrow_down</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <div class="faq-answer-content px-4 pb-5 sm:px-5 sm:pb-6 pt-3 flex items-start gap-3 bg-surface-container-lowest border-t border-outline-variant/10">
+              <span class="w-7 h-7 rounded-full border border-secondary/30 text-secondary font-bold text-sm flex items-center justify-center shrink-0 bg-surface-container-lowest shadow-sm mt-0.5">A</span>
+              <p class="text-sm sm:text-base text-on-surface-variant leading-relaxed pt-0.5">原則として、受験料のご返金を伴うキャンセルは受け付けておりません。予めご了承ください。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section><section class="w-full max-w-[75rem] mx-auto py-space-xl sm:px-gutter-desktop px-3.5">
 <div class="relative overflow-hidden bg-primary text-on-primary rounded-3xl p-space-xl lg:p-space-2xl shadow-xl">
 <!-- Decorative Backdrop Circles -->
 <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-primary-fixed/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -317,4 +509,17 @@
     }
   }
 </script>
-</body></html>
+<script>
+  window.toggleFaq = function(btn) {
+    var item = btn.closest('.faq-item');
+    if (!item) return;
+    var isOpen = item.classList.contains('is-open');
+    if (isOpen) {
+      item.classList.remove('is-open');
+      btn.setAttribute('aria-expanded', 'false');
+    } else {
+      item.classList.add('is-open');
+      btn.setAttribute('aria-expanded', 'true');
+    }
+  };
+</script></body></html>

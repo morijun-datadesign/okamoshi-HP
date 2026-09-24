@@ -64,16 +64,225 @@
             </div>
           </div>
         </div>
-        <div>
+        <div class="hidden lg:block">
           <a class="inline-flex items-center justify-center px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-secondary text-on-secondary font-semibold text-sm sm:text-[15px] shadow-[0_4px_14px_-2px_rgba(200,90,50,0.35)] hover:bg-secondary-container hover:shadow-[0_6px_20px_-2px_rgba(200,90,50,0.45)] hover:-translate-y-0.5 transition-all whitespace-nowrap tracking-wide" data-path="apply" href="apply.html">
             <span class="material-symbols-outlined mr-1 sm:mr-1.5 text-base sm:text-lg">edit_document</span>
             <span class="hidden xs:inline sm:inline">お申し込みはこちら</span>
             <span class="inline xs:hidden sm:hidden">お申込み</span>
           </a>
         </div>
+        <!-- Hamburger Button (Mobile Only) -->
+        <button type="button" id="mobile-menu-open-btn" onclick="openMobileMenu()" aria-label="メニューを開く" aria-expanded="false" class="lg:hidden flex items-center justify-center w-10 h-10 -mr-1 rounded-xl text-on-surface hover:bg-surface-container-high active:bg-surface-container-highest transition-colors cursor-pointer focus:outline-none">
+          <span class="material-symbols-outlined text-[28px] text-on-surface">menu</span>
+        </button>
       </div>
     </div>
-  </header><main class="w-full pt-20 bg-surface min-h-screen overflow-x-hidden flex flex-col items-center mx-auto" style="min-height: 100%; height: auto !important; overflow: visible !important; visibility: visible !important;" data-stitch-orig-opacity="1"><div class="flex flex-col w-full items-center">
+  </header>
+
+  <!-- Mobile Drawer Backdrop -->
+    <div id="mobile-menu-backdrop" onclick="closeMobileMenu()" class="fixed inset-0 bg-black/50 backdrop-blur-xs z-[998] transition-opacity duration-300 opacity-0 pointer-events-none lg:hidden" aria-hidden="true"></div>
+
+    <!-- Mobile Drawer Panel -->
+    <div id="mobile-menu-drawer" class="fixed top-0 right-0 bottom-0 w-[84vw] max-w-[340px] bg-surface z-[999] shadow-2xl flex flex-col justify-between transition-transform duration-300 transform translate-x-full ease-in-out lg:hidden" role="dialog" aria-modal="true" aria-label="モバイルメニュー">
+      <!-- Drawer Header -->
+      <div class="h-16 px-5 border-b border-surface-container flex items-center justify-between shrink-0 bg-surface">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary text-xl">menu</span>
+          <span class="font-bold text-on-surface text-base">メニュー</span>
+        </div>
+        <button type="button" onclick="closeMobileMenu()" aria-label="メニューを閉じる" class="w-10 h-10 -mr-2 rounded-xl flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors cursor-pointer">
+          <span class="material-symbols-outlined text-2xl">close</span>
+        </button>
+      </div>
+
+      <!-- Drawer Navigation Links (Scrollable) -->
+      <div class="flex-1 overflow-y-auto px-4 py-4 space-y-2.5">
+        <!-- 模試を選ぶ (Accordion) -->
+        <div class="rounded-2xl border border-surface-container bg-surface-container-lowest overflow-hidden shadow-xs">
+          <button type="button" id="mobile-exam-accordion-btn" onclick="toggleMobileExamAccordion()" class="w-full px-4 py-3.5 flex items-center justify-between text-left font-bold text-base text-primary hover:bg-surface-container-low transition-colors cursor-pointer" aria-expanded="true">
+            <div class="flex items-center gap-2.5">
+              <span class="material-symbols-outlined text-xl text-primary">school</span>
+              <span>模試を選ぶ</span>
+            </div>
+            <span id="mobile-exam-chevron" class="material-symbols-outlined text-xl transition-transform duration-200 transform rotate-180">expand_more</span>
+          </button>
+          <div id="mobile-exam-menu" class="border-t border-surface-container bg-surface-container-low/30 divide-y divide-surface-container/60">
+            <a href="index.html#next-exam" onclick="selectMobileNavExamTab('chu3')" class="flex items-center justify-between px-4 py-3 text-sm font-bold text-on-surface hover:bg-surface-container-low transition-colors">
+              <div class="flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                <span>中3 おかもし</span>
+              </div>
+              <span class="material-symbols-outlined text-base text-on-surface-variant">arrow_forward</span>
+            </a>
+            <a href="index.html#next-exam" onclick="selectMobileNavExamTab('chu2')" class="flex items-center justify-between px-4 py-3 text-sm font-bold text-on-surface hover:bg-surface-container-low transition-colors">
+              <div class="flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                <span>中2 おかもし</span>
+              </div>
+              <span class="material-symbols-outlined text-base text-on-surface-variant">arrow_forward</span>
+            </a>
+            <a href="index.html#next-exam" onclick="selectMobileNavExamTab('chu1')" class="flex items-center justify-between px-4 py-3 text-sm font-bold text-on-surface hover:bg-surface-container-low transition-colors">
+              <div class="flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                <span>中1 おかもし</span>
+              </div>
+              <span class="material-symbols-outlined text-base text-on-surface-variant">arrow_forward</span>
+            </a>
+            <a href="index.html#next-exam" onclick="selectMobileNavExamTab('sho6')" class="flex items-center justify-between px-4 py-3 text-sm font-bold text-on-surface hover:bg-surface-container-low transition-colors">
+              <div class="flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                <span>小6 適性検査対策模試</span>
+              </div>
+              <span class="material-symbols-outlined text-base text-on-surface-variant">arrow_forward</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- 参加塾一覧 -->
+        <a href="schools_PC.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-2xl border border-surface-container bg-surface-container-lowest hover:bg-surface-container-low font-bold text-base text-on-surface shadow-xs transition-colors">
+          <div class="flex items-center gap-2.5">
+            <span class="material-symbols-outlined text-xl text-primary">apartment</span>
+            <span>参加塾一覧</span>
+          </div>
+          <span class="material-symbols-outlined text-base text-on-surface-variant">arrow_forward</span>
+        </a>
+
+        <!-- ブログ / お知らせ -->
+        <a href="news.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-2xl border border-surface-container bg-surface-container-lowest hover:bg-surface-container-low font-bold text-base text-on-surface shadow-xs transition-colors">
+          <div class="flex items-center gap-2.5">
+            <span class="material-symbols-outlined text-xl text-primary">feed</span>
+            <span>ブログ / お知らせ</span>
+          </div>
+          <span class="material-symbols-outlined text-base text-on-surface-variant">arrow_forward</span>
+        </a>
+
+        <!-- お問い合わせ (Accordion) -->
+        <div class="rounded-2xl border border-surface-container bg-surface-container-lowest overflow-hidden shadow-xs">
+          <button type="button" id="mobile-contact-accordion-btn" onclick="toggleMobileContactAccordion()" class="w-full px-4 py-3.5 flex items-center justify-between text-left font-bold text-base text-on-surface hover:bg-surface-container-low transition-colors cursor-pointer" aria-expanded="false">
+            <div class="flex items-center gap-2.5">
+              <span class="material-symbols-outlined text-xl text-primary">mail</span>
+              <span>お問い合わせ</span>
+            </div>
+            <span id="mobile-contact-chevron" class="material-symbols-outlined text-xl transition-transform duration-200 transform">expand_more</span>
+          </button>
+          <div id="mobile-contact-menu" class="hidden border-t border-surface-container bg-surface-container-low/30 divide-y divide-surface-container/60">
+            <a href="apply.html#partner-contact" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3 text-sm font-bold text-on-surface hover:bg-surface-container-low transition-colors">
+              <div class="flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                <span>塾・学校関係者様</span>
+              </div>
+              <span class="material-symbols-outlined text-base text-on-surface-variant">arrow_forward</span>
+            </a>
+            <a href="apply.html#contact" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3 text-sm font-bold text-on-surface hover:bg-surface-container-low transition-colors">
+              <div class="flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                <span>個人申込の方</span>
+              </div>
+              <span class="material-symbols-outlined text-base text-on-surface-variant">arrow_forward</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Drawer Footer (Prominent CV Button) -->
+      <div class="p-5 border-t border-surface-container bg-surface space-y-2 shrink-0">
+        <a href="apply.html" onclick="closeMobileMenu()" class="w-full py-3.5 px-5 rounded-2xl bg-secondary text-white font-bold text-base shadow-[0_4px_16px_rgba(162,62,24,0.35)] hover:bg-secondary-container active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+          <span class="material-symbols-outlined text-xl">edit_document</span>
+          <span>お申し込みはこちら</span>
+        </a>
+        <p class="text-[11px] text-center text-on-surface-variant">ネットでかんたん24時間受付中</p>
+      </div>
+    </div>
+
+    <!-- Mobile Menu Script -->
+    <script>
+      function openMobileMenu() {
+        var drawer = document.getElementById("mobile-menu-drawer");
+        var backdrop = document.getElementById("mobile-menu-backdrop");
+        var btn = document.getElementById("mobile-menu-open-btn");
+        if (drawer && backdrop) {
+          drawer.classList.remove("translate-x-full");
+          drawer.classList.add("translate-x-0");
+          backdrop.classList.remove("opacity-0", "pointer-events-none");
+          backdrop.classList.add("opacity-100", "pointer-events-auto");
+          document.body.style.overflow = "hidden";
+          if (btn) btn.setAttribute("aria-expanded", "true");
+        }
+      }
+
+      function closeMobileMenu() {
+        var drawer = document.getElementById("mobile-menu-drawer");
+        var backdrop = document.getElementById("mobile-menu-backdrop");
+        var btn = document.getElementById("mobile-menu-open-btn");
+        if (drawer && backdrop) {
+          drawer.classList.remove("translate-x-0");
+          drawer.classList.add("translate-x-full");
+          backdrop.classList.remove("opacity-100", "pointer-events-auto");
+          backdrop.classList.add("opacity-0", "pointer-events-none");
+          document.body.style.overflow = "";
+          if (btn) btn.setAttribute("aria-expanded", "false");
+        }
+      }
+
+      function toggleMobileExamAccordion() {
+        var menu = document.getElementById("mobile-exam-menu");
+        var chevron = document.getElementById("mobile-exam-chevron");
+        var btn = document.getElementById("mobile-exam-accordion-btn");
+        if (!menu) return;
+        var isOpen = !menu.classList.contains("hidden");
+        if (isOpen) {
+          menu.classList.add("hidden");
+          if (chevron) chevron.style.transform = "rotate(0deg)";
+          if (btn) btn.setAttribute("aria-expanded", "false");
+        } else {
+          menu.classList.remove("hidden");
+          if (chevron) chevron.style.transform = "rotate(180deg)";
+          if (btn) btn.setAttribute("aria-expanded", "true");
+        }
+      }
+
+      function toggleMobileContactAccordion() {
+        var menu = document.getElementById("mobile-contact-menu");
+        var chevron = document.getElementById("mobile-contact-chevron");
+        var btn = document.getElementById("mobile-contact-accordion-btn");
+        if (!menu) return;
+        var isOpen = !menu.classList.contains("hidden");
+        if (isOpen) {
+          menu.classList.add("hidden");
+          if (chevron) chevron.style.transform = "rotate(0deg)";
+          if (btn) btn.setAttribute("aria-expanded", "false");
+        } else {
+          menu.classList.remove("hidden");
+          if (chevron) chevron.style.transform = "rotate(180deg)";
+          if (btn) btn.setAttribute("aria-expanded", "true");
+        }
+      }
+
+      function selectMobileNavExamTab(tabKey) {
+        closeMobileMenu();
+        if (typeof switchExamTab === "function") {
+          switchExamTab(tabKey);
+          var targetElem = document.getElementById("next-exam");
+          if (targetElem) {
+            targetElem.scrollIntoView({ behavior: "smooth" });
+            return;
+          }
+        }
+        window.location.href = "index.html#next-exam";
+      }
+
+      window.addEventListener("resize", function() {
+        if (window.innerWidth >= 1024) {
+          closeMobileMenu();
+        }
+      });
+
+      document.addEventListener("keydown", function(e) {
+        if (e.key === "Escape") {
+          closeMobileMenu();
+        }
+      });
+    </script><main class="w-full pt-20 bg-surface min-h-screen overflow-x-hidden flex flex-col items-center mx-auto" style="min-height: 100%; height: auto !important; overflow: visible !important; visibility: visible !important;" data-stitch-orig-opacity="1"><div class="flex flex-col w-full items-center">
 <!-- 1. HERO SECTION -->
 <section class="relative w-full overflow-hidden bg-surface-container-high -mt-4 md:-mt-20">
   <!-- Hero Background Image Container -->

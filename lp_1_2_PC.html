@@ -285,6 +285,18 @@
         window.location.href = "index.html?grade=" + tabKey + "#next-exam";
       }
 
+      function updateStudentVoicesVisibility(tabKey) {
+        var studentVoices = document.getElementById("student-voices");
+        if (studentVoices) {
+          if (tabKey === "sho6") {
+            studentVoices.classList.add("hidden");
+          } else {
+            studentVoices.classList.remove("hidden");
+          }
+        }
+      }
+      window.updateStudentVoicesVisibility = updateStudentVoicesVisibility;
+
       function initExamTabFromUrl() {
         try {
           var params = new URLSearchParams(window.location.search);
@@ -307,6 +319,14 @@
                 setTimeout(function() {
                   targetElem.scrollIntoView({ behavior: "smooth" });
                 }, 150);
+              }
+            }
+          } else {
+            var activeBtn = document.querySelector('.tab-btn[aria-selected="true"]');
+            if (activeBtn && activeBtn.id) {
+              var keyMatch = activeBtn.id.replace('tab-btn-', '');
+              if (typeof window.updateStudentVoicesVisibility === 'function') {
+                window.updateStudentVoicesVisibility(keyMatch);
               }
             }
           }
@@ -554,6 +574,9 @@
     };
 
     window.switchExamTab = function(tabKey) {
+      if (typeof window.updateStudentVoicesVisibility === "function") {
+        window.updateStudentVoicesVisibility(tabKey);
+      }
       const tabs = ['sho6', 'chu12', 'chu3'];
       tabs.forEach(function(key) {
         const panel = document.getElementById('tab-panel-' + key);

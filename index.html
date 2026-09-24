@@ -303,6 +303,14 @@
                 }, 150);
               }
             }
+          } else {
+            var activeBtn = document.querySelector('.tab-btn[aria-selected="true"]');
+            if (activeBtn && activeBtn.id) {
+              var keyMatch = activeBtn.id.replace('tab-btn-', '');
+              if (typeof window.updateStudentVoicesVisibility === 'function') {
+                window.updateStudentVoicesVisibility(keyMatch);
+              }
+            }
           }
         } catch (e) {}
       }
@@ -1445,7 +1453,21 @@
       'sho6': { inactiveText: 'text-secondary', inactiveBg: 'bg-surface-container-highest', activeBg: 'bg-[#fe8357]' }
     };
 
+    window.updateStudentVoicesVisibility = function(tabKey) {
+      const studentVoices = document.getElementById('student-voices');
+      if (studentVoices) {
+        if (tabKey === 'sho6') {
+          studentVoices.classList.add('hidden');
+        } else {
+          studentVoices.classList.remove('hidden');
+        }
+      }
+    };
+
     window.switchExamTab = function(tabKey) {
+      if (typeof window.updateStudentVoicesVisibility === 'function') {
+        window.updateStudentVoicesVisibility(tabKey);
+      }
       const tabs = ['sho6', 'chu1', 'chu2', 'chu3'];
       tabs.forEach(function(key) {
         const panel = document.getElementById('tab-panel-' + key);
@@ -2575,6 +2597,7 @@
     var _origSwitch = window.switchExamTab;
     window.switchExamTab = function (tabKey) {
       if (typeof _origSwitch === 'function') { _origSwitch(tabKey); }
+      if (typeof window.updateStudentVoicesVisibility === 'function') { window.updateStudentVoicesVisibility(tabKey); }
       if (_examGuidesCache) { renderExamGuidePanel(tabKey, _examGuidesCache); }
     };
     loadExamGuides();

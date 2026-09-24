@@ -113,34 +113,34 @@
             <span id="mobile-exam-chevron" class="material-symbols-outlined text-xl transition-transform duration-200 transform rotate-180">expand_more</span>
           </button>
           <div id="mobile-exam-menu" class="border-t border-surface-container bg-surface-container-low/30 divide-y divide-surface-container/60">
-            <a href="index.html#next-exam" onclick="selectMobileNavExamTab('chu3')" class="flex items-center justify-between px-4 py-3 text-sm font-bold text-on-surface hover:bg-surface-container-low transition-colors">
+            <button type="button" onclick="selectMobileNavExamTab('chu3')" class="w-full flex items-center justify-between px-4 py-3 text-sm font-bold text-on-surface hover:bg-surface-container-low transition-colors text-left cursor-pointer">
               <div class="flex items-center gap-2">
                 <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
                 <span>中3 おかもし</span>
               </div>
               <span class="material-symbols-outlined text-base text-on-surface-variant">arrow_forward</span>
-            </a>
-            <a href="index.html#next-exam" onclick="selectMobileNavExamTab('chu2')" class="flex items-center justify-between px-4 py-3 text-sm font-bold text-on-surface hover:bg-surface-container-low transition-colors">
+            </button>
+            <button type="button" onclick="selectMobileNavExamTab('chu2')" class="w-full flex items-center justify-between px-4 py-3 text-sm font-bold text-on-surface hover:bg-surface-container-low transition-colors text-left cursor-pointer">
               <div class="flex items-center gap-2">
                 <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
                 <span>中2 おかもし</span>
               </div>
               <span class="material-symbols-outlined text-base text-on-surface-variant">arrow_forward</span>
-            </a>
-            <a href="index.html#next-exam" onclick="selectMobileNavExamTab('chu1')" class="flex items-center justify-between px-4 py-3 text-sm font-bold text-on-surface hover:bg-surface-container-low transition-colors">
+            </button>
+            <button type="button" onclick="selectMobileNavExamTab('chu1')" class="w-full flex items-center justify-between px-4 py-3 text-sm font-bold text-on-surface hover:bg-surface-container-low transition-colors text-left cursor-pointer">
               <div class="flex items-center gap-2">
                 <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
                 <span>中1 おかもし</span>
               </div>
               <span class="material-symbols-outlined text-base text-on-surface-variant">arrow_forward</span>
-            </a>
-            <a href="index.html#next-exam" onclick="selectMobileNavExamTab('sho6')" class="flex items-center justify-between px-4 py-3 text-sm font-bold text-on-surface hover:bg-surface-container-low transition-colors">
+            </button>
+            <button type="button" onclick="selectMobileNavExamTab('sho6')" class="w-full flex items-center justify-between px-4 py-3 text-sm font-bold text-on-surface hover:bg-surface-container-low transition-colors text-left cursor-pointer">
               <div class="flex items-center gap-2">
                 <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
                 <span>小6 適性検査対策模試</span>
               </div>
               <span class="material-symbols-outlined text-base text-on-surface-variant">arrow_forward</span>
-            </a>
+            </button>
           </div>
         </div>
 
@@ -266,16 +266,55 @@
 
       function selectMobileNavExamTab(tabKey) {
         closeMobileMenu();
-        if (typeof switchExamTab === "function") {
-          switchExamTab(tabKey);
-          var targetElem = document.getElementById("next-exam");
-          if (targetElem) {
-            targetElem.scrollIntoView({ behavior: "smooth" });
-            return;
+        var targetElem = document.getElementById("next-exam");
+        if (typeof switchExamTab === "function" && targetElem) {
+          var effectiveKey = tabKey;
+          if ((tabKey === "chu1" || tabKey === "chu2") && !document.getElementById("tab-btn-" + tabKey) && document.getElementById("tab-btn-chu12")) {
+            effectiveKey = "chu12";
           }
+          switchExamTab(effectiveKey);
+          try {
+            var newUrl = window.location.pathname + "?grade=" + tabKey + "#next-exam";
+            history.replaceState(null, "", newUrl);
+          } catch (e) {}
+          setTimeout(function() {
+            targetElem.scrollIntoView({ behavior: "smooth" });
+          }, 100);
+          return;
         }
-        window.location.href = "index.html#next-exam";
+        window.location.href = "index.html?grade=" + tabKey + "#next-exam";
       }
+
+      function initExamTabFromUrl() {
+        try {
+          var params = new URLSearchParams(window.location.search);
+          var grade = params.get("grade");
+          if (!grade && window.location.hash) {
+            var hashMatch = window.location.hash.match(/(?:grade[=-]|#)(chu[123]|sho6|chu12)/i);
+            if (hashMatch) {
+              grade = hashMatch[1].toLowerCase();
+            }
+          }
+          if (grade && ["chu3", "chu2", "chu1", "sho6", "chu12"].indexOf(grade) !== -1) {
+            var targetElem = document.getElementById("next-exam");
+            if (typeof switchExamTab === "function" && targetElem) {
+              var effectiveKey = grade;
+              if ((grade === "chu1" || grade === "chu2") && !document.getElementById("tab-btn-" + grade) && document.getElementById("tab-btn-chu12")) {
+                effectiveKey = "chu12";
+              }
+              switchExamTab(effectiveKey);
+              if (window.location.hash === "#next-exam") {
+                setTimeout(function() {
+                  targetElem.scrollIntoView({ behavior: "smooth" });
+                }, 150);
+              }
+            }
+          }
+        } catch (e) {}
+      }
+
+      window.addEventListener("DOMContentLoaded", initExamTabFromUrl);
+      window.addEventListener("load", initExamTabFromUrl);
 
       window.addEventListener("resize", function() {
         if (window.innerWidth >= 1024) {

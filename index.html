@@ -216,7 +216,7 @@
       <!-- Card 5: 当日の時間割 -->
       <div class="bg-white rounded-xl p-3.5 sm:p-4 shadow-xs border border-outline-variant/10 space-y-2">
         <div class="font-bold text-xs sm:text-sm text-on-surface">当日の時間割</div>
-        <div class="bg-surface-container-low rounded-xl p-3 space-y-2 text-xs sm:text-[13px]">
+        <div class="bg-surface-container-low rounded-xl py-3.5 sm:py-4 px-6 sm:px-8 space-y-2.5 sm:space-y-3 text-sm sm:text-base">
           <div class="flex justify-between items-center">
             <span class="font-bold text-on-surface">受付</span>
             <span class="font-bold text-on-surface">9:30 〜 9:50</span>
@@ -476,7 +476,7 @@
       <!-- Card 5: 当日の時間割 -->
       <div class="bg-white rounded-xl p-3.5 sm:p-4 shadow-xs border border-outline-variant/10 space-y-2">
         <div class="font-bold text-xs sm:text-sm text-on-surface">当日の時間割</div>
-        <div class="bg-surface-container-low rounded-xl p-3 space-y-2 text-xs sm:text-[13px]">
+        <div class="bg-surface-container-low rounded-xl py-3.5 sm:py-4 px-6 sm:px-8 space-y-2.5 sm:space-y-3 text-sm sm:text-base">
           <div class="flex justify-between items-center">
             <span class="font-bold text-on-surface">受付</span>
             <span class="font-bold text-on-surface">9:30 〜 9:50</span>
@@ -740,7 +740,7 @@
       <!-- Card 4: 当日の時間割（5教科） -->
       <div class="bg-white rounded-2xl p-4 shadow-xs border border-outline-variant/10 space-y-2">
         <div class="font-bold text-sm text-on-surface">当日の時間割（5教科）</div>
-        <div class="bg-surface-container-low rounded-xl py-3.5 px-7 space-y-2 text-[14px]">
+        <div class="bg-surface-container-low rounded-xl py-3.5 sm:py-4 px-6 sm:px-8 space-y-2.5 sm:space-y-3 text-sm sm:text-base">
           <div class="flex justify-between items-center text-on-surface">
             <span>受付</span>
             <span class="w-[120px] text-left shrink-0">9:30 〜 9:50</span>
@@ -842,7 +842,7 @@
       <!-- Card 4: 当日の時間割（5教科） -->
       <div class="bg-white rounded-xl p-3.5 sm:p-4 shadow-xs border border-outline-variant/10 space-y-2">
         <div class="font-bold text-xs sm:text-sm text-on-surface">当日の時間割（5教科）</div>
-        <div class="bg-surface-container-low rounded-xl p-3 space-y-2 text-xs sm:text-[13px]">
+        <div class="bg-surface-container-low rounded-xl py-3.5 sm:py-4 px-6 sm:px-8 space-y-2.5 sm:space-y-3 text-sm sm:text-base">
           <div class="flex justify-between items-center">
             <span class="font-bold text-on-surface">受付</span>
             <span class="font-bold text-on-surface">9:30 〜 9:50</span>
@@ -1719,12 +1719,12 @@
         var rows = timetableItems.map(function(t, idx) {
           var isLast = idx === timetableItems.length - 1;
           var borderClass = isLast ? '' : 'border-b border-surface-container/60';
-          return '<div class="flex justify-between items-center py-1.5 ' + borderClass + '">' +
+          return '<div class="flex justify-between items-center py-2 sm:py-2.5 ' + borderClass + '">' +
                    '<span class="font-bold text-on-surface">' + t.label + '</span>' +
                    '<span class="font-bold text-on-surface">' + t.time + '</span>' +
                  '</div>';
         }).join('');
-        cardInner.push('<div class="bg-surface-container-low rounded-xl p-3 space-y-0.5 text-xs sm:text-[13px]">' + rows + '</div>');
+        cardInner.push('<div class="bg-surface-container-low rounded-xl py-3.5 sm:py-4 px-6 sm:px-8 text-sm sm:text-base">' + rows + '</div>');
         timetableItems = [];
         inTimetable = false;
       };

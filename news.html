@@ -995,14 +995,8 @@
   <!-- ==================================================== -->
   <!-- microCMS 連携 & カテゴリ動的フィルタリング スクリプト -->
   <!-- ==================================================== -->
-  <script>
-    // 1. microCMS 接続設定（後から差し替え可能）
-    const MICROCMS_CONFIG = {
-      serviceDomain: 'okamoshi-blog',
-      apiKey: '4qO3xGjs5W1r7zolbBgAX2KXP8VEUooOpMtc',
-      endpoint: 'blogs'
-    };
-
+  <script src="js/microcms-config.js"></script>
+<script>
     // 2. カテゴリのマッピング定義
     const CATEGORY_MAP = {
       all: { label: 'すべて', filterValue: '' },

@@ -60,37 +60,79 @@
     }
   </style>
 <!-- END: Custom Styles -->
+<style id="header-contact-dropdown-style">
+  #nav-contact-container:hover #nav-contact-dropdown,
+  #nav-contact-container.is-open #nav-contact-dropdown { display: block !important; }
+  #nav-contact-container:hover #nav-contact-chevron,
+  #nav-contact-container.is-open #nav-contact-chevron { transform: rotate(180deg) !important; }
+</style>
 </head>
 <body class="min-h-screen flex flex-col justify-between text-slate-800 antialiased selection:bg-brand-sage selection:text-white">
 <!-- BEGIN: StickyMobileHeader -->
-<header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-emerald-900/10 shadow-xs">
-<div class="px-4 py-2.5 flex items-center justify-between max-w-lg mx-auto w-full">
-<!-- Logo Branding -->
-<a aria-label="岡山県統一模擬試験 トップページへ" class="flex items-center gap-2 group" href="#">
-<div class="w-9 h-9 rounded-lg bg-brand-forest flex items-center justify-center text-white shadow-xs">
-<span class="font-extrabold text-base leading-none tracking-tight">岡模</span>
-</div>
-<div class="flex flex-col">
-<span class="text-[10px] font-bold text-brand-forest tracking-wider uppercase leading-none">OKAYAMA EXAM</span>
-<span class="text-sm font-black text-slate-800 leading-tight">岡山県統一模擬試験</span>
-</div>
-</a>
-<!-- Header Action Buttons -->
-<div class="flex items-center gap-2">
-<a class="px-3 py-1.5 rounded-full bg-brand-orange text-white text-xs font-bold shadow-xs hover:bg-brand-orangeHover transition-all flex items-center gap-1" href="#apply-guide">
-<span class="">受験申込</span>
-<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-<path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
-</svg>
-</a>
-<button aria-label="メニューを開く" class="p-1.5 text-slate-600 hover:text-slate-900 rounded-md focus:outline-hidden" id="mobile-menu-toggle" type="button">
-<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-<path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-</svg>
-</button>
-</div>
-</div>
-</header>
+  <header class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+    <div class="h-16 sm:h-[4.5rem] max-w-[75rem] mx-auto px-4 sm:px-6 flex items-center justify-between gap-3 lg:gap-4 xl:gap-8">
+      <a href="index.html" class="flex items-center gap-2.5 sm:gap-3 min-w-0 shrink-0">
+        <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-primary flex items-center justify-center text-on-primary font-headline-md font-bold shrink-0">
+          <span class="material-symbols-outlined text-xl sm:text-headline-sm">school</span>
+        </div>
+        <div class="flex items-center gap-1.5 sm:gap-2 min-w-0">
+          <span class="font-headline-sm text-base sm:text-lg xl:text-headline-sm text-primary tracking-tight font-bold truncate">岡山県統一模擬試験</span>
+          <span class="font-label-sm text-[11px] sm:text-xs px-2 py-0.5 bg-primary-fixed text-on-primary-fixed-variant rounded-full font-bold shrink-0">おかもし</span>
+        </div>
+      </a>
+      <nav class="hidden lg:flex items-center gap-5 xl:gap-8 text-base" data-active-classes="text-primary font-bold border-b-2 border-primary">
+        <div class="relative inline-block text-left" id="nav-next-exam-container">
+          <button type="button" id="nav-next-exam-btn" onclick="toggleNextExamDropdown(event)" aria-expanded="false" aria-haspopup="true" class="transition-colors py-1 text-primary font-bold border-b-2 border-primary whitespace-nowrap inline-flex items-center gap-1 cursor-pointer focus:outline-none text-base">
+            <span class="font-semibold">模試を選ぶ</span>
+            <span id="nav-next-exam-chevron" class="material-symbols-outlined text-lg transition-transform duration-200 transform">expand_more</span>
+          </button>
+          <div id="nav-next-exam-dropdown" class="hidden absolute left-0 top-full mt-2 w-56 rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-xl p-2 z-50 transition-all duration-200">
+            <div class="space-y-1">
+              <button type="button" onclick="selectNavExamTab('chu3')" class="w-full flex items-center px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
+                <span class="text-base font-bold text-on-surface group-hover:text-primary transition-colors">中3 おかもし</span>
+              </button>
+              <button type="button" onclick="selectNavExamTab('chu2')" class="w-full flex items-center px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
+                <span class="text-base font-bold text-on-surface group-hover:text-primary transition-colors">中2 おかもし</span>
+              </button>
+              <button type="button" onclick="selectNavExamTab('chu1')" class="w-full flex items-center px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
+                <span class="text-base font-bold text-on-surface group-hover:text-primary transition-colors">中1 おかもし</span>
+              </button>
+              <button type="button" onclick="selectNavExamTab('sho6')" class="w-full flex items-center px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
+                <span class="text-base font-bold text-on-surface group-hover:text-primary transition-colors whitespace-nowrap">小6 適性検査対策模試</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <a class="text-base font-semibold text-on-surface-variant hover:text-primary transition-colors py-1 whitespace-nowrap" data-path="partner-schools" href="schools_PC.html">参加塾一覧</a>
+        <a class="text-base font-semibold text-on-surface-variant hover:text-primary transition-colors py-1 whitespace-nowrap" data-path="news" href="news.html">ブログ / お知らせ</a>
+      </nav>
+      <div class="flex items-center shrink-0">
+        <div class="relative group inline-block text-left hidden lg:block mr-4 xl:mr-6 pl-3 xl:pl-5 border-l border-outline-variant/40" id="nav-contact-container">
+          <button type="button" id="nav-contact-btn" onclick="toggleContactDropdown(event)" aria-expanded="false" aria-haspopup="true" class="transition-colors py-1 text-on-surface-variant hover:text-primary font-semibold text-base whitespace-nowrap inline-flex items-center gap-1 cursor-pointer focus:outline-none">
+            <span>お問い合わせ</span>
+            <span id="nav-contact-chevron" class="material-symbols-outlined text-lg transition-transform duration-200 transform group-hover:rotate-180">expand_more</span>
+          </button>
+          <div id="nav-contact-dropdown" class="hidden group-hover:block absolute right-0 top-full mt-2 w-48 rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-xl p-2 z-50 transition-all duration-200 before:content-[''] before:absolute before:-top-2 before:left-0 before:w-full before:h-2">
+            <div class="space-y-1">
+              <a href="apply.html#partner-contact" data-path="contact-partner" onclick="closeContactDropdown()" class="block px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition-colors text-left group/item cursor-pointer">
+                <span class="text-base font-bold text-on-surface group-hover/item:text-primary transition-colors">塾・学校関係者様</span>
+              </a>
+              <a href="apply.html#contact" data-path="contact" onclick="closeContactDropdown()" class="block px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition-colors text-left group/item cursor-pointer">
+                <span class="text-base font-bold text-on-surface group-hover/item:text-primary transition-colors">個人申込の方</span>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div>
+          <a class="inline-flex items-center justify-center px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-secondary text-on-secondary font-semibold text-sm sm:text-[15px] shadow-[0_4px_14px_-2px_rgba(200,90,50,0.35)] hover:bg-secondary-container hover:shadow-[0_6px_20px_-2px_rgba(200,90,50,0.45)] hover:-translate-y-0.5 transition-all whitespace-nowrap tracking-wide" data-path="apply" href="apply.html">
+            <span class="material-symbols-outlined mr-1 sm:mr-1.5 text-base sm:text-lg">edit_document</span>
+            <span class="hidden xs:inline sm:inline">お申し込みはこちら</span>
+            <span class="inline xs:hidden sm:hidden">お申込み</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
 <!-- END: StickyMobileHeader -->
 <!-- BEGIN: MainContent -->
 <main class="flex-grow w-full max-w-lg mx-auto px-4 pt-3 pb-12">
@@ -1132,4 +1174,83 @@
 
 
 
+<script id="header-navigation-script">
+  function toggleNextExamDropdown(event) {
+    if (event) event.stopPropagation();
+    closeContactDropdown();
+    var dropdown = document.getElementById('nav-next-exam-dropdown');
+    var chevron = document.getElementById('nav-next-exam-chevron');
+    var btn = document.getElementById('nav-next-exam-btn');
+    if (!dropdown) return;
+    var isOpen = !dropdown.classList.contains('hidden');
+    if (isOpen) {
+      dropdown.classList.add('hidden');
+      if (chevron) chevron.style.transform = 'rotate(0deg)';
+      if (btn) btn.setAttribute('aria-expanded', 'false');
+    } else {
+      dropdown.classList.remove('hidden');
+      if (chevron) chevron.style.transform = 'rotate(180deg)';
+      if (btn) btn.setAttribute('aria-expanded', 'true');
+    }
+  }
+
+  function closeNextExamDropdown() {
+    var dropdown = document.getElementById('nav-next-exam-dropdown');
+    var chevron = document.getElementById('nav-next-exam-chevron');
+    var btn = document.getElementById('nav-next-exam-btn');
+    if (dropdown && !dropdown.classList.contains('hidden')) {
+      dropdown.classList.add('hidden');
+      if (chevron) chevron.style.transform = 'rotate(0deg)';
+      if (btn) btn.setAttribute('aria-expanded', 'false');
+    }
+  }
+
+  function toggleContactDropdown(event) {
+    if (event) event.stopPropagation();
+    closeNextExamDropdown();
+    var container = document.getElementById('nav-contact-container');
+    var btn = document.getElementById('nav-contact-btn');
+    if (!container) return;
+    var isOpen = container.classList.contains('is-open');
+    if (isOpen) {
+      closeContactDropdown();
+    } else {
+      container.classList.add('is-open');
+      if (btn) btn.setAttribute('aria-expanded', 'true');
+    }
+  }
+
+  function closeContactDropdown() {
+    var container = document.getElementById('nav-contact-container');
+    var btn = document.getElementById('nav-contact-btn');
+    if (container) {
+      container.classList.remove('is-open');
+      if (btn) btn.setAttribute('aria-expanded', 'false');
+    }
+  }
+
+  document.addEventListener('click', function(e) {
+    var examContainer = document.getElementById('nav-next-exam-container');
+    if (examContainer && !examContainer.contains(e.target)) {
+      closeNextExamDropdown();
+    }
+    var contactContainer = document.getElementById('nav-contact-container');
+    if (contactContainer && !contactContainer.contains(e.target)) {
+      closeContactDropdown();
+    }
+  });
+
+  function selectNavExamTab(tabKey) {
+    closeNextExamDropdown();
+    if (typeof switchExamTab === 'function') {
+      switchExamTab(tabKey);
+      var targetElem = document.getElementById('next-exam');
+      if (targetElem) {
+        targetElem.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else {
+      window.location.href = 'index.html?tab=' + tabKey + '#next-exam';
+    }
+  }
+</script>
 </body></html>

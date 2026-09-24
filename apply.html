@@ -144,151 +144,67 @@
   <!-- ========================================== -->
   <!-- HEADER (中3 PCページ index.html と完全同期) -->
   <!-- ========================================== -->
-  <header class="fixed top-0 w-full z-50 bg-surface/95 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.06)] border-b border-outline-variant/20">
-    <div class="h-16 sm:h-20 max-w-[75rem] mx-auto px-4 sm:px-gutter-desktop flex items-center justify-between gap-3 lg:gap-4 xl:gap-8">
-      
-      <!-- Brand Logo / Site Title -->
-      <a href="index.html" class="flex items-center gap-2.5 sm:gap-3 min-w-0 shrink-0 group">
-        <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-primary flex items-center justify-center text-on-primary font-headline-md font-bold shrink-0 shadow-sm group-hover:scale-105 transition-transform">
+    <header class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+    <div class="h-16 sm:h-[4.5rem] max-w-[75rem] mx-auto px-4 sm:px-6 flex items-center justify-between gap-3 lg:gap-4 xl:gap-8">
+      <a href="index.html" class="flex items-center gap-2.5 sm:gap-3 min-w-0 shrink-0">
+        <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-primary flex items-center justify-center text-on-primary font-headline-md font-bold shrink-0">
           <span class="material-symbols-outlined text-xl sm:text-headline-sm">school</span>
         </div>
         <div class="flex items-center gap-1.5 sm:gap-2 min-w-0">
-          <span class="font-headline-sm text-base sm:text-lg xl:text-headline-sm text-primary tracking-tight font-bold truncate group-hover:text-primary-container transition-colors">岡山県統一模擬試験</span>
+          <span class="font-headline-sm text-base sm:text-lg xl:text-headline-sm text-primary tracking-tight font-bold truncate">岡山県統一模擬試験</span>
           <span class="font-label-sm text-[11px] sm:text-xs px-2 py-0.5 bg-primary-fixed text-on-primary-fixed-variant rounded-full font-bold shrink-0">おかもし</span>
         </div>
       </a>
-
-      <!-- PC Navigation Links -->
-      <nav class="hidden lg:flex items-center gap-5 xl:gap-8 text-base" aria-label="主要ナビゲーション">
-        <!-- 次回模試 Dropdown -->
+      <nav class="hidden lg:flex items-center gap-5 xl:gap-8 text-base" data-active-classes="text-primary font-bold border-b-2 border-primary">
         <div class="relative inline-block text-left" id="nav-next-exam-container">
-          <button type="button" id="nav-next-exam-btn" onclick="toggleNextExamDropdown(event)" aria-expanded="false" aria-haspopup="true" class="transition-colors py-1 text-on-surface hover:text-primary font-bold whitespace-nowrap inline-flex items-center gap-1 cursor-pointer focus:outline-none">
-            <span class="font-label-md text-label-md">模試を選ぶ</span>
+          <button type="button" id="nav-next-exam-btn" onclick="toggleNextExamDropdown(event)" aria-expanded="false" aria-haspopup="true" class="transition-colors py-1 text-primary font-bold border-b-2 border-primary whitespace-nowrap inline-flex items-center gap-1 cursor-pointer focus:outline-none text-base">
+            <span class="font-semibold">模試を選ぶ</span>
             <span id="nav-next-exam-chevron" class="material-symbols-outlined text-lg transition-transform duration-200 transform">expand_more</span>
           </button>
-          <div id="nav-next-exam-dropdown" class="hidden absolute left-0 top-full mt-2 w-72 rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-xl p-2 z-50 transition-all duration-200">
-            <div class="px-3 py-2 border-b border-surface-container/60 mb-1">
-              <span class="text-[11px] font-bold text-on-surface-variant tracking-wider">学年・実施号を選択</span>
-            </div>
+          <div id="nav-next-exam-dropdown" class="hidden absolute left-0 top-full mt-2 w-56 rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-xl p-2 z-50 transition-all duration-200">
             <div class="space-y-1">
-              <button type="button" onclick="selectNavExamTab('chu3')" class="w-full flex items-center justify-between p-2.5 rounded-xl hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
-                <div class="flex flex-col min-w-0">
-                  <span class="text-sm font-bold text-on-surface group-hover:text-primary transition-colors">中3 おかもし</span>
-                  <span class="text-[11px] text-on-surface-variant">志望校合否・内申連動判定</span>
-                </div>
+              <button type="button" onclick="selectNavExamTab('chu3')" class="w-full flex items-center px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
+                <span class="text-base font-bold text-on-surface group-hover:text-primary transition-colors">中3 おかもし</span>
               </button>
-              <button type="button" onclick="selectNavExamTab('chu2')" class="w-full flex items-center justify-between p-2.5 rounded-xl hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
-                <div class="flex flex-col min-w-0">
-                  <span class="text-sm font-bold text-on-surface group-hover:text-primary transition-colors">中2 おかもし</span>
-                  <span class="text-[11px] text-on-surface-variant">公立高校入試 基礎・標準</span>
-                </div>
+              <button type="button" onclick="selectNavExamTab('chu2')" class="w-full flex items-center px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
+                <span class="text-base font-bold text-on-surface group-hover:text-primary transition-colors">中2 おかもし</span>
               </button>
-              <button type="button" onclick="selectNavExamTab('chu1')" class="w-full flex items-center justify-between p-2.5 rounded-xl hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
-                <div class="flex flex-col min-w-0">
-                  <span class="text-sm font-bold text-on-surface group-hover:text-primary transition-colors">中1 おかもし</span>
-                  <span class="text-[11px] text-on-surface-variant">公立高校入試 基礎・標準</span>
-                </div>
+              <button type="button" onclick="selectNavExamTab('chu1')" class="w-full flex items-center px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
+                <span class="text-base font-bold text-on-surface group-hover:text-primary transition-colors">中1 おかもし</span>
               </button>
-              <button type="button" onclick="selectNavExamTab('sho6')" class="w-full flex items-center justify-between p-2.5 rounded-xl hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
-                <div class="flex flex-col min-w-0">
-                  <span class="text-sm font-bold text-on-surface group-hover:text-primary transition-colors">小6 適性検査対策模試</span>
-                  <span class="text-[11px] text-on-surface-variant">県立中高一貫校 受検対策</span>
-                </div>
+              <button type="button" onclick="selectNavExamTab('sho6')" class="w-full flex items-center px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
+                <span class="text-base font-bold text-on-surface group-hover:text-primary transition-colors whitespace-nowrap">小6 適性検査対策模試</span>
               </button>
             </div>
           </div>
         </div>
-
-        <a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors py-1 whitespace-nowrap" href="schools_PC.html">参加塾一覧</a>
-        <a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors py-1 whitespace-nowrap" href="news.html">ブログ / お知らせ</a>
+        <a class="text-base font-semibold text-on-surface-variant hover:text-primary transition-colors py-1 whitespace-nowrap" data-path="partner-schools" href="schools_PC.html">参加塾一覧</a>
+        <a class="text-base font-semibold text-on-surface-variant hover:text-primary transition-colors py-1 whitespace-nowrap" data-path="news" href="news.html">ブログ / お知らせ</a>
       </nav>
-
-      <!-- Header Actions & Mobile Menu Button -->
       <div class="flex items-center shrink-0">
-        <!-- お問い合わせ Dropdown (PC) -->
         <div class="relative group inline-block text-left hidden lg:block mr-4 xl:mr-6 pl-3 xl:pl-5 border-l border-outline-variant/40" id="nav-contact-container">
-          <button type="button" id="nav-contact-btn" onclick="toggleContactDropdown(event)" aria-expanded="false" aria-haspopup="true" class="transition-colors py-1 text-on-surface-variant hover:text-primary font-semibold text-sm whitespace-nowrap inline-flex items-center gap-1 cursor-pointer focus:outline-none">
-            <span class="material-symbols-outlined text-sm text-primary">contact_support</span>
+          <button type="button" id="nav-contact-btn" onclick="toggleContactDropdown(event)" aria-expanded="false" aria-haspopup="true" class="transition-colors py-1 text-on-surface-variant hover:text-primary font-semibold text-base whitespace-nowrap inline-flex items-center gap-1 cursor-pointer focus:outline-none">
             <span>お問い合わせ</span>
-            <span id="nav-contact-chevron" class="material-symbols-outlined text-base transition-transform duration-200 transform group-hover:rotate-180">expand_more</span>
+            <span id="nav-contact-chevron" class="material-symbols-outlined text-lg transition-transform duration-200 transform group-hover:rotate-180">expand_more</span>
           </button>
           <div id="nav-contact-dropdown" class="hidden group-hover:block absolute right-0 top-full mt-2 w-48 rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-xl p-2 z-50 transition-all duration-200 before:content-[''] before:absolute before:-top-2 before:left-0 before:w-full before:h-2">
             <div class="space-y-1">
-              <a href="schools.html#partner-contact" onclick="closeContactDropdown()" class="block px-3 py-2 rounded-xl hover:bg-surface-container-low transition-colors text-left group/item cursor-pointer">
-                <span class="text-sm font-bold text-on-surface group-hover/item:text-primary transition-colors flex items-center gap-1.5">
-                  <span class="material-symbols-outlined text-base text-primary">corporate_fare</span>塾・学校関係者様
-                </span>
+              <a href="apply.html#partner-contact" data-path="contact-partner" onclick="closeContactDropdown()" class="block px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition-colors text-left group/item cursor-pointer">
+                <span class="text-base font-bold text-on-surface group-hover/item:text-primary transition-colors">塾・学校関係者様</span>
               </a>
-              <a href="apply.html#contact" onclick="closeContactDropdown()" class="block px-3 py-2 rounded-xl hover:bg-surface-container-low transition-colors text-left group/item cursor-pointer">
-                <span class="text-sm font-bold text-on-surface group-hover/item:text-primary transition-colors flex items-center gap-1.5">
-                  <span class="material-symbols-outlined text-base text-primary">mail</span>個人申込の方
-                </span>
+              <a href="apply.html#contact" data-path="contact" onclick="closeContactDropdown()" class="block px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition-colors text-left group/item cursor-pointer">
+                <span class="text-base font-bold text-on-surface group-hover/item:text-primary transition-colors">個人申込の方</span>
               </a>
             </div>
           </div>
         </div>
-        
-        <!-- お申し込みボタン -->
-        <a class="inline-flex items-center justify-center px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-secondary text-on-secondary font-semibold text-xs sm:text-sm shadow-[0_4px_14px_-2px_rgba(200,90,50,0.35)] hover:bg-secondary-container hover:shadow-[0_6px_20px_-2px_rgba(200,90,50,0.45)] hover:-translate-y-0.5 transition-all whitespace-nowrap tracking-wide" href="apply.html">
-          <span class="material-symbols-outlined mr-1 sm:mr-1.5 text-base sm:text-lg">edit_document</span>
-          <span class="hidden xs:inline sm:inline">お申し込みはこちら</span>
-          <span class="inline xs:hidden sm:hidden">お申込み</span>
-        </a>
-
-        <!-- Hamburger Button (SP) -->
-        <button type="button" onclick="toggleMobileMenu()" aria-label="メニューを開く" class="lg:hidden ml-2 w-9 h-9 flex items-center justify-center rounded-lg text-on-surface hover:bg-surface-container transition-colors focus:outline-none">
-          <span id="mobile-menu-icon" class="material-symbols-outlined text-2xl">menu</span>
-        </button>
-      </div>
-    </div>
-
-    <!-- Mobile Drawer / Dropdown Menu -->
-    <div id="mobile-menu" class="hidden lg:hidden w-full bg-surface-container-lowest border-b border-outline-variant/30 shadow-2xl transition-all duration-300 px-4 py-6 space-y-4 max-h-[85vh] overflow-y-auto">
-      <div class="space-y-1 pb-4 border-b border-surface-container/60">
-        <div class="text-xs font-bold text-on-surface-variant px-2 py-1">次回模試実施要項</div>
-        <button type="button" onclick="selectNavExamTab('chu3')" class="w-full flex items-center justify-between p-3 rounded-xl bg-surface-container-low hover:bg-surface-container text-left transition-colors">
-          <span class="text-sm font-bold text-on-surface">中3 おかもし (10月号)</span>
-          <span class="px-2 py-0.5 rounded-full text-xs font-bold text-white bg-[#c2410c]">表示</span>
-        </button>
-        <button type="button" onclick="selectNavExamTab('chu2')" class="w-full flex items-center justify-between p-3 rounded-xl bg-surface-container-low hover:bg-surface-container text-left transition-colors">
-          <span class="text-sm font-bold text-on-surface">中2 おかもし (12月号)</span>
-          <span class="px-2 py-0.5 rounded-full text-xs font-bold text-secondary bg-surface-container-highest">表示</span>
-        </button>
-        <button type="button" onclick="selectNavExamTab('chu1')" class="w-full flex items-center justify-between p-3 rounded-xl bg-surface-container-low hover:bg-surface-container text-left transition-colors">
-          <span class="text-sm font-bold text-on-surface">中1 おかもし (12月号)</span>
-          <span class="px-2 py-0.5 rounded-full text-xs font-bold text-secondary bg-surface-container-highest">表示</span>
-        </button>
-        <button type="button" onclick="selectNavExamTab('sho6')" class="w-full flex items-center justify-between p-3 rounded-xl bg-surface-container-low hover:bg-surface-container text-left transition-colors">
-          <span class="text-sm font-bold text-on-surface">小6 適性検査対策模試 (10月号)</span>
-          <span class="px-2 py-0.5 rounded-full text-xs font-bold text-secondary bg-surface-container-highest">表示</span>
-        </button>
-      </div>
-
-      <div class="grid grid-cols-1 gap-2">
-        <a href="schools_PC.html" class="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-container text-on-surface font-bold text-sm transition-colors">
-          <span class="material-symbols-outlined text-primary text-xl">storefront</span>参加塾一覧
-        </a>
-        <a href="news.html" class="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-container text-on-surface font-bold text-sm transition-colors">
-          <span class="material-symbols-outlined text-primary text-xl">newspaper</span>ブログ / お知らせ
-        </a>
-        <a href="apply.html" class="flex items-center gap-3 p-3 rounded-xl bg-secondary/10 text-secondary font-bold text-sm hover:bg-secondary/20 transition-colors">
-          <span class="material-symbols-outlined text-xl">edit_document</span>個人受験Webお申込み
-        </a>
-      </div>
-
-      <div class="pt-4 border-t border-surface-container/60 space-y-2">
-        <div class="text-xs font-bold text-on-surface-variant px-2">お問い合わせ窓口</div>
-        <a href="schools.html#partner-contact" class="flex items-center gap-2 p-2.5 rounded-lg border border-primary/20 bg-primary-fixed/20 text-primary text-xs font-bold">
-          <span class="material-symbols-outlined text-base">corporate_fare</span>塾・学校関係者様 お問い合わせ
-        </a>
-        <a href="apply.html#contact" class="flex items-center gap-2 p-2.5 rounded-lg border border-outline-variant/30 bg-surface-container text-on-surface text-xs font-bold">
-          <span class="material-symbols-outlined text-base">mail</span>個人申込の方 お問い合わせ
-        </a>
-      </div>
-
-      <div class="pt-2 flex items-center justify-between text-xs text-on-surface-variant px-2">
-        <a href="privacy.html" class="hover:underline">プライバシーポリシー</a>
-        <a href="tokushoho.html" class="hover:underline">特定商取引法</a>
+        <div>
+          <a class="inline-flex items-center justify-center px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-secondary text-on-secondary font-semibold text-sm sm:text-[15px] shadow-[0_4px_14px_-2px_rgba(200,90,50,0.35)] hover:bg-secondary-container hover:shadow-[0_6px_20px_-2px_rgba(200,90,50,0.45)] hover:-translate-y-0.5 transition-all whitespace-nowrap tracking-wide" data-path="apply" href="apply.html">
+            <span class="material-symbols-outlined mr-1 sm:mr-1.5 text-base sm:text-lg">edit_document</span>
+            <span class="hidden xs:inline sm:inline">お申し込みはこちら</span>
+            <span class="inline xs:hidden sm:hidden">お申込み</span>
+          </a>
+        </div>
       </div>
     </div>
   </header>
@@ -1658,8 +1574,16 @@
       }
     }
 
+    function closeNextExamDropdown() {
+      const dropdown = document.getElementById('nav-next-exam-dropdown');
+      const chevron = document.getElementById('nav-next-exam-chevron');
+      if (dropdown) dropdown.classList.add('hidden');
+      if (chevron) chevron.classList.remove('rotate-180');
+    }
+
     function toggleContactDropdown(event) {
       if (event) event.stopPropagation();
+      closeNextExamDropdown();
       const container = document.getElementById('nav-contact-container');
       if (!container) return;
       container.classList.toggle('is-open');

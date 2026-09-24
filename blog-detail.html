@@ -1216,9 +1216,9 @@
   <script>
     // 1. microCMS 接続設定（後から差し替え可能）
     const MICROCMS_CONFIG = {
-      serviceDomain: 'YOUR_SERVICE_DOMAIN', // 例: okayama-moshi
-      apiKey: 'YOUR_API_KEY',               // microCMSのAPIキー（GET専用）
-      endpoint: 'blogs'                     // エンドポイント名
+      serviceDomain: 'okamoshi-blog',
+      apiKey: '4qO3xGjs5W1r7zolbBgAX2KXP8VEUooOpMtc',
+      endpoint: 'blogs'
     };
 
     // 2. モック記事データ（フォールバック用）
@@ -1285,6 +1285,34 @@
         updatedAt: '2026-06-15T10:00:00+09:00',
         description: '偏差値や判定記号に一喜一憂するだけで終わらせない。大問・小問別の正答率マトリクスを用いた「復習すべき優先単元のあぶり出し方」を専門指導員がレクチャー。',
         eyecatch: { url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAmRNjkULsUOOKOzy90r7eDwSXDMu-2gxIid5tcWUT0Xt6aAmHtd5ArtgY23QLNFpbjzZZY2k1BZiD0FbcKBX3QTs8vKeWS0rqspoNs57V1cHZv3tG2_A8XeTFw4fOfla41IbtEu7J8a7Z_lvjMoM2il6wPFzmXjEbet5m6yCiwA4NWN6-adJPizN6QKWfaJmPANae6igs-A-kzIitvqZ8FTamMUx_LZMjfItiqpNnVexGUi9ytOcPA' }
+      },
+      // microCMS 実記事フォールバック（API障害時の保険）
+      'b055d-p_k7': {
+        title: '【岡山県の高校受験】合格への近道はここにある！「おかもし」が受験生から支持される理由',
+        category: '模試活用法',
+        subCategory: '合格体験・模試活用',
+        publishedAt: '2026-09-23T05:32:00+09:00',
+        updatedAt: '2026-09-23T05:32:00+09:00',
+        description: '岡山県公立高校入試を突破するために最も重要なのは、「県内固有の出題形式への徹底適応」と「内申点を含めた正確な相対位置の把握」です。',
+        eyecatch: { url: 'https://images.microcms-assets.io/assets/1ac525f4c868455d9d89ba053378d2ec/472790e3ea034e348fc446be675dc5e5/%E3%81%8A%E3%81%8B%E3%82%82%E3%81%9720260923-1.jpeg' }
+      },
+      '20p7a-hecrv': {
+        title: 'おかもし　決済用リンク',
+        category: '模試活用法',
+        subCategory: '受験手続き・事務',
+        publishedAt: '2026-09-23T05:32:00+09:00',
+        updatedAt: '2026-09-23T05:32:00+09:00',
+        description: '個人受験お申し込み時にお選びいただけるクレジットカード決済、およびコンビニ店頭払込の確定フローをご案内します。',
+        eyecatch: { url: 'https://images.microcms-assets.io/assets/1ac525f4c868455d9d89ba053378d2ec/9264e101b06c40348002c2d70b2d496a/%E3%81%8A%E3%81%8B%E3%82%82%E3%81%97Stripe%E6%B1%BA%E6%B8%88%E3%82%A4%E3%83%A1%E3%83%BC%E3%82%B7%E3%82%99.jpeg' }
+      },
+      '0qf1y_rb2': {
+        title: '（サンプル）まずはこの記事を開きましょう',
+        category: 'お知らせ',
+        subCategory: 'お知らせ',
+        publishedAt: '2026-09-23T05:32:00+09:00',
+        updatedAt: '2026-09-23T05:32:00+09:00',
+        description: 'サンプル記事です。',
+        eyecatch: { url: '' }
       }
     };
 

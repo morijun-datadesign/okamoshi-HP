@@ -709,14 +709,22 @@
       <!-- Card 2: 会場・実施日 -->
       <div class="bg-white rounded-2xl p-4 shadow-xs border border-outline-variant/10 space-y-2">
         <div class="font-bold text-sm text-on-surface">会場・実施日</div>
-        <div class="space-y-1 pt-0.5">
-          <div class="font-bold text-sm text-on-surface">岡山会場 ： 山陽学園中学校・高等学校</div>
-          <div class="font-bold text-secondary text-sm pl-[72px]">2026年11月1日(日)</div>
-        </div>
-        <div class="border-t border-surface-container/60 my-2"></div>
-        <div class="space-y-1">
-          <div class="font-bold text-sm text-on-surface">津山会場 ： 美作高等学校</div>
-          <div class="font-bold text-secondary text-sm pl-[72px]">2026年10月25日(日)</div>
+        <div class="venue-badge-list space-y-1 w-full pt-0.5">
+          <div class="flex items-start gap-2.5 sm:gap-3 py-0.5">
+            <span class="inline-flex items-center justify-center w-[74px] sm:w-[82px] py-1 rounded-md bg-primary text-white text-xs sm:text-sm font-bold shrink-0 text-center tracking-tight leading-tight">岡山会場</span>
+            <div class="space-y-1 pt-0.5 flex-1 min-w-0">
+              <div class="font-bold text-sm sm:text-base text-on-surface leading-snug">山陽学園中学校・高等学校</div>
+              <div class="text-secondary font-bold text-base sm:text-lg leading-snug tracking-tight">2026年11月1日(日)</div>
+            </div>
+          </div>
+          <div class="border-t border-surface-container/60 my-2.5"></div>
+          <div class="flex items-start gap-2.5 sm:gap-3 py-0.5">
+            <span class="inline-flex items-center justify-center w-[74px] sm:w-[82px] py-1 rounded-md bg-primary text-white text-xs sm:text-sm font-bold shrink-0 text-center tracking-tight leading-tight">津山会場</span>
+            <div class="space-y-1 pt-0.5 flex-1 min-w-0">
+              <div class="font-bold text-sm sm:text-base text-on-surface leading-snug">美作高等学校</div>
+              <div class="text-secondary font-bold text-base sm:text-lg leading-snug tracking-tight">2026年10月25日(日)</div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -803,19 +811,20 @@
       <!-- Card 2: 会場・実施日 -->
       <div class="bg-white rounded-xl p-3.5 sm:p-4 shadow-xs border border-outline-variant/10 space-y-2">
         <div class="font-bold text-xs sm:text-sm text-on-surface">会場・実施日</div>
-        <div class="space-y-2 pt-0.5">
-          <div class="flex items-start text-sm sm:text-base">
-            <span class="font-bold text-on-surface shrink-0">岡山会場 ：&nbsp;</span>
-            <div class="space-y-0.5">
-              <div class="font-bold text-on-surface">山陽学園中学校・高等学校</div>
-              <div class="font-bold text-secondary">2026年11月1日(日)</div>
+        <div class="venue-badge-list space-y-1 w-full pt-0.5">
+          <div class="flex items-start gap-2.5 sm:gap-3 py-0.5">
+            <span class="inline-flex items-center justify-center w-[74px] sm:w-[82px] py-1 rounded-md bg-primary text-white text-xs sm:text-sm font-bold shrink-0 text-center tracking-tight leading-tight">岡山会場</span>
+            <div class="space-y-1 pt-0.5 flex-1 min-w-0">
+              <div class="font-bold text-sm sm:text-base text-on-surface leading-snug">山陽学園中学校・高等学校</div>
+              <div class="text-secondary font-bold text-base sm:text-lg leading-snug tracking-tight">2026年11月1日(日)</div>
             </div>
           </div>
-          <div class="border-t border-surface-container/60 pt-2 flex items-start text-sm sm:text-base">
-            <span class="font-bold text-on-surface shrink-0">津山会場 ：&nbsp;</span>
-            <div class="space-y-0.5">
-              <div class="font-bold text-on-surface">美作高等学校</div>
-              <div class="font-bold text-secondary">2026年10月25日(日)</div>
+          <div class="border-t border-surface-container/60 my-2.5"></div>
+          <div class="flex items-start gap-2.5 sm:gap-3 py-0.5">
+            <span class="inline-flex items-center justify-center w-[74px] sm:w-[82px] py-1 rounded-md bg-primary text-white text-xs sm:text-sm font-bold shrink-0 text-center tracking-tight leading-tight">津山会場</span>
+            <div class="space-y-1 pt-0.5 flex-1 min-w-0">
+              <div class="font-bold text-sm sm:text-base text-on-surface leading-snug">美作高等学校</div>
+              <div class="text-secondary font-bold text-base sm:text-lg leading-snug tracking-tight">2026年10月25日(日)</div>
             </div>
           </div>
         </div>
@@ -1492,10 +1501,10 @@
   }
 
   /* -----------------------------------------------------------------------
-     4-0b. 実施要項「会場・実施日」カード用テキスト形式関数
-      （1行目・太字）会場名 ： 学校名
-      （2行目・赤茶色）日付
-      会場間に区切り線
+     4-0b. 実施要項「会場・実施日」カード用整形関数
+      ・バッジ（岡山会場 / 津山会場 等）
+      ・会場名（学校名）と日付を縦並びにして先頭揃え
+      ・日付は右パネル「実施期間」と同一のフォントサイズ（text-base sm:text-lg）・font-bold・text-secondary
   ----------------------------------------------------------------------- */
   function formatVenueTextCards(rawLines) {
     if (!rawLines || !rawLines.length) return '<span class="text-on-surface-variant">会場情報は準備中です</span>';
@@ -1565,15 +1574,24 @@
         }
       }
 
-      var firstLine = '';
+      var badge = '';
+      var school = '';
+
       if (areaName && schoolName) {
-        firstLine = areaName + ' ： ' + schoolName;
+        badge = areaName;
+        school = schoolName;
       } else if (areaName) {
-        firstLine = areaName;
+        if (/会場$|受験$/.test(areaName)) {
+          badge = areaName;
+          school = '';
+        } else {
+          badge = '';
+          school = areaName;
+        }
       }
 
-      if (firstLine || dateText) {
-        venueItems.push({ venue: firstLine, date: dateText });
+      if (badge || school || dateText) {
+        venueItems.push({ badge: badge, school: school, date: dateText });
       }
     });
 
@@ -1582,20 +1600,36 @@
     var htmlParts = [];
     venueItems.forEach(function (item, idx) {
       if (idx > 0) {
-        htmlParts.push('<div style="border-top: 1px solid #eee; margin: 12px 0;"></div>');
+        htmlParts.push('<div class="border-t border-surface-container/60 my-2.5"></div>');
       }
-      var isLast = (idx === venueItems.length - 1);
-      var mb = isLast ? 'margin-bottom: 0;' : 'margin-bottom: 16px;';
-      var venueLine = item.venue
-        ? '<p style="font-weight: bold; font-size: 15px; margin-bottom: 4px; color: #1b1c1c;">' + item.venue + '</p>'
+
+      var isHome = /自宅/.test(item.badge);
+      var badgeBg = isHome ? 'background-color: #4a3b10;' : 'background-color: #134230;';
+
+      var badgeHTML = item.badge
+        ? '<span class="inline-flex items-center justify-center w-[74px] sm:w-[82px] py-1 rounded-md text-white text-xs sm:text-sm font-bold shrink-0 text-center tracking-tight leading-tight" style="' + badgeBg + '">' + item.badge + '</span>'
         : '';
-      var dateLine = item.date
-        ? '<p style="color: #a63815; font-weight: bold; font-size: 14px; margin-left: 1.5em; ' + mb + '">' + item.date + '</p>'
+
+      var schoolHTML = item.school
+        ? '<div class="font-bold text-sm sm:text-base text-on-surface leading-snug">' + item.school + '</div>'
         : '';
-      htmlParts.push(venueLine + dateLine);
+
+      var dateHTML = item.date
+        ? '<div class="text-secondary font-bold text-base sm:text-lg leading-snug tracking-tight" style="color: #a23e18;">' + item.date + '</div>'
+        : '';
+
+      htmlParts.push(
+        '<div class="flex items-start gap-2.5 sm:gap-3 py-0.5">' +
+          badgeHTML +
+          '<div class="space-y-1 pt-0.5 flex-1 min-w-0">' +
+            schoolHTML +
+            dateHTML +
+          '</div>' +
+        '</div>'
+      );
     });
 
-    return '<div class="venue-text-list" style="width: 100%;">' + htmlParts.join('') + '</div>';
+    return '<div class="venue-badge-list space-y-1 w-full">' + htmlParts.join('') + '</div>';
   }
 
 /* -----------------------------------------------------------------------

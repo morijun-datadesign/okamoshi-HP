@@ -1837,6 +1837,22 @@
             date_end: '2026-10-31T15:00:00.000Z'
           }
         ],
+        shipping_date_venue: '10月13日(火)頃発送予定',
+        belongings: '・制服着用 ・筆記用具（鉛筆・消しゴム・定規・コンパス） ・受験票 ・志望校記入用紙 ・昼食 ・飲料 ・上履き\n\n※志望校記入用紙と受験票は事前にご郵送いたします。当日必ずお持ちください。',
+        timetable: [
+          { fieldId: 'timetable_item', label: '受付', time_range: '9:30〜9:50' },
+          { fieldId: 'timetable_item', label: 'ガイダンス', time_range: '9:55〜10:10' },
+          { fieldId: 'timetable_item', label: '社会', time_range: '10:10 〜 10:55' },
+          { fieldId: 'timetable_item', label: '数学', time_range: '11:05 〜 11:50' },
+          { fieldId: 'timetable_item', label: '昼食', time_range: '11:50 〜 12:25' },
+          { fieldId: 'timetable_item', label: '国語', time_range: '12:25 〜 13:10' },
+          { fieldId: 'timetable_item', label: '英語', time_range: '13:20 〜 14:05' },
+          { fieldId: 'timetable_item', label: '理科', time_range: '14:15 〜 15:00' },
+          { fieldId: 'timetable_item', label: '解散予定', time_range: '15:10頃' }
+        ],
+        shipping_date_home: '10月13日(火) 頃発送予定',
+        submission_deadline: '2026年11月4日(水)',
+        return_date: '2026年11月12日(木) 発送予定',
         announce_text: 'ただいま10月号のお申し込みを受付中です',
         title: '岡山県統一模擬試験（おかもし）',
         catchcopy: '志望校決定の秋！合格に向けて今必要な「あと◯点」を掴む！',
@@ -2583,10 +2599,193 @@
   /* -----------------------------------------------------------------------
      4-2. 実施要項セクション全体のHTML構築
   ----------------------------------------------------------------------- */
+    /* ==========================================================================
+     完全構造化データ用 実施要項カードビルダー
+     ========================================================================== */
+
+  // 左側「会場受検カード」生成
+  function buildStructuredVenueCards(session) {
+    var cards = [];
+    var schedules = session.schedules || [];
+    var venueSchedules = schedules.filter(function(item) {
+      return !isHomeVenueType(item.venue_type);
+    });
+
+    // 1. 受験票等の発送
+    var shipDate = session.shipping_date_venue || '10月13日(火) 頃発送予定';
+    cards.push(
+      '<div class="bg-white rounded-xl p-3.5 sm:p-4 shadow-xs border border-outline-variant/10 space-y-2">' +
+        '<div class="font-bold text-xs sm:text-sm text-on-surface flex items-center gap-1.5">' +
+          '<span class="material-symbols-outlined text-base text-primary">mark_email_read</span>' +
+          '<span>受験票等の発送</span>' +
+        '</div>' +
+        '<div class="text-primary font-bold text-base sm:text-lg">' + shipDate + '</div>' +
+        '<p class="text-[11px] sm:text-xs text-on-surface-variant leading-relaxed">同封物：受験当日のご案内、受験票、志望校記入用紙、志望校コード表</p>' +
+      '</div>'
+    );
+
+    // 2. 会場・実施日
+    var venueListHTML = renderVenueScheduleCardInner(venueSchedules);
+    cards.push(
+      '<div class="bg-white rounded-xl p-3.5 sm:p-4 shadow-xs border border-outline-variant/10 space-y-2">' +
+        '<div class="font-bold text-xs sm:text-sm text-on-surface flex items-center gap-1.5">' +
+          '<span>会場・実施日</span>' +
+        '</div>' +
+        venueListHTML +
+      '</div>'
+    );
+
+    // 3. 当日持参物 (belongings)
+    if (session.belongings) {
+      var lines = session.belongings.split(/\r?\n/).map(function(l) { return l.trim(); }).filter(function(l) { return l.length > 0; });
+      var itemsList = [];
+      var notesList = [];
+      lines.forEach(function(line) {
+        if (line.indexOf('※') === 0) {
+          notesList.push('<p class="text-secondary font-bold leading-relaxed text-xs pt-1">' + line + '</p>');
+        } else {
+          itemsList.push('<p class="text-on-surface leading-relaxed">' + line + '</p>');
+        }
+      });
+
+      cards.push(
+        '<div class="bg-white rounded-xl p-3.5 sm:p-4 shadow-xs border border-outline-variant/10 space-y-2">' +
+          '<div class="font-bold text-xs sm:text-sm text-on-surface flex items-center gap-1.5">' +
+            '<span class="material-symbols-outlined text-base text-primary">backpack</span>' +
+            '<span>当日持参照物</span>' +
+          '</div>' +
+          '<div class="bg-surface-container-low rounded-xl p-3 space-y-1.5 text-xs sm:text-[13px]">' +
+            itemsList.join('') +
+            notesList.join('') +
+          '</div>' +
+        '</div>'
+      );
+    } else {
+      // belongings が未設定の場合の標準表示
+      cards.push(
+        '<div class="bg-white rounded-xl p-3.5 sm:p-4 shadow-xs border border-outline-variant/10 space-y-2">' +
+          '<div class="font-bold text-xs sm:text-sm text-on-surface flex items-center gap-1.5">' +
+            '<span class="material-symbols-outlined text-base text-primary">backpack</span>' +
+            '<span>当日持参照物</span>' +
+          '</div>' +
+          '<div class="bg-surface-container-low rounded-xl p-3 space-y-1.5 text-xs sm:text-[13px]">' +
+            '<p class="text-on-surface leading-relaxed">・制服着用 ・筆記用具（鉛筆・消しゴム・定規・コンパス） ・受験票 ・志望校記入用紙 ・昼食 ・飲料 ・上履き</p>' +
+            '<p class="text-secondary font-bold leading-relaxed text-xs pt-1">※志望校記入用紙と受験票は事前にご郵送いたします。当日必ずお持ちください。</p>' +
+          '</div>' +
+        '</div>'
+      );
+    }
+
+    // 4. 当日の時間割 (timetable)
+    if (session.timetable && session.timetable.length > 0) {
+      var ttRows = session.timetable.map(function(item, idx) {
+        var isLast = idx === session.timetable.length - 1;
+        var borderClass = isLast ? '' : 'border-b border-surface-container/60';
+        return (
+          '<div class="flex justify-between items-center py-2 sm:py-2.5 ' + borderClass + '">' +
+            '<span class="font-bold text-on-surface">' + item.label + '</span>' +
+            '<span class="font-bold text-on-surface">' + item.time_range + '</span>' +
+          '</div>'
+        );
+      }).join('');
+
+      cards.push(
+        '<div class="bg-white rounded-xl p-3.5 sm:p-4 shadow-xs border border-outline-variant/10 space-y-2">' +
+          '<div class="font-bold text-xs sm:text-sm text-on-surface flex items-center gap-1.5">' +
+            '<span class="material-symbols-outlined text-base text-primary">schedule</span>' +
+            '<span>当日の時間割（5教科）</span>' +
+          '</div>' +
+          '<div class="bg-surface-container-low rounded-xl py-3.5 sm:py-4 px-6 sm:px-8 text-sm sm:text-base">' +
+            ttRows +
+          '</div>' +
+          '<p class="text-[11px] sm:text-xs text-on-surface-variant leading-relaxed">※試験終了後、詳細な解答・解説集を受験者全員にお渡しいたします。</p>' +
+        '</div>'
+      );
+    }
+
+    return cards.join('');
+  }
+
+  // 右側「自宅受検カード」生成
+  function buildStructuredHomeCards(session) {
+    var cards = [];
+    var schedules = session.schedules || [];
+    var homeSchedule = schedules.filter(function(item) {
+      return isHomeVenueType(item.venue_type);
+    })[0] || null;
+
+    // 1. 問題用紙等の発送
+    var shipDateHome = session.shipping_date_home || '10月13日(火) 頃発送予定';
+    cards.push(
+      '<div class="bg-white rounded-xl p-3.5 sm:p-4 shadow-xs border border-outline-variant/10 space-y-2">' +
+        '<div class="font-bold text-xs sm:text-sm text-on-surface flex items-center gap-1.5">' +
+          '<span class="material-symbols-outlined text-base text-primary">mark_email_read</span>' +
+          '<span>問題用紙等の発送</span>' +
+        '</div>' +
+        '<div class="text-primary font-bold text-base sm:text-lg">' + shipDateHome + '</div>' +
+      '</div>'
+    );
+
+    // 2. 実施期間
+    var periodStr = homeSchedule
+      ? formatDateRangeLong(homeSchedule.date_start, homeSchedule.date_end)
+      : '2026年10月17日(土) 〜 11月1日(日)';
+    cards.push(
+      '<div class="bg-white rounded-xl p-3.5 sm:p-4 shadow-xs border border-outline-variant/10 space-y-2">' +
+        '<div class="font-bold text-xs sm:text-sm text-on-surface flex items-center gap-1.5">' +
+          '<span class="material-symbols-outlined text-base text-primary">calendar_today</span>' +
+          '<span>実施期間</span>' +
+        '</div>' +
+        '<div class="text-secondary font-bold text-base sm:text-lg leading-snug tracking-tight" style="color: #a23e18;">' +
+          periodStr +
+        '</div>' +
+        '<div class="text-xs text-on-surface-variant leading-relaxed">期間内のご都合に合わせて受験いただけます。</div>' +
+      '</div>'
+    );
+
+    // 3. 答案提出締め切り
+    var deadlineRaw = session.submission_deadline || '2026年11月4日(水)';
+    var deadlineFormatted = /^\d{4}-\d{2}-\d{2}/.test(deadlineRaw)
+      ? formatDateSingle(deadlineRaw)
+      : deadlineRaw;
+
+    cards.push(
+      '<div class="bg-white rounded-xl p-3.5 sm:p-4 shadow-xs border border-outline-variant/10 space-y-2">' +
+        '<div class="font-bold text-xs sm:text-sm text-on-surface flex items-center gap-1.5">' +
+          '<span class="material-symbols-outlined text-base text-primary">event</span>' +
+          '<span>答案提出締め切り</span>' +
+        '</div>' +
+        '<div class="text-primary font-bold text-base sm:text-lg">' +
+          deadlineFormatted +
+          '<span class="text-xs sm:text-sm font-bold text-primary bg-primary/10 px-2 py-0.5 rounded ml-2">指定業者必着</span>' +
+        '</div>' +
+        '<div class="text-xs text-on-surface-variant leading-relaxed">答案用紙は期日までに同封の返送用封筒にて指定業者宛ご郵送ください。</div>' +
+        '<div class="text-xs text-secondary font-bold leading-relaxed pt-0.5" style="color: #a23e18;">※期日を超えての到着は採点・判定ができませんのでご注意ください。</div>' +
+      '</div>'
+    );
+
+    // 4. 成績表のご返却予定
+    var returnDate = session.return_date || '2026年11月12日(木) 発送予定';
+    cards.push(
+      '<div class="bg-white rounded-xl p-3.5 sm:p-4 shadow-xs border border-outline-variant/10 space-y-2">' +
+        '<div class="font-bold text-xs sm:text-sm text-on-surface flex items-center gap-1.5">' +
+          '<span class="material-symbols-outlined text-base text-primary">calendar_month</span>' +
+          '<span>成績表のご返却予定</span>' +
+        '</div>' +
+        '<div class="text-primary font-bold text-base sm:text-lg">' + returnDate + '</div>' +
+        '<div class="text-xs text-on-surface-variant leading-relaxed">個人成績表を発送いたします。</div>' +
+        '<div class="text-xs text-on-surface-variant leading-relaxed">ご自宅到着は翌週になる場合がございます。</div>' +
+      '</div>'
+    );
+
+    return cards.join('');
+  }
+
+
   function buildGuidelineSectionHTML(session) {
     var schedules = session.schedules || [];
 
-    // 2. 会場受検データの判定: schedules 配列内に「自宅」以外のデータが存在するか
+    // 会場受検データの判定: schedules 配列内に「自宅」以外のデータが存在するか
     var hasVenueExams = schedules.length > 0
       ? schedules.some(function(item) { return !isHomeVenueType(item.venue_type); })
       : false;
@@ -2594,25 +2793,35 @@
       ? schedules.some(function(item) { return isHomeVenueType(item.venue_type); })
       : false;
 
-    var venueHTML = session.venue_exam_html || '';
-    if (!venueHTML && hasVenueExams) {
-      venueHTML = DEFAULT_VENUE_EXAM_HTML;
+    // 新構造データ（shipping_date_venue / belongings / timetable / shipping_date_home など）があるか判定
+    var hasStructuredVenue = !!(session.shipping_date_venue || session.belongings || (session.timetable && session.timetable.length));
+    var hasStructuredHome = !!(session.shipping_date_home || session.submission_deadline || session.return_date);
+
+    var venueCards = '';
+    if (hasStructuredVenue || hasVenueExams) {
+      venueCards = buildStructuredVenueCards(session);
+    } else {
+      var venueHTML = session.venue_exam_html || (hasVenueExams ? DEFAULT_VENUE_EXAM_HTML : '');
+      if (venueHTML) {
+        venueCards = parseGuidelineCards(venueHTML, 'venue', schedules);
+      }
     }
 
-    var homeHTML = session.home_exam_html || '';
-    if (!homeHTML && hasHomeExams) {
-      homeHTML = DEFAULT_HOME_EXAM_HTML;
+    var homeCards = '';
+    if (hasStructuredHome || hasHomeExams) {
+      homeCards = buildStructuredHomeCards(session);
+    } else {
+      var homeHTML = session.home_exam_html || (hasHomeExams ? DEFAULT_HOME_EXAM_HTML : '');
+      if (homeHTML) {
+        homeCards = parseGuidelineCards(homeHTML, 'home', schedules);
+      }
     }
-
-    var legacyHTML = session.guideline_html || '';
-
-    var venueCards = parseGuidelineCards(venueHTML, 'venue', schedules);
-    var homeCards = parseGuidelineCards(homeHTML, 'home', schedules);
 
     var hasVenue = !!venueCards || hasVenueExams;
     var hasHome = !!homeCards || hasHomeExams;
 
     if (!hasVenue && !hasHome) {
+      var legacyHTML = session.guideline_html || '';
       return legacyHTML
         ? '<div class="space-y-4 pt-4 border-t border-surface-container"><div class="flex items-center gap-2 pb-2 border-b border-surface-container/60"><span class="w-2.5 h-6 bg-primary rounded-xs inline-block"></span><h4 class="font-headline-lg text-xl sm:text-2xl text-on-surface font-bold tracking-tight">実施要項</h4></div><div class="prose max-w-none text-on-surface text-sm sm:text-base leading-relaxed">' + legacyHTML + '</div></div>'
         : '';

@@ -1044,18 +1044,16 @@
     // 0. microCMS & Stripe 設定
     // ========================================================
     const MICROCMS_CONFIG = {
-      serviceDomain: 'okamoshi', // ご利用のmicroCMSサービスドメイン
-      apiKey: '',                // APIキー（未設定時はモックデータを使用）
-      endpoint: 'exams'          // 模試データエンドポイント
+      serviceDomain: 'okamoshi-blog',
+      apiKey: '4qO3xGjs5W1r7zolbBgAX2KXP8VEUooOpMtc',
+      endpoint: 'exam-guides'
     };
 
     // Stripe Checkout セッション生成エンドポイント
     const STRIPE_CHECKOUT_ENDPOINT = '/api/create-checkout-session';
 
     // ========================================================
-    // 1. 模試マスターデータ（microCMS連携用ダミーデータオブジェクト）
-    //    ※ deadline は ISO8601 形式の日時（現在時刻と比較）
-    //    ※ status: 'open' | 'closed'
+    // 1. 模試フォールバック・マスターデータ（microCMS未取得時・欠損補完用）
     // ========================================================
     const EXAMS_DATABASE = [
       // ---------------- 中学3年生 ----------------
@@ -1063,6 +1061,7 @@
         id: 'chu3_10',
         grade: 'chu3',
         gradeLabel: '中3',
+        issueName: '10月号',
         title: '第2回 岡山県統一模擬試験（10月号）',
         badge: '中3対象・受付中',
         examDate: '2026年11月1日(日)',
@@ -1072,9 +1071,8 @@
         status: 'open',
         isDefaultChecked: true,
         venues: [
-          { value: 'venue_okayama', label: '岡山会場（岡山大学 津島キャンパス / 山陽学園）' },
-          { value: 'venue_kurashiki', label: '倉敷会場（倉敷商工会議所）' },
-          { value: 'venue_tsuyama', label: '津山会場（美作大学）' },
+          { value: 'venue_okayama', label: '岡山会場（山陽学園中学校・高等学校）' },
+          { value: 'venue_tsuyama', label: '津山会場（美作高等学校）' },
           { value: 'home', label: '自宅受験（問題冊子郵送・期日内答案返送）' }
         ]
       },
@@ -1082,6 +1080,7 @@
         id: 'chu3_11',
         grade: 'chu3',
         gradeLabel: '中3',
+        issueName: '11月号',
         title: '第3回 岡山県統一模擬試験（11月号）',
         badge: '中3対象・予約受付',
         examDate: '2026年11月15日(日)',
@@ -1101,18 +1100,19 @@
         id: 'chu3_12',
         grade: 'chu3',
         gradeLabel: '中3',
+        issueName: '12月号',
         title: '第4回 岡山県統一模擬試験（12月号）',
         badge: '中3対象・予約受付',
         examDate: '2026年12月20日(日)',
-        deadline: '2026-12-13T23:59:59+09:00', // 未来日時（受付中）
-        deadlineDisplay: '12/13(日) 23:59',
+        deadline: '2026-12-14T23:59:59+09:00', // 未来日時（受付中）
+        deadlineDisplay: '12/14(月) 23:59',
         price: 5500,
         status: 'open',
         isDefaultChecked: false,
         venues: [
-          { value: 'venue_okayama', label: '岡山会場（岡山大学 津島キャンパス）' },
-          { value: 'venue_kurashiki', label: '倉敷会場（倉敷商工会議所）' },
-          { value: 'venue_tsuyama', label: '津山会場（美作大学）' },
+          { value: 'venue_okayama', label: '岡山会場（岡山市民会館）' },
+          { value: 'venue_kurashiki', label: '倉敷会場（倉敷市民センター）' },
+          { value: 'venue_tsuyama', label: '津山会場（津山商工会議所）' },
           { value: 'home', label: '自宅受験（問題冊子郵送・期日内答案返送）' }
         ]
       },
@@ -1120,17 +1120,16 @@
         id: 'chu3_08',
         grade: 'chu3',
         gradeLabel: '中3',
+        issueName: '8月号',
         title: '第1回 岡山県統一模擬試験（8月号）',
         badge: '中3対象・受付終了',
         examDate: '2026年8月23日(日)',
-        deadline: '2026-08-16T23:59:59+09:00', // 過去日時（自動非表示テスト用）
+        deadline: '2026-08-16T23:59:59+09:00', // 過去日時（自動除外対象）
         deadlineDisplay: '8/16(日) 23:59',
         price: 5500,
-        status: 'closed', // 締切済み
+        status: 'closed',
         isDefaultChecked: false,
-        venues: [
-          { value: 'venue_okayama', label: '岡山会場' }
-        ]
+        venues: [{ value: 'venue_okayama', label: '岡山会場' }]
       },
 
       // ---------------- 中学2年生 ----------------
@@ -1138,12 +1137,13 @@
         id: 'chu2_12',
         grade: 'chu2',
         gradeLabel: '中2',
+        issueName: '12月号',
         title: '第2回 中2 岡山県統一模擬試験（12月号）',
         badge: '中2対象・受付中',
         examDate: '2026年12月20日(日)',
-        deadline: '2026-12-13T23:59:59+09:00', // 未来日時（受付中）
+        deadline: '2026-12-13T23:59:59+09:00',
         deadlineDisplay: '12/13(日) 23:59',
-        price: 4400,
+        price: 5500,
         status: 'open',
         isDefaultChecked: true,
         venues: [
@@ -1157,12 +1157,13 @@
         id: 'chu2_03',
         grade: 'chu2',
         gradeLabel: '中2',
+        issueName: '3月号',
         title: '第3回 中2 岡山県統一模擬試験（3月号 学年末対策）',
         badge: '中2対象・予約受付',
         examDate: '2027年3月14日(日)',
-        deadline: '2027-03-07T23:59:59+09:00', // 未来日時（受付中）
+        deadline: '2027-03-07T23:59:59+09:00',
         deadlineDisplay: '2027/3/7(日) 23:59',
-        price: 4400,
+        price: 5500,
         status: 'open',
         isDefaultChecked: false,
         venues: [
@@ -1172,32 +1173,19 @@
           { value: 'home', label: '自宅受験（問題冊子郵送・期日内答案返送）' }
         ]
       },
-      {
-        id: 'chu2_08',
-        grade: 'chu2',
-        gradeLabel: '中2',
-        title: '第1回 中2 岡山県統一模擬試験（8月号）',
-        badge: '中2対象・受付終了',
-        examDate: '2026年8月23日(日)',
-        deadline: '2026-08-16T23:59:59+09:00',
-        deadlineDisplay: '8/16(日) 23:59',
-        price: 4400,
-        status: 'closed',
-        isDefaultChecked: false,
-        venues: [{ value: 'home', label: '自宅受験' }]
-      },
 
       // ---------------- 中学1年生 ----------------
       {
         id: 'chu1_12',
         grade: 'chu1',
         gradeLabel: '中1',
+        issueName: '12月号',
         title: '第2回 中1 岡山県統一模擬試験（12月号）',
         badge: '中1対象・受付中',
         examDate: '2026年12月20日(日)',
-        deadline: '2026-12-13T23:59:59+09:00', // 未来日時（受付中）
+        deadline: '2026-12-13T23:59:59+09:00',
         deadlineDisplay: '12/13(日) 23:59',
-        price: 4400,
+        price: 5500,
         status: 'open',
         isDefaultChecked: true,
         venues: [
@@ -1211,12 +1199,13 @@
         id: 'chu1_03',
         grade: 'chu1',
         gradeLabel: '中1',
+        issueName: '3月号',
         title: '第3回 中1 岡山県統一模擬試験（3月号 学年末対策）',
         badge: '中1対象・予約受付',
         examDate: '2027年3月14日(日)',
-        deadline: '2027-03-07T23:59:59+09:00', // 未来日時（受付中）
+        deadline: '2027-03-07T23:59:59+09:00',
         deadlineDisplay: '2027/3/7(日) 23:59',
-        price: 4400,
+        price: 5500,
         status: 'open',
         isDefaultChecked: false,
         venues: [
@@ -1232,10 +1221,11 @@
         id: 'sho6_10',
         grade: 'sho6',
         gradeLabel: '小6',
+        issueName: '10月号',
         title: '第2回 岡山県立中高一貫校 適性検査対策模試（10月号）',
         badge: '小6対象・受付中',
         examDate: '2026年10月18日(日)',
-        deadline: '2026-10-11T23:59:59+09:00', // 未来日時（受付中）
+        deadline: '2026-10-11T23:59:59+09:00',
         deadlineDisplay: '10/11(日) 23:59',
         price: 5500,
         status: 'open',
@@ -1251,10 +1241,11 @@
         id: 'sho6_12',
         grade: 'sho6',
         gradeLabel: '小6',
+        issueName: '12月号',
         title: '第3回 岡山県立中高一貫校 適性検査対策模試（12月号 直前対策）',
-        badge: '小6対象・直前演習',
+        badge: '小6対象・予約受付',
         examDate: '2026年12月13日(日)',
-        deadline: '2026-12-06T23:59:59+09:00', // 未来日時（受付中）
+        deadline: '2026-12-06T23:59:59+09:00',
         deadlineDisplay: '12/6(日) 23:59',
         price: 5500,
         status: 'open',
@@ -1265,30 +1256,178 @@
           { value: 'venue_tsuyama', label: '津山会場（津山中学校 受検対応）' },
           { value: 'home', label: '自宅受験（問題冊子郵送・期日内答案返送）' }
         ]
-      },
-      {
-        id: 'sho6_07',
-        grade: 'sho6',
-        gradeLabel: '小6',
-        title: '第1回 岡山県立中高一貫校 適性検査対策模試（7月号）',
-        badge: '小6対象・受付終了',
-        examDate: '2026年7月12日(日)',
-        deadline: '2026-07-05T23:59:59+09:00',
-        deadlineDisplay: '7/5(日) 23:59',
-        price: 5500,
-        status: 'closed',
-        isDefaultChecked: false,
-        venues: [{ value: 'home', label: '自宅受験' }]
       }
     ];
 
     // 現在の選択状態
     let currentSelectedGrade = 'chu3';
-    let currentExamsList = [];
+    let _examGuidesCache = null; // microCMS exam-guides キャッシュ
     let selectedExamsState = {}; // { [examId]: { ...exam, venue, venueLabel } }
 
     // ========================================================
-    // 2. 学年切り替えロジック
+    // 2. 日時パース & 整形ユーティリティ
+    // ========================================================
+    /**
+     * 申込締切日時をパースしてタイムスタンプ(ms)を返却
+     * ISO文字列、または日本語表記（例: "2026年10月5日(月)", "12月14日(月)", "10/25(日) 23:59"）に対応
+     */
+    function parseDeadline(deadlineRaw) {
+      if (!deadlineRaw || typeof deadlineRaw !== 'string') return null;
+      const str = deadlineRaw.trim();
+      if (!str) return null;
+
+      // 1. ISO 形式 (例: 2026-10-25T23:59:59+09:00, 2026-10-05T15:00:00.000Z)
+      if (/^\d{4}-\d{2}-\d{2}/.test(str)) {
+        const t = new Date(str).getTime();
+        if (!isNaN(t)) return t;
+      }
+
+      // 2. 日本語形式 (例: "2026年10月5日(月)", "12月14日(月)", "10/25(日) 23:59")
+      const currentYear = new Date().getFullYear();
+      let year = currentYear;
+      const yearMatch = str.match(/(\d{4})[年\/-]/);
+      if (yearMatch) {
+        year = parseInt(yearMatch[1], 10);
+      }
+
+      const monthMatch = str.match(/(\d{1,2})[月\/-]/);
+      const dayMatch = str.match(/[月\/-](\d{1,2})[日]?/);
+
+      if (monthMatch && dayMatch) {
+        const month = parseInt(monthMatch[1], 10);
+        const day = parseInt(dayMatch[1], 10);
+
+        // 年が省略され、現在が秋〜冬で月が1〜3月の場合は翌年とみなす
+        if (!yearMatch) {
+          const currentMonth = new Date().getMonth() + 1;
+          if (currentMonth >= 9 && month <= 3) {
+            year = currentYear + 1;
+          }
+        }
+
+        let hour = 23;
+        let minute = 59;
+        let second = 59;
+        const timeMatch = str.match(/(\d{1,2})[:：](\d{1,2})/);
+        if (timeMatch) {
+          hour = parseInt(timeMatch[1], 10);
+          minute = parseInt(timeMatch[2], 10);
+        }
+
+        const d = new Date(year, month - 1, day, hour, minute, second);
+        return d.getTime();
+      }
+
+      return null;
+    }
+
+    /**
+     * 申込締切表示テキストを整形（例: "10/25(日) 23:59"）
+     */
+    function formatDeadlineDisplay(deadlineRaw, parsedTime) {
+      const t = parsedTime || parseDeadline(deadlineRaw);
+      if (t) {
+        const d = new Date(t);
+        const days = ['日', '月', '火', '水', '木', '金', '土'];
+        const m = d.getMonth() + 1;
+        const dt = d.getDate();
+        const day = days[d.getDay()];
+        const hh = String(d.getHours()).padStart(2, '0');
+        const mm = String(d.getMinutes()).padStart(2, '0');
+        return `${m}/${dt}(${day}) ${hh}:${mm}`;
+      }
+      return deadlineRaw || '締切日時未定';
+    }
+
+    /**
+     * schedules から代表日または実施期間を整形表示
+     */
+    function formatExamDate(session, fallbackExamDate) {
+      if (session && Array.isArray(session.schedules) && session.schedules.length > 0) {
+        const days = ['日', '月', '火', '水', '木', '金', '土'];
+        // 会場受検のスケジュールを優先
+        const venueSch = session.schedules.find(sch => {
+          const types = Array.isArray(sch.venue_type) ? sch.venue_type : [sch.venue_type || ''];
+          return !types.some(t => t && t.includes('自宅')) && (sch.date_start || sch.date_text);
+        }) || session.schedules[0];
+
+        if (venueSch) {
+          if (venueSch.date_text) return venueSch.date_text;
+          if (venueSch.date_start) {
+            const d = new Date(venueSch.date_start);
+            if (!isNaN(d.getTime())) {
+              const y = d.getFullYear();
+              const m = d.getMonth() + 1;
+              const dt = d.getDate();
+              const day = days[d.getDay()];
+
+              // 複数日期間（date_end があり別日の場合）
+              if (venueSch.date_end) {
+                const dEnd = new Date(venueSch.date_end);
+                if (!isNaN(dEnd.getTime()) && (dEnd.getDate() !== dt || dEnd.getMonth() !== d.getMonth())) {
+                  const mEnd = dEnd.getMonth() + 1;
+                  const dtEnd = dEnd.getDate();
+                  const dayEnd = days[dEnd.getDay()];
+                  return `${y}年${m}/${dt}(${day})〜${mEnd}/${dtEnd}(${dayEnd})`;
+                }
+              }
+              return `${y}年${m}月${dt}日(${day})`;
+            }
+          }
+        }
+      }
+      return fallbackExamDate || '実施日未定';
+    }
+
+    /**
+     * schedules から会場名（venue_name）および「自宅受検」を動的選択肢として抽出
+     */
+    function extractVenuesFromSchedules(session, fallbackVenues) {
+      const venues = [];
+
+      if (session && Array.isArray(session.schedules) && session.schedules.length > 0) {
+        session.schedules.forEach((sch, sIdx) => {
+          const types = Array.isArray(sch.venue_type) ? sch.venue_type : [sch.venue_type || ''];
+          const isHome = types.some(t => t && (t.includes('自宅') || t.includes('自宅受検') || t.includes('自宅受験'))) ||
+                         (sch.venue_name && sch.venue_name.includes('自宅'));
+          if (!isHome) {
+            const typeName = types[0] || '会場';
+            let label = sch.venue_name ? `${typeName}（${sch.venue_name}）` : typeName;
+            if (sch.venue_name && sch.venue_name.includes(typeName)) {
+              label = sch.venue_name;
+            }
+            let valKey = 'venue_' + sIdx;
+            if (typeName.includes('岡山')) valKey = 'venue_okayama';
+            else if (typeName.includes('倉敷')) valKey = 'venue_kurashiki';
+            else if (typeName.includes('津山')) valKey = 'venue_tsuyama';
+
+            // 重複排除
+            if (!venues.some(v => v.label === label)) {
+              venues.push({
+                value: valKey,
+                label: label
+              });
+            }
+          }
+        });
+      }
+
+      // 「自宅受験」の選択肢を追加
+      venues.push({
+        value: 'home',
+        label: '自宅受験（問題冊子郵送・期日内答案返送）'
+      });
+
+      // スケジュールから会場が1つも抽出できなかった場合はフォールバック
+      if (venues.length === 1 && fallbackVenues && fallbackVenues.length > 0) {
+        return fallbackVenues;
+      }
+
+      return venues;
+    }
+
+    // ========================================================
+    // 3. 学年切り替えロジック
     // ========================================================
     function selectFormGrade(gradeKey) {
       currentSelectedGrade = gradeKey;
@@ -1316,36 +1455,192 @@
     }
 
     // ========================================================
-    // 3. 模試データのフィルタリング & 動的レンダリング
-    //    表示条件:
-    //    1) 選択された学年と一致すること
-    //    2) 申込締切日時（deadline）が現在時刻よりも未来であること（締切済みは非表示）
-    //    3) 受付ステータス（status）が 'open' であること
+    // 4. microCMSデータ連動 & 締切フィルタリング & 動的レンダリング
     // ========================================================
-    function filterAvailableExams(allExams, gradeKey) {
-      const now = new Date().getTime();
+    /**
+     * 学年キーに応じた模試一覧を生成（microCMS優先 + フォールバック補完）
+     * 1) 選択学年の sessions を抽出
+     * 2) application_deadline と現在日時をリアルタイム比較（締切を過ぎた模試は自動除外）
+     * 3) active_issue と一致する模試は「〇〇対象・受付中」、より後の号は「〇〇対象・予約受付」
+     * 4) schedules から希望会場および自宅受検を動的生成
+     */
+    function getAvailableExamsForGrade(gradeKey) {
+      const now = Date.now();
+      const gradeLabels = { sho6: '小6', chu1: '中1', chu2: '中2', chu3: '中3' };
+      const gradeLabel = gradeLabels[gradeKey] || '中3';
+      const gradePrefix = `${gradeLabel}対象`;
 
-      return allExams.filter(exam => {
-        // 1. 学年一致
-        if (exam.grade !== gradeKey) return false;
+      // 学年コード・名称マッチング
+      const gradeCodeMap = { chu3: 'c3', chu2: 'c2', chu1: 'c1', sho6: 'e6' };
+      const targetCode = gradeCodeMap[gradeKey];
 
-        // 2. 受付ステータスが 'open'
-        if (exam.status !== 'open') return false;
+      let targetGuide = null;
+      if (_examGuidesCache && Array.isArray(_examGuidesCache)) {
+        targetGuide = _examGuidesCache.find(g => {
+          if (targetCode && (g.grade_code === targetCode || (targetCode === 'e6' && g.grade_code === 's6'))) {
+            return true;
+          }
+          if (g.grade_name && g.grade_name.includes(gradeLabel)) {
+            return true;
+          }
+          return false;
+        });
+      }
 
-        // 3. 締切日時が現在時刻より未来
-        const deadlineTime = new Date(exam.deadline).getTime();
-        if (isNaN(deadlineTime) || deadlineTime <= now) return false;
+      // フォールバック模試リスト
+      const fallbackList = EXAMS_DATABASE.filter(e => e.grade === gradeKey);
 
-        return true;
+      let rawSessions = [];
+      let activeIssueStr = '';
+
+      if (targetGuide) {
+        rawSessions = Array.isArray(targetGuide.sessions) ? targetGuide.sessions : [];
+        if (targetGuide.active_issue) {
+          activeIssueStr = Array.isArray(targetGuide.active_issue)
+            ? (targetGuide.active_issue[0] || '')
+            : String(targetGuide.active_issue);
+        }
+      }
+
+      // microCMS の sessions をベースに模試アイテム配列を構築
+      let candidateExams = [];
+
+      if (rawSessions.length > 0) {
+        rawSessions.forEach((s, idx) => {
+          const issueName = (s.issue_name || s.session_label || '').trim();
+          // 対応するフォールバック情報（未設定項目を補完）
+          const fallback = fallbackList.find(f => f.issueName && issueName && f.issueName.includes(issueName))
+            || fallbackList[idx]
+            || {};
+
+          // 締切日時
+          const deadlineRaw = s.application_deadline || s.deadline || fallback.deadline || '';
+          const deadlineTime = parseDeadline(deadlineRaw);
+
+          // 【自動非表示ルール】: 締切日時を過ぎている模試は除外
+          if (deadlineTime && deadlineTime <= now) {
+            return;
+          }
+
+          // 模試タイトル: issue_name + title（例: 「第2回 岡山県統一模擬試験 (10月号)」）
+          let title = '';
+          if (fallback.title && (!s.title || s.title === '岡山県統一模擬試験（おかもし）')) {
+            title = fallback.title;
+          } else {
+            const baseTitle = s.title || fallback.title || '岡山県統一模擬試験';
+            if (issueName && !baseTitle.includes(issueName)) {
+              title = `${baseTitle}（${issueName}）`;
+            } else {
+              title = baseTitle;
+            }
+          }
+
+          // 実施日
+          const examDate = formatExamDate(s, fallback.examDate);
+
+          // 申込締切表示
+          const deadlineDisplay = formatDeadlineDisplay(deadlineRaw, deadlineTime);
+
+          // 受験料
+          let price = fallback.price || (gradeKey === 'chu1' || gradeKey === 'chu2' ? 5500 : 5500);
+          if (s.fee) {
+            const parsedFee = parseInt(String(s.fee).replace(/[^0-9]/g, ''), 10);
+            if (!isNaN(parsedFee) && parsedFee > 0) {
+              price = parsedFee;
+            }
+          }
+
+          // 会場リスト
+          const venues = extractVenuesFromSchedules(s, fallback.venues);
+
+          candidateExams.push({
+            id: `${gradeKey}_${s.id || issueName || idx}`,
+            grade: gradeKey,
+            gradeLabel: gradeLabel,
+            issueName: issueName,
+            title: title,
+            examDate: examDate,
+            deadline: deadlineRaw,
+            deadlineTime: deadlineTime,
+            deadlineDisplay: deadlineDisplay,
+            price: price,
+            status: 'open',
+            venues: venues,
+            originalIndex: idx
+          });
+        });
+
+        // もし microCMS 側の未締切セッションが少なく、フォールバック側に未登録の未来の号（例: 3月号など）がある場合は補完
+        fallbackList.forEach(fb => {
+          const fbDeadlineTime = parseDeadline(fb.deadline);
+          if (fbDeadlineTime && fbDeadlineTime <= now) return; // 締切済み除外
+
+          const alreadyExists = candidateExams.some(c => c.issueName && fb.issueName && c.issueName.includes(fb.issueName));
+          if (!alreadyExists) {
+            candidateExams.push({
+              ...fb,
+              deadlineTime: fbDeadlineTime,
+              originalIndex: candidateExams.length
+            });
+          }
+        });
+
+      } else {
+        // microCMS 未取得時またはセッション未定義時はフォールバックリストを使用
+        fallbackList.forEach(fb => {
+          const fbDeadlineTime = parseDeadline(fb.deadline);
+          // 締切前のみ
+          if (fb.status !== 'closed' && (!fbDeadlineTime || fbDeadlineTime > now)) {
+            candidateExams.push({
+              ...fb,
+              deadlineTime: fbDeadlineTime
+            });
+          }
+        });
+      }
+
+      // 受付ステータスバッジの自動判定
+      // - 締切前で、active_issue と一致する模試 ➔ 「〇〇対象・受付中」
+      // - 締切前で、active_issue より後の号 ➔ 「〇〇対象・予約受付」
+      let activeIndexInCandidates = -1;
+      if (activeIssueStr) {
+        activeIndexInCandidates = candidateExams.findIndex(e => e.issueName && e.issueName.includes(activeIssueStr));
+      }
+
+      candidateExams = candidateExams.map((exam, index) => {
+        let badge = '';
+        if (activeIndexInCandidates !== -1) {
+          if (index === activeIndexInCandidates || index < activeIndexInCandidates) {
+            badge = `${gradePrefix}・受付中`;
+          } else {
+            badge = `${gradePrefix}・予約受付`;
+          }
+        } else {
+          // active_issue が未指定または既に締切済みの号だった場合:
+          // 残っている未締切模試の先頭が「受付中」、2番目以降が「予約受付」
+          if (index === 0) {
+            badge = `${gradePrefix}・受付中`;
+          } else {
+            badge = `${gradePrefix}・予約受付`;
+          }
+        }
+
+        return {
+          ...exam,
+          badge: badge,
+          isDefaultChecked: index === 0 // 最も早い号をデフォルト選択
+        };
       });
+
+      return candidateExams;
     }
 
     function renderExamCards(gradeKey) {
       const container = document.getElementById('examOptionGroup');
       if (!container) return;
 
-      // 該当学年の受付中模試を抽出
-      const availableExams = filterAvailableExams(currentExamsList.length > 0 ? currentExamsList : EXAMS_DATABASE, gradeKey);
+      // 該当学年の受付中模試を抽出（締切前・自動非表示適用済み）
+      const availableExams = getAvailableExamsForGrade(gradeKey);
       selectedExamsState = {};
 
       if (availableExams.length === 0) {
@@ -1362,7 +1657,7 @@
 
       // カード群を生成
       container.innerHTML = availableExams.map((exam, index) => {
-        // デフォルト選択（最初の1件またはisDefaultChecked）
+        // デフォルト選択（最初の1件）
         const isChecked = exam.isDefaultChecked || index === 0;
         const defaultVenue = exam.venues && exam.venues.length > 0 ? exam.venues[0].value : 'venue_okayama';
         const defaultVenueLabel = exam.venues && exam.venues.length > 0 ? exam.venues[0].label : '岡山会場';
@@ -1430,7 +1725,7 @@
       const card = document.getElementById('card-' + examId);
       const venueSelect = document.getElementById('venue-' + examId);
       const venueWrapper = document.getElementById('venue-wrapper-' + examId);
-      const exams = currentExamsList.length > 0 ? currentExamsList : EXAMS_DATABASE;
+      const exams = getAvailableExamsForGrade(currentSelectedGrade);
       const examData = exams.find(e => e.id === examId);
 
       if (!chk || !examData) return;
@@ -1758,30 +2053,33 @@
     }
 
     // ========================================================
-    // 7. microCMS からの動的データ取得（設定がある場合）
+    // 7. microCMS からの動的データ取得（exam-guides API）
     // ========================================================
     async function loadExamsFromMicroCMS() {
       if (!MICROCMS_CONFIG.apiKey || MICROCMS_CONFIG.apiKey === 'YOUR_MICROCMS_API_KEY') {
         console.info('[microCMS] APIキー未設定のため、内蔵の模試マスターデータを使用します。');
-        currentExamsList = EXAMS_DATABASE;
+        _examGuidesCache = null;
         return;
       }
 
       try {
-        const url = `https://${MICROCMS_CONFIG.serviceDomain}.microcms.io/api/v1/${MICROCMS_CONFIG.endpoint}?limit=50`;
+        const url = `https://${MICROCMS_CONFIG.serviceDomain}.microcms.io/api/v1/${MICROCMS_CONFIG.endpoint}?limit=100&_t=${Date.now()}`;
         const res = await fetch(url, {
+          cache: 'no-store',
           headers: { 'X-MICROCMS-API-KEY': MICROCMS_CONFIG.apiKey }
         });
         if (res.ok) {
           const data = await res.json();
           if (data && data.contents && data.contents.length > 0) {
-            currentExamsList = data.contents;
-            console.log('[microCMS] 模試データを正常に取得しました:', currentExamsList);
+            _examGuidesCache = data.contents;
+            console.log('[microCMS] exam-guides データを正常に取得しました:', _examGuidesCache);
           }
+        } else {
+          console.warn('[microCMS] HTTPレスポンスエラー:', res.status);
         }
       } catch (err) {
-        console.warn('[microCMS] 模試データの取得に失敗しました。フォールバックデータを使用します:', err);
-        currentExamsList = EXAMS_DATABASE;
+        console.warn('[microCMS] exam-guides データの取得に失敗しました。フォールバックデータを使用します:', err);
+        _examGuidesCache = null;
       }
     }
 

@@ -2703,6 +2703,20 @@
       );
     }
 
+    // 5. 成績表のご返却予定 (右側自宅受検カードと同じデザイン)
+    var returnDateVenue = session.return_date || '2026年11月12日(木) 発送予定';
+    cards.push(
+      '<div class="bg-white rounded-xl p-3.5 sm:p-4 shadow-xs border border-outline-variant/10 space-y-2">' +
+        '<div class="font-bold text-xs sm:text-sm text-on-surface flex items-center gap-1.5">' +
+          '<span class="material-symbols-outlined text-base text-primary">calendar_month</span>' +
+          '<span>成績表のご返却予定</span>' +
+        '</div>' +
+        '<div class="text-primary font-bold text-base sm:text-lg">' + returnDateVenue + '</div>' +
+        '<div class="text-xs text-on-surface-variant leading-relaxed">個人成績表を発送いたします。</div>' +
+        '<div class="text-xs text-on-surface-variant leading-relaxed">ご自宅到着は翌週になる場合がございます。</div>' +
+      '</div>'
+    );
+
     return cards.join('');
   }
 

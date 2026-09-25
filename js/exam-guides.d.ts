@@ -24,13 +24,20 @@ export interface TimetableItem {
 
 export interface ExamSession {
   fieldId?: 'exam_session';
-  is_active: boolean;
+  is_active?: boolean;
+  /** 実施号名 (例: "10月号", "12月号", "3月号") */
   issue_name: string;
   session_label?: string;
+  /** アナウンス帯テキスト (例: "ただいま10月号のお申し込みを受付中です") */
   notice_text?: string;
+  announce_text?: string;
+  /** タイトル (例: "岡山県統一模擬試験（おかもし）") */
   title: string;
   catchphrase?: string;
+  catchcopy?: string;
+  /** 申込締切日 (例: "2026年10月5日(月)" または ISO日時) */
   deadline?: string;
+  application_deadline?: string;
   fee?: string;
   fee_note?: string;
   apply_button_text?: string;
@@ -50,7 +57,7 @@ export interface ExamSession {
   shipping_date_home?: string;
   /** 答案提出締め切り (例: "2026年11月4日(水)" または ISO文字列) */
   submission_deadline?: string;
-  /** 成績表のご返却予定 (例: "2026年11月12日(木) 発送予定") */
+  /** 成績表のご返却予定 (例: "2026年11月12日(木) 発送予定") - 会場・自宅共通 */
   return_date?: string;
 
   // 3. 実施日程・会場
@@ -66,9 +73,13 @@ export interface ExamSession {
 
 export interface ExamGuide {
   id: string;
-  grade_code: 'c3' | 'c2' | 'c1' | 's6' | string;
+  grade_code: 'c3' | 'c2' | 'c1' | 's6' | 'e6' | string;
   grade_label?: string;
   grade_name?: string;
   exam_name?: string;
+  /** 現在メインで表示・受付中の号名 (例: "10月号" または ["10月号"]) */
+  active_issue?: string | string[];
   sessions: ExamSession[];
+  annual_schedule?: any[];
+  subject_scopes?: any[];
 }

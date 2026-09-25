@@ -818,8 +818,32 @@
 </div>
 </div>
 <!-- Exam Quick Signup Card -->
-<!-- Exam Quick Signup Card -->
-<div class="p-space-lg bg-surface-container-lowest rounded-xl shadow-sm flex flex-col gap-space-md"><div class="flex items-center justify-between pb-space-xs border-b border-surface-container-highest"><div class="flex items-center gap-space-xs text-primary font-headline-sm text-headline-sm font-bold"><span class="material-symbols-outlined text-[22px] text-secondary">edit_calendar</span><span class="">次回の模試・お申込み</span></div><span class="text-[11px] font-bold text-secondary bg-secondary-fixed px-2 py-0.5 rounded-full">受付中</span></div><div class="flex flex-col gap-space-sm"><!-- Exam 1: 中3 --><div class="p-space-sm bg-surface-container-low rounded-lg border border-[#e2dedd] flex flex-col gap-2"><div class="flex items-center justify-between"><span class="px-space-xs py-0.5 rounded bg-primary-container text-on-primary-container font-label-sm text-label-sm font-bold">中学3年生対象</span><span class="text-xs font-bold text-secondary">¥5,500</span></div><h4 class="font-label-lg text-label-lg text-on-surface font-bold">第3回 岡山県統一模擬試験</h4><div class="space-y-1 text-xs text-on-surface-variant"><div class="flex items-center justify-between"><span class="text-outline">試験日</span><span class="font-medium text-on-surface">2026年10月18日(日)</span></div><div class="flex items-center justify-between"><span class="text-outline">会場</span><span class="text-right truncate max-w-[12rem]">岡山・倉敷・津山 特設会場</span></div><div class="flex items-center justify-between"><span class="text-outline">申込締切</span><span class="text-secondary font-bold">10月8日(木) 厳守</span></div></div></div><!-- Exam 2: 中1・2 --><div class="p-space-sm bg-surface-container-low rounded-lg border border-[#e2dedd] flex flex-col gap-2"><div class="flex items-center justify-between"><span class="px-space-xs py-0.5 rounded bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm font-bold">中学1・2年生対象</span><span class="text-xs font-medium text-outline">受付準備中</span></div><h4 class="font-label-lg text-label-lg text-on-surface font-bold">12月号 岡山県統一模擬試験</h4><div class="space-y-1 text-xs text-on-surface-variant"><div class="flex items-center justify-between"><span class="text-outline">実施期間</span><span class="font-medium text-on-surface">2026/12/26〜2027/1/11</span></div><div class="flex items-center justify-between"><span class="text-outline">会場</span><span class="text-right truncate max-w-[12rem]">各会場 または 自宅受験</span></div><div class="flex items-center justify-between"><span class="text-outline">申込締切</span><span class="font-medium text-on-surface">12月14日(月)</span></div></div></div><!-- Exam 3: 小6 --><div class="p-space-sm bg-surface-container-low rounded-lg border border-[#e2dedd] flex flex-col gap-2"><div class="flex items-center justify-between"><span class="px-space-xs py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-bold">小学6年生対象</span><span class="text-xs font-bold text-secondary">近日締切</span></div><h4 class="font-label-lg text-label-lg text-on-surface font-bold">10月号 岡山県適性検査対策模試</h4><div class="space-y-1 text-xs text-on-surface-variant"><div class="flex items-center justify-between"><span class="text-outline">実施期間</span><span class="font-medium text-on-surface">2026/10/24〜11/1</span></div><div class="flex items-center justify-between"><span class="text-outline">会場</span><span class="text-right truncate max-w-[12rem]">山陽学園会場・自宅</span></div><div class="flex items-center justify-between"><span class="text-outline">申込締切</span><span class="text-secondary font-bold">10月13日(火)</span></div></div></div></div><div class="flex flex-col gap-space-2xs pt-space-2xs"><a class="w-full py-space-sm bg-secondary text-on-secondary font-label-md text-label-md rounded-lg shadow-sm hover:bg-on-secondary-container hover:text-on-secondary transition-all text-center flex items-center justify-center gap-1" data-path="application-entry" href="blog.html"><span class="material-symbols-outlined text-[18px]">app_registration</span><span class="">個人受験を申し込む</span><span class="material-symbols-outlined text-[16px]">chevron_right</span></a><a class="w-full py-2 bg-surface-container hover:bg-surface-container-high text-primary font-label-sm text-label-sm rounded-lg transition-colors text-center flex items-center justify-center gap-1 font-bold" href="#guide"><span class="">模試実施要項・日程一覧を見る</span><span class="material-symbols-outlined text-[14px]">arrow_forward</span></a></div></div>
+<div class="p-space-lg bg-surface-container-lowest rounded-xl shadow-sm flex flex-col gap-space-md" id="sidebar-next-exam-widget">
+  <div class="flex items-center justify-between pb-space-xs border-b border-surface-container-highest">
+    <div class="flex items-center gap-space-xs text-primary font-headline-sm text-headline-sm font-bold">
+      <span class="material-symbols-outlined text-[22px] text-secondary">edit_calendar</span>
+      <span>次回の模試・お申込み</span>
+    </div>
+    <span class="text-[11px] font-bold text-secondary bg-secondary-fixed px-2 py-0.5 rounded-full">受付中</span>
+  </div>
+  <div class="flex flex-col gap-space-sm" id="sidebar-exam-widget-list">
+    <div class="py-8 text-center text-on-surface-variant flex items-center justify-center gap-2">
+      <span class="material-symbols-outlined animate-spin text-primary">sync</span>
+      <span class="text-xs">模試情報を読み込み中...</span>
+    </div>
+  </div>
+  <div class="flex flex-col gap-space-2xs pt-space-2xs">
+    <a class="w-full py-space-sm bg-secondary text-on-secondary font-label-md text-label-md rounded-lg shadow-sm hover:bg-on-secondary-container hover:text-on-secondary transition-all text-center flex items-center justify-center gap-1" data-path="application-entry" href="apply.html">
+      <span class="material-symbols-outlined text-[18px]">app_registration</span>
+      <span>個人受験を申し込む</span>
+      <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+    </a>
+    <a class="w-full py-2 bg-surface-container hover:bg-surface-container-high text-primary font-label-sm text-label-sm rounded-lg transition-colors text-center flex items-center justify-center gap-1 font-bold" href="index.html#next-exam">
+      <span>模試実施要項・日程一覧を見る</span>
+      <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+    </a>
+  </div>
+</div>
 
 </aside>
 </div>
@@ -1375,10 +1399,404 @@
       }
     });
 
+    /* =========================================================================
+       9. サイドバー「次回の模試・お申込み」動的生成スクリプト
+       ========================================================================= */
+    const SIDEBAR_EXAM_GUIDES_FALLBACK = [
+      {
+        grade_code: 'c3',
+        grade_name: '中学3年生対象',
+        exam_name: '岡山県統一模擬試験',
+        active_issue: '10月号',
+        sessions: [
+          {
+            issue_name: '10月号',
+            title: '第3回 岡山県統一模擬試験',
+            fee: '5,500',
+            deadline: '10月8日(木) 厳守',
+            application_deadline: '10月8日(木) 厳守',
+            schedules: [
+              { venue_type: ['会場'], venue_name: '岡山・倉敷・津山 特設会場', date_start: '2026-10-18T00:00:00.000Z', date_text: '2026年10月18日(日)' },
+              { venue_type: ['自宅受験'], date_start: '2026-10-17T00:00:00.000Z', date_end: '2026-11-01T00:00:00.000Z' }
+            ]
+          },
+          {
+            issue_name: '12月号',
+            title: '12月号 岡山県統一模擬試験',
+            fee: '5,500',
+            deadline: '12月14日(月)',
+            application_deadline: '12月14日(月)',
+            schedules: [
+              { venue_type: ['岡山会場'], venue_name: '岡山市民会館', date_start: '2026-12-26T15:00:00.000Z' },
+              { venue_type: ['倉敷会場'], venue_name: '倉敷市民センター', date_start: '2026-12-25T15:00:00.000Z' },
+              { venue_type: ['津山会場'], venue_name: '津山商工会議所', date_start: '2027-01-08T15:00:00.000Z' },
+              { venue_type: ['自宅受験'], date_start: '2026-12-25T15:00:00.000Z', date_end: '2027-01-10T15:00:00.000Z' }
+            ]
+          }
+        ]
+      },
+      {
+        grade_code: 'c1_c2',
+        grade_codes: ['c1', 'c2'],
+        grade_name: '中学1・2年生対象',
+        exam_name: '岡山県統一模擬試験',
+        active_issue: '12月号',
+        sessions: [
+          {
+            issue_name: '12月号',
+            title: '12月号 岡山県統一模擬試験',
+            status_text: '受付準備中',
+            fee: '4,500',
+            deadline: '12月14日(月)',
+            application_deadline: '12月14日(月)',
+            schedules: [
+              { venue_type: ['自宅受験'], date_start: '2026-12-26T00:00:00.000Z', date_end: '2027-01-11T00:00:00.000Z', date_text: '2026/12/26〜2027/1/11' }
+            ],
+            venue_text: '各会場 または 自宅受験'
+          }
+        ]
+      },
+      {
+        grade_code: 'e6',
+        grade_name: '小学6年生対象',
+        exam_name: '岡山県適性検査対策模試',
+        active_issue: '10月号',
+        sessions: [
+          {
+            issue_name: '10月号',
+            title: '10月号 岡山県適性検査対策模試',
+            status_text: '近日締切',
+            fee: '5,500',
+            deadline: '10月13日(火)',
+            application_deadline: '10月13日(火)',
+            schedules: [
+              { venue_type: ['岡山会場'], venue_name: '山陽学園中学校', date_start: '2026-10-24T00:00:00.000Z', date_end: '2026-11-01T00:00:00.000Z', date_text: '2026/10/24〜11/1' }
+            ],
+            venue_text: '山陽学園会場・自宅'
+          }
+        ]
+      }
+    ];
+
+    const JST_WEEKDAYS = ['日', '月', '火', '水', '木', '金', '土'];
+
+    function parseToJST(dateStr) {
+      if (!dateStr) return null;
+      const d = new Date(dateStr);
+      if (isNaN(d.getTime())) return null;
+      const jst = new Date(d.getTime() + (9 * 60 * 60 * 1000));
+      return {
+        year: jst.getUTCFullYear(),
+        month: jst.getUTCMonth() + 1,
+        day: jst.getUTCDate(),
+        weekday: JST_WEEKDAYS[jst.getUTCDay()]
+      };
+    }
+
+    function formatJSTSingleDate(dateStr) {
+      if (!dateStr) return '';
+      const p = parseToJST(dateStr);
+      if (!p) return dateStr;
+      return `${p.year}年${p.month}月${p.day}日(${p.weekday})`;
+    }
+
+    function formatJSTPeriod(startStr, endStr) {
+      if (!startStr && !endStr) return '';
+      const p1 = parseToJST(startStr);
+      const p2 = parseToJST(endStr);
+      if (p1 && p2) {
+        if (p1.year === p2.year) {
+          return `${p1.year}/${p1.month}/${p1.day}〜${p2.month}/${p2.day}`;
+        } else {
+          return `${p1.year}/${p1.month}/${p1.day}〜${p2.year}/${p2.month}/${p2.day}`;
+        }
+      }
+      if (p1 && !p2) return `${p1.year}/${p1.month}/${p1.day}`;
+      return `${startStr || ''}〜${endStr || ''}`;
+    }
+
+    function getExamDateInfo(schedules) {
+      if (!schedules || schedules.length === 0) {
+        return { label: '試験日', value: '未定' };
+      }
+      const venueSchedules = schedules.filter(s => {
+        const vt = (s.venue_type && s.venue_type[0]) || '';
+        return vt !== '自宅受験' && !/自宅/.test(vt);
+      });
+      const homeSchedule = schedules.find(s => {
+        const vt = (s.venue_type && s.venue_type[0]) || '';
+        return vt === '自宅受験' || /自宅/.test(vt);
+      });
+
+      if (venueSchedules.length > 0 && venueSchedules[0].date_start) {
+        const vs = venueSchedules[0];
+        if (vs.date_start && vs.date_end) {
+          return {
+            label: '実施期間',
+            value: formatJSTPeriod(vs.date_start, vs.date_end)
+          };
+        }
+        return {
+          label: '試験日',
+          value: formatJSTSingleDate(vs.date_start || vs.date_text)
+        };
+      }
+
+      if (homeSchedule) {
+        if (homeSchedule.date_start && homeSchedule.date_end) {
+          return {
+            label: '実施期間',
+            value: formatJSTPeriod(homeSchedule.date_start, homeSchedule.date_end)
+          };
+        }
+        if (homeSchedule.date_text) {
+          return {
+            label: '実施期間',
+            value: homeSchedule.date_text
+          };
+        }
+      }
+
+      const first = schedules[0];
+      if (first.date_text && /〜/.test(first.date_text)) {
+        return { label: '実施期間', value: first.date_text };
+      }
+      return {
+        label: '試験日',
+        value: first.date_text || (first.date_start ? formatJSTSingleDate(first.date_start) : '')
+      };
+    }
+
+    function generateVenueText(schedules) {
+      if (!schedules || schedules.length === 0) {
+        return '各会場 または 自宅受験';
+      }
+      const venueNames = [];
+      let hasHome = false;
+      schedules.forEach(item => {
+        const vType = (item.venue_type && item.venue_type[0]) || '';
+        if (vType === '自宅受験' || /自宅/.test(vType)) {
+          hasHome = true;
+        } else {
+          const name = item.venue_name || vType;
+          if (name) venueNames.push(name);
+        }
+      });
+
+      if (venueNames.length === 0 && hasHome) {
+        return '自宅受験';
+      }
+      if (venueNames.length >= 3) {
+        return '岡山・倉敷・津山 特設会場';
+      }
+      if (venueNames.length === 1) {
+        const shortName = venueNames[0].replace(/中学校|高等学校|高校|大学|商工会議所|市民センター|市民会館/g, '').trim();
+        return shortName + '会場' + (hasHome ? '・自宅' : '');
+      }
+      if (hasHome) {
+        return '各会場 または 自宅受験';
+      }
+      return venueNames.join('・');
+    }
+
+    function getRightBadgeHTML(session, gradeCode) {
+      if (session.fee) {
+        let feeStr = String(session.fee).trim();
+        if (!feeStr.startsWith('¥')) feeStr = '¥' + feeStr;
+        return `<span class="text-xs font-bold text-secondary">${feeStr}</span>`;
+      }
+      const statusText = session.status_text || session.notice_text;
+      if (statusText) {
+        const isUrgent = /近日|締切|受付中/.test(statusText);
+        const cls = isUrgent ? 'text-xs font-bold text-secondary' : 'text-xs font-medium text-outline';
+        return `<span class="${cls}">${statusText}</span>`;
+      }
+      if (gradeCode === 'c3') {
+        return '<span class="text-xs font-bold text-secondary">¥5,500</span>';
+      } else if (gradeCode === 'c1_c2' || gradeCode === 'c1' || gradeCode === 'c2') {
+        return '<span class="text-xs font-medium text-outline">受付準備中</span>';
+      } else if (gradeCode === 'e6' || gradeCode === 's6') {
+        return '<span class="text-xs font-bold text-secondary">近日締切</span>';
+      }
+      return '';
+    }
+
+    function getGradeBadgeInfo(gradeCode, gradeName) {
+      let text = (gradeName || '').trim();
+      let colorClass = 'bg-surface-container-high text-on-surface-variant';
+      if (gradeCode === 'c3' || gradeCode === 'chu3') {
+        text = (text && text.indexOf('対象') !== -1) ? text : '中学3年生対象';
+        colorClass = 'bg-primary-container text-on-primary-container';
+      } else if (gradeCode === 'c1_c2' || gradeCode === 'c2' || gradeCode === 'c1') {
+        text = (text && text.indexOf('対象') !== -1) ? text : '中学1・2年生対象';
+        colorClass = 'bg-surface-container-high text-on-surface-variant';
+      } else if (gradeCode === 'e6' || gradeCode === 'sho6' || gradeCode === 's6') {
+        text = (text && text.indexOf('対象') !== -1) ? text : '小学6年生対象';
+        colorClass = 'bg-tertiary-fixed text-on-tertiary-fixed';
+      }
+      return {
+        text: text,
+        className: `px-space-xs py-0.5 rounded ${colorClass} font-label-sm text-label-sm font-bold`
+      };
+    }
+
+    async function loadSidebarNextExamWidget() {
+      const container = document.getElementById('sidebar-exam-widget-list');
+      if (!container) return;
+
+      let contents = [];
+      const domain = (typeof MICROCMS_CONFIG !== 'undefined' && MICROCMS_CONFIG.serviceDomain) || 'okamoshi-blog';
+      const apiKey = (typeof MICROCMS_CONFIG !== 'undefined' && MICROCMS_CONFIG.apiKey) || '4qO3xGjs5W1r7zolbBgAX2KXP8VEUooOpMtc';
+      const url = `https://${domain}.microcms.io/api/v1/exam-guides?limit=100&_t=${Date.now()}`;
+
+      try {
+        const res = await fetch(url, {
+          cache: 'no-store',
+          headers: { 'X-MICROCMS-API-KEY': apiKey }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data && Array.isArray(data.contents)) {
+            contents = data.contents;
+          }
+        }
+      } catch (e) {
+        console.warn('Sidebar exam widget fetch failed, using fallback:', e);
+      }
+
+      const targetConfigs = [
+        {
+          targetCode: 'c3',
+          matchCodes: ['c3', 'chu3'],
+          defaultName: '中学3年生対象',
+          fallbackKey: 'c3'
+        },
+        {
+          targetCode: 'c1_c2',
+          matchCodes: ['c2', 'c1', 'chu2', 'chu1'],
+          defaultName: '中学1・2年生対象',
+          fallbackKey: 'c1_c2'
+        },
+        {
+          targetCode: 'e6',
+          matchCodes: ['e6', 's6', 'sho6'],
+          defaultName: '小学6年生対象',
+          fallbackKey: 'e6'
+        }
+      ];
+
+      const cardsHTML = targetConfigs.map(config => {
+        let matchedItem = null;
+        for (const code of config.matchCodes) {
+          matchedItem = contents.find(c => c.grade_code === code);
+          if (matchedItem) break;
+        }
+
+        const fallbackDef = SIDEBAR_EXAM_GUIDES_FALLBACK.find(f => f.grade_code === config.fallbackKey);
+
+        let activeIssue = '';
+        if (matchedItem && matchedItem.active_issue) {
+          activeIssue = Array.isArray(matchedItem.active_issue)
+            ? (matchedItem.active_issue[0] || '')
+            : String(matchedItem.active_issue || '');
+        }
+        if (!activeIssue && fallbackDef) {
+          activeIssue = fallbackDef.active_issue || '';
+        }
+
+        const rawSessions = (matchedItem && Array.isArray(matchedItem.sessions) && matchedItem.sessions.length > 0)
+          ? matchedItem.sessions
+          : (fallbackDef ? fallbackDef.sessions : []);
+
+        let targetSession = null;
+        if (activeIssue) {
+          targetSession = rawSessions.find(s => {
+            const sName = (s.issue_name || s.session_label || '').trim();
+            return sName === activeIssue.trim();
+          });
+        }
+        if (!targetSession && rawSessions.length > 0) {
+          targetSession = rawSessions.find(s => s.is_active === true || s.is_active === 'true') || rawSessions[0];
+        }
+
+        let fallbackSession = null;
+        if (fallbackDef && fallbackDef.sessions) {
+          const matchName = targetSession ? (targetSession.issue_name || targetSession.session_label || '').trim() : activeIssue.trim();
+          fallbackSession = fallbackDef.sessions.find(fs => (fs.issue_name || fs.session_label || '').trim() === matchName) || fallbackDef.sessions[0];
+        }
+
+        const session = Object.assign({}, fallbackSession || {}, targetSession || {});
+        if ((!session.schedules || session.schedules.length === 0) && fallbackSession && fallbackSession.schedules) {
+          session.schedules = fallbackSession.schedules;
+        }
+        if (!session.venue_text && fallbackSession && fallbackSession.venue_text) {
+          session.venue_text = fallbackSession.venue_text;
+        }
+        if (!session.application_deadline && fallbackSession && fallbackSession.application_deadline) {
+          session.application_deadline = fallbackSession.application_deadline;
+        }
+
+        const badgeInfo = getGradeBadgeInfo(config.targetCode, (matchedItem && matchedItem.grade_name) || config.defaultName);
+        const rightBadgeHTML = getRightBadgeHTML(session, config.targetCode);
+
+        const issueName = (session.issue_name || session.session_label || '').trim();
+        let rawTitle = session.title || (matchedItem && matchedItem.exam_name) || (fallbackDef && fallbackDef.exam_name) || '岡山県統一模擬試験';
+        let displayTitle = rawTitle;
+        if (issueName && displayTitle.indexOf(issueName) === -1 && !/第[0-9１-９一二三四五]回/.test(displayTitle)) {
+          displayTitle = issueName + ' ' + displayTitle;
+        }
+
+        const dateInfo = getExamDateInfo(session.schedules);
+        const venueText = session.venue_text || generateVenueText(session.schedules);
+
+        let deadlineText = session.application_deadline || session.deadline || '受付中';
+        if (/^\d{4}-\d{2}-\d{2}/.test(deadlineText)) {
+          deadlineText = formatJSTSingleDate(deadlineText);
+        }
+
+        const deadlineHighlight = /厳守|締切/.test(deadlineText)
+          ? 'text-secondary font-bold'
+          : 'font-medium text-on-surface';
+
+        return `
+          <div class="p-space-sm bg-surface-container-low rounded-lg border border-[#e2dedd] flex flex-col gap-2 hover:border-secondary/50 transition-colors">
+            <div class="flex items-center justify-between">
+              <span class="${badgeInfo.className}">${badgeInfo.text}</span>
+              ${rightBadgeHTML}
+            </div>
+            <h4 class="font-label-lg text-label-lg text-on-surface font-bold">${displayTitle}</h4>
+            <div class="space-y-1 text-xs text-on-surface-variant">
+              <div class="flex items-center justify-between">
+                <span class="text-outline">${dateInfo.label}</span>
+                <span class="font-medium text-on-surface">${dateInfo.value}</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-outline">会場</span>
+                <span class="text-right truncate max-w-[12rem]">${venueText}</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-outline">申込締切</span>
+                <span class="${deadlineHighlight}">${deadlineText}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      container.innerHTML = cardsHTML;
+    }
+
     // 8. ページ読み込み時に実行
-    document.addEventListener('DOMContentLoaded', function() {
+    function initDetailPage() {
       loadArticleDetail();
-    });
+      loadSidebarNextExamWidget();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initDetailPage);
+    } else {
+      initDetailPage();
+    }
   </script>
 <script id="header-navigation-script">
   function toggleNextExamDropdown(event) {

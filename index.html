@@ -1817,6 +1817,26 @@
       exam_name: '岡山県統一模擬試験（おかもし）',
       sessions: [{
         session_label: '10月号', issue_name: '10月号', is_active: true,
+        schedules: [
+          {
+            fieldId: 'schedule_item',
+            venue_type: ['岡山会場'],
+            venue_name: '山陽学園中学校・高等学校',
+            date_start: '2026-10-31T15:00:00.000Z'
+          },
+          {
+            fieldId: 'schedule_item',
+            venue_type: ['津山会場'],
+            venue_name: '美作高等学校',
+            date_start: '2026-10-24T15:00:00.000Z'
+          },
+          {
+            fieldId: 'schedule_item',
+            venue_type: ['自宅受験'],
+            date_start: '2026-10-16T15:00:00.000Z',
+            date_end: '2026-10-31T15:00:00.000Z'
+          }
+        ],
         announce_text: 'ただいま10月号のお申し込みを受付中です',
         title: '岡山県統一模擬試験（おかもし）',
         catchcopy: '志望校決定の秋！合格に向けて今必要な「あと◯点」を掴む！',
@@ -1889,6 +1909,173 @@
       バッジ形式（緑 or 茶）+ 会場名 + 右揃え日付（赤太字）
       ※ 実施要項カード内の「会場・実施日」は formatVenueTextCards を使用
   ----------------------------------------------------------------------- */
+    /* ==========================================================================
+     schedules データ用フォーマット & レンダリング関数
+     ========================================================================== */
+  var SCHEDULE_WEEKDAYS = ['日', '月', '火', '水', '木', '金', '土'];
+
+  // ISO文字列をJST (UTC+9) 基準の日時オブジェクトに変換
+  function parseScheduleToJST(dateStr) {
+    if (!dateStr) return null;
+    var d = new Date(dateStr);
+    if (isNaN(d.getTime())) return null;
+    // JST (+9h)
+    var jstTime = d.getTime() + (9 * 60 * 60 * 1000);
+    var jstDate = new Date(jstTime);
+    return {
+      year: jstDate.getUTCFullYear(),
+      month: jstDate.getUTCMonth() + 1,
+      day: jstDate.getUTCDate(),
+      weekday: SCHEDULE_WEEKDAYS[jstDate.getUTCDay()]
+    };
+  }
+
+  // 1. 単一日: 「YYYY年M月D日(木)」形式
+  function formatDateSingle(dateStr) {
+    var p = parseScheduleToJST(dateStr);
+    if (!p) return dateStr || '';
+    return p.year + '年' + p.month + '月' + p.day + '日(' + p.weekday + ')';
+  }
+
+  // 1. 期間: 「M/D(土)〜M/D(日)」形式
+  function formatDateRangeShort(startStr, endStr) {
+    var p1 = parseScheduleToJST(startStr);
+    var p2 = parseScheduleToJST(endStr);
+    if (!p1 && !p2) return '';
+    if (p1 && !p2) return formatDateSingle(startStr);
+    if (!p1 && p2) return formatDateSingle(endStr);
+    return p1.month + '/' + p1.day + '(' + p1.weekday + ')〜' + p2.month + '/' + p2.day + '(' + p2.weekday + ')';
+  }
+
+  // 期間（詳細）: 「YYYY年M月D日(木) 〜 M月D日(木)」形式（実施要項 自宅受験用）
+  function formatDateRangeLong(startStr, endStr) {
+    var p1 = parseScheduleToJST(startStr);
+    var p2 = parseScheduleToJST(endStr);
+    if (!p1 && !p2) return '';
+    if (p1 && !p2) return formatDateSingle(startStr);
+    if (!p1 && p2) return formatDateSingle(endStr);
+    if (p1.year === p2.year) {
+      return p1.year + '年' + p1.month + '月' + p1.day + '日(' + p1.weekday + ') 〜 ' + p2.month + '月' + p2.day + '日(' + p2.weekday + ')';
+    } else {
+      return p1.year + '年' + p1.month + '月' + p1.day + '日(' + p1.weekday + ') 〜 ' + p2.year + '年' + p2.month + '月' + p2.day + '日(' + p2.weekday + ')';
+    }
+  }
+
+  // 自宅判定ヘルパー
+  function isHomeVenueType(venueType) {
+    if (!venueType) return false;
+    var str = Array.isArray(venueType) ? venueType.join('') : String(venueType);
+    return str.indexOf('自宅') !== -1;
+  }
+
+  // 2. 【実施日程】エリア用レンダリング（schedules 全件ループ）
+  function renderSchedulesListHTML(schedules) {
+    if (!schedules || !schedules.length) {
+      return '<span class="text-on-surface-variant">日程情報は準備中です</span>';
+    }
+
+    var rows = schedules.map(function(item) {
+      var vTypeArr = Array.isArray(item.venue_type) ? item.venue_type : [item.venue_type || ''];
+      var vTypeStr = vTypeArr[0] || '';
+      var isHome = isHomeVenueType(vTypeArr);
+
+      var badgeText = vTypeStr;
+      if (badgeText === '自宅') badgeText = '自宅受験';
+
+      var bg = isHome ? '#4a3b10' : '#0b4a32';
+
+      var badgeHTML = badgeText
+        ? '<span style="display:inline-flex;align-items:center;justify-content:center;background:' + bg + ';color:#fff;padding:4px 12px;border-radius:5px;font-size:0.88em;font-weight:700;white-space:nowrap;min-width:76px;text-align:center;">' + badgeText + '</span>'
+        : '<span style="display:inline-block;min-width:68px;"></span>';
+
+      var venueHTML = item.venue_name
+        ? '<span style="font-size:1.06em;color:#1b1c1c;font-weight:500;">' + item.venue_name + '</span>'
+        : '';
+
+      var dateText = item.date_end
+        ? formatDateRangeShort(item.date_start, item.date_end)
+        : formatDateSingle(item.date_start);
+
+      var dateHTML = dateText
+        ? '<span style="font-size:1.1em;font-weight:700;color:#a63815;white-space:nowrap;">' + dateText + '</span>'
+        : '';
+
+      return (
+        '<div style="display:flex;align-items:center;gap:10px 12px;padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.07);">' +
+          '<div style="flex-shrink:0;">' + badgeHTML + '</div>' +
+          '<div style="flex:1 1 0%;min-width:0;">' + venueHTML + '</div>' +
+          '<div style="flex-shrink:0;text-align:right;">' + dateHTML + '</div>' +
+        '</div>'
+      );
+    });
+
+    return '<div style="display:flex;flex-direction:column;width:100%;">' + rows.join('') + '</div>';
+  }
+
+  // 3. 【実施要項】会場受験用（会場・実施日）カード内部HTML
+  function renderVenueScheduleCardInner(venueSchedules) {
+    if (!venueSchedules || !venueSchedules.length) {
+      return '<span class="text-on-surface-variant">会場情報は準備中です</span>';
+    }
+
+    var htmlParts = [];
+    venueSchedules.forEach(function (item, idx) {
+      if (idx > 0) {
+        htmlParts.push('<div class="border-t border-surface-container/60 my-2.5"></div>');
+      }
+
+      var vTypeArr = Array.isArray(item.venue_type) ? item.venue_type : [item.venue_type || ''];
+      var badgeText = vTypeArr[0] || '会場受験';
+      var badgeBg = 'background-color: #134230;';
+
+      var badgeHTML = '<span class="inline-flex items-center justify-center w-[74px] sm:w-[82px] py-1 rounded-md text-white text-xs sm:text-sm font-bold shrink-0 text-center tracking-tight leading-tight" style="' + badgeBg + '">' + badgeText + '</span>';
+
+      var schoolHTML = item.venue_name
+        ? '<div class="font-bold text-sm sm:text-base text-on-surface leading-snug">' + item.venue_name + '</div>'
+        : '';
+
+      var dateFormatted = formatDateSingle(item.date_start);
+      var dateHTML = dateFormatted
+        ? '<div class="text-secondary font-bold text-base sm:text-lg leading-snug tracking-tight" style="color: #a23e18;">' + dateFormatted + '</div>'
+        : '';
+
+      htmlParts.push(
+        '<div class="flex items-start gap-2.5 sm:gap-3 py-0.5">' +
+          badgeHTML +
+          '<div class="space-y-1 pt-0.5 flex-1 min-w-0">' +
+            schoolHTML +
+            dateHTML +
+          '</div>' +
+        '</div>'
+      );
+    });
+
+    return '<div class="venue-badge-list space-y-1 w-full">' + htmlParts.join('') + '</div>';
+  }
+
+  // 4. 【実施要項】自宅受験用（実施期間）カード内部HTML
+  function renderHomePeriodCardInner(homeSchedule, existingItems) {
+    var rangeStr = formatDateRangeLong(homeSchedule.date_start, homeSchedule.date_end);
+    var extraNotes = [];
+    if (existingItems && existingItems.length) {
+      existingItems.forEach(function(it) {
+        if (!/^\d{4}年|\d+月\d+日|[〜~-]/.test(it)) {
+          extraNotes.push('<p class="text-xs text-on-surface-variant leading-relaxed">' + it + '</p>');
+        }
+      });
+    }
+    if (!extraNotes.length) {
+      extraNotes.push('<p class="text-xs text-on-surface-variant leading-relaxed">期間内のご都合に合わせて受験いただけます。</p>');
+    }
+
+    return (
+      '<div class="text-secondary font-bold text-base sm:text-lg leading-snug tracking-tight" style="color: #a23e18;">' +
+        rangeStr +
+      '</div>' +
+      extraNotes.join('')
+    );
+  }
+
   function formatScheduleHTML(raw) {
     if (!raw) return '<span class="text-on-surface-variant">日程情報は準備中です</span>';
 
@@ -2121,7 +2308,7 @@
      4-1./* -----------------------------------------------------------------------
      4-1. 実施要項（会場/自宅）のカード自動パース
   ----------------------------------------------------------------------- */
-  function parseGuidelineCards(rawHTML, mode) {
+  function parseGuidelineCards(rawHTML, mode, schedules) {
     if (!rawHTML) return '';
     var text = rawHTML
       .replace(/<\/(p|div|li|tr|h[1-6])>/gi, '\n')
@@ -2151,6 +2338,31 @@
           cards.push(currentCard);
         }
         currentCard.items.push(line);
+      }
+    }
+
+    // schedules がある場合のカード補完/準備
+    var venueSchedules = (schedules && schedules.length)
+      ? schedules.filter(function(item) { return !isHomeVenueType(item.venue_type); })
+      : [];
+    var homeSchedule = (schedules && schedules.length)
+      ? schedules.filter(function(item) { return isHomeVenueType(item.venue_type); })[0]
+      : null;
+
+    if (mode === 'venue' && venueSchedules.length > 0) {
+      var hasVenueCard = cards.some(function(cd) { return /会場|実施日|場所/.test(cd.title); });
+      if (!hasVenueCard) {
+        // 会場・実施日カードがない場合は自動挿入（受験票発送カードの次、または先頭）
+        var insertIdx = cards.length > 0 ? 1 : 0;
+        cards.splice(insertIdx, 0, { title: '会場・実施日', items: [], fromSchedules: true });
+      }
+    }
+
+    if (mode === 'home' && homeSchedule) {
+      var hasHomePeriodCard = cards.some(function(cd) { return /期間|実施期間/.test(cd.title); });
+      if (!hasHomePeriodCard) {
+        var insertIdx2 = cards.length > 0 ? 1 : 0;
+        cards.splice(insertIdx2, 0, { title: '実施期間', items: [], fromSchedules: true });
       }
     }
 
@@ -2184,8 +2396,23 @@
       }
 
       if (isVenueDateCard) {
-        // 会場・実施日カードはテキスト形式（formatVenueTextCards）で描画
-        cardInner.push(formatVenueTextCards(items));
+        // 要件3: schedules があれば優先して renderVenueScheduleCardInner で描画
+        if (venueSchedules && venueSchedules.length > 0) {
+          cardInner.push(renderVenueScheduleCardInner(venueSchedules));
+        } else {
+          cardInner.push(formatVenueTextCards(items));
+        }
+        cardHTMLList.push(
+          '<div class="bg-white rounded-xl p-3.5 sm:p-4 shadow-xs border border-outline-variant/10 space-y-2">' +
+            cardInner.join('') +
+          '</div>'
+        );
+        continue;
+      }
+
+      // 要件4: 自宅受験の「実施期間」カードを schedules から描画
+      if (mode === 'home' && /期間|実施期間/.test(title) && homeSchedule) {
+        cardInner.push(renderHomePeriodCardInner(homeSchedule, items));
         cardHTMLList.push(
           '<div class="bg-white rounded-xl p-3.5 sm:p-4 shadow-xs border border-outline-variant/10 space-y-2">' +
             cardInner.join('') +
@@ -2305,8 +2532,8 @@
     var legacyHTML = session.guideline_html || '';
 
     if (venueHTML || homeHTML) {
-      var venueCards = parseGuidelineCards(venueHTML, 'venue');
-      var homeCards = parseGuidelineCards(homeHTML, 'home');
+      var venueCards = parseGuidelineCards(venueHTML, 'venue', session.schedules);
+      var homeCards = parseGuidelineCards(homeHTML, 'home', session.schedules);
 
       var hasVenue = !!venueCards;
       var hasHome = !!homeCards;
@@ -2479,7 +2706,7 @@
           // mobile
           '<div class="block md:hidden space-y-3.5">',
             '<div class="bg-white rounded-2xl border border-outline-variant/30 p-5 shadow-xs">',
-              '<div class="text-sm font-medium text-on-surface leading-relaxed">' + formatScheduleHTML(scheduleHTML) + '</div>',
+              '<div class="text-sm font-medium text-on-surface leading-relaxed">' + (session.schedules && session.schedules.length ? renderSchedulesListHTML(session.schedules) : formatScheduleHTML(scheduleHTML)) + '</div>',
               mobileDeadline,
             '</div>',
             '<div class="bg-white rounded-2xl border border-outline-variant/30 p-5 shadow-xs flex flex-col items-center gap-3 text-center">',
@@ -2495,7 +2722,7 @@
                   '<span class="flex items-center gap-1.5 text-primary font-bold text-sm sm:text-base"><span class="material-symbols-outlined text-base sm:text-lg text-primary">location_on</span>受験会場と実施日</span>',
                   deadlineTag,
                 '</div>',
-                '<div class="py-2 text-sm sm:text-base text-on-surface leading-relaxed">' + formatScheduleHTML(scheduleHTML) + '</div>',
+                '<div class="py-2 text-sm sm:text-base text-on-surface leading-relaxed">' + (session.schedules && session.schedules.length ? renderSchedulesListHTML(session.schedules) : formatScheduleHTML(scheduleHTML)) + '</div>',
               '</div>',
             '</div>',
             '<div class="w-full md:col-span-3 flex flex-col justify-between p-4 sm:p-5 rounded-2xl bg-surface-container-low border border-outline-variant/30 shadow-sm gap-3.5">',

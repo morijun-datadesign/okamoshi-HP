@@ -1061,8 +1061,9 @@
         id: 'chu3_10',
         grade: 'chu3',
         gradeLabel: '中3',
+        gradeName: '中3生',
         issueName: '10月号',
-        title: '第2回 岡山県統一模擬試験（10月号）',
+        title: '岡山県統一模擬試験（おかもし）',
         badge: '中3対象・受付中',
         examDate: '2026年11月1日(日)',
         deadline: '2026-10-25T23:59:59+09:00', // 未来日時（受付中）
@@ -1080,8 +1081,9 @@
         id: 'chu3_11',
         grade: 'chu3',
         gradeLabel: '中3',
+        gradeName: '中3生',
         issueName: '11月号',
-        title: '第3回 岡山県統一模擬試験（11月号）',
+        title: '岡山県統一模擬試験（おかもし）',
         badge: '中3対象・予約受付',
         examDate: '2026年11月15日(日)',
         deadline: '2026-11-08T23:59:59+09:00', // 未来日時（受付中）
@@ -1100,8 +1102,9 @@
         id: 'chu3_12',
         grade: 'chu3',
         gradeLabel: '中3',
+        gradeName: '中3生',
         issueName: '12月号',
-        title: '第4回 岡山県統一模擬試験（12月号）',
+        title: '岡山県統一模擬試験（おかもし）',
         badge: '中3対象・予約受付',
         examDate: '2026年12月20日(日)',
         deadline: '2026-12-14T23:59:59+09:00', // 未来日時（受付中）
@@ -1120,8 +1123,9 @@
         id: 'chu3_08',
         grade: 'chu3',
         gradeLabel: '中3',
+        gradeName: '中3生',
         issueName: '8月号',
-        title: '第1回 岡山県統一模擬試験（8月号）',
+        title: '岡山県統一模擬試験（おかもし）',
         badge: '中3対象・受付終了',
         examDate: '2026年8月23日(日)',
         deadline: '2026-08-16T23:59:59+09:00', // 過去日時（自動除外対象）
@@ -1137,8 +1141,9 @@
         id: 'chu2_12',
         grade: 'chu2',
         gradeLabel: '中2',
+        gradeName: '中2生',
         issueName: '12月号',
-        title: '第2回 中2 岡山県統一模擬試験（12月号）',
+        title: '岡山県統一模擬試験（おかもし）',
         badge: '中2対象・受付中',
         examDate: '2026年12月20日(日)',
         deadline: '2026-12-13T23:59:59+09:00',
@@ -1157,8 +1162,9 @@
         id: 'chu2_03',
         grade: 'chu2',
         gradeLabel: '中2',
+        gradeName: '中2生',
         issueName: '3月号',
-        title: '第3回 中2 岡山県統一模擬試験（3月号 学年末対策）',
+        title: '岡山県統一模擬試験（おかもし）',
         badge: '中2対象・予約受付',
         examDate: '2027年3月14日(日)',
         deadline: '2027-03-07T23:59:59+09:00',
@@ -1179,8 +1185,9 @@
         id: 'chu1_12',
         grade: 'chu1',
         gradeLabel: '中1',
+        gradeName: '中1生',
         issueName: '12月号',
-        title: '第2回 中1 岡山県統一模擬試験（12月号）',
+        title: '岡山県統一模擬試験（おかもし）',
         badge: '中1対象・受付中',
         examDate: '2026年12月20日(日)',
         deadline: '2026-12-13T23:59:59+09:00',
@@ -1199,8 +1206,9 @@
         id: 'chu1_03',
         grade: 'chu1',
         gradeLabel: '中1',
+        gradeName: '中1生',
         issueName: '3月号',
-        title: '第3回 中1 岡山県統一模擬試験（3月号 学年末対策）',
+        title: '岡山県統一模擬試験（おかもし）',
         badge: '中1対象・予約受付',
         examDate: '2027年3月14日(日)',
         deadline: '2027-03-07T23:59:59+09:00',
@@ -1221,8 +1229,9 @@
         id: 'sho6_10',
         grade: 'sho6',
         gradeLabel: '小6',
+        gradeName: '小6生',
         issueName: '10月号',
-        title: '第2回 岡山県立中高一貫校 適性検査対策模試（10月号）',
+        title: '岡山県立中高一貫校 適性検査対策模試',
         badge: '小6対象・受付中',
         examDate: '2026年10月18日(日)',
         deadline: '2026-10-11T23:59:59+09:00',
@@ -1241,8 +1250,9 @@
         id: 'sho6_12',
         grade: 'sho6',
         gradeLabel: '小6',
+        gradeName: '小6生',
         issueName: '12月号',
-        title: '第3回 岡山県立中高一貫校 適性検査対策模試（12月号 直前対策）',
+        title: '岡山県立中高一貫校 適性検査対策模試',
         badge: '小6対象・予約受付',
         examDate: '2026年12月13日(日)',
         deadline: '2026-12-06T23:59:59+09:00',
@@ -1522,18 +1532,8 @@
             return;
           }
 
-          // 模試タイトル: issue_name + title（例: 「第2回 岡山県統一模擬試験 (10月号)」）
-          let title = '';
-          if (fallback.title && (!s.title || s.title === '岡山県統一模擬試験（おかもし）')) {
-            title = fallback.title;
-          } else {
-            const baseTitle = s.title || fallback.title || '岡山県統一模擬試験';
-            if (issueName && !baseTitle.includes(issueName)) {
-              title = `${baseTitle}（${issueName}）`;
-            } else {
-              title = baseTitle;
-            }
-          }
+          // 模試タイトル: microCMS の title をそのまま表示（フォールバック時は学年別標準タイトル）
+          const title = s.title || fallback.title || (gradeKey === 'sho6' ? '岡山県立中高一貫校 適性検査対策模試' : '岡山県統一模擬試験（おかもし）');
 
           // 実施日
           const examDate = formatExamDate(s, fallback.examDate);
@@ -1553,10 +1553,14 @@
           // 会場リスト
           const venues = extractVenuesFromSchedules(s, fallback.venues);
 
+          // 学年名（例: 中3生, 小6生）
+          const gradeName = (targetGuide && targetGuide.grade_name) ? targetGuide.grade_name : (fallback.gradeName || `${gradeLabel}生`);
+
           candidateExams.push({
             id: `${gradeKey}_${s.id || issueName || idx}`,
             grade: gradeKey,
             gradeLabel: gradeLabel,
+            gradeName: gradeName,
             issueName: issueName,
             title: title,
             examDate: examDate,
@@ -1579,6 +1583,7 @@
           if (!alreadyExists) {
             candidateExams.push({
               ...fb,
+              gradeName: fb.gradeName || `${gradeLabel}生`,
               deadlineTime: fbDeadlineTime,
               originalIndex: candidateExams.length
             });
@@ -1593,6 +1598,7 @@
           if (fb.status !== 'closed' && (!fbDeadlineTime || fbDeadlineTime > now)) {
             candidateExams.push({
               ...fb,
+              gradeName: fb.gradeName || `${gradeLabel}生`,
               deadlineTime: fbDeadlineTime
             });
           }
@@ -1600,8 +1606,6 @@
       }
 
       // 受付ステータスバッジの自動判定
-      // - 締切前で、active_issue と一致する模試 ➔ 「〇〇対象・受付中」
-      // - 締切前で、active_issue より後の号 ➔ 「〇〇対象・予約受付」
       let activeIndexInCandidates = -1;
       if (activeIssueStr) {
         activeIndexInCandidates = candidateExams.findIndex(e => e.issueName && e.issueName.includes(activeIssueStr));
@@ -1616,8 +1620,6 @@
             badge = `${gradePrefix}・予約受付`;
           }
         } else {
-          // active_issue が未指定または既に締切済みの号だった場合:
-          // 残っている未締切模試の先頭が「受付中」、2番目以降が「予約受付」
           if (index === 0) {
             badge = `${gradePrefix}・受付中`;
           } else {
@@ -1659,36 +1661,43 @@
       container.innerHTML = availableExams.map((exam, index) => {
         // デフォルト選択（最初の1件）
         const isChecked = exam.isDefaultChecked || index === 0;
-        const defaultVenue = exam.venues && exam.venues.length > 0 ? exam.venues[0].value : 'venue_okayama';
-        const defaultVenueLabel = exam.venues && exam.venues.length > 0 ? exam.venues[0].label : '岡山会場';
 
+        // 希望会場の初期値は未選択（空値）
         if (isChecked) {
           selectedExamsState[exam.id] = {
             ...exam,
-            venue: defaultVenue,
-            venueLabel: defaultVenueLabel
+            venue: '',
+            venueLabel: ''
           };
         }
 
-        const venueOptionsHtml = (exam.venues || []).map(v => `
-          <option value="${v.value}" ${v.value === defaultVenue ? 'selected' : ''}>${v.label}</option>
-        `).join('');
+        // 会場選択肢（先頭に未選択の初期値を配置）
+        const venueOptionsHtml = [
+          `<option value="" selected disabled>選択してください</option>`,
+          ...(exam.venues || []).map(v => `
+            <option value="${v.value}">${v.label}</option>
+          `)
+        ].join('');
 
         return `
-          <div class="relative flex flex-col p-4 sm:p-5 rounded-2xl ${isChecked ? 'bg-primary-fixed/30 border-2 border-primary-container ring-1 ring-primary-container/20' : 'bg-surface-container-lowest border border-outline-variant/30'} shadow-sm gap-3 transition-all duration-200" id="card-${exam.id}">
+          <div class="relative flex flex-col p-4 sm:p-5 rounded-2xl ${isChecked ? 'bg-primary-fixed/30 border-2 border-primary-container ring-1 ring-primary-container/20' : 'bg-surface-container-lowest border border-outline-variant/30'} shadow-sm gap-3.5 transition-all duration-200" id="card-${exam.id}">
             <label class="flex items-start justify-between gap-3 cursor-pointer">
               <div class="flex items-start gap-3 flex-1">
                 <input type="checkbox" id="check-${exam.id}" name="selected_exams" value="${exam.id}" ${isChecked ? 'checked' : ''}
                   onchange="toggleExamSelection('${exam.id}')"
                   class="mt-1 w-5 h-5 text-primary-container accent-primary-container rounded cursor-pointer shrink-0">
-                <div class="flex flex-col">
-                  <div class="flex items-center gap-2 mb-1">
-                    <span class="bg-primary text-on-primary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">${exam.badge}</span>
+                <div class="flex flex-col gap-1.5 flex-1 min-w-0">
+                  <!-- バッジとタイトルの配置（レスポンシブ対応: PC=1行, スマホ=バッジ2つとタイトルで2行折り返し） -->
+                  <div class="flex flex-col md:flex-row md:items-center gap-1.5 md:gap-2.5 flex-wrap">
+                    <div class="flex items-center gap-1.5 shrink-0">
+                      <span class="inline-flex items-center justify-center px-2.5 py-0.5 rounded-md bg-primary text-white font-bold text-xs sm:text-[13px] shrink-0 shadow-2xs leading-normal">${exam.gradeName}</span>
+                      <span class="inline-flex items-center justify-center px-2.5 py-0.5 rounded-md bg-primary text-white font-bold text-xs sm:text-[13px] shrink-0 shadow-2xs leading-normal">${exam.issueName}</span>
+                    </div>
+                    <span class="font-headline-sm text-base sm:text-lg font-bold text-on-surface leading-snug">${exam.title}</span>
                   </div>
-                  <span class="font-headline-sm text-base sm:text-lg font-bold text-on-surface leading-snug">${exam.title}</span>
-                  <div class="flex items-center gap-3 sm:gap-4 mt-1.5 text-on-surface-variant font-body-sm text-xs sm:text-[13px] flex-wrap">
-                    <span>実施日: <strong class="text-primary font-bold">${exam.examDate}</strong></span>
-                    <span>申込締切: <strong class="text-secondary font-bold">${exam.deadlineDisplay}</strong></span>
+                  <!-- 申込締切のみ強調表示（実施日行は削除） -->
+                  <div class="text-xs sm:text-[13px] font-body-sm">
+                    <span class="text-on-surface-variant font-medium">申込締切: <strong class="text-secondary font-bold text-xs sm:text-[13px]">${exam.deadlineDisplay}</strong></span>
                   </div>
                 </div>
               </div>
@@ -1698,13 +1707,14 @@
               </div>
             </label>
 
-            <!-- 会場・受検形式セレクトボックス -->
+            <!-- 会場・受検形式セレクトボックス（必須） -->
             <div class="pt-3 border-t border-outline-variant/20 grid grid-cols-1 md:grid-cols-12 gap-2 items-center ${isChecked ? '' : 'opacity-50 pointer-events-none'}" id="venue-wrapper-${exam.id}">
-              <label class="md:col-span-4 font-label-md text-xs sm:text-sm font-bold text-primary flex items-center gap-1.5 pl-1">
+              <label class="md:col-span-4 font-label-md text-xs sm:text-sm font-bold text-primary flex items-center gap-1.5 pl-1" for="venue-${exam.id}">
                 <span class="material-symbols-outlined text-base">apartment</span>受験方法・希望会場
+                <span class="bg-secondary text-on-secondary font-label-sm text-[10px] px-1.5 py-0.2 rounded-full font-bold ml-1">必須</span>
               </label>
               <div class="md:col-span-8 relative">
-                <select id="venue-${exam.id}" ${isChecked ? '' : 'disabled'}
+                <select id="venue-${exam.id}" ${isChecked ? '' : 'disabled'} required
                   onchange="updateExamVenue('${exam.id}', this)"
                   class="w-full h-10 sm:h-11 pl-3 pr-9 bg-surface-container-lowest text-on-surface rounded-xl font-body-sm text-xs sm:text-sm appearance-none border border-outline-variant/40 focus:outline-none focus:ring-2 focus:ring-primary-container shadow-2xs cursor-pointer">
                   ${venueOptionsHtml}
@@ -1731,9 +1741,9 @@
       if (!chk || !examData) return;
 
       if (chk.checked) {
-        const venueVal = venueSelect ? venueSelect.value : (examData.venues[0]?.value || 'venue_okayama');
-        const venueOpt = venueSelect ? venueSelect.options[venueSelect.selectedIndex] : null;
-        const venueText = venueOpt ? venueOpt.text : (examData.venues[0]?.label || '岡山会場');
+        const venueVal = venueSelect ? venueSelect.value : '';
+        const venueOpt = (venueSelect && venueSelect.selectedIndex > 0) ? venueSelect.options[venueSelect.selectedIndex] : null;
+        const venueText = venueOpt ? venueOpt.text : '';
 
         selectedExamsState[examId] = {
           ...examData,
@@ -1764,8 +1774,10 @@
     // 会場選択の変更
     function updateExamVenue(examId, selectElem) {
       if (selectedExamsState[examId]) {
-        selectedExamsState[examId].venue = selectElem.value;
-        selectedExamsState[examId].venueLabel = selectElem.options[selectElem.selectedIndex].text;
+        const val = selectElem.value;
+        const opt = selectElem.selectedIndex > 0 ? selectElem.options[selectElem.selectedIndex] : null;
+        selectedExamsState[examId].venue = val;
+        selectedExamsState[examId].venueLabel = opt ? opt.text : '';
         updateSummary();
       }
     }
@@ -1802,12 +1814,16 @@
           listContainer.innerHTML = selectedList.map((item, idx) => `
             <div class="flex flex-col gap-1 ${idx > 0 ? 'pt-2.5 border-t border-outline-variant/20' : ''}">
               <div class="flex items-start justify-between gap-2">
-                <span class="font-bold text-primary text-xs sm:text-[14px] leading-snug">${item.title}</span>
+                <span class="font-bold text-primary text-xs sm:text-[14px] leading-snug">${item.title} (${item.issueName})</span>
                 <span class="font-headline-sm text-xs sm:text-[15px] font-bold text-primary shrink-0">¥${item.price.toLocaleString()}</span>
               </div>
               <div class="flex items-center gap-2 text-on-surface-variant font-body-sm text-[11px] sm:text-xs">
-                <span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-medium">形式: ${item.venueLabel || '会場受験'}</span>
-                <span>実施日: ${item.examDate}</span>
+                ${item.venueLabel ? `
+                  <span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-medium">形式: ${item.venueLabel}</span>
+                ` : `
+                  <span class="px-2 py-0.5 rounded bg-secondary/10 text-secondary font-bold">形式: 会場未選択（要選択）</span>
+                `}
+                <span>申込締切: ${item.deadlineDisplay}</span>
               </div>
             </div>
           `).join('');
@@ -1864,6 +1880,19 @@
         const examGroup = document.getElementById('examOptionGroup');
         if (examGroup) examGroup.scrollIntoView({ behavior: 'smooth', block: 'center' });
         return;
+      }
+
+      // 1-2. 受験方法・希望会場の未選択チェック (選択必須バリデーション)
+      for (const exam of selectedExams) {
+        if (!exam.venue || exam.venue === '') {
+          alert(`「${exam.issueName} ${exam.title}」の受験方法・希望会場を選択してください。`);
+          const venueElem = document.getElementById(`venue-${exam.id}`);
+          if (venueElem) {
+            venueElem.focus();
+            venueElem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+          return;
+        }
       }
 
       // 2. 必須項目の取得

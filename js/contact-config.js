@@ -3,7 +3,7 @@
  * n8n Webhook URL などのエンドポイント設定
  */
 (function() {
-  var DEFAULT_WEBHOOK_URL = "http://n8n-ier65piurogdeiutvey9onrp.147.93.81.200.sslip.io/webhook-test/okamoshi-contact";
+  var DEFAULT_WEBHOOK_URL = "https://n8n-ier65piurogdeiutvey9onrp.147.93.81.200.sslip.io/webhook-test/okamoshi-contact";
 
   window.CONTACT_CONFIG = {
     // n8n Webhook URL

@@ -7,7 +7,7 @@ export async function POST(request: Request) {
 
     const n8nWebhookUrl = process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL
       || process.env.N8N_WEBHOOK_URL
-      || 'http://n8n-ier65piurogdeiutvey9onrp.147.93.81.200.sslip.io/webhook-test/okamoshi-contact';
+      || 'https://n8n-ier65piurogdeiutvey9onrp.147.93.81.200.sslip.io/webhook-test/okamoshi-contact';
 
     const response = await fetch(n8nWebhookUrl, {
       method: 'POST',

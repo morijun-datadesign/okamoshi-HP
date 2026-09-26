@@ -867,29 +867,88 @@
 </div>
 </section>
 <!-- Editorial Value & Diagnostic Insight Feature Banner -->
-<section class="w-full bg-surface relative overflow-hidden py-space-lg py-space-xl">
+<section class="w-full bg-surface relative py-space-lg py-space-xl">
 <div class="max-w-[75rem] mx-auto px-gutter-desktop">
-<div class="bg-gradient-to-r from-primary to-primary-container rounded-2xl p-space-xl lg:p-space-2xl text-on-primary shadow-lg relative overflow-hidden">
-<div class="absolute -right-12 -bottom-16 w-80 h-80 bg-white/5 rounded-full pointer-events-none"></div>
+<div class="bg-gradient-to-r from-primary to-primary-container rounded-2xl p-space-xl lg:p-space-2xl text-on-primary shadow-lg relative">
+<div class="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none">
+  <div class="absolute -right-12 -bottom-16 w-80 h-80 bg-white/5 rounded-full"></div>
+</div>
 <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-center relative z-10">
 <div class="lg:col-span-8 flex flex-col gap-space-sm">
 
 <h2 class="font-bold leading-tight font-headline-md text-headline-md">
-              岡山県高校入試<br class="hidden sm:inline">正確無比な志望校判定をすべての受験生へ。
+              正確無比な志望校判定をすべての受験生へ。
             </h2>
 <p class="font-body-md text-body-md text-on-primary-container max-w-2xl leading-relaxed">
-              おかもし実行委員会では、最新の県入試動向分析や過去問解読セミナーのレポートを定期配信しています。保護者向け進路選択ガイドや科目別学習法も随時更新中。
+              おかもし実行委員会では、最新の入試動向分析やおかもし、適性検査対策模試の役立つ情報を配信しています。<br class="hidden sm:inline">進路選択ガイドや科目別学習法も随時更新中。
             </p>
 </div>
-<div class="lg:col-span-4 flex flex-col sm:flex-row lg:flex-col gap-space-sm justify-end">
-<a class="px-space-lg py-space-sm bg-surface-container-lowest text-primary font-label-md text-label-md font-bold rounded-lg text-center hover:bg-surface-container-high transition-colors shadow-sm flex items-center justify-center gap-space-2xs" data-path="annual-schedule" href="news.html">
-<span class="material-symbols-outlined text-[18px]">event_note</span>
-<span class="">2026年度 年間日程表</span>
-</a>
-<a class="px-space-lg py-space-sm bg-primary-fixed/20 text-on-primary font-label-md text-label-md font-bold rounded-lg text-center hover:bg-primary-fixed/30 transition-colors flex items-center justify-center gap-space-2xs" data-path="score-reports" href="news.html">
-<span class="material-symbols-outlined text-[18px]">assessment</span>
-<span class="">学力診断シートの特長</span>
-</a>
+<div class="lg:col-span-4 flex flex-col sm:flex-row lg:flex-col gap-space-sm justify-end relative z-30">
+  <!-- ドロップダウン1: 年間日程表 -->
+  <div class="relative w-full sm:w-auto" id="cta-schedule-dropdown-container">
+    <button type="button" id="cta-schedule-btn" onclick="toggleCtaScheduleDropdown(event)" aria-expanded="false" aria-haspopup="true"
+      class="w-full px-space-lg py-space-sm bg-surface-container-lowest text-primary font-label-md text-label-md font-bold rounded-lg text-center hover:bg-surface-container-high active:scale-[0.99] transition-all shadow-sm flex items-center justify-between gap-space-2xs cursor-pointer focus:outline-none">
+      <span class="flex items-center gap-space-2xs">
+        <span class="material-symbols-outlined text-[18px]">event_note</span>
+        <span>2026年度 年間日程表</span>
+      </span>
+      <span id="cta-schedule-chevron" class="material-symbols-outlined text-[20px] transition-transform duration-200 transform">expand_more</span>
+    </button>
+    <!-- ドロップダウンメニュー -->
+    <div id="cta-schedule-menu" class="hidden absolute left-0 right-0 sm:right-auto sm:w-60 top-full mt-2 rounded-2xl bg-white border border-outline-variant/30 shadow-2xl p-2 z-50 transition-all duration-200 text-on-surface">
+      <div class="space-y-1">
+        <a href="index.html?grade=chu3#schedule-table-chu3" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl hover:bg-primary/10 hover:text-primary transition-colors group cursor-pointer">
+          <span class="font-bold text-sm text-on-surface group-hover:text-primary transition-colors">中3おかもし</span>
+          <span class="material-symbols-outlined text-base text-outline group-hover:text-primary group-hover:translate-x-0.5 transition-all">chevron_right</span>
+        </a>
+        <a href="index.html?grade=chu2#schedule-table-chu2" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl hover:bg-primary/10 hover:text-primary transition-colors group cursor-pointer">
+          <span class="font-bold text-sm text-on-surface group-hover:text-primary transition-colors">中2おかもし</span>
+          <span class="material-symbols-outlined text-base text-outline group-hover:text-primary group-hover:translate-x-0.5 transition-all">chevron_right</span>
+        </a>
+        <a href="index.html?grade=chu1#schedule-table-chu1" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl hover:bg-primary/10 hover:text-primary transition-colors group cursor-pointer">
+          <span class="font-bold text-sm text-on-surface group-hover:text-primary transition-colors">中1おかもし</span>
+          <span class="material-symbols-outlined text-base text-outline group-hover:text-primary group-hover:translate-x-0.5 transition-all">chevron_right</span>
+        </a>
+        <a href="index.html?grade=sho6#schedule-table-sho6" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl hover:bg-primary/10 hover:text-primary transition-colors group cursor-pointer">
+          <span class="font-bold text-sm text-on-surface group-hover:text-primary transition-colors">小6適性検査対策模試</span>
+          <span class="material-symbols-outlined text-base text-outline group-hover:text-primary group-hover:translate-x-0.5 transition-all">chevron_right</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ドロップダウン2: 学力診断シートの特長 -->
+  <div class="relative w-full sm:w-auto" id="cta-report-dropdown-container">
+    <button type="button" id="cta-report-btn" onclick="toggleCtaReportDropdown(event)" aria-expanded="false" aria-haspopup="true"
+      class="w-full px-space-lg py-space-sm bg-primary-fixed/20 text-on-primary font-label-md text-label-md font-bold rounded-lg text-center hover:bg-primary-fixed/30 border border-white/20 active:scale-[0.99] transition-all flex items-center justify-between gap-space-2xs cursor-pointer focus:outline-none">
+      <span class="flex items-center gap-space-2xs">
+        <span class="material-symbols-outlined text-[18px]">assessment</span>
+        <span>学力診断シートの特長</span>
+      </span>
+      <span id="cta-report-chevron" class="material-symbols-outlined text-[20px] transition-transform duration-200 transform">expand_more</span>
+    </button>
+    <!-- ドロップダウンメニュー -->
+    <div id="cta-report-menu" class="hidden absolute left-0 right-0 sm:right-auto sm:w-60 top-full mt-2 rounded-2xl bg-white border border-outline-variant/30 shadow-2xl p-2 z-50 transition-all duration-200 text-on-surface">
+      <div class="space-y-1">
+        <a href="index.html?grade=chu3#features-section" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl hover:bg-primary/10 hover:text-primary transition-colors group cursor-pointer">
+          <span class="font-bold text-sm text-on-surface group-hover:text-primary transition-colors">中3おかもし</span>
+          <span class="material-symbols-outlined text-base text-outline group-hover:text-primary group-hover:translate-x-0.5 transition-all">chevron_right</span>
+        </a>
+        <a href="index.html?grade=chu2#features-section" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl hover:bg-primary/10 hover:text-primary transition-colors group cursor-pointer">
+          <span class="font-bold text-sm text-on-surface group-hover:text-primary transition-colors">中2おかもし</span>
+          <span class="material-symbols-outlined text-base text-outline group-hover:text-primary group-hover:translate-x-0.5 transition-all">chevron_right</span>
+        </a>
+        <a href="index.html?grade=chu1#features-section" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl hover:bg-primary/10 hover:text-primary transition-colors group cursor-pointer">
+          <span class="font-bold text-sm text-on-surface group-hover:text-primary transition-colors">中1おかもし</span>
+          <span class="material-symbols-outlined text-base text-outline group-hover:text-primary group-hover:translate-x-0.5 transition-all">chevron_right</span>
+        </a>
+        <a href="index.html?grade=sho6#features-section" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl hover:bg-primary/10 hover:text-primary transition-colors group cursor-pointer">
+          <span class="font-bold text-sm text-on-surface group-hover:text-primary transition-colors">小6適性検査対策模試</span>
+          <span class="material-symbols-outlined text-base text-outline group-hover:text-primary group-hover:translate-x-0.5 transition-all">chevron_right</span>
+        </a>
+      </div>
+    </div>
+  </div>
 </div>
 </div>
 </div>
@@ -1493,6 +1552,99 @@
       window.location.href = 'index.html?tab=' + tabKey + '#next-exam';
     }
   }
+</script>
+
+<style id="cta-dropdown-style">
+  @keyframes ctaDropdownFadeSlide {
+    0% {
+      opacity: 0;
+      transform: translateY(-8px) scale(0.97);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  .cta-dropdown-open {
+    animation: ctaDropdownFadeSlide 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+</style>
+
+<script id="cta-footer-dropdown-script">
+  function toggleCtaScheduleDropdown(event) {
+    if (event) event.stopPropagation();
+    closeCtaReportDropdown();
+    var menu = document.getElementById('cta-schedule-menu');
+    var chevron = document.getElementById('cta-schedule-chevron');
+    var btn = document.getElementById('cta-schedule-btn');
+    if (!menu) return;
+    var isOpen = !menu.classList.contains('hidden');
+    if (isOpen) {
+      closeCtaScheduleDropdown();
+    } else {
+      menu.classList.remove('hidden');
+      menu.classList.remove('cta-dropdown-open');
+      void menu.offsetWidth;
+      menu.classList.add('cta-dropdown-open');
+      if (chevron) chevron.style.transform = 'rotate(180deg)';
+      if (btn) btn.setAttribute('aria-expanded', 'true');
+    }
+  }
+
+  function closeCtaScheduleDropdown() {
+    var menu = document.getElementById('cta-schedule-menu');
+    var chevron = document.getElementById('cta-schedule-chevron');
+    var btn = document.getElementById('cta-schedule-btn');
+    if (menu && !menu.classList.contains('hidden')) {
+      menu.classList.add('hidden');
+      menu.classList.remove('cta-dropdown-open');
+      if (chevron) chevron.style.transform = 'rotate(0deg)';
+      if (btn) btn.setAttribute('aria-expanded', 'false');
+    }
+  }
+
+  function toggleCtaReportDropdown(event) {
+    if (event) event.stopPropagation();
+    closeCtaScheduleDropdown();
+    var menu = document.getElementById('cta-report-menu');
+    var chevron = document.getElementById('cta-report-chevron');
+    var btn = document.getElementById('cta-report-btn');
+    if (!menu) return;
+    var isOpen = !menu.classList.contains('hidden');
+    if (isOpen) {
+      closeCtaReportDropdown();
+    } else {
+      menu.classList.remove('hidden');
+      menu.classList.remove('cta-dropdown-open');
+      void menu.offsetWidth;
+      menu.classList.add('cta-dropdown-open');
+      if (chevron) chevron.style.transform = 'rotate(180deg)';
+      if (btn) btn.setAttribute('aria-expanded', 'true');
+    }
+  }
+
+  function closeCtaReportDropdown() {
+    var menu = document.getElementById('cta-report-menu');
+    var chevron = document.getElementById('cta-report-chevron');
+    var btn = document.getElementById('cta-report-btn');
+    if (menu && !menu.classList.contains('hidden')) {
+      menu.classList.add('hidden');
+      menu.classList.remove('cta-dropdown-open');
+      if (chevron) chevron.style.transform = 'rotate(0deg)';
+      if (btn) btn.setAttribute('aria-expanded', 'false');
+    }
+  }
+
+  document.addEventListener('click', function(e) {
+    var schedContainer = document.getElementById('cta-schedule-dropdown-container');
+    if (schedContainer && !schedContainer.contains(e.target)) {
+      closeCtaScheduleDropdown();
+    }
+    var reportContainer = document.getElementById('cta-report-dropdown-container');
+    if (reportContainer && !reportContainer.contains(e.target)) {
+      closeCtaReportDropdown();
+    }
+  });
 </script>
 </body>
 </html>

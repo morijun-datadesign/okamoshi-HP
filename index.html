@@ -297,9 +297,18 @@
                 effectiveKey = "chu12";
               }
               switchExamTab(effectiveKey);
-              if (window.location.hash === "#next-exam") {
+              if (window.location.hash) {
                 setTimeout(function() {
-                  targetElem.scrollIntoView({ behavior: "smooth" });
+                  try {
+                    var hashTarget = document.querySelector(window.location.hash);
+                    if (hashTarget) {
+                      hashTarget.scrollIntoView({ behavior: "smooth" });
+                    } else if (targetElem) {
+                      targetElem.scrollIntoView({ behavior: "smooth" });
+                    }
+                  } catch (err) {
+                    if (targetElem) targetElem.scrollIntoView({ behavior: "smooth" });
+                  }
                 }, 150);
               }
             }

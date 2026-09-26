@@ -155,18 +155,25 @@
     .entry-content > * + * {
       margin-top: 1.5rem;
     }
+    .entry-content h2,
     .entry-content > h2,
     .entry-content section > h2 {
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       font-weight: 700;
-      line-height: 1.4;
-      color: #134230;
-      background: linear-gradient(135deg, rgba(19, 66, 48, 0.08) 0%, rgba(19, 66, 48, 0.02) 100%);
-      border-left: 5px solid #134230;
-      padding: 0.875rem 1.25rem;
-      border-radius: 0 0.5rem 0.5rem 0;
-      margin-top: 3rem !important;
-      margin-bottom: 1.25rem;
+      line-height: 1.45;
+      color: #0F5B47;
+      background: transparent !important;
+      border-top: none !important;
+      border-right: none !important;
+      border-bottom: none !important;
+      border-left: 4px solid #0F5B47 !important;
+      padding-top: 0.125rem !important;
+      padding-bottom: 0.125rem !important;
+      padding-right: 0 !important;
+      padding-left: 0.75rem !important; /* 12px */
+      border-radius: 0 !important;
+      margin-top: 1.5rem !important;
+      margin-bottom: 0.75rem !important;
       scroll-margin-top: 6rem;
     }
     /* 背景がグリーンのタイトルバー（.bg-primary）内の見出し（白文字・余白や枠線リセット） */
@@ -187,12 +194,18 @@
       font-size: 1.25rem;
       font-weight: 700;
       line-height: 1.45;
-      color: #134230;
-      border-bottom: 2px solid #fe8357;
-      padding-bottom: 0.5rem;
-      margin-top: 2.25rem !important;
-      margin-bottom: 1rem;
+      color: #0F5B47;
+      background: transparent !important;
+      border: none !important;
+      padding: 0 !important;
+      border-radius: 0 !important;
+      margin-top: 1.5rem !important;
+      margin-bottom: 0.75rem !important;
       scroll-margin-top: 6rem;
+    }
+    .entry-content h2 + *,
+    .entry-content h3 + * {
+      margin-top: 0 !important;
     }
     .entry-content h4 {
       font-size: 1.1rem;

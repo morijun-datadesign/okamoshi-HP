@@ -820,29 +820,38 @@
   </div>
 </div>
 <!-- Pagination: Previous / Next Article Navigation -->
-<div class="grid grid-cols-1 md:grid-cols-3 gap-space-sm pt-space-md">
-<a class="p-space-md bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-all flex flex-col gap-1 group" data-path="news-detail-prev" href="blog.html">
-<div class="flex items-center gap-1 text-on-surface-variant font-label-sm text-label-sm">
-<span class="material-symbols-outlined text-[16px] group-hover:-translate-x-1 transition-transform">arrow_back</span>
-<span class="">前の記事</span>
-</div>
-<span class="font-body-sm text-body-sm text-on-surface font-medium line-clamp-2">
-                2026年度 岡山県公立高校入試実施日程および定員発表について
-              </span>
-</a>
-<a class="p-space-md bg-surface-container rounded-xl hover:bg-surface-container-high transition-colors flex items-center justify-center gap-space-xs text-primary font-label-md text-label-md font-bold" data-path="news" href="news.html">
-<span class="material-symbols-outlined text-[20px]">grid_view</span>
-<span class="">記事一覧へ戻る</span>
-</a>
-<a class="p-space-md bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-all flex flex-col gap-1 text-right group" data-path="news-detail-next" href="detail.html?id=naishin-calc">
-<div class="flex items-center justify-end gap-1 text-on-surface-variant font-label-sm text-label-sm">
-<span class="">次の記事</span>
-<span class="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
-</div>
-<span class="font-body-sm text-body-sm text-on-surface font-medium line-clamp-2">
-                今さら聞けない「岡山県公立高校の内申点」計算方法と当日の逆転可能ライン
-              </span>
-</a>
+<div class="flex flex-col gap-3 pt-space-sm">
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+    <!-- 前の記事 -->
+    <a class="py-2.5 px-3.5 bg-surface-container-lowest rounded-xl border border-outline-variant/30 shadow-2xs hover:shadow-md hover:-translate-y-0.5 hover:border-primary/50 transition-all flex flex-col gap-0.5 group cursor-pointer" data-path="news-detail-prev" href="blog.html">
+      <div class="flex items-center gap-1 text-[11px] font-bold text-gray-500">
+        <span class="material-symbols-outlined text-[14px] group-hover:-translate-x-0.5 transition-transform">arrow_back</span>
+        <span>前の記事</span>
+      </div>
+      <span class="text-xs sm:text-[13px] font-medium text-on-surface truncate group-hover:text-primary transition-colors">
+        2026年度 岡山県公立高校入試実施日程および定員発表について
+      </span>
+    </a>
+
+    <!-- 次の記事 -->
+    <a class="py-2.5 px-3.5 bg-surface-container-lowest rounded-xl border border-outline-variant/30 shadow-2xs hover:shadow-md hover:-translate-y-0.5 hover:border-primary/50 transition-all flex flex-col gap-0.5 text-right group cursor-pointer" data-path="news-detail-next" href="detail.html?id=naishin-calc">
+      <div class="flex items-center justify-end gap-1 text-[11px] font-bold text-gray-500">
+        <span>次の記事</span>
+        <span class="material-symbols-outlined text-[14px] group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+      </div>
+      <span class="text-xs sm:text-[13px] font-medium text-on-surface truncate group-hover:text-primary transition-colors">
+        今さら聞けない「岡山県公立高校の内申点」計算方法と当日の逆転可能ライン
+      </span>
+    </a>
+  </div>
+
+  <!-- 記事一覧へ戻る (中央配置のシンプルで上品なテキストボタン) -->
+  <div class="flex justify-center pt-0.5">
+    <a class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold text-primary hover:text-primary-container bg-surface-container/60 hover:bg-surface-container transition-all" data-path="news" href="blog.html">
+      <span class="material-symbols-outlined text-[16px]">grid_view</span>
+      <span>記事一覧に戻る</span>
+    </a>
+  </div>
 </div>
 </article>
 <!-- Sticky Sidebar Column -->

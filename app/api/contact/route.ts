@@ -6,7 +6,7 @@ export async function POST(request: Request) {
     console.log("Server API Route received:", body);
 
     const n8nWebhookUrl = process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL
-      || 'http://n8n-ier65piurogdeiutvey9onrp.147.93.81.200.sslip.io/webhook-test/okamoshi-contact';
+      || 'http://n8n-ier65piurogdeiutvey9onrp.147.93.81.200.sslip.io/webhook/okamoshi-contact';
 
     // サーバー間通信でn8nへ転送（CORSやブラウザ制限を受けません）
     const res = await fetch(n8nWebhookUrl, {

@@ -1098,8 +1098,8 @@
 </div>
 </div>
 <!-- Related Articles Section -->
-<section id="related-articles-section" class="w-full bg-surface-container-low py-8">
-  <div class="max-w-[75rem] mx-auto px-gutter-desktop flex flex-col gap-6">
+<section id="related-articles-section" class="w-full bg-surface-container-low py-6 sm:py-8">
+  <div class="max-w-[75rem] mx-auto px-gutter-desktop flex flex-col gap-4 sm:gap-5">
     <!-- Section Header -->
     <div class="flex items-center justify-between pb-2 border-b border-surface-container-highest/60">
       <h2 class="text-xl sm:text-2xl text-primary font-bold">こちらの記事も読まれています</h2>
@@ -1109,16 +1109,16 @@
       </a>
     </div>
 
-    <!-- Articles Card Grid (3 Columns, Dynamic) -->
-    <div id="related-articles-grid" class="grid grid-cols-1 md:grid-cols-3 gap-5">
-      <div class="col-span-full py-8 text-center text-on-surface-variant flex items-center justify-center gap-2">
+    <!-- Articles Card List (Horizontal Text List, Dynamic) -->
+    <div id="related-articles-grid" class="flex flex-col gap-2.5">
+      <div class="py-6 text-center text-on-surface-variant flex items-center justify-center gap-2">
         <span class="material-symbols-outlined animate-spin text-primary">sync</span>
         <span class="text-xs">関連記事を読み込み中...</span>
       </div>
     </div>
 
     <!-- Mobile Button for Article List -->
-    <div class="md:hidden flex justify-center pt-2">
+    <div class="md:hidden flex justify-center pt-1">
       <a class="w-full py-2.5 bg-surface-container text-primary font-bold text-sm rounded-lg text-center shadow-2xs hover:bg-surface-container-high transition-colors" data-path="news" href="news.html">
         記事一覧へ戻る
       </a>
@@ -1558,29 +1558,80 @@
         return;
       }
 
-      const DEFAULT_EYECATCH = 'https://images.microcms-assets.io/assets/1ac525f4c868455d9d89ba053378d2ec/472790e3ea034e348fc446be675dc5e5/%E3%81%8A%E3%81%8B%E3%82%82%E3%81%9720260923-1.jpeg';
+      // NEWバッジ判定（現在日時から10日以内）
+      function isNewArticle(dateString) {
+        if (!dateString) return false;
+        let pubDate = new Date(dateString);
+        if (isNaN(pubDate.getTime())) {
+          const parts = String(dateString).split('.');
+          if (parts.length === 3) {
+            pubDate = new Date(parts[0], parseInt(parts[1], 10) - 1, parts[2]);
+          }
+        }
+        if (isNaN(pubDate.getTime())) return false;
+        const now = new Date();
+        const diffMs = now.getTime() - pubDate.getTime();
+        const diffDays = diffMs / (1000 * 60 * 60 * 24);
+        return diffDays >= -1 && diffDays <= 10;
+      }
+
+      // カテゴリに応じたバッジスタイル決定
+      function getCategoryBadgeClass(categoryText, fallbackClass) {
+        if (fallbackClass) return fallbackClass;
+        if (!categoryText) return 'bg-surface-container-high text-on-surface-variant';
+        if (categoryText.includes('重要') || categoryText.includes('トピックス')) {
+          return 'bg-secondary-fixed text-on-secondary-fixed-variant';
+        } else if (categoryText.includes('入試') || categoryText.includes('受検')) {
+          return 'bg-primary-container text-on-primary-container';
+        } else if (categoryText.includes('活用') || categoryText.includes('コラム')) {
+          return 'bg-tertiary-fixed text-on-tertiary-fixed';
+        } else if (categoryText.includes('要項') || categoryText.includes('日程')) {
+          return 'bg-secondary text-white';
+        }
+        return 'bg-primary-container text-on-primary-container';
+      }
 
       const cardsHtml = relatedPosts.slice(0, 3).map(item => {
-        const eyecatchUrl = (item.eyecatch && item.eyecatch.url) || DEFAULT_EYECATCH;
         const categoryName = (item.category && item.category.name) || (typeof item.category === 'string' ? item.category : '模試情報');
-        const publishedDate = formatArticleDate(item.publishedAt);
+        const badgeCls = getCategoryBadgeClass(categoryName, item.badgeClass);
+        const rawDate = item.publishedAt || item.date;
+        const publishedDate = formatArticleDate(rawDate);
+        const isNew = isNewArticle(rawDate);
         const detailHref = `detail.html?id=${encodeURIComponent(item.id)}`;
 
+        const newBadgeHtml = isNew 
+          ? `<span class="px-2 py-0.5 rounded-full bg-error text-white font-extrabold text-[10px] leading-none shrink-0 tracking-wide shadow-2xs">NEW</span>` 
+          : '';
+
         return `
-          <a href="${detailHref}" class="bg-surface-container-lowest rounded-xl shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all flex flex-col overflow-hidden group border border-outline-variant/30 hover:border-primary/50 cursor-pointer">
-            <div class="relative w-full aspect-[16/10] bg-surface-container overflow-hidden">
-              <img src="${eyecatchUrl}" alt="${item.title || ''}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy">
-              <span class="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-primary text-white text-[11px] font-bold shadow-xs">
-                ${categoryName}
-              </span>
-            </div>
-            <div class="p-3.5 flex flex-col gap-1.5 flex-grow justify-between">
-              <span class="text-[11px] text-on-surface-variant font-medium">${publishedDate}</span>
-              <h3 class="text-sm font-bold text-on-surface group-hover:text-secondary transition-colors line-clamp-2 leading-snug">
-                ${item.title || ''}
-              </h3>
-            </div>
-          </a>
+          <article class="bg-surface-container-lowest rounded-xl border border-outline-variant/30 hover:border-primary/50 shadow-2xs hover:shadow-xs transition-all duration-200 group">
+            <a href="${detailHref}" class="flex flex-col sm:flex-row sm:items-center justify-between px-4 py-3 sm:px-5 sm:py-3.5 gap-2 sm:gap-4 cursor-pointer">
+              <div class="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-4 flex-1 min-w-0">
+                <!-- メタ領域: [NEW] [日付] [カテゴリバッジ] -->
+                <div class="flex items-center gap-2 shrink-0">
+                  ${newBadgeHtml}
+                  <span class="flex items-center gap-1 text-xs text-on-surface-variant font-medium">
+                    <span class="material-symbols-outlined text-[14px] text-outline">calendar_today</span>
+                    <span>${publishedDate}</span>
+                  </span>
+                  <span class="px-2 py-0.5 rounded text-[11px] font-bold ${badgeCls} shrink-0">
+                    ${categoryName}
+                  </span>
+                </div>
+
+                <!-- 記事タイトル -->
+                <h3 class="font-bold text-sm sm:text-[15px] text-on-surface group-hover:text-primary transition-colors truncate">
+                  ${item.title || ''}
+                </h3>
+              </div>
+
+              <!-- 右端アクション: 詳細を読む (PCで表示) -->
+              <div class="hidden sm:flex items-center gap-1 text-xs font-bold text-secondary shrink-0 group-hover:translate-x-0.5 transition-transform">
+                <span>詳細を読む</span>
+                <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+              </div>
+            </a>
+          </article>
         `;
       }).join('');
 

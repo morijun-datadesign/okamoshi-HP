@@ -462,10 +462,8 @@
 
       console.log("送信開始", formData);
 
-      var n8nWebhookUrl = "https://n8n-ier65piurogdeiutvey9onrp.147.93.81.200.sslip.io/webhook-test/okamoshi-contact";
-
       try {
-        var res = await fetch(n8nWebhookUrl, {
+        var res = await fetch('/api/contact', {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -476,20 +474,22 @@
           }),
         });
 
-        console.log("n8n レスポンス受信:", res.status);
+        console.log("API レスポンス受信:", res.status);
         if (res.ok) {
-          alert("送信が完了しました！");
           form.classList.add('hidden');
           completeMsg.classList.remove('hidden');
           window.scrollTo({ top: 0, behavior: 'smooth' });
         } else {
-          alert("送信エラー: ステータス " + res.status);
+          var errorData = await res.json().catch(function() { return {}; });
+          var errorMsg = errorData.message || ("ステータス " + res.status);
+          console.error("送信エラー詳細:", errorData);
+          alert("送信エラー: " + errorMsg);
           btn.disabled = false;
           btn.innerHTML = originalBtnContent;
         }
       } catch (error) {
         console.error("通信エラー:", error);
-        alert("通信エラーが発生しました。");
+        alert("通信エラーが発生しました: " + (error.message || ""));
         btn.disabled = false;
         btn.innerHTML = originalBtnContent;
       }

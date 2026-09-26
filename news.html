@@ -184,10 +184,10 @@
           </button>
           <div id="nav-contact-dropdown" class="hidden group-hover:block absolute right-0 top-full mt-2 w-52 rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-xl p-2 z-50 transition-all duration-200 before:content-[''] before:absolute before:-top-2 before:left-0 before:w-full before:h-2">
             <div class="space-y-1">
-              <a href="contact/organization/" data-path="contact-partner" onclick="closeContactDropdown()" class="block px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition-colors text-left group/item cursor-pointer">
+              <a href="/contact/organization/" data-path="contact-partner" onclick="handleContactNavClick(event, '/contact/organization/')" class="block px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition-colors text-left group/item cursor-pointer">
                 <span class="text-base font-bold text-on-surface group-hover/item:text-primary transition-colors">塾・学校関係者様</span>
               </a>
-              <a href="contact/individual/" data-path="contact" onclick="closeContactDropdown()" class="block px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition-colors text-left group/item cursor-pointer">
+              <a href="/contact/individual/" data-path="contact" onclick="handleContactNavClick(event, '/contact/individual/')" class="block px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition-colors text-left group/item cursor-pointer">
                 <span class="text-base font-bold text-on-surface group-hover/item:text-primary transition-colors">個人申込の方</span>
               </a>
             </div>
@@ -295,14 +295,14 @@
             <span id="mobile-contact-chevron" class="material-symbols-outlined text-xl transition-transform duration-200 transform">expand_more</span>
           </button>
           <div id="mobile-contact-menu" class="hidden border-t border-surface-container bg-surface-container-low/30 divide-y divide-surface-container/60">
-            <a href="contact/organization/" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3 text-sm font-bold text-on-surface hover:bg-surface-container-low transition-colors">
+            <a href="/contact/organization/" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3 text-sm font-bold text-on-surface hover:bg-surface-container-low transition-colors">
               <div class="flex items-center gap-2">
                 <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
                 <span>塾・学校関係者様</span>
               </div>
               <span class="material-symbols-outlined text-base text-on-surface-variant">arrow_forward</span>
             </a>
-            <a href="contact/individual/" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3 text-sm font-bold text-on-surface hover:bg-surface-container-low transition-colors">
+            <a href="/contact/individual/" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3 text-sm font-bold text-on-surface hover:bg-surface-container-low transition-colors">
               <div class="flex items-center gap-2">
                 <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
                 <span>個人申込の方</span>
@@ -773,10 +773,10 @@
             <span class="material-symbols-outlined text-sm text-primary">contact_support</span>お問い合わせ
           </div>
           <div class="flex flex-wrap sm:flex-nowrap gap-2 min-w-0">
-            <a class="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg font-bold text-xs transition-all text-center shadow-sm border whitespace-nowrap bg-[#e8f5ee] text-[#134230] border-[#134230]/20 hover:bg-[#d8ede1]" href="contact/organization/">
+            <a class="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg font-bold text-xs transition-all text-center shadow-sm border whitespace-nowrap bg-[#e8f5ee] text-[#134230] border-[#134230]/20 hover:bg-[#d8ede1]" href="/contact/organization/">
               <span class="material-symbols-outlined text-base">corporate_fare</span>塾・学校関係者様
             </a>
-            <a class="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg font-bold text-xs transition-all text-center shadow-sm border whitespace-nowrap bg-[#e8f5ee] text-[#134230] border-[#134230]/20 hover:bg-[#d8ede1]" href="contact/individual/">
+            <a class="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg font-bold text-xs transition-all text-center shadow-sm border whitespace-nowrap bg-[#e8f5ee] text-[#134230] border-[#134230]/20 hover:bg-[#d8ede1]" href="/contact/individual/">
               <span class="material-symbols-outlined text-base">mail</span>個人申込の方
             </a>
           </div>
@@ -1224,6 +1224,15 @@
       container.classList.remove('is-open');
       if (btn) btn.setAttribute('aria-expanded', 'false');
     }
+  }
+
+  function handleContactNavClick(event, url) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    closeContactDropdown();
+    window.location.href = url;
   }
 
   document.addEventListener('click', function(e) {

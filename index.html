@@ -1224,24 +1224,24 @@
 <!-- ========================================== -->
 <!-- 最新のお知らせ（3件） SECTION               -->
 <!-- ========================================== -->
-<section class="w-full bg-surface-container-lowest py-space-3xl border-t border-surface-container" id="latest-news-section">
-  <div class="max-w-[75rem] mx-auto px-4 sm:px-gutter-desktop space-y-space-xl">
-    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-space-sm border-b border-outline-variant/30">
+<section class="w-full bg-surface-container-low/40 py-space-2xl sm:py-space-3xl border-t border-surface-container" id="latest-news-section">
+  <div class="max-w-[75rem] mx-auto px-4 sm:px-gutter-desktop space-y-space-md sm:space-y-space-lg">
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 pb-space-xs border-b border-outline-variant/30">
       <div>
-        <span class="text-xs font-bold tracking-widest text-primary uppercase block mb-1">News & Topics</span>
-        <h2 class="font-headline-lg text-[24px] md:text-headline-lg text-on-surface tracking-tight font-bold">最新のお知らせ</h2>
+        <span class="text-xs font-bold tracking-widest text-primary uppercase block mb-0.5">News & Topics</span>
+        <h2 class="font-headline-lg text-[22px] sm:text-headline-lg text-on-surface tracking-tight font-bold">最新のお知らせ</h2>
       </div>
-      <a href="news.html" class="inline-flex items-center gap-1.5 text-primary font-bold text-sm sm:text-base hover:text-primary-container transition-colors group">
+      <a href="news.html" class="inline-flex items-center gap-1 text-primary font-bold text-xs sm:text-sm hover:text-primary-container transition-colors group self-start sm:self-auto">
         <span>すべてのお知らせを見る</span>
-        <span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
+        <span class="material-symbols-outlined text-base group-hover:translate-x-1 transition-transform">arrow_forward</span>
       </a>
     </div>
 
-    <!-- 記事グリッド（3件） -->
-    <div id="latest-news-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-      <div class="col-span-full py-12 text-center text-on-surface-variant flex items-center justify-center gap-2">
+    <!-- 記事テキストリスト（3件） -->
+    <div id="latest-news-list" class="space-y-2.5 sm:space-y-3">
+      <div class="p-8 text-center text-on-surface-variant flex items-center justify-center gap-2 bg-surface-container-lowest rounded-2xl border border-outline-variant/30">
         <span class="material-symbols-outlined animate-spin text-primary">sync</span>
-        <span>お知らせを読み込み中...</span>
+        <span class="text-sm font-medium">お知らせを読み込み中...</span>
       </div>
     </div>
   </div>
@@ -1477,6 +1477,9 @@
       if (typeof window.updateStudentVoicesVisibility === 'function') {
         window.updateStudentVoicesVisibility(tabKey);
       }
+      if (typeof window.loadLatestNews === 'function') {
+        window.loadLatestNews(tabKey);
+      }
       const tabs = ['sho6', 'chu1', 'chu2', 'chu3'];
       tabs.forEach(function(key) {
         const panel = document.getElementById('tab-panel-' + key);
@@ -1665,7 +1668,7 @@
   }
 
   /* ==========================================================================
-     microCMS 設定 & 最新お知らせ（3件）取得・動的描画
+     microCMS 設定 & 最新お知らせ（3件）取得・動的描画（テキストリスト & 学年別フィルタ）
      ========================================================================== */
   const MICROCMS_CONFIG = {
     serviceDomain: 'okamoshi-blog',
@@ -1675,34 +1678,36 @@
 
   const FALLBACK_LATEST_NEWS = [
     {
-      id: "okamoshi-oct-2026-guide",
-      title: "【重要】2026年度 第4回「中3岡山県統一模試（10月号）」の出題範囲と受験要領を公開しました",
-      publishedAt: "2026-09-20T10:00:00.000Z",
-      category: { name: "重要なお知らせ", key: "important" },
-      eyecatch: {
-        url: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=800&q=80"
-      }
+      id: "s9o093uhf",
+      title: "小6生対象 岡山県適性検査対策模試 10月号",
+      publishedAt: "2026-09-26T09:00:00.000Z",
+      category: { name: "模試活用法", key: "article" },
+      targetGrade: ["小6生"]
     },
     {
-      id: "okayama-highschool-exam-2027-points",
-      title: "【高校入試速報】岡山県公立高校一般入試・特別入試の最新動向と秋からの合否判定活用法",
-      publishedAt: "2026-09-15T14:30:00.000Z",
-      category: { name: "入試・受検情報", key: "exam" },
-      eyecatch: {
-        url: "https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?auto=format&fit=crop&w=800&q=80"
-      }
+      id: "b055d-p_k7",
+      title: "【岡山県の高校受験】合格への近道はここにある！「おかもし」が受験生から支持される理由",
+      publishedAt: "2026-09-23T10:00:00.000Z",
+      category: { name: "模試活用法", key: "article" },
+      targetGrade: ["中学生"]
     },
     {
-      id: "chu6-tekisei-autumn-special",
-      title: "小6生対象「岡山県立中高一貫校 適性検査対策模試」受付開始！本番そっくりの適性Ⅰ・Ⅱを体験",
-      publishedAt: "2026-09-10T09:00:00.000Z",
-      category: { name: "模試実施情報", key: "moshi" },
-      eyecatch: {
-        url: "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=800&q=80"
-      }
+      id: "20p7a-hecrv",
+      title: "おかもし　決済用リンク",
+      publishedAt: "2026-09-23T05:00:00.000Z",
+      category: { name: "模試活用法", key: "article" },
+      targetGrade: ["全学年"]
+    },
+    {
+      id: "0qf1y_rb2",
+      title: "（サンプル）まずはこの記事を開きましょう",
+      publishedAt: "2026-09-23T04:56:59.888Z",
+      category: { name: "更新情報", key: "important" },
+      targetGrade: ["全学年"]
     }
   ];
 
+  // 公開日フォーマット (YYYY.MM.DD)
   function formatNewsDate(isoStr) {
     if (!isoStr) return '';
     const d = new Date(isoStr);
@@ -1713,21 +1718,34 @@
     return `${y}.${m}.${day}`;
   }
 
+  // 公開日10日以内の自動判定
+  function isNewNewsArticle(publishedAt) {
+    if (!publishedAt) return false;
+    const pubTime = new Date(publishedAt).getTime();
+    if (isNaN(pubTime)) return false;
+    const now = Date.now();
+    const diffDays = (now - pubTime) / (1000 * 60 * 60 * 24);
+    return diffDays >= 0 && diffDays <= 10;
+  }
+
+  // カテゴリバッジカラー判定
   function getNewsBadgeColor(catName) {
     if (!catName) return 'bg-surface-container-high text-on-surface';
     if (catName.includes('重要')) return 'bg-error-container text-on-error-container border border-error/20';
     if (catName.includes('入試') || catName.includes('受検')) return 'bg-[#e8f5ee] text-[#134230] border border-[#a1d1b8]';
-    if (catName.includes('模試') || catName.includes('実施')) return 'bg-secondary-fixed text-on-secondary-fixed-variant border border-secondary/20';
+    if (catName.includes('活用法') || catName.includes('コラム')) return 'bg-[#fef3c7] text-[#92400e] border border-[#fde68a]';
+    if (catName.includes('要項') || catName.includes('日程') || catName.includes('模試')) return 'bg-[#ecfdf5] text-[#065f46] border border-[#a7f3d0]';
     return 'bg-surface-container-high text-on-surface';
   }
 
+  // 2枚目テキストリスト形式のレンダリング
   function renderLatestNews(posts) {
-    const container = document.getElementById('latest-news-grid');
+    const container = document.getElementById('latest-news-list') || document.getElementById('latest-news-grid');
     if (!container) return;
 
     if (!posts || posts.length === 0) {
       container.innerHTML = `
-        <div class="col-span-full py-8 text-center text-on-surface-variant">
+        <div class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/30 text-center text-on-surface-variant">
           現在お知らせはありません。
         </div>
       `;
@@ -1737,48 +1755,93 @@
     container.innerHTML = posts.map(post => {
       const catName = (typeof post.category === 'object' && post.category !== null) ? (post.category.name || 'お知らせ') : (post.category || 'お知らせ');
       const badgeClass = getNewsBadgeColor(catName);
-      const dateStr = formatNewsDate(post.publishedAt || post.createdAt);
-      const thumb = (post.eyecatch && post.eyecatch.url) ? post.eyecatch.url : 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=800&q=80';
+      const pubDateIso = post.publishedAt || post.createdAt;
+      const dateStr = formatNewsDate(pubDateIso);
+      const isNew = isNewNewsArticle(pubDateIso);
       const detailUrl = `detail.html?id=${encodeURIComponent(post.id)}`;
 
+      const newBadgeHtml = isNew
+        ? `<span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-[#c85a32] text-white shadow-sm shrink-0 tracking-tight leading-tight">NEW</span>`
+        : '';
+
       return `
-        <article class="bg-surface-container-lowest rounded-2xl border border-outline-variant/30 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-200 overflow-hidden flex flex-col group">
-          <a href="${detailUrl}" class="block aspect-[16/10] overflow-hidden bg-surface-container-low relative">
-            <img src="${thumb}" alt="${post.title || ''}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy">
-            <span class="absolute top-3 left-3 px-2.5 py-0.5 rounded-full text-xs font-bold ${badgeClass} shadow-sm backdrop-blur-sm">
-              ${catName}
-            </span>
-          </a>
-          <div class="p-5 flex-1 flex flex-col justify-between space-y-3">
-            <div class="space-y-2">
-              <div class="flex items-center gap-1.5 text-xs text-on-surface-variant font-medium">
-                <span class="material-symbols-outlined text-sm text-primary">calendar_today</span>
-                <time datetime="${post.publishedAt || ''}">${dateStr}</time>
+        <article class="bg-surface-container-lowest rounded-2xl border border-outline-variant/30 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 overflow-hidden group">
+          <a href="${detailUrl}" class="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 sm:px-5 sm:py-3.5 gap-2 sm:gap-4">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 flex-1 min-w-0">
+              <!-- メタ領域: [NEW] [日付] [カテゴリバッジ] -->
+              <div class="flex items-center gap-2 shrink-0">
+                ${newBadgeHtml}
+                <span class="flex items-center gap-1 text-xs text-on-surface-variant font-medium">
+                  <span class="material-symbols-outlined text-[14px] text-outline">calendar_today</span>
+                  <span>${dateStr}</span>
+                </span>
+                <span class="px-2.5 py-0.5 rounded text-[11px] font-bold ${badgeClass} shrink-0">
+                  ${catName}
+                </span>
               </div>
-              <h3 class="font-bold text-base text-on-surface group-hover:text-primary transition-colors line-clamp-2 leading-snug">
-                <a href="${detailUrl}">
-                  ${post.title || '無題の記事'}
-                </a>
+
+              <!-- 記事タイトル -->
+              <h3 class="font-bold text-sm sm:text-[15px] text-on-surface group-hover:text-primary transition-colors truncate flex-1">
+                ${post.title || '無題の記事'}
               </h3>
             </div>
-            <div class="pt-2 border-t border-surface-container/60 flex items-center justify-between text-xs font-bold text-primary">
-              <span>記事を読む</span>
-              <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+
+            <!-- 右端アクション: 詳細を読む (PCで表示) -->
+            <div class="flex items-center gap-1 text-xs font-bold text-secondary shrink-0 group-hover:translate-x-0.5 transition-transform self-end sm:self-center">
+              <span>詳細を読む</span>
+              <span class="material-symbols-outlined text-[16px]">chevron_right</span>
             </div>
-          </div>
+          </a>
         </article>
       `;
     }).join('');
   }
 
-  async function loadLatestNews() {
-    if (MICROCMS_CONFIG.serviceDomain === 'YOUR_SERVICE_DOMAIN' || MICROCMS_CONFIG.apiKey === 'YOUR_API_KEY') {
-      renderLatestNews(FALLBACK_LATEST_NEWS);
+  // 学年別フォールバック取得
+  function getFallbackNewsByGrade(grade) {
+    const isSho6 = (grade === 'sho6');
+    return FALLBACK_LATEST_NEWS.filter(post => {
+      const grades = post.targetGrade || [];
+      if (grades.includes('全学年')) return true;
+      if (isSho6 && grades.includes('小6生')) return true;
+      if (!isSho6 && (grades.includes('中学生') || grades.includes('中3生') || grades.includes('中2生') || grades.includes('中1生'))) return true;
+      return false;
+    }).slice(0, 3);
+  }
+
+  // 学年別 microCMS 最新お知らせ取得
+  var _currentNewsGrade = null;
+  async function loadLatestNews(grade) {
+    if (!grade) {
+      // 現在アクティブなタブを特定
+      const activeBtn = document.querySelector('.tab-btn[aria-selected="true"]');
+      if (activeBtn) {
+        if (activeBtn.id === 'tab-btn-sho6') grade = 'sho6';
+        else grade = 'chu3';
+      } else {
+        const urlParams = new URLSearchParams(window.location.search);
+        grade = urlParams.get('grade') || 'chu3';
+      }
+    }
+    _currentNewsGrade = grade;
+
+    const isSho6 = (grade === 'sho6');
+    const filterQuery = isSho6
+      ? 'targetGrade[contains]小6生[or]targetGrade[contains]全学年'
+      : 'targetGrade[contains]中学生[or]targetGrade[contains]全学年';
+
+    const hasMicroCMSConfig = MICROCMS_CONFIG.serviceDomain && 
+                              MICROCMS_CONFIG.serviceDomain !== 'YOUR_SERVICE_DOMAIN' &&
+                              MICROCMS_CONFIG.apiKey && 
+                              MICROCMS_CONFIG.apiKey !== 'YOUR_API_KEY';
+
+    if (!hasMicroCMSConfig) {
+      renderLatestNews(getFallbackNewsByGrade(grade));
       return;
     }
 
     try {
-      const url = `https://${MICROCMS_CONFIG.serviceDomain}.microcms.io/api/v1/${MICROCMS_CONFIG.endpoint}?limit=3`;
+      const url = `https://${MICROCMS_CONFIG.serviceDomain}.microcms.io/api/v1/${MICROCMS_CONFIG.endpoint}?orders=-publishedAt&limit=3&filters=${encodeURIComponent(filterQuery)}`;
       const res = await fetch(url, {
         headers: {
           'X-MICROCMS-API-KEY': MICROCMS_CONFIG.apiKey
@@ -1789,16 +1852,18 @@
       if (data && data.contents && data.contents.length > 0) {
         renderLatestNews(data.contents);
       } else {
-        renderLatestNews(FALLBACK_LATEST_NEWS);
+        renderLatestNews(getFallbackNewsByGrade(grade));
       }
     } catch (err) {
-      console.warn('microCMSからの取得に失敗したため、初期フォールバックデータを表示します:', err);
-      renderLatestNews(FALLBACK_LATEST_NEWS);
+      console.warn('microCMS最新お知らせの取得に失敗したためフォールバックを表示します:', err);
+      renderLatestNews(getFallbackNewsByGrade(grade));
     }
   }
 
+  window.loadLatestNews = loadLatestNews;
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadLatestNews);
+    document.addEventListener('DOMContentLoaded', function() { loadLatestNews(); });
   } else {
     loadLatestNews();
   }

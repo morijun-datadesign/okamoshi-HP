@@ -231,7 +231,7 @@
 
     <!-- フォームカード -->
     <div class="bg-white rounded-2xl border border-outline-variant/30 shadow-sm p-6 sm:p-10 mb-8">
-      <form id="org-contact-form" onsubmit="handleContactSubmit(event)" class="space-y-6">
+      <form id="org-contact-form" onsubmit="handleSubmit(event)" class="space-y-6">
         
         <!-- 貴塾・学校名 -->
         <div>
@@ -425,12 +425,18 @@
     }
 
     // フォーム送信処理
-    async function handleContactSubmit(e) {
-      e.preventDefault();
+    async function handleSubmit(e) {
+      if (e) e.preventDefault();
       var form = document.getElementById('org-contact-form');
       var btn = document.getElementById('submit-btn');
       var completeMsg = document.getElementById('complete-msg');
 
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      // 送信中UI更新（ボタンをdisable）
       var originalBtnContent = btn.innerHTML;
       btn.disabled = true;
       btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-xl">progress_activity</span><span>送信中...</span>';
@@ -447,14 +453,14 @@
         message: (document.getElementById('org-message') ? document.getElementById('org-message').value.trim() : "")
       };
 
-      var webhookUrl = (window.CONTACT_CONFIG && window.CONTACT_CONFIG.webhookUrl)
-        || (typeof process !== 'undefined' && process.env && process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL)
+      console.log('送信開始', formData);
+
+      var directWebhookUrl = (window.CONTACT_CONFIG && window.CONTACT_CONFIG.webhookUrl)
         || "http://n8n-ier65piurogdeiutvey9onrp.147.93.81.200.sslip.io/webhook-test/okamoshi-contact";
 
-      console.log("Sending to n8n:", formData);
-
       try {
-        var res = await fetch(webhookUrl, {
+        // 1. Next.js API Routes (/api/contact) へのPOST送信を優先（CORS制限回避）
+        var res = await fetch('/api/contact', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -462,27 +468,53 @@
           body: JSON.stringify(formData)
         });
 
-        console.log("n8n response:", res);
+        console.log('送信完了', res);
 
-        if (res.ok) {
+        if (res.ok || res.status === 200 || res.status === 201) {
           form.classList.add('hidden');
           completeMsg.classList.remove('hidden');
           window.scrollTo({ top: 0, behavior: 'smooth' });
+          return;
+        } else if (res.status === 404) {
+          // 静的配信環境などで /api/contact が未配置の場合は直接 Webhook へフォールバック
+          console.warn('/api/contact が404のため、直接 Webhook への送信にフォールバックします');
+          throw new Error('API Route returned 404');
         } else {
-          // n8nテスト待機時などHTTP 200以外のレスポンスがあった場合
-          console.warn("n8n response not ok:", res.status, res.statusText);
-          // テストモードや運用環境の差異に配慮しつつ、レスポンスが到達した場合は完了表示へ
+          // n8nのテスト待機時レスポンス等
+          console.log('n8n レスポンス受信:', res.status);
           form.classList.add('hidden');
           completeMsg.classList.remove('hidden');
           window.scrollTo({ top: 0, behavior: 'smooth' });
+          return;
         }
       } catch (err) {
-        console.error("n8n connection error:", err);
-        // 通信エラー時もユーザーに送信完了または案内を表示
+        console.warn('API Route経由での通信をスキップし、直接 n8n Webhook へ送信します:', err);
+        try {
+          var directRes = await fetch(directWebhookUrl, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+          });
+          console.log('送信完了 (直接Webhook送信)', directRes);
+        } catch (directErr) {
+          console.error('直接Webhook送信エラー:', directErr);
+        }
         form.classList.add('hidden');
         completeMsg.classList.remove('hidden');
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
+    }
+
+    // イベントリスナーの登録と後方互換性担保
+    window.handleSubmit = handleSubmit;
+    window.handleContactSubmit = handleSubmit;
+
+    var orgForm = document.getElementById('org-contact-form');
+    if (orgForm) {
+      orgForm.addEventListener('submit', handleSubmit);
     }
   </script>
 </body>

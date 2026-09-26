@@ -1032,7 +1032,7 @@
 <div class="flex flex-col gap-3">
   <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
     <!-- 前の記事 -->
-    <a class="py-2.5 px-3.5 bg-surface-container-lowest rounded-xl border border-outline-variant/30 shadow-2xs hover:shadow-md hover:-translate-y-0.5 hover:border-primary/50 transition-all flex flex-col gap-0.5 group cursor-pointer" data-path="news-detail-prev" href="blog.html">
+    <a class="py-2.5 px-3.5 bg-surface-container-lowest rounded-xl border border-outline-variant/30 shadow-2xs hover:shadow-md hover:-translate-y-0.5 hover:border-primary/50 transition-all flex flex-col gap-0.5 group cursor-pointer" data-path="news-detail-prev" href="news.html">
       <div class="flex items-center gap-1 text-[11px] font-bold text-gray-500">
         <span class="material-symbols-outlined text-[14px] group-hover:-translate-x-0.5 transition-transform">arrow_back</span>
         <span>前の記事</span>
@@ -1056,7 +1056,7 @@
 
   <!-- 記事一覧へ戻る (中央配置のシンプルで上品なテキストボタン) -->
   <div class="flex justify-center pt-0.5">
-    <a class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold text-primary hover:text-primary-container bg-surface-container/60 hover:bg-surface-container transition-all" data-path="news" href="blog.html">
+    <a class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold text-primary hover:text-primary-container bg-surface-container/60 hover:bg-surface-container transition-all" data-path="news" href="news.html">
       <span class="material-symbols-outlined text-[16px]">grid_view</span>
       <span>記事一覧に戻る</span>
     </a>
@@ -1103,7 +1103,7 @@
     <!-- Section Header -->
     <div class="flex items-center justify-between pb-2 border-b border-surface-container-highest/60">
       <h2 class="text-xl sm:text-2xl text-primary font-bold">こちらの記事も読まれています</h2>
-      <a class="hidden md:flex items-center gap-1 text-primary text-xs sm:text-sm hover:underline font-bold" data-path="news" href="blog.html">
+      <a class="hidden md:flex items-center gap-1 text-primary text-xs sm:text-sm hover:underline font-bold" data-path="news" href="news.html">
         <span>記事一覧を見る</span>
         <span class="material-symbols-outlined text-[16px]">chevron_right</span>
       </a>
@@ -1119,7 +1119,7 @@
 
     <!-- Mobile Button for Article List -->
     <div class="md:hidden flex justify-center pt-2">
-      <a class="w-full py-2.5 bg-surface-container text-primary font-bold text-sm rounded-lg text-center shadow-2xs hover:bg-surface-container-high transition-colors" data-path="news" href="blog.html">
+      <a class="w-full py-2.5 bg-surface-container text-primary font-bold text-sm rounded-lg text-center shadow-2xs hover:bg-surface-container-high transition-colors" data-path="news" href="news.html">
         記事一覧へ戻る
       </a>
     </div>
@@ -1461,7 +1461,7 @@
         // IDはあるがフォールバックにも存在しない場合
         const contentBody = document.getElementById('entry-content-body');
         if (contentBody) {
-          contentBody.innerHTML = '<div class="p-8 text-center text-on-surface-variant flex flex-col items-center gap-space-sm rounded-xl bg-surface-container-low"><span class="material-symbols-outlined text-4xl text-outline">article</span><p class="font-bold text-base text-on-surface mt-2">記事が見つかりませんでした</p><p class="text-sm mt-1">URLを確認するか、<a href="blog.html" class="text-primary underline">記事一覧</a>からお探しください。</p></div>';
+          contentBody.innerHTML = '<div class="p-8 text-center text-on-surface-variant flex flex-col items-center gap-space-sm rounded-xl bg-surface-container-low"><span class="material-symbols-outlined text-4xl text-outline">article</span><p class="font-bold text-base text-on-surface mt-2">記事が見つかりませんでした</p><p class="text-sm mt-1">URLを確認するか、<a href="news.html" class="text-primary underline">記事一覧</a>からお探しください。</p></div>';
         }
         const titleEl = document.getElementById('article-title');
         if (titleEl) titleEl.textContent = '記事が見つかりませんでした';

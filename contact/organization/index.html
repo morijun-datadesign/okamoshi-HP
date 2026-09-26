@@ -334,7 +334,7 @@
         <div class="w-16 h-16 mx-auto rounded-full bg-[#e8f5ee] text-primary flex items-center justify-center shadow-sm">
           <span class="material-symbols-outlined text-3xl">check_circle</span>
         </div>
-        <h3 class="text-2xl font-bold text-primary">お問い合わせありがとうございます</h3>
+        <h3 class="text-2xl font-bold text-primary">お問い合わせを受け付けました</h3>
         <p class="text-sm text-on-surface-variant max-w-md mx-auto leading-relaxed">
           送信が完了いたしました。<br>
           担当者より内容を確認のうえ、2営業日以内にご連絡差し上げます。
@@ -431,36 +431,58 @@
       var btn = document.getElementById('submit-btn');
       var completeMsg = document.getElementById('complete-msg');
 
+      var originalBtnContent = btn.innerHTML;
       btn.disabled = true;
       btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-xl">progress_activity</span><span>送信中...</span>';
 
-      var formData = new FormData(form);
-      var payload = Object.fromEntries(formData.entries());
-      payload.form_type = '塾・学校関係者様 お問い合わせ';
-      payload.timestamp = new Date().toISOString();
+      var formData = {
+        type: "organization",
+        organizationName: (document.getElementById('org-name') ? document.getElementById('org-name').value.trim() : ""),
+        classroomName: (document.getElementById('org-branch') ? document.getElementById('org-branch').value.trim() : ""),
+        name: (document.getElementById('org-contact-name') ? document.getElementById('org-contact-name').value.trim() : ""),
+        phonetic: (document.getElementById('org-contact-kana') ? document.getElementById('org-contact-kana').value.trim() : ""),
+        email: (document.getElementById('org-email') ? document.getElementById('org-email').value.trim() : ""),
+        phone: (document.getElementById('org-tel') ? document.getElementById('org-tel').value.trim() : ""),
+        category: (document.getElementById('org-type') ? document.getElementById('org-type').value : ""),
+        message: (document.getElementById('org-message') ? document.getElementById('org-message').value.trim() : "")
+      };
 
-      var webhookUrl = (window.CONTACT_CONFIG && window.CONTACT_CONFIG.webhookUrl) 
-        ? window.CONTACT_CONFIG.webhookUrl 
-        : 'http://n8n-ier65piurogdeiutvey9onrp.147.93.81.200.sslip.io/webhook-test/okamoshi-contact';
+      var webhookUrl = (window.CONTACT_CONFIG && window.CONTACT_CONFIG.webhookUrl)
+        || (typeof process !== 'undefined' && process.env && process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL)
+        || "http://n8n-ier65piurogdeiutvey9onrp.147.93.81.200.sslip.io/webhook-test/okamoshi-contact";
+
+      console.log("Sending to n8n:", formData);
 
       try {
-        console.log('[Contact Form] Sending payload to n8n Webhook:', webhookUrl, payload);
-        var response = await fetch(webhookUrl, {
+        var res = await fetch(webhookUrl, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json, text/plain, */*'
+            'Content-Type': 'application/json'
           },
-          body: JSON.stringify(payload)
+          body: JSON.stringify(formData)
         });
-        console.log('[Contact Form] Response status:', response.status);
-      } catch (err) {
-        console.warn('Webhook送信時の通知（ネットワーク環境やn8nテスト待機状態をご確認ください）:', err);
-      }
 
-      form.classList.add('hidden');
-      completeMsg.classList.remove('hidden');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+        console.log("n8n response:", res);
+
+        if (res.ok) {
+          form.classList.add('hidden');
+          completeMsg.classList.remove('hidden');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          // n8nテスト待機時などHTTP 200以外のレスポンスがあった場合
+          console.warn("n8n response not ok:", res.status, res.statusText);
+          // テストモードや運用環境の差異に配慮しつつ、レスポンスが到達した場合は完了表示へ
+          form.classList.add('hidden');
+          completeMsg.classList.remove('hidden');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      } catch (err) {
+        console.error("n8n connection error:", err);
+        // 通信エラー時もユーザーに送信完了または案内を表示
+        form.classList.add('hidden');
+        completeMsg.classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
     }
   </script>
 </body>

@@ -441,21 +441,21 @@
 
       var webhookUrl = (window.CONTACT_CONFIG && window.CONTACT_CONFIG.webhookUrl) 
         ? window.CONTACT_CONFIG.webhookUrl 
-        : null;
+        : 'http://n8n-ier65piurogdeiutvey9onrp.147.93.81.200.sslip.io/webhook-test/okamoshi-contact';
 
       try {
-        if (webhookUrl && !webhookUrl.includes('example.com')) {
-          await fetch(webhookUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-          });
-        } else {
-          // モック遅延
-          await new Promise(r => setTimeout(r, 600));
-        }
+        console.log('[Contact Form] Sending payload to n8n Webhook:', webhookUrl, payload);
+        var response = await fetch(webhookUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json, text/plain, */*'
+          },
+          body: JSON.stringify(payload)
+        });
+        console.log('[Contact Form] Response status:', response.status);
       } catch (err) {
-        console.warn('Webhook送信エラー（UIは完了表示へ進みます）:', err);
+        console.warn('Webhook送信時の通知（ネットワーク環境やn8nテスト待機状態をご確認ください）:', err);
       }
 
       form.classList.add('hidden');

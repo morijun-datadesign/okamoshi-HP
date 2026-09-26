@@ -184,7 +184,7 @@
       font-weight: 700;
       line-height: 1.45;
       color: #0F5B47;
-      margin-top: 1.5rem !important;
+      margin-top: 3rem !important;
     }
 
     .entry-content h2,
@@ -206,7 +206,7 @@
       padding-right: 0 !important;
       padding-left: 0.75rem !important; /* 12px */
       border-radius: 0 !important;
-      margin-top: 1.5rem !important;
+      margin-top: 3rem !important;
       scroll-margin-top: 6rem;
     }
 
@@ -236,8 +236,30 @@
       border: none !important;
       padding: 0 !important;
       border-radius: 0 !important;
-      margin-top: 1.5rem !important;
+      margin-top: 3rem !important;
       scroll-margin-top: 6rem;
+    }
+
+    /* 記事先頭の見出しは上の余白が空きすぎないよう抑制 */
+    .entry-content > h1:first-child,
+    .entry-content > h2:first-child,
+    .entry-content > h3:first-child,
+    .entry-content section:first-child > h1:first-child,
+    .entry-content section:first-child > h2:first-child,
+    .entry-content section:first-child > h3:first-child,
+    .blog-body > h1:first-child,
+    .blog-body > h2:first-child,
+    .blog-body > h3:first-child,
+    .blog-body h1:first-child,
+    .blog-body h2:first-child,
+    .blog-body h3:first-child,
+    .prose > h1:first-child,
+    .prose > h2:first-child,
+    .prose > h3:first-child,
+    .prose h1:first-child,
+    .prose h2:first-child,
+    .prose h3:first-child {
+      margin-top: 1rem !important;
     }
 
     /* 2. 見出し直後の <p> または要素の上の余白を強制的に消去・極小化 (0.25rem) */

@@ -442,7 +442,6 @@
       btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-xl">progress_activity</span><span>送信中...</span>';
 
       var formData = {
-        type: "organization",
         organizationName: (document.getElementById('org-name') ? document.getElementById('org-name').value.trim() : ""),
         classroomName: (document.getElementById('org-branch') ? document.getElementById('org-branch').value.trim() : ""),
         name: (document.getElementById('org-contact-name') ? document.getElementById('org-contact-name').value.trim() : ""),
@@ -453,58 +452,38 @@
         message: (document.getElementById('org-message') ? document.getElementById('org-message').value.trim() : "")
       };
 
-      console.log('送信開始', formData);
+      console.log("送信開始", formData);
 
-      var directWebhookUrl = (window.CONTACT_CONFIG && window.CONTACT_CONFIG.webhookUrl)
-        || "http://n8n-ier65piurogdeiutvey9onrp.147.93.81.200.sslip.io/webhook-test/okamoshi-contact";
+      var n8nWebhookUrl = "http://n8n-ier65piurogdeiutvey9onrp.147.93.81.200.sslip.io/webhook-test/okamoshi-contact";
 
       try {
-        // 1. Next.js API Routes (/api/contact) へのPOST送信を優先（CORS制限回避）
-        var res = await fetch('/api/contact', {
-          method: 'POST',
+        var res = await fetch(n8nWebhookUrl, {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify(formData)
+          body: JSON.stringify({
+            type: "organization",
+            ...formData
+          }),
         });
 
-        console.log('送信完了', res);
-
-        if (res.ok || res.status === 200 || res.status === 201) {
+        console.log("n8n レスポンス受信:", res.status);
+        if (res.ok) {
+          alert("送信が完了しました！");
           form.classList.add('hidden');
           completeMsg.classList.remove('hidden');
           window.scrollTo({ top: 0, behavior: 'smooth' });
-          return;
-        } else if (res.status === 404) {
-          // 静的配信環境などで /api/contact が未配置の場合は直接 Webhook へフォールバック
-          console.warn('/api/contact が404のため、直接 Webhook への送信にフォールバックします');
-          throw new Error('API Route returned 404');
         } else {
-          // n8nのテスト待機時レスポンス等
-          console.log('n8n レスポンス受信:', res.status);
-          form.classList.add('hidden');
-          completeMsg.classList.remove('hidden');
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-          return;
+          alert("送信エラー: ステータス " + res.status);
+          btn.disabled = false;
+          btn.innerHTML = originalBtnContent;
         }
-      } catch (err) {
-        console.warn('API Route経由での通信をスキップし、直接 n8n Webhook へ送信します:', err);
-        try {
-          var directRes = await fetch(directWebhookUrl, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-          });
-          console.log('送信完了 (直接Webhook送信)', directRes);
-        } catch (directErr) {
-          console.error('直接Webhook送信エラー:', directErr);
-        }
-        form.classList.add('hidden');
-        completeMsg.classList.remove('hidden');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } catch (error) {
+        console.error("通信エラー:", error);
+        alert("通信エラーが発生しました。");
+        btn.disabled = false;
+        btn.innerHTML = originalBtnContent;
       }
     }
 

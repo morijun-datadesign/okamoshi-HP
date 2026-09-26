@@ -144,30 +144,54 @@
     }
 
     /* ==================================================== */
-    /* microCMS リッチエディタ用タイポグラフィスタイル (.entry-content) */
+    /* microCMS リッチエディタ用タイポグラフィスタイル (.entry-content, .blog-body, .prose) */
     /* ==================================================== */
-    .entry-content {
+    #entry-content-body,
+    .entry-content,
+    .blog-body,
+    .prose {
+      display: block !important;
+      gap: 0 !important;
+      row-gap: 0 !important;
       color: #1b1c1c;
       font-size: 1rem;
       line-height: 1.85;
       letter-spacing: 0.02em;
     }
-    .entry-content > * + * {
+    .entry-content > * + *,
+    .blog-body > * + *,
+    .prose > * + * {
       margin-top: 1.5rem;
     }
+
+    /* 1. 見出し自体の下の余白を極小化 (0.25rem) */
     .entry-content h1,
-    .entry-content > h1,
-    .entry-content section > h1 {
+    .entry-content h2,
+    .entry-content h3,
+    .blog-body h1,
+    .blog-body h2,
+    .blog-body h3,
+    .prose h1,
+    .prose h2,
+    .prose h3 {
+      margin-bottom: 0.25rem !important;
+    }
+
+    .entry-content h1,
+    .blog-body h1,
+    .prose h1 {
       font-size: 1.6rem;
       font-weight: 700;
       line-height: 1.45;
       color: #0F5B47;
       margin-top: 1.5rem !important;
-      margin-bottom: 0.5rem !important;
     }
+
     .entry-content h2,
     .entry-content > h2,
-    .entry-content section > h2 {
+    .entry-content section > h2,
+    .blog-body h2,
+    .prose h2 {
       font-size: 1.4rem;
       font-weight: 700;
       line-height: 1.45;
@@ -183,9 +207,9 @@
       padding-left: 0.75rem !important; /* 12px */
       border-radius: 0 !important;
       margin-top: 1.5rem !important;
-      margin-bottom: 0.45rem !important;
       scroll-margin-top: 6rem;
     }
+
     /* 背景がグリーンのタイトルバー（.bg-primary）内の見出し（白文字・余白や枠線リセット） */
     .bg-primary h2,
     .entry-content .bg-primary h2,
@@ -200,7 +224,10 @@
       padding: 0 !important;
       margin: 0 !important;
     }
-    .entry-content h3 {
+
+    .entry-content h3,
+    .blog-body h3,
+    .prose h3 {
       font-size: 1.25rem;
       font-weight: 700;
       line-height: 1.45;
@@ -210,14 +237,44 @@
       padding: 0 !important;
       border-radius: 0 !important;
       margin-top: 1.5rem !important;
-      margin-bottom: 0.75rem !important;
       scroll-margin-top: 6rem;
     }
+
+    /* 2. 見出し直後の <p> または要素の上の余白を強制的に消去・極小化 (0.25rem) */
+    .entry-content h1 + p,
+    .entry-content h2 + p,
+    .entry-content h3 + p,
+    .blog-body h1 + p,
+    .blog-body h2 + p,
+    .blog-body h3 + p,
+    .prose h1 + p,
+    .prose h2 + p,
+    .prose h3 + p,
     .entry-content h1 + *,
     .entry-content h2 + *,
-    .entry-content h3 + * {
-      margin-top: 0 !important;
+    .entry-content h3 + *,
+    .blog-body h1 + *,
+    .blog-body h2 + *,
+    .blog-body h3 + *,
+    .prose h1 + *,
+    .prose h2 + *,
+    .prose h3 + * {
+      margin-top: 0.25rem !important;
     }
+
+    /* 3. 空の <p></p> や <p><br></p> が入っていた場合の非表示化（不要な隙間除去） */
+    .entry-content p:empty,
+    .entry-content p:has(> br:only-child),
+    .blog-body p:empty,
+    .blog-body p:has(> br:only-child),
+    .prose p:empty,
+    .prose p:has(> br:only-child) {
+      display: none !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      height: 0 !important;
+    }
+
     .entry-content h4 {
       font-size: 1.1rem;
       font-weight: 700;
@@ -227,7 +284,9 @@
       margin-top: 1.75rem !important;
       margin-bottom: 0.75rem;
     }
-    .entry-content p {
+    .entry-content p,
+    .blog-body p,
+    .prose p {
       margin-bottom: 1.25rem;
       line-height: 1.9;
       color: #334155;
@@ -717,7 +776,7 @@
 </header>
 <!-- Table of Contents removed -->
 <!-- Main Article Body Container -->
-<div id="entry-content-body" class="entry-content flex flex-col gap-space-xl">
+<div id="entry-content-body" class="entry-content blog-body prose">
   <!-- コンテンツはJavaScriptで動的に挿入されます -->
 </div><!-- /#entry-content-body -->
 <!-- In-article High-Conversion CTA Banner -->
@@ -1307,6 +1366,12 @@
       if (contentBody) {
         if (post.content) {
           contentBody.innerHTML = post.content;
+          // microCMS出力の空段落 (<p></p>, <p><br></p>, 空白のみのp) を除去
+          contentBody.querySelectorAll('p').forEach(p => {
+            if (!p.textContent.trim() && (!p.children.length || (p.children.length === 1 && p.children[0].tagName === 'BR'))) {
+              p.remove();
+            }
+          });
         } else {
           // フォールバック時: 本文なしの場合は焼き込み本文を隠してプレースホルダー表示
           contentBody.innerHTML = `

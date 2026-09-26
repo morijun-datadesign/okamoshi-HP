@@ -1006,33 +1006,23 @@
 </div>
 </section>
 </div><!-- /#entry-content-body -->
-<!-- Social Media Share Buttons -->
-<div class="p-space-lg bg-surface-container-lowest rounded-xl shadow-sm flex flex-col gap-space-sm">
-<span class="font-label-md text-label-md text-on-surface-variant text-center font-medium">
-              この記事を保護者・お友達とシェアする
-            </span>
-<div class="flex items-center justify-center flex-wrap gap-space-sm">
-<!-- X / Twitter -->
-<button class="px-space-md py-space-xs rounded-lg bg-surface-container hover:bg-surface-container-highest text-on-surface font-label-md text-label-md transition-colors flex items-center gap-space-xs" onclick="window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(document.title) + '&amp;url=' + encodeURIComponent(window.location.href), '_blank')" type="button">
-<span class="font-bold">X</span>
-<span class="">でポスト</span>
-</button>
-<!-- LINE -->
-<button class="px-space-md py-space-xs rounded-lg bg-[#06c755] text-white font-label-md text-label-md hover:opacity-90 transition-opacity flex items-center gap-space-xs" onclick="window.open('https://social-plugins.line.me/lineit/share?url=' + encodeURIComponent(window.location.href), '_blank')" type="button">
-<span class="material-symbols-outlined text-[18px]">chat</span>
-<span class="">LINEで送る</span>
-</button>
-<!-- Facebook -->
-<button class="px-space-md py-space-xs rounded-lg bg-[#1877f2] text-white font-label-md text-label-md hover:opacity-90 transition-opacity flex items-center gap-space-xs" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(window.location.href), '_blank')" type="button">
-<span class="material-symbols-outlined text-[18px]">share</span>
-<span class="">シェア</span>
-</button>
-<!-- Copy Link -->
-<button class="px-space-md py-space-xs rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-md text-label-md transition-colors flex items-center gap-space-xs" onclick="navigator.clipboard.writeText(window.location.href); alert('記事のURLをクリップボードにコピーしました');" type="button">
-<span class="material-symbols-outlined text-[18px]">content_copy</span>
-<span class="">URLをコピー</span>
-</button>
-</div>
+<!-- Social Media Share Buttons (LINE-focused) -->
+<div class="py-3.5 px-4 bg-surface-container-lowest rounded-xl shadow-xs flex flex-col items-center gap-2.5">
+  <span class="font-bold text-xs sm:text-sm text-on-surface-variant flex items-center gap-1.5">
+    保護者の方・お知り合いへの共有はこちら
+  </span>
+  <div class="flex items-center justify-center gap-2.5 w-full max-w-sm">
+    <!-- LINE (Main Button - Prominent & Wide) -->
+    <button class="flex-1 py-2 px-5 rounded-lg bg-[#06c755] hover:bg-[#05b34c] text-white font-bold text-sm hover:shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs" onclick="window.open('https://social-plugins.line.me/lineit/share?url=' + encodeURIComponent(window.location.href), '_blank')" type="button">
+      <svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.477.254l2.484 3.374V8.108c0-.345.282-.63.63-.63.345 0 .626.285.626.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63.349 0 .631.285.631.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"></path></svg>
+      <span>LINEで送る</span>
+    </button>
+    <!-- Copy Link (Sub Button - Simple Gray) -->
+    <button class="px-4 py-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-medium text-xs sm:text-sm transition-colors flex items-center justify-center gap-1.5 cursor-pointer shrink-0 shadow-2xs" onclick="navigator.clipboard.writeText(window.location.href); alert('記事のURLをクリップボードにコピーしました');" type="button">
+      <span class="material-symbols-outlined text-[16px]">content_copy</span>
+      <span>URLをコピー</span>
+    </button>
+  </div>
 </div>
 <!-- Pagination: Previous / Next Article Navigation -->
 <div class="grid grid-cols-1 md:grid-cols-3 gap-space-sm pt-space-md">

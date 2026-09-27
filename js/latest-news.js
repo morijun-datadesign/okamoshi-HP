@@ -94,8 +94,8 @@
         : '';
 
       return `
-        <article class="bg-surface-container-lowest rounded-2xl border border-outline-variant/30 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 overflow-hidden group">
-          <a href="${detailUrl}" class="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 sm:px-5 sm:py-3.5 gap-2 sm:gap-4">
+        <article class="border-b border-gray-200/80 last:border-b-0 transition-colors group">
+          <a href="${detailUrl}" class="flex flex-col sm:flex-row sm:items-center justify-between py-3.5 sm:py-4 gap-2 sm:gap-4 cursor-pointer hover:bg-slate-50/50 sm:-mx-3 sm:px-3 rounded-lg transition-colors">
             <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 flex-1 min-w-0">
               <!-- メタ領域: [NEW] [日付] [カテゴリバッジ] -->
               <div class="flex items-center gap-2 shrink-0">
@@ -110,7 +110,7 @@
               </div>
 
               <!-- 記事タイトル -->
-              <h3 class="font-bold text-sm sm:text-[15px] text-on-surface group-hover:text-primary transition-colors truncate flex-1">
+              <h3 class="font-bold text-sm sm:text-base text-on-surface group-hover:text-primary transition-colors truncate flex-1">
                 ${post.title || '無題の記事'}
               </h3>
             </div>

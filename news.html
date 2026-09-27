@@ -475,62 +475,25 @@
   <main class="flex-1 w-full bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-4 sm:pt-6 pb-8 sm:pb-12">
       <div class="flex flex-col w-full">
-<!-- Editorial Page Title Banner -->
-<section class="relative w-full overflow-hidden bg-white sm:bg-transparent px-4 sm:px-0 py-4 sm:py-0 sm:pb-space-md border-b border-gray-200/80 sm:border-b-0">
-<div class="w-full relative z-10">
-<div class="flex flex-col gap-space-xs">
-
-<h1 class="text-2xl md:text-3xl font-bold text-[#1e3a2f] tracking-tight">
-            お知らせ・受験情報
-          </h1>
-<p class="font-body-lg text-body-lg text-on-surface-variant mt-space-2xs leading-relaxed">
-            岡山県統一模擬試験（おかもし）の実施要項・重要なお知らせや、岡山県の高校入試・県立中高一貫校受検に役立つ受験情報・学習コラムをお届けします。
-          </p>
-</div>
-<!-- Segmented Category Filter Strip -->
-<div class="flex flex-wrap items-center gap-space-xs p-space-2xs bg-surface-container-low rounded-xl mt-space-md">
-<button class="category-btn px-space-md py-space-xs bg-primary text-on-primary font-label-md text-label-md rounded-lg shadow-sm transition-all flex items-center gap-space-2xs" data-filter="all" type="button">
-<span class="material-symbols-outlined text-[16px]">grid_view</span>
-<span class="">すべて</span>
-</button>
-<button class="category-btn px-space-md py-space-xs bg-surface-container-lowest text-on-surface-variant hover:text-primary hover:bg-surface-container-high font-label-md text-label-md rounded-lg transition-all flex items-center gap-space-2xs" data-filter="important" type="button">
-<span class="material-symbols-outlined text-[16px] text-secondary">campaign</span>
-<span class="">重要なお知らせ</span>
-</button>
-<button class="category-btn px-space-md py-space-xs bg-surface-container-lowest text-on-surface-variant hover:text-primary hover:bg-surface-container-high font-label-md text-label-md rounded-lg transition-all flex items-center gap-space-2xs" data-filter="exam-info" type="button">
-<span class="material-symbols-outlined text-[16px] text-primary">school</span>
-<span class="">入試・受検情報</span>
-</button>
-<button class="category-btn px-space-md py-space-xs bg-surface-container-lowest text-on-surface-variant hover:text-primary hover:bg-surface-container-high font-label-md text-label-md rounded-lg transition-all flex items-center gap-space-2xs" data-filter="column" type="button">
-<span class="material-symbols-outlined text-[16px] text-tertiary-container">menu_book</span>
-<span class="">模試活用法・学習コラム</span>
-</button>
-<button class="category-btn px-space-md py-space-xs bg-surface-container-lowest text-on-surface-variant hover:text-primary hover:bg-surface-container-high font-label-md text-label-md rounded-lg transition-all flex items-center gap-space-2xs" data-filter="schedule" type="button">
-<span class="material-symbols-outlined text-[16px] text-primary">calendar_month</span>
-<span class="">実施要項・日程</span>
-</button>
-</div>
-</div>
-</section>
-<!-- Main Articles Grid & Aside Section -->
-<section class="w-full bg-slate-50 sm:bg-transparent px-4 sm:px-0 py-8 sm:py-space-lg border-b border-gray-200/80 sm:border-b-0">
+<!-- Editorial Page Title Banner & Articles List -->
 <div class="w-full">
-<div class="flex items-center justify-between pb-space-lg">
-<div class="flex items-center gap-space-sm">
-<div class="w-2.5 h-8 bg-primary rounded-full"></div>
-<h2 class="font-headline-md text-headline-md text-primary font-bold">
-            新着記事・アーカイブ
-          </h2>
-</div>
-<span id="articles-count-badge" class="font-label-sm text-label-sm text-on-surface-variant">全 7 件中 1〜6 件を表示</span>
-</div>
-<!-- 記事一覧コンテナ（画像なし・テキスト省スペース化） -->
-<div id="articles-list-container" class="flex flex-col gap-2.5">
-  <div class="p-8 text-center text-on-surface-variant flex flex-col items-center gap-2">
-    <div class="w-8 h-8 border-3 border-primary border-t-transparent rounded-full animate-spin"></div>
-    <span class="text-sm font-medium">記事を読み込んでいます...</span>
+  <!-- Page Title -->
+  <div class="pt-1 pb-5 sm:pb-6">
+    <h1 class="text-2xl md:text-3xl font-bold text-[#1e3a2f] tracking-tight">
+      お知らせ・受験情報
+    </h1>
+    <p class="font-body-md text-sm sm:text-base text-on-surface-variant mt-1.5 leading-relaxed">
+      岡山県統一模擬試験（おかもし）の実施要項・重要なお知らせや、岡山県の高校入試・県立中高一貫校受検に役立つ受験情報・学習コラムをお届けします。
+    </p>
   </div>
-</div>
+
+  <!-- 記事一覧コンテナ（フラット・ヘアライン境界線） -->
+  <div id="articles-list-container" class="flex flex-col border-t border-gray-200/80">
+    <div class="p-8 text-center text-on-surface-variant flex flex-col items-center gap-2">
+      <div class="w-8 h-8 border-3 border-primary border-t-transparent rounded-full animate-spin"></div>
+      <span class="text-sm font-medium">記事を読み込んでいます...</span>
+    </div>
+  </div>
 <!-- Pagination Component -->
 <div class="flex items-center justify-center pt-space-lg">
 <nav class="flex items-center gap-space-xs bg-slate-50 border border-slate-200/80 p-space-xs rounded-xl shadow-xs">
@@ -548,7 +511,6 @@
 </nav>
 </div>
 </div>
-</section>
 <!-- Editorial Value & Diagnostic Insight Feature Banner -->
 <section class="w-full relative bg-white sm:bg-transparent px-4 sm:px-0 py-8 sm:py-space-lg border-b border-gray-200/80 sm:border-b-0">
 <div class="w-full">
@@ -983,9 +945,9 @@
       const detailUrl = `detail.html?id=${encodeURIComponent(post.id)}`;
 
       return `
-        <article class="bg-transparent sm:bg-surface-container-lowest rounded-none sm:rounded-xl border-0 sm:border border-b border-gray-200/60 sm:border-outline-variant/30 hover:border-primary/50 shadow-none sm:shadow-2xs hover:shadow-xs transition-all duration-200 group">
-          <a href="${detailUrl}" class="flex flex-col sm:flex-row sm:items-center justify-between px-0 sm:px-5 py-3 sm:py-3.5 gap-2 sm:gap-4 cursor-pointer">
-            <div class="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-4 flex-1 min-w-0">
+        <article class="border-b border-gray-200/80 transition-colors group">
+          <a href="${detailUrl}" class="flex flex-col sm:flex-row sm:items-center justify-between py-3.5 sm:py-4 gap-2 sm:gap-4 cursor-pointer hover:bg-slate-50/50 sm:-mx-3 sm:px-3 rounded-lg transition-colors">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 flex-1 min-w-0">
               <!-- メタ領域: [NEW] [日付] [カテゴリバッジ] -->
               <div class="flex items-center gap-2 shrink-0">
                 ${newBadgeHtml}
@@ -999,7 +961,7 @@
               </div>
 
               <!-- 記事タイトル -->
-              <h3 class="font-bold text-sm sm:text-[15px] text-on-surface group-hover:text-primary transition-colors truncate">
+              <h3 class="font-bold text-sm sm:text-base text-on-surface group-hover:text-primary transition-colors truncate">
                 ${post.title}
               </h3>
             </div>

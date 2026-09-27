@@ -50,6 +50,7 @@ ${body.message || "なし"}
       headers: {
         Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json",
+        "User-Agent": "Okamoshi-Contact/1.0",
       },
       body: JSON.stringify({
         from: fromEmail,
@@ -112,6 +113,7 @@ Web : https://okayama-moshi.com
         headers: {
           Authorization: `Bearer ${apiKey}`,
           "Content-Type": "application/json",
+          "User-Agent": "Okamoshi-Contact/1.0",
         },
         body: JSON.stringify({
           from: fromEmail,

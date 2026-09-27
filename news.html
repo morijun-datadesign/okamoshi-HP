@@ -472,9 +472,9 @@
       });
     </script>
 
-  <main class="flex-1 w-full py-6 sm:py-10">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-      <div class="bg-white rounded-2xl p-6 sm:p-10 shadow-sm border border-slate-200/80 flex flex-col w-full">
+  <main class="flex-1 w-full py-0 sm:py-10 bg-slate-50 sm:bg-transparent">
+    <div class="max-w-7xl mx-auto px-0 sm:px-6 lg:px-8 w-full">
+      <div class="bg-transparent sm:bg-white rounded-none sm:rounded-2xl p-0 sm:p-10 shadow-none sm:shadow-sm border-0 sm:border sm:border-slate-200/80 flex flex-col w-full">
 <!-- Micro Breadcrumb & Atmospheric Top Strip -->
 <section class="w-full pb-4 mb-4 border-b border-slate-200/80 hidden sm:block">
 <div class="w-full">
@@ -489,7 +489,7 @@
 </div>
 </section>
 <!-- Editorial Page Title Banner -->
-<section class="relative w-full overflow-hidden pb-space-md">
+<section class="relative w-full overflow-hidden bg-white sm:bg-transparent px-4 sm:px-0 py-8 sm:py-0 sm:pb-space-md border-b border-gray-200/80 sm:border-b-0">
 <div class="w-full relative z-10">
 <div class="flex flex-col gap-space-xs">
 
@@ -526,7 +526,7 @@
 </div>
 </section>
 <!-- Main Articles Grid & Aside Section -->
-<section class="w-full py-space-lg">
+<section class="w-full bg-slate-50 sm:bg-transparent px-4 sm:px-0 py-8 sm:py-space-lg border-b border-gray-200/80 sm:border-b-0">
 <div class="w-full">
 <div class="flex items-center justify-between pb-space-lg">
 <div class="flex items-center gap-space-sm">
@@ -563,7 +563,7 @@
 </div>
 </section>
 <!-- Editorial Value & Diagnostic Insight Feature Banner -->
-<section class="w-full relative py-space-lg">
+<section class="w-full relative bg-white sm:bg-transparent px-4 sm:px-0 py-8 sm:py-space-lg border-b border-gray-200/80 sm:border-b-0">
 <div class="w-full">
 <div class="bg-gradient-to-r from-primary to-primary-container rounded-2xl p-space-xl lg:p-space-2xl text-on-primary shadow-lg relative">
 <div class="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none">
@@ -651,7 +651,7 @@
 </div>
 </section>
 <!-- Related Links & High-Conversion Action Footer Strip -->
-<section class="w-full pt-space-lg pb-space-sm">
+<section class="w-full bg-slate-50 sm:bg-transparent px-4 sm:px-0 py-8 sm:pt-space-lg sm:pb-space-sm">
 <div class="w-full">
 <div class="text-center pb-space-xl">
 <span class="font-label-sm text-label-sm text-secondary font-bold tracking-widest uppercase">QUICK ACTION &amp; RESOURCES</span>
@@ -662,7 +662,7 @@
 </div>
 <div class="grid grid-cols-1 md:grid-cols-3 gap-space-lg">
 <!-- Quick Card 1: Exam Application -->
-<a class="group p-space-xl bg-slate-50/80 rounded-xl border border-slate-200/80 shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between" data-path="application-entry" href="apply.html">
+<a class="group p-4 sm:p-space-xl bg-white sm:bg-slate-50/80 rounded-xl border border-gray-200/60 sm:border-slate-200/80 shadow-none sm:shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between" data-path="application-entry" href="apply.html">
 <div class="flex items-start justify-between gap-space-sm">
 <div class="w-12 h-12 rounded-xl bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center group-hover:scale-110 transition-transform">
 <span class="material-symbols-outlined text-[26px]">how_to_reg</span>
@@ -683,7 +683,7 @@
 </div>
 </a>
 <!-- Quick Card 2: Partner Schools -->
-<a class="group p-space-xl bg-slate-50/80 rounded-xl border border-slate-200/80 shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between" data-path="partner-schools" href="schools_PC.html">
+<a class="group p-4 sm:p-space-xl bg-white sm:bg-slate-50/80 rounded-xl border border-gray-200/60 sm:border-slate-200/80 shadow-none sm:shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between" data-path="partner-schools" href="schools_PC.html">
 <div class="flex items-start justify-between gap-space-sm">
 <div class="w-12 h-12 rounded-xl bg-primary-fixed text-on-primary-fixed flex items-center justify-center group-hover:scale-110 transition-transform">
 <span class="material-symbols-outlined text-[26px]">location_city</span>
@@ -704,7 +704,7 @@
 </div>
 </a>
 <!-- Quick Card 3: Social & Study Advice -->
-<a class="group p-space-xl bg-slate-50/80 rounded-xl border border-slate-200/80 shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between" data-path="social-instagram" href="https://www.instagram.com/okamoshi01/" target="_blank" rel="noopener noreferrer">
+<a class="group p-4 sm:p-space-xl bg-white sm:bg-slate-50/80 rounded-xl border border-gray-200/60 sm:border-slate-200/80 shadow-none sm:shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between" data-path="social-instagram" href="https://www.instagram.com/okamoshi01/" target="_blank" rel="noopener noreferrer">
 <div class="flex items-start justify-between gap-space-sm">
 <div class="w-12 h-12 rounded-xl bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center group-hover:scale-110 transition-transform">
 <span class="material-symbols-outlined text-[26px]">photo_camera</span>
@@ -996,8 +996,8 @@
       const detailUrl = `detail.html?id=${encodeURIComponent(post.id)}`;
 
       return `
-        <article class="bg-surface-container-lowest rounded-xl border border-outline-variant/30 hover:border-primary/50 shadow-2xs hover:shadow-xs transition-all duration-200 group">
-          <a href="${detailUrl}" class="flex flex-col sm:flex-row sm:items-center justify-between px-4 py-3 sm:px-5 sm:py-3.5 gap-2 sm:gap-4 cursor-pointer">
+        <article class="bg-transparent sm:bg-surface-container-lowest rounded-none sm:rounded-xl border-0 sm:border border-b border-gray-200/60 sm:border-outline-variant/30 hover:border-primary/50 shadow-none sm:shadow-2xs hover:shadow-xs transition-all duration-200 group">
+          <a href="${detailUrl}" class="flex flex-col sm:flex-row sm:items-center justify-between px-0 sm:px-5 py-3 sm:py-3.5 gap-2 sm:gap-4 cursor-pointer">
             <div class="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-4 flex-1 min-w-0">
               <!-- メタ領域: [NEW] [日付] [カテゴリバッジ] -->
               <div class="flex items-center gap-2 shrink-0">

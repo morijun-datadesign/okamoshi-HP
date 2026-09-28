@@ -74,7 +74,7 @@
 
     if (!posts || posts.length === 0) {
       container.innerHTML = `
-        <div class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/30 text-center text-on-surface-variant">
+        <div class="bg-surface-container-lowest p-6 rounded-lg border border-outline-variant/30 text-center text-on-surface-variant">
           現在お知らせはありません。
         </div>
       `;

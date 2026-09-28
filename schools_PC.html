@@ -78,7 +78,17 @@
             "surface-container-highest": "#e4e2e1",
             "on-primary-container": "#9fcfb6"
           },
-          borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "3xl": "1.5rem", "full": "9999px" },
+          borderRadius: {
+          'none': '0px',
+          'sm': '4px',
+          'DEFAULT': '6px',
+          'md': '6px',
+          'lg': '8px',
+          'xl': '8px',
+          '2xl': '8px',
+          '3xl': '8px',
+          'full': '9999px',
+        },
           spacing: {
             "gutter-desktop": "1.5rem",
             "space-3xl": "4.5rem",
@@ -188,18 +198,18 @@
             <span class="font-semibold">模試を選ぶ</span>
             <span id="nav-next-exam-chevron" class="material-symbols-outlined text-lg transition-transform duration-200 transform">expand_more</span>
           </button>
-          <div id="nav-next-exam-dropdown" class="hidden absolute left-0 top-full mt-2 w-56 rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-xl p-2 z-50 transition-all duration-200">
+          <div id="nav-next-exam-dropdown" class="hidden absolute left-0 top-full mt-2 w-56 rounded-lg bg-surface-container-lowest border border-outline-variant/30 shadow-xl p-2 z-50 transition-all duration-200">
             <div class="space-y-1">
-              <button type="button" onclick="selectNavExamTab('chu3')" class="w-full flex items-center px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
+              <button type="button" onclick="selectNavExamTab('chu3')" class="w-full flex items-center px-3 py-2.5 rounded-lg hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
                 <span class="text-base font-bold text-on-surface group-hover:text-primary transition-colors">中3 おかもし</span>
               </button>
-              <button type="button" onclick="selectNavExamTab('chu2')" class="w-full flex items-center px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
+              <button type="button" onclick="selectNavExamTab('chu2')" class="w-full flex items-center px-3 py-2.5 rounded-lg hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
                 <span class="text-base font-bold text-on-surface group-hover:text-primary transition-colors">中2 おかもし</span>
               </button>
-              <button type="button" onclick="selectNavExamTab('chu1')" class="w-full flex items-center px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
+              <button type="button" onclick="selectNavExamTab('chu1')" class="w-full flex items-center px-3 py-2.5 rounded-lg hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
                 <span class="text-base font-bold text-on-surface group-hover:text-primary transition-colors">中1 おかもし</span>
               </button>
-              <button type="button" onclick="selectNavExamTab('sho6')" class="w-full flex items-center px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
+              <button type="button" onclick="selectNavExamTab('sho6')" class="w-full flex items-center px-3 py-2.5 rounded-lg hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
                 <span class="text-base font-bold text-on-surface group-hover:text-primary transition-colors whitespace-nowrap">小6 適性検査対策模試</span>
               </button>
             </div>
@@ -214,12 +224,12 @@
             <span>お問い合わせ</span>
             <span id="nav-contact-chevron" class="material-symbols-outlined text-lg transition-transform duration-200 transform group-hover:rotate-180">expand_more</span>
           </button>
-          <div id="nav-contact-dropdown" class="hidden group-hover:block absolute right-0 top-full mt-2 w-48 rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-xl p-2 z-50 transition-all duration-200 before:content-[''] before:absolute before:-top-2 before:left-0 before:w-full before:h-2">
+          <div id="nav-contact-dropdown" class="hidden group-hover:block absolute right-0 top-full mt-2 w-48 rounded-lg bg-surface-container-lowest border border-outline-variant/30 shadow-xl p-2 z-50 transition-all duration-200 before:content-[''] before:absolute before:-top-2 before:left-0 before:w-full before:h-2">
             <div class="space-y-1">
-              <a href="/contact/organization/" data-path="contact-partner" onclick="closeContactDropdown()" class="block px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition-colors text-left group/item cursor-pointer">
+              <a href="/contact/organization/" data-path="contact-partner" onclick="closeContactDropdown()" class="block px-3 py-2.5 rounded-lg hover:bg-surface-container-low transition-colors text-left group/item cursor-pointer">
                 <span class="text-base font-bold text-on-surface group-hover/item:text-primary transition-colors">塾・学校関係者様</span>
               </a>
-              <a href="/contact/individual/" data-path="contact" onclick="closeContactDropdown()" class="block px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition-colors text-left group/item cursor-pointer">
+              <a href="/contact/individual/" data-path="contact" onclick="closeContactDropdown()" class="block px-3 py-2.5 rounded-lg hover:bg-surface-container-low transition-colors text-left group/item cursor-pointer">
                 <span class="text-base font-bold text-on-surface group-hover/item:text-primary transition-colors">個人申込の方</span>
               </a>
             </div>
@@ -233,7 +243,7 @@
           </a>
         </div>
         <!-- Hamburger Button (Mobile Only) -->
-        <button type="button" id="mobile-menu-open-btn" onclick="openMobileMenu()" aria-label="メニューを開く" aria-expanded="false" class="lg:hidden flex items-center justify-center w-10 h-10 -mr-1 rounded-xl text-on-surface hover:bg-surface-container-high active:bg-surface-container-highest transition-colors cursor-pointer focus:outline-none">
+        <button type="button" id="mobile-menu-open-btn" onclick="openMobileMenu()" aria-label="メニューを開く" aria-expanded="false" class="lg:hidden flex items-center justify-center w-10 h-10 -mr-1 rounded-lg text-on-surface hover:bg-surface-container-high active:bg-surface-container-highest transition-colors cursor-pointer focus:outline-none">
           <span class="material-symbols-outlined text-[28px] text-on-surface">menu</span>
         </button>
       </div>
@@ -251,7 +261,7 @@
           <span class="material-symbols-outlined text-primary text-xl">menu</span>
           <span class="font-bold text-on-surface text-base">メニュー</span>
         </div>
-        <button type="button" onclick="closeMobileMenu()" aria-label="メニューを閉じる" class="w-10 h-10 -mr-2 rounded-xl flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors cursor-pointer">
+        <button type="button" onclick="closeMobileMenu()" aria-label="メニューを閉じる" class="w-10 h-10 -mr-2 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors cursor-pointer">
           <span class="material-symbols-outlined text-2xl">close</span>
         </button>
       </div>
@@ -259,7 +269,7 @@
       <!-- Drawer Navigation Links (Scrollable) -->
       <div class="flex-1 overflow-y-auto px-4 py-4 space-y-2.5">
         <!-- 模試を選ぶ (Accordion) -->
-        <div class="rounded-2xl border border-surface-container bg-surface-container-lowest overflow-hidden shadow-xs">
+        <div class="rounded-lg border border-surface-container bg-surface-container-lowest overflow-hidden shadow-xs">
           <button type="button" id="mobile-exam-accordion-btn" onclick="toggleMobileExamAccordion()" class="w-full px-4 py-3.5 flex items-center justify-between text-left font-bold text-base text-primary hover:bg-surface-container-low transition-colors cursor-pointer" aria-expanded="true">
             <div class="flex items-center gap-2.5">
               <span class="material-symbols-outlined text-xl text-primary">school</span>
@@ -300,7 +310,7 @@
         </div>
 
         <!-- お知らせ・受験情報 -->
-        <a href="news.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-2xl border border-surface-container bg-surface-container-lowest hover:bg-surface-container-low font-bold text-base text-on-surface shadow-xs transition-colors">
+        <a href="news.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-lg border border-surface-container bg-surface-container-lowest hover:bg-surface-container-low font-bold text-base text-on-surface shadow-xs transition-colors">
           <div class="flex items-center gap-2.5">
             <span class="material-symbols-outlined text-xl text-primary">feed</span>
             <span>お知らせ・受験情報</span>
@@ -309,7 +319,7 @@
         </a>
 
         <!-- 参加塾一覧 -->
-        <a href="schools_PC.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-2xl border border-surface-container bg-surface-container-lowest hover:bg-surface-container-low font-bold text-base text-on-surface shadow-xs transition-colors">
+        <a href="schools_PC.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-lg border border-surface-container bg-surface-container-lowest hover:bg-surface-container-low font-bold text-base text-on-surface shadow-xs transition-colors">
           <div class="flex items-center gap-2.5">
             <span class="material-symbols-outlined text-xl text-primary">apartment</span>
             <span>参加塾一覧</span>
@@ -318,7 +328,7 @@
         </a>
 
         <!-- お問い合わせ (Accordion) -->
-        <div class="rounded-2xl border border-surface-container bg-surface-container-lowest overflow-hidden shadow-xs">
+        <div class="rounded-lg border border-surface-container bg-surface-container-lowest overflow-hidden shadow-xs">
           <button type="button" id="mobile-contact-accordion-btn" onclick="toggleMobileContactAccordion()" class="w-full px-4 py-3.5 flex items-center justify-between text-left font-bold text-base text-on-surface hover:bg-surface-container-low transition-colors cursor-pointer" aria-expanded="false">
             <div class="flex items-center gap-2.5">
               <span class="material-symbols-outlined text-xl text-primary">mail</span>
@@ -347,7 +357,7 @@
 
       <!-- Drawer Footer (Prominent CV Button) -->
       <div class="p-5 border-t border-surface-container bg-surface space-y-2 shrink-0">
-        <a href="apply.html" onclick="closeMobileMenu()" class="w-full py-3.5 px-5 rounded-2xl bg-secondary text-white font-bold text-base shadow-[0_4px_16px_rgba(162,62,24,0.35)] hover:bg-secondary-container active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+        <a href="apply.html" onclick="closeMobileMenu()" class="w-full py-3.5 px-5 rounded-lg bg-secondary text-white font-bold text-base shadow-[0_4px_16px_rgba(162,62,24,0.35)] hover:bg-secondary-container active:scale-[0.98] transition-all flex items-center justify-center gap-2">
           <span class="material-symbols-outlined text-xl">edit_document</span>
           <span>お申し込みはこちら</span>
         </a>
@@ -565,7 +575,7 @@
 </div>
 <span class="font-body-sm text-body-sm text-on-surface-variant">岡山市・瀬戸内市・備前市・赤磐市 ほか</span>
 </div>
-<div class="bg-surface-container-lowest rounded-xl border border-gray-200/70 sm:border-0 shadow-none sm:shadow-sm overflow-hidden">
+<div class="bg-surface-container-lowest rounded-lg border border-gray-200/70 sm:border-0 shadow-none sm:shadow-sm overflow-hidden">
 <div class="overflow-x-auto">
 <table class="w-full text-left border-collapse">
 <thead>
@@ -1388,7 +1398,7 @@
 </div>
 <span class="font-body-sm text-body-sm text-on-surface-variant">倉敷市・総社市・都窪郡 ほか</span>
 </div>
-<div class="bg-surface-container-lowest rounded-xl border border-gray-200/70 sm:border-0 shadow-none sm:shadow-sm overflow-hidden">
+<div class="bg-surface-container-lowest rounded-lg border border-gray-200/70 sm:border-0 shadow-none sm:shadow-sm overflow-hidden">
 <div class="overflow-x-auto">
 <table class="w-full text-left border-collapse">
 <thead>
@@ -1813,7 +1823,7 @@
 </div>
 <span class="font-body-sm text-body-sm text-on-surface-variant">津山市・真庭市・美作市・久米郡 ほか</span>
 </div>
-<div class="bg-surface-container-lowest rounded-xl border border-gray-200/70 sm:border-0 shadow-none sm:shadow-sm overflow-hidden">
+<div class="bg-surface-container-lowest rounded-lg border border-gray-200/70 sm:border-0 shadow-none sm:shadow-sm overflow-hidden">
 <div class="overflow-x-auto">
 <table class="w-full text-left border-collapse">
 <thead>
@@ -2139,7 +2149,7 @@
 </div>
 <span class="font-body-sm text-body-sm text-on-surface-variant">笠岡市・井原市・浅口市 ほか</span>
 </div>
-<div class="bg-surface-container-lowest rounded-xl border border-gray-200/70 sm:border-0 shadow-none sm:shadow-sm overflow-hidden">
+<div class="bg-surface-container-lowest rounded-lg border border-gray-200/70 sm:border-0 shadow-none sm:shadow-sm overflow-hidden">
 <div class="overflow-x-auto">
 <table class="w-full text-left border-collapse">
 <thead>
@@ -2268,7 +2278,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-space-lg items-stretch">
       
       <!-- Card 1: 塾に通われていない方の受験方法 -->
-      <div class="bg-transparent lg:bg-slate-50/80 rounded-none lg:rounded-2xl p-0 lg:p-space-xl border-0 lg:border lg:border-slate-200/80 shadow-none lg:shadow-xs pb-6 mb-6 lg:pb-space-xl lg:mb-0 border-b-2 border-slate-200 lg:border-b-slate-200/80 flex flex-col justify-between relative overflow-hidden h-full group hover:shadow-md transition-shadow">
+      <div class="bg-transparent lg:bg-slate-50/80 rounded-none lg:rounded-lg p-0 lg:p-space-xl border-0 lg:border lg:border-slate-200/80 shadow-none lg:shadow-xs pb-6 mb-6 lg:pb-space-xl lg:mb-0 border-b-2 border-slate-200 lg:border-b-slate-200/80 flex flex-col justify-between relative overflow-hidden h-full group hover:shadow-md transition-shadow">
         <div class="flex flex-col h-full">
           <div class="mb-2.5">
             <span class="inline-flex items-center text-xs font-bold text-emerald-800 bg-slate-100 px-2 py-1 rounded-md tracking-wide">一般生・個人でのお申し込み</span>
@@ -2319,7 +2329,7 @@
       </div>
 
       <!-- Card 2: すでに学習塾に通っている方の受験方法 -->
-      <div class="bg-transparent lg:bg-slate-50/80 rounded-none lg:rounded-2xl p-0 lg:p-space-xl border-0 lg:border lg:border-slate-200/80 shadow-none lg:shadow-xs flex flex-col justify-between relative overflow-hidden h-full group hover:shadow-md transition-shadow">
+      <div class="bg-transparent lg:bg-slate-50/80 rounded-none lg:rounded-lg p-0 lg:p-space-xl border-0 lg:border lg:border-slate-200/80 shadow-none lg:shadow-xs flex flex-col justify-between relative overflow-hidden h-full group hover:shadow-md transition-shadow">
         <div class="flex flex-col h-full">
           <div class="mb-2.5">
             <span class="inline-flex items-center text-xs font-bold text-amber-800 bg-slate-100 px-2 py-1 rounded-md tracking-wide">提携塾・他塾にお通いの方</span>
@@ -2376,7 +2386,7 @@
 <!-- Educational & Institutional Partner CTA Banner (Pre-footer) -->
 <section class="w-full py-8 sm:py-space-3xl bg-white sm:bg-transparent border-t border-gray-200/60 sm:border-t-0">
 <div class="max-w-[75rem] mx-auto px-2.5 sm:px-6 lg:px-8">
-<div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary via-primary-container to-[#1a4f3b] text-on-primary p-6 sm:p-space-xl lg:p-space-2xl shadow-xl">
+<div class="relative overflow-hidden rounded-lg bg-gradient-to-br from-primary via-primary-container to-[#1a4f3b] text-on-primary p-6 sm:p-space-xl lg:p-space-2xl shadow-xl">
 <!-- Academic Decorative Watermark Badge -->
 
 <div class="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-space-xl">
@@ -2391,7 +2401,7 @@
 
 </div>
 <div class="shrink-0 w-full sm:w-auto">
-<a class="inline-flex items-center justify-center gap-space-xs w-full sm:w-auto px-space-xl py-space-md bg-secondary text-on-secondary rounded-xl font-label-lg text-label-lg shadow-[0_8px_20px_-4px_rgba(162,62,24,0.4)] hover:bg-secondary-container hover:text-on-secondary-container transition-all text-center" data-path="juku-inquiry" href="/contact?type=organization">
+<a class="inline-flex items-center justify-center gap-space-xs w-full sm:w-auto px-space-xl py-space-md bg-secondary text-on-secondary rounded-lg font-label-lg text-label-lg shadow-[0_8px_20px_-4px_rgba(162,62,24,0.4)] hover:bg-secondary-container hover:text-on-secondary-container transition-all text-center" data-path="juku-inquiry" href="/contact?type=organization">
 <span class="material-symbols-outlined text-[20px]">corporate_fare</span>
 <span class="">団体受験のご相談・お問い合わせ</span>
 <span class="material-symbols-outlined text-[18px]">chevron_right</span>

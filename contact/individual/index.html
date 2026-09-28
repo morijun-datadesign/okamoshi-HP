@@ -76,7 +76,17 @@
             "surface-container-highest": "#e4e2e1",
             "on-primary-container": "#9fcfb6"
           },
-          borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "3xl": "1.5rem", "full": "9999px" },
+          borderRadius: {
+          'none': '0px',
+          'sm': '4px',
+          'DEFAULT': '6px',
+          'md': '6px',
+          'lg': '8px',
+          'xl': '8px',
+          '2xl': '8px',
+          '3xl': '8px',
+          'full': '9999px',
+        },
           fontFamily: {
             "body-md": ["Noto Sans JP", "sans-serif"],
             "headline-xl": ["Plus Jakarta Sans", "Noto Sans JP", "sans-serif"],
@@ -115,18 +125,18 @@
             <span class="font-semibold">模試を選ぶ</span>
             <span id="nav-next-exam-chevron" class="material-symbols-outlined text-lg transition-transform duration-200 transform">expand_more</span>
           </button>
-          <div id="nav-next-exam-dropdown" class="hidden absolute left-0 top-full mt-2 w-56 rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-xl p-2 z-50 transition-all duration-200">
+          <div id="nav-next-exam-dropdown" class="hidden absolute left-0 top-full mt-2 w-56 rounded-lg bg-surface-container-lowest border border-outline-variant/30 shadow-xl p-2 z-50 transition-all duration-200">
             <div class="space-y-1">
-              <button type="button" onclick="selectNavExamTab('chu3')" class="w-full flex items-center px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
+              <button type="button" onclick="selectNavExamTab('chu3')" class="w-full flex items-center px-3 py-2.5 rounded-lg hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
                 <span class="text-base font-bold text-on-surface group-hover:text-primary transition-colors">中3 おかもし</span>
               </button>
-              <button type="button" onclick="selectNavExamTab('chu2')" class="w-full flex items-center px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
+              <button type="button" onclick="selectNavExamTab('chu2')" class="w-full flex items-center px-3 py-2.5 rounded-lg hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
                 <span class="text-base font-bold text-on-surface group-hover:text-primary transition-colors">中2 おかもし</span>
               </button>
-              <button type="button" onclick="selectNavExamTab('chu1')" class="w-full flex items-center px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
+              <button type="button" onclick="selectNavExamTab('chu1')" class="w-full flex items-center px-3 py-2.5 rounded-lg hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
                 <span class="text-base font-bold text-on-surface group-hover:text-primary transition-colors">中1 おかもし</span>
               </button>
-              <button type="button" onclick="selectNavExamTab('sho6')" class="w-full flex items-center px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
+              <button type="button" onclick="selectNavExamTab('sho6')" class="w-full flex items-center px-3 py-2.5 rounded-lg hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
                 <span class="text-base font-bold text-on-surface group-hover:text-primary transition-colors whitespace-nowrap">小6 適性検査対策模試</span>
               </button>
             </div>
@@ -142,12 +152,12 @@
             <span>お問い合わせ</span>
             <span id="nav-contact-chevron" class="material-symbols-outlined text-lg transition-transform duration-200 transform group-hover:rotate-180">expand_more</span>
           </button>
-          <div id="nav-contact-dropdown" class="hidden group-hover:block absolute right-0 top-full mt-2 w-52 rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-xl p-2 z-50 transition-all duration-200 before:content-[''] before:absolute before:-top-2 before:left-0 before:w-full before:h-2">
+          <div id="nav-contact-dropdown" class="hidden group-hover:block absolute right-0 top-full mt-2 w-52 rounded-lg bg-surface-container-lowest border border-outline-variant/30 shadow-xl p-2 z-50 transition-all duration-200 before:content-[''] before:absolute before:-top-2 before:left-0 before:w-full before:h-2">
             <div class="space-y-1">
-              <a href="/contact/organization/" data-path="contact-partner" onclick="handleContactNavClick(event, '/contact/organization/')" class="block px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition-colors text-left group/item cursor-pointer">
+              <a href="/contact/organization/" data-path="contact-partner" onclick="handleContactNavClick(event, '/contact/organization/')" class="block px-3 py-2.5 rounded-lg hover:bg-surface-container-low transition-colors text-left group/item cursor-pointer">
                 <span class="text-base font-bold text-on-surface group-hover/item:text-primary transition-colors">塾・学校関係者様</span>
               </a>
-              <a href="/contact/individual/" data-path="contact" onclick="handleContactNavClick(event, '/contact/individual/')" class="block px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition-colors text-left group/item cursor-pointer">
+              <a href="/contact/individual/" data-path="contact" onclick="handleContactNavClick(event, '/contact/individual/')" class="block px-3 py-2.5 rounded-lg hover:bg-surface-container-low transition-colors text-left group/item cursor-pointer">
                 <span class="text-base font-bold text-on-surface group-hover/item:text-primary transition-colors">個人申込の方</span>
               </a>
             </div>
@@ -161,7 +171,7 @@
           </a>
         </div>
         <!-- Hamburger Button (Mobile Only) -->
-        <button type="button" id="mobile-menu-open-btn" onclick="openMobileMenu()" aria-label="メニューを開く" aria-expanded="false" class="lg:hidden flex items-center justify-center w-10 h-10 -mr-1 rounded-xl text-on-surface hover:bg-surface-container-high active:bg-surface-container-highest transition-colors cursor-pointer focus:outline-none">
+        <button type="button" id="mobile-menu-open-btn" onclick="openMobileMenu()" aria-label="メニューを開く" aria-expanded="false" class="lg:hidden flex items-center justify-center w-10 h-10 -mr-1 rounded-lg text-on-surface hover:bg-surface-container-high active:bg-surface-container-highest transition-colors cursor-pointer focus:outline-none">
           <span class="material-symbols-outlined text-[28px] text-on-surface">menu</span>
         </button>
       </div>
@@ -179,7 +189,7 @@
         <span class="material-symbols-outlined text-primary text-xl">menu</span>
         <span class="font-bold text-on-surface text-base">メニュー</span>
       </div>
-      <button type="button" onclick="closeMobileMenu()" aria-label="メニューを閉じる" class="w-10 h-10 -mr-2 rounded-xl flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors cursor-pointer">
+      <button type="button" onclick="closeMobileMenu()" aria-label="メニューを閉じる" class="w-10 h-10 -mr-2 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors cursor-pointer">
         <span class="material-symbols-outlined text-2xl">close</span>
       </button>
     </div>
@@ -187,7 +197,7 @@
     <!-- Drawer Navigation Links (Scrollable) -->
     <div class="flex-1 overflow-y-auto px-4 py-4 space-y-2.5">
       <!-- 模試を選ぶ (Accordion) -->
-      <div class="rounded-2xl border border-surface-container bg-surface-container-lowest overflow-hidden shadow-xs">
+      <div class="rounded-lg border border-surface-container bg-surface-container-lowest overflow-hidden shadow-xs">
         <button type="button" id="mobile-exam-accordion-btn" onclick="toggleMobileExamAccordion()" class="w-full px-4 py-3.5 flex items-center justify-between text-left font-bold text-base text-primary hover:bg-surface-container-low transition-colors cursor-pointer" aria-expanded="true">
           <div class="flex items-center gap-2.5">
             <span class="material-symbols-outlined text-xl text-primary">school</span>
@@ -228,7 +238,7 @@
       </div>
 
         <!-- お知らせ・受験情報 -->
-      <a href="/news.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-2xl border border-surface-container bg-surface-container-lowest hover:bg-surface-container-low font-bold text-base text-on-surface shadow-xs transition-colors">
+      <a href="/news.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-lg border border-surface-container bg-surface-container-lowest hover:bg-surface-container-low font-bold text-base text-on-surface shadow-xs transition-colors">
         <div class="flex items-center gap-2.5">
           <span class="material-symbols-outlined text-xl text-primary">campaign</span>
           <span>お知らせ・受験情報</span>
@@ -237,7 +247,7 @@
       </a>
 
 <!-- 参加塾一覧 -->
-<a href="/schools_PC.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-2xl border border-surface-container bg-surface-container-lowest hover:bg-surface-container-low font-bold text-base text-on-surface shadow-xs transition-colors">
+<a href="/schools_PC.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-lg border border-surface-container bg-surface-container-lowest hover:bg-surface-container-low font-bold text-base text-on-surface shadow-xs transition-colors">
         <div class="flex items-center gap-2.5">
           <span class="material-symbols-outlined text-xl text-primary">apartment</span>
           <span>参加塾一覧</span>
@@ -246,7 +256,7 @@
       </a>
 
       <!-- お問い合わせ (Accordion) -->
-      <div class="rounded-2xl border border-surface-container bg-surface-container-lowest overflow-hidden shadow-xs">
+      <div class="rounded-lg border border-surface-container bg-surface-container-lowest overflow-hidden shadow-xs">
         <button type="button" id="mobile-contact-accordion-btn" onclick="toggleMobileContactAccordion()" class="w-full px-4 py-3.5 flex items-center justify-between text-left font-bold text-base text-primary hover:bg-surface-container-low transition-colors cursor-pointer" aria-expanded="true">
           <div class="flex items-center gap-2.5">
             <span class="material-symbols-outlined text-xl text-primary">mail</span>
@@ -289,7 +299,7 @@
     
     <!-- ヘッダーバナー -->
     <div class="mb-6">
-      <div class="bg-gradient-to-br from-primary to-primary-container text-white p-6 sm:p-8 rounded-2xl shadow-sm">
+      <div class="bg-gradient-to-br from-primary to-primary-container text-white p-6 sm:p-8 rounded-lg shadow-sm">
         <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 text-xs font-bold mb-3 backdrop-blur-xs">
           <span class="material-symbols-outlined text-sm">person</span>
           <span>受験生・保護者様 専用窓口</span>
@@ -303,12 +313,12 @@
 
     <!-- お問い合わせ切り替えタブ -->
     <div class="mb-6 sm:mb-8">
-      <div class="flex items-center bg-slate-200/60 p-1.5 rounded-2xl border border-slate-300/70 max-w-md mx-auto">
-        <a href="/contact?type=organization" class="flex-1 text-center py-2.5 px-3 rounded-xl font-semibold text-sm text-slate-600 hover:text-slate-900 transition-all flex items-center justify-center gap-1.5">
+      <div class="flex items-center bg-slate-200/60 p-1.5 rounded-lg border border-slate-300/70 max-w-md mx-auto">
+        <a href="/contact?type=organization" class="flex-1 text-center py-2.5 px-3 rounded-lg font-semibold text-sm text-slate-600 hover:text-slate-900 transition-all flex items-center justify-center gap-1.5">
           <span class="material-symbols-outlined text-base">corporate_fare</span>
           <span>塾・学校関係者様</span>
         </a>
-        <a href="/contact?type=individual" class="flex-1 text-center py-2.5 px-3 rounded-xl font-bold text-sm bg-white text-primary shadow-sm transition-all flex items-center justify-center gap-1.5">
+        <a href="/contact?type=individual" class="flex-1 text-center py-2.5 px-3 rounded-lg font-bold text-sm bg-white text-primary shadow-sm transition-all flex items-center justify-center gap-1.5">
           <span class="material-symbols-outlined text-base">person</span>
           <span>個人申込の方</span>
         </a>
@@ -316,7 +326,7 @@
     </div>
 
     <!-- フォームカード -->
-    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm px-4 py-8 sm:p-10 mb-8">
+    <div class="bg-white rounded-lg border border-slate-200 shadow-sm px-4 py-8 sm:p-10 mb-8">
       <form id="individual-contact-form" onsubmit="handleSubmit(event)" class="space-y-6">
         
         <!-- 保護者様お名前 -->
@@ -326,14 +336,14 @@
               保護者様 お名前 <span class="text-xs px-2 py-0.5 rounded bg-error/10 text-error font-bold ml-1.5">必須</span>
             </label>
             <input type="text" id="indiv-name" name="parent_name" required placeholder="例：岡山 花子"
-              class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 text-slate-800 text-base outline-none transition-all placeholder:text-slate-400 bg-white">
+              class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 text-slate-800 text-base outline-none transition-all placeholder:text-slate-400 bg-white">
           </div>
           <div>
             <label class="block text-sm font-bold text-on-surface mb-2" for="indiv-kana">
               フリガナ <span class="text-xs px-2 py-0.5 rounded bg-error/10 text-error font-bold ml-1.5">必須</span>
             </label>
             <input type="text" id="indiv-kana" name="parent_kana" required placeholder="例：オカヤマ ハナコ"
-              class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 text-slate-800 text-base outline-none transition-all placeholder:text-slate-400 bg-white">
+              class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 text-slate-800 text-base outline-none transition-all placeholder:text-slate-400 bg-white">
           </div>
         </div>
 
@@ -344,14 +354,14 @@
               生徒様 お名前 <span class="text-xs px-2 py-0.5 rounded bg-surface-container-high text-on-surface-variant font-medium ml-1.5">任意</span>
             </label>
             <input type="text" id="student-name" name="student_name" placeholder="例：岡山 太郎"
-              class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 text-slate-800 text-base outline-none transition-all placeholder:text-slate-400 bg-white">
+              class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 text-slate-800 text-base outline-none transition-all placeholder:text-slate-400 bg-white">
           </div>
           <div>
             <label class="block text-sm font-bold text-on-surface mb-2" for="student-grade">
               学年 <span class="text-xs px-2 py-0.5 rounded bg-error/10 text-error font-bold ml-1.5">必須</span>
             </label>
             <select id="student-grade" name="grade" required
-              class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 text-slate-800 text-base outline-none transition-all bg-white cursor-pointer">
+              class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 text-slate-800 text-base outline-none transition-all bg-white cursor-pointer">
               <option value="" disabled selected>学年を選択してください</option>
               <option value="中学3年生">中学3年生（中3おかもし）</option>
               <option value="中学2年生">中学2年生（中2おかもし）</option>
@@ -369,14 +379,14 @@
               メールアドレス <span class="text-xs px-2 py-0.5 rounded bg-error/10 text-error font-bold ml-1.5">必須</span>
             </label>
             <input type="email" id="indiv-email" name="email" required placeholder="example@domain.jp"
-              class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 text-slate-800 text-base outline-none transition-all placeholder:text-slate-400 bg-white">
+              class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 text-slate-800 text-base outline-none transition-all placeholder:text-slate-400 bg-white">
           </div>
           <div>
             <label class="block text-sm font-bold text-on-surface mb-2" for="indiv-tel">
               お電話番号 <span class="text-xs px-2 py-0.5 rounded bg-error/10 text-error font-bold ml-1.5">必須</span>
             </label>
             <input type="tel" id="indiv-tel" name="tel" required placeholder="例：090-0000-0000"
-              class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 text-slate-800 text-base outline-none transition-all placeholder:text-slate-400 bg-white">
+              class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 text-slate-800 text-base outline-none transition-all placeholder:text-slate-400 bg-white">
           </div>
         </div>
 
@@ -386,7 +396,7 @@
             お問い合わせ種別 <span class="text-xs px-2 py-0.5 rounded bg-error/10 text-error font-bold ml-1.5">必須</span>
           </label>
           <select id="indiv-type" name="inquiry_type" required
-            class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 text-slate-800 text-base outline-none transition-all bg-white cursor-pointer">
+            class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 text-slate-800 text-base outline-none transition-all bg-white cursor-pointer">
             <option value="" disabled selected>お問い合わせの種別を選択してください</option>
             <option value="個人受験のお申込み方法について">個人受験のお申込み方法について</option>
             <option value="会場受験・自宅受験の変更やご相談">会場受験・自宅受験の変更やご相談</option>
@@ -402,11 +412,11 @@
             お問い合わせ内容 <span class="text-xs px-2 py-0.5 rounded bg-error/10 text-error font-bold ml-1.5">必須</span>
           </label>
           <textarea id="indiv-message" name="message" rows="5" required placeholder="ご質問やご不明点の内容を具体的にご記入ください。"
-            class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 text-slate-800 text-base outline-none transition-all placeholder:text-slate-400 bg-white resize-y"></textarea>
+            class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 text-slate-800 text-base outline-none transition-all placeholder:text-slate-400 bg-white resize-y"></textarea>
         </div>
 
         <!-- プライバシーポリシー同意 -->
-        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-3">
+        <div class="p-4 rounded-lg bg-slate-50 border border-slate-200 flex items-start gap-3">
           <input type="checkbox" id="privacy-agree" required class="mt-1 w-4 h-4 rounded text-primary focus:ring-primary border-slate-300 cursor-pointer">
           <label for="privacy-agree" class="text-xs text-on-surface-variant leading-relaxed cursor-pointer select-none">
             当委員会の <a href="/privacy.html" target="_blank" class="text-primary font-bold underline hover:text-primary-container">プライバシーポリシー</a> に同意の上、送信します。ご入力いただいた情報は、お問い合わせへの回答および模試運営のご案内にのみ利用いたします。
@@ -442,7 +452,7 @@
     </div>
 
     <!-- お電話でのお問い合わせカード -->
-    <div class="mx-4 sm:mx-0 p-5 sm:p-6 rounded-2xl bg-white border border-slate-200 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+    <div class="mx-4 sm:mx-0 p-5 sm:p-6 rounded-lg bg-white border border-slate-200 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
       <div class="space-y-1">
         <div class="text-xs font-bold text-on-surface-variant flex items-center gap-1">
           <span class="material-symbols-outlined text-base text-primary">call</span>
@@ -451,7 +461,7 @@
         <div class="text-xl sm:text-2xl font-black text-primary tracking-tight">082-227-3999</div>
         <div class="text-xs text-on-surface-variant">受付時間：平日 10:00〜18:00（土日祝・休業日を除く）</div>
       </div>
-      <a href="tel:082-227-3999" class="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl border border-primary/30 text-primary font-bold text-sm hover:bg-primary/5 transition-all">
+      <a href="tel:082-227-3999" class="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-lg border border-primary/30 text-primary font-bold text-sm hover:bg-primary/5 transition-all">
         <span class="material-symbols-outlined text-lg">phone_in_talk</span>
         <span>電話をかける</span>
       </a>

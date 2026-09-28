@@ -28,6 +28,17 @@
       darkMode: "class",
       theme: {
         extend: {
+        borderRadius: {
+          'none': '0px',
+          'sm': '4px',
+          'DEFAULT': '6px',
+          'md': '6px',
+          'lg': '8px',
+          'xl': '8px',
+          '2xl': '8px',
+          '3xl': '8px',
+          'full': '9999px',
+        },
           colors: {
             "tertiary-container": "#6c4c00",
             "outline-variant": "#c0c9c2",
@@ -120,18 +131,18 @@
             <span class="font-semibold">模試を選ぶ</span>
             <span id="nav-next-exam-chevron" class="material-symbols-outlined text-lg transition-transform duration-200 transform">expand_more</span>
           </button>
-          <div id="nav-next-exam-dropdown" class="hidden absolute left-0 top-full mt-2 w-56 rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-xl p-2 z-50 transition-all duration-200">
+          <div id="nav-next-exam-dropdown" class="hidden absolute left-0 top-full mt-2 w-56 rounded-lg bg-surface-container-lowest border border-outline-variant/30 shadow-xl p-2 z-50 transition-all duration-200">
             <div class="space-y-1">
-              <button type="button" onclick="selectNavExamTab('chu3')" class="w-full flex items-center px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
+              <button type="button" onclick="selectNavExamTab('chu3')" class="w-full flex items-center px-3 py-2.5 rounded-lg hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
                 <span class="text-base font-bold text-on-surface group-hover:text-primary transition-colors">中3 おかもし</span>
               </button>
-              <button type="button" onclick="selectNavExamTab('chu2')" class="w-full flex items-center px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
+              <button type="button" onclick="selectNavExamTab('chu2')" class="w-full flex items-center px-3 py-2.5 rounded-lg hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
                 <span class="text-base font-bold text-on-surface group-hover:text-primary transition-colors">中2 おかもし</span>
               </button>
-              <button type="button" onclick="selectNavExamTab('chu1')" class="w-full flex items-center px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
+              <button type="button" onclick="selectNavExamTab('chu1')" class="w-full flex items-center px-3 py-2.5 rounded-lg hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
                 <span class="text-base font-bold text-on-surface group-hover:text-primary transition-colors">中1 おかもし</span>
               </button>
-              <button type="button" onclick="selectNavExamTab('sho6')" class="w-full flex items-center px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
+              <button type="button" onclick="selectNavExamTab('sho6')" class="w-full flex items-center px-3 py-2.5 rounded-lg hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
                 <span class="text-base font-bold text-on-surface group-hover:text-primary transition-colors whitespace-nowrap">小6 適性検査対策模試</span>
               </button>
             </div>
@@ -146,12 +157,12 @@
             <span>お問い合わせ</span>
             <span id="nav-contact-chevron" class="material-symbols-outlined text-lg transition-transform duration-200 transform group-hover:rotate-180">expand_more</span>
           </button>
-          <div id="nav-contact-dropdown" class="hidden group-hover:block absolute right-0 top-full mt-2 w-48 rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-xl p-2 z-50 transition-all duration-200 before:content-[''] before:absolute before:-top-2 before:left-0 before:w-full before:h-2">
+          <div id="nav-contact-dropdown" class="hidden group-hover:block absolute right-0 top-full mt-2 w-48 rounded-lg bg-surface-container-lowest border border-outline-variant/30 shadow-xl p-2 z-50 transition-all duration-200 before:content-[''] before:absolute before:-top-2 before:left-0 before:w-full before:h-2">
             <div class="space-y-1">
-              <a href="/contact/organization/" data-path="contact-partner" onclick="closeContactDropdown()" class="block px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition-colors text-left group/item cursor-pointer">
+              <a href="/contact/organization/" data-path="contact-partner" onclick="closeContactDropdown()" class="block px-3 py-2.5 rounded-lg hover:bg-surface-container-low transition-colors text-left group/item cursor-pointer">
                 <span class="text-base font-bold text-on-surface group-hover/item:text-primary transition-colors">塾・学校関係者様</span>
               </a>
-              <a href="/contact/individual/" data-path="contact" onclick="closeContactDropdown()" class="block px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition-colors text-left group/item cursor-pointer">
+              <a href="/contact/individual/" data-path="contact" onclick="closeContactDropdown()" class="block px-3 py-2.5 rounded-lg hover:bg-surface-container-low transition-colors text-left group/item cursor-pointer">
                 <span class="text-base font-bold text-on-surface group-hover/item:text-primary transition-colors">個人申込の方</span>
               </a>
             </div>
@@ -165,7 +176,7 @@
           </a>
         </div>
         <!-- Hamburger Button (Mobile Only) -->
-        <button type="button" id="mobile-menu-open-btn" onclick="openMobileMenu()" aria-label="メニューを開く" aria-expanded="false" class="lg:hidden flex items-center justify-center w-10 h-10 -mr-1 rounded-xl text-on-surface hover:bg-surface-container-high active:bg-surface-container-highest transition-colors cursor-pointer focus:outline-none">
+        <button type="button" id="mobile-menu-open-btn" onclick="openMobileMenu()" aria-label="メニューを開く" aria-expanded="false" class="lg:hidden flex items-center justify-center w-10 h-10 -mr-1 rounded-lg text-on-surface hover:bg-surface-container-high active:bg-surface-container-highest transition-colors cursor-pointer focus:outline-none">
           <span class="material-symbols-outlined text-[28px] text-on-surface">menu</span>
         </button>
       </div>
@@ -183,7 +194,7 @@
           <span class="material-symbols-outlined text-primary text-xl">menu</span>
           <span class="font-bold text-on-surface text-base">メニュー</span>
         </div>
-        <button type="button" onclick="closeMobileMenu()" aria-label="メニューを閉じる" class="w-10 h-10 -mr-2 rounded-xl flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors cursor-pointer">
+        <button type="button" onclick="closeMobileMenu()" aria-label="メニューを閉じる" class="w-10 h-10 -mr-2 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors cursor-pointer">
           <span class="material-symbols-outlined text-2xl">close</span>
         </button>
       </div>
@@ -191,7 +202,7 @@
       <!-- Drawer Navigation Links (Scrollable) -->
       <div class="flex-1 overflow-y-auto px-4 py-4 space-y-2.5">
         <!-- 模試を選ぶ (Accordion) -->
-        <div class="rounded-2xl border border-surface-container bg-surface-container-lowest overflow-hidden shadow-xs">
+        <div class="rounded-lg border border-surface-container bg-surface-container-lowest overflow-hidden shadow-xs">
           <button type="button" id="mobile-exam-accordion-btn" onclick="toggleMobileExamAccordion()" class="w-full px-4 py-3.5 flex items-center justify-between text-left font-bold text-base text-primary hover:bg-surface-container-low transition-colors cursor-pointer" aria-expanded="true">
             <div class="flex items-center gap-2.5">
               <span class="material-symbols-outlined text-xl text-primary">school</span>
@@ -232,7 +243,7 @@
         </div>
 
         <!-- お知らせ・受験情報 -->
-        <a href="news.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-2xl border border-surface-container bg-surface-container-lowest hover:bg-surface-container-low font-bold text-base text-on-surface shadow-xs transition-colors">
+        <a href="news.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-lg border border-surface-container bg-surface-container-lowest hover:bg-surface-container-low font-bold text-base text-on-surface shadow-xs transition-colors">
           <div class="flex items-center gap-2.5">
             <span class="material-symbols-outlined text-xl text-primary">feed</span>
             <span>お知らせ・受験情報</span>
@@ -241,7 +252,7 @@
         </a>
 
         <!-- 参加塾一覧 -->
-        <a href="schools_PC.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-2xl border border-surface-container bg-surface-container-lowest hover:bg-surface-container-low font-bold text-base text-on-surface shadow-xs transition-colors">
+        <a href="schools_PC.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-lg border border-surface-container bg-surface-container-lowest hover:bg-surface-container-low font-bold text-base text-on-surface shadow-xs transition-colors">
           <div class="flex items-center gap-2.5">
             <span class="material-symbols-outlined text-xl text-primary">apartment</span>
             <span>参加塾一覧</span>
@@ -250,7 +261,7 @@
         </a>
 
         <!-- お問い合わせ (Accordion) -->
-        <div class="rounded-2xl border border-surface-container bg-surface-container-lowest overflow-hidden shadow-xs">
+        <div class="rounded-lg border border-surface-container bg-surface-container-lowest overflow-hidden shadow-xs">
           <button type="button" id="mobile-contact-accordion-btn" onclick="toggleMobileContactAccordion()" class="w-full px-4 py-3.5 flex items-center justify-between text-left font-bold text-base text-on-surface hover:bg-surface-container-low transition-colors cursor-pointer" aria-expanded="false">
             <div class="flex items-center gap-2.5">
               <span class="material-symbols-outlined text-xl text-primary">mail</span>
@@ -279,7 +290,7 @@
 
       <!-- Drawer Footer (Prominent CV Button) -->
       <div class="p-5 border-t border-surface-container bg-surface space-y-2 shrink-0">
-        <a href="apply.html" onclick="closeMobileMenu()" class="w-full py-3.5 px-5 rounded-2xl bg-secondary text-white font-bold text-base shadow-[0_4px_16px_rgba(162,62,24,0.35)] hover:bg-secondary-container active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+        <a href="apply.html" onclick="closeMobileMenu()" class="w-full py-3.5 px-5 rounded-lg bg-secondary text-white font-bold text-base shadow-[0_4px_16px_rgba(162,62,24,0.35)] hover:bg-secondary-container active:scale-[0.98] transition-all flex items-center justify-center gap-2">
           <span class="material-symbols-outlined text-xl">edit_document</span>
           <span>お申し込みはこちら</span>
         </a>
@@ -462,7 +473,7 @@
       </div>
     </div>
 <!-- BEGIN: Card 1 - 基本方針 -->
-<div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm divide-y divide-slate-100 space-y-6 [&amp;&gt;*]:pt-6 first:[&amp;&gt;*]:pt-0" data-purpose="unified-policy-card">
+<div class="bg-white border border-slate-200 rounded-lg p-5 shadow-sm divide-y divide-slate-100 space-y-6 [&amp;&gt;*]:pt-6 first:[&amp;&gt;*]:pt-0" data-purpose="unified-policy-card">
   <!-- Basic Policy -->
   <section class="space-y-3">
     <div class="border-l-4 border-brand-green pl-2.5 mb-2.5">
@@ -472,7 +483,7 @@
     <p class="text-xs text-slate-600 leading-relaxed">
       当社（中央教育研究所株式会社および岡山県統一模擬試験実行委員会）は、業務上取り扱うお客様および模試受験生、保護者様の氏名、住所、電話番号、電子メールアドレス、学校名、学年、成績データ、志望校などの個人を特定できる情報（以下「個人情報」）について、その重要性を強く認識し、法令を遵守の上、適切な管理と保護を推進いたします。
     </p>
-    <div class="mt-3 bg-slate-50 border border-slate-200/80 rounded-xl p-3">
+    <div class="mt-3 bg-slate-50 border border-slate-200/80 rounded-lg p-3">
       <h3 class="text-xs font-bold text-slate-800 mb-1">本方針が適用される範囲</h3>
       <p class="text-[11px] text-slate-600 leading-relaxed">
         本方針は、岡山県統一模擬試験（おかもし）のウェブサイト、会場受験申込、塾内実施、各種成績診断書発行、教育相談、資料請求など、当社が提供するすべての付帯サービスに適用されます。
@@ -486,7 +497,7 @@
       <span class="w-5 h-5 rounded-full bg-brand-green text-white text-xs font-bold flex items-center justify-center shrink-0">1</span>
       <h2 class="text-sm font-bold text-slate-900">事業者情報</h2>
     </div>
-    <dl class="text-xs divide-y divide-slate-100 bg-slate-50/50 rounded-xl border border-slate-200/60 overflow-hidden">
+    <dl class="text-xs divide-y divide-slate-100 bg-slate-50/50 rounded-lg border border-slate-200/60 overflow-hidden">
       <div class="p-2.5 flex flex-col">
         <dt class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">事業者名</dt>
         <dd class="text-slate-800 font-bold mt-0.5">中央教育研究所株式会社</dd>
@@ -514,7 +525,7 @@
     <p class="text-xs text-slate-600 leading-relaxed">
       当社は、個人情報管理責任者を以下の通り設置し、個人情報の適切な管理及び安全管理対策を実施いたします。不正アクセス、紛失、破壊、改ざん及び漏えい等の予防並びに是正措置を講じます。
     </p>
-    <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-3 flex flex-col gap-2">
+    <div class="bg-slate-50 border border-slate-200/80 rounded-lg p-3 flex flex-col gap-2">
       <div>
         <div class="text-[10px] text-slate-400 font-bold">個人情報管理責任者</div>
         <div class="text-xs font-bold text-slate-800 mt-0.5">中央教育研究所株式会社 企画部 亀井伸一郎</div>
@@ -538,7 +549,7 @@
     <p class="text-xs text-slate-600 leading-relaxed">
       当社はお預かりした個人情報を、以下の利用目的の範囲内でのみ利用し、ご本人の事前の同意なく目的外での利用は行いません。
     </p>
-    <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-3">
+    <div class="bg-slate-50 border border-slate-200/80 rounded-lg p-3">
       <h3 class="text-xs font-bold text-slate-900 mb-2 flex items-center gap-1.5">
         <svg class="w-4 h-4 text-brand-green shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
@@ -568,7 +579,7 @@
         </li>
       </ul>
     </div>
-    <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-3">
+    <div class="bg-slate-50 border border-slate-200/80 rounded-lg p-3">
       <h3 class="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1.5">
         <svg class="w-4 h-4 text-brand-green shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
@@ -591,25 +602,25 @@
       当社は、お客様より取得させていただいた個人情報を適切に管理し、あらかじめお客様の同意を得ることなく第三者に提供することはありません。ただし、次の各号に該当する場合は除きます。
     </p>
     <div class="grid grid-cols-1 gap-2 text-xs">
-      <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200/70">
+      <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200/70">
         <div class="font-bold text-slate-800 flex items-center gap-1.5 mb-0.5">
           <span class="text-emerald-700 font-bold">✔</span> 法令に基づく場合
         </div>
         <p class="text-[11px] text-slate-600">裁判所、警察署その他行政機関等からの法的拘束力のある照会・命令に応じる場合</p>
       </div>
-      <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200/70">
+      <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200/70">
         <div class="font-bold text-slate-800 flex items-center gap-1.5 mb-0.5">
           <span class="text-emerald-700 font-bold">✔</span> 生命・身体・財産の保護
         </div>
         <p class="text-[11px] text-slate-600">人の生命、身体または財産の保護のために必要がある場合で、本人の同意を得ることが困難である場合</p>
       </div>
-      <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200/70">
+      <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200/70">
         <div class="font-bold text-slate-800 flex items-center gap-1.5 mb-0.5">
           <span class="text-emerald-700 font-bold">✔</span> 公衆衛生・児童の健全育成
         </div>
         <p class="text-[11px] text-slate-600">公衆衛生の向上または児童の健全な育成の推進のために特に必要があり、本人の同意を得ることが困難である場合</p>
       </div>
-      <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200/70">
+      <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200/70">
         <div class="font-bold text-slate-800 flex items-center gap-1.5 mb-0.5">
           <span class="text-emerald-700 font-bold">✔</span> 事業承継・委託
         </div>
@@ -638,7 +649,7 @@
     <p class="text-xs text-slate-600 leading-relaxed">
       お客様ご本人（またはその保護者・法定代理人）は、当社が保有する個人データに関して、開示、利用目的の通知、訂正、追加、削除、利用の停止、消去及び第三者への提供の停止（以下「開示等」といいます）を請求することができます。
     </p>
-    <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-3 text-xs space-y-1.5">
+    <div class="bg-slate-50 border border-slate-200/80 rounded-lg p-3 text-xs space-y-1.5">
       <div class="font-bold text-slate-800">開示等のお申し出及び苦情相談窓口</div>
       <div class="text-slate-600">苦情相談窓口責任者: 中央教育研究所株式会社 企画部 加藤玲</div>
       <div class="flex items-center gap-2 pt-1">
@@ -670,15 +681,15 @@
       本サイトでは、お客様がより快適にご利用いただけるよう「クッキー（Cookie）」と呼ばれる技術を使用することがあります。
     </p>
     <div class="space-y-2 text-xs">
-      <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200/70">
+      <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200/70">
         <div class="font-bold text-slate-800 mb-0.5">利用目的</div>
         <div class="text-slate-600 text-[11px] leading-relaxed">お客様のログイン状態の保持、カート（お申込み内容・発注教材）の管理、サイトの利用動向解析による利便性向上のために使用します。</div>
       </div>
-      <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200/70">
+      <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200/70">
         <div class="font-bold text-slate-800 mb-0.5">特定情報の非保持</div>
         <div class="text-slate-600 text-[11px] leading-relaxed">クッキー自体には、お客様の氏名・電話番号・メールアドレス等の個人を特定可能な情報は含まれません。</div>
       </div>
-      <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200/70">
+      <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200/70">
         <div class="font-bold text-slate-800 mb-0.5">設定拒否</div>
         <div class="text-slate-600 text-[11px] leading-relaxed">ご使用のブラウザ設定によりクッキーの受け入れを拒否することも可能です。ただし、その場合本サイトの一部機能（オンライン申込等）が正常に動作しない場合がございます。</div>
       </div>
@@ -695,43 +706,43 @@
       当社は、取り扱う個人情報の漏えい、滅失またはき損の防止その他の個人データの安全管理のため、以下の措置を講じています。
     </p>
     <div class="grid grid-cols-1 gap-2 text-xs">
-      <div class="border border-slate-200 rounded-xl p-2.5 bg-slate-50/60">
+      <div class="border border-slate-200 rounded-lg p-2.5 bg-slate-50/60">
         <div class="font-bold text-brand-green flex items-center gap-1 mb-0.5">
           <span class="">●</span> 基本方針の策定
         </div>
         <p class="text-[11px] text-slate-600">関係法令・ガイドライン等の遵守、「苦情相談窓口の設置」等について基本方針を策定しています。</p>
       </div>
-      <div class="border border-slate-200 rounded-xl p-2.5 bg-slate-50/60">
+      <div class="border border-slate-200 rounded-lg p-2.5 bg-slate-50/60">
         <div class="font-bold text-brand-green flex items-center gap-1 mb-0.5">
           <span class="">●</span> 個人データの取扱いに係る規律の整備
         </div>
         <p class="text-[11px] text-slate-600">取得、利用、保存、提供、削除・廃棄等の段階ごとに、取扱方法、責任者等について個人情報保護規程を整備。</p>
       </div>
-      <div class="border border-slate-200 rounded-xl p-2.5 bg-slate-50/60">
+      <div class="border border-slate-200 rounded-lg p-2.5 bg-slate-50/60">
         <div class="font-bold text-brand-green flex items-center gap-1 mb-0.5">
           <span class="">●</span> 組織的安全管理措置
         </div>
         <p class="text-[11px] text-slate-600">個人データの取扱いに関する責任者を設置するとともに、法令や社内規程に違反している事実を報告連絡する体制を整備。</p>
       </div>
-      <div class="border border-slate-200 rounded-xl p-2.5 bg-slate-50/60">
+      <div class="border border-slate-200 rounded-lg p-2.5 bg-slate-50/60">
         <div class="font-bold text-brand-green flex items-center gap-1 mb-0.5">
           <span class="">●</span> 人的安全管理措置
         </div>
         <p class="text-[11px] text-slate-600">個人データの取扱いに関する留意事項について、従業員に定期的な研修を実施。秘密保持誓約を締結しています。</p>
       </div>
-      <div class="border border-slate-200 rounded-xl p-2.5 bg-slate-50/60">
+      <div class="border border-slate-200 rounded-lg p-2.5 bg-slate-50/60">
         <div class="font-bold text-brand-green flex items-center gap-1 mb-0.5">
           <span class="">●</span> 物理的安全管理措置
         </div>
         <p class="text-[11px] text-slate-600">取扱区域における入退室管理および機器・書類等の盗難・紛失を防止する施策を講じています。</p>
       </div>
-      <div class="border border-slate-200 rounded-xl p-2.5 bg-slate-50/60">
+      <div class="border border-slate-200 rounded-lg p-2.5 bg-slate-50/60">
         <div class="font-bold text-brand-green flex items-center gap-1 mb-0.5">
           <span class="">●</span> 技術的安全管理措置
         </div>
         <p class="text-[11px] text-slate-600">アクセス制御により担当者を限定。外部からの不正アクセスから保護するファイアウォール・暗号化通信を導入。</p>
       </div>
-      <div class="border border-slate-200 rounded-xl p-2.5 bg-slate-50/60">
+      <div class="border border-slate-200 rounded-lg p-2.5 bg-slate-50/60">
         <div class="font-bold text-brand-green flex items-center gap-1 mb-0.5">
           <span class="">●</span> 外的環境の把握
         </div>
@@ -783,7 +794,7 @@
 
 <!-- END: Card 11 -->
 <!-- BEGIN: Card 12 - 11. お問合せ先 (Dark Green Highlight Card) -->
-<section class="bg-brand-green text-white rounded-2xl p-5 shadow-md space-y-4" data-purpose="contact-highlight-card">
+<section class="bg-brand-green text-white rounded-lg p-5 shadow-md space-y-4" data-purpose="contact-highlight-card">
 <div class="text-center space-y-1">
 <div class="w-9 h-9 mx-auto rounded-full bg-white/10 flex items-center justify-center">
 <svg class="w-5 h-5 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -795,7 +806,7 @@
           当社の個人情報の取扱い、開示・訂正・利用停止等のご請求、または苦情・ご相談に関するお問合せ窓口は下記の通りです。
         </p>
 </div>
-<div class="bg-white/95 text-slate-800 rounded-xl p-3.5 text-xs space-y-2 shadow-inner">
+<div class="bg-white/95 text-slate-800 rounded-lg p-3.5 text-xs space-y-2 shadow-inner">
 <div class="font-bold text-slate-900 border-b border-slate-200 pb-1.5 text-xs">
           中央教育研究所株式会社 苦情相談窓口
         </div>
@@ -816,13 +827,13 @@
 </div>
 <!-- Action Buttons -->
 <div class="space-y-2 pt-1">
-<a class="w-full bg-brand-terracotta hover:bg-brand-terracotta-dark text-white font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 shadow text-sm transition-colors" href="tel:082-227-3999">
+<a class="w-full bg-brand-terracotta hover:bg-brand-terracotta-dark text-white font-bold py-3 px-4 rounded-lg flex items-center justify-center gap-2 shadow text-sm transition-colors" href="tel:082-227-3999">
 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 <path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
 </svg>
           電話でお問い合わせ (082-227-3999)
         </a>
-<a class="w-full bg-white/10 hover:bg-white/20 text-white font-bold py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 border border-white/20 text-xs transition-colors" href="#">
+<a class="w-full bg-white/10 hover:bg-white/20 text-white font-bold py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 border border-white/20 text-xs transition-colors" href="#">
 <svg class="w-4 h-4 text-emerald-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
 </svg>

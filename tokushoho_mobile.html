@@ -28,6 +28,17 @@
       darkMode: "class",
       theme: {
         extend: {
+        borderRadius: {
+          'none': '0px',
+          'sm': '4px',
+          'DEFAULT': '6px',
+          'md': '6px',
+          'lg': '8px',
+          'xl': '8px',
+          '2xl': '8px',
+          '3xl': '8px',
+          'full': '9999px',
+        },
           colors: {
             "tertiary-container": "#6c4c00",
             "outline-variant": "#c0c9c2",
@@ -122,18 +133,18 @@
             <span class="font-semibold">模試を選ぶ</span>
             <span id="nav-next-exam-chevron" class="material-symbols-outlined text-lg transition-transform duration-200 transform">expand_more</span>
           </button>
-          <div id="nav-next-exam-dropdown" class="hidden absolute left-0 top-full mt-2 w-56 rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-xl p-2 z-50 transition-all duration-200">
+          <div id="nav-next-exam-dropdown" class="hidden absolute left-0 top-full mt-2 w-56 rounded-lg bg-surface-container-lowest border border-outline-variant/30 shadow-xl p-2 z-50 transition-all duration-200">
             <div class="space-y-1">
-              <button type="button" onclick="selectNavExamTab('chu3')" class="w-full flex items-center px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
+              <button type="button" onclick="selectNavExamTab('chu3')" class="w-full flex items-center px-3 py-2.5 rounded-lg hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
                 <span class="text-base font-bold text-on-surface group-hover:text-primary transition-colors">中3 おかもし</span>
               </button>
-              <button type="button" onclick="selectNavExamTab('chu2')" class="w-full flex items-center px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
+              <button type="button" onclick="selectNavExamTab('chu2')" class="w-full flex items-center px-3 py-2.5 rounded-lg hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
                 <span class="text-base font-bold text-on-surface group-hover:text-primary transition-colors">中2 おかもし</span>
               </button>
-              <button type="button" onclick="selectNavExamTab('chu1')" class="w-full flex items-center px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
+              <button type="button" onclick="selectNavExamTab('chu1')" class="w-full flex items-center px-3 py-2.5 rounded-lg hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
                 <span class="text-base font-bold text-on-surface group-hover:text-primary transition-colors">中1 おかもし</span>
               </button>
-              <button type="button" onclick="selectNavExamTab('sho6')" class="w-full flex items-center px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
+              <button type="button" onclick="selectNavExamTab('sho6')" class="w-full flex items-center px-3 py-2.5 rounded-lg hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
                 <span class="text-base font-bold text-on-surface group-hover:text-primary transition-colors whitespace-nowrap">小6 適性検査対策模試</span>
               </button>
             </div>
@@ -148,12 +159,12 @@
             <span>お問い合わせ</span>
             <span id="nav-contact-chevron" class="material-symbols-outlined text-lg transition-transform duration-200 transform group-hover:rotate-180">expand_more</span>
           </button>
-          <div id="nav-contact-dropdown" class="hidden group-hover:block absolute right-0 top-full mt-2 w-48 rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-xl p-2 z-50 transition-all duration-200 before:content-[''] before:absolute before:-top-2 before:left-0 before:w-full before:h-2">
+          <div id="nav-contact-dropdown" class="hidden group-hover:block absolute right-0 top-full mt-2 w-48 rounded-lg bg-surface-container-lowest border border-outline-variant/30 shadow-xl p-2 z-50 transition-all duration-200 before:content-[''] before:absolute before:-top-2 before:left-0 before:w-full before:h-2">
             <div class="space-y-1">
-              <a href="/contact/organization/" data-path="contact-partner" onclick="closeContactDropdown()" class="block px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition-colors text-left group/item cursor-pointer">
+              <a href="/contact/organization/" data-path="contact-partner" onclick="closeContactDropdown()" class="block px-3 py-2.5 rounded-lg hover:bg-surface-container-low transition-colors text-left group/item cursor-pointer">
                 <span class="text-base font-bold text-on-surface group-hover/item:text-primary transition-colors">塾・学校関係者様</span>
               </a>
-              <a href="/contact/individual/" data-path="contact" onclick="closeContactDropdown()" class="block px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition-colors text-left group/item cursor-pointer">
+              <a href="/contact/individual/" data-path="contact" onclick="closeContactDropdown()" class="block px-3 py-2.5 rounded-lg hover:bg-surface-container-low transition-colors text-left group/item cursor-pointer">
                 <span class="text-base font-bold text-on-surface group-hover/item:text-primary transition-colors">個人申込の方</span>
               </a>
             </div>
@@ -167,7 +178,7 @@
           </a>
         </div>
         <!-- Hamburger Button (Mobile Only) -->
-        <button type="button" id="mobile-menu-open-btn" onclick="openMobileMenu()" aria-label="メニューを開く" aria-expanded="false" class="lg:hidden flex items-center justify-center w-10 h-10 -mr-1 rounded-xl text-on-surface hover:bg-surface-container-high active:bg-surface-container-highest transition-colors cursor-pointer focus:outline-none">
+        <button type="button" id="mobile-menu-open-btn" onclick="openMobileMenu()" aria-label="メニューを開く" aria-expanded="false" class="lg:hidden flex items-center justify-center w-10 h-10 -mr-1 rounded-lg text-on-surface hover:bg-surface-container-high active:bg-surface-container-highest transition-colors cursor-pointer focus:outline-none">
           <span class="material-symbols-outlined text-[28px] text-on-surface">menu</span>
         </button>
       </div>
@@ -185,7 +196,7 @@
           <span class="material-symbols-outlined text-primary text-xl">menu</span>
           <span class="font-bold text-on-surface text-base">メニュー</span>
         </div>
-        <button type="button" onclick="closeMobileMenu()" aria-label="メニューを閉じる" class="w-10 h-10 -mr-2 rounded-xl flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors cursor-pointer">
+        <button type="button" onclick="closeMobileMenu()" aria-label="メニューを閉じる" class="w-10 h-10 -mr-2 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors cursor-pointer">
           <span class="material-symbols-outlined text-2xl">close</span>
         </button>
       </div>
@@ -193,7 +204,7 @@
       <!-- Drawer Navigation Links (Scrollable) -->
       <div class="flex-1 overflow-y-auto px-4 py-4 space-y-2.5">
         <!-- 模試を選ぶ (Accordion) -->
-        <div class="rounded-2xl border border-surface-container bg-surface-container-lowest overflow-hidden shadow-xs">
+        <div class="rounded-lg border border-surface-container bg-surface-container-lowest overflow-hidden shadow-xs">
           <button type="button" id="mobile-exam-accordion-btn" onclick="toggleMobileExamAccordion()" class="w-full px-4 py-3.5 flex items-center justify-between text-left font-bold text-base text-primary hover:bg-surface-container-low transition-colors cursor-pointer" aria-expanded="true">
             <div class="flex items-center gap-2.5">
               <span class="material-symbols-outlined text-xl text-primary">school</span>
@@ -234,7 +245,7 @@
         </div>
 
         <!-- お知らせ・受験情報 -->
-        <a href="news.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-2xl border border-surface-container bg-surface-container-lowest hover:bg-surface-container-low font-bold text-base text-on-surface shadow-xs transition-colors">
+        <a href="news.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-lg border border-surface-container bg-surface-container-lowest hover:bg-surface-container-low font-bold text-base text-on-surface shadow-xs transition-colors">
           <div class="flex items-center gap-2.5">
             <span class="material-symbols-outlined text-xl text-primary">feed</span>
             <span>お知らせ・受験情報</span>
@@ -243,7 +254,7 @@
         </a>
 
         <!-- 参加塾一覧 -->
-        <a href="schools_PC.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-2xl border border-surface-container bg-surface-container-lowest hover:bg-surface-container-low font-bold text-base text-on-surface shadow-xs transition-colors">
+        <a href="schools_PC.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-lg border border-surface-container bg-surface-container-lowest hover:bg-surface-container-low font-bold text-base text-on-surface shadow-xs transition-colors">
           <div class="flex items-center gap-2.5">
             <span class="material-symbols-outlined text-xl text-primary">apartment</span>
             <span>参加塾一覧</span>
@@ -252,7 +263,7 @@
         </a>
 
         <!-- お問い合わせ (Accordion) -->
-        <div class="rounded-2xl border border-surface-container bg-surface-container-lowest overflow-hidden shadow-xs">
+        <div class="rounded-lg border border-surface-container bg-surface-container-lowest overflow-hidden shadow-xs">
           <button type="button" id="mobile-contact-accordion-btn" onclick="toggleMobileContactAccordion()" class="w-full px-4 py-3.5 flex items-center justify-between text-left font-bold text-base text-on-surface hover:bg-surface-container-low transition-colors cursor-pointer" aria-expanded="false">
             <div class="flex items-center gap-2.5">
               <span class="material-symbols-outlined text-xl text-primary">mail</span>
@@ -281,7 +292,7 @@
 
       <!-- Drawer Footer (Prominent CV Button) -->
       <div class="p-5 border-t border-surface-container bg-surface space-y-2 shrink-0">
-        <a href="apply.html" onclick="closeMobileMenu()" class="w-full py-3.5 px-5 rounded-2xl bg-secondary text-white font-bold text-base shadow-[0_4px_16px_rgba(162,62,24,0.35)] hover:bg-secondary-container active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+        <a href="apply.html" onclick="closeMobileMenu()" class="w-full py-3.5 px-5 rounded-lg bg-secondary text-white font-bold text-base shadow-[0_4px_16px_rgba(162,62,24,0.35)] hover:bg-secondary-container active:scale-[0.98] transition-all flex items-center justify-center gap-2">
           <span class="material-symbols-outlined text-xl">edit_document</span>
           <span>お申し込みはこちら</span>
         </a>
@@ -470,7 +481,7 @@
     <div class="px-4 pb-8 space-y-4">
       
       <!-- Card 1: 基本事業者情報 -->
-      <article class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm divide-y divide-slate-100">
+      <article class="bg-white rounded-lg p-4 border border-slate-200 shadow-sm divide-y divide-slate-100">
         <!-- 1. 販売事業者名 -->
         <div class="pb-3.5">
           <div class="accent-border-l pl-2.5 mb-1.5">
@@ -535,7 +546,7 @@
               〒730-0013 広島県広島市中区八丁堀15番6号 広島ちゅうぎんビル3階<br>
               <span class="font-medium text-on-surface">担当：吉岡</span>
             </p>
-            <div class="bg-surface-container-low rounded-xl p-3 border border-slate-200/80 space-y-1.5 text-xs text-on-surface-variant">
+            <div class="bg-surface-container-low rounded-lg p-3 border border-slate-200/80 space-y-1.5 text-xs text-on-surface-variant">
               <div class="flex items-center gap-2">
                 <span class="material-symbols-outlined text-primary text-[16px]">call</span>
                 <strong class="text-on-surface">TEL:</strong>
@@ -559,18 +570,18 @@
       </article>
 
       <!-- Card 2: 模試受験料・お支払い・引渡し規定 -->
-      <article class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm divide-y divide-slate-100">
+      <article class="bg-white rounded-lg p-4 border border-slate-200 shadow-sm divide-y divide-slate-100">
         <!-- 6. 販売価格 -->
         <div class="pb-4">
           <div class="accent-border-l pl-2.5 mb-2">
             <h2 class="text-sm font-bold text-on-surface">販売価格</h2>
           </div>
           <div class="space-y-2 pl-1">
-            <div class="flex items-center justify-between p-2.5 rounded-xl bg-surface-container-low border border-slate-200/70">
+            <div class="flex items-center justify-between p-2.5 rounded-lg bg-surface-container-low border border-slate-200/70">
               <span class="text-xs font-semibold text-on-surface">岡山県適性検査対策模試</span>
               <span class="text-sm font-bold text-primary">¥5,500 <span class="text-[11px] font-normal text-on-surface-variant">(税込)/回</span></span>
             </div>
-            <div class="flex items-center justify-between p-2.5 rounded-xl bg-surface-container-low border border-slate-200/70">
+            <div class="flex items-center justify-between p-2.5 rounded-lg bg-surface-container-low border border-slate-200/70">
               <span class="text-xs font-semibold text-on-surface">岡山県統一模擬試験（おかもし）</span>
               <span class="text-sm font-bold text-primary">¥5,500 <span class="text-[11px] font-normal text-on-surface-variant">(税込)/回</span></span>
             </div>
@@ -616,14 +627,14 @@
             <h2 class="text-sm font-bold text-on-surface">お支払方法</h2>
           </div>
           <div class="space-y-2 pl-1">
-            <div class="p-2.5 rounded-xl bg-surface-container-low border border-slate-200/70 space-y-1">
+            <div class="p-2.5 rounded-lg bg-surface-container-low border border-slate-200/70 space-y-1">
               <div class="flex items-center gap-1.5 text-on-surface font-bold text-xs">
                 <span class="material-symbols-outlined text-primary text-[16px]">credit_card</span>
                 <span>クレジットカード決済</span>
               </div>
               <p class="text-[11px] text-on-surface-variant pl-5">Visa、Mastercard、American Express、JCBがご利用いただけます。</p>
             </div>
-            <div class="p-2.5 rounded-xl bg-surface-container-low border border-slate-200/70 space-y-1">
+            <div class="p-2.5 rounded-lg bg-surface-container-low border border-slate-200/70 space-y-1">
               <div class="flex items-center gap-1.5 text-on-surface font-bold text-xs">
                 <span class="material-symbols-outlined text-primary text-[16px]">local_convenience_store</span>
                 <span>コンビニ決済</span>
@@ -688,7 +699,7 @@
             </div>
           </div>
           <div class="space-y-2.5 pl-1 text-xs text-on-surface leading-relaxed">
-            <div class="p-2.5 rounded-xl bg-surface-container-low border border-slate-200 space-y-1">
+            <div class="p-2.5 rounded-lg bg-surface-container-low border border-slate-200 space-y-1">
               <p class="font-bold text-secondary flex items-center gap-1 text-[11px]">
                 <span class="material-symbols-outlined text-[14px]">info</span>基本規定
               </p>
@@ -708,7 +719,7 @@
             </div>
 
             <div class="space-y-2 pt-1">
-              <div class="p-2.5 rounded-xl bg-surface-container-low border border-slate-200 space-y-1">
+              <div class="p-2.5 rounded-lg bg-surface-container-low border border-slate-200 space-y-1">
                 <span class="font-bold text-primary flex items-center gap-1">
                   <span class="material-symbols-outlined text-[15px]">credit_card</span>クレジットカード決済の場合
                 </span>
@@ -716,7 +727,7 @@
                   クレジットカード会社へ決済のキャンセル処理を行います。カード会社の締め日等によって翌月返金等になる場合がございます。
                 </p>
               </div>
-              <div class="p-2.5 rounded-xl bg-surface-container-low border border-slate-200 space-y-1">
+              <div class="p-2.5 rounded-lg bg-surface-container-low border border-slate-200 space-y-1">
                 <span class="font-bold text-primary flex items-center gap-1">
                   <span class="material-symbols-outlined text-[15px]">account_balance</span>コンビニ決済の場合
                 </span>
@@ -733,7 +744,7 @@
           <div class="accent-border-l pl-2.5 mb-2">
             <h2 class="text-sm font-bold text-on-surface">自然災害等による実施困難時の取り扱い</h2>
           </div>
-          <div class="p-3 rounded-xl bg-surface-container-low border border-slate-200/80 flex items-start gap-2 text-xs text-on-surface leading-relaxed">
+          <div class="p-3 rounded-lg bg-surface-container-low border border-slate-200/80 flex items-start gap-2 text-xs text-on-surface leading-relaxed">
             <span class="material-symbols-outlined text-secondary text-[20px] shrink-0 mt-0.5">storm</span>
             <p>
               自然災害等で試験日での実施が困難な場合、別日程にて実施させていただくか、実施できない場合は返金手数料を差し引き受験料を返金させていただきます。
@@ -747,7 +758,7 @@
 
     <!-- Contact Banner -->
     <section class="px-4 py-2">
-      <div class="bg-gradient-to-br from-primary-container to-primary text-on-primary rounded-2xl p-5 text-center shadow-md">
+      <div class="bg-gradient-to-br from-primary-container to-primary text-on-primary rounded-lg p-5 text-center shadow-md">
         <div class="w-10 h-10 mx-auto mb-2.5 rounded-full bg-white/15 flex items-center justify-center text-white">
           <span class="material-symbols-outlined text-[22px]">contact_support</span>
         </div>
@@ -756,11 +767,11 @@
           ご不明な点やご相談はお気軽に岡山県統一模擬試験実行委員会までご連絡ください。
         </p>
         <div class="space-y-2">
-          <a class="w-full bg-secondary hover:bg-secondary-container text-white font-bold text-xs py-3 px-4 rounded-xl flex items-center justify-center gap-1.5 shadow-sm transition-transform active:scale-95" href="tel:082-227-3999">
+          <a class="w-full bg-secondary hover:bg-secondary-container text-white font-bold text-xs py-3 px-4 rounded-lg flex items-center justify-center gap-1.5 shadow-sm transition-transform active:scale-95" href="tel:082-227-3999">
             <span class="material-symbols-outlined text-[18px]">call</span>
             <span>電話でお問い合わせ (082-227-3999)</span>
           </a>
-          <a class="w-full bg-white/10 hover:bg-white/20 text-white text-xs py-2.5 px-4 rounded-xl flex items-center justify-center gap-1.5 border border-white/20 transition-colors" href="mailto:info@chuoh-kyouiku.co.jp">
+          <a class="w-full bg-white/10 hover:bg-white/20 text-white text-xs py-2.5 px-4 rounded-lg flex items-center justify-center gap-1.5 border border-white/20 transition-colors" href="mailto:info@chuoh-kyouiku.co.jp">
             <span class="material-symbols-outlined text-[18px]">mail</span>
             <span>メールでのお問い合わせ</span>
           </a>

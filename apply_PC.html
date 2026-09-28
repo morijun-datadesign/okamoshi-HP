@@ -516,6 +516,7 @@
           <div class="bg-surface-container-lowest rounded-lg sm:rounded-lg p-5 sm:p-7 border border-outline-variant/30 shadow-none sm:shadow-sm flex flex-col gap-6">
             <div class="flex items-center justify-between pb-3 border-b border-surface-container">
               <div class="flex items-center gap-2">
+                <span class="w-7 h-7 rounded-md bg-primary-container text-on-primary flex items-center justify-center font-label-md font-bold text-[13px]">1</span>
                 <h2 class="font-headline-md text-lg sm:text-[20px] font-bold text-primary">模試・受験形式の選択</h2>
               </div>
               <span class="font-label-sm text-[11px] sm:text-[12px] text-on-surface-variant">複数模試の一括申込みが可能です</span>
@@ -526,10 +527,7 @@
               <!-- STEP 1-1: 学年選択 -->
               <div class="flex flex-col gap-2.5">
                 <div class="flex items-center justify-between">
-                  <label class="font-label-md text-sm sm:text-base text-on-surface font-bold flex items-center gap-2">
-                    <span class="w-5 h-5 rounded-full bg-primary/10 text-primary flex items-center justify-center text-[11px] font-extrabold">①</span>
-                    学年をお選びください
-                  </label>
+                  <label class="font-label-md text-sm sm:text-base text-on-surface font-bold">学年をお選びください</label>
                   <span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span>
                 </div>
 
@@ -556,10 +554,7 @@
               <!-- STEP 1-2: 対象模試の選択（動的生成エリア） -->
               <div class="flex flex-col gap-3 pt-3 border-t border-surface-container/60">
                 <div class="flex items-center justify-between">
-                  <label class="font-label-md text-sm sm:text-base text-on-surface font-bold flex items-center gap-2">
-                    <span class="w-5 h-5 rounded-full bg-primary/10 text-primary flex items-center justify-center text-[11px] font-extrabold">②</span>
-                    お申込み模試と受験会場の選択（複数選択可）
-                  </label>
+                  <label class="font-label-md text-sm sm:text-base text-on-surface font-bold">お申込み模試と受験会場の選択</label>
                   <span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span>
                 </div>
                 <p class="text-xs text-on-surface-variant">※締切日時を過ぎた模試は自動的に受付終了となり表示されません。</p>

@@ -131,6 +131,41 @@
     body { background-color: #ffffff !important; }
     #nav-contact-container:hover #nav-contact-dropdown, #nav-contact-container.is-open #nav-contact-dropdown { display: block !important; }
     #nav-contact-container:hover #nav-contact-chevron, #nav-contact-container.is-open #nav-contact-chevron { transform: rotate(180deg) !important; }
+
+    /* スマホ表示における参加塾一覧テーブルの最適化 */
+    @media (max-width: 639.98px) {
+      .district-section table th,
+      .district-section table td {
+        padding-left: 0.5rem !important; /* px-2 (8px) */
+        padding-right: 0.5rem !important; /* px-2 (8px) */
+      }
+      .district-section table th {
+        font-size: 0.75rem !important; /* text-xs (12px) */
+        line-height: 1.25 !important;
+        font-weight: 700 !important;
+        padding-top: 0.5rem !important;
+        padding-bottom: 0.5rem !important;
+      }
+      .district-section table td {
+        padding-top: 0.625rem !important;
+        padding-bottom: 0.625rem !important;
+      }
+      /* 電話番号セルの不必要な折り返し防止と文字サイズ最適化 */
+      .district-section table td:last-child {
+        white-space: nowrap !important;
+        font-size: 0.8125rem !important; /* 13px */
+      }
+      .district-section table td:last-child a {
+        gap: 0.25rem !important;
+      }
+      .district-section table td:last-child .material-symbols-outlined {
+        font-size: 15px !important;
+      }
+      .district-section table td:first-child {
+        font-size: 0.875rem !important; /* 14px */
+        line-height: 1.35 !important;
+      }
+    }
   </style>
 </head>
 <body class="bg-white font-body-md text-body-md text-on-surface antialiased min-h-screen flex flex-col justify-between selection:bg-primary/20 selection:text-primary pt-16 sm:pt-[4.5rem]">
@@ -470,14 +505,14 @@
     </script>
 
   <main class="flex-1 w-full bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-4 sm:pt-6 pb-8 sm:pb-12">
+    <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 w-full pt-4 sm:pt-6 pb-8 sm:pb-12">
       <div class="flex flex-col w-full">
 <!-- Page Title Row -->
-<div class="w-full pt-4 pb-4 sm:pt-0 sm:pb-space-sm bg-white border-b border-gray-200/60 sm:border-b-0">
-  <div class="max-w-[75rem] mx-auto px-4 sm:px-0">
+<div class="w-full pt-3 pb-3 sm:pt-0 sm:pb-space-sm bg-white border-b border-gray-200/60 sm:border-b-0">
+  <div class="max-w-[75rem] mx-auto px-1 sm:px-0">
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-space-sm">
       <h1 class="text-2xl md:text-3xl font-bold text-[#1e3a2f] tracking-tight">参加塾一覧</h1>
-      <a href="apply.html" data-path="juku-inquiry" class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg bg-primary hover:bg-primary/90 text-white text-sm font-semibold transition-all shadow-sm shrink-0 whitespace-nowrap self-start sm:self-auto">
+      <a href="apply.html" data-path="juku-inquiry" class="hidden sm:inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg bg-primary hover:bg-primary/90 text-white text-sm font-semibold transition-all shadow-sm shrink-0 whitespace-nowrap self-start sm:self-auto">
         <span class="material-symbols-outlined text-[17px]">corporate_fare</span>
         <span>団体受検のお問い合わせ</span>
         <span class="material-symbols-outlined text-[17px]">arrow_forward</span>
@@ -487,25 +522,25 @@
 </div>
 
 <!-- Interactive District Nav & Filter Bar -->
-<section class="w-full sticky top-16 sm:top-20 z-40 bg-surface/95 backdrop-blur-md py-3 sm:py-space-sm shadow-sm border-b border-outline-variant/20 transition-all" id="district-anchor">
-<div class="max-w-[75rem] mx-auto px-4 sm:px-0 flex flex-col md:flex-row items-center justify-between gap-space-sm">
+<section class="w-full sticky top-16 sm:top-20 z-40 bg-surface/95 backdrop-blur-md py-2.5 sm:py-space-sm shadow-sm border-b border-outline-variant/20 transition-all" id="district-anchor">
+<div class="max-w-[75rem] mx-auto px-1 sm:px-0 flex flex-col md:flex-row items-center justify-between gap-2.5 sm:gap-space-sm">
 <!-- District Pills -->
-<div class="flex items-center gap-space-2xs overflow-x-auto w-full md:w-auto pb-1 md:pb-0 scrollbar-none" id="districtTabs">
-<a class="px-space-md py-space-xs rounded-full bg-primary text-on-primary font-label-md text-label-md font-bold whitespace-nowrap shadow-sm hover:opacity-90 transition-all flex items-center gap-1.5 district-nav-btn active cursor-pointer" href="#area-okayama" data-target="area-okayama">
+<div class="flex items-center gap-1.5 sm:gap-space-2xs overflow-x-auto w-full md:w-auto pb-1 md:pb-0 scrollbar-none -mx-1 px-1 sm:mx-0 sm:px-0" id="districtTabs">
+<a class="px-3 py-1.5 rounded-full bg-primary text-on-primary text-sm sm:text-label-md font-bold whitespace-nowrap shadow-sm hover:opacity-90 transition-all flex items-center gap-1.5 district-nav-btn active cursor-pointer shrink-0" href="#area-okayama" data-target="area-okayama">
 <span class="">岡山・東備学区</span>
-<span id="badge-okayama" class="w-5 h-5 rounded-full bg-white/20 text-white font-label-sm text-label-sm inline-flex items-center justify-center count-badge font-mono" data-total="58">58</span>
+<span id="badge-okayama" class="w-5 h-5 rounded-full bg-white/20 text-white text-xs sm:text-label-sm inline-flex items-center justify-center count-badge font-mono" data-total="58">58</span>
 </a>
-<a class="px-space-md py-space-xs rounded-full bg-surface-container text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface transition-all whitespace-nowrap flex items-center gap-1.5 district-nav-btn cursor-pointer" href="#area-kurashiki" data-target="area-kurashiki">
+<a class="px-3 py-1.5 rounded-full bg-surface-container text-on-surface-variant text-sm sm:text-label-md font-medium sm:font-bold hover:bg-surface-container-high hover:text-on-surface transition-all whitespace-nowrap flex items-center gap-1.5 district-nav-btn cursor-pointer shrink-0" href="#area-kurashiki" data-target="area-kurashiki">
 <span class="">倉敷学区</span>
-<span id="badge-kurashiki" class="w-5 h-5 rounded-full bg-surface-container-highest text-on-surface font-label-sm text-label-sm inline-flex items-center justify-center count-badge font-mono" data-total="30">30</span>
+<span id="badge-kurashiki" class="w-5 h-5 rounded-full bg-surface-container-highest text-on-surface text-xs sm:text-label-sm inline-flex items-center justify-center count-badge font-mono" data-total="30">30</span>
 </a>
-<a class="px-space-md py-space-xs rounded-full bg-surface-container text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface transition-all whitespace-nowrap flex items-center gap-1.5 district-nav-btn cursor-pointer" href="#area-mimasaka" data-target="area-mimasaka">
+<a class="px-3 py-1.5 rounded-full bg-surface-container text-on-surface-variant text-sm sm:text-label-md font-medium sm:font-bold hover:bg-surface-container-high hover:text-on-surface transition-all whitespace-nowrap flex items-center gap-1.5 district-nav-btn cursor-pointer shrink-0" href="#area-mimasaka" data-target="area-mimasaka">
 <span class="">美作学区</span>
-<span id="badge-mimasaka" class="w-5 h-5 rounded-full bg-surface-container-highest text-on-surface font-label-sm text-label-sm inline-flex items-center justify-center count-badge font-mono" data-total="24">24</span>
+<span id="badge-mimasaka" class="w-5 h-5 rounded-full bg-surface-container-highest text-on-surface text-xs sm:text-label-sm inline-flex items-center justify-center count-badge font-mono" data-total="24">24</span>
 </a>
-<a class="px-space-md py-space-xs rounded-full bg-surface-container text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface transition-all whitespace-nowrap flex items-center gap-1.5 district-nav-btn cursor-pointer" href="#area-seibi" data-target="area-seibi">
+<a class="px-3 py-1.5 rounded-full bg-surface-container text-on-surface-variant text-sm sm:text-label-md font-medium sm:font-bold hover:bg-surface-container-high hover:text-on-surface transition-all whitespace-nowrap flex items-center gap-1.5 district-nav-btn cursor-pointer shrink-0" href="#area-seibi" data-target="area-seibi">
 <span class="">西備学区</span>
-<span id="badge-seibi" class="w-5 h-5 rounded-full bg-surface-container-highest text-on-surface font-label-sm text-label-sm inline-flex items-center justify-center count-badge font-mono" data-total="7">7</span>
+<span id="badge-seibi" class="w-5 h-5 rounded-full bg-surface-container-highest text-on-surface text-xs sm:text-label-sm inline-flex items-center justify-center count-badge font-mono" data-total="7">7</span>
 </a>
 </div>
 <!-- Quick Search Input with Clear Button -->
@@ -519,8 +554,8 @@
 </div>
 </section>
 <!-- School Directory Tables Section -->
-<section class="w-full py-8 sm:py-space-xl bg-slate-50 sm:bg-transparent">
-<div class="max-w-[75rem] mx-auto px-4 sm:px-0 flex flex-col gap-8 sm:gap-space-2xl">
+<section class="w-full py-5 sm:py-space-xl bg-slate-50 sm:bg-transparent">
+<div class="max-w-[75rem] mx-auto px-0 flex flex-col gap-6 sm:gap-space-2xl">
 <!-- Area 1: 岡山・東備学区 -->
 <div class="district-section scroll-mt-36" id="area-okayama">
 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-xs mb-space-md">
@@ -535,8 +570,8 @@
 <table class="w-full text-left border-collapse">
 <thead>
 <tr class="bg-primary-container text-on-primary">
-<th class="py-space-sm px-space-md font-label-md text-label-md w-7/12" scope="col">学習塾・教室名（教室サイトリンク）</th>
-<th class="py-space-sm px-space-md font-label-md text-label-md w-5/12" scope="col">電話番号</th>
+<th class="py-2.5 sm:py-space-sm px-2 sm:px-space-md text-xs sm:text-label-md font-bold sm:font-label-md w-7/12" scope="col">学習塾・教室名（教室サイトリンク）</th>
+<th class="py-2.5 sm:py-space-sm px-2 sm:px-space-md text-xs sm:text-label-md font-bold sm:font-label-md w-5/12" scope="col">電話番号</th>
 </tr>
 </thead>
 <tbody class="divide-y divide-surface-container text-on-surface font-body-md text-body-md" id="tableOkayama">
@@ -1358,8 +1393,8 @@
 <table class="w-full text-left border-collapse">
 <thead>
 <tr class="bg-primary-container text-on-primary">
-<th class="py-space-sm px-space-md font-label-md text-label-md w-7/12" scope="col">学習塾・教室名（教室サイトリンク）</th>
-<th class="py-space-sm px-space-md font-label-md text-label-md w-5/12" scope="col">電話番号</th>
+<th class="py-2.5 sm:py-space-sm px-2 sm:px-space-md text-xs sm:text-label-md font-bold sm:font-label-md w-7/12" scope="col">学習塾・教室名（教室サイトリンク）</th>
+<th class="py-2.5 sm:py-space-sm px-2 sm:px-space-md text-xs sm:text-label-md font-bold sm:font-label-md w-5/12" scope="col">電話番号</th>
 </tr>
 </thead>
 <tbody class="divide-y divide-surface-container text-on-surface font-body-md text-body-md" id="tableKurashiki">
@@ -1783,8 +1818,8 @@
 <table class="w-full text-left border-collapse">
 <thead>
 <tr class="bg-primary-container text-on-primary">
-<th class="py-space-sm px-space-md font-label-md text-label-md w-7/12" scope="col">学習塾・教室名（教室サイトリンク）</th>
-<th class="py-space-sm px-space-md font-label-md text-label-md w-5/12" scope="col">電話番号</th>
+<th class="py-2.5 sm:py-space-sm px-2 sm:px-space-md text-xs sm:text-label-md font-bold sm:font-label-md w-7/12" scope="col">学習塾・教室名（教室サイトリンク）</th>
+<th class="py-2.5 sm:py-space-sm px-2 sm:px-space-md text-xs sm:text-label-md font-bold sm:font-label-md w-5/12" scope="col">電話番号</th>
 </tr>
 </thead>
 <tbody class="divide-y divide-surface-container text-on-surface font-body-md text-body-md" id="tableMimasaka">
@@ -2109,8 +2144,8 @@
 <table class="w-full text-left border-collapse">
 <thead>
 <tr class="bg-primary-container text-on-primary">
-<th class="py-space-sm px-space-md font-label-md text-label-md w-7/12" scope="col">学習塾・教室名（教室サイトリンク）</th>
-<th class="py-space-sm px-space-md font-label-md text-label-md w-5/12" scope="col">電話番号</th>
+<th class="py-2.5 sm:py-space-sm px-2 sm:px-space-md text-xs sm:text-label-md font-bold sm:font-label-md w-7/12" scope="col">学習塾・教室名（教室サイトリンク）</th>
+<th class="py-2.5 sm:py-space-sm px-2 sm:px-space-md text-xs sm:text-label-md font-bold sm:font-label-md w-5/12" scope="col">電話番号</th>
 </tr>
 </thead>
 <tbody class="divide-y divide-surface-container text-on-surface font-body-md text-body-md" id="tableSeibi">

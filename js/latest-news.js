@@ -62,7 +62,7 @@
   function getNewsBadgeColor(catName) {
     if (!catName) return 'bg-surface-container-high text-on-surface';
     if (catName.includes('重要')) return 'bg-error-container text-on-error-container border border-error/20';
-    if (catName.includes('入試') || catName.includes('受検')) return 'bg-[#e8f5ee] text-[#134230] border border-[#a1d1b8]';
+    if (catName.includes('入試') || catName.includes('受験') || catName.includes('受検')) return 'bg-[#e8f5ee] text-[#134230] border border-[#a1d1b8]';
     if (catName.includes('活用法') || catName.includes('コラム')) return 'bg-[#fef3c7] text-[#92400e] border border-[#fde68a]';
     if (catName.includes('要項') || catName.includes('日程') || catName.includes('模試')) return 'bg-[#ecfdf5] text-[#065f46] border border-[#a7f3d0]';
     return 'bg-surface-container-high text-on-surface';

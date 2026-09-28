@@ -44,7 +44,7 @@ export interface ExamSession {
   apply_btn_text?: string;
   apply_url?: string;
 
-  // 1. 会場受検用フィールド
+  // 1. 会場受験用フィールド
   /** 受験票等の発送日 (例: "10月13日(火) 頃発送予定") */
   shipping_date_venue?: string;
   /** 当日持参物 (改行区切りの持ち物・注記テキスト) */
@@ -52,7 +52,7 @@ export interface ExamSession {
   /** 当日の時間割 */
   timetable?: TimetableItem[];
 
-  // 2. 自宅受検用フィールド
+  // 2. 自宅受験用フィールド
   /** 問題用紙等の発送日 (例: "10月13日(火) 頃発送予定") */
   shipping_date_home?: string;
   /** 答案提出締め切り (例: "2026年11月4日(水)" または ISO文字列) */

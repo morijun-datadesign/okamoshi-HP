@@ -826,7 +826,7 @@
             <!-- 内訳リスト（動的更新） -->
             <div class="rounded-xl p-4 border border-outline-variant/20 flex flex-col gap-3 bg-surface-container-lowest" id="summarySelectedContainer">
               <div class="flex items-center gap-2 text-on-surface-variant font-label-sm text-xs font-bold">
-                <span>受検模試の内訳</span>
+                <span>受験模試の内訳</span>
               </div>
               
               <div class="flex flex-col gap-3" id="summarySelectedList">
@@ -1236,9 +1236,9 @@
         status: 'open',
         isDefaultChecked: true,
         venues: [
-          { value: 'venue_okayama', label: '岡山会場（岡山操山中学校 受検対応）' },
-          { value: 'venue_kurashiki', label: '倉敷会場（倉敷天城中学校 受検対応）' },
-          { value: 'venue_tsuyama', label: '津山会場（津山中学校 受検対応）' },
+          { value: 'venue_okayama', label: '岡山会場（岡山操山中学校 受験対応）' },
+          { value: 'venue_kurashiki', label: '倉敷会場（倉敷天城中学校 受験対応）' },
+          { value: 'venue_tsuyama', label: '津山会場（津山中学校 受験対応）' },
           { value: 'home', label: '自宅受験（問題冊子郵送・期日内答案返送）' }
         ]
       },
@@ -1257,9 +1257,9 @@
         status: 'open',
         isDefaultChecked: false,
         venues: [
-          { value: 'venue_okayama', label: '岡山会場（岡山操山中学校 受検対応）' },
-          { value: 'venue_kurashiki', label: '倉敷会場（倉敷天城中学校 受検対応）' },
-          { value: 'venue_tsuyama', label: '津山会場（津山中学校 受検対応）' },
+          { value: 'venue_okayama', label: '岡山会場（岡山操山中学校 受験対応）' },
+          { value: 'venue_kurashiki', label: '倉敷会場（倉敷天城中学校 受験対応）' },
+          { value: 'venue_tsuyama', label: '津山会場（津山中学校 受験対応）' },
           { value: 'home', label: '自宅受験（問題冊子郵送・期日内答案返送）' }
         ]
       }
@@ -1351,7 +1351,7 @@
     function formatExamDate(session, fallbackExamDate) {
       if (session && Array.isArray(session.schedules) && session.schedules.length > 0) {
         const days = ['日', '月', '火', '水', '木', '金', '土'];
-        // 会場受検のスケジュールを優先
+        // 会場受験のスケジュールを優先
         const venueSch = session.schedules.find(sch => {
           const types = Array.isArray(sch.venue_type) ? sch.venue_type : [sch.venue_type || ''];
           return !types.some(t => t && t.includes('自宅')) && (sch.date_start || sch.date_text);
@@ -1386,7 +1386,7 @@
     }
 
     /**
-     * schedules から会場名（venue_name）および「自宅受検」を動的選択肢として抽出
+     * schedules から会場名（venue_name）および「自宅受験」を動的選択肢として抽出
      */
     function extractVenuesFromSchedules(session, fallbackVenues) {
       const venues = [];
@@ -1394,7 +1394,7 @@
       if (session && Array.isArray(session.schedules) && session.schedules.length > 0) {
         session.schedules.forEach((sch, sIdx) => {
           const types = Array.isArray(sch.venue_type) ? sch.venue_type : [sch.venue_type || ''];
-          const isHome = types.some(t => t && (t.includes('自宅') || t.includes('自宅受検') || t.includes('自宅受験'))) ||
+          const isHome = types.some(t => t && (t.includes('自宅') || t.includes('自宅受験') || t.includes('自宅受検'))) ||
                          (sch.venue_name && sch.venue_name.includes('自宅'));
           if (!isHome) {
             const typeName = types[0] || '会場';
@@ -1468,7 +1468,7 @@
      * 1) 選択学年の sessions を抽出
      * 2) application_deadline と現在日時をリアルタイム比較（締切を過ぎた模試は自動除外）
      * 3) active_issue と一致する模試は「〇〇対象・受付中」、より後の号は「〇〇対象・予約受付」
-     * 4) schedules から希望会場および自宅受検を動的生成
+     * 4) schedules から希望会場および自宅受験を動的生成
      */
     function getAvailableExamsForGrade(gradeKey) {
       const now = Date.now();
@@ -1703,7 +1703,7 @@
               </div>
             </label>
 
-            <!-- 会場・受検形式セレクトボックス（必須） -->
+            <!-- 会場・受験形式セレクトボックス（必須） -->
             <div class="pt-3 border-t border-outline-variant/20 grid grid-cols-1 md:grid-cols-12 gap-2 items-center ${isChecked ? '' : 'opacity-50 pointer-events-none'}" id="venue-wrapper-${exam.id}">
               <label class="md:col-span-4 font-label-md text-xs sm:text-sm font-bold text-primary flex items-center gap-1.5 pl-1" for="venue-${exam.id}">
                 <span class="material-symbols-outlined text-base">apartment</span>受験方法・希望会場
@@ -1803,7 +1803,7 @@
         if (selectedList.length === 0) {
           listContainer.innerHTML = `
             <div class="py-2 text-center text-xs text-secondary font-bold">
-              受検する模試を選択してください（未選択）
+              受験する模試を選択してください（未選択）
             </div>
           `;
         } else {
@@ -1872,7 +1872,7 @@
       // 1. 模試の選択確認
       const selectedExams = Object.values(selectedExamsState);
       if (selectedExams.length === 0) {
-        alert('受検を希望する模試を1つ以上選択してください。');
+        alert('受験を希望する模試を1つ以上選択してください。');
         const examGroup = document.getElementById('examOptionGroup');
         if (examGroup) examGroup.scrollIntoView({ behavior: 'smooth', block: 'center' });
         return;

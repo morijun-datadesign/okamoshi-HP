@@ -483,7 +483,7 @@
       お知らせ・受験情報
     </h1>
     <p class="font-body-md text-sm sm:text-base text-on-surface-variant mt-1.5 leading-relaxed">
-      岡山県統一模擬試験（おかもし）の実施要項・重要なお知らせや、岡山県の高校入試・県立中高一貫校受検に役立つ受験情報・学習コラムをお届けします。
+      岡山県統一模擬試験（おかもし）の実施要項・重要なお知らせや、岡山県の高校入試・県立中高一貫校受験に役立つ受験情報・学習コラムをお届けします。
     </p>
   </div>
 
@@ -792,7 +792,7 @@
     const CATEGORY_MAP = {
       all: { label: 'すべて', filterValue: '' },
       important: { label: '重要なお知らせ', filterValue: '重要なお知らせ' },
-      'exam-info': { label: '入試・受検情報', filterValue: '入試・受検情報' },
+      'exam-info': { label: '入試・受験情報', filterValue: '入試・受験情報' },
       column: { label: '模試活用法・学習コラム', filterValue: '模試活用法・学習コラム' },
       schedule: { label: '実施要項・日程', filterValue: '実施要項・日程' }
     };
@@ -824,7 +824,7 @@
       {
         id: 'senior-interview',
         category: 'exam-info',
-        categoryLabel: '入試・受検情報',
+        categoryLabel: '入試・受験情報',
         badgeClass: 'bg-primary-container text-on-primary-container',
         date: '2026.07.30',
         subCategory: '合格体験記・学習法',
@@ -920,7 +920,7 @@
       if (!categoryText) return 'bg-surface-container-high text-on-surface-variant';
       if (categoryText.includes('重要') || categoryText.includes('トピックス')) {
         return 'bg-secondary-fixed text-on-secondary-fixed-variant';
-      } else if (categoryText.includes('入試') || categoryText.includes('受検')) {
+      } else if (categoryText.includes('入試') || categoryText.includes('受験') || categoryText.includes('受検')) {
         return 'bg-primary-container text-on-primary-container';
       } else if (categoryText.includes('活用') || categoryText.includes('コラム')) {
         return 'bg-tertiary-fixed text-on-tertiary-fixed';

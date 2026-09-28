@@ -399,6 +399,134 @@
       color: inherit;
       padding: 0;
     }
+
+    /* ==================================================== */
+    /* スマートフォン向け（sm未満: 〜639.98px）タイポグラフィ最適化 */
+    /* Wired等のWebメディアを意識した、1画面の情報密度と読みやすさを高めるタイト設計 */
+    /* ==================================================== */
+    @media (max-width: 639.98px) {
+      #entry-content-body,
+      .entry-content,
+      .blog-body,
+      .prose {
+        font-size: 15px !important;
+        line-height: 1.62 !important;
+        letter-spacing: 0.015em !important;
+      }
+
+      .entry-content > * + *,
+      .blog-body > * + *,
+      .prose > * + * {
+        margin-top: 1rem !important; /* ブロック要素間を mb-4 相当に短縮 */
+      }
+
+      /* 段落のフォントサイズ・行間・下マージン */
+      .entry-content p,
+      .blog-body p,
+      .prose p {
+        font-size: 15px !important;
+        line-height: 1.62 !important;
+        margin-bottom: 1rem !important; /* mb-4 相当 (16px) */
+      }
+
+      /* H1見出し */
+      .entry-content h1,
+      .blog-body h1,
+      .prose h1 {
+        font-size: 1.35rem !important;
+        line-height: 1.35 !important;
+        margin-top: 2rem !important;
+        margin-bottom: 0.5rem !important;
+      }
+
+      /* H2見出し（左緑ボーダー付き） */
+      .entry-content h2,
+      .entry-content > h2,
+      .entry-content section > h2,
+      .blog-body h2,
+      .prose h2 {
+        font-size: 1.2rem !important; /* 約19px */
+        line-height: 1.38 !important;
+        padding-left: 0.625rem !important;
+        margin-top: 2rem !important; /* 48px -> 32px に圧縮 */
+        margin-bottom: 0.5rem !important;
+      }
+
+      /* H3見出し */
+      .entry-content h3,
+      .blog-body h3,
+      .prose h3 {
+        font-size: 1.1rem !important; /* 約17.5px */
+        line-height: 1.38 !important;
+        margin-top: 1.5rem !important; /* 48px -> 24px に圧縮 */
+        margin-bottom: 0.375rem !important;
+      }
+
+      /* H4見出し */
+      .entry-content h4,
+      .blog-body h4,
+      .prose h4 {
+        font-size: 1rem !important;
+        line-height: 1.4 !important;
+        margin-top: 1.25rem !important;
+        margin-bottom: 0.375rem !important;
+      }
+
+      /* 先頭見出しの上の余白抑制 */
+      .entry-content > h1:first-child,
+      .entry-content > h2:first-child,
+      .entry-content > h3:first-child,
+      .entry-content section:first-child > h1:first-child,
+      .entry-content section:first-child > h2:first-child,
+      .entry-content section:first-child > h3:first-child,
+      .blog-body > h1:first-child,
+      .blog-body > h2:first-child,
+      .blog-body > h3:first-child,
+      .prose > h1:first-child,
+      .prose > h2:first-child,
+      .prose > h3:first-child {
+        margin-top: 0.5rem !important;
+      }
+
+      /* 見出し直後の要素の上余白（文脈の一体感を強化） */
+      .entry-content h1 + p,
+      .entry-content h2 + p,
+      .entry-content h3 + p,
+      .blog-body h1 + p,
+      .blog-body h2 + p,
+      .blog-body h3 + p,
+      .prose h1 + p,
+      .prose h2 + p,
+      .prose h3 + p,
+      .entry-content h1 + *,
+      .entry-content h2 + *,
+      .entry-content h3 + *,
+      .blog-body h1 + *,
+      .blog-body h2 + *,
+      .blog-body h3 + *,
+      .prose h1 + *,
+      .prose h2 + *,
+      .prose h3 + * {
+        margin-top: 0.375rem !important;
+      }
+
+      /* リスト項目のタイト化 */
+      .entry-content ul,
+      .entry-content ol {
+        margin: 0.75rem 0 !important;
+        padding-left: 1.25rem !important;
+      }
+      .entry-content li {
+        margin-bottom: 0.25rem !important;
+        line-height: 1.6 !important;
+      }
+
+      /* 引用ブロックの余白 */
+      .entry-content blockquote {
+        margin: 1rem 0 !important;
+        padding: 0.75rem 1rem !important;
+      }
+    }
   </style>
 <style id="header-contact-dropdown-style">
   #nav-contact-container:hover #nav-contact-dropdown,
@@ -746,11 +874,11 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-4 sm:pt-6 pb-8 sm:pb-12">
       <div class="flex flex-col w-full">
 <!-- Main Article Area (Desktop Split Layout: Content & Sticky Sidebar) -->
-<div class="w-full pt-2 pb-8 px-4 sm:px-0 bg-white">
+<div class="w-full pt-2 pb-8 px-0 bg-white">
 <div class="w-full">
 <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-start">
 <!-- Primary Column (Article Body) -->
-<article class="lg:col-span-8 flex flex-col gap-space-xl w-full">
+<article class="lg:col-span-8 flex flex-col gap-5 sm:gap-space-xl w-full">
 <!-- Article Header -->
 <header class="w-full flex flex-col gap-space-md">
 <!-- Category & Metadata Badges -->
@@ -766,11 +894,11 @@
 </div>
 </div>
 <!-- Main Heading -->
-<h1 id="article-title" class="text-2xl md:text-3xl text-[#1e3a2f] tracking-tight font-bold" style="line-height: 1.8 !important; margin-top: 1rem !important; margin-bottom: 0.5rem !important;">【岡山県の高校受験】合格への近道はここにある！「おかもし」が受験生から支持される理由</h1>
+<h1 id="article-title" class="text-xl sm:text-2xl md:text-3xl text-[#1e3a2f] tracking-tight font-bold leading-snug sm:leading-[1.4] mt-3 sm:mt-4 mb-2">【岡山県の高校受験】合格への近道はここにある！「おかもし」が受験生から支持される理由</h1>
 <!-- Lead Paragraph -->
 <p id="article-lead" class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed"></p>
 <!-- Eye-catcher Image Container -->
-<div class="relative w-full rounded-xl overflow-hidden shadow-sm aspect-[16/9] bg-surface-container mt-6">
+<div class="relative w-full rounded-xl overflow-hidden shadow-sm aspect-[16/9] bg-surface-container mt-4 sm:mt-6">
 <img id="article-hero-img" class="w-full h-full object-cover" data-alt="岡山県統一模擬試験 ブログアイキャッチ" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDihB4z3AsRpUpXCouRdFclwC_Ju-I3ytlec4tKNkWhVRWRrzTlsfU6RWv8dqyZJQIlJNKz319n0Ux1EyYHWsimPGY880KIYPKhLF42sLHx49skA7hdqqjucs9j1ySXXuHayJIHeUoPFWlQIzGZE26O778G6xZnz57xtlCsHRi8-mCncTIutLC4Z3WajScem77Q5woMXX_wgKTTlqNmD4lXX3tCyfaMOM30vrspKGOtyuhFSWBb2Zop">
 <div class="absolute bottom-3 right-3 px-space-xs py-1 bg-primary/80 backdrop-blur-md rounded-lg text-on-primary font-label-sm text-label-sm flex items-center gap-1">
 <span class="material-symbols-outlined text-[14px]">insights</span>

@@ -305,13 +305,13 @@
     <!-- お問い合わせ切り替えタブ -->
     <div class="mb-6 sm:mb-8">
       <div class="flex items-center bg-slate-200/60 p-1.5 rounded-2xl border border-slate-300/70 max-w-md mx-auto">
-        <a href="/contact/organization/" class="flex-1 text-center py-2.5 px-3 rounded-xl font-bold text-sm bg-white text-primary shadow-sm transition-all flex items-center justify-center gap-1.5">
+        <a href="/contact?type=organization" class="flex-1 text-center py-2.5 px-3 rounded-xl font-bold text-sm bg-white text-primary shadow-sm transition-all flex items-center justify-center gap-1.5">
           <span class="material-symbols-outlined text-base">corporate_fare</span>
           <span>塾・学校関係者様</span>
         </a>
-        <a href="/contact/individual/" class="flex-1 text-center py-2.5 px-3 rounded-xl font-semibold text-sm text-slate-600 hover:text-slate-900 transition-all flex items-center justify-center gap-1.5">
+        <a href="/contact?type=individual" class="flex-1 text-center py-2.5 px-3 rounded-xl font-semibold text-sm text-slate-600 hover:text-slate-900 transition-all flex items-center justify-center gap-1.5">
           <span class="material-symbols-outlined text-base">person</span>
-          <span>個人申込の方はこちら</span>
+          <span>個人申込の方</span>
         </a>
       </div>
     </div>
@@ -485,6 +485,15 @@
   <!-- 共通 Header コンポーネント制御スクリプト -->
   <script src="/js/header.js"></script>
   <script>
+    // URLパラメータ判定（individual指定なら切り替え）
+    (function() {
+      var p = new URLSearchParams(window.location.search);
+      var t = p.get('type');
+      if (t === 'individual' || t === 'indiv' || window.location.hash === '#individual') {
+        window.location.replace('/contact?type=individual');
+      }
+    })();
+
     // フォーム送信処理
     async function handleSubmit(e) {
       if (e) e.preventDefault();

@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>お問い合わせ窓口 | 岡山県統一模擬試験（おかもし）</title>
+  <title>お問い合わせ | 岡山県統一模擬試験（おかもし）</title>
   <meta name="description" content="岡山県統一模擬試験（おかもし）のお問い合わせ窓口。個人でのWebお申し込みのご案内から、塾・学校関係者様の団体受験・導入に関するご相談まで承っております。">
-  <link rel="canonical" href="https://okamoshi.pages.dev/contact/">
+  <link rel="canonical" href="https://okamoshi.pages.dev/contact">
   
   <!-- OGP -->
-  <meta property="og:title" content="お問い合わせ窓口 | 岡山県統一模擬試験（おかもし）">
+  <meta property="og:title" content="お問い合わせ | 岡山県統一模擬試験（おかもし）">
   <meta property="og:description" content="岡山県統一模擬試験（おかもし）のお問い合わせ窓口。個人でのWebお申し込みのご案内から、塾・学校関係者様の団体受験・導入に関するご相談まで承っております。">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://okamoshi.pages.dev/contact/">
+  <meta property="og:url" content="https://okamoshi.pages.dev/contact">
   <meta property="og:image" content="https://okamoshi.pages.dev/og-image.jpg">
   <meta property="og:site_name" content="岡山県統一模擬試験（おかもし）">
   <meta name="twitter:card" content="summary_large_image">
@@ -31,7 +31,12 @@
           colors: {
             primary: '#134230',
             'primary-container': '#2d5a46',
+            'primary-fixed': '#bceed3',
+            'primary-fixed-dim': '#a1d1b8',
+            'on-primary-fixed-variant': '#224f3c',
             secondary: '#a23e18',
+            'secondary-container': '#fe8357',
+            'on-secondary-container': '#6f2000',
             'on-surface': '#1b1c1c',
             'on-surface-variant': '#414944',
             surface: '#fcf9f8',
@@ -39,7 +44,11 @@
             'surface-container-low': '#f6f3f2',
             'surface-container': '#f0eded',
             'surface-container-high': '#eae7e7',
-            'surface-container-highest': '#e4e2e1'
+            'surface-container-highest': '#e4e2e1',
+            outline: '#717973',
+            'outline-variant': '#c0c9c2',
+            error: '#ba1a1a',
+            'on-error': '#ffffff'
           },
           fontFamily: {
             sans: ['"Noto Sans JP"', '"Plus Jakarta Sans"', 'sans-serif'],
@@ -49,95 +58,586 @@
     };
   </script>
 </head>
-<body class="bg-surface text-on-surface font-sans antialiased min-h-screen flex flex-col justify-between pt-16 sm:pt-20">
+<body class="bg-surface font-sans text-body-md text-on-surface antialiased min-h-screen flex flex-col justify-between pt-16 sm:pt-[4.5rem]">
 
   <!-- Header -->
-  <header class="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-md shadow-xs border-b border-slate-100">
-    <div class="h-16 sm:h-20 max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between">
-      <a href="/" class="flex items-center gap-2.5">
+  <header class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+    <div class="h-16 sm:h-[4.5rem] max-w-[75rem] mx-auto px-4 sm:px-6 flex items-center justify-between gap-3 lg:gap-4 xl:gap-8">
+      <a href="/index.html" class="flex items-center gap-2.5 sm:gap-3 min-w-0 shrink-0">
         <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-primary flex items-center justify-center text-white font-bold shrink-0">
-          <span class="material-symbols-outlined text-xl">school</span>
+          <span class="material-symbols-outlined text-xl sm:text-2xl">school</span>
         </div>
-        <div class="flex items-center gap-1.5">
-          <span class="text-base sm:text-lg text-primary font-bold">岡山県統一模擬試験</span>
-          <span class="text-[11px] sm:text-xs px-2 py-0.5 bg-[#e8f5ee] text-[#134230] rounded-full font-bold">おかもし</span>
+        <div class="flex items-center gap-1.5 sm:gap-2 min-w-0">
+          <span class="text-base sm:text-lg xl:text-xl text-primary tracking-tight font-bold truncate">岡山県統一模擬試験</span>
+          <span class="text-[11px] sm:text-xs px-2 py-0.5 bg-primary-fixed text-on-primary-fixed-variant rounded-full font-bold shrink-0">おかもし</span>
         </div>
       </a>
-      <a href="/" class="text-xs sm:text-sm font-bold text-slate-600 hover:text-primary transition-colors flex items-center gap-1">
-        <span class="material-symbols-outlined text-base">home</span>トップページへ
-      </a>
+      <nav class="hidden lg:flex items-center gap-5 xl:gap-8 text-base">
+        <a class="text-base font-semibold text-on-surface-variant hover:text-primary transition-colors py-1 whitespace-nowrap" href="/index.html">模試を選ぶ</a>
+        <a class="text-base font-semibold text-on-surface-variant hover:text-primary transition-colors py-1 whitespace-nowrap" href="/schools_PC.html">参加塾一覧</a>
+        <a class="text-base font-semibold text-on-surface-variant hover:text-primary transition-colors py-1 whitespace-nowrap" href="/news.html">お知らせ・受験情報</a>
+      </nav>
+      <div class="flex items-center shrink-0">
+        <div class="hidden lg:block mr-4 xl:mr-6 pl-3 xl:pl-5 border-l border-outline-variant/40">
+          <a href="/contact" class="transition-colors py-1 text-primary font-bold border-b-2 border-primary text-base whitespace-nowrap inline-flex items-center gap-1">
+            <span>お問い合わせ</span>
+          </a>
+        </div>
+        <div class="hidden lg:block">
+          <a class="inline-flex items-center justify-center px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-secondary text-white font-semibold text-sm sm:text-[15px] shadow-[0_4px_14px_-2px_rgba(200,90,50,0.35)] hover:bg-secondary-container hover:shadow-[0_6px_20px_-2px_rgba(200,90,50,0.45)] hover:-translate-y-0.5 transition-all whitespace-nowrap tracking-wide" href="/apply.html">
+            <span class="material-symbols-outlined mr-1 sm:mr-1.5 text-base sm:text-lg">edit_document</span>
+            <span>お申し込みはこちら</span>
+          </a>
+        </div>
+        <button type="button" id="mobile-menu-open-btn" onclick="openMobileMenu()" aria-label="メニューを開く" class="lg:hidden flex items-center justify-center w-10 h-10 -mr-1 rounded-xl text-on-surface hover:bg-surface-container-high transition-colors cursor-pointer">
+          <span class="material-symbols-outlined text-2xl">menu</span>
+        </button>
+      </div>
     </div>
   </header>
 
+  <!-- モバイルメニュードロワー -->
+  <div id="mobile-menu-backdrop" onclick="closeMobileMenu()" class="fixed inset-0 bg-black/50 backdrop-blur-xs z-[998] transition-opacity duration-300 opacity-0 pointer-events-none lg:hidden" aria-hidden="true"></div>
+  <div id="mobile-menu-drawer" class="fixed top-0 right-0 bottom-0 w-[84vw] max-w-[340px] bg-surface z-[999] shadow-2xl flex flex-col justify-between transition-transform duration-300 transform translate-x-full ease-in-out lg:hidden" role="dialog" aria-modal="true">
+    <div class="h-16 px-5 border-b border-surface-container flex items-center justify-between shrink-0 bg-surface">
+      <div class="flex items-center gap-2">
+        <span class="w-8 h-8 rounded-lg bg-primary text-white flex items-center justify-center font-bold text-sm">岡</span>
+        <span class="font-bold text-base text-primary">メニュー</span>
+      </div>
+      <button type="button" onclick="closeMobileMenu()" aria-label="メニューを閉じる" class="w-10 h-10 -mr-2 rounded-xl flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors">
+        <span class="material-symbols-outlined text-2xl">close</span>
+      </button>
+    </div>
+    <div class="flex-1 overflow-y-auto px-5 py-6 space-y-4">
+      <a href="/index.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-2xl border border-surface-container bg-surface-container-lowest font-bold text-base text-on-surface shadow-xs">
+        <span>トップページ</span>
+        <span class="material-symbols-outlined text-outline">chevron_right</span>
+      </a>
+      <a href="/schools_PC.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-2xl border border-surface-container bg-surface-container-lowest font-bold text-base text-on-surface shadow-xs">
+        <span>参加塾一覧</span>
+        <span class="material-symbols-outlined text-outline">chevron_right</span>
+      </a>
+      <a href="/news.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-2xl border border-surface-container bg-surface-container-lowest font-bold text-base text-on-surface shadow-xs">
+        <span>お知らせ・受験情報</span>
+        <span class="material-symbols-outlined text-outline">chevron_right</span>
+      </a>
+      <div class="pt-2 border-t border-slate-200">
+        <p class="text-xs font-bold text-slate-500 mb-2 px-1">お問い合わせ</p>
+        <button type="button" onclick="switchTab('organization'); closeMobileMenu();" class="w-full flex items-center justify-between px-4 py-3 rounded-xl border border-slate-200 bg-white font-bold text-sm text-primary mb-2 text-left">
+          <span>塾・学校関係者様</span>
+          <span class="material-symbols-outlined text-sm">arrow_forward</span>
+        </button>
+        <button type="button" onclick="switchTab('individual'); closeMobileMenu();" class="w-full flex items-center justify-between px-4 py-3 rounded-xl border border-slate-200 bg-white font-bold text-sm text-primary text-left">
+          <span>個人申込の方</span>
+          <span class="material-symbols-outlined text-sm">arrow_forward</span>
+        </button>
+      </div>
+    </div>
+    <div class="p-5 border-t border-surface-container bg-surface space-y-2 shrink-0">
+      <a href="/apply.html" onclick="closeMobileMenu()" class="w-full py-3.5 px-5 rounded-2xl bg-secondary text-white font-bold text-base shadow-md flex items-center justify-center gap-2">
+        <span class="material-symbols-outlined text-xl">edit_document</span>
+        <span>お申込みフォームへ</span>
+      </a>
+    </div>
+  </div>
+
   <!-- Main Content -->
-  <main class="flex-1 max-w-3xl w-full mx-auto px-4 py-8 sm:py-16">
-    <div class="text-center mb-10">
-      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#e8f5ee] text-[#134230] text-xs font-bold mb-3">
-        <span class="material-symbols-outlined text-sm">mail</span>お問い合わせ
+  <main class="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-12">
+    
+    <!-- パンくずリスト -->
+    <nav class="mb-6 flex items-center gap-2 text-xs text-on-surface-variant" aria-label="Breadcrumb">
+      <a href="/index.html" class="hover:text-primary transition-colors flex items-center gap-1">
+        <span class="material-symbols-outlined text-sm">home</span>ホーム
+      </a>
+      <span class="text-outline/60">/</span>
+      <span class="font-medium text-on-surface" id="breadcrumb-current">お問い合わせ</span>
+    </nav>
+
+    <!-- ページタイトルエリア -->
+    <div class="text-center mb-6 sm:mb-8">
+      <span id="contact-badge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#e8f5ee] text-[#134230] text-xs font-bold mb-3 shadow-2xs">
+        <span class="material-symbols-outlined text-sm">mail</span>塾・学校関係者様専用
       </span>
-      <h1 class="text-2xl sm:text-3xl font-bold text-[#1e3a2f] tracking-tight">お問い合わせ窓口のご案内</h1>
-      <p class="text-sm sm:text-base text-on-surface-variant mt-2 max-w-xl mx-auto leading-relaxed">
-        お問い合わせ内容に合わせて、該当の窓口をお選びください。
+      <h1 id="contact-title" class="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#1e3a2f] tracking-tight">
+        塾・学校関係者様 お問い合わせ
+      </h1>
+      <p id="contact-lead" class="text-xs sm:text-sm text-on-surface-variant mt-2 max-w-xl mx-auto leading-relaxed">
+        岡山県統一模擬試験の導入・団体受験、実施日程や資料請求など、お気軽にお問い合わせください。下記フォームに必要事項をご入力のうえ、送信してください。
       </p>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
-      <!-- 個人受験・保護者様向け -->
-      <a href="/contact/individual/" class="group block p-6 sm:p-8 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md hover:border-primary/50 transition-all flex flex-col justify-between">
-        <div>
-          <div class="w-12 h-12 rounded-xl bg-[#e8f5ee] text-[#134230] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-            <span class="material-symbols-outlined text-2xl">person</span>
-          </div>
-          <h2 class="text-lg font-bold text-slate-900 group-hover:text-primary transition-colors flex items-center gap-1">
-            個人申込の方・保護者様
-            <span class="material-symbols-outlined text-base opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all">arrow_forward</span>
-          </h2>
-          <p class="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed">
-            Webお申し込み方法、公開会場受験・自宅受験の変更、成績表や判定に関するご質問・ご相談はこちら。
-          </p>
-        </div>
-        <div class="mt-6 pt-4 border-t border-slate-100 flex items-center text-xs font-bold text-primary">
-          <span>専用フォームへ進む</span>
-          <span class="material-symbols-outlined text-sm ml-1 group-hover:translate-x-1 transition-transform">arrow_forward</span>
-        </div>
-      </a>
-
-      <!-- 塾・学校関係者様向け -->
-      <a href="/contact/organization/" class="group block p-6 sm:p-8 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md hover:border-primary/50 transition-all flex flex-col justify-between">
-        <div>
-          <div class="w-12 h-12 rounded-xl bg-orange-50 text-orange-700 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-            <span class="material-symbols-outlined text-2xl">corporate_fare</span>
-          </div>
-          <h2 class="text-lg font-bold text-slate-900 group-hover:text-primary transition-colors flex items-center gap-1">
-            塾・学校関係者様
-            <span class="material-symbols-outlined text-base opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all">arrow_forward</span>
-          </h2>
-          <p class="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed">
-            模試の一括導入・団体受験のご相談、資料請求、実施日程や成績処理に関するお問い合わせはこちら。
-          </p>
-        </div>
-        <div class="mt-6 pt-4 border-t border-slate-100 flex items-center text-xs font-bold text-primary">
-          <span>専用フォームへ進む</span>
-          <span class="material-symbols-outlined text-sm ml-1 group-hover:translate-x-1 transition-transform">arrow_forward</span>
-        </div>
-      </a>
-    </div>
-
-    <!-- お電話でのお問い合わせ -->
-    <div class="mt-10 p-5 rounded-2xl bg-slate-50 border border-slate-200/80 text-center">
-      <p class="text-xs text-slate-600 font-medium">お電話でのお問い合わせも受け付けております</p>
-      <div class="flex items-center justify-center gap-2 mt-1">
-        <span class="material-symbols-outlined text-primary text-xl">call</span>
-        <a href="tel:082-227-3999" class="text-lg sm:text-xl font-bold text-primary hover:underline">082-227-3999</a>
+    <!-- お問い合わせ切り替えタブ -->
+    <div class="mb-6 sm:mb-8">
+      <div class="flex items-center bg-slate-200/70 p-1.5 rounded-2xl border border-slate-300/80 max-w-md mx-auto shadow-inner">
+        <button type="button" id="tab-btn-organization" onclick="switchTab('organization')" class="flex-1 text-center py-2.5 px-3 rounded-xl font-bold text-sm bg-white text-primary shadow-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+          <span class="material-symbols-outlined text-base">corporate_fare</span>
+          <span>塾・学校関係者様</span>
+        </button>
+        <button type="button" id="tab-btn-individual" onclick="switchTab('individual')" class="flex-1 text-center py-2.5 px-3 rounded-xl font-semibold text-sm text-slate-600 hover:text-slate-900 transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+          <span class="material-symbols-outlined text-base">person</span>
+          <span>個人申込の方</span>
+        </button>
       </div>
-      <p class="text-[11px] text-slate-500 mt-1">受付時間: 平日 10:00〜17:00（土・日・祝日を除く）</p>
     </div>
+
+    <!-- 1. 塾・学校関係者様 フォームコンテナ -->
+    <div id="container-organization" class="transition-opacity duration-200">
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm px-4 py-8 sm:p-10 mb-8">
+        <form id="org-contact-form" onsubmit="handleSubmit(event)" class="space-y-6">
+        
+        <!-- 貴塾・学校名 -->
+        <div>
+          <label class="block text-sm font-bold text-on-surface mb-2" for="org-name">
+            貴塾・学校名 <span class="text-xs px-2 py-0.5 rounded bg-error/10 text-error font-bold ml-1.5">必須</span>
+          </label>
+          <input type="text" id="org-name" name="organization" required placeholder="例：中央教育ゼミナール"
+            class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 text-slate-800 text-base outline-none transition-all placeholder:text-slate-400 bg-white">
+        </div>
+
+        <!-- 教室名・校舎名 -->
+        <div>
+          <label class="block text-sm font-bold text-on-surface mb-2" for="org-branch">
+            教室名・校舎名 <span class="text-xs px-2 py-0.5 rounded bg-surface-container-high text-on-surface-variant font-medium ml-1.5">任意</span>
+          </label>
+          <input type="text" id="org-branch" name="branch" placeholder="例：岡山駅前校"
+            class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 text-slate-800 text-base outline-none transition-all placeholder:text-slate-400 bg-white">
+        </div>
+
+        <!-- お名前・役職 -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-bold text-on-surface mb-2" for="org-contact-name">
+              ご担当者様 お名前 <span class="text-xs px-2 py-0.5 rounded bg-error/10 text-error font-bold ml-1.5">必須</span>
+            </label>
+            <input type="text" id="org-contact-name" name="name" required placeholder="例：岡山 太郎"
+              class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 text-slate-800 text-base outline-none transition-all placeholder:text-slate-400 bg-white">
+          </div>
+          <div>
+            <label class="block text-sm font-bold text-on-surface mb-2" for="org-contact-kana">
+              フリガナ <span class="text-xs px-2 py-0.5 rounded bg-error/10 text-error font-bold ml-1.5">必須</span>
+            </label>
+            <input type="text" id="org-contact-kana" name="kana" required placeholder="例：オカヤマ タロウ"
+              class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 text-slate-800 text-base outline-none transition-all placeholder:text-slate-400 bg-white">
+          </div>
+        </div>
+
+        <!-- メールアドレス & 電話番号 -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-bold text-on-surface mb-2" for="org-email">
+              メールアドレス <span class="text-xs px-2 py-0.5 rounded bg-error/10 text-error font-bold ml-1.5">必須</span>
+            </label>
+            <input type="email" id="org-email" name="email" required placeholder="example@domain.jp"
+              class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 text-slate-800 text-base outline-none transition-all placeholder:text-slate-400 bg-white">
+          </div>
+          <div>
+            <label class="block text-sm font-bold text-on-surface mb-2" for="org-tel">
+              お電話番号 <span class="text-xs px-2 py-0.5 rounded bg-error/10 text-error font-bold ml-1.5">必須</span>
+            </label>
+            <input type="tel" id="org-tel" name="tel" required placeholder="例：086-000-0000"
+              class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 text-slate-800 text-base outline-none transition-all placeholder:text-slate-400 bg-white">
+          </div>
+        </div>
+
+        <!-- お問い合わせ種別 -->
+        <div>
+          <label class="block text-sm font-bold text-on-surface mb-2" for="org-type">
+            お問い合わせ種別 <span class="text-xs px-2 py-0.5 rounded bg-error/10 text-error font-bold ml-1.5">必須</span>
+          </label>
+          <select id="org-type" name="inquiry_type" required
+            class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 text-slate-800 text-base outline-none transition-all bg-white cursor-pointer">
+            <option value="" disabled selected>お問い合わせの種別を選択してください</option>
+            <option value="模試導入のご検討・ご相談">模試導入のご検討・ご相談</option>
+            <option value="パンフレット・見本問題等の資料請求">パンフレット・見本問題等の資料請求</option>
+            <option value="実施日程・出題範囲について">実施日程・出題範囲について</option>
+            <option value="成績処理・判定システムについて">成績処理・判定システムについて</option>
+            <option value="その他のお問い合わせ">その他のお問い合わせ</option>
+          </select>
+        </div>
+
+        <!-- お問い合わせ内容 -->
+        <div>
+          <label class="block text-sm font-bold text-on-surface mb-2" for="org-message">
+            お問い合わせ内容 <span class="text-xs px-2 py-0.5 rounded bg-error/10 text-error font-bold ml-1.5">必須</span>
+          </label>
+          <textarea id="org-message" name="message" rows="5" required placeholder="模試の対象学年や受験予定人数、ご質問内容などを具体的にご記入ください。"
+            class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 text-slate-800 text-base outline-none transition-all placeholder:text-slate-400 bg-white resize-y"></textarea>
+        </div>
+
+        <!-- プライバシーポリシー同意 -->
+        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-3">
+          <input type="checkbox" id="privacy-agree" required class="mt-1 w-4 h-4 rounded text-primary focus:ring-primary border-slate-300 cursor-pointer">
+          <label for="privacy-agree" class="text-xs text-on-surface-variant leading-relaxed cursor-pointer select-none">
+            当委員会の <a href="/privacy.html" target="_blank" class="text-primary font-bold underline hover:text-primary-container">プライバシーポリシー</a> に同意の上、送信します。ご入力いただいた情報は、お問い合わせへの回答および模試運営のご案内にのみ利用いたします。
+          </label>
+        </div>
+
+        <!-- 送信ボタン -->
+        <div class="pt-2 text-center">
+          <button type="submit" id="submit-btn-org" class="w-full sm:w-auto min-w-[260px] inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-primary hover:bg-primary-container text-white font-bold text-base shadow-md hover:shadow-lg transition-all active:scale-[0.99] cursor-pointer">
+            <span class="material-symbols-outlined text-xl">send</span>
+            <span>お問い合わせを送信する</span>
+          </button>
+        </div>
+      </form>
+
+      <!-- 送信完了メッセージエリア（初期非表示） -->
+      <div id="complete-msg-org" class="hidden text-center py-10 space-y-4">
+        <div class="w-16 h-16 mx-auto rounded-full bg-[#e8f5ee] text-primary flex items-center justify-center shadow-sm">
+          <span class="material-symbols-outlined text-3xl">check_circle</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. 個人申込の方 フォームコンテナ -->
+    <div id="container-individual" class="hidden transition-opacity duration-200">
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm px-4 py-8 sm:p-10 mb-8">
+        <form id="individual-contact-form" onsubmit="handleSubmit(event)" class="space-y-6">
+        
+        <!-- 保護者様お名前 -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-bold text-on-surface mb-2" for="indiv-name">
+              保護者様 お名前 <span class="text-xs px-2 py-0.5 rounded bg-error/10 text-error font-bold ml-1.5">必須</span>
+            </label>
+            <input type="text" id="indiv-name" name="parent_name" required placeholder="例：岡山 花子"
+              class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 text-slate-800 text-base outline-none transition-all placeholder:text-slate-400 bg-white">
+          </div>
+          <div>
+            <label class="block text-sm font-bold text-on-surface mb-2" for="indiv-kana">
+              フリガナ <span class="text-xs px-2 py-0.5 rounded bg-error/10 text-error font-bold ml-1.5">必須</span>
+            </label>
+            <input type="text" id="indiv-kana" name="parent_kana" required placeholder="例：オカヤマ ハナコ"
+              class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 text-slate-800 text-base outline-none transition-all placeholder:text-slate-400 bg-white">
+          </div>
+        </div>
+
+        <!-- 生徒様お名前 & 学年 -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-bold text-on-surface mb-2" for="student-name">
+              生徒様 お名前 <span class="text-xs px-2 py-0.5 rounded bg-surface-container-high text-on-surface-variant font-medium ml-1.5">任意</span>
+            </label>
+            <input type="text" id="student-name" name="student_name" placeholder="例：岡山 太郎"
+              class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 text-slate-800 text-base outline-none transition-all placeholder:text-slate-400 bg-white">
+          </div>
+          <div>
+            <label class="block text-sm font-bold text-on-surface mb-2" for="student-grade">
+              学年 <span class="text-xs px-2 py-0.5 rounded bg-error/10 text-error font-bold ml-1.5">必須</span>
+            </label>
+            <select id="student-grade" name="grade" required
+              class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 text-slate-800 text-base outline-none transition-all bg-white cursor-pointer">
+              <option value="" disabled selected>学年を選択してください</option>
+              <option value="中学3年生">中学3年生（中3おかもし）</option>
+              <option value="中学2年生">中学2年生（中2おかもし）</option>
+              <option value="中学1年生">中学1年生（中1おかもし）</option>
+              <option value="小学6年生">小学6年生（小6適性検査対策模試）</option>
+              <option value="その他">その他</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- メールアドレス & 電話番号 -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-bold text-on-surface mb-2" for="indiv-email">
+              メールアドレス <span class="text-xs px-2 py-0.5 rounded bg-error/10 text-error font-bold ml-1.5">必須</span>
+            </label>
+            <input type="email" id="indiv-email" name="email" required placeholder="example@domain.jp"
+              class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 text-slate-800 text-base outline-none transition-all placeholder:text-slate-400 bg-white">
+          </div>
+          <div>
+            <label class="block text-sm font-bold text-on-surface mb-2" for="indiv-tel">
+              お電話番号 <span class="text-xs px-2 py-0.5 rounded bg-error/10 text-error font-bold ml-1.5">必須</span>
+            </label>
+            <input type="tel" id="indiv-tel" name="tel" required placeholder="例：090-0000-0000"
+              class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 text-slate-800 text-base outline-none transition-all placeholder:text-slate-400 bg-white">
+          </div>
+        </div>
+
+        <!-- お問い合わせ種別 -->
+        <div>
+          <label class="block text-sm font-bold text-on-surface mb-2" for="indiv-type">
+            お問い合わせ種別 <span class="text-xs px-2 py-0.5 rounded bg-error/10 text-error font-bold ml-1.5">必須</span>
+          </label>
+          <select id="indiv-type" name="inquiry_type" required
+            class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 text-slate-800 text-base outline-none transition-all bg-white cursor-pointer">
+            <option value="" disabled selected>お問い合わせの種別を選択してください</option>
+            <option value="個人受験のお申込み方法について">個人受験のお申込み方法について</option>
+            <option value="会場受験・自宅受験の変更やご相談">会場受験・自宅受験の変更やご相談</option>
+            <option value="成績表（個人学力診断シート）・志望校判定について">成績表（個人学力診断シート）・志望校判定について</option>
+            <option value="受験料・お支払い方法について">受験料・お支払い方法について</option>
+            <option value="その他のお問い合わせ">その他のお問い合わせ</option>
+          </select>
+        </div>
+
+        <!-- お問い合わせ内容 -->
+        <div>
+          <label class="block text-sm font-bold text-on-surface mb-2" for="indiv-message">
+            お問い合わせ内容 <span class="text-xs px-2 py-0.5 rounded bg-error/10 text-error font-bold ml-1.5">必須</span>
+          </label>
+          <textarea id="indiv-message" name="message" rows="5" required placeholder="ご質問やご不明点の内容を具体的にご記入ください。"
+            class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 text-slate-800 text-base outline-none transition-all placeholder:text-slate-400 bg-white resize-y"></textarea>
+        </div>
+
+        <!-- プライバシーポリシー同意 -->
+        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-3">
+          <input type="checkbox" id="privacy-agree" required class="mt-1 w-4 h-4 rounded text-primary focus:ring-primary border-slate-300 cursor-pointer">
+          <label for="privacy-agree" class="text-xs text-on-surface-variant leading-relaxed cursor-pointer select-none">
+            当委員会の <a href="/privacy.html" target="_blank" class="text-primary font-bold underline hover:text-primary-container">プライバシーポリシー</a> に同意の上、送信します。ご入力いただいた情報は、お問い合わせへの回答および模試運営のご案内にのみ利用いたします。
+          </label>
+        </div>
+
+        <!-- 送信ボタン -->
+        <div class="pt-2 text-center">
+          <button type="submit" id="submit-btn-indiv" class="w-full sm:w-auto min-w-[260px] inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-primary hover:bg-primary-container text-white font-bold text-base shadow-md hover:shadow-lg transition-all active:scale-[0.99] cursor-pointer">
+            <span class="material-symbols-outlined text-xl">send</span>
+            <span>お問い合わせを送信する</span>
+          </button>
+        </div>
+      </form>
+
+      <!-- 送信完了メッセージエリア（初期非表示） -->
+      <div id="complete-msg-indiv" class="hidden text-center py-10 space-y-4">
+        <div class="w-16 h-16 mx-auto rounded-full bg-[#e8f5ee] text-primary flex items-center justify-center shadow-sm">
+          <span class="material-symbols-outlined text-3xl">check_circle</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- お電話でのお問い合わせカード -->
+    <div class="p-5 sm:p-6 rounded-2xl bg-white border border-slate-200 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div class="space-y-1">
+        <div class="text-xs font-bold text-on-surface-variant flex items-center gap-1">
+          <span class="material-symbols-outlined text-base text-primary">call</span>
+          お電話でのお問い合わせ・ご相談
+        </div>
+        <div class="text-xl sm:text-2xl font-black text-primary tracking-tight">082-227-3999</div>
+        <div class="text-xs text-on-surface-variant">受付時間：平日 10:00〜18:00（土日祝・休業日を除く）</div>
+      </div>
+      <a href="tel:082-227-3999" class="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl border border-primary/30 text-primary font-bold text-sm hover:bg-primary/5 transition-all">
+        <span class="material-symbols-outlined text-lg">phone_in_talk</span>
+        <span>電話をかける</span>
+      </a>
+    </div>
+
   </main>
 
   <!-- Footer -->
-  <footer class="w-full bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500">
-    <p>&copy; 中央教育研究所株式会社 岡山県統一模擬試験実行委員会 All Rights Reserved.</p>
+  <footer class="w-full bg-surface-container-low mt-auto flex flex-col items-center border-t border-outline-variant/20">
+    <div class="max-w-[75rem] mx-auto px-4 sm:px-6 py-10 w-full text-center">
+      <div class="flex items-center justify-center gap-2 mb-3">
+        <span class="w-7 h-7 rounded-lg bg-primary text-white flex items-center justify-center">
+          <span class="material-symbols-outlined text-base">history_edu</span>
+        </span>
+        <span class="font-bold text-primary text-base">岡山県統一模擬試験（おかもし）</span>
+      </div>
+      <p class="text-xs text-on-surface-variant mb-4">
+        主催 : 中央教育研究所株式会社 岡山県統一模擬試験実行委員会<br>
+        〒730-0013 広島県広島市中区八丁堀15番6号 広島ちゅうぎんビル3階<br>
+        TEL: 082-227-3999 / MAIL: okayamamoshi@chuoh-kyouiku.co.jp
+      </p>
+      <div class="flex flex-wrap justify-center gap-4 text-xs text-on-surface-variant mb-6">
+        <a href="/index.html" class="hover:text-primary transition-colors">トップページ</a>
+        <a href="/schools_PC.html" class="hover:text-primary transition-colors">参加塾一覧</a>
+        <a href="/news.html" class="hover:text-primary transition-colors">お知らせ・受験情報</a>
+        <a href="/privacy.html" class="hover:text-primary transition-colors">プライバシーポリシー</a>
+        <a href="/tokushoho.html" class="hover:text-primary transition-colors">特定商取引法に基づく表記</a>
+      </div>
+      <p class="text-[11px] text-outline">
+        &copy; 中央教育研究所株式会社 岡山県統一模擬試験実行委員会 All Rights Reserved.
+      </p>
+    </div>
   </footer>
 
+  <script src="/js/contact-config.js"></script>
+  <script src="/js/header.js"></script>
+
+  <script>
+    // タブ切り替えロジック
+    function switchTab(type, updateUrl) {
+      if (updateUrl === undefined) updateUrl = true;
+
+      var orgBtn = document.getElementById('tab-btn-organization');
+      var indivBtn = document.getElementById('tab-btn-individual');
+      var orgContainer = document.getElementById('container-organization');
+      var indivContainer = document.getElementById('container-individual');
+      var badge = document.getElementById('contact-badge');
+      var title = document.getElementById('contact-title');
+      var lead = document.getElementById('contact-lead');
+      var breadcrumb = document.getElementById('breadcrumb-current');
+
+      var activeClass = "flex-1 text-center py-2.5 px-3 rounded-xl font-bold text-sm bg-white text-primary shadow-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer";
+      var inactiveClass = "flex-1 text-center py-2.5 px-3 rounded-xl font-semibold text-sm text-slate-600 hover:text-slate-900 transition-all flex items-center justify-center gap-1.5 cursor-pointer";
+
+      if (type === 'organization' || type === 'org') {
+        if (orgBtn) orgBtn.className = activeClass;
+        if (indivBtn) indivBtn.className = inactiveClass;
+        if (orgContainer) orgContainer.classList.remove('hidden');
+        if (indivContainer) indivContainer.classList.add('hidden');
+        if (badge) badge.innerHTML = '<span class="material-symbols-outlined text-sm">corporate_fare</span>塾・学校関係者様専用';
+        if (title) title.textContent = '塾・学校関係者様 お問い合わせ';
+        if (lead) lead.textContent = '岡山県統一模擬試験の導入・団体受験、実施日程や資料請求など、お気軽にお問い合わせください。下記フォームに必要事項をご入力のうえ、送信してください。';
+        if (breadcrumb) breadcrumb.textContent = '塾・学校関係者様 お問い合わせ';
+        document.title = '塾・学校関係者様 お問い合わせ | 岡山県統一模擬試験（おかもし）';
+        if (updateUrl && window.history && window.history.replaceState) {
+          window.history.replaceState(null, '', '/contact?type=organization');
+        }
+      } else {
+        if (indivBtn) indivBtn.className = activeClass;
+        if (orgBtn) orgBtn.className = inactiveClass;
+        if (indivContainer) indivContainer.classList.remove('hidden');
+        if (orgContainer) orgContainer.classList.add('hidden');
+        if (badge) badge.innerHTML = '<span class="material-symbols-outlined text-sm">person</span>個人申込・保護者様専用';
+        if (title) title.textContent = '個人申込の方 お問い合わせ';
+        if (lead) lead.textContent = '岡山県統一模擬試験（おかもし）の個人受験に関するご質問やご相談を承ります。下記フォームに必要事項をご入力のうえ、送信してください。';
+        if (breadcrumb) breadcrumb.textContent = '個人申込の方 お問い合わせ';
+        document.title = '個人申込の方 お問い合わせ | 岡山県統一模擬試験（おかもし）';
+        if (updateUrl && window.history && window.history.replaceState) {
+          window.history.replaceState(null, '', '/contact?type=individual');
+        }
+      }
+    }
+
+    // URLキーの判定と初期タブ切り替え
+    function initTabFromUrl() {
+      var urlParams = new URLSearchParams(window.location.search);
+      var typeParam = urlParams.get('type');
+      var hash = window.location.hash;
+
+      if (typeParam === 'organization' || typeParam === 'org' || hash === '#organization' || hash === '#org') {
+        switchTab('organization', false);
+      } else {
+        switchTab('individual', false);
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', initTabFromUrl);
+    window.addEventListener('hashchange', initTabFromUrl);
+
+    // モバイルメニュー制御
+    function openMobileMenu() {
+      var backdrop = document.getElementById('mobile-menu-backdrop');
+      var drawer = document.getElementById('mobile-menu-drawer');
+      if (backdrop && drawer) {
+        backdrop.classList.remove('pointer-events-none', 'opacity-0');
+        backdrop.classList.add('opacity-100');
+        drawer.classList.remove('translate-x-full');
+      }
+    }
+    function closeMobileMenu() {
+      var backdrop = document.getElementById('mobile-menu-backdrop');
+      var drawer = document.getElementById('mobile-menu-drawer');
+      if (backdrop && drawer) {
+        backdrop.classList.add('opacity-0', 'pointer-events-none');
+        backdrop.classList.remove('opacity-100');
+        drawer.classList.add('translate-x-full');
+      }
+    }
+
+    // 1. 塾・学校関係者様フォーム送信
+    var orgForm = document.getElementById('org-contact-form');
+    if (orgForm) {
+      orgForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        var btn = document.getElementById('submit-btn-org');
+        var completeMsg = document.getElementById('complete-msg-org');
+        if (!orgForm.checkValidity()) {
+          orgForm.reportValidity();
+          return;
+        }
+
+        var origHtml = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-xl">progress_activity</span><span>送信中...</span>';
+
+        var formData = {
+          organizationName: (document.getElementById('org-name') ? document.getElementById('org-name').value.trim() : ""),
+          classroomName: (document.getElementById('org-branch') ? document.getElementById('org-branch').value.trim() : ""),
+          name: (document.getElementById('org-contact-name') ? document.getElementById('org-contact-name').value.trim() : ""),
+          phonetic: (document.getElementById('org-contact-kana') ? document.getElementById('org-contact-kana').value.trim() : ""),
+          email: (document.getElementById('org-email') ? document.getElementById('org-email').value.trim() : ""),
+          phone: (document.getElementById('org-tel') ? document.getElementById('org-tel').value.trim() : ""),
+          category: (document.getElementById('org-type') ? document.getElementById('org-type').value : ""),
+          message: (document.getElementById('org-message') ? document.getElementById('org-message').value.trim() : "")
+        };
+
+        try {
+          var res = await fetch('/api/contact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ type: 'organization', ...formData })
+          });
+          if (res.ok) {
+            orgForm.classList.add('hidden');
+            if (completeMsg) completeMsg.classList.remove('hidden');
+            window.scrollTo({ top: 100, behavior: 'smooth' });
+          } else {
+            var errData = await res.json().catch(function() { return {}; });
+            alert('送信エラー: ' + (errData.message || ('ステータス ' + res.status)));
+            btn.disabled = false;
+            btn.innerHTML = origHtml;
+          }
+        } catch (err) {
+          alert('通信エラーが発生しました: ' + (err.message || ''));
+          btn.disabled = false;
+          btn.innerHTML = origHtml;
+        }
+      });
+    }
+
+    // 2. 個人申込の方フォーム送信
+    var indivForm = document.getElementById('individual-contact-form');
+    if (indivForm) {
+      indivForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        var btn = document.getElementById('submit-btn-indiv');
+        var completeMsg = document.getElementById('complete-msg-indiv');
+        if (!indivForm.checkValidity()) {
+          indivForm.reportValidity();
+          return;
+        }
+
+        var origHtml = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-xl">progress_activity</span><span>送信中...</span>';
+
+        var formData = {
+          organizationName: "",
+          classroomName: "",
+          name: (document.getElementById('indiv-name') ? document.getElementById('indiv-name').value.trim() : ""),
+          phonetic: (document.getElementById('indiv-kana') ? document.getElementById('indiv-kana').value.trim() : ""),
+          email: (document.getElementById('indiv-email') ? document.getElementById('indiv-email').value.trim() : ""),
+          phone: (document.getElementById('indiv-tel') ? document.getElementById('indiv-tel').value.trim() : ""),
+          category: (document.getElementById('indiv-type') ? document.getElementById('indiv-type').value : ""),
+          message: (document.getElementById('indiv-message') ? document.getElementById('indiv-message').value.trim() : ""),
+          studentName: (document.getElementById('student-name') ? document.getElementById('student-name').value.trim() : ""),
+          grade: (document.getElementById('student-grade') ? document.getElementById('student-grade').value : "")
+        };
+
+        try {
+          var res = await fetch('/api/contact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ type: 'individual', ...formData })
+          });
+          if (res.ok) {
+            indivForm.classList.add('hidden');
+            if (completeMsg) completeMsg.classList.remove('hidden');
+            window.scrollTo({ top: 100, behavior: 'smooth' });
+          } else {
+            var errData = await res.json().catch(function() { return {}; });
+            alert('送信エラー: ' + (errData.message || ('ステータス ' + res.status)));
+            btn.disabled = false;
+            btn.innerHTML = origHtml;
+          }
+        } catch (err) {
+          alert('通信エラーが発生しました: ' + (err.message || ''));
+          btn.disabled = false;
+          btn.innerHTML = origHtml;
+        }
+      });
+    }
+  </script>
 </body>
 </html>

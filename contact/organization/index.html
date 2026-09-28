@@ -88,14 +88,14 @@
     };
   </script>
   <style>
-    body { font-family: 'Noto Sans JP', sans-serif; background-color: #ffffff; color: #1b1c1c; }
+    body { font-family: 'Noto Sans JP', sans-serif; background-color: #f8fafc; color: #1b1c1c; }
     #nav-contact-container:hover #nav-contact-dropdown,
     #nav-contact-container.is-open #nav-contact-dropdown { display: block !important; }
     #nav-contact-container:hover #nav-contact-chevron,
     #nav-contact-container.is-open #nav-contact-chevron { transform: rotate(180deg) !important; }
   </style>
 </head>
-<body class="bg-white text-on-surface antialiased min-h-screen flex flex-col items-center justify-start pt-16 sm:pt-[4.5rem]">
+<body class="bg-slate-50 text-on-surface antialiased min-h-screen flex flex-col items-center justify-start pt-16 sm:pt-[4.5rem]">
 
   <!-- Header (トップページ index.html と共通のヘッダー構造) -->
   <header class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
@@ -283,7 +283,7 @@
   </div>
 
   <!-- Main Content -->
-  <main class="w-full flex-1 bg-white">
+  <main class="w-full flex-1 bg-slate-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-4 sm:pt-6 pb-12 sm:pb-16">
       <div class="max-w-3xl mx-auto">
     
@@ -304,12 +304,12 @@
 
     <!-- お問い合わせ切り替えタブ -->
     <div class="px-4 sm:px-0 mb-6 sm:mb-8">
-      <div class="flex items-center bg-surface-container-low p-1 rounded-xl border border-outline-variant/30 max-w-md mx-auto">
-        <a href="/contact/organization/" class="flex-1 text-center py-2.5 px-3 rounded-lg font-bold text-sm bg-white text-primary shadow-sm transition-all flex items-center justify-center gap-1.5">
+      <div class="flex items-center bg-slate-200/60 p-1.5 rounded-2xl border border-slate-300/70 max-w-md mx-auto">
+        <a href="/contact/organization/" class="flex-1 text-center py-2.5 px-3 rounded-xl font-bold text-sm bg-white text-primary shadow-sm transition-all flex items-center justify-center gap-1.5">
           <span class="material-symbols-outlined text-base">corporate_fare</span>
           <span>塾・学校関係者様</span>
         </a>
-        <a href="/contact/individual/" class="flex-1 text-center py-2.5 px-3 rounded-lg font-semibold text-sm text-on-surface-variant hover:text-on-surface transition-all flex items-center justify-center gap-1.5">
+        <a href="/contact/individual/" class="flex-1 text-center py-2.5 px-3 rounded-xl font-semibold text-sm text-slate-600 hover:text-slate-900 transition-all flex items-center justify-center gap-1.5">
           <span class="material-symbols-outlined text-base">person</span>
           <span>個人申込の方はこちら</span>
         </a>
@@ -317,7 +317,7 @@
     </div>
 
     <!-- フォームカード -->
-    <div class="bg-white rounded-none sm:rounded-2xl border-y sm:border border-gray-200/60 sm:border-outline-variant/30 shadow-none sm:shadow-sm px-4 py-8 sm:p-10 mb-8">
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm px-4 py-8 sm:p-10 mb-8">
       <form id="org-contact-form" onsubmit="handleSubmit(event)" class="space-y-6">
         
         <!-- 貴塾・学校名 -->
@@ -326,7 +326,7 @@
             貴塾・学校名 <span class="text-xs px-2 py-0.5 rounded bg-error/10 text-error font-bold ml-1.5">必須</span>
           </label>
           <input type="text" id="org-name" name="organization" required placeholder="例：中央教育ゼミナール"
-            class="w-full px-4 py-3 rounded-xl border border-outline-variant/50 focus:border-primary focus:ring-2 focus:ring-primary/20 text-on-surface text-base outline-none transition-all placeholder:text-outline-variant">
+            class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 text-slate-800 text-base outline-none transition-all placeholder:text-slate-400 bg-white">
         </div>
 
         <!-- 教室名・校舎名 -->
@@ -335,7 +335,7 @@
             教室名・校舎名 <span class="text-xs px-2 py-0.5 rounded bg-surface-container-high text-on-surface-variant font-medium ml-1.5">任意</span>
           </label>
           <input type="text" id="org-branch" name="branch" placeholder="例：岡山駅前校"
-            class="w-full px-4 py-3 rounded-xl border border-outline-variant/50 focus:border-primary focus:ring-2 focus:ring-primary/20 text-on-surface text-base outline-none transition-all placeholder:text-outline-variant">
+            class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 text-slate-800 text-base outline-none transition-all placeholder:text-slate-400 bg-white">
         </div>
 
         <!-- お名前・役職 -->
@@ -345,14 +345,14 @@
               ご担当者様 お名前 <span class="text-xs px-2 py-0.5 rounded bg-error/10 text-error font-bold ml-1.5">必須</span>
             </label>
             <input type="text" id="org-contact-name" name="name" required placeholder="例：岡山 太郎"
-              class="w-full px-4 py-3 rounded-xl border border-outline-variant/50 focus:border-primary focus:ring-2 focus:ring-primary/20 text-on-surface text-base outline-none transition-all placeholder:text-outline-variant">
+              class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 text-slate-800 text-base outline-none transition-all placeholder:text-slate-400 bg-white">
           </div>
           <div>
             <label class="block text-sm font-bold text-on-surface mb-2" for="org-contact-kana">
               フリガナ <span class="text-xs px-2 py-0.5 rounded bg-error/10 text-error font-bold ml-1.5">必須</span>
             </label>
             <input type="text" id="org-contact-kana" name="kana" required placeholder="例：オカヤマ タロウ"
-              class="w-full px-4 py-3 rounded-xl border border-outline-variant/50 focus:border-primary focus:ring-2 focus:ring-primary/20 text-on-surface text-base outline-none transition-all placeholder:text-outline-variant">
+              class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 text-slate-800 text-base outline-none transition-all placeholder:text-slate-400 bg-white">
           </div>
         </div>
 
@@ -363,14 +363,14 @@
               メールアドレス <span class="text-xs px-2 py-0.5 rounded bg-error/10 text-error font-bold ml-1.5">必須</span>
             </label>
             <input type="email" id="org-email" name="email" required placeholder="example@domain.jp"
-              class="w-full px-4 py-3 rounded-xl border border-outline-variant/50 focus:border-primary focus:ring-2 focus:ring-primary/20 text-on-surface text-base outline-none transition-all placeholder:text-outline-variant">
+              class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 text-slate-800 text-base outline-none transition-all placeholder:text-slate-400 bg-white">
           </div>
           <div>
             <label class="block text-sm font-bold text-on-surface mb-2" for="org-tel">
               お電話番号 <span class="text-xs px-2 py-0.5 rounded bg-error/10 text-error font-bold ml-1.5">必須</span>
             </label>
             <input type="tel" id="org-tel" name="tel" required placeholder="例：086-000-0000"
-              class="w-full px-4 py-3 rounded-xl border border-outline-variant/50 focus:border-primary focus:ring-2 focus:ring-primary/20 text-on-surface text-base outline-none transition-all placeholder:text-outline-variant">
+              class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 text-slate-800 text-base outline-none transition-all placeholder:text-slate-400 bg-white">
           </div>
         </div>
 
@@ -380,7 +380,7 @@
             お問い合わせ種別 <span class="text-xs px-2 py-0.5 rounded bg-error/10 text-error font-bold ml-1.5">必須</span>
           </label>
           <select id="org-type" name="inquiry_type" required
-            class="w-full px-4 py-3 rounded-xl border border-outline-variant/50 focus:border-primary focus:ring-2 focus:ring-primary/20 text-on-surface text-base outline-none transition-all bg-white cursor-pointer">
+            class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 text-slate-800 text-base outline-none transition-all bg-white cursor-pointer">
             <option value="" disabled selected>お問い合わせの種別を選択してください</option>
             <option value="模試導入のご検討・ご相談">模試導入のご検討・ご相談</option>
             <option value="パンフレット・見本問題等の資料請求">パンフレット・見本問題等の資料請求</option>
@@ -396,12 +396,12 @@
             お問い合わせ内容 <span class="text-xs px-2 py-0.5 rounded bg-error/10 text-error font-bold ml-1.5">必須</span>
           </label>
           <textarea id="org-message" name="message" rows="5" required placeholder="模試の対象学年や受験予定人数、ご質問内容などを具体的にご記入ください。"
-            class="w-full px-4 py-3 rounded-xl border border-outline-variant/50 focus:border-primary focus:ring-2 focus:ring-primary/20 text-on-surface text-base outline-none transition-all placeholder:text-outline-variant resize-y"></textarea>
+            class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 text-slate-800 text-base outline-none transition-all placeholder:text-slate-400 bg-white resize-y"></textarea>
         </div>
 
         <!-- プライバシーポリシー同意 -->
-        <div class="p-4 rounded-xl bg-surface-container-low/60 border border-outline-variant/30 flex items-start gap-3">
-          <input type="checkbox" id="privacy-agree" required class="mt-1 w-4 h-4 rounded text-primary focus:ring-primary border-outline-variant/60 cursor-pointer">
+        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-3">
+          <input type="checkbox" id="privacy-agree" required class="mt-1 w-4 h-4 rounded text-primary focus:ring-primary border-slate-300 cursor-pointer">
           <label for="privacy-agree" class="text-xs text-on-surface-variant leading-relaxed cursor-pointer select-none">
             当委員会の <a href="/privacy.html" target="_blank" class="text-primary font-bold underline hover:text-primary-container">プライバシーポリシー</a> に同意の上、送信します。ご入力いただいた情報は、お問い合わせへの回答および模試運営のご案内にのみ利用いたします。
           </label>
@@ -436,7 +436,7 @@
     </div>
 
     <!-- お電話でのお問い合わせカード -->
-    <div class="mx-4 sm:mx-0 p-5 sm:p-6 rounded-xl sm:rounded-2xl bg-white border border-gray-200/70 sm:border-outline-variant/30 shadow-none sm:shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+    <div class="mx-4 sm:mx-0 p-5 sm:p-6 rounded-2xl bg-white border border-slate-200 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
       <div class="space-y-1">
         <div class="text-xs font-bold text-on-surface-variant flex items-center gap-1">
           <span class="material-symbols-outlined text-base text-primary">call</span>

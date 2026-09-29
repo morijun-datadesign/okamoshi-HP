@@ -395,202 +395,230 @@
     </section>
 
     <!-- =======================================================================
-         セクション①：おかもしが選ばれる理由（max-w-7xl 3カラムPC最適化）
+         セクション①：おかもしが選ばれる3つの理由（Apple風 横スクロールカルーセル）
          ======================================================================= -->
-    <section id="features" class="py-12 md:py-16 px-4 sm:px-6 max-w-7xl mx-auto">
-      <div class="text-center mb-8 md:mb-12">
-        <span class="text-xs sm:text-sm font-bold text-brand-green uppercase tracking-wider">Features</span>
-        <h3 class="text-2xl md:text-3xl font-black text-slate-900 mt-1.5">おかもしが選ばれる3つの理由</h3>
-        <p class="text-xs sm:text-sm text-slate-500 mt-1.5">県内最大級の母集団データと高精度な合格診断</p>
-      </div>
-
-      <!-- カルーセル（スマホでは横スワイプ、PCでは3カラムグリッド） -->
-      <div class="snap-carousel gap-5 md:grid md:grid-cols-3 pb-4">
-        
-        <!-- CARD 1: 岡山県入試の再現ビジュアル -->
-        <div class="snap-card bg-white p-5 lg:p-6 rounded-3xl border border-slate-200/80 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
-          <div>
-            <div class="w-10 h-10 rounded-2xl bg-brand-greenLight flex items-center justify-center text-brand-green font-black text-base mb-3">
-              01
-            </div>
-            <h4 class="text-base sm:text-lg font-bold text-slate-900 leading-snug mb-2">
-              岡山県入試・適性検査の<br><span class="text-brand-green">出題傾向を完全再現</span>
-            </h4>
-            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed mb-4">
-              岡山の県立高校入試や操山・大安寺・天城などの適性検査を長年研究。記述量や配点バランスまで本番そっくりです。
-            </p>
-          </div>
-
-          <!-- ミニチュア模試用紙＆入試分析インフォグラフィック -->
-          <div class="bg-gradient-to-br from-slate-50 to-emerald-50/50 rounded-2xl p-3.5 border border-slate-200/80 shadow-inner">
-            <div class="bg-white rounded-xl p-3 border border-slate-200 shadow-xs mb-2.5">
-              <div class="flex items-center justify-between border-b border-slate-100 pb-2 mb-2">
-                <div class="flex items-center gap-1.5">
-                  <span class="px-1.5 py-0.5 rounded bg-brand-green text-white text-[9px] font-black">公立高校入試型</span>
-                  <span class="text-[10px] sm:text-[11px] font-bold text-slate-800">岡山県統一模試問題</span>
-                </div>
-                <span class="text-[9px] font-bold text-emerald-700 bg-emerald-100/70 px-1.5 py-0.5 rounded">5教科対応</span>
-              </div>
-              <div class="space-y-1.5 opacity-75">
-                <div class="flex items-center gap-1.5">
-                  <span class="text-[9px] font-black text-slate-400">大問2</span>
-                  <div class="h-1.5 bg-slate-300 rounded w-3/4"></div>
-                </div>
-                <div class="flex gap-2.5 items-center pl-4 py-1">
-                  <div class="w-8 h-8 border border-slate-300 rounded bg-slate-100 flex items-center justify-center shrink-0">
-                    <svg class="w-5 h-5 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="12 2 22 20 2 20" stroke-width="2"/><circle cx="12" cy="13" r="3" stroke-width="1.5"/></svg>
-                  </div>
-                  <div class="space-y-1 flex-1">
-                    <div class="h-1 bg-slate-200 rounded w-full"></div>
-                    <div class="h-1 bg-slate-200 rounded w-5/6"></div>
-                    <div class="h-1 bg-emerald-400 rounded w-2/3"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="grid grid-cols-2 gap-2 text-center text-[10px] sm:text-xs">
-              <div class="bg-white/90 p-2 rounded-xl border border-slate-200/60 shadow-xs">
-                <span class="text-[9px] text-slate-400 block leading-tight">記述式採点基準</span>
-                <span class="font-black text-brand-green">県入試完全準拠</span>
-              </div>
-              <div class="bg-white/90 p-2 rounded-xl border border-slate-200/60 shadow-xs">
-                <span class="text-[9px] text-slate-400 block leading-tight">岡山5校志望者母数</span>
-                <span class="font-black text-brand-green">県内トップクラス</span>
-              </div>
-            </div>
-          </div>
+    <section id="features" class="py-12 md:py-16 px-4 sm:px-6 max-w-7xl mx-auto overflow-hidden">
+      
+      <!-- セクションヘッダー ＆ PC用 左右ナビゲーション矢印ボタン -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6 md:mb-8">
+        <div>
+          <span class="text-xs sm:text-sm font-bold text-brand-green uppercase tracking-wider">Features</span>
+          <h3 class="text-2xl md:text-3xl font-black text-slate-900 mt-1">岡山県統一模擬試験（おかもし）が選ばれる3つの理由</h3>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1">ただ点数を出すだけでなく、本番で合格を勝ち取るための確かな理由があります。</p>
         </div>
 
-        <!-- CARD 2: 成績表ビジュアルメイン（一番の強み・カルテ） -->
-        <div class="snap-card bg-white p-5 lg:p-6 rounded-3xl border-2 border-brand-green/30 shadow-md shadow-brand-green/5 flex flex-col justify-between relative overflow-hidden hover:shadow-lg transition-shadow">
-          <div class="absolute -top-1 -right-1 bg-brand-green text-white text-[10px] sm:text-[11px] font-bold px-3.5 py-1 rounded-bl-xl shadow-xs">
-            一番の強み
-          </div>
-          <div>
-            <div class="w-10 h-10 rounded-2xl bg-brand-greenLight flex items-center justify-center text-brand-green font-black text-base mb-3">
-              02
-            </div>
-            <h4 class="text-base sm:text-lg font-bold text-slate-900 leading-snug mb-2">
-              合否可能性と弱点がわかる<br><span class="text-brand-green">精密な学力診断シート（カルテ）</span>
-            </h4>
-            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed mb-3">
-              岡山県内最大級の母集団データをもとに、志望校判定だけでなく「あと何点で合格できるか」「落としてはいけない単元」をカルテのように詳細分析。
-            </p>
-          </div>
+        <!-- PC用 左右ナビゲーション矢印ボタン（＜ ＞） -->
+        <div class="hidden md:flex items-center gap-2 shrink-0">
+          <button type="button" id="features-prev-btn" onclick="scrollFeaturesCarousel(-1)" aria-label="前のカードへ" class="w-10 h-10 rounded-full border border-slate-300 bg-white hover:bg-slate-50 active:bg-slate-100 flex items-center justify-center text-slate-700 shadow-xs transition-all cursor-pointer">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
+          </button>
+          <button type="button" id="features-next-btn" onclick="scrollFeaturesCarousel(1)" aria-label="次のカードへ" class="w-10 h-10 rounded-full border border-slate-300 bg-white hover:bg-slate-50 active:bg-slate-100 flex items-center justify-center text-slate-700 shadow-xs transition-all cursor-pointer">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- 横スクロール カルーセルコンテナ（PC・スマホ共通） -->
+      <div id="features-carousel" class="flex gap-5 lg:gap-6 overflow-x-auto no-scrollbar scroll-smooth pb-4 px-1" style="scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;">
+        
+        <!-- ===================================================================
+             CARD 01: 本番さながらの出題問題（模試用紙・問題画像）
+             =================================================================== -->
+        <div class="features-card w-[86vw] sm:w-[500px] md:w-[560px] lg:w-[600px] shrink-0 bg-white rounded-3xl p-5 sm:p-6 lg:p-7 border border-slate-200/90 shadow-md hover:shadow-lg transition-all flex flex-col md:flex-row items-stretch gap-5 lg:gap-6 relative overflow-hidden" style="scroll-snap-align: start;">
           
-          <!-- 精密な成績表カード（タップでモーダル拡大） -->
-          <div onclick="openReportModal()" class="cursor-pointer group relative bg-gradient-to-br from-emerald-50/90 via-teal-50/40 to-white rounded-2xl p-3.5 border border-emerald-200 shadow-inner hover:border-brand-green transition-all">
-            <div class="flex justify-between items-start pb-2 border-b border-emerald-200/80">
-              <div class="flex-1 pr-2">
-                <span class="text-[9px] text-emerald-800 font-bold block uppercase tracking-wide">個人成績カルテ（志望校判定）</span>
-                <span class="font-black text-slate-900 text-xs sm:text-sm block leading-snug mt-0.5">岡山朝日高校（普通科）</span>
+          <!-- テキストエリア（PC: 左側 / スマホ: 下側） -->
+          <div class="flex-1 flex flex-col justify-between space-y-3 order-2 md:order-1">
+            <div class="space-y-2">
+              <div class="flex items-center gap-2">
+                <span class="px-3 py-0.5 rounded-lg bg-brand-green text-white font-bold text-xs tracking-wide shadow-xs flex items-center gap-1">
+                  <span>✓</span> POINT 01
+                </span>
+                <span class="text-xs sm:text-sm font-bold text-slate-900">岡山県入試の徹底分析</span>
               </div>
-              <div class="text-right shrink-0">
-                <span class="inline-block px-2.5 py-0.5 rounded-md bg-brand-green text-white font-black text-xs shadow-xs">A判定</span>
-                <span class="text-[9px] text-brand-green font-bold block mt-0.5 whitespace-nowrap">可能性 85%以上</span>
-              </div>
+              <h4 class="text-lg sm:text-xl font-black text-slate-900 leading-snug">
+                本番さながらの出題問題
+                <span class="block text-xs sm:text-sm font-bold text-brand-green mt-0.5">出題傾向・難易度・問題用紙の体裁まで岡山県入試を精密再現</span>
+              </h4>
+              <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                最新の岡山県公立高校入試の出題傾向を徹底分析。単なる知識の暗記では解けない、岡山県特有の「思考力・判断力・表現力」を問う記述問題やグラフ・資料分析問題にも徹底して合わせています。
+              </p>
             </div>
 
-            <!-- 目標達成バー -->
-            <div class="mt-2.5 space-y-1">
-              <div class="flex justify-between items-baseline text-[10px]">
-                <span class="font-bold text-slate-600">合格目標まで</span>
-                <span class="font-black text-brand-green text-xs">+14点 <span class="text-[9px] font-normal text-slate-500">(目標 215点 / 獲得 229点)</span></span>
+            <!-- 補足枠（中3生 ＆ 中1・2生） -->
+            <div class="space-y-2 pt-1 text-xs">
+              <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/70 space-y-0.5">
+                <div class="flex items-center gap-1.5 font-bold text-slate-900">
+                  <span class="px-1.5 py-0.2 rounded bg-brand-green text-white text-[10px] font-black">中3生</span>
+                  <span class="text-xs">岡山県公立高校入試の完全シミュレーション</span>
+                </div>
+                <p class="text-[11px] text-slate-600 leading-relaxed">
+                  一般入試の出題形式・配点・難易度を完全再現。実物さながらのB4判・横綴じ冊子で本番当日の時間配分や独特の解答用紙に慣れることができます。
+                </p>
               </div>
-              <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden flex relative">
-                <div class="bg-gradient-to-r from-emerald-500 to-brand-green h-full w-[84%]"></div>
-                <div class="absolute top-0 bottom-0 left-[75%] w-0.5 bg-amber-500 shadow-xs" title="ボーダーライン"></div>
-              </div>
-              <div class="flex justify-between text-[8px] text-slate-400 font-medium">
-                <span>0点</span>
-                <span class="text-amber-600 font-bold">▲ 合格ボーダーライン</span>
-                <span>250点</span>
+
+              <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/70 space-y-0.5">
+                <div class="flex items-center gap-1.5 font-bold text-slate-900">
+                  <span class="px-1.5 py-0.2 rounded bg-emerald-100 text-brand-green text-[10px] font-black">中1・2生</span>
+                  <span class="text-xs">教科書準拠の良問で現時点の真の実力を客観判定</span>
+                </div>
+                <p class="text-[11px] text-slate-600 leading-relaxed">
+                  定期テストだけでは測りきれない入試レベルの総合力を診断。習った単元を着実に定着させ、早期から高校入試の出題形式に親しむことができます。
+                </p>
               </div>
             </div>
+          </div>
 
-            <!-- 教科別バランスグラフ -->
-            <div class="mt-2 pt-2 border-t border-emerald-100 flex items-center justify-between gap-1 text-[9px]">
-              <span class="text-slate-400 font-bold shrink-0 text-[8px]">得点力:</span>
-              <div class="flex-1 flex gap-1 items-end h-5 bg-white/80 p-1 rounded border border-emerald-100">
-                <div class="flex-1 bg-emerald-400 rounded-t h-[80%]" title="国語"></div>
-                <div class="flex-1 bg-emerald-500 rounded-t h-[65%]" title="数学"></div>
-                <div class="flex-1 bg-emerald-600 rounded-t h-[90%]" title="英語"></div>
-                <div class="flex-1 bg-emerald-400 rounded-t h-[75%]" title="理科"></div>
-                <div class="flex-1 bg-emerald-500 rounded-t h-[85%]" title="社会"></div>
-              </div>
-              <span class="text-[9px] font-bold text-slate-700 shrink-0">偏差値 <span class="text-brand-green font-black text-xs">64.8</span></span>
-            </div>
-
-            <div class="grid grid-cols-2 gap-1.5 mt-2 text-[10px]">
-              <div class="bg-white/95 p-1.5 rounded-lg border border-emerald-100">
-                <span class="text-slate-400 block text-[8px] font-medium leading-tight">志望者中順位</span>
-                <span class="font-bold text-slate-800 text-[11px] leading-tight"><span class="text-brand-green font-black text-xs">28</span> 位 / 342人</span>
-              </div>
-              <div class="bg-white/95 p-1.5 rounded-lg border border-emerald-100">
-                <span class="text-rose-500 block text-[8px] font-bold leading-tight">要復習単元</span>
-                <span class="font-bold text-slate-800 text-[10px] truncate block leading-tight">数学: 関数 y=ax²</span>
-              </div>
-            </div>
-
-            <div class="mt-2 text-center">
-              <span class="inline-flex items-center gap-1 text-[10px] font-bold text-brand-green group-hover:underline">
-                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path></svg>
-                <span>診断シートの見本（全体）を拡大して見る</span>
+          <!-- 画像エリア（PC: 右側 / スマホ: 上側） -->
+          <div class="w-full md:w-[220px] lg:w-[260px] shrink-0 flex flex-col justify-center order-1 md:order-2">
+            <div class="relative w-full h-[180px] sm:h-[220px] md:h-full min-h-[200px] rounded-2xl overflow-hidden shadow-xs border border-slate-200 bg-slate-100">
+              <img 
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyoeLrzY5eHTf1oGqssIoKITVJxkgdI-BMeb_umMVDZVLziZg2wHIOwukdNHqSmo-TrRa1PiH4LD6o8Xc1ert8Zi4u8Y9pum7o0YcU-HtH7OHD8rIvQ54gc2LDcmIAshqdiudsfGy8H0A18aivJbvP97blilmtXQBVzgC7xL9lW_PWSJorm6C5En1209H60RxVH3o_2MaBr9J8GD5mU6jsm0N4YfuTAJ2tsp1YzEUZUzdETM6tZ6wI6zVewCxS57j5vuyKtxQwUJtUVg" 
+                alt="岡山県統一模擬試験 中3生 数学 問題用紙" 
+                class="w-full h-full object-cover object-center"
+              />
+              <span class="absolute bottom-2 left-2 bg-slate-900/70 backdrop-blur-xs text-white text-[9px] px-2 py-0.5 rounded-full font-bold">
+                実際の模試用紙（B4判）
               </span>
             </div>
           </div>
+
         </div>
 
-        <!-- CARD 3: 会場受験 ＆ 自宅受験 -->
-        <div class="snap-card bg-white p-5 lg:p-6 rounded-3xl border border-slate-200/80 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
-          <div>
-            <div class="w-10 h-10 rounded-2xl bg-brand-greenLight flex items-center justify-center text-brand-green font-black text-base mb-3">
-              03
-            </div>
-            <h4 class="text-base sm:text-lg font-bold text-slate-900 leading-snug mb-2">
-              会場受験 & 自宅受験<br><span class="text-brand-green">選べる2つの受験スタイル</span>
-            </h4>
-            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed mb-4">
-              本番の緊張感を味わえる会場受験に加え、部活動や遠方でも安心の自宅受験にも完全対応しています。
-            </p>
+        <!-- ===================================================================
+             CARD 02: 学力診断シート（精密な成績カルテ画像・拡大モーダル対応）
+             =================================================================== -->
+        <div class="features-card w-[86vw] sm:w-[500px] md:w-[560px] lg:w-[600px] shrink-0 bg-white rounded-3xl p-5 sm:p-6 lg:p-7 border-2 border-brand-green/30 shadow-md hover:shadow-lg transition-all flex flex-col md:flex-row items-stretch gap-5 lg:gap-6 relative overflow-hidden" style="scroll-snap-align: start;">
+          
+          <div class="absolute -top-1 -right-1 bg-brand-green text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl shadow-xs z-10">
+            一番の強み
           </div>
 
-          <div class="bg-slate-50 rounded-2xl p-3 border border-slate-200/70 space-y-2.5">
-            <div class="bg-white p-3 rounded-xl border border-slate-200 flex items-center gap-3 shadow-xs">
-              <div class="w-10 h-10 rounded-xl bg-emerald-50 text-brand-green flex items-center justify-center text-xl shrink-0 border border-emerald-100">
-                🏫
+          <!-- テキストエリア（PC: 左側 / スマホ: 下側） -->
+          <div class="flex-1 flex flex-col justify-between space-y-3 order-2 md:order-1">
+            <div class="space-y-2">
+              <div class="flex items-center gap-2">
+                <span class="px-3 py-0.5 rounded-lg bg-brand-green text-white font-bold text-xs tracking-wide shadow-xs flex items-center gap-1">
+                  <span>✓</span> POINT 02
+                </span>
+                <span class="text-xs sm:text-sm font-bold text-slate-900">入試内申点も加味した高精度判定</span>
               </div>
-              <div class="flex-1 min-w-0">
-                <div class="flex items-center gap-1.5">
-                  <span class="font-black text-slate-900 text-xs sm:text-sm">本番会場受験</span>
-                  <span class="text-[9px] font-bold text-emerald-800 bg-emerald-100 px-1.5 py-0.2 rounded">入試リハーサル</span>
-                </div>
-                <p class="text-[10px] sm:text-xs text-slate-500 mt-0.5 leading-tight truncate">岡山・倉敷・津山の高校/大学会場</p>
-                <span class="text-[9px] sm:text-[10px] text-brand-green font-bold block mt-0.5">本番の緊張感・時間配分を体得</span>
-              </div>
+              <h4 class="text-lg sm:text-xl font-black text-slate-900 leading-snug">
+                結果を詳細に分析した学力診断シート
+                <span class="block text-xs sm:text-sm font-bold text-[#8B3A18] mt-0.5">志望校合格可能性から科目ごとの弱点分野まで一目瞭然</span>
+              </h4>
+              <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                個人成績表は、単なる点数や全県偏差値の提示にとどまりません。公立高校の選抜制度（当日点＋内申点の総合評価）に対応し、本番入試に最も近い高精度の合否可能性（A〜E判定）を算出します。
+              </p>
             </div>
 
-            <div class="bg-white p-3 rounded-xl border border-slate-200 flex items-center gap-3 shadow-xs">
-              <div class="w-10 h-10 rounded-xl bg-amber-50 text-[#8B3A18] flex items-center justify-center text-xl shrink-0 border border-amber-100">
-                🏠
-              </div>
-              <div class="flex-1 min-w-0">
-                <div class="flex items-center gap-1.5">
-                  <span class="font-black text-slate-900 text-xs sm:text-sm">自宅受験</span>
-                  <span class="text-[9px] font-bold text-amber-800 bg-amber-100 px-1.5 py-0.2 rounded">全国対応・柔軟日程</span>
+            <!-- 補足枠（3つの詳細診断） -->
+            <div class="space-y-2 pt-1 text-xs">
+              <div class="grid grid-cols-2 gap-2">
+                <div class="p-2 rounded-xl bg-slate-50 border border-slate-200/70">
+                  <span class="font-black text-brand-green block text-[11px]">総合成績・県内順位</span>
+                  <p class="text-[10px] text-slate-600 mt-0.5 leading-snug">全県順位に加え、グラフで全体における客観的位置を把握。</p>
                 </div>
-                <p class="text-[10px] sm:text-xs text-slate-500 mt-0.5 leading-tight truncate">問題をご自宅へ郵送・ポスト投函返却</p>
-                <span class="text-[9px] sm:text-[10px] text-[#8B3A18] font-bold block mt-0.5">部活・体調・遠方でも同一判定</span>
+                <div class="p-2 rounded-xl bg-slate-50 border border-slate-200/70">
+                  <span class="font-black text-slate-800 block text-[11px]">小問別正誤・正答率</span>
+                  <p class="text-[10px] text-slate-600 mt-0.5 leading-snug">平均正答率との比較で落としてはいけない弱点を分析。</p>
+                </div>
+              </div>
+
+              <div class="p-2.5 rounded-xl bg-emerald-50/60 border border-emerald-200/80">
+                <span class="font-black text-emerald-800 block text-xs">志望校判定（偏差値＋内申点総合判定）</span>
+                <p class="text-[11px] text-slate-700 mt-0.5 leading-relaxed">
+                  岡山県内ほぼ全ての公立・私立・国立・高専に対応。特別入試・一般入試それぞれで判定を出します。
+                </p>
               </div>
             </div>
           </div>
+
+          <!-- 画像エリア（PC: 右側 / スマホ: 上側 / クリックで拡大モーダル） -->
+          <div onclick="openReportModal()" class="w-full md:w-[220px] lg:w-[260px] shrink-0 flex flex-col justify-center order-1 md:order-2 cursor-pointer group">
+            <div class="relative w-full h-[180px] sm:h-[220px] md:h-full min-h-[200px] rounded-2xl overflow-hidden shadow-xs border border-emerald-200 bg-emerald-50/30 p-1 flex items-center justify-center group-hover:border-brand-green transition-all">
+              <img 
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAI1eEp3_qLtOYcdxooYuhzSlDWmtvXyVfZirma7wmc1QzDVSsjc9IdUqx0TNorwN5MUjoPVR6brDORz5vUHDOAM2ikBK7a4395x2br2y6B_CiDg4qVB7MuYOFsi4y0w4z3Ev8SPSePllWEeP_OUFiP4PxScmXifNIsjJoWCg4yZoOUJSMF_O1dRV6iL-j6T-p8tHqbAUwtjT7EFxpGzNINg1yU7avJAmyDtqTbAkr_v92GcgQ5mfs9rDp0KBd3ZwQgjg" 
+                alt="おかもし成績表サンプル（学力診断シート）" 
+                class="w-full h-full object-contain object-center rounded-xl bg-white p-1"
+              />
+              <span class="absolute bottom-2 right-2 bg-brand-green text-white text-[9px] px-2 py-0.5 rounded-full font-bold shadow-xs flex items-center gap-1 group-hover:bg-brand-greenDark">
+                <span>🔍 拡大して見る</span>
+              </span>
+            </div>
+          </div>
+
         </div>
+
+        <!-- ===================================================================
+             CARD 03: 詳しくよく分かる解答解説（解答解説冊子画像）
+             =================================================================== -->
+        <div class="features-card w-[86vw] sm:w-[500px] md:w-[560px] lg:w-[600px] shrink-0 bg-white rounded-3xl p-5 sm:p-6 lg:p-7 border border-slate-200/90 shadow-md hover:shadow-lg transition-all flex flex-col md:flex-row items-stretch gap-5 lg:gap-6 relative overflow-hidden" style="scroll-snap-align: start;">
+          
+          <!-- テキストエリア（PC: 左側 / スマホ: 下側） -->
+          <div class="flex-1 flex flex-col justify-between space-y-3 order-2 md:order-1">
+            <div class="space-y-2">
+              <div class="flex items-center gap-2">
+                <span class="px-3 py-0.5 rounded-lg bg-brand-green text-white font-bold text-xs tracking-wide shadow-xs flex items-center gap-1">
+                  <span>✓</span> POINT 03
+                </span>
+                <span class="text-xs sm:text-sm font-bold text-slate-900">復習・弱点克服を完全サポート</span>
+              </div>
+              <h4 class="text-lg sm:text-xl font-black text-slate-900 leading-snug">
+                詳しくよく分かる解答解説
+                <span class="block text-xs sm:text-sm font-bold text-[#C85A32] mt-0.5">模試は解いた後が最重要。復習効率を劇的に高める丁寧な全問解説</span>
+              </h4>
+              <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                模試の最大の価値は「受験後の解き直し」にあります。単に正解を示すだけでなく、「なぜその解法を選択するのか」「間違えやすい落とし穴はどこか」を徹底解説した別冊を配付。自宅学習で疑問を残しません。
+              </p>
+            </div>
+
+            <!-- 補足枠（途中式ステップ ＆ 自学自習完結） -->
+            <div class="space-y-2 pt-1 text-xs">
+              <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/70 space-y-0.5">
+                <div class="flex items-center gap-1.5 font-bold text-slate-900">
+                  <span class="material-symbols-outlined text-sm text-[#C85A32]">check_circle</span>
+                  <span class="text-xs">疑問を残さない途中式・ステップ解説と重要公式</span>
+                </div>
+                <p class="text-[11px] text-slate-600 leading-relaxed pl-5">
+                  数学の途中式や理科の計算過程、英語の構文分析、国語の読解ポイントを丁寧に図解。復習時に理解が進む構成です。
+                </p>
+              </div>
+
+              <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/70 space-y-0.5">
+                <div class="flex items-center gap-1.5 font-bold text-slate-900">
+                  <span class="material-symbols-outlined text-sm text-[#C85A32]">check_circle</span>
+                  <span class="text-xs">自学自習を完結させる、圧倒的に詳しい網羅的な解説</span>
+                </div>
+                <p class="text-[11px] text-slate-600 leading-relaxed pl-5">
+                  大問から小問に至るまで計算過程が記載。「読んで納得できる」詳しさで、家庭学習での解き直しをスムーズに完結できます。
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 画像エリア（PC: 右側 / スマホ: 上側） -->
+          <div class="w-full md:w-[220px] lg:w-[260px] shrink-0 flex flex-col justify-center order-1 md:order-2">
+            <div class="relative w-full h-[180px] sm:h-[220px] md:h-full min-h-[200px] rounded-2xl overflow-hidden shadow-xs border border-slate-200 bg-slate-100">
+              <img 
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjc7W9Xy59CrZCYqZmrXyItCyioUYP8uAxJO7xGCzfO9AV_Eh9ONQZGS2CDcINs4hAzoGm1tQ572PrZHhs48JyXXPtySZfoYmYJjDqunjMWzFZevtFzuL8Brlp_ELg6rNEFMfHUBOOC3196uSiPnh7PMpIkbPzqf5JhPLgUlwvJ_-R_vGj8ISUjjeuLMkXqIAoGd9ir6kSu2oeuWqAL7z7W59IyV1N48ZnFUaB6k1bhH7JCiRTQOFfJH6WtgcDhVQERQVHki5MzHPUTQ" 
+                alt="岡山県統一模擬試験 解答と解説冊子" 
+                class="w-full h-full object-cover object-center"
+              />
+              <span class="absolute bottom-2 left-2 bg-slate-900/70 backdrop-blur-xs text-white text-[9px] px-2 py-0.5 rounded-full font-bold">
+                別冊・全問詳細解説
+              </span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- カルーセル末尾の余白スペーサー -->
+        <div class="shrink-0 w-2 md:w-6" aria-hidden="true"></div>
 
       </div>
 
       <!-- スマホ向けドットインジケーター -->
-      <div class="flex md:hidden justify-center items-center gap-1.5 mt-3">
+      <div id="features-dots" class="flex md:hidden justify-center items-center gap-1.5 mt-3">
         <span class="w-2 h-2 rounded-full bg-brand-green"></span>
         <span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
         <span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
@@ -1749,6 +1777,70 @@
       }
     }
 
+    // Features（選ばれる3つの理由）カルーセル制御
+    function scrollFeaturesCarousel(direction) {
+      const carousel = document.getElementById('features-carousel');
+      if (!carousel) return;
+      const card = carousel.querySelector('.features-card');
+      const cardWidth = card ? card.getBoundingClientRect().width : 600;
+      const gap = window.innerWidth >= 1024 ? 24 : 20;
+      carousel.scrollBy({ left: (cardWidth + gap) * direction, behavior: 'smooth' });
+    }
+
+    function updateFeaturesCarouselState() {
+      const carousel = document.getElementById('features-carousel');
+      if (!carousel) return;
+
+      const scrollLeft = carousel.scrollLeft;
+      const maxScrollLeft = carousel.scrollWidth - carousel.clientWidth;
+      const cards = carousel.querySelectorAll('.features-card');
+      if (cards.length === 0) return;
+
+      const card = cards[0];
+      const cardWidth = card.getBoundingClientRect().width;
+      const gap = window.innerWidth >= 1024 ? 24 : 20;
+      const itemTotalWidth = cardWidth + gap;
+      const activeIndex = Math.min(
+        cards.length - 1,
+        Math.max(0, Math.round(scrollLeft / itemTotalWidth))
+      );
+
+      // ドットインジケーター（スマホ向け）
+      const dotsContainer = document.getElementById('features-dots');
+      if (dotsContainer) {
+        const dots = dotsContainer.children;
+        for (let i = 0; i < dots.length; i++) {
+          if (i === activeIndex) {
+            dots[i].className = 'w-4 h-1.5 rounded-full bg-brand-green transition-all';
+          } else {
+            dots[i].className = 'w-1.5 h-1.5 rounded-full bg-slate-300 transition-all';
+          }
+        }
+      }
+
+      // PC矢印ボタンの活性・非活性状態
+      const prevBtn = document.getElementById('features-prev-btn');
+      const nextBtn = document.getElementById('features-next-btn');
+      if (prevBtn) {
+        if (scrollLeft <= 10) {
+          prevBtn.classList.add('opacity-30', 'cursor-not-allowed', 'pointer-events-none');
+          prevBtn.classList.remove('hover:bg-slate-50', 'active:bg-slate-100');
+        } else {
+          prevBtn.classList.remove('opacity-30', 'cursor-not-allowed', 'pointer-events-none');
+          prevBtn.classList.add('hover:bg-slate-50', 'active:bg-slate-100');
+        }
+      }
+      if (nextBtn) {
+        if (scrollLeft >= maxScrollLeft - 10) {
+          nextBtn.classList.add('opacity-30', 'cursor-not-allowed', 'pointer-events-none');
+          nextBtn.classList.remove('hover:bg-slate-50', 'active:bg-slate-100');
+        } else {
+          nextBtn.classList.remove('opacity-30', 'cursor-not-allowed', 'pointer-events-none');
+          nextBtn.classList.add('hover:bg-slate-50', 'active:bg-slate-100');
+        }
+      }
+    }
+
     // 診断シートモーダルの開閉関数
     function openReportModal() {
       const modal = document.getElementById('report-modal');
@@ -1917,6 +2009,13 @@
       } catch (e) {}
 
       selectGrade(initialGrade);
+
+      // Features カルーセルの初期化・スクロール監視
+      const featuresCarousel = document.getElementById('features-carousel');
+      if (featuresCarousel) {
+        featuresCarousel.addEventListener('scroll', updateFeaturesCarouselState, { passive: true });
+        updateFeaturesCarouselState();
+      }
     });
   </script>
 </body>

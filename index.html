@@ -435,24 +435,35 @@
           
           <!-- テキストエリア（PC: 左側 / スマホ: 下側） -->
           <div class="flex-1 flex flex-col justify-between space-y-3.5 order-2 md:order-1 min-w-0">
-            <div class="space-y-2">
-              <div class="flex items-center gap-2">
-                <span class="px-3 py-0.5 rounded-lg bg-brand-green text-white font-bold text-xs tracking-wide shadow-xs flex items-center gap-1">
-                  <span>✓</span> POINT 01
-                </span>
-                <span class="text-xs sm:text-sm font-bold text-slate-900">岡山県入試の徹底分析</span>
+            <div class="space-y-2.5">
+              <!-- ラベル ＆ 学年別ミニピル切替スイッチ -->
+              <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-2">
+                <div class="flex items-center gap-2">
+                  <span class="px-2.5 py-0.5 rounded-lg bg-brand-green text-white font-bold text-xs tracking-wide shadow-xs flex items-center gap-1">
+                    <span>✓</span> POINT 01
+                  </span>
+                  <span id="card1-point-label" class="text-xs sm:text-sm font-bold text-slate-900">岡山県入試の徹底分析</span>
+                </div>
+
+                <!-- 学年別ミニピル切替ボタン群（中3 / 中1・2 / 小6） -->
+                <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl shrink-0" role="tablist" aria-label="出題傾向 学年別切り替え">
+                  <button type="button" onclick="switchCard1Grade('c3')" id="card1-pill-c3" class="px-2.5 sm:px-3 py-1 text-xs font-bold rounded-lg transition-all bg-brand-green text-white shadow-xs cursor-pointer">中3</button>
+                  <button type="button" onclick="switchCard1Grade('c12')" id="card1-pill-c12" class="px-2.5 sm:px-3 py-1 text-xs font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900 cursor-pointer">中1・2</button>
+                  <button type="button" onclick="switchCard1Grade('p6')" id="card1-pill-p6" class="px-2.5 sm:px-3 py-1 text-xs font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900 cursor-pointer">小6</button>
+                </div>
               </div>
-              <h4 class="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 leading-snug">
-                本番さながらの出題問題
-                <span class="block text-xs sm:text-sm font-bold text-brand-green mt-0.5">出題傾向・難易度・問題用紙の体裁まで岡山県入試を精密再現</span>
+
+              <h4 id="card1-title" class="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 leading-snug">
+                <span id="card1-title-text">岡山県公立高校入試の出題傾向を完全再現</span>
+                <span id="card1-subtitle" class="block text-xs sm:text-sm font-bold text-brand-green mt-0.5">出題傾向・難易度・問題用紙の体裁まで岡山県入試を精密再現</span>
               </h4>
-              <p class="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed">
-                最新の岡山県公立高校入試の出題傾向を徹底分析。単なる知識の暗記では解けない、岡山県特有の「思考力・判断力・表現力」を問う記述問題やグラフ・資料分析問題にも徹底して合わせています。
+              <p id="card1-desc" class="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed">
+                岡山の県立高校入試を長年研究。記述量や配点バランスまで本番そっくりです。単なる知識の暗記では解けない、岡山県特有の「思考力・判断力・表現力」を問う記述問題やグラフ・資料分析問題にも徹底して合わせています。
               </p>
             </div>
 
-            <!-- 補足枠（中3生 ＆ 中1・2生） -->
-            <div class="space-y-2 pt-1 text-xs">
+            <!-- 補足枠（学年別に動的切り替え） -->
+            <div id="card1-features-container" class="space-y-2 pt-1 text-xs">
               <div class="p-3 rounded-2xl bg-slate-50 border border-slate-200/70 space-y-0.5">
                 <div class="flex items-center gap-1.5 font-bold text-slate-900">
                   <span class="px-1.5 py-0.2 rounded bg-brand-green text-white text-[10px] font-bold">中3生</span>
@@ -463,28 +474,24 @@
                 </p>
               </div>
 
-              <div class="p-3 rounded-2xl bg-slate-50 border border-slate-200/70 space-y-0.5">
-                <div class="flex items-center gap-1.5 font-bold text-slate-900">
-                  <span class="px-1.5 py-0.2 rounded bg-emerald-100 text-brand-green text-[10px] font-bold">中1・2生</span>
-                  <span class="text-xs font-bold">教科書準拠の良問で現時点の真の実力を客観判定</span>
-                </div>
-                <p class="text-[11px] sm:text-xs text-slate-700 font-medium leading-relaxed">
-                  定期テストだけでは測りきれない入試レベルの総合力を診断。習った単元を着実に定着させ、早期から高校入試の出題形式に親しむことができます。
-                </p>
+              <div class="p-2.5 rounded-xl bg-emerald-50/60 border border-emerald-200/70 flex items-center justify-between">
+                <span class="text-[11px] font-bold text-brand-green">★ 幾何図形の証明記述・理科の実験手順論述・英語の条件英作文まで完全準拠</span>
+                <span class="text-[10px] font-bold text-emerald-800 shrink-0 ml-2">県内最多クラス</span>
               </div>
             </div>
           </div>
 
           <!-- 画像エリア（PC: 右側 / スマホ: 上側） -->
           <div class="w-full md:w-[260px] lg:w-[300px] xl:w-[320px] shrink-0 flex flex-col justify-center order-1 md:order-2">
-            <div class="relative w-full h-[200px] sm:h-[240px] md:h-full min-h-[220px] rounded-2xl overflow-hidden shadow-xs border border-slate-200 bg-slate-100">
+            <div id="card1-preview-container" class="relative w-full h-[200px] sm:h-[240px] md:h-full min-h-[220px] rounded-2xl overflow-hidden shadow-xs border border-slate-200 bg-slate-100">
               <img 
+                id="card1-preview-img"
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyoeLrzY5eHTf1oGqssIoKITVJxkgdI-BMeb_umMVDZVLziZg2wHIOwukdNHqSmo-TrRa1PiH4LD6o8Xc1ert8Zi4u8Y9pum7o0YcU-HtH7OHD8rIvQ54gc2LDcmIAshqdiudsfGy8H0A18aivJbvP97blilmtXQBVzgC7xL9lW_PWSJorm6C5En1209H60RxVH3o_2MaBr9J8GD5mU6jsm0N4YfuTAJ2tsp1YzEUZUzdETM6tZ6wI6zVewCxS57j5vuyKtxQwUJtUVg" 
-                alt="岡山県統一模擬試験 中3生 数学 問題用紙" 
+                alt="岡山県統一模擬試験 問題用紙見本" 
                 class="w-full h-full object-cover object-center"
               />
-              <span class="absolute bottom-2 left-2 bg-slate-900/70 backdrop-blur-xs text-white text-[9px] px-2 py-0.5 rounded-full font-bold">
-                実際の模試用紙（B4判）
+              <span id="card1-preview-badge" class="absolute bottom-2 left-2 bg-slate-900/70 backdrop-blur-xs text-white text-[9px] px-2 py-0.5 rounded-full font-bold">
+                公立高校入試型 模試用紙（B4判）
               </span>
             </div>
           </div>
@@ -502,40 +509,55 @@
 
           <!-- テキストエリア（PC: 左側 / スマホ: 下側） -->
           <div class="flex-1 flex flex-col justify-between space-y-3.5 order-2 md:order-1 min-w-0">
-            <div class="space-y-2">
-              <div class="flex items-center gap-2">
-                <span class="px-3 py-0.5 rounded-lg bg-brand-green text-white font-bold text-xs tracking-wide shadow-xs flex items-center gap-1">
-                  <span>✓</span> POINT 02
-                </span>
-                <span class="text-xs sm:text-sm font-bold text-slate-900">入試内申点も加味した高精度判定</span>
+            <div class="space-y-2.5">
+              <!-- ラベル ＆ 学年別ミニピル切替スイッチ -->
+              <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-2">
+                <div class="flex items-center gap-2">
+                  <span class="px-2.5 py-0.5 rounded-lg bg-brand-green text-white font-bold text-xs tracking-wide shadow-xs flex items-center gap-1">
+                    <span>✓</span> POINT 02
+                  </span>
+                  <span id="card2-point-label" class="text-xs sm:text-sm font-bold text-slate-900">入試内申点も加味した高精度判定</span>
+                </div>
+
+                <!-- 学年別ミニピル切替ボタン群（中3 / 中1・2 / 小6） -->
+                <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl shrink-0" role="tablist" aria-label="学力診断シート 学年別切り替え">
+                  <button type="button" onclick="switchCard2Grade('c3')" id="card2-pill-c3" class="px-2.5 sm:px-3 py-1 text-xs font-bold rounded-lg transition-all bg-brand-green text-white shadow-xs cursor-pointer">中3</button>
+                  <button type="button" onclick="switchCard2Grade('c12')" id="card2-pill-c12" class="px-2.5 sm:px-3 py-1 text-xs font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900 cursor-pointer">中1・2</button>
+                  <button type="button" onclick="switchCard2Grade('p6')" id="card2-pill-p6" class="px-2.5 sm:px-3 py-1 text-xs font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900 cursor-pointer">小6</button>
+                </div>
               </div>
-              <h4 class="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 leading-snug">
-                結果を詳細に分析した学力診断シート
-                <span class="block text-xs sm:text-sm font-bold text-[#8B3A18] mt-0.5">志望校合格可能性から科目ごとの弱点分野まで一目瞭然</span>
+
+              <h4 id="card2-title" class="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 leading-snug">
+                <span id="card2-title-text">合否可能性と弱点がわかる精密な学力診断シート</span>
+                <span id="card2-subtitle" class="block text-xs sm:text-sm font-bold text-[#8B3A18] mt-0.5">志望校合格可能性から科目ごとの弱点分野まで一目瞭然</span>
               </h4>
-              <p class="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed">
+              <p id="card2-desc" class="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed">
                 個人成績表は、単なる点数や全県偏差値の提示にとどまりません。公立高校の選抜制度（当日点＋内申点の総合評価）に対応し、本番入試に最も近い高精度の合否可能性（A〜E判定）を算出します。
               </p>
             </div>
 
-            <!-- 補足枠（3つの詳細診断） -->
-            <div class="space-y-2 pt-1 text-xs">
+            <!-- 補足枠（ミニカルテ：学年別に動的切り替え） -->
+            <div id="card2-minikarte-container" class="space-y-2 pt-1 text-xs">
               <div class="grid grid-cols-2 gap-2">
                 <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/70">
-                  <span class="font-bold text-brand-green block text-[11px]">総合成績・県内順位</span>
-                  <p class="text-[10px] text-slate-600 mt-0.5 leading-snug">全県順位に加え、グラフで全体における客観的位置を把握。</p>
+                  <div class="flex items-center justify-between">
+                    <span class="font-bold text-brand-green block text-[11px]">岡山朝日高校 A判定</span>
+                    <span class="px-1.5 py-0.2 rounded bg-brand-green text-white text-[9px] font-bold">可能性85%以上</span>
+                  </div>
+                  <p class="text-[10px] text-slate-600 mt-1 leading-snug">合格ラインまで <strong class="text-brand-green text-xs font-bold">あと+14点</strong> (安全圏)</p>
                 </div>
                 <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/70">
-                  <span class="font-bold text-slate-800 block text-[11px]">小問別正誤・正答率</span>
-                  <p class="text-[10px] text-slate-600 mt-0.5 leading-snug">平均正答率との比較で落としてはいけない弱点を分析。</p>
+                  <span class="font-bold text-slate-800 block text-[11px]">志望者内順位：28位 / 342人</span>
+                  <p class="text-[10px] text-slate-600 mt-1 leading-snug">要復習：数学「関数 y=ax²」</p>
                 </div>
               </div>
 
-              <div class="p-3 rounded-2xl bg-emerald-50/60 border border-emerald-200/80">
-                <span class="font-bold text-emerald-800 block text-xs">志望校判定（偏差値＋内申点総合判定）</span>
-                <p class="text-[11px] sm:text-xs text-slate-700 mt-0.5 leading-relaxed">
-                  岡山県内ほぼ全ての公立・私立・国立・高専に対応。特別入試・一般入試それぞれで判定を出します。
-                </p>
+              <div class="p-3 rounded-2xl bg-emerald-50/60 border border-emerald-200/80 flex items-center justify-between cursor-pointer hover:bg-emerald-50 transition-colors" onclick="openReportModal()">
+                <div>
+                  <span class="font-bold text-emerald-800 block text-xs">志望校判定（当日点＋内申点総合判定）</span>
+                  <p class="text-[11px] text-slate-700 mt-0.5 leading-snug">県内ほぼ全ての公立・私立・国立に対応。一般・特別入試それぞれで精密判定。</p>
+                </div>
+                <span class="text-[10px] font-bold text-brand-green shrink-0 ml-2">🔍 拡大で見る</span>
               </div>
             </div>
           </div>
@@ -544,11 +566,12 @@
           <div onclick="openReportModal()" class="w-full md:w-[260px] lg:w-[300px] xl:w-[320px] shrink-0 flex flex-col justify-center order-1 md:order-2 cursor-pointer group">
             <div class="relative w-full h-[200px] sm:h-[240px] md:h-full min-h-[220px] rounded-2xl overflow-hidden shadow-xs border border-emerald-200 bg-emerald-50/30 p-1 flex items-center justify-center group-hover:border-brand-green transition-all">
               <img 
+                id="card2-preview-img"
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuAI1eEp3_qLtOYcdxooYuhzSlDWmtvXyVfZirma7wmc1QzDVSsjc9IdUqx0TNorwN5MUjoPVR6brDORz5vUHDOAM2ikBK7a4395x2br2y6B_CiDg4qVB7MuYOFsi4y0w4z3Ev8SPSePllWEeP_OUFiP4PxScmXifNIsjJoWCg4yZoOUJSMF_O1dRV6iL-j6T-p8tHqbAUwtjT7EFxpGzNINg1yU7avJAmyDtqTbAkr_v92GcgQ5mfs9rDp0KBd3ZwQgjg" 
                 alt="おかもし成績表サンプル（学力診断シート）" 
                 class="w-full h-full object-contain object-center rounded-xl bg-white p-1"
               />
-              <span class="absolute bottom-2 right-2 bg-brand-green text-white text-[9px] px-2 py-0.5 rounded-full font-bold shadow-xs flex items-center gap-1 group-hover:bg-brand-greenDark">
+              <span id="card2-preview-badge" class="absolute bottom-2 right-2 bg-brand-green text-white text-[9px] px-2 py-0.5 rounded-full font-bold shadow-xs flex items-center gap-1 group-hover:bg-brand-greenDark">
                 <span>🔍 拡大して見る</span>
               </span>
             </div>
@@ -826,7 +849,6 @@
           </div>
         </div>
 
-      </div>
     </section>
 
     <!-- =======================================================================
@@ -945,75 +967,30 @@
 
   <!-- 学力診断シート拡大見本モーダル -->
   <div id="report-modal" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-xs flex items-center justify-center p-4 hidden">
-    <div class="bg-white rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-5 sm:p-6 shadow-2xl relative">
+    <div class="bg-white rounded-3xl max-w-xl w-full max-h-[92vh] overflow-y-auto p-5 sm:p-7 shadow-2xl relative">
       <button onclick="closeReportModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 font-bold text-base cursor-pointer">✕</button>
       
-      <div class="flex items-center gap-2 mb-3">
-        <span class="w-2.5 h-2.5 rounded-full bg-brand-green"></span>
-        <h4 class="text-base sm:text-lg font-bold text-slate-900">学力診断シート（成績カルテ）見本</h4>
+      <!-- モーダルヘッダー ＆ 学年別ミニピル切替 -->
+      <div class="pr-8 mb-3">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-brand-green"></span>
+          <h4 id="modal-report-title" class="text-base sm:text-lg font-bold text-slate-900">中3生｜学力診断シート（成績カルテ）見本</h4>
+        </div>
+        <!-- モーダル内学年ピル -->
+        <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl w-fit" role="tablist" aria-label="モーダル内学年切り替え">
+          <button type="button" onclick="switchModalGrade('c3')" id="modal-pill-c3" class="px-2.5 sm:px-3 py-1 text-xs font-bold rounded-lg transition-all bg-brand-green text-white shadow-xs cursor-pointer">中3</button>
+          <button type="button" onclick="switchModalGrade('c12')" id="modal-pill-c12" class="px-2.5 sm:px-3 py-1 text-xs font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900 cursor-pointer">中1・2</button>
+          <button type="button" onclick="switchModalGrade('p6')" id="modal-pill-p6" class="px-2.5 sm:px-3 py-1 text-xs font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900 cursor-pointer">小6</button>
+        </div>
       </div>
-      <p class="text-xs sm:text-sm text-slate-600 mb-4 leading-relaxed">
+
+      <p id="modal-report-desc" class="text-xs sm:text-sm text-slate-600 mb-4 leading-relaxed">
         試験後にお届けする個人カルテです。単なる点数や偏差値だけでなく、志望校合格までの具体的な「あと何点」や優先して克服すべき単元がひと目で分かります。
       </p>
 
-      <div class="border-2 border-slate-200 rounded-2xl p-4 bg-slate-50 space-y-4 text-xs">
-        <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs">
-          <div class="text-[11px] font-bold text-slate-400 mb-2">総合学力データ（5教科合計）</div>
-          <div class="grid grid-cols-3 gap-2 text-center">
-            <div class="border-r border-slate-100">
-              <span class="text-[10px] text-slate-500 block">総合得点</span>
-              <span class="text-base font-bold text-slate-900">388<span class="text-xs font-normal"> / 500</span></span>
-            </div>
-            <div class="border-r border-slate-100">
-              <span class="text-[10px] text-slate-500 block">総合偏差値</span>
-              <span class="text-base font-bold text-brand-green">64.8</span>
-            </div>
-            <div>
-              <span class="text-[10px] text-slate-500 block">県内総合順位</span>
-              <span class="text-base font-bold text-slate-900">142<span class="text-xs font-normal"> / 2,180人</span></span>
-            </div>
-          </div>
-        </div>
-
-        <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs space-y-2">
-          <div class="text-[11px] font-bold text-slate-400 mb-1">公立高校 志望校判定結果</div>
-          
-          <div class="flex items-center justify-between p-2.5 rounded-lg bg-emerald-50/70 border border-emerald-100">
-            <div>
-              <span class="text-[10px] font-bold text-brand-green">第1志望</span>
-              <div class="text-xs sm:text-sm font-bold text-slate-800">岡山朝日高等学校（普通科）</div>
-            </div>
-            <div class="text-right">
-              <span class="px-2.5 py-0.5 rounded bg-brand-green text-white font-bold text-xs">A 判定</span>
-              <span class="text-[10px] text-brand-green font-bold block mt-0.5">安全圏 (+14点)</span>
-            </div>
-          </div>
-
-          <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 border border-slate-200/70">
-            <div>
-              <span class="text-[10px] font-bold text-slate-500">第2志望</span>
-              <div class="text-xs sm:text-sm font-bold text-slate-800">岡山操山高等学校（普通科）</div>
-            </div>
-            <div class="text-right">
-              <span class="px-2.5 py-0.5 rounded bg-emerald-700 text-white font-bold text-xs">A 判定</span>
-              <span class="text-[10px] text-slate-500 font-bold block mt-0.5">安全圏 (+28点)</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs">
-          <div class="text-[11px] font-bold text-slate-400 mb-2">教科別診断・弱点単元カルテ</div>
-          <div class="space-y-2 text-[11px]">
-            <div class="flex items-start gap-2.5">
-              <span class="w-12 text-center py-0.5 rounded bg-brand-green text-white font-bold text-[10px] shrink-0">数学</span>
-              <p class="text-slate-700 leading-relaxed">「関数 y=ax²」の配点が高い応用問での失点が見られます。基礎計算は満点のため、グラフの交点座標と面積を求める複合問題を集中的に演習しましょう。</p>
-            </div>
-            <div class="flex items-start gap-2.5 pt-1.5 border-t border-slate-100">
-              <span class="w-12 text-center py-0.5 rounded bg-brand-green text-white font-bold text-[10px] shrink-0">英語</span>
-              <p class="text-slate-700 leading-relaxed">文法・対話文は高得点。後半の「条件英作文（自由英作文）」で語数不足の減点があります。指定語句を活用した3文構成の練習が有効です。</p>
-            </div>
-          </div>
-        </div>
+      <!-- 動的カルテコンテナ -->
+      <div id="modal-report-body" class="border-2 border-slate-200 rounded-2xl p-4 bg-slate-50 space-y-4 text-xs">
+        <!-- JSで初期生成・動的レンダリング -->
       </div>
 
       <div class="mt-5 text-center">
@@ -1847,11 +1824,496 @@
       }
     }
 
+    // =========================================================================
+    // 「選ばれる3つの理由」CARD 01 & CARD 02 学年別切り替えロジック
+    // =========================================================================
+    const featureCard1Data = {
+      c3: {
+        badge: "中3生",
+        pointLabel: "岡山県入試の徹底分析",
+        title: "岡山県公立高校入試の出題傾向を完全再現",
+        sub: "出題傾向・難易度・問題用紙の体裁まで岡山県入試を精密再現",
+        desc: "岡山の県立高校入試を長年研究。記述量や配点バランスまで本番そっくりです。単なる知識の暗記では解けない、岡山県特有の「思考力・判断力・表現力」を問う記述問題やグラフ・資料分析問題にも徹底して合わせています。",
+        featuresHtml: `
+          <div class="p-3 rounded-2xl bg-slate-50 border border-slate-200/70 space-y-0.5">
+            <div class="flex items-center gap-1.5 font-bold text-slate-900">
+              <span class="px-1.5 py-0.2 rounded bg-brand-green text-white text-[10px] font-bold">中3生</span>
+              <span class="text-xs font-bold">岡山県公立高校入試の完全シミュレーション</span>
+            </div>
+            <p class="text-[11px] sm:text-xs text-slate-700 font-medium leading-relaxed">
+              一般入試の出題形式・配点・難易度を完全再現。実物さながらのB4判・横綴じ冊子で本番当日の時間配分や独特の解答用紙に慣れることができます。
+            </p>
+          </div>
+          <div class="p-2.5 rounded-xl bg-emerald-50/60 border border-emerald-200/70 flex items-center justify-between">
+            <span class="text-[11px] font-bold text-brand-green">★ 幾何図形の証明記述・理科の実験手順論述・英語の条件英作文まで完全準拠</span>
+            <span class="text-[10px] font-bold text-emerald-800 shrink-0 ml-2">県内最多クラス</span>
+          </div>
+        `,
+        previewLabel: "公立高校入試型（大問・幾何図形・記述式採点基準・5教科対応）"
+      },
+      c12: {
+        badge: "中1・2生",
+        pointLabel: "中1・2 学力到達度の客観判定",
+        title: "定期テストでは測れない県内基準の標準・応用問題",
+        sub: "教科書の基礎から応用・新傾向の思考力問題まで高校入試に向けた早期の弱点発見に最適",
+        desc: "教科書の基礎から応用・新傾向の思考力問題まで。高校入試に向けた早期の弱点発見に最適です。定期テストの暗記学習だけでは見えてこない、高校入試に必要な初見問題への対応力と真の学力を客観的に測ります。",
+        featuresHtml: `
+          <div class="p-3 rounded-2xl bg-slate-50 border border-slate-200/70 space-y-0.5">
+            <div class="flex items-center gap-1.5 font-bold text-slate-900">
+              <span class="px-1.5 py-0.2 rounded bg-emerald-100 text-brand-green text-[10px] font-bold">中1・2生</span>
+              <span class="text-xs font-bold">学力診断型（標準〜応用構成・初見問題対応力・つまずき単元特定）</span>
+            </div>
+            <p class="text-[11px] sm:text-xs text-slate-700 font-medium leading-relaxed">
+              既習範囲から出題されるため、未習内容に不安を感じることなく現在の真の定着度と弱点分野を客観的に明確化できます。
+            </p>
+          </div>
+          <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/70 flex items-center justify-between">
+            <span class="text-[11px] font-bold text-slate-700">★ 教科書の基礎から新傾向の思考力問題までバランス出題</span>
+            <span class="text-[10px] font-bold text-brand-green shrink-0 ml-2">早期の弱点克服</span>
+          </div>
+        `,
+        previewLabel: "学力診断型（標準〜応用構成・初見問題対応力・つまずき単元特定）"
+      },
+      p6: {
+        badge: "小6生",
+        pointLabel: "公立中高一貫 独自検査の精密分析",
+        title: "操山・大安寺・天城の適性検査形式を完全分析",
+        sub: "公立中高一貫3校特有の「複数資料読み取り・会話文抽出・作文記述」を忠実にシミュレート",
+        desc: "岡山県立中高一貫3校特有の「複数資料読み取り・会話文抽出・作文記述」を忠実にシミュレート。適性I・適性IIの長文資料読み取りやグラフ分析、400字作文の条件記述枠まで本番そっくりにシミュレートします。",
+        featuresHtml: `
+          <div class="p-3 rounded-2xl bg-slate-50 border border-slate-200/70 space-y-0.5">
+            <div class="flex items-center gap-1.5 font-bold text-slate-900">
+              <span class="px-1.5 py-0.2 rounded bg-amber-500 text-white text-[10px] font-bold">小6生</span>
+              <span class="text-xs font-bold">公立中高一貫型（適性I・適性II、400字作文・要約記述枠、プロ添削対応）</span>
+            </div>
+            <p class="text-[11px] sm:text-xs text-slate-700 font-medium leading-relaxed">
+              適性検査特有の長いリード文と図表・グラフの読み解き、指定字数・段落構成の条件作文を本番形式で実戦演習できます。
+            </p>
+          </div>
+          <div class="p-2.5 rounded-xl bg-amber-50/80 border border-amber-200/80 flex items-center justify-between">
+            <span class="text-[11px] font-bold text-amber-900">★ 記述答案・400字作文はプロ講師による個別添削付き</span>
+            <span class="text-[10px] font-bold text-amber-700 shrink-0 ml-2">県立3校完全対応</span>
+          </div>
+        `,
+        previewLabel: "公立中高一貫型（適性I・適性II、400字作文・要約記述枠、プロ添削対応）"
+      }
+    };
+
+    const featureCard2Data = {
+      c3: {
+        pointLabel: "入試内申点も加味した高精度判定",
+        title: "合否可能性と弱点がわかる精密な学力診断シート",
+        sub: "志望校合格可能性から科目ごとの弱点分野まで一目瞭然",
+        desc: "個人成績表は、単なる点数や全県偏差値の提示にとどまりません。公立高校の選抜制度（当日点＋内申点の総合評価）に対応し、本番入試に最も近い高精度の合否可能性（A〜E判定）を算出します。",
+        miniKarteHtml: `
+          <div class="grid grid-cols-2 gap-2">
+            <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/70">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-brand-green block text-[11px]">岡山朝日高校 A判定</span>
+                <span class="px-1.5 py-0.2 rounded bg-brand-green text-white text-[9px] font-bold">可能性85%以上</span>
+              </div>
+              <div class="mt-1.5 space-y-1">
+                <div class="flex justify-between items-center text-[10px] text-slate-600">
+                  <span>合格まで</span>
+                  <span class="text-brand-green font-bold text-[11px]">あと+14点 (安全圏)</span>
+                </div>
+                <div class="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden" title="合格ラインゲージ">
+                  <div class="bg-brand-green h-full rounded-full" style="width: 86%;"></div>
+                </div>
+              </div>
+            </div>
+            <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/70">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-slate-800 block text-[11px]">志望者内順位</span>
+                <span class="text-[10px] font-bold text-brand-green">28位 / 342人</span>
+              </div>
+              <div class="mt-1.5 text-[10px] text-slate-600">
+                <span>要復習単元:</span>
+                <span class="font-bold text-slate-900 block truncate">数学「関数 y=ax²」</span>
+              </div>
+            </div>
+          </div>
+          <div class="p-3 rounded-2xl bg-emerald-50/60 border border-emerald-200/80 flex items-center justify-between cursor-pointer hover:bg-emerald-50 transition-colors" onclick="openReportModal('c3')">
+            <div>
+              <span class="font-bold text-emerald-800 block text-xs">志望校判定（当日点＋内申点総合判定）</span>
+              <p class="text-[11px] text-slate-700 mt-0.5 leading-snug">県内ほぼ全ての公立・私立・国立に対応。一般・特別入試それぞれで精密判定。</p>
+            </div>
+            <span class="text-[10px] font-bold text-brand-green shrink-0 ml-2">🔍 拡大で見る</span>
+          </div>
+        `,
+        modal: {
+          title: "中3生｜学力診断シート（成績カルテ）見本",
+          desc: "試験後にお届けする個人カルテです。単なる点数や偏差値だけでなく、志望校合格までの具体的な「あと何点」や優先して克服すべき単元がひと目で分かります。",
+          bodyHtml: `
+            <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs">
+              <div class="text-[11px] font-bold text-slate-400 mb-2">総合学力データ（5教科合計）</div>
+              <div class="grid grid-cols-3 gap-2 text-center">
+                <div class="border-r border-slate-100">
+                  <span class="text-[10px] text-slate-500 block">総合得点</span>
+                  <span class="text-base font-bold text-slate-900">388<span class="text-xs font-normal"> / 500</span></span>
+                </div>
+                <div class="border-r border-slate-100">
+                  <span class="text-[10px] text-slate-500 block">総合偏差値</span>
+                  <span class="text-base font-bold text-brand-green">64.8</span>
+                </div>
+                <div>
+                  <span class="text-[10px] text-slate-500 block">県内総合順位</span>
+                  <span class="text-base font-bold text-slate-900">142<span class="text-xs font-normal"> / 2,180人</span></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs space-y-2">
+              <div class="text-[11px] font-bold text-slate-400 mb-1">公立高校 志望校判定結果（内申点＋当日点総合判定）</div>
+              
+              <div class="flex items-center justify-between p-2.5 rounded-lg bg-emerald-50/70 border border-emerald-100">
+                <div>
+                  <span class="text-[10px] font-bold text-brand-green">第1志望</span>
+                  <div class="text-xs sm:text-sm font-bold text-slate-800">岡山朝日高等学校（普通科）</div>
+                  <span class="text-[10px] text-slate-500">志望者内 28位 / 342人</span>
+                </div>
+                <div class="text-right">
+                  <span class="px-2.5 py-0.5 rounded bg-brand-green text-white font-bold text-xs">A 判定</span>
+                  <span class="text-[10px] text-brand-green font-bold block mt-0.5">安全圏 (+14点)</span>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 border border-slate-200/70">
+                <div>
+                  <span class="text-[10px] font-bold text-slate-500">第2志望</span>
+                  <div class="text-xs sm:text-sm font-bold text-slate-800">岡山操山高等学校（普通科）</div>
+                  <span class="text-[10px] text-slate-500">志望者内 15位 / 290人</span>
+                </div>
+                <div class="text-right">
+                  <span class="px-2.5 py-0.5 rounded bg-emerald-700 text-white font-bold text-xs">A 判定</span>
+                  <span class="text-[10px] text-slate-500 font-bold block mt-0.5">安全圏 (+28点)</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs">
+              <div class="text-[11px] font-bold text-slate-400 mb-2">教科別診断・弱点単元カルテ</div>
+              <div class="space-y-2 text-[11px]">
+                <div class="flex items-start gap-2.5">
+                  <span class="w-12 text-center py-0.5 rounded bg-brand-green text-white font-bold text-[10px] shrink-0">数学</span>
+                  <p class="text-slate-700 leading-relaxed">「関数 y=ax²」の配点が高い応用問での失点が見られます。基礎計算は満点のため、グラフの交点座標と面積を求める複合問題を集中的に演習しましょう。</p>
+                </div>
+                <div class="flex items-start gap-2.5 pt-1.5 border-t border-slate-100">
+                  <span class="w-12 text-center py-0.5 rounded bg-brand-green text-white font-bold text-[10px] shrink-0">英語</span>
+                  <p class="text-slate-700 leading-relaxed">文法・対話文は高得点。後半の「条件英作文（自由英作文）」で語数不足の減点があります。指定語句を活用した3文構成の練習が有効です。</p>
+                </div>
+              </div>
+            </div>
+          `
+        }
+      },
+      c12: {
+        pointLabel: "定期テストを超えた客観的到達度",
+        title: "県内での現在地と苦手単元がひと目でわかる学習カルテ",
+        sub: "教科書単元ごとの定着度と優先復習分野をピンポイント可視化",
+        desc: "教科書の単元ごとの定着度を県内平均と比較。中1・2のうちに克服しておくべき優先復習単元を具体的に提示し、日々の自学自習や定期テスト対策へ直結させます。",
+        miniKarteHtml: `
+          <div class="grid grid-cols-2 gap-2">
+            <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/70">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-brand-green block text-[11px]">総合学力到達度 S</span>
+                <span class="px-1.5 py-0.2 rounded bg-emerald-100 text-brand-green text-[9px] font-bold">上位10%</span>
+              </div>
+              <div class="mt-1.5 space-y-1">
+                <div class="flex justify-between items-center text-[10px] text-slate-600">
+                  <span>県平均比較グラフ</span>
+                  <span class="text-brand-green font-bold text-[11px]">+32点</span>
+                </div>
+                <div class="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden flex" title="県平均比較">
+                  <div class="bg-slate-400 h-full" style="width: 50%;"></div>
+                  <div class="bg-brand-green h-full" style="width: 38%;"></div>
+                </div>
+              </div>
+            </div>
+            <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/70">
+              <span class="font-bold text-slate-800 block text-[11px]">中1・2総復習優先単元カルテ</span>
+              <p class="text-[10px] text-slate-600 mt-1 leading-snug">要克服：<strong class="font-bold text-slate-900 block truncate">数学「方程式の応用」</strong></p>
+            </div>
+          </div>
+          <div class="p-3 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-center justify-between cursor-pointer hover:bg-slate-100 transition-colors" onclick="openReportModal('c12')">
+            <div>
+              <span class="font-bold text-slate-900 block text-xs">単元別到達度・県内客観順位判定</span>
+              <p class="text-[11px] text-slate-700 mt-0.5 leading-snug">定期テストでは見えない県内全体での位置と、次学年に向けた弱点を早期発見。</p>
+            </div>
+            <span class="text-[10px] font-bold text-brand-green shrink-0 ml-2">🔍 拡大で見る</span>
+          </div>
+        `,
+        modal: {
+          title: "中1・2生｜学力診断シート（成績カルテ）見本",
+          desc: "教科書の基礎から応用まで、単元ごとの定着度を県内平均と比較。現時点での到達度と、高校入試に向けた「つまずき単元」がひと目で分かります。",
+          bodyHtml: `
+            <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs">
+              <div class="text-[11px] font-bold text-slate-400 mb-2">総合学力到達度データ</div>
+              <div class="grid grid-cols-3 gap-2 text-center">
+                <div class="border-r border-slate-100">
+                  <span class="text-[10px] text-slate-500 block">到達度ランク</span>
+                  <span class="text-base font-bold text-brand-green">S ランク<span class="text-xs font-normal"> (上位10%)</span></span>
+                </div>
+                <div class="border-r border-slate-100">
+                  <span class="text-[10px] text-slate-500 block">県平均比較</span>
+                  <span class="text-base font-bold text-brand-green">+32点</span>
+                </div>
+                <div>
+                  <span class="text-[10px] text-slate-500 block">県内総合順位</span>
+                  <span class="text-base font-bold text-slate-900">215<span class="text-xs font-normal"> / 1,640人</span></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs space-y-2">
+              <div class="text-[11px] font-bold text-slate-400 mb-1">志望校目安判定（現時点での学力到達水準）</div>
+              
+              <div class="flex items-center justify-between p-2.5 rounded-lg bg-emerald-50/70 border border-emerald-100">
+                <div>
+                  <span class="text-[10px] font-bold text-brand-green">志望校目安 1</span>
+                  <div class="text-xs sm:text-sm font-bold text-slate-800">岡山操山高等学校（普通科）</div>
+                  <span class="text-[10px] text-slate-500">志望者内 42位 / 280人</span>
+                </div>
+                <div class="text-right">
+                  <span class="px-2.5 py-0.5 rounded bg-brand-green text-white font-bold text-xs">B 判定</span>
+                  <span class="text-[10px] text-brand-green font-bold block mt-0.5">合格圏 (+8点)</span>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 border border-slate-200/70">
+                <div>
+                  <span class="text-[10px] font-bold text-slate-500">志望校目安 2</span>
+                  <div class="text-xs sm:text-sm font-bold text-slate-800">岡山芳泉高等学校（普通科）</div>
+                  <span class="text-[10px] text-slate-500">志望者内 25位 / 240人</span>
+                </div>
+                <div class="text-right">
+                  <span class="px-2.5 py-0.5 rounded bg-brand-green text-white font-bold text-xs">A 判定</span>
+                  <span class="text-[10px] text-brand-green font-bold block mt-0.5">安全圏 (+22点)</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs">
+              <div class="text-[11px] font-bold text-slate-400 mb-2">中1・2総復習優先単元カルテ</div>
+              <div class="space-y-2 text-[11px]">
+                <div class="flex items-start gap-2.5">
+                  <span class="w-12 text-center py-0.5 rounded bg-brand-green text-white font-bold text-[10px] shrink-0">数学</span>
+                  <p class="text-slate-700 leading-relaxed">「一次方程式・連立方程式の文章題」で立式のミスが見られます。数量関係を図や表に整理してから方程式を立てる基本手順を再確認しましょう。</p>
+                </div>
+                <div class="flex items-start gap-2.5 pt-1.5 border-t border-slate-100">
+                  <span class="w-12 text-center py-0.5 rounded bg-brand-green text-white font-bold text-[10px] shrink-0">国語</span>
+                  <p class="text-slate-700 leading-relaxed">説明的文章の読解は高得点。古文の基礎知識（歴史的仮名遣い・主語の把握）に課題があります。教科書の短文音読と現代語訳の確認が効果的です。</p>
+                </div>
+              </div>
+            </div>
+          `
+        }
+      },
+      p6: {
+        pointLabel: "公立中高一貫3校 特性診断",
+        title: "操山・大安寺・天城の記述講評 小6適性検査判定カルテ",
+        sub: "適性I・IIの得点バランスと作文・論述添削で合格への距離を診断",
+        desc: "岡山県立中高一貫3校特有の適性検査I・IIに加え、作文・論述問題に対するプロ添削者からの具体的講評を掲載。部分点基準や減点要因を明確にし、合格に必要な記述力を可視化します。",
+        miniKarteHtml: `
+          <div class="grid grid-cols-2 gap-2">
+            <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/70">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-brand-green block text-[11px]">岡山県立操山中学校 B判定</span>
+                <span class="px-1.5 py-0.2 rounded bg-amber-100 text-amber-800 text-[9px] font-bold">可能性70%以上</span>
+              </div>
+              <div class="mt-1.5 space-y-1">
+                <div class="flex justify-between items-center text-[10px] text-slate-600">
+                  <span>適性I・IIバランス</span>
+                  <span class="text-brand-green font-bold text-[11px]">計148 / 200点</span>
+                </div>
+                <div class="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden" title="適性I・IIバランス">
+                  <div class="bg-amber-500 h-full rounded-full" style="width: 74%;"></div>
+                </div>
+              </div>
+            </div>
+            <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/70">
+              <span class="font-bold text-slate-800 block text-[11px]">作文・論述添削講評</span>
+              <p class="text-[10px] text-slate-600 mt-1 leading-snug">「要約の字数制限と条件設定の減点箇所」</p>
+            </div>
+          </div>
+          <div class="p-3 rounded-2xl bg-amber-50/80 border border-amber-200/80 flex items-center justify-between cursor-pointer hover:bg-amber-100/70 transition-colors" onclick="openReportModal('p6')">
+            <div>
+              <span class="font-bold text-amber-900 block text-xs">操山・大安寺・天城の記述講評 小6適性検査判定カルテ</span>
+              <p class="text-[11px] text-slate-700 mt-0.5 leading-snug">プロ添削者による論述講評で、合格基準に達するための減点防止策がわかる。</p>
+            </div>
+            <span class="text-[10px] font-bold text-amber-800 shrink-0 ml-2">🔍 拡大で見る</span>
+          </div>
+        `,
+        modal: {
+          title: "小6生｜公立中高一貫適性検査対策模試 学力診断シート見本",
+          desc: "岡山県立中高一貫3校（操山・大安寺・天城）の適性検査I・IIおよび作文の得点バランスと、プロ添削者による記述講評を詳細にフィードバックします。",
+          bodyHtml: `
+            <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs">
+              <div class="text-[11px] font-bold text-slate-400 mb-2">適性検査 得点バランス（200点満点）</div>
+              <div class="grid grid-cols-3 gap-2 text-center">
+                <div class="border-r border-slate-100">
+                  <span class="text-[10px] text-slate-500 block">総合得点</span>
+                  <span class="text-base font-bold text-slate-900">148<span class="text-xs font-normal"> / 200</span></span>
+                </div>
+                <div class="border-r border-slate-100">
+                  <span class="text-[10px] text-slate-500 block">総合偏差値</span>
+                  <span class="text-base font-bold text-brand-green">58.4</span>
+                </div>
+                <div>
+                  <span class="text-[10px] text-slate-500 block">県立3校志望者内</span>
+                  <span class="text-base font-bold text-slate-900">68<span class="text-xs font-normal"> / 420人</span></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs space-y-2">
+              <div class="text-[11px] font-bold text-slate-400 mb-1">公立中高一貫校 志望校判定結果</div>
+              
+              <div class="flex items-center justify-between p-2.5 rounded-lg bg-amber-50/70 border border-amber-200/80">
+                <div>
+                  <span class="text-[10px] font-bold text-amber-800">第1志望</span>
+                  <div class="text-xs sm:text-sm font-bold text-slate-800">岡山県立操山中学校</div>
+                  <span class="text-[10px] text-slate-500">志望者内 35位 / 185人</span>
+                </div>
+                <div class="text-right">
+                  <span class="px-2.5 py-0.5 rounded bg-amber-600 text-white font-bold text-xs">B 判定</span>
+                  <span class="text-[10px] text-amber-800 font-bold block mt-0.5">合格圏 (+6点)</span>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 border border-slate-200/70">
+                <div>
+                  <span class="text-[10px] font-bold text-slate-500">第2志望</span>
+                  <div class="text-xs sm:text-sm font-bold text-slate-800">岡山県立大安寺中等教育学校</div>
+                  <span class="text-[10px] text-slate-500">志望者内 22位 / 140人</span>
+                </div>
+                <div class="text-right">
+                  <span class="px-2.5 py-0.5 rounded bg-amber-700 text-white font-bold text-xs">B 判定</span>
+                  <span class="text-[10px] text-slate-500 font-bold block mt-0.5">合格圏 (+4点)</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs">
+              <div class="text-[11px] font-bold text-slate-400 mb-2">作文・論述添削 プロ講評カルテ</div>
+              <div class="space-y-2 text-[11px]">
+                <div class="flex items-start gap-2.5">
+                  <span class="w-16 text-center py-0.5 rounded bg-amber-600 text-white font-bold text-[10px] shrink-0">作文添削</span>
+                  <p class="text-slate-700 leading-relaxed">全体の段落構成（導入・体験・まとめ）は大変良好です。ただし第2段落において「指定された字数制限（300字以上400字以内）」に対し、語句の重複による減点が見られます。接続詞の推敲を意識しましょう。</p>
+                </div>
+                <div class="flex items-start gap-2.5 pt-1.5 border-t border-slate-100">
+                  <span class="w-16 text-center py-0.5 rounded bg-brand-green text-white font-bold text-[10px] shrink-0">適性II</span>
+                  <p class="text-slate-700 leading-relaxed">複数資料の読み取り問題において、グラフの単位確認のミスがありました。数値を引用して記述する際は、必ず軸ラベルと単位を再照合する習慣をつけましょう。</p>
+                </div>
+              </div>
+            </div>
+          `
+        }
+      }
+    };
+
+    let currentCard1Grade = 'c3';
+    let currentCard2Grade = 'c3';
+    let currentModalGrade = 'c3';
+
+    function switchCard1Grade(grade) {
+      currentCard1Grade = grade;
+      const data = featureCard1Data[grade];
+      if (!data) return;
+
+      ['c3', 'c12', 'p6'].forEach(g => {
+        const btn = document.getElementById(`card1-pill-${g}`);
+        if (!btn) return;
+        if (g === grade) {
+          btn.className = 'px-2.5 sm:px-3 py-1 text-xs font-bold rounded-lg transition-all bg-brand-green text-white shadow-xs cursor-pointer';
+        } else {
+          btn.className = 'px-2.5 sm:px-3 py-1 text-xs font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900 cursor-pointer';
+        }
+      });
+
+      const pointLabel = document.getElementById('card1-point-label');
+      if (pointLabel) pointLabel.textContent = data.pointLabel;
+
+      const titleText = document.getElementById('card1-title-text');
+      if (titleText) titleText.textContent = data.title;
+
+      const subtitle = document.getElementById('card1-subtitle');
+      if (subtitle) subtitle.textContent = data.sub;
+
+      const desc = document.getElementById('card1-desc');
+      if (desc) desc.textContent = data.desc;
+
+      const featuresContainer = document.getElementById('card1-features-container');
+      if (featuresContainer) featuresContainer.innerHTML = data.featuresHtml;
+
+      const previewBadge = document.getElementById('card1-preview-badge');
+      if (previewBadge) previewBadge.textContent = data.previewLabel;
+    }
+
+    function switchCard2Grade(grade) {
+      currentCard2Grade = grade;
+      currentModalGrade = grade;
+      const data = featureCard2Data[grade];
+      if (!data) return;
+
+      ['c3', 'c12', 'p6'].forEach(g => {
+        const btn = document.getElementById(`card2-pill-${g}`);
+        if (!btn) return;
+        if (g === grade) {
+          btn.className = 'px-2.5 sm:px-3 py-1 text-xs font-bold rounded-lg transition-all bg-brand-green text-white shadow-xs cursor-pointer';
+        } else {
+          btn.className = 'px-2.5 sm:px-3 py-1 text-xs font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900 cursor-pointer';
+        }
+      });
+
+      const pointLabel = document.getElementById('card2-point-label');
+      if (pointLabel) pointLabel.textContent = data.pointLabel;
+
+      const titleText = document.getElementById('card2-title-text');
+      if (titleText) titleText.textContent = data.title;
+
+      const subtitle = document.getElementById('card2-subtitle');
+      if (subtitle) subtitle.textContent = data.sub;
+
+      const desc = document.getElementById('card2-desc');
+      if (desc) desc.textContent = data.desc;
+
+      const minikarteContainer = document.getElementById('card2-minikarte-container');
+      if (minikarteContainer) minikarteContainer.innerHTML = data.miniKarteHtml;
+    }
+
     // 診断シートモーダルの開閉関数
-    function openReportModal() {
+    function openReportModal(grade) {
+      const targetGrade = grade || currentCard2Grade || 'c3';
+      switchModalGrade(targetGrade);
       const modal = document.getElementById('report-modal');
       if (modal) modal.classList.remove('hidden');
       document.body.style.overflow = 'hidden';
+    }
+
+    function switchModalGrade(grade) {
+      currentModalGrade = grade;
+      const data = featureCard2Data[grade];
+      if (!data) return;
+
+      ['c3', 'c12', 'p6'].forEach(g => {
+        const btn = document.getElementById(`modal-pill-${g}`);
+        if (!btn) return;
+        if (g === grade) {
+          btn.className = 'px-2.5 sm:px-3 py-1 text-xs font-bold rounded-lg transition-all bg-brand-green text-white shadow-xs cursor-pointer';
+        } else {
+          btn.className = 'px-2.5 sm:px-3 py-1 text-xs font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900 cursor-pointer';
+        }
+      });
+
+      const modalTitle = document.getElementById('modal-report-title');
+      if (modalTitle) modalTitle.textContent = data.modal.title;
+
+      const modalDesc = document.getElementById('modal-report-desc');
+      if (modalDesc) modalDesc.textContent = data.modal.desc;
+
+      const modalBody = document.getElementById('modal-report-body');
+      if (modalBody) modalBody.innerHTML = data.modal.bodyHtml;
     }
 
     function closeReportModal() {
@@ -1859,6 +2321,13 @@
       if (modal) modal.classList.add('hidden');
       document.body.style.overflow = '';
     }
+
+    // グローバル公開
+    window.switchCard1Grade = switchCard1Grade;
+    window.switchCard2Grade = switchCard2Grade;
+    window.openReportModal = openReportModal;
+    window.switchModalGrade = switchModalGrade;
+    window.closeReportModal = closeReportModal;
 
     // 共通ヘッダー制御ロジック
     function toggleNextExamDropdown(event) {
@@ -2015,6 +2484,11 @@
       } catch (e) {}
 
       selectGrade(initialGrade);
+
+      // 「選ばれる3つの理由」CARD 01 & CARD 02 およびモーダルの初期化
+      switchCard1Grade('c3');
+      switchCard2Grade('c3');
+      switchModalGrade('c3');
 
       // Features カルーセルの初期化・スクロール監視
       const featuresCarousel = document.getElementById('features-carousel');

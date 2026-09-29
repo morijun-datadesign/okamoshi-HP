@@ -670,13 +670,13 @@
               <span id="badge-status" class="inline-block px-3 py-1 rounded-full text-xs font-black bg-brand-green text-white mb-1.5 shadow-xs">
                 受付中
               </span>
-              <h4 id="card-title" class="text-lg sm:text-xl lg:text-2xl font-black text-slate-900">
-                中3｜第4回 岡山県統一模擬試験
+              <h4 id="card-title" class="text-xl sm:text-2xl lg:text-3xl font-black text-slate-900 tracking-tight">
+                中学3年生｜第4回 岡山県統一模擬試験
               </h4>
             </div>
             <div class="text-left sm:text-right">
-              <span class="text-xs text-slate-400 block font-medium">受験料（税込）</span>
-              <span id="card-price" class="text-xl sm:text-2xl font-black text-brand-green">5,500円</span>
+              <span class="text-xs sm:text-sm text-slate-500 block font-bold">受験料（税込）</span>
+              <span id="card-price" class="text-2xl sm:text-3xl font-black text-brand-green">5,500円</span>
             </div>
           </div>
 
@@ -688,24 +688,24 @@
               
               <!-- 実施日程リスト -->
               <div class="bg-white rounded-2xl border border-slate-200/80 p-4 sm:p-5 shadow-sm">
-                <div class="flex items-center gap-2 mb-4">
-                  <span class="w-1.5 h-4 bg-brand-green rounded-full inline-block"></span>
-                  <h5 class="text-sm sm:text-base font-black text-slate-900 tracking-tight">実施日程・会場</h5>
+                <div class="flex items-center gap-2.5 mb-4">
+                  <span class="w-2 h-5 bg-brand-green rounded-full inline-block shrink-0"></span>
+                  <h5 class="text-base sm:text-lg font-black text-slate-900 tracking-tight">実施日程・会場</h5>
                 </div>
                 <div id="schedule-list" class="space-y-3.5"></div>
               </div>
 
               <!-- アコーディオン（出題範囲 ＆ 実施詳細） -->
-              <div class="space-y-3 text-xs sm:text-sm">
+              <div class="space-y-3">
                 
                 <!-- 出題範囲アコーディオン -->
                 <details class="group bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
-                  <summary class="flex justify-between items-center p-4 font-bold text-slate-700 cursor-pointer list-none select-none hover:bg-slate-50 transition-colors">
-                    <span class="flex items-center gap-2">
-                      <span class="text-base">📖</span>
-                      <span class="font-black text-slate-800">今回の出題範囲を確認する</span>
+                  <summary class="flex justify-between items-center p-4 sm:p-5 font-bold text-slate-800 cursor-pointer list-none select-none hover:bg-slate-50 transition-colors">
+                    <span class="flex items-center gap-2.5">
+                      <span class="text-lg">📖</span>
+                      <span class="text-sm sm:text-base font-bold text-slate-900 group-hover:text-brand-green transition-colors">今回の出題範囲を確認する</span>
                     </span>
-                    <svg class="w-4 h-4 text-slate-400 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    <svg class="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
                   </summary>
                   
                   <div class="p-4 bg-slate-50/70 border-t border-slate-100">
@@ -722,12 +722,12 @@
 
                 <!-- 実施詳細・受験の流れアコーディオン -->
                 <details class="group bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs" id="details-accordion">
-                  <summary class="flex justify-between items-center p-4 font-bold text-slate-700 cursor-pointer list-none select-none hover:bg-slate-50 transition-colors">
-                    <span class="flex items-center gap-2">
-                      <span class="text-base">📋</span>
-                      <span class="font-black text-slate-800">実施詳細・受験の流れ（会場別・自宅）</span>
+                  <summary class="flex justify-between items-center p-4 sm:p-5 font-bold text-slate-800 cursor-pointer list-none select-none hover:bg-slate-50 transition-colors">
+                    <span class="flex items-center gap-2.5">
+                      <span class="text-lg">📋</span>
+                      <span class="text-sm sm:text-base font-bold text-slate-900 group-hover:text-brand-green transition-colors">実施詳細・受験の流れ（会場別・自宅）</span>
                     </span>
-                    <svg class="w-4 h-4 text-slate-400 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    <svg class="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
                   </summary>
                   
                   <div class="p-4 bg-slate-50/70 border-t border-slate-100 space-y-4">
@@ -1522,18 +1522,18 @@
       const container = document.getElementById('scope-list-container');
       if (!container) return;
       if (!scopeList || scopeList.length === 0) {
-        container.innerHTML = '<p class="text-xs text-slate-500">出題範囲の詳細は準備中です。</p>';
+        container.innerHTML = '<p class="text-xs sm:text-sm text-slate-500">出題範囲の詳細は準備中です。</p>';
         return;
       }
 
       container.innerHTML = scopeList.map(item => `
-        <div class="flex items-center gap-2.5 bg-white rounded-xl p-2 border border-slate-200/80 shadow-xs overflow-hidden">
-          <div class="shrink-0 w-14 text-center py-1 rounded-lg text-xs font-black bg-brand-green text-white tracking-wide shadow-xs">
+        <div class="flex items-center gap-2.5 sm:gap-3 bg-white rounded-xl p-2.5 border border-slate-200/80 shadow-xs overflow-hidden">
+          <div class="shrink-0 w-14 sm:w-16 text-center py-1.5 rounded-lg text-xs sm:text-sm font-black bg-brand-green text-white tracking-wide shadow-xs">
             ${item.subject}
           </div>
           <div class="flex-1 overflow-x-auto no-scrollbar flex items-center gap-1.5 py-0.5">
             ${item.topics.map(topic => `
-              <span class="shrink-0 px-2.5 py-1 rounded-md bg-slate-100/90 text-slate-800 text-xs font-medium whitespace-nowrap border border-slate-200/60">
+              <span class="shrink-0 px-2.5 py-1 rounded-md bg-slate-100/90 text-slate-900 text-xs sm:text-sm font-bold whitespace-nowrap border border-slate-200/70">
                 ${topic}
               </span>
             `).join('')}
@@ -1547,7 +1547,7 @@
       const container = document.getElementById('schedule-list');
       if (!container) return;
       if (!venuesList || venuesList.length === 0) {
-        container.innerHTML = '<p class="text-xs text-slate-500">日程詳細は未定です。</p>';
+        container.innerHTML = '<p class="text-xs sm:text-sm text-slate-500">日程詳細は未定です。</p>';
         return;
       }
 
@@ -1556,16 +1556,16 @@
         const badgeBg = isHome ? 'bg-[#4A4031]' : 'bg-[#134230]';
 
         return `
-          <div class="flex items-start gap-3.5 ${idx !== 0 ? 'pt-3.5 border-t border-slate-100' : ''}">
-            <div class="shrink-0">
-              <span class="inline-block px-3 py-1 rounded-lg text-xs font-bold text-white tracking-wide ${badgeBg} shadow-sm">
+          <div class="flex items-start sm:items-center gap-3 sm:gap-4 ${idx !== 0 ? 'pt-3.5 border-t border-slate-100' : ''}">
+            <div class="shrink-0 pt-0.5 sm:pt-0">
+              <span class="inline-block px-3 py-1 rounded-lg text-xs font-black text-white tracking-wide ${badgeBg} shadow-xs">
                 ${item.badge}
               </span>
             </div>
             
-            <div class="flex-1 min-w-0">
-              ${item.school ? `<div class="text-sm sm:text-base font-black text-slate-900 leading-snug">${item.school}</div>` : ''}
-              <div class="text-sm sm:text-base font-black text-[#8B3A18] tracking-tight ${item.school ? 'mt-0.5' : 'mt-1'}">
+            <div class="flex-1 min-w-0 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-4">
+              ${item.school ? `<div class="text-base sm:text-lg font-bold text-slate-900 leading-snug">${item.school}</div>` : ''}
+              <div class="text-base sm:text-lg font-black text-[#8B3A18] tracking-tight shrink-0 sm:text-right">
                 ${item.date}
               </div>
             </div>
@@ -1622,9 +1622,9 @@
       let scheduleHtml = '';
       if (activeVenue.schedule && activeVenue.schedule.length > 0) {
         scheduleHtml = activeVenue.schedule.map(item => `
-          <div class="flex justify-between py-1.5 border-b border-slate-100 text-xs last:border-none">
-            <span class="text-slate-600">${item.label}</span>
-            <span class="font-bold text-slate-800">${item.time || ''}</span>
+          <div class="flex justify-between py-1.5 border-b border-slate-100 text-xs sm:text-sm last:border-none">
+            <span class="text-slate-700 font-medium">${item.label}</span>
+            <span class="font-bold text-slate-900">${item.time || ''}</span>
           </div>
         `).join('');
       }
@@ -1632,28 +1632,28 @@
       venueDetailContainer.innerHTML = `
         <div class="border-b border-slate-100 pb-3">
           <div class="flex items-center justify-between">
-            <span class="text-xs sm:text-sm font-black text-slate-900">${activeVenue.name}</span>
-            <span class="text-[11px] font-bold px-2 py-0.5 rounded bg-emerald-50 text-emerald-800">実施日：${activeVenue.examDate}</span>
+            <span class="text-sm sm:text-base font-black text-slate-900">${activeVenue.name}</span>
+            <span class="text-xs font-bold px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-100">実施日：${activeVenue.examDate}</span>
           </div>
-          <p class="text-xs text-slate-500 mt-1">📍 場所：${activeVenue.place}</p>
+          <p class="text-xs sm:text-sm text-slate-700 font-bold mt-1.5">📍 場所：${activeVenue.place}</p>
         </div>
 
-        <div class="space-y-3.5 pt-1 text-xs">
+        <div class="space-y-3.5 pt-1 text-xs sm:text-sm">
           <!-- ① 受験票等の発送 -->
           <div class="flex items-start gap-2.5">
-            <div class="w-5 h-5 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center font-black text-[10px] shrink-0 mt-0.5 border border-slate-200">1</div>
+            <div class="w-5 h-5 rounded-full bg-slate-100 text-slate-800 flex items-center justify-center font-black text-[11px] shrink-0 mt-0.5 border border-slate-200">1</div>
             <div class="flex-1">
-              <span class="font-bold text-slate-800 block text-xs">${isHome ? '問題一式のお届け（発送日）' : '受験票等の発送'}</span>
-              <p class="text-slate-600 mt-0.5 leading-relaxed">${activeVenue.ticketDispatch}</p>
+              <span class="font-bold text-slate-900 block text-xs sm:text-sm">${isHome ? '問題一式のお届け（発送日）' : '受験票等の発送'}</span>
+              <p class="text-slate-700 mt-0.5 font-medium leading-relaxed">${activeVenue.ticketDispatch}</p>
             </div>
           </div>
 
           <!-- ② 当日持参物 -->
           <div class="flex items-start gap-2.5">
-            <div class="w-5 h-5 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center font-black text-[10px] shrink-0 mt-0.5 border border-slate-200">2</div>
+            <div class="w-5 h-5 rounded-full bg-slate-100 text-slate-800 flex items-center justify-center font-black text-[11px] shrink-0 mt-0.5 border border-slate-200">2</div>
             <div class="flex-1">
-              <span class="font-bold text-slate-800 block text-xs">${isHome ? 'ご用意いただくもの' : '当日持参物'}</span>
-              <p class="text-slate-600 mt-0.5 leading-relaxed bg-slate-50 p-2.5 rounded-xl border border-slate-100 text-[11px] sm:text-xs">
+              <span class="font-bold text-slate-900 block text-xs sm:text-sm">${isHome ? 'ご用意いただくもの' : '当日持参物'}</span>
+              <p class="text-slate-700 mt-1 leading-relaxed bg-slate-50 p-2.5 rounded-xl border border-slate-200/70 text-xs sm:text-sm font-medium">
                 ${activeVenue.items}
               </p>
             </div>
@@ -1661,10 +1661,10 @@
 
           <!-- ③ 時間割 -->
           <div class="flex items-start gap-2.5">
-            <div class="w-5 h-5 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center font-black text-[10px] shrink-0 mt-0.5 border border-slate-200">3</div>
+            <div class="w-5 h-5 rounded-full bg-slate-100 text-slate-800 flex items-center justify-center font-black text-[11px] shrink-0 mt-0.5 border border-slate-200">3</div>
             <div class="flex-1">
-              <span class="font-bold text-slate-800 block text-xs mb-1.5">${isHome ? '受験方法・時間割' : '時間割'}</span>
-              <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-100 space-y-0.5">
+              <span class="font-bold text-slate-900 block text-xs sm:text-sm mb-1.5">${isHome ? '受験方法・時間割' : '時間割'}</span>
+              <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200/70 space-y-1">
                 ${scheduleHtml}
               </div>
             </div>
@@ -1672,10 +1672,10 @@
 
           <!-- ④ 成績表のご返却予定 -->
           <div class="flex items-start gap-2.5">
-            <div class="w-5 h-5 rounded-full bg-emerald-100 text-brand-green flex items-center justify-center font-black text-[10px] shrink-0 mt-0.5">4</div>
+            <div class="w-5 h-5 rounded-full bg-emerald-100 text-brand-green flex items-center justify-center font-black text-[11px] shrink-0 mt-0.5">4</div>
             <div class="flex-1">
-              <span class="font-bold text-slate-800 block text-xs">成績表のご返却予定</span>
-              <p class="text-slate-600 mt-0.5 leading-relaxed">${activeVenue.reportDispatch}</p>
+              <span class="font-bold text-slate-900 block text-xs sm:text-sm">成績表のご返却予定</span>
+              <p class="text-slate-700 mt-0.5 font-medium leading-relaxed">${activeVenue.reportDispatch}</p>
             </div>
           </div>
         </div>
@@ -1745,16 +1745,16 @@
                 </div>
                 <div>
                   <div class="flex items-center gap-1.5">
-                    <span class="text-[10px] font-black text-emerald-800 tracking-wide uppercase">お申し込み締切</span>
-                    <span class="text-[9px] font-bold text-white bg-emerald-600 px-1.5 py-0.2 rounded-full">期日厳守</span>
+                    <span class="text-xs font-black text-emerald-800 tracking-wide uppercase">お申し込み締切</span>
+                    <span class="text-[10px] font-black text-white bg-emerald-600 px-2 py-0.5 rounded-full">期日厳守</span>
                   </div>
-                  <div class="text-sm sm:text-base font-black text-slate-900 tracking-tight mt-0.5">
+                  <div class="text-base sm:text-lg font-black text-slate-900 tracking-tight mt-0.5">
                     ${r.deadline}
                   </div>
                 </div>
               </div>
               <div class="hidden sm:block text-right">
-                <span class="text-xs font-bold text-emerald-700 bg-white/90 px-2.5 py-1 rounded-md border border-emerald-200 shadow-2xs">
+                <span class="text-xs sm:text-sm font-bold text-emerald-700 bg-white/90 px-3 py-1 rounded-md border border-emerald-200 shadow-2xs">
                   WEB受付中
                 </span>
               </div>
@@ -1762,12 +1762,12 @@
           `;
 
           ctaContainer.innerHTML = `
-            <a href="apply.html?grade=${currentGrade}&round=${r.round}" class="w-full py-4 px-6 rounded-2xl bg-brand-green text-white font-black text-base flex items-center justify-center gap-2 shadow-lg shadow-brand-green/20 active:scale-[0.98] transition-all hover:bg-brand-greenDark">
+            <a href="apply.html?grade=${currentGrade}&round=${r.round}" class="w-full py-4 px-6 rounded-2xl bg-brand-green text-white font-black text-base sm:text-lg flex items-center justify-center gap-2 shadow-lg shadow-brand-green/20 active:scale-[0.98] transition-all hover:bg-brand-greenDark">
               <span>第${r.round}回をWEBで申し込む</span>
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
             </a>
             <div class="text-center">
-              <span class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 bg-slate-100/90 px-3.5 py-1.5 rounded-full border border-slate-200/80">
+              <span class="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-slate-700 bg-slate-100 px-3.5 py-1.5 rounded-full border border-slate-200">
                 <span class="w-2 h-2 rounded-full bg-brand-green"></span>
                 <span>お申込みフォーム内で今後の回をまとめて選択可能です</span>
               </span>

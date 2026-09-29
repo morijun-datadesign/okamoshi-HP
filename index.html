@@ -353,50 +353,41 @@
       </div>
     </section>
 
-    <!-- 【スマホ表示: md未満】B案プロトタイプの縦スクロール最適化コンパクト配置 -->
-    <section class="block md:hidden relative bg-gradient-to-b from-brand-greenLight/80 via-white to-brand-grayBg pt-6 pb-10 px-4 border-b border-slate-100 overflow-hidden">
-      <div class="absolute -top-12 -right-12 w-64 h-64 bg-emerald-100/40 rounded-full blur-3xl pointer-events-none"></div>
-      <div class="absolute top-20 -left-12 w-48 h-48 bg-teal-100/40 rounded-full blur-2xl pointer-events-none"></div>
+    <!-- 【スマホ表示: md未満】従来レイアウト完全復元：全幅背景＋重ねテキストカード（ボタンなし・すっきり美しい構成） -->
+    <section class="block md:hidden relative w-full overflow-hidden bg-brand-grayBg pb-4">
+      <!-- 全幅背景写真エリア（ヘッダー直下・左右横幅いっぱい・青空グラデーション＋左側人物） -->
+      <div class="w-full h-64 sm:h-72 relative overflow-hidden bg-sky-100">
+        <img 
+          src="images/hero-main.webp" 
+          alt="岡山県統一模擬試験に挑む澄み渡る青空を見上げる女子生徒" 
+          class="w-full h-full object-cover object-[18%_25%]" 
+          fetchpriority="high" 
+          decoding="async"
+          onerror="this.onerror=null; this.src='hero-banner.jpg';"
+        />
+        <!-- 繊細なグラデーションスクリム（下部カードへの自然な接続） -->
+        <div class="absolute inset-0 bg-gradient-to-t from-black/15 via-transparent to-transparent pointer-events-none"></div>
+      </div>
 
-      <div class="max-w-xl mx-auto text-center relative z-10">
-        <div class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white/90 border border-brand-green/20 text-brand-green text-xs font-bold mb-4 shadow-xs">
-          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span>岡山県内最大級の母集団・公立高校入試特化</span>
-        </div>
-        
-        <h2 class="text-2xl font-bold text-slate-900 leading-tight tracking-tight mb-3">
-          正確なデータ判定で、<br>
-          <span class="text-brand-green underline decoration-brand-greenAccent decoration-4 underline-offset-4">志望校合格への距離</span>がわかる。
-        </h2>
-        
-        <p class="text-xs text-slate-600 leading-relaxed mb-5 max-w-md mx-auto">
-          中学生の岡山県高校入試・小6公立中高一貫校適性検査に対応。<br>
-          県内トップクラスの受験者数だからこそ出せる精密な合格判定。
-        </p>
+      <!-- 重ねテキストカード（全幅ビジュアル下部に被さる白い角丸カード） -->
+      <div class="px-4 -mt-14 relative z-10">
+        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80 space-y-3">
+          <p class="text-xs sm:text-sm font-bold text-[#9E3A14] tracking-wide">志望校合格への確かな現在地を知る</p>
+          
+          <h1 class="space-y-2">
+            <div class="flex items-center gap-2 sm:gap-2.5">
+              <span class="w-[64px] sm:w-[72px] inline-flex items-center justify-center py-0.5 rounded-full bg-[#EBF6F0] border border-[#C7E6D7] text-[#134230] text-[11px] font-bold shrink-0 text-center tracking-wide">中学生</span>
+              <span class="font-bold text-slate-900 text-base sm:text-lg tracking-tight">岡山県統一模擬試験</span>
+            </div>
+            <div class="flex items-center gap-2 sm:gap-2.5">
+              <span class="w-[64px] sm:w-[72px] inline-flex items-center justify-center py-0.5 rounded-full bg-[#FBF2E7] border border-[#EAD6C0] text-[#5C3D1E] text-[11px] font-bold shrink-0 text-center tracking-tight">小学6年</span>
+              <span class="font-bold text-brand-green text-base sm:text-lg tracking-tight">岡山県適性検査対策模試</span>
+            </div>
+          </h1>
 
-        <!-- ヒーロービジュアル（スマホ用） -->
-        <div class="relative max-w-lg mx-auto mb-6 rounded-3xl overflow-hidden border border-slate-200/90 shadow-md bg-sky-100">
-          <img 
-            src="images/hero-main.webp" 
-            alt="志望校合格への確かな現在地を知る - 岡山県統一模擬試験・岡山県適性検査対策模試" 
-            class="w-full h-auto object-cover object-center shadow-inner"
-            onerror="this.onerror=null; this.src='hero-banner.jpg';"
-          />
-        </div>
-
-        <!-- 2大導線ボタン（スマホ表示のみ） -->
-        <div class="grid grid-cols-2 gap-3 max-w-md mx-auto">
-          <a href="#features" class="flex flex-col items-center justify-center p-3.5 rounded-2xl bg-white border-2 border-slate-200 text-slate-700 shadow-sm active:scale-95 transition-transform hover:border-brand-green">
-            <span class="text-[11px] font-bold text-slate-400">どんな模試？</span>
-            <span class="text-sm font-bold text-brand-green mt-0.5">初めての方へ</span>
-            <span class="text-[10px] text-slate-500 mt-1">特徴と診断シート ↓</span>
-          </a>
-
-          <a href="#schedule-selector" class="flex flex-col items-center justify-center p-3.5 rounded-2xl bg-brand-green text-white shadow-md shadow-brand-green/20 active:scale-95 transition-transform hover:bg-brand-greenDark">
-            <span class="inline-block px-2 py-0.5 rounded-full bg-white/20 text-[10px] font-bold text-white mb-0.5">次回受付中</span>
-            <span class="text-sm font-bold mt-0.5">次回に申し込む</span>
-            <span class="text-[10px] text-emerald-100 mt-1">日程・出題範囲 ↓</span>
-          </a>
+          <p class="text-xs text-slate-600 leading-relaxed pt-1">
+            岡山県の入試傾向を徹底分析。県内多数の学習塾が採用する高い信頼性と精緻な合否判定で、受験生と保護者の不安を確信へと変えていきます。
+          </p>
         </div>
       </div>
     </section>

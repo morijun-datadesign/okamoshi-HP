@@ -696,24 +696,26 @@
       <!-- 1280px純白メインカード（タブ選択＋回詳細を一体化した重厚で美しい1枚のカード） -->
       <div class="bg-white rounded-3xl border border-slate-200 p-5 sm:p-7 lg:p-9 shadow-md transition-all" id="card-container">
         
-        <!-- 上部：学年＆実施回タブ選択エリア（純白カード内に美しく内包） -->
-        <div class="space-y-3 pb-6 mb-6 border-b border-slate-200">
-          <!-- ① 学年切り替えタブ (4択スリムピル) -->
-          <div class="flex items-center gap-2 sm:gap-4">
-            <span class="text-xs font-bold text-slate-500 shrink-0 tracking-tight">学年:</span>
-            <div class="grid grid-cols-4 gap-2 flex-1 bg-slate-100 p-1.5 rounded-xl border border-slate-200/50" id="grade-tabs">
-              <button onclick="selectGrade('c3')" data-grade="c3" class="grade-btn py-2 text-xs sm:text-sm font-bold rounded-lg transition-all bg-brand-green text-white shadow-xs">中3</button>
-              <button onclick="selectGrade('c2')" data-grade="c2" class="grade-btn py-2 text-xs sm:text-sm font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900">中2</button>
-              <button onclick="selectGrade('c1')" data-grade="c1" class="grade-btn py-2 text-xs sm:text-sm font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900">中1</button>
-              <button onclick="selectGrade('p6')" data-grade="p6" class="grade-btn py-2 text-xs sm:text-sm font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900">小6</button>
+        <!-- 上部：学年＆実施回タブ選択エリア（画面上部固定追従 Sticky バー） -->
+        <div class="sticky top-16 sm:top-[4.5rem] z-30 bg-white -mx-5 sm:-mx-7 lg:-mx-9 px-5 sm:px-7 lg:px-9 -mt-5 sm:-mt-7 lg:-mt-9 pt-5 sm:pt-7 lg:pt-9 pb-4 mb-6 border-b border-slate-200 shadow-md rounded-t-3xl transition-all">
+          <div class="space-y-3">
+            <!-- ① 学年切り替えタブ (4択スリムピル) -->
+            <div class="flex items-center gap-2 sm:gap-4">
+              <span class="text-xs font-bold text-slate-500 shrink-0 tracking-tight">学年:</span>
+              <div class="grid grid-cols-4 gap-2 flex-1 bg-slate-100 p-1.5 rounded-xl border border-slate-200/50" id="grade-tabs">
+                <button onclick="selectGrade('c3')" data-grade="c3" class="grade-btn py-2 text-xs sm:text-sm font-bold rounded-lg transition-all bg-brand-green text-white shadow-xs">中3</button>
+                <button onclick="selectGrade('c2')" data-grade="c2" class="grade-btn py-2 text-xs sm:text-sm font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900">中2</button>
+                <button onclick="selectGrade('c1')" data-grade="c1" class="grade-btn py-2 text-xs sm:text-sm font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900">中1</button>
+                <button onclick="selectGrade('p6')" data-grade="p6" class="grade-btn py-2 text-xs sm:text-sm font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900">小6</button>
+              </div>
             </div>
-          </div>
 
-          <!-- ② 実施回切り替えタブ (1行横スクロール式ピル) -->
-          <div class="flex items-center gap-2 sm:gap-4">
-            <span class="text-xs font-bold text-slate-500 shrink-0 tracking-tight">回:</span>
-            <div class="flex gap-2 overflow-x-auto no-scrollbar py-0.5 flex-1" id="round-tabs">
-              <!-- JSで動的生成 -->
+            <!-- ② 実施回切り替えタブ (1行横スクロール式ピル) -->
+            <div class="flex items-center gap-2 sm:gap-4">
+              <span class="text-xs font-bold text-slate-500 shrink-0 tracking-tight">回:</span>
+              <div class="flex gap-2 overflow-x-auto no-scrollbar py-0.5 flex-1" id="round-tabs">
+                <!-- JSで動的生成 -->
+              </div>
             </div>
           </div>
         </div>
@@ -1709,7 +1711,10 @@
 
       // 受験料
       if (s.fee) {
-        data.price = `${Number(s.fee).toLocaleString()}円`;
+        const parsedFee = parseInt(String(s.fee).replace(/[^0-9]/g, ''), 10);
+        if (!isNaN(parsedFee) && parsedFee > 0) {
+          data.price = `${parsedFee.toLocaleString()}円`;
+        }
       }
 
       // 締切日
@@ -2100,7 +2105,18 @@
       const cardDeadline = document.getElementById('card-deadline');
 
       if (cardTitle) cardTitle.textContent = `${data.gradeName}｜第${r.round}回 ${data.examName}`;
-      if (cardPrice) cardPrice.textContent = data.price;
+      if (cardPrice) {
+        let priceText = '5,500円';
+        if (data && data.price) {
+          if (typeof data.price === 'number' && !isNaN(data.price)) {
+            priceText = `${data.price.toLocaleString()}円`;
+          } else {
+            const num = parseInt(String(data.price).replace(/[^0-9]/g, ''), 10);
+            priceText = (!isNaN(num) && num > 0) ? `${num.toLocaleString()}円` : '5,500円';
+          }
+        }
+        cardPrice.textContent = priceText;
+      }
       if (cardDeadline) cardDeadline.textContent = r.deadline;
 
       renderScopeList(r.scopeList);

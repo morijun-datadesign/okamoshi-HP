@@ -72,6 +72,7 @@
     body {
       font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
       color: #1e293b;
+      background-color: #F4F6F8 !important;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
@@ -122,7 +123,7 @@
   </style>
 </head>
 
-<body class="bg-brand-grayBg text-slate-800 font-sans pb-24 md:pb-12 antialiased selection:bg-brand-green selection:text-white">
+<body class="bg-[#F4F6F8] text-slate-800 font-sans pb-24 md:pb-12 antialiased selection:bg-brand-green selection:text-white">
 
   <!-- =========================================================================
        現行サイト共通ヘッダー（固定 / max-w-7xl 1280px完全復元）
@@ -634,41 +635,40 @@
     <!-- =======================================================================
          セクション②：模試日程・出題範囲・お申し込み（PC大画面ワイド最適化）
          ======================================================================= -->
-    <section id="schedule-selector" class="py-12 md:py-16 px-4 sm:px-6 bg-white border-y border-slate-200 relative scroll-mt-16 sm:scroll-mt-[4.5rem]">
-      <div class="max-w-5xl lg:max-w-6xl mx-auto">
-        
-        <div class="text-center mb-8">
-          <span class="text-xs sm:text-sm font-bold text-brand-green uppercase tracking-wider">Schedule & Entry</span>
-          <h3 class="text-2xl md:text-3xl font-bold text-slate-900 mt-1.5">模試日程・出題範囲・申込</h3>
-          <p class="text-xs sm:text-sm text-slate-700 font-medium mt-1.5">学年と実施回を選ぶと、詳細が瞬時に切り替わります</p>
-        </div>
+    <section id="schedule-selector" class="py-8 md:py-14 px-4 sm:px-6 max-w-7xl mx-auto relative scroll-mt-16 sm:scroll-mt-[4.5rem]">
+      
+      <div class="text-center mb-6 md:mb-8">
+        <span class="text-xs sm:text-sm font-bold text-brand-green uppercase tracking-wider">Schedule & Entry</span>
+        <h3 class="text-2xl md:text-3xl font-bold text-slate-900 mt-1.5">模試日程・出題範囲・申込</h3>
+        <p class="text-xs sm:text-sm text-slate-700 font-medium mt-1.5">学年と実施回を選ぶと、詳細が瞬時に切り替わります</p>
+      </div>
 
-        <!-- スティッキータブバー（PCではワイドで押しやすいデザイン） -->
-        <div class="sticky top-16 sm:top-[4.5rem] z-30 -mx-4 sm:-mx-6 px-4 sm:px-6 py-3 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-sm transition-all mb-6">
-          <div class="max-w-5xl lg:max-w-6xl mx-auto space-y-2.5">
-            <!-- ① 学年切り替えタブ (4択スリムピル) -->
-            <div class="flex items-center gap-2 sm:gap-4">
-              <span class="text-xs font-bold text-slate-400 shrink-0 tracking-tight">学年:</span>
-              <div class="grid grid-cols-4 gap-2 flex-1 bg-slate-100 p-1.5 rounded-2xl" id="grade-tabs">
-                <button onclick="selectGrade('c3')" data-grade="c3" class="grade-btn py-2 text-xs sm:text-sm font-bold rounded-xl transition-all bg-brand-green text-white shadow-xs">中3</button>
-                <button onclick="selectGrade('c2')" data-grade="c2" class="grade-btn py-2 text-xs sm:text-sm font-bold rounded-xl transition-all text-slate-600 hover:text-slate-900">中2</button>
-                <button onclick="selectGrade('c1')" data-grade="c1" class="grade-btn py-2 text-xs sm:text-sm font-bold rounded-xl transition-all text-slate-600 hover:text-slate-900">中1</button>
-                <button onclick="selectGrade('p6')" data-grade="p6" class="grade-btn py-2 text-xs sm:text-sm font-bold rounded-xl transition-all text-slate-600 hover:text-slate-900">小6</button>
-              </div>
+      <!-- スティッキータブバー（PCではワイドで押しやすい、グレー背景から浮き出る白カード） -->
+      <div class="sticky top-16 sm:top-[4.5rem] z-30 px-4 sm:px-6 py-3.5 bg-white/95 backdrop-blur-md rounded-2xl border border-slate-200/90 shadow-md transition-all mb-6">
+        <div class="space-y-2.5">
+          <!-- ① 学年切り替えタブ (4択スリムピル) -->
+          <div class="flex items-center gap-2 sm:gap-4">
+            <span class="text-xs font-bold text-slate-500 shrink-0 tracking-tight">学年:</span>
+            <div class="grid grid-cols-4 gap-2 flex-1 bg-slate-100 p-1.5 rounded-xl" id="grade-tabs">
+              <button onclick="selectGrade('c3')" data-grade="c3" class="grade-btn py-2 text-xs sm:text-sm font-bold rounded-lg transition-all bg-brand-green text-white shadow-xs">中3</button>
+              <button onclick="selectGrade('c2')" data-grade="c2" class="grade-btn py-2 text-xs sm:text-sm font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900">中2</button>
+              <button onclick="selectGrade('c1')" data-grade="c1" class="grade-btn py-2 text-xs sm:text-sm font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900">中1</button>
+              <button onclick="selectGrade('p6')" data-grade="p6" class="grade-btn py-2 text-xs sm:text-sm font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900">小6</button>
             </div>
+          </div>
 
-            <!-- ② 実施回切り替えタブ (1行横スクロール式ピル) -->
-            <div class="flex items-center gap-2 sm:gap-4">
-              <span class="text-xs font-bold text-slate-400 shrink-0 tracking-tight">回:</span>
-              <div class="flex gap-2 overflow-x-auto no-scrollbar py-0.5 flex-1" id="round-tabs">
-                <!-- JSで動的生成 -->
-              </div>
+          <!-- ② 実施回切り替えタブ (1行横スクロール式ピル) -->
+          <div class="flex items-center gap-2 sm:gap-4">
+            <span class="text-xs font-bold text-slate-500 shrink-0 tracking-tight">回:</span>
+            <div class="flex gap-2 overflow-x-auto no-scrollbar py-0.5 flex-1" id="round-tabs">
+              <!-- JSで動的生成 -->
             </div>
           </div>
         </div>
+      </div>
 
-        <!-- ③ 選択された回の詳細カード（PCでは2カラムワイドレイアウト） -->
-        <div class="bg-gradient-to-b from-slate-50 to-white rounded-3xl border-2 border-slate-200/90 p-5 sm:p-7 lg:p-8 shadow-sm transition-all" id="card-container">
+      <!-- ③ 選択された回の詳細カード（1280px純白カードブロック：グレー背景の上に堂々と浮かび上がる） -->
+      <div class="bg-white rounded-3xl border border-slate-200/90 p-5 sm:p-7 lg:p-9 shadow-md transition-all" id="card-container">
           
           <!-- 回タイトル & ステータス -->
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-4 mb-6">
@@ -832,47 +832,47 @@
     <!-- =======================================================================
          セクション：最新のお知らせ（NEWS / PC大画面ワイド最適化）
          ======================================================================= -->
-    <section class="py-12 md:py-16 px-4 sm:px-6 max-w-5xl lg:max-w-6xl mx-auto border-b border-slate-200/80">
-      <div class="text-center mb-8">
+    <section class="py-8 md:py-14 px-4 sm:px-6 max-w-7xl mx-auto">
+      <div class="text-center mb-6 md:mb-8">
         <span class="text-xs sm:text-sm font-bold text-brand-green uppercase tracking-wider">News</span>
         <h3 class="text-2xl md:text-3xl font-bold text-slate-900 mt-1.5">最新のお知らせ</h3>
       </div>
 
-      <div class="bg-white rounded-3xl border border-slate-200 divide-y divide-slate-100 shadow-sm overflow-hidden text-xs sm:text-sm">
+      <div class="bg-white rounded-3xl border border-slate-200/90 divide-y divide-slate-100 shadow-md overflow-hidden text-xs sm:text-sm">
         
         <!-- 記事 1 -->
         <a href="news.html" class="block p-4 sm:p-5 hover:bg-slate-50 transition-colors group">
           <div class="flex items-center gap-2.5 mb-1.5">
-            <span class="text-xs font-medium text-slate-400">2026.09.19</span>
-            <span class="px-2.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-100 text-slate-600">トピックス</span>
+            <span class="text-xs font-bold text-slate-500">2026.09.19</span>
+            <span class="px-2.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-100 text-slate-700">トピックス</span>
           </div>
-          <p class="font-bold text-slate-800 group-hover:text-brand-green transition-colors leading-snug flex items-center justify-between gap-3 text-sm sm:text-base">
+          <p class="font-bold text-slate-900 group-hover:text-brand-green transition-colors leading-snug flex items-center justify-between gap-3 text-sm sm:text-base">
             <span>シルバーウィーク休業およびお問い合わせ対応について</span>
-            <svg class="w-4 h-4 text-slate-300 group-hover:text-brand-green shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            <svg class="w-4 h-4 text-slate-400 group-hover:text-brand-green shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
           </p>
         </a>
 
         <!-- 記事 2 -->
         <a href="news.html" class="block p-4 sm:p-5 hover:bg-slate-50 transition-colors group">
           <div class="flex items-center gap-2.5 mb-1.5">
-            <span class="text-xs font-medium text-slate-400">2026.09.14</span>
+            <span class="text-xs font-bold text-slate-500">2026.09.14</span>
             <span class="px-2.5 py-0.5 rounded-md text-[11px] font-bold bg-brand-greenLight text-brand-green">入試情報</span>
           </div>
-          <p class="font-bold text-slate-800 group-hover:text-brand-green transition-colors leading-snug flex items-center justify-between gap-3 text-sm sm:text-base">
+          <p class="font-bold text-slate-900 group-hover:text-brand-green transition-colors leading-snug flex items-center justify-between gap-3 text-sm sm:text-base">
             <span>【8月号結果速報】岡山5校を志望校とした受験生が計1,100名を超えました！</span>
-            <svg class="w-4 h-4 text-slate-300 group-hover:text-brand-green shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            <svg class="w-4 h-4 text-slate-400 group-hover:text-brand-green shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
           </p>
         </a>
 
         <!-- 記事 3 -->
         <a href="news.html" class="block p-4 sm:p-5 hover:bg-slate-50 transition-colors group">
           <div class="flex items-center gap-2.5 mb-1.5">
-            <span class="text-xs font-medium text-slate-400">2026.09.04</span>
+            <span class="text-xs font-bold text-slate-500">2026.09.04</span>
             <span class="px-2.5 py-0.5 rounded-md text-[11px] font-bold bg-emerald-100 text-emerald-800">要項公開</span>
           </div>
-          <p class="font-bold text-slate-800 group-hover:text-brand-green transition-colors leading-snug flex items-center justify-between gap-3 text-sm sm:text-base">
+          <p class="font-bold text-slate-900 group-hover:text-brand-green transition-colors leading-snug flex items-center justify-between gap-3 text-sm sm:text-base">
             <span>2026年度 10月号（第4回）中学3年生おかもし実施要項を公開しました</span>
-            <svg class="w-4 h-4 text-slate-300 group-hover:text-brand-green shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            <svg class="w-4 h-4 text-slate-400 group-hover:text-brand-green shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
           </p>
         </a>
 
@@ -887,41 +887,41 @@
     </section>
 
     <!-- =======================================================================
-         セクション③：よくある質問（FAQ / PC大画面ワイド最適化）
+         セクション④：よくある質問（FAQ / PC大画面ワイド最適化）
          ======================================================================= -->
-    <section class="py-12 md:py-16 px-4 sm:px-6 max-w-5xl lg:max-w-6xl mx-auto">
-      <div class="text-center mb-8">
+    <section class="py-8 md:py-14 px-4 sm:px-6 max-w-7xl mx-auto pb-16">
+      <div class="text-center mb-6 md:mb-8">
         <span class="text-xs sm:text-sm font-bold text-brand-green uppercase tracking-wider">FAQ</span>
         <h3 class="text-2xl md:text-3xl font-bold text-slate-900 mt-1.5">よくあるご質問</h3>
       </div>
 
-      <div class="space-y-3 text-xs sm:text-sm">
-        <details class="group bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 shadow-xs">
-          <summary class="flex justify-between items-center font-bold text-slate-800 cursor-pointer list-none select-none text-sm sm:text-base">
+      <div class="space-y-3.5 text-xs sm:text-sm">
+        <details class="group bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-5 shadow-xs">
+          <summary class="flex justify-between items-center font-bold text-slate-900 cursor-pointer list-none select-none text-sm sm:text-base">
             <span>Q. 塾に通っていなくても個人で申し込めますか？</span>
             <svg class="w-4 h-4 text-slate-400 transition-transform duration-200 shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
           </summary>
-          <p class="mt-3 text-slate-600 leading-relaxed pt-3 border-t border-slate-100">
+          <p class="mt-3 text-slate-700 font-medium leading-relaxed pt-3 border-t border-slate-100">
             はい、個人でのお申し込みを歓迎しております。当サイトのWEBフォームより24時間いつでもお申し込みいただけます。
           </p>
         </details>
 
-        <details class="group bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 shadow-xs">
-          <summary class="flex justify-between items-center font-bold text-slate-800 cursor-pointer list-none select-none text-sm sm:text-base">
+        <details class="group bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-5 shadow-xs">
+          <summary class="flex justify-between items-center font-bold text-slate-900 cursor-pointer list-none select-none text-sm sm:text-base">
             <span>Q. 自宅受験と会場受験の判定基準は同じですか？</span>
             <svg class="w-4 h-4 text-slate-400 transition-transform duration-200 shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
           </summary>
-          <p class="mt-3 text-slate-600 leading-relaxed pt-3 border-t border-slate-100">
+          <p class="mt-3 text-slate-700 font-medium leading-relaxed pt-3 border-t border-slate-100">
             同一の判定基準・同じ母集団データを用いて志望校判定を算出します。部活動や体調、遠方で会場に行けない場合も、まったく同じ精度の合格判定結果をお届けします。
           </p>
         </details>
 
-        <details class="group bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 shadow-xs">
-          <summary class="flex justify-between items-center font-bold text-slate-800 cursor-pointer list-none select-none text-sm sm:text-base">
+        <details class="group bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-5 shadow-xs">
+          <summary class="flex justify-between items-center font-bold text-slate-900 cursor-pointer list-none select-none text-sm sm:text-base">
             <span>Q. 成績表はいつ頃返却されますか？</span>
             <svg class="w-4 h-4 text-slate-400 transition-transform duration-200 shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
           </summary>
-          <p class="mt-3 text-slate-600 leading-relaxed pt-3 border-t border-slate-100">
+          <p class="mt-3 text-slate-700 font-medium leading-relaxed pt-3 border-t border-slate-100">
             試験実施後、約10日〜2週間前後でご自宅宛てに発送いたします。各回の正確な返却予定日は上記の「実施詳細」よりご確認いただけます。
           </p>
         </details>

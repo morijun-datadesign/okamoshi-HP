@@ -138,7 +138,13 @@
   }
   </script>
   <style>
-    body { background-color: #ffffff !important; }
+    body {
+      font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+      color: #1e293b;
+      background-color: #F4F6F8 !important;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
     #nav-contact-container:hover #nav-contact-dropdown,
     #nav-contact-container.is-open #nav-contact-dropdown {
       display: block !important;
@@ -149,7 +155,7 @@
     }
   </style>
 </head>
-<body class="bg-white font-body-md text-body-md text-on-surface antialiased min-h-screen flex flex-col justify-between selection:bg-primary/20 selection:text-primary pt-16 sm:pt-[4.5rem]">
+<body class="bg-[#F4F6F8] font-body-md text-body-md text-on-surface antialiased min-h-screen flex flex-col justify-between selection:bg-primary/20 selection:text-primary pt-16 sm:pt-[4.5rem]">
 
   <!-- ========================================== -->
   <!-- HEADER (中3 PCページ index.html と完全同期) -->
@@ -490,9 +496,9 @@
   <!-- ========================================== -->
   <!-- MAIN APPLICATION FORM CONTENT              -->
   <!-- ========================================== -->
-  <main class="flex-1 w-full bg-white">
-    <div class="max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8 w-full pt-4 sm:pt-6 pb-8 sm:pb-12">
-      <div class="flex flex-col w-full">
+  <main class="flex-1 w-full py-6 sm:py-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+      <div class="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 shadow-sm p-4 sm:p-8 lg:p-10 flex flex-col w-full">
     
     <!-- Subheader & Breadcrumbs -->
     <div class="w-full bg-white px-0 pt-4 sm:pt-0 pb-4 mb-4 sm:pb-6 sm:mb-6 border-b border-gray-200/60 sm:border-slate-200/80">

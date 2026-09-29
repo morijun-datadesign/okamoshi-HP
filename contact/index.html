@@ -72,12 +72,13 @@
     body {
       font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
       color: #1e293b;
+      background-color: #F4F6F8 !important;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
-</style>
+  </style>
 </head>
-<body class="bg-surface font-sans text-body-md text-on-surface antialiased min-h-screen flex flex-col justify-between pt-16 sm:pt-[4.5rem]">
+<body class="bg-[#F4F6F8] font-sans text-body-md text-on-surface antialiased min-h-screen flex flex-col justify-between pt-16 sm:pt-[4.5rem]">
 
   <!-- Header -->
   <header class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
@@ -201,7 +202,7 @@
 
     <!-- 1. 塾・学校関係者様 フォームコンテナ -->
     <div id="container-organization" class="transition-opacity duration-200">
-      <div class="bg-white rounded-lg border border-slate-200 shadow-sm px-4 py-8 sm:p-10 mb-8">
+      <div class="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 shadow-md px-4 py-8 sm:p-10 mb-8">
         <form id="org-contact-form" onsubmit="handleSubmit(event)" class="space-y-6">
         
         <!-- 貴塾・学校名 -->
@@ -310,7 +311,7 @@
 
     <!-- 2. 個人申込の方 フォームコンテナ -->
     <div id="container-individual" class="hidden transition-opacity duration-200">
-      <div class="bg-white rounded-lg border border-slate-200 shadow-sm px-4 py-8 sm:p-10 mb-8">
+      <div class="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 shadow-md px-4 py-8 sm:p-10 mb-8">
         <form id="individual-contact-form" onsubmit="handleSubmit(event)" class="space-y-6">
         
         <!-- 保護者様お名前 -->

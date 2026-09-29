@@ -72,7 +72,7 @@
     body {
       font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
       color: #1e293b;
-      background-color: #F4F6F8 !important;
+      background-color: #F8F9FA !important;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
@@ -123,7 +123,7 @@
   </style>
 </head>
 
-<body class="bg-brand-grayBg text-slate-800 font-sans pb-24 md:pb-12 antialiased selection:bg-brand-green selection:text-white">
+<body class="bg-[#F8F9FA] text-slate-800 font-sans pb-24 md:pb-12 antialiased selection:bg-brand-green selection:text-white">
 
   <!-- =========================================================================
        現行サイト共通ヘッダー（固定 / max-w-7xl 1280px完全復元）
@@ -1031,97 +1031,99 @@
     </section>
 
     <!-- =======================================================================
-         セクション：最新のお知らせ（NEWS / 超シンプル・フラットライン構成）
+         セクション：最新のお知らせ（NEWS / 1280px純白カード ＆ フラットライン構成）
          ======================================================================= -->
-    <section class="py-8 md:py-14 px-4 sm:px-6 max-w-7xl mx-auto">
-      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-4 sm:mb-6">
-        <div>
-          <span class="text-xs font-bold text-brand-green uppercase tracking-wider block mb-1">News &amp; Topics</span>
-          <h3 class="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight">最新のお知らせ</h3>
+    <section class="py-6 md:py-10 px-4 sm:px-6 max-w-7xl mx-auto">
+      <div class="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 md:p-12 shadow-sm">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-6 sm:mb-8">
+          <div>
+            <span class="text-xs font-bold text-brand-green uppercase tracking-wider block mb-1">News &amp; Topics</span>
+            <h3 class="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight">最新のお知らせ</h3>
+          </div>
+          <a href="news.html" class="inline-flex items-center gap-1 text-xs sm:text-sm font-bold text-brand-green hover:underline group self-start sm:self-auto mb-1">
+            <span>すべてのお知らせを見る</span>
+            <span class="material-symbols-outlined text-base group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+          </a>
         </div>
-        <a href="news.html" class="inline-flex items-center gap-1 text-xs sm:text-sm font-bold text-brand-green hover:underline group self-start sm:self-auto mb-1">
-          <span>すべてのお知らせを見る</span>
-          <span class="material-symbols-outlined text-base group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
-        </a>
-      </div>
 
-      <div id="latest-news-list">
-        
-        <!-- 記事 1 -->
-        <article class="border-b border-slate-200/60 transition-colors group">
-          <a href="detail.html?id=leoodvgmoet" class="flex flex-col sm:flex-row sm:items-center justify-between py-4 sm:py-4.5 gap-2.5 sm:gap-4 hover:bg-slate-50/70 -mx-2 sm:-mx-3 px-2 sm:px-3 rounded-lg transition-colors">
-            <div class="flex flex-col sm:flex-row sm:items-center gap-2.5 sm:gap-4 flex-1 min-w-0">
-              <div class="flex items-center gap-2 shrink-0">
-                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#c85a32] text-white shadow-xs shrink-0 tracking-tight leading-none">NEW</span>
-                <span class="flex items-center gap-1 text-xs text-slate-500 font-medium">
-                  <span class="material-symbols-outlined text-[15px] text-slate-400">calendar_today</span>
-                  <span>2026.09.28</span>
-                </span>
-                <span class="px-2.5 py-0.5 rounded text-[11px] font-bold bg-[#fef3c7] text-[#92400e] border border-[#fde68a] shrink-0">
-                  模試活用法
-                </span>
+        <div id="latest-news-list">
+          
+          <!-- 記事 1 -->
+          <article class="border-b border-slate-200/60 transition-colors group">
+            <a href="detail.html?id=leoodvgmoet" class="flex flex-col sm:flex-row sm:items-center justify-between py-4 sm:py-4.5 gap-2.5 sm:gap-4 hover:bg-slate-50/70 -mx-2 sm:-mx-3 px-2 sm:px-3 rounded-lg transition-colors">
+              <div class="flex flex-col sm:flex-row sm:items-center gap-2.5 sm:gap-4 flex-1 min-w-0">
+                <div class="flex items-center gap-2 shrink-0">
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#c85a32] text-white shadow-xs shrink-0 tracking-tight leading-none">NEW</span>
+                  <span class="flex items-center gap-1 text-xs text-slate-500 font-medium">
+                    <span class="material-symbols-outlined text-[15px] text-slate-400">calendar_today</span>
+                    <span>2026.09.28</span>
+                  </span>
+                  <span class="px-2.5 py-0.5 rounded text-[11px] font-bold bg-[#fef3c7] text-[#92400e] border border-[#fde68a] shrink-0">
+                    模試活用法
+                  </span>
+                </div>
+                <h3 class="font-bold text-sm sm:text-base text-slate-900 group-hover:text-brand-green transition-colors truncate flex-1">
+                  【8月号結果】岡山5校を志望校とした受験生が計1100名を超えました！
+                </h3>
               </div>
-              <h3 class="font-bold text-sm sm:text-base text-slate-900 group-hover:text-brand-green transition-colors truncate flex-1">
-                【8月号結果】岡山5校を志望校とした受験生が計1100名を超えました！
-              </h3>
-            </div>
-            <div class="flex items-center gap-0.5 text-xs font-bold text-[#8B3A18] shrink-0 group-hover:translate-x-0.5 transition-transform self-end sm:self-center">
-              <span>詳細を読む</span>
-              <span class="material-symbols-outlined text-[16px]">chevron_right</span>
-            </div>
-          </a>
-        </article>
-
-        <!-- 記事 2 -->
-        <article class="border-b border-slate-200/60 transition-colors group">
-          <a href="detail.html?id=b055d-p_k7" class="flex flex-col sm:flex-row sm:items-center justify-between py-4 sm:py-4.5 gap-2.5 sm:gap-4 hover:bg-slate-50/70 -mx-2 sm:-mx-3 px-2 sm:px-3 rounded-lg transition-colors">
-            <div class="flex flex-col sm:flex-row sm:items-center gap-2.5 sm:gap-4 flex-1 min-w-0">
-              <div class="flex items-center gap-2 shrink-0">
-                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#c85a32] text-white shadow-xs shrink-0 tracking-tight leading-none">NEW</span>
-                <span class="flex items-center gap-1 text-xs text-slate-500 font-medium">
-                  <span class="material-symbols-outlined text-[15px] text-slate-400">calendar_today</span>
-                  <span>2026.09.23</span>
-                </span>
-                <span class="px-2.5 py-0.5 rounded text-[11px] font-bold bg-[#fef3c7] text-[#92400e] border border-[#fde68a] shrink-0">
-                  模試活用法
-                </span>
+              <div class="flex items-center gap-0.5 text-xs font-bold text-[#8B3A18] shrink-0 group-hover:translate-x-0.5 transition-transform self-end sm:self-center">
+                <span>詳細を読む</span>
+                <span class="material-symbols-outlined text-[16px]">chevron_right</span>
               </div>
-              <h3 class="font-bold text-sm sm:text-base text-slate-900 group-hover:text-brand-green transition-colors truncate flex-1">
-                【岡山県の高校受験】合格への近道はここにある！「おかもし」が受験生から支持される理由
-              </h3>
-            </div>
-            <div class="flex items-center gap-0.5 text-xs font-bold text-[#8B3A18] shrink-0 group-hover:translate-x-0.5 transition-transform self-end sm:self-center">
-              <span>詳細を読む</span>
-              <span class="material-symbols-outlined text-[16px]">chevron_right</span>
-            </div>
-          </a>
-        </article>
+            </a>
+          </article>
 
-        <!-- 記事 3 -->
-        <article class="border-b border-slate-200/60 transition-colors group">
-          <a href="detail.html?id=20p7a-hecrv" class="flex flex-col sm:flex-row sm:items-center justify-between py-4 sm:py-4.5 gap-2.5 sm:gap-4 hover:bg-slate-50/70 -mx-2 sm:-mx-3 px-2 sm:px-3 rounded-lg transition-colors">
-            <div class="flex flex-col sm:flex-row sm:items-center gap-2.5 sm:gap-4 flex-1 min-w-0">
-              <div class="flex items-center gap-2 shrink-0">
-                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#c85a32] text-white shadow-xs shrink-0 tracking-tight leading-none">NEW</span>
-                <span class="flex items-center gap-1 text-xs text-slate-500 font-medium">
-                  <span class="material-symbols-outlined text-[15px] text-slate-400">calendar_today</span>
-                  <span>2026.09.23</span>
-                </span>
-                <span class="px-2.5 py-0.5 rounded text-[11px] font-bold bg-[#fef3c7] text-[#92400e] border border-[#fde68a] shrink-0">
-                  模試活用法
-                </span>
+          <!-- 記事 2 -->
+          <article class="border-b border-slate-200/60 transition-colors group">
+            <a href="detail.html?id=b055d-p_k7" class="flex flex-col sm:flex-row sm:items-center justify-between py-4 sm:py-4.5 gap-2.5 sm:gap-4 hover:bg-slate-50/70 -mx-2 sm:-mx-3 px-2 sm:px-3 rounded-lg transition-colors">
+              <div class="flex flex-col sm:flex-row sm:items-center gap-2.5 sm:gap-4 flex-1 min-w-0">
+                <div class="flex items-center gap-2 shrink-0">
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#c85a32] text-white shadow-xs shrink-0 tracking-tight leading-none">NEW</span>
+                  <span class="flex items-center gap-1 text-xs text-slate-500 font-medium">
+                    <span class="material-symbols-outlined text-[15px] text-slate-400">calendar_today</span>
+                    <span>2026.09.23</span>
+                  </span>
+                  <span class="px-2.5 py-0.5 rounded text-[11px] font-bold bg-[#fef3c7] text-[#92400e] border border-[#fde68a] shrink-0">
+                    模試活用法
+                  </span>
+                </div>
+                <h3 class="font-bold text-sm sm:text-base text-slate-900 group-hover:text-brand-green transition-colors truncate flex-1">
+                  【岡山県の高校受験】合格への近道はここにある！「おかもし」が受験生から支持される理由
+                </h3>
               </div>
-              <h3 class="font-bold text-sm sm:text-base text-slate-900 group-hover:text-brand-green transition-colors truncate flex-1">
-                おかもし　決済用リンク
-              </h3>
-            </div>
-            <div class="flex items-center gap-0.5 text-xs font-bold text-[#8B3A18] shrink-0 group-hover:translate-x-0.5 transition-transform self-end sm:self-center">
-              <span>詳細を読む</span>
-              <span class="material-symbols-outlined text-[16px]">chevron_right</span>
-            </div>
-          </a>
-        </article>
+              <div class="flex items-center gap-0.5 text-xs font-bold text-[#8B3A18] shrink-0 group-hover:translate-x-0.5 transition-transform self-end sm:self-center">
+                <span>詳細を読む</span>
+                <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+              </div>
+            </a>
+          </article>
 
+          <!-- 記事 3 -->
+          <article class="border-b border-slate-200/60 transition-colors group">
+            <a href="detail.html?id=20p7a-hecrv" class="flex flex-col sm:flex-row sm:items-center justify-between py-4 sm:py-4.5 gap-2.5 sm:gap-4 hover:bg-slate-50/70 -mx-2 sm:-mx-3 px-2 sm:px-3 rounded-lg transition-colors">
+              <div class="flex flex-col sm:flex-row sm:items-center gap-2.5 sm:gap-4 flex-1 min-w-0">
+                <div class="flex items-center gap-2 shrink-0">
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#c85a32] text-white shadow-xs shrink-0 tracking-tight leading-none">NEW</span>
+                  <span class="flex items-center gap-1 text-xs text-slate-500 font-medium">
+                    <span class="material-symbols-outlined text-[15px] text-slate-400">calendar_today</span>
+                    <span>2026.09.23</span>
+                  </span>
+                  <span class="px-2.5 py-0.5 rounded text-[11px] font-bold bg-[#fef3c7] text-[#92400e] border border-[#fde68a] shrink-0">
+                    模試活用法
+                  </span>
+                </div>
+                <h3 class="font-bold text-sm sm:text-base text-slate-900 group-hover:text-brand-green transition-colors truncate flex-1">
+                  おかもし　決済用リンク
+                </h3>
+              </div>
+              <div class="flex items-center gap-0.5 text-xs font-bold text-[#8B3A18] shrink-0 group-hover:translate-x-0.5 transition-transform self-end sm:self-center">
+                <span>詳細を読む</span>
+                <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+              </div>
+            </a>
+          </article>
+
+        </div>
       </div>
     </section>
 

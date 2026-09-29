@@ -123,12 +123,12 @@
   </style>
 </head>
 
-<body class="bg-[#F4F6F8] text-slate-800 font-sans pb-24 md:pb-12 antialiased selection:bg-brand-green selection:text-white">
+<body class="bg-brand-grayBg text-slate-800 font-sans pb-24 md:pb-12 antialiased selection:bg-brand-green selection:text-white">
 
   <!-- =========================================================================
        現行サイト共通ヘッダー（固定 / max-w-7xl 1280px完全復元）
        ========================================================================= -->
-  <header class="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-md border-b border-slate-200/90 shadow-[0_1px_8px_rgba(0,0,0,0.03)]">
+  <header class="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-[0_1px_8px_rgba(0,0,0,0.03)]">
     <div class="h-16 sm:h-[4.5rem] max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between gap-3 lg:gap-4 xl:gap-8">
       
       <!-- ロゴ（他ページと完全統一） -->
@@ -431,7 +431,7 @@
         <!-- ===================================================================
              CARD 01: 本番さながらの出題問題（模試用紙・問題画像）
              =================================================================== -->
-        <div class="features-card w-[86vw] sm:w-[80vw] md:w-[76%] lg:w-[78%] shrink-0 bg-white rounded-3xl p-5 sm:p-6 lg:p-8 border border-slate-200/90 shadow-md hover:shadow-lg transition-all flex flex-col md:flex-row items-stretch gap-6 lg:gap-8 relative overflow-hidden" style="scroll-snap-align: start;">
+        <div class="features-card w-[86vw] sm:w-[80vw] md:w-[76%] lg:w-[78%] shrink-0 bg-white rounded-3xl p-5 sm:p-6 lg:p-8 border border-slate-200/80 shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row items-stretch gap-6 lg:gap-8 relative overflow-hidden" style="scroll-snap-align: start;">
           
           <!-- テキストエリア（PC: 左側 / スマホ: 下側） -->
           <div class="flex-1 flex flex-col justify-between space-y-3.5 order-2 md:order-1 min-w-0">
@@ -501,7 +501,7 @@
         <!-- ===================================================================
              CARD 02: 学力診断シート（精密な成績カルテ画像・拡大モーダル対応）
              =================================================================== -->
-        <div class="features-card w-[86vw] sm:w-[80vw] md:w-[76%] lg:w-[78%] shrink-0 bg-white rounded-3xl p-5 sm:p-6 lg:p-8 border-2 border-brand-green/30 shadow-md hover:shadow-lg transition-all flex flex-col md:flex-row items-stretch gap-6 lg:gap-8 relative overflow-hidden" style="scroll-snap-align: start;">
+        <div class="features-card w-[86vw] sm:w-[80vw] md:w-[76%] lg:w-[78%] shrink-0 bg-white rounded-3xl p-5 sm:p-6 lg:p-8 border-2 border-brand-green/30 shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row items-stretch gap-6 lg:gap-8 relative overflow-hidden" style="scroll-snap-align: start;">
           
           <div class="absolute -top-1 -right-1 bg-brand-green text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl shadow-xs z-10">
             一番の強み
@@ -582,7 +582,7 @@
         <!-- ===================================================================
              CARD 03: 詳しくよく分かる解答解説（解答解説冊子画像）
              =================================================================== -->
-        <div class="features-card w-[86vw] sm:w-[80vw] md:w-[76%] lg:w-[78%] shrink-0 bg-white rounded-3xl p-5 sm:p-6 lg:p-8 border border-slate-200/90 shadow-md hover:shadow-lg transition-all flex flex-col md:flex-row items-stretch gap-6 lg:gap-8 relative overflow-hidden" style="scroll-snap-align: start;">
+        <div class="features-card w-[86vw] sm:w-[80vw] md:w-[76%] lg:w-[78%] shrink-0 bg-white rounded-3xl p-5 sm:p-6 lg:p-8 border border-slate-200/80 shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row items-stretch gap-6 lg:gap-8 relative overflow-hidden" style="scroll-snap-align: start;">
           
           <!-- テキストエリア（PC: 左側 / スマホ: 下側） -->
           <div class="flex-1 flex flex-col justify-between space-y-3.5 order-2 md:order-1 min-w-0">
@@ -667,7 +667,7 @@
       </div>
 
       <!-- スティッキータブバー（PCではワイドで押しやすい、グレー背景から浮き出る白カード） -->
-      <div class="sticky top-16 sm:top-[4.5rem] z-30 px-4 sm:px-6 py-3.5 bg-white/95 backdrop-blur-md rounded-2xl border border-slate-200/90 shadow-md transition-all mb-6">
+      <div class="sticky top-16 sm:top-[4.5rem] z-30 px-4 sm:px-6 py-3.5 bg-white/95 backdrop-blur-md rounded-2xl border border-slate-200/80 shadow-sm transition-all mb-6">
         <div class="space-y-2.5">
           <!-- ① 学年切り替えタブ (4択スリムピル) -->
           <div class="flex items-center gap-2 sm:gap-4">
@@ -691,7 +691,7 @@
       </div>
 
       <!-- ③ 選択された回の詳細カード（1280px純白カードブロック：グレー背景の上に堂々と浮かび上がる） -->
-      <div class="bg-white rounded-3xl border border-slate-200/90 p-5 sm:p-7 lg:p-9 shadow-md transition-all" id="card-container">
+      <div class="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-7 lg:p-9 shadow-sm transition-all" id="card-container">
           
           <!-- 回タイトル & ステータス -->
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-4 mb-6">
@@ -860,7 +860,7 @@
         <h3 class="text-2xl md:text-3xl font-bold text-slate-900 mt-1.5">最新のお知らせ</h3>
       </div>
 
-      <div class="bg-white rounded-3xl border border-slate-200/90 divide-y divide-slate-100 shadow-md overflow-hidden text-xs sm:text-sm">
+      <div class="bg-white rounded-3xl border border-slate-200/80 divide-y divide-slate-100 shadow-sm overflow-hidden text-xs sm:text-sm">
         
         <!-- 記事 1 -->
         <a href="news.html" class="block p-4 sm:p-5 hover:bg-slate-50 transition-colors group">
@@ -917,31 +917,31 @@
         <h3 class="text-2xl md:text-3xl font-bold text-slate-900 mt-1.5">よくあるご質問</h3>
       </div>
 
-      <div class="space-y-3.5 text-xs sm:text-sm">
-        <details class="group bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-5 shadow-xs">
-          <summary class="flex justify-between items-center font-bold text-slate-900 cursor-pointer list-none select-none text-sm sm:text-base">
+      <div class="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-7 lg:p-9 shadow-sm divide-y divide-slate-100 text-xs sm:text-sm">
+        <details class="group py-4 sm:py-5 first:pt-0 last:pb-0">
+          <summary class="flex justify-between items-center font-bold text-slate-900 cursor-pointer list-none select-none text-sm sm:text-base group-hover:text-brand-green transition-colors">
             <span>Q. 塾に通っていなくても個人で申し込めますか？</span>
-            <svg class="w-4 h-4 text-slate-400 transition-transform duration-200 shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            <svg class="w-4 h-4 text-slate-400 group-hover:text-brand-green transition-transform duration-200 shrink-0 ml-2 group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
           </summary>
           <p class="mt-3 text-slate-700 font-medium leading-relaxed pt-3 border-t border-slate-100">
             はい、個人でのお申し込みを歓迎しております。当サイトのWEBフォームより24時間いつでもお申し込みいただけます。
           </p>
         </details>
 
-        <details class="group bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-5 shadow-xs">
-          <summary class="flex justify-between items-center font-bold text-slate-900 cursor-pointer list-none select-none text-sm sm:text-base">
+        <details class="group py-4 sm:py-5 first:pt-0 last:pb-0">
+          <summary class="flex justify-between items-center font-bold text-slate-900 cursor-pointer list-none select-none text-sm sm:text-base group-hover:text-brand-green transition-colors">
             <span>Q. 自宅受験と会場受験の判定基準は同じですか？</span>
-            <svg class="w-4 h-4 text-slate-400 transition-transform duration-200 shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            <svg class="w-4 h-4 text-slate-400 group-hover:text-brand-green transition-transform duration-200 shrink-0 ml-2 group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
           </summary>
           <p class="mt-3 text-slate-700 font-medium leading-relaxed pt-3 border-t border-slate-100">
             同一の判定基準・同じ母集団データを用いて志望校判定を算出します。部活動や体調、遠方で会場に行けない場合も、まったく同じ精度の合格判定結果をお届けします。
           </p>
         </details>
 
-        <details class="group bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-5 shadow-xs">
-          <summary class="flex justify-between items-center font-bold text-slate-900 cursor-pointer list-none select-none text-sm sm:text-base">
+        <details class="group py-4 sm:py-5 first:pt-0 last:pb-0">
+          <summary class="flex justify-between items-center font-bold text-slate-900 cursor-pointer list-none select-none text-sm sm:text-base group-hover:text-brand-green transition-colors">
             <span>Q. 成績表はいつ頃返却されますか？</span>
-            <svg class="w-4 h-4 text-slate-400 transition-transform duration-200 shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            <svg class="w-4 h-4 text-slate-400 group-hover:text-brand-green transition-transform duration-200 shrink-0 ml-2 group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
           </summary>
           <p class="mt-3 text-slate-700 font-medium leading-relaxed pt-3 border-t border-slate-100">
             試験実施後、約10日〜2週間前後でご自宅宛てに発送いたします。各回の正確な返却予定日は上記の「実施詳細」よりご確認いただけます。

@@ -1039,40 +1039,40 @@
         <h3 class="text-2xl md:text-3xl font-bold text-slate-900 mt-1.5">最新のお知らせ</h3>
       </div>
 
-      <div class="bg-white rounded-3xl border border-slate-200/80 divide-y divide-slate-100 shadow-sm overflow-hidden text-xs sm:text-sm">
+      <div id="latest-news-list" class="bg-white rounded-3xl border border-slate-200/80 divide-y divide-slate-100 shadow-sm overflow-hidden text-xs sm:text-sm transition-all duration-300">
         
         <!-- 記事 1 -->
-        <a href="news.html" class="block p-4 sm:p-5 hover:bg-slate-50 transition-colors group">
+        <a href="detail.html?id=20p7a-hecrv" class="block p-4 sm:p-5 hover:bg-slate-50 transition-colors group">
           <div class="flex items-center gap-2.5 mb-1.5">
             <span class="text-xs font-bold text-slate-500">2026.09.19</span>
             <span class="px-2.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-100 text-slate-700">トピックス</span>
           </div>
           <p class="font-bold text-slate-900 group-hover:text-brand-green transition-colors leading-snug flex items-center justify-between gap-3 text-sm sm:text-base">
-            <span>シルバーウィーク休業およびお問い合わせ対応について</span>
+            <span class="truncate">シルバーウィーク休業およびお問い合わせ対応について</span>
             <svg class="w-4 h-4 text-slate-400 group-hover:text-brand-green shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
           </p>
         </a>
 
         <!-- 記事 2 -->
-        <a href="news.html" class="block p-4 sm:p-5 hover:bg-slate-50 transition-colors group">
+        <a href="detail.html?id=leoodvgmoet" class="block p-4 sm:p-5 hover:bg-slate-50 transition-colors group">
           <div class="flex items-center gap-2.5 mb-1.5">
             <span class="text-xs font-bold text-slate-500">2026.09.14</span>
             <span class="px-2.5 py-0.5 rounded-md text-[11px] font-bold bg-brand-greenLight text-brand-green">入試情報</span>
           </div>
           <p class="font-bold text-slate-900 group-hover:text-brand-green transition-colors leading-snug flex items-center justify-between gap-3 text-sm sm:text-base">
-            <span>【8月号結果速報】岡山5校を志望校とした受験生が計1,100名を超えました！</span>
+            <span class="truncate">【8月号結果速報】岡山5校を志望校とした受験生が計1,100名を超えました！</span>
             <svg class="w-4 h-4 text-slate-400 group-hover:text-brand-green shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
           </p>
         </a>
 
         <!-- 記事 3 -->
-        <a href="news.html" class="block p-4 sm:p-5 hover:bg-slate-50 transition-colors group">
+        <a href="detail.html?id=c3-oct-guide" class="block p-4 sm:p-5 hover:bg-slate-50 transition-colors group">
           <div class="flex items-center gap-2.5 mb-1.5">
             <span class="text-xs font-bold text-slate-500">2026.09.04</span>
             <span class="px-2.5 py-0.5 rounded-md text-[11px] font-bold bg-emerald-100 text-emerald-800">要項公開</span>
           </div>
           <p class="font-bold text-slate-900 group-hover:text-brand-green transition-colors leading-snug flex items-center justify-between gap-3 text-sm sm:text-base">
-            <span>2026年度 10月号（第4回）中学3年生おかもし実施要項を公開しました</span>
+            <span class="truncate">2026年度 10月号（第4回）中学3年生おかもし実施要項を公開しました</span>
             <svg class="w-4 h-4 text-slate-400 group-hover:text-brand-green shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
           </p>
         </a>
@@ -1265,6 +1265,7 @@
   <!-- =========================================================================
        JavaScript ロジック（B案データモデル & 共通ヘッダー連動）
        ========================================================================= -->
+  <script src="js/microcms-config.js"></script>
   <script>
     // 模試データモデル（examData）
     const examData = {
@@ -1639,6 +1640,11 @@
         } else {
           studentVoices.classList.remove('hidden');
         }
+      }
+
+      // 「最新のお知らせ（NEWS）」の学年連動フィルタリング描画
+      if (typeof updateNewsByGrade === 'function') {
+        updateNewsByGrade(gradeKey);
       }
 
       const rounds = examData[gradeKey].rounds;
@@ -2659,6 +2665,195 @@
       }
     }
 
+    // =========================================================================
+    // microCMS 連動：最新のお知らせ（NEWS）学年別動的フィルタリング
+    // =========================================================================
+    let allNewsArticles = [];
+
+    // 静的フォールバックデータ（microCMS未設定時・オフライン時・通信障害時に即時表示）
+    const FALLBACK_NEWS_LIST = [
+      {
+        id: "leoodvgmoet",
+        title: "【8月号結果速報】岡山5校を志望校とした受験生が計1,100名を超えました！",
+        publishedAt: "2026-09-28T06:44:38.475Z",
+        category: { name: "入試情報" },
+        targetGrade: ["中学生"]
+      },
+      {
+        id: "s9o093uhf",
+        title: "小6生対象 岡山県適性検査対策模試 10月号 実施要項を公開しました",
+        publishedAt: "2026-09-26T04:22:24.556Z",
+        category: { name: "要項公開" },
+        targetGrade: ["小6生"]
+      },
+      {
+        id: "b055d-p_k7",
+        title: "【岡山県の高校受験】合格への近道はここにある！「おかもし」が受験生から支持される理由",
+        publishedAt: "2026-09-23T12:07:45.448Z",
+        category: { name: "模試活用法" },
+        targetGrade: ["中学生"]
+      },
+      {
+        id: "20p7a-hecrv",
+        title: "シルバーウィーク休業およびお問い合わせ対応について",
+        publishedAt: "2026-09-19T05:20:07.810Z",
+        category: { name: "トピックス" },
+        targetGrade: ["全学年"]
+      },
+      {
+        id: "c3-oct-guide",
+        title: "2026年度 10月号（第4回）中学3年生おかもし実施要項を公開しました",
+        publishedAt: "2026-09-04T09:00:00.000Z",
+        category: { name: "要項公開" },
+        targetGrade: ["中学生"]
+      },
+      {
+        id: "p6-prep-guide",
+        title: "岡山県立中高一貫校（操山・大安寺・天城）適性検査対策のポイントと学習指針",
+        publishedAt: "2026-09-15T09:00:00.000Z",
+        category: { name: "入試情報" },
+        targetGrade: ["小6生"]
+      }
+    ];
+
+    function formatNewsDate(isoStr) {
+      if (!isoStr) return '';
+      const d = new Date(isoStr);
+      if (isNaN(d.getTime())) {
+        return String(isoStr).substring(0, 10).replace(/-/g, '.');
+      }
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${y}.${m}.${day}`;
+    }
+
+    function getNewsBadgeInfo(category, title) {
+      let catName = 'お知らせ';
+      if (typeof category === 'object' && category !== null && category.name) {
+        catName = category.name;
+      } else if (typeof category === 'string' && category) {
+        catName = category;
+      }
+
+      let badgeClass = 'bg-slate-100 text-slate-700';
+      if (catName.includes('重要') || (title && title.includes('重要'))) {
+        badgeClass = 'bg-red-50 text-red-700 border border-red-200/60';
+      } else if (catName.includes('入試') || (title && (title.includes('結果') || title.includes('速報') || title.includes('入試')))) {
+        badgeClass = 'bg-brand-greenLight text-brand-green';
+      } else if (catName.includes('要項') || catName.includes('日程') || (title && (title.includes('要項') || title.includes('模試')))) {
+        badgeClass = 'bg-emerald-100 text-emerald-800';
+      } else if (catName.includes('活用') || catName.includes('コラム')) {
+        badgeClass = 'bg-amber-50 text-amber-800';
+      } else if (catName.includes('トピックス') || catName.includes('更新')) {
+        badgeClass = 'bg-slate-100 text-slate-700';
+      }
+
+      return { catName, badgeClass };
+    }
+
+    function isArticleMatchGrade(post, gradeKey) {
+      let grades = post.targetGrade || [];
+      if (typeof grades === 'string') {
+        grades = [grades];
+      }
+      if (!Array.isArray(grades) || grades.length === 0) {
+        return true;
+      }
+
+      // 1. microCMSの対象学年に「全学年」が含まれる記事は全学年タブで表示
+      const hasAllGrades = grades.some(g => typeof g === 'string' && (g === '全学年' || g.includes('全学年') || g.includes('全')));
+      if (hasAllGrades) return true;
+
+      // 2. 学年タブごとのフィルタ条件
+      if (gradeKey === 'p6' || gradeKey === 'sho6') {
+        // 「小6」タブ選択時：microCMSの対象学年に「全学年」または「小6生」（または「小学生」）が含まれる記事
+        return grades.some(g => typeof g === 'string' && (g.includes('小6') || g.includes('小学生') || g.includes('小6生') || g.includes('適性検査')));
+      } else {
+        // 「中3」「中2」「中1」タブ選択時：microCMSの対象学年に「全学年」または「中学生」が含まれる記事
+        return grades.some(g => typeof g === 'string' && (g.includes('中学生') || g.includes('中3') || g.includes('中2') || g.includes('中1') || g.includes('中学')));
+      }
+    }
+
+    function updateNewsByGrade(gradeKey) {
+      const container = document.getElementById('latest-news-list');
+      if (!container) return;
+
+      const sourceArticles = (allNewsArticles && allNewsArticles.length > 0) ? allNewsArticles : FALLBACK_NEWS_LIST;
+
+      // 対象学年でフィルタリング
+      const filtered = sourceArticles.filter(post => isArticleMatchGrade(post, gradeKey));
+
+      // 降順ソート (publishedAt / date / createdAt)
+      filtered.sort((a, b) => {
+        const da = new Date(a.publishedAt || a.date || a.createdAt || 0).getTime();
+        const db = new Date(b.publishedAt || b.date || b.createdAt || 0).getTime();
+        return db - da;
+      });
+
+      // 最新の3件〜5件（デザイン枠に収まる3件）を抽出
+      const displayPosts = filtered.slice(0, 3);
+
+      if (displayPosts.length === 0) {
+        container.innerHTML = `
+          <div class="p-6 sm:p-8 text-center text-slate-500 text-xs sm:text-sm">
+            現在、該当するお知らせはありません。
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = displayPosts.map(post => {
+        const pubDate = formatNewsDate(post.publishedAt || post.date || post.createdAt);
+        const { catName, badgeClass } = getNewsBadgeInfo(post.category, post.title);
+        const detailUrl = `detail.html?id=${encodeURIComponent(post.id)}`;
+
+        return `
+          <a href="${detailUrl}" class="block p-4 sm:p-5 hover:bg-slate-50 transition-colors group">
+            <div class="flex items-center gap-2.5 mb-1.5">
+              <span class="text-xs font-bold text-slate-500">${pubDate}</span>
+              <span class="px-2.5 py-0.5 rounded-md text-[11px] font-bold ${badgeClass}">${catName}</span>
+            </div>
+            <p class="font-bold text-slate-900 group-hover:text-brand-green transition-colors leading-snug flex items-center justify-between gap-3 text-sm sm:text-base">
+              <span class="truncate">${post.title || '無題のお知らせ'}</span>
+              <svg class="w-4 h-4 text-slate-400 group-hover:text-brand-green shrink-0 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </p>
+          </a>
+        `;
+      }).join('');
+    }
+
+    async function initLatestNews() {
+      const cfg = (typeof MICROCMS_CONFIG !== 'undefined' && MICROCMS_CONFIG.serviceDomain) 
+        ? MICROCMS_CONFIG 
+        : {
+            serviceDomain: 'okamoshi-blog',
+            apiKey: '4qO3xGjs5W1r7zolbBgAX2KXP8VEUooOpMtc',
+            endpoint: 'blogs'
+          };
+
+      try {
+        const url = `https://${cfg.serviceDomain}.microcms.io/api/v1/${cfg.endpoint}?orders=-publishedAt&limit=30`;
+        const res = await fetch(url, {
+          headers: { 'X-MICROCMS-API-KEY': cfg.apiKey }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.contents && data.contents.length > 0) {
+            allNewsArticles = data.contents;
+          }
+        }
+      } catch (err) {
+        console.warn('microCMS news fetch fallback:', err);
+      }
+
+      // 現在選択中の学年で最新記事を描画
+      updateNewsByGrade(currentGrade);
+    }
+
+    window.updateNewsByGrade = updateNewsByGrade;
+    window.initLatestNews = initLatestNews;
+
     // 初期化 & URLパラメータ対応
     window.addEventListener('DOMContentLoaded', () => {
       let initialGrade = 'c3';
@@ -2686,6 +2881,9 @@
         featuresCarousel.addEventListener('scroll', updateFeaturesCarouselState, { passive: true });
         updateFeaturesCarouselState();
       }
+
+      // microCMS お知らせの動的取得と初期学年フィルタ適用
+      initLatestNews();
     });
   </script>
 </body>

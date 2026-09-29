@@ -1031,59 +1031,97 @@
     </section>
 
     <!-- =======================================================================
-         セクション：最新のお知らせ（NEWS / PC大画面ワイド最適化）
+         セクション：最新のお知らせ（NEWS / 超シンプル・フラットライン構成）
          ======================================================================= -->
     <section class="py-8 md:py-14 px-4 sm:px-6 max-w-7xl mx-auto">
-      <div class="text-center mb-6 md:mb-8">
-        <span class="text-xs sm:text-sm font-bold text-brand-green uppercase tracking-wider">News</span>
-        <h3 class="text-2xl md:text-3xl font-bold text-slate-900 mt-1.5">最新のお知らせ</h3>
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-4 sm:mb-6">
+        <div>
+          <span class="text-xs font-bold text-brand-green uppercase tracking-wider block mb-1">News &amp; Topics</span>
+          <h3 class="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight">最新のお知らせ</h3>
+        </div>
+        <a href="news.html" class="inline-flex items-center gap-1 text-xs sm:text-sm font-bold text-brand-green hover:underline group self-start sm:self-auto mb-1">
+          <span>すべてのお知らせを見る</span>
+          <span class="material-symbols-outlined text-base group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+        </a>
       </div>
 
-      <div id="latest-news-list" class="bg-white rounded-3xl border border-slate-200/80 divide-y divide-slate-100 shadow-sm overflow-hidden text-xs sm:text-sm transition-all duration-300">
+      <div id="latest-news-list">
         
         <!-- 記事 1 -->
-        <a href="detail.html?id=20p7a-hecrv" class="block p-4 sm:p-5 hover:bg-slate-50 transition-colors group">
-          <div class="flex items-center gap-2.5 mb-1.5">
-            <span class="text-xs font-bold text-slate-500">2026.09.19</span>
-            <span class="px-2.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-100 text-slate-700">トピックス</span>
-          </div>
-          <p class="font-bold text-slate-900 group-hover:text-brand-green transition-colors leading-snug flex items-center justify-between gap-3 text-sm sm:text-base">
-            <span class="truncate">シルバーウィーク休業およびお問い合わせ対応について</span>
-            <svg class="w-4 h-4 text-slate-400 group-hover:text-brand-green shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-          </p>
-        </a>
+        <article class="border-b border-slate-200/60 transition-colors group">
+          <a href="detail.html?id=leoodvgmoet" class="flex flex-col sm:flex-row sm:items-center justify-between py-4 sm:py-4.5 gap-2.5 sm:gap-4 hover:bg-slate-50/70 -mx-2 sm:-mx-3 px-2 sm:px-3 rounded-lg transition-colors">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-2.5 sm:gap-4 flex-1 min-w-0">
+              <div class="flex items-center gap-2 shrink-0">
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#c85a32] text-white shadow-xs shrink-0 tracking-tight leading-none">NEW</span>
+                <span class="flex items-center gap-1 text-xs text-slate-500 font-medium">
+                  <span class="material-symbols-outlined text-[15px] text-slate-400">calendar_today</span>
+                  <span>2026.09.28</span>
+                </span>
+                <span class="px-2.5 py-0.5 rounded text-[11px] font-bold bg-[#fef3c7] text-[#92400e] border border-[#fde68a] shrink-0">
+                  模試活用法
+                </span>
+              </div>
+              <h3 class="font-bold text-sm sm:text-base text-slate-900 group-hover:text-brand-green transition-colors truncate flex-1">
+                【8月号結果】岡山5校を志望校とした受験生が計1100名を超えました！
+              </h3>
+            </div>
+            <div class="flex items-center gap-0.5 text-xs font-bold text-[#8B3A18] shrink-0 group-hover:translate-x-0.5 transition-transform self-end sm:self-center">
+              <span>詳細を読む</span>
+              <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+            </div>
+          </a>
+        </article>
 
         <!-- 記事 2 -->
-        <a href="detail.html?id=leoodvgmoet" class="block p-4 sm:p-5 hover:bg-slate-50 transition-colors group">
-          <div class="flex items-center gap-2.5 mb-1.5">
-            <span class="text-xs font-bold text-slate-500">2026.09.14</span>
-            <span class="px-2.5 py-0.5 rounded-md text-[11px] font-bold bg-brand-greenLight text-brand-green">入試情報</span>
-          </div>
-          <p class="font-bold text-slate-900 group-hover:text-brand-green transition-colors leading-snug flex items-center justify-between gap-3 text-sm sm:text-base">
-            <span class="truncate">【8月号結果速報】岡山5校を志望校とした受験生が計1,100名を超えました！</span>
-            <svg class="w-4 h-4 text-slate-400 group-hover:text-brand-green shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-          </p>
-        </a>
+        <article class="border-b border-slate-200/60 transition-colors group">
+          <a href="detail.html?id=b055d-p_k7" class="flex flex-col sm:flex-row sm:items-center justify-between py-4 sm:py-4.5 gap-2.5 sm:gap-4 hover:bg-slate-50/70 -mx-2 sm:-mx-3 px-2 sm:px-3 rounded-lg transition-colors">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-2.5 sm:gap-4 flex-1 min-w-0">
+              <div class="flex items-center gap-2 shrink-0">
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#c85a32] text-white shadow-xs shrink-0 tracking-tight leading-none">NEW</span>
+                <span class="flex items-center gap-1 text-xs text-slate-500 font-medium">
+                  <span class="material-symbols-outlined text-[15px] text-slate-400">calendar_today</span>
+                  <span>2026.09.23</span>
+                </span>
+                <span class="px-2.5 py-0.5 rounded text-[11px] font-bold bg-[#fef3c7] text-[#92400e] border border-[#fde68a] shrink-0">
+                  模試活用法
+                </span>
+              </div>
+              <h3 class="font-bold text-sm sm:text-base text-slate-900 group-hover:text-brand-green transition-colors truncate flex-1">
+                【岡山県の高校受験】合格への近道はここにある！「おかもし」が受験生から支持される理由
+              </h3>
+            </div>
+            <div class="flex items-center gap-0.5 text-xs font-bold text-[#8B3A18] shrink-0 group-hover:translate-x-0.5 transition-transform self-end sm:self-center">
+              <span>詳細を読む</span>
+              <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+            </div>
+          </a>
+        </article>
 
         <!-- 記事 3 -->
-        <a href="detail.html?id=c3-oct-guide" class="block p-4 sm:p-5 hover:bg-slate-50 transition-colors group">
-          <div class="flex items-center gap-2.5 mb-1.5">
-            <span class="text-xs font-bold text-slate-500">2026.09.04</span>
-            <span class="px-2.5 py-0.5 rounded-md text-[11px] font-bold bg-emerald-100 text-emerald-800">要項公開</span>
-          </div>
-          <p class="font-bold text-slate-900 group-hover:text-brand-green transition-colors leading-snug flex items-center justify-between gap-3 text-sm sm:text-base">
-            <span class="truncate">2026年度 10月号（第4回）中学3年生おかもし実施要項を公開しました</span>
-            <svg class="w-4 h-4 text-slate-400 group-hover:text-brand-green shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-          </p>
-        </a>
+        <article class="border-b border-slate-200/60 transition-colors group">
+          <a href="detail.html?id=20p7a-hecrv" class="flex flex-col sm:flex-row sm:items-center justify-between py-4 sm:py-4.5 gap-2.5 sm:gap-4 hover:bg-slate-50/70 -mx-2 sm:-mx-3 px-2 sm:px-3 rounded-lg transition-colors">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-2.5 sm:gap-4 flex-1 min-w-0">
+              <div class="flex items-center gap-2 shrink-0">
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#c85a32] text-white shadow-xs shrink-0 tracking-tight leading-none">NEW</span>
+                <span class="flex items-center gap-1 text-xs text-slate-500 font-medium">
+                  <span class="material-symbols-outlined text-[15px] text-slate-400">calendar_today</span>
+                  <span>2026.09.23</span>
+                </span>
+                <span class="px-2.5 py-0.5 rounded text-[11px] font-bold bg-[#fef3c7] text-[#92400e] border border-[#fde68a] shrink-0">
+                  模試活用法
+                </span>
+              </div>
+              <h3 class="font-bold text-sm sm:text-base text-slate-900 group-hover:text-brand-green transition-colors truncate flex-1">
+                おかもし　決済用リンク
+              </h3>
+            </div>
+            <div class="flex items-center gap-0.5 text-xs font-bold text-[#8B3A18] shrink-0 group-hover:translate-x-0.5 transition-transform self-end sm:self-center">
+              <span>詳細を読む</span>
+              <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+            </div>
+          </a>
+        </article>
 
-      </div>
-
-      <div class="mt-6 text-center">
-        <a href="news.html" class="inline-flex items-center gap-1.5 text-sm font-bold text-brand-green hover:underline">
-          <span>お知らせ一覧を見る</span>
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-        </a>
       </div>
     </section>
 
@@ -2728,6 +2766,21 @@
       return `${y}.${m}.${day}`;
     }
 
+    function isNewNewsArticle(publishedAt) {
+      if (!publishedAt) return false;
+      let pubTime = new Date(publishedAt).getTime();
+      if (isNaN(pubTime)) {
+        const parts = String(publishedAt).split('.');
+        if (parts.length === 3) {
+          pubTime = new Date(parts[0], parseInt(parts[1], 10) - 1, parts[2]).getTime();
+        }
+      }
+      if (isNaN(pubTime)) return false;
+      const now = Date.now();
+      const diffDays = (now - pubTime) / (1000 * 60 * 60 * 24);
+      return diffDays >= -1 && diffDays <= 14;
+    }
+
     function getNewsBadgeInfo(category, title) {
       let catName = 'お知らせ';
       if (typeof category === 'object' && category !== null && category.name) {
@@ -2736,17 +2789,17 @@
         catName = category;
       }
 
-      let badgeClass = 'bg-slate-100 text-slate-700';
+      let badgeClass = 'bg-[#fef3c7] text-[#92400e] border border-[#fde68a]';
       if (catName.includes('重要') || (title && title.includes('重要'))) {
         badgeClass = 'bg-red-50 text-red-700 border border-red-200/60';
       } else if (catName.includes('入試') || (title && (title.includes('結果') || title.includes('速報') || title.includes('入試')))) {
-        badgeClass = 'bg-brand-greenLight text-brand-green';
+        badgeClass = 'bg-[#e8f5ee] text-[#134230] border border-[#a1d1b8]';
       } else if (catName.includes('要項') || catName.includes('日程') || (title && (title.includes('要項') || title.includes('模試')))) {
-        badgeClass = 'bg-emerald-100 text-emerald-800';
+        badgeClass = 'bg-[#ecfdf5] text-[#065f46] border border-[#a7f3d0]';
       } else if (catName.includes('活用') || catName.includes('コラム')) {
-        badgeClass = 'bg-amber-50 text-amber-800';
+        badgeClass = 'bg-[#fef3c7] text-[#92400e] border border-[#fde68a]';
       } else if (catName.includes('トピックス') || catName.includes('更新')) {
-        badgeClass = 'bg-slate-100 text-slate-700';
+        badgeClass = 'bg-slate-100 text-slate-700 border border-slate-200/60';
       }
 
       return { catName, badgeClass };
@@ -2804,21 +2857,44 @@
       }
 
       container.innerHTML = displayPosts.map(post => {
-        const pubDate = formatNewsDate(post.publishedAt || post.date || post.createdAt);
+        const rawDate = post.publishedAt || post.date || post.createdAt;
+        const pubDate = formatNewsDate(rawDate);
         const { catName, badgeClass } = getNewsBadgeInfo(post.category, post.title);
+        const isNew = isNewNewsArticle(rawDate);
+        const newBadgeHtml = isNew
+          ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#c85a32] text-white shadow-xs shrink-0 tracking-tight leading-none">NEW</span>`
+          : '';
         const detailUrl = `detail.html?id=${encodeURIComponent(post.id)}`;
 
         return `
-          <a href="${detailUrl}" class="block p-4 sm:p-5 hover:bg-slate-50 transition-colors group">
-            <div class="flex items-center gap-2.5 mb-1.5">
-              <span class="text-xs font-bold text-slate-500">${pubDate}</span>
-              <span class="px-2.5 py-0.5 rounded-md text-[11px] font-bold ${badgeClass}">${catName}</span>
-            </div>
-            <p class="font-bold text-slate-900 group-hover:text-brand-green transition-colors leading-snug flex items-center justify-between gap-3 text-sm sm:text-base">
-              <span class="truncate">${post.title || '無題のお知らせ'}</span>
-              <svg class="w-4 h-4 text-slate-400 group-hover:text-brand-green shrink-0 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-            </p>
-          </a>
+          <article class="border-b border-slate-200/60 transition-colors group">
+            <a href="${detailUrl}" class="flex flex-col sm:flex-row sm:items-center justify-between py-4 sm:py-4.5 gap-2.5 sm:gap-4 hover:bg-slate-50/70 -mx-2 sm:-mx-3 px-2 sm:px-3 rounded-lg transition-colors">
+              <div class="flex flex-col sm:flex-row sm:items-center gap-2.5 sm:gap-4 flex-1 min-w-0">
+                <!-- メタ領域: [NEW] [日付] [カテゴリバッジ] -->
+                <div class="flex items-center gap-2 shrink-0">
+                  ${newBadgeHtml}
+                  <span class="flex items-center gap-1 text-xs text-slate-500 font-medium">
+                    <span class="material-symbols-outlined text-[15px] text-slate-400">calendar_today</span>
+                    <span>${pubDate}</span>
+                  </span>
+                  <span class="px-2.5 py-0.5 rounded text-[11px] font-bold ${badgeClass} shrink-0">
+                    ${catName}
+                  </span>
+                </div>
+
+                <!-- 記事タイトル -->
+                <h3 class="font-bold text-sm sm:text-base text-slate-900 group-hover:text-brand-green transition-colors truncate flex-1">
+                  ${post.title || '無題のお知らせ'}
+                </h3>
+              </div>
+
+              <!-- 右端アクション: 詳細を読む ＞ -->
+              <div class="flex items-center gap-0.5 text-xs font-bold text-[#8B3A18] shrink-0 group-hover:translate-x-0.5 transition-transform self-end sm:self-center">
+                <span>詳細を読む</span>
+                <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+              </div>
+            </a>
+          </article>
         `;
       }).join('');
     }

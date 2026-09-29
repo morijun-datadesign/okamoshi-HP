@@ -1653,6 +1653,195 @@
       }
     };
 
+    // ==========================================
+    // microCMS 動的模試日程・会場データ (exam-guides) 連動
+    // ==========================================
+    const MICROCMS_EXAM_CONFIG = {
+      serviceDomain: 'okamoshi-blog',
+      apiKey: '4qO3xGjs5W1r7zolbBgAX2KXP8VEUooOpMtc',
+      endpoint: 'exam-guides'
+    };
+
+    // ISO 8601 (UTC) を JST の「YYYY年M月D日(曜)」または「M/D(曜)」に変換する
+    function formatJstDate(isoStr, includeYear = true) {
+      if (!isoStr) return '';
+      const d = new Date(isoStr);
+      if (isNaN(d.getTime())) return isoStr;
+      
+      const jstDate = new Date(d.getTime() + 9 * 60 * 60 * 1000);
+      const y = jstDate.getUTCFullYear();
+      const m = jstDate.getUTCMonth() + 1;
+      const day = jstDate.getUTCDate();
+      const weekDays = ['日', '月', '火', '水', '木', '金', '土'];
+      const w = weekDays[jstDate.getUTCDay()];
+
+      if (includeYear) {
+        return `${y}年${m}月${day}日(${w})`;
+      } else {
+        return `${m}/${day}(${w})`;
+      }
+    }
+
+    // 学年と号名（例: "10月号", "12月号"）から対応するラウンドIndexを判定
+    function findTargetRoundIndex(gradeKey, issueName) {
+      if (!issueName) return -1;
+      const numMatch = issueName.match(/(\d+)/);
+      const num = numMatch ? parseInt(numMatch[1], 10) : null;
+      
+      if (gradeKey === 'c3') {
+        if (num === 10) return 3; // 第4回 (10月号)
+        if (num === 12) return 5; // 第6回 (12月号)
+        if (num === 11) return 4; // 第5回 (11月号)
+        if (num === 8) return 2;  // 第3回 (8月号)
+        if (num === 6) return 1;  // 第2回 (6月号)
+        if (num === 3) return 0;  // 第1回 (3月号)
+      } else if (gradeKey === 'c2' || gradeKey === 'c1') {
+        if (num === 8) return 0;  // 第1回 (8月号)
+        if (num === 10) return 1; // 第2回 (10月号)
+        if (num === 12 || num === 1) return 2; // 第3回 (12月号 / 1月)
+      } else if (gradeKey === 'p6') {
+        if (num === 5) return 0;  // 第1回 (5月号)
+        if (num === 7 || num === 8) return 1; // 第2回 (7月号/8月号)
+        if (num === 9) return 2;  // 第3回 (9月号)
+        if (num === 10 || num === 11) return 3; // 第4回 (10月号)
+      }
+      return -1;
+    }
+
+    // microCMS session データを examData にマージ・適用
+    function applyMicroCmsSession(gradeKey, targetRoundIndex, s) {
+      const data = examData[gradeKey];
+      if (!data || !data.rounds || !data.rounds[targetRoundIndex]) return;
+      const roundObj = data.rounds[targetRoundIndex];
+
+      // 受験料
+      if (s.fee) {
+        data.price = `${Number(s.fee).toLocaleString()}円`;
+      }
+
+      // 締切日
+      if (s.deadline) {
+        roundObj.deadline = s.deadline.includes('23:59') ? s.deadline : `${s.deadline} 23:59まで`;
+      }
+
+      // 会場日程リスト (venuesList)
+      if (Array.isArray(s.schedules) && s.schedules.length > 0) {
+        roundObj.venuesList = s.schedules.map(sc => {
+          const badge = Array.isArray(sc.venue_type) ? sc.venue_type[0] : (sc.venue_type || '会場');
+          const isHome = badge.includes('自宅');
+          let dateText = '';
+          if (isHome && sc.date_start && sc.date_end) {
+            dateText = `${formatJstDate(sc.date_start, false)}〜${formatJstDate(sc.date_end, false)}`;
+          } else if (sc.date_start) {
+            dateText = formatJstDate(sc.date_start, true);
+          }
+          return {
+            badge: badge,
+            school: sc.venue_name || '',
+            date: dateText
+          };
+        });
+
+        // 会場詳細タイムライン (venueDetails)
+        roundObj.venueDetails = s.schedules.map(sc => {
+          const badge = Array.isArray(sc.venue_type) ? sc.venue_type[0] : (sc.venue_type || '会場');
+          const isHome = badge.includes('自宅');
+          const id = isHome ? 'home' : (badge.includes('津山') ? 'tsuyama' : (badge.includes('倉敷') ? 'kurashiki' : 'okayama'));
+          
+          let examDateText = '';
+          if (isHome && sc.date_start && sc.date_end) {
+            examDateText = `${formatJstDate(sc.date_start, false)} 〜 ${formatJstDate(sc.date_end, false)} 答案返送締切`;
+          } else if (sc.date_start) {
+            examDateText = formatJstDate(sc.date_start, true);
+          }
+
+          // 時間割
+          let timetableItems = [];
+          if (Array.isArray(s.timetable) && s.timetable.length > 0) {
+            timetableItems = s.timetable.map(t => ({
+              label: t.label || '',
+              time: t.time_range || ''
+            }));
+          } else {
+            if (isHome) {
+              timetableItems = [
+                { label: "問題同封の時間割・タイマーに沿って本番と同じ制限時間で自室にてご解答ください。" }
+              ];
+            } else {
+              timetableItems = [
+                { label: "集合・諸注意", time: "8:45 〜 9:00" },
+                { label: "第1科目 〜 最終科目", time: "9:05 〜 14:40" }
+              ];
+            }
+          }
+
+          // 当日持参物
+          let itemsText = s.belongings;
+          if (!itemsText) {
+            itemsText = isHome 
+              ? "お届けする問題用紙・解答用紙、筆記用具、同封の返信用封筒（ポスト投函）"
+              : "受験票、筆記用具（HB以上の鉛筆またはシャープペンシル、消しゴム）、コンパス、三角定規、腕時計、昼食・飲料、上履き（要持参）";
+          }
+
+          // 受験票等の発送
+          const ticketDispatch = isHome 
+            ? (s.shipping_date_home || "試験日の約5日前発送予定")
+            : (s.shipping_date_venue || "試験日の約5日前発送予定");
+
+          // 成績表のご返却予定
+          const reportDispatch = s.return_date || "試験実施の約10日後発送予定";
+
+          return {
+            id: id,
+            name: isHome ? '🏠 自宅受験' : badge,
+            place: sc.venue_name || (isHome ? "ご自宅（全国どこからでも受験可能）" : "指定会場"),
+            examDate: examDateText,
+            ticketDispatch: ticketDispatch,
+            reportDispatch: reportDispatch,
+            schedule: timetableItems,
+            items: itemsText
+          };
+        });
+      }
+    }
+
+    // microCMSからexam-guidesを取得
+    async function initExamGuidesFromMicroCMS() {
+      const cfg = MICROCMS_EXAM_CONFIG;
+      try {
+        const url = `https://${cfg.serviceDomain}.microcms.io/api/v1/${cfg.endpoint}?limit=100`;
+        const res = await fetch(url, {
+          headers: { 'X-MICROCMS-API-KEY': cfg.apiKey }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.contents && data.contents.length > 0) {
+            data.contents.forEach(item => {
+              let gradeKey = item.grade_code;
+              if (gradeKey === 'e6') gradeKey = 'p6';
+              
+              if (examData[gradeKey] && Array.isArray(item.sessions)) {
+                item.sessions.forEach(s => {
+                  const targetIdx = findTargetRoundIndex(gradeKey, s.issue_name);
+                  if (targetIdx !== -1) {
+                    applyMicroCmsSession(gradeKey, targetIdx, s);
+                  }
+                });
+              }
+            });
+
+            // 取得完了後に現在のカードおよびタブを再描画
+            renderRoundTabs();
+            renderCard();
+          }
+        }
+      } catch (err) {
+        console.warn('microCMS exam-guides fetch fallback:', err);
+      }
+    }
+
+    window.initExamGuidesFromMicroCMS = initExamGuidesFromMicroCMS;
+
     let currentGrade = 'c3';
     let currentRoundIndex = 3; // デフォルトで第4回（受付中）
     let currentVenueIndex = 0;
@@ -1838,12 +2027,21 @@
 
       let scheduleHtml = '';
       if (activeVenue.schedule && activeVenue.schedule.length > 0) {
-        scheduleHtml = activeVenue.schedule.map(item => `
-          <div class="flex justify-between py-1.5 border-b border-slate-100 text-xs sm:text-sm last:border-none">
-            <span class="text-slate-700 font-medium">${item.label}</span>
-            <span class="font-bold text-slate-900">${item.time || ''}</span>
-          </div>
-        `).join('');
+        scheduleHtml = activeVenue.schedule.map(item => {
+          if (!item.time) {
+            return `
+              <div class="py-1.5 border-b border-slate-100 text-xs sm:text-sm last:border-none text-slate-700 font-medium">
+                ${item.label}
+              </div>
+            `;
+          }
+          return `
+            <div class="flex justify-between py-1.5 border-b border-slate-100 text-xs sm:text-sm last:border-none">
+              <span class="text-slate-700 font-medium">${item.label}</span>
+              <span class="font-bold text-slate-900">${item.time}</span>
+            </div>
+          `;
+        }).join('');
       }
 
       venueDetailContainer.innerHTML = `
@@ -1870,7 +2068,7 @@
             <div class="w-5 h-5 rounded-full bg-slate-100 text-slate-800 flex items-center justify-center font-bold text-[11px] shrink-0 mt-0.5 border border-slate-200">2</div>
             <div class="flex-1">
               <span class="font-bold text-slate-900 block text-xs sm:text-sm">${isHome ? 'ご用意いただくもの' : '当日持参物'}</span>
-              <p class="text-slate-700 mt-1 leading-relaxed bg-slate-50 p-2.5 rounded-xl border border-slate-200/70 text-xs sm:text-sm font-medium">
+              <p class="text-slate-700 mt-1 leading-relaxed bg-slate-50 p-2.5 rounded-xl border border-slate-200/70 text-xs sm:text-sm font-medium whitespace-pre-line">
                 ${activeVenue.items}
               </p>
             </div>
@@ -2960,6 +3158,9 @@
 
       // microCMS お知らせの動的取得と初期学年フィルタ適用
       initLatestNews();
+
+      // microCMS 模試日程・会場動的データの取得
+      initExamGuidesFromMicroCMS();
     });
   </script>
 </body>

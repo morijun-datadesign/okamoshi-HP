@@ -700,13 +700,15 @@
         <p class="text-xs sm:text-sm text-slate-700 font-medium mt-1.5">学年と実施回を選ぶと、詳細が瞬時に切り替わります</p>
       </div>
 
-      <!-- スティッキータブバー（PCではワイドで押しやすい、グレー背景から浮き出る白カード） -->
-      <div class="sticky top-16 sm:top-[4.5rem] z-30 px-4 sm:px-6 py-3.5 bg-white/95 backdrop-blur-md rounded-2xl border border-slate-200/80 shadow-sm transition-all mb-6">
-        <div class="space-y-2.5">
+      <!-- 1280px純白メインカード（タブ選択＋回詳細を一体化した重厚で美しい1枚のカード） -->
+      <div class="bg-white rounded-3xl border border-slate-200 p-5 sm:p-7 lg:p-9 shadow-md transition-all" id="card-container">
+        
+        <!-- 上部：学年＆実施回タブ選択エリア（純白カード内に美しく内包） -->
+        <div class="space-y-3 pb-6 mb-6 border-b border-slate-200">
           <!-- ① 学年切り替えタブ (4択スリムピル) -->
           <div class="flex items-center gap-2 sm:gap-4">
             <span class="text-xs font-bold text-slate-500 shrink-0 tracking-tight">学年:</span>
-            <div class="grid grid-cols-4 gap-2 flex-1 bg-slate-100 p-1.5 rounded-xl" id="grade-tabs">
+            <div class="grid grid-cols-4 gap-2 flex-1 bg-slate-100 p-1.5 rounded-xl border border-slate-200/50" id="grade-tabs">
               <button onclick="selectGrade('c3')" data-grade="c3" class="grade-btn py-2 text-xs sm:text-sm font-bold rounded-lg transition-all bg-brand-green text-white shadow-xs">中3</button>
               <button onclick="selectGrade('c2')" data-grade="c2" class="grade-btn py-2 text-xs sm:text-sm font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900">中2</button>
               <button onclick="selectGrade('c1')" data-grade="c1" class="grade-btn py-2 text-xs sm:text-sm font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900">中1</button>
@@ -722,10 +724,6 @@
             </div>
           </div>
         </div>
-      </div>
-
-      <!-- ③ 選択された回の詳細カード（1280px純白カードブロック：グレー背景の上に堂々と浮かび上がる） -->
-      <div class="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-7 lg:p-9 shadow-sm transition-all" id="card-container">
           
           <!-- 回タイトル & ステータス -->
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-4 mb-6">

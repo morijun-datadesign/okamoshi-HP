@@ -330,9 +330,9 @@
         <div class="absolute inset-0 bg-gradient-to-r from-transparent via-transparent via-50% to-white/90 lg:to-white/95 pointer-events-none"></div>
       </div>
 
-      <!-- 白いパネルコンテナ（右側配置・ボタンなしのすっきりした美しい構成） -->
-      <div class="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-20 lg:py-28 flex flex-col justify-center items-end min-h-[520px] lg:min-h-[580px]">
-        <div class="w-full max-w-xl lg:max-w-2xl flex flex-col items-start gap-4 ml-auto bg-white/95 backdrop-blur-md p-6 sm:p-8 rounded-2xl shadow-sm border border-white/80">
+      <!-- 白いパネルコンテナ（右側配置・テキスト＋2大導線ボタン一体化） -->
+      <div class="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-16 lg:py-24 flex flex-col justify-center items-end min-h-[540px] lg:min-h-[600px]">
+        <div class="w-full max-w-xl lg:max-w-2xl flex flex-col items-start gap-4 ml-auto bg-white/95 backdrop-blur-md p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200/80">
           <div class="space-y-3 w-full">
             <p class="text-sm sm:text-lg lg:text-xl font-bold text-[#9E3A14] tracking-normal sm:tracking-wide">志望校合格への確かな現在地を知る</p>
             <h1 class="tracking-tight leading-snug flex flex-col gap-2 sm:gap-2.5">
@@ -349,12 +349,36 @@
           <p class="text-xs sm:text-base text-[#374151] leading-relaxed max-w-xl pt-1">
             岡山県の入試傾向を徹底分析。県内多数の学習塾が採用する高い信頼性と精緻な合否判定で、受験生と保護者の不安を確信へと変えていきます。
           </p>
+
+          <!-- 2大導線ボタン（下段：左「初めての方へ」 / 右「次回に申し込む」） -->
+          <div class="grid grid-cols-2 gap-3 sm:gap-4 w-full pt-4 border-t border-slate-100">
+            <a href="#features" class="flex items-center justify-center gap-2.5 py-3 px-4 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200/90 text-slate-800 transition-all hover:border-brand-green group">
+              <div class="w-7 h-7 rounded-full bg-white border border-slate-200 flex items-center justify-center text-brand-green text-xs font-bold shrink-0 group-hover:bg-brand-green group-hover:text-white transition-colors">？</div>
+              <div class="text-left">
+                <span class="text-[10px] font-bold text-slate-500 block leading-tight">どんな模試？</span>
+                <span class="text-xs sm:text-sm font-bold text-slate-900 group-hover:text-brand-green leading-tight">初めての方へ</span>
+              </div>
+            </a>
+
+            <a href="#schedule-selector" class="flex items-center justify-center gap-2.5 py-3 px-4 rounded-xl bg-brand-green hover:bg-brand-greenDark text-white shadow-sm hover:shadow transition-all group">
+              <div class="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center text-white text-xs font-bold shrink-0">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+              </div>
+              <div class="text-left">
+                <span class="text-[10px] font-bold text-emerald-200 block leading-tight">日程・出題範囲</span>
+                <span class="text-xs sm:text-sm font-bold text-white flex items-center gap-1 leading-tight">
+                  次回に申し込む
+                  <svg class="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+                </span>
+              </div>
+            </a>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- 【スマホ表示: md未満】従来レイアウト完全復元：全幅背景＋重ねテキストカード（ボタンなし・すっきり美しい構成） -->
-    <section class="block md:hidden relative w-full overflow-hidden bg-brand-grayBg pb-4">
+    <!-- 【スマホ表示: md未満】従来レイアウト完全復元：全幅背景＋重ねテキスト＆2大ボタン統合カード -->
+    <section class="block md:hidden relative w-full overflow-hidden bg-brand-grayBg pb-6">
       <!-- 全幅背景写真エリア（ヘッダー直下・左右横幅いっぱい・青空グラデーション＋左側人物） -->
       <div class="w-full h-64 sm:h-72 relative overflow-hidden bg-sky-100">
         <img 
@@ -369,25 +393,44 @@
         <div class="absolute inset-0 bg-gradient-to-t from-black/15 via-transparent to-transparent pointer-events-none"></div>
       </div>
 
-      <!-- 重ねテキストカード（全幅ビジュアル下部に被さる白い角丸カード） -->
+      <!-- 重ねテキスト＆2大ボタン統合カード（全幅ビジュアル下部に被さる白い角丸カード） -->
       <div class="px-4 -mt-14 relative z-10">
-        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80 space-y-3">
-          <p class="text-xs sm:text-sm font-bold text-[#9E3A14] tracking-wide">志望校合格への確かな現在地を知る</p>
-          
-          <h1 class="space-y-2">
-            <div class="flex items-center gap-2 sm:gap-2.5">
-              <span class="w-[64px] sm:w-[72px] inline-flex items-center justify-center py-0.5 rounded-full bg-[#EBF6F0] border border-[#C7E6D7] text-[#134230] text-[11px] font-bold shrink-0 text-center tracking-wide">中学生</span>
-              <span class="font-bold text-slate-900 text-base sm:text-lg tracking-tight">岡山県統一模擬試験</span>
-            </div>
-            <div class="flex items-center gap-2 sm:gap-2.5">
-              <span class="w-[64px] sm:w-[72px] inline-flex items-center justify-center py-0.5 rounded-full bg-[#FBF2E7] border border-[#EAD6C0] text-[#5C3D1E] text-[11px] font-bold shrink-0 text-center tracking-tight">小学6年</span>
-              <span class="font-bold text-brand-green text-base sm:text-lg tracking-tight">岡山県適性検査対策模試</span>
-            </div>
-          </h1>
+        <div class="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-slate-200/80 space-y-3.5">
+          <!-- 上段：キャッチコピー ＋ 学年バッジ ＋ 模試タイトル -->
+          <div class="space-y-2">
+            <p class="text-xs sm:text-sm font-bold text-[#9E3A14] tracking-wide">志望校合格への確かな現在地を知る</p>
+            
+            <h1 class="space-y-2">
+              <div class="flex items-center gap-2 sm:gap-2.5">
+                <span class="w-[64px] sm:w-[72px] inline-flex items-center justify-center py-0.5 rounded-full bg-[#EBF6F0] border border-[#C7E6D7] text-[#134230] text-[11px] font-bold shrink-0 text-center tracking-wide">中学生</span>
+                <span class="font-bold text-slate-900 text-base sm:text-lg tracking-tight">岡山県統一模擬試験</span>
+              </div>
+              <div class="flex items-center gap-2 sm:gap-2.5">
+                <span class="w-[64px] sm:w-[72px] inline-flex items-center justify-center py-0.5 rounded-full bg-[#FBF2E7] border border-[#EAD6C0] text-[#5C3D1E] text-[11px] font-bold shrink-0 text-center tracking-tight">小学6年</span>
+                <span class="font-bold text-brand-green text-base sm:text-lg tracking-tight">岡山県適性検査対策模試</span>
+              </div>
+            </h1>
+          </div>
 
-          <p class="text-xs text-slate-600 leading-relaxed pt-1">
+          <!-- 説明文 -->
+          <p class="text-xs text-slate-600 leading-relaxed">
             岡山県の入試傾向を徹底分析。県内多数の学習塾が採用する高い信頼性と精緻な合否判定で、受験生と保護者の不安を確信へと変えていきます。
           </p>
+
+          <!-- 下段：2大導線ボタン（左：「初めての方へ」 / 右：「次回に申し込む」） -->
+          <div class="grid grid-cols-2 gap-2.5 pt-3 border-t border-slate-100">
+            <a href="#features" class="flex flex-col items-center justify-center p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-center active:scale-98 transition-all">
+              <span class="text-[10px] font-bold text-slate-500">どんな模試？</span>
+              <span class="text-xs sm:text-sm font-bold text-brand-green mt-0.5">初めての方へ</span>
+              <span class="text-[9px] text-slate-400 mt-0.5">特徴と診断シート ↓</span>
+            </a>
+
+            <a href="#schedule-selector" class="flex flex-col items-center justify-center p-2.5 rounded-xl bg-brand-green hover:bg-brand-greenDark text-white text-center shadow-xs active:scale-98 transition-all">
+              <span class="inline-block px-1.5 py-0.2 rounded-full bg-white/20 text-[9px] font-bold text-emerald-100">次回受付中</span>
+              <span class="text-xs sm:text-sm font-bold text-white mt-0.5">次回に申し込む</span>
+              <span class="text-[9px] text-emerald-200 mt-0.5">日程・出題範囲 ↓</span>
+            </a>
+          </div>
         </div>
       </div>
     </section>

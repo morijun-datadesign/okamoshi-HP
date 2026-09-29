@@ -440,7 +440,7 @@
          ======================================================================= -->
     <section id="features" class="py-12 md:py-16 px-4 sm:px-6 max-w-7xl mx-auto overflow-hidden">
       
-      <!-- セクションヘッダー ＆ PC用 左右ナビゲーション矢印ボタン -->
+      <!-- セクションヘッダー ＆ 学年一括切り替えボタン ＆ PC用 左右ナビゲーション矢印ボタン -->
       <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6 md:mb-8">
         <div>
           <span class="text-xs sm:text-sm font-bold text-brand-green uppercase tracking-wider">Features</span>
@@ -448,14 +448,24 @@
           <p class="text-xs sm:text-sm text-slate-700 font-medium mt-1">ただ点数を出すだけでなく、本番で合格を勝ち取るための確かな理由があります。</p>
         </div>
 
-        <!-- PC用 左右ナビゲーション矢印ボタン（＜ ＞） -->
-        <div class="hidden md:flex items-center gap-2 shrink-0">
-          <button type="button" id="features-prev-btn" onclick="scrollFeaturesCarousel(-1)" aria-label="前のカードへ" class="w-10 h-10 rounded-full border border-slate-300 bg-white hover:bg-slate-50 active:bg-slate-100 flex items-center justify-center text-slate-700 shadow-xs transition-all cursor-pointer">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
-          </button>
-          <button type="button" id="features-next-btn" onclick="scrollFeaturesCarousel(1)" aria-label="次のカードへ" class="w-10 h-10 rounded-full border border-slate-300 bg-white hover:bg-slate-50 active:bg-slate-100 flex items-center justify-center text-slate-700 shadow-xs transition-all cursor-pointer">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
-          </button>
+        <!-- ヘッダー右側：学年一括切り替えボタン ＋ PC用ナビゲーション矢印ボタン -->
+        <div class="flex items-center justify-between md:justify-end gap-3 shrink-0 w-full md:w-auto">
+          <!-- 3パネル一括学年切り替えスイッチ -->
+          <div class="flex items-center gap-1 bg-slate-100 p-1.5 rounded-xl border border-slate-200/80 shadow-2xs" role="tablist" aria-label="選ばれる理由 学年一括切り替え">
+            <button type="button" onclick="switchFeatureGrade('c3')" id="feature-pill-c3" class="px-3.5 py-1.5 text-xs sm:text-sm font-bold rounded-lg transition-all bg-brand-green text-white shadow-xs cursor-pointer">中3</button>
+            <button type="button" onclick="switchFeatureGrade('c12')" id="feature-pill-c12" class="px-3.5 py-1.5 text-xs sm:text-sm font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900 cursor-pointer">中1・2</button>
+            <button type="button" onclick="switchFeatureGrade('p6')" id="feature-pill-p6" class="px-3.5 py-1.5 text-xs sm:text-sm font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900 cursor-pointer">小6</button>
+          </div>
+
+          <!-- PC用 左右ナビゲーション矢印ボタン（＜ ＞） -->
+          <div class="hidden md:flex items-center gap-2">
+            <button type="button" id="features-prev-btn" onclick="scrollFeaturesCarousel(-1)" aria-label="前のカードへ" class="w-10 h-10 rounded-full border border-slate-300 bg-white hover:bg-slate-50 active:bg-slate-100 flex items-center justify-center text-slate-700 shadow-xs transition-all cursor-pointer">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
+            </button>
+            <button type="button" id="features-next-btn" onclick="scrollFeaturesCarousel(1)" aria-label="次のカードへ" class="w-10 h-10 rounded-full border border-slate-300 bg-white hover:bg-slate-50 active:bg-slate-100 flex items-center justify-center text-slate-700 shadow-xs transition-all cursor-pointer">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -470,21 +480,12 @@
           <!-- テキストエリア（PC: 左側 / スマホ: 下側） -->
           <div class="flex-1 flex flex-col justify-between space-y-3.5 order-2 md:order-1 min-w-0">
             <div class="space-y-2.5">
-              <!-- ラベル ＆ 学年別ミニピル切替スイッチ -->
-              <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-2">
-                <div class="flex items-center gap-2">
-                  <span class="px-2.5 py-0.5 rounded-lg bg-brand-green text-white font-bold text-xs tracking-wide shadow-xs flex items-center gap-1">
-                    <span>✓</span> POINT 01
-                  </span>
-                  <span id="card1-point-label" class="text-xs sm:text-sm font-bold text-slate-900">岡山県入試の徹底分析</span>
-                </div>
-
-                <!-- 学年別ミニピル切替ボタン群（中3 / 中1・2 / 小6） -->
-                <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl shrink-0" role="tablist" aria-label="出題傾向 学年別切り替え">
-                  <button type="button" onclick="switchCard1Grade('c3')" id="card1-pill-c3" class="px-2.5 sm:px-3 py-1 text-xs font-bold rounded-lg transition-all bg-brand-green text-white shadow-xs cursor-pointer">中3</button>
-                  <button type="button" onclick="switchCard1Grade('c12')" id="card1-pill-c12" class="px-2.5 sm:px-3 py-1 text-xs font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900 cursor-pointer">中1・2</button>
-                  <button type="button" onclick="switchCard1Grade('p6')" id="card1-pill-p6" class="px-2.5 sm:px-3 py-1 text-xs font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900 cursor-pointer">小6</button>
-                </div>
+              <!-- ラベル -->
+              <div class="flex items-center gap-2 border-b border-slate-100 pb-2">
+                <span class="px-2.5 py-0.5 rounded-lg bg-brand-green text-white font-bold text-xs tracking-wide shadow-xs flex items-center gap-1">
+                  <span>✓</span> POINT 01
+                </span>
+                <span id="card1-point-label" class="text-xs sm:text-sm font-bold text-slate-900">岡山県入試の徹底分析</span>
               </div>
 
               <h4 id="card1-title" class="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 leading-snug">
@@ -544,21 +545,12 @@
           <!-- テキストエリア（PC: 左側 / スマホ: 下側） -->
           <div class="flex-1 flex flex-col justify-between space-y-3.5 order-2 md:order-1 min-w-0">
             <div class="space-y-2.5">
-              <!-- ラベル ＆ 学年別ミニピル切替スイッチ -->
-              <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-2">
-                <div class="flex items-center gap-2">
-                  <span class="px-2.5 py-0.5 rounded-lg bg-brand-green text-white font-bold text-xs tracking-wide shadow-xs flex items-center gap-1">
-                    <span>✓</span> POINT 02
-                  </span>
-                  <span id="card2-point-label" class="text-xs sm:text-sm font-bold text-slate-900">入試内申点も加味した高精度判定</span>
-                </div>
-
-                <!-- 学年別ミニピル切替ボタン群（中3 / 中1・2 / 小6） -->
-                <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl shrink-0" role="tablist" aria-label="学力診断シート 学年別切り替え">
-                  <button type="button" onclick="switchCard2Grade('c3')" id="card2-pill-c3" class="px-2.5 sm:px-3 py-1 text-xs font-bold rounded-lg transition-all bg-brand-green text-white shadow-xs cursor-pointer">中3</button>
-                  <button type="button" onclick="switchCard2Grade('c12')" id="card2-pill-c12" class="px-2.5 sm:px-3 py-1 text-xs font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900 cursor-pointer">中1・2</button>
-                  <button type="button" onclick="switchCard2Grade('p6')" id="card2-pill-p6" class="px-2.5 sm:px-3 py-1 text-xs font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900 cursor-pointer">小6</button>
-                </div>
+              <!-- ラベル -->
+              <div class="flex items-center gap-2 border-b border-slate-100 pb-2">
+                <span class="px-2.5 py-0.5 rounded-lg bg-brand-green text-white font-bold text-xs tracking-wide shadow-xs flex items-center gap-1">
+                  <span>✓</span> POINT 02
+                </span>
+                <span id="card2-point-label" class="text-xs sm:text-sm font-bold text-slate-900">入試内申点も加味した高精度判定</span>
               </div>
 
               <h4 id="card2-title" class="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 leading-snug">
@@ -621,23 +613,23 @@
           <!-- テキストエリア（PC: 左側 / スマホ: 下側） -->
           <div class="flex-1 flex flex-col justify-between space-y-3.5 order-2 md:order-1 min-w-0">
             <div class="space-y-2">
-              <div class="flex items-center gap-2">
-                <span class="px-3 py-0.5 rounded-lg bg-brand-green text-white font-bold text-xs tracking-wide shadow-xs flex items-center gap-1">
+              <div class="flex items-center gap-2 pb-2 border-b border-slate-100">
+                <span class="px-2.5 py-0.5 rounded-lg bg-brand-green text-white font-bold text-xs tracking-wide shadow-xs flex items-center gap-1">
                   <span>✓</span> POINT 03
                 </span>
-                <span class="text-xs sm:text-sm font-bold text-slate-900">復習・弱点克服を完全サポート</span>
+                <span id="card3-point-label" class="text-xs sm:text-sm font-bold text-slate-900">復習・弱点克服を完全サポート</span>
               </div>
-              <h4 class="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 leading-snug">
-                詳しくよく分かる解答解説
-                <span class="block text-xs sm:text-sm font-bold text-[#C85A32] mt-0.5">模試は解いた後が最重要。復習効率を劇的に高める丁寧な全問解説</span>
+              <h4 id="card3-title" class="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 leading-snug">
+                <span id="card3-title-text">詳しくよく分かる解答解説</span>
+                <span id="card3-subtitle" class="block text-xs sm:text-sm font-bold text-[#C85A32] mt-0.5">模試は解いた後が最重要。復習効率を劇的に高める丁寧な全問解説</span>
               </h4>
-              <p class="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed">
+              <p id="card3-desc" class="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed">
                 模試の最大の価値は「受験後の解き直し」にあります。単に正解を示すだけでなく、「なぜその解法を選択するのか」「間違えやすい落とし穴はどこか」を徹底解説した別冊を配付。自宅学習で疑問を残しません。
               </p>
             </div>
 
             <!-- 補足枠（途中式ステップ ＆ 自学自習完結） -->
-            <div class="space-y-2 pt-1 text-xs">
+            <div id="card3-features-container" class="space-y-2 pt-1 text-xs">
               <div class="p-3 rounded-2xl bg-slate-50 border border-slate-200/70 space-y-0.5">
                 <div class="flex items-center gap-1.5 font-bold text-slate-900">
                   <span class="material-symbols-outlined text-sm text-[#C85A32]">check_circle</span>
@@ -662,14 +654,15 @@
 
           <!-- 画像エリア（PC: 右側 / スマホ: 上側） -->
           <div class="w-full md:w-[260px] lg:w-[300px] xl:w-[320px] shrink-0 flex flex-col justify-center order-1 md:order-2">
-            <div class="relative w-full h-[200px] sm:h-[240px] md:h-full min-h-[220px] rounded-2xl overflow-hidden shadow-xs border border-slate-200 bg-slate-100">
+            <div class="relative w-full h-[200px] sm:h-[240px] md:h-full min-h-[220px] rounded-2xl overflow-hidden shadow-xs border border-slate-200 bg-slate-100 flex items-center justify-center p-2">
               <img 
+                id="card3-preview-img"
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjc7W9Xy59CrZCYqZmrXyItCyioUYP8uAxJO7xGCzfO9AV_Eh9ONQZGS2CDcINs4hAzoGm1tQ572PrZHhs48JyXXPtySZfoYmYJjDqunjMWzFZevtFzuL8Brlp_ELg6rNEFMfHUBOOC3196uSiPnh7PMpIkbPzqf5JhPLgUlwvJ_-R_vGj8ISUjjeuLMkXqIAoGd9ir6kSu2oeuWqAL7z7W59IyV1N48ZnFUaB6k1bhH7JCiRTQOFfJH6WtgcDhVQERQVHki5MzHPUTQ" 
                 alt="岡山県統一模擬試験 解答と解説冊子" 
-                class="w-full h-full object-cover object-center"
+                class="w-full h-full object-cover object-center rounded-xl"
               />
-              <span class="absolute bottom-2 left-2 bg-slate-900/70 backdrop-blur-xs text-white text-[9px] px-2 py-0.5 rounded-full font-bold">
-                別冊・全問詳細解説
+              <span id="card3-preview-badge" class="absolute bottom-2 left-2 bg-slate-900/70 backdrop-blur-xs text-white text-[9px] px-2 py-0.5 rounded-full font-bold">
+                高校入試型 別冊解答解説（全問途中式・採点基準掲載）
               </span>
             </div>
           </div>
@@ -2644,24 +2637,121 @@
       }
     };
 
+    const featureCard3Data = {
+      c3: {
+        pointLabel: "入試本番を見据えた復習・採点基準",
+        title: "公立高校入試の採点基準まで網羅した解答解説",
+        sub: "模試は解いた後が最重要。減点されない記述法と途中式を完全図解",
+        desc: "模試の最大の価値は「受験後の解き直し」にあります。単に正解を示すだけでなく、「なぜその解法を選択するのか」「部分点がもらえる採点基準や落とし穴はどこか」を徹底解説した別冊を配付。自宅学習で疑問を残しません。",
+        featuresHtml: `
+          <div class="p-3 rounded-2xl bg-slate-50 border border-slate-200/70 space-y-0.5">
+            <div class="flex items-center gap-1.5 font-bold text-slate-900">
+              <span class="material-symbols-outlined text-sm text-[#C85A32]">check_circle</span>
+              <span class="text-xs font-bold">疑問を残さない途中式・ステップ解説と重要公式</span>
+            </div>
+            <p class="text-[11px] sm:text-xs text-slate-700 font-medium leading-relaxed pl-5">
+              数学の途中式や理科の計算過程、英語の構文分析、国語の読解ポイントを丁寧に図解。復習時に理解が進む構成です。
+            </p>
+          </div>
+          <div class="p-3 rounded-2xl bg-slate-50 border border-slate-200/70 space-y-0.5">
+            <div class="flex items-center gap-1.5 font-bold text-slate-900">
+              <span class="material-symbols-outlined text-sm text-[#C85A32]">check_circle</span>
+              <span class="text-xs font-bold">自学自習を完結させる、圧倒的に詳しい網羅的な解説</span>
+            </div>
+            <p class="text-[11px] sm:text-xs text-slate-700 font-medium leading-relaxed pl-5">
+              大問から小問に至るまで計算過程が記載。「読んで納得できる」詳しさで、家庭学習での解き直しをスムーズに完結できます。
+            </p>
+          </div>
+        `,
+        previewLabel: "高校入試型 別冊解答解説（全問途中式・採点基準掲載）"
+      },
+      c12: {
+        pointLabel: "つまずきを早期解消する基礎〜応用解説",
+        title: "解き直しで苦手をゼロにする単元別ステップ解説",
+        sub: "間違えた原因がすぐわかる！次回の定期テスト・実力テストに直結",
+        desc: "中1・2の学習で最も大切なのは、つまずいた単元をそのまま放置しないことです。基礎事項の確認から標準・応用問題の着眼点まで、順を追って理解できる親切な解説で自学自習を強力にバックアップします。",
+        featuresHtml: `
+          <div class="p-3 rounded-2xl bg-slate-50 border border-slate-200/70 space-y-0.5">
+            <div class="flex items-center gap-1.5 font-bold text-slate-900">
+              <span class="material-symbols-outlined text-sm text-brand-green">check_circle</span>
+              <span class="text-xs font-bold">つまずきの原因がすぐわかる途中式・基本事項のまとめ</span>
+            </div>
+            <p class="text-[11px] sm:text-xs text-slate-700 font-medium leading-relaxed pl-5">
+              「どこで計算を間違えたか」「どの公式・文法を忘れていたか」が一目でわかる構成。定期テスト前の総復習にも役立ちます。
+            </p>
+          </div>
+          <div class="p-3 rounded-2xl bg-slate-50 border border-slate-200/70 space-y-0.5">
+            <div class="flex items-center gap-1.5 font-bold text-slate-900">
+              <span class="material-symbols-outlined text-sm text-brand-green">check_circle</span>
+              <span class="text-xs font-bold">次につながる類題演習ヒントと学習アドバイス</span>
+            </div>
+            <p class="text-[11px] sm:text-xs text-slate-700 font-medium leading-relaxed pl-5">
+              教科書の基礎から応用へのステップアップを丁寧にナビゲート。家庭学習でも一人で無理なく復習を完結できます。
+            </p>
+          </div>
+        `,
+        previewLabel: "中1・2学力診断型 解答解説（ステップ式途中解説・重要事項まとめ）"
+      },
+      p6: {
+        pointLabel: "適性検査の思考プロセスを解き明かす",
+        title: "公立中高一貫校 適性検査・作文の思考力解説＆添削",
+        sub: "資料読み取りの着眼点と400字作文の合格基準を徹底ガイダンス",
+        desc: "答えが一つではない適性検査だからこそ、正解に至る「思考の道筋（ロジック）」を丁寧に言語化。なぜその数値を読み取るのか、どのように条件を満たして論述・作文をまとめるのかをわかりやすく指南します。",
+        featuresHtml: `
+          <div class="p-3 rounded-2xl bg-slate-50 border border-slate-200/70 space-y-0.5">
+            <div class="flex items-center gap-1.5 font-bold text-slate-900">
+              <span class="material-symbols-outlined text-sm text-amber-600">check_circle</span>
+              <span class="text-xs font-bold">複数資料・グラフの読み解き手順と条件整理を可視化</span>
+            </div>
+            <p class="text-[11px] sm:text-xs text-slate-700 font-medium leading-relaxed pl-5">
+              適性検査特有の長い会話文や図表から、必要な情報を取り出して立式・記述するプロセスをステップごとに図解解説します。
+            </p>
+          </div>
+          <div class="p-3 rounded-2xl bg-slate-50 border border-slate-200/70 space-y-0.5">
+            <div class="flex items-center gap-1.5 font-bold text-slate-900">
+              <span class="material-symbols-outlined text-sm text-amber-600">check_circle</span>
+              <span class="text-xs font-bold">作文・記述の採点ポイントと模範解答・プロ添削の講評</span>
+            </div>
+            <p class="text-[11px] sm:text-xs text-slate-700 font-medium leading-relaxed pl-5">
+              評価される表現法や減点対象となるNGパターンを具体例で解説。自宅での書き直し練習にそのまま活用できます。
+            </p>
+          </div>
+        `,
+        previewLabel: "公立中高一貫適性検査型 解答解説（思考プロセス図解・作文講評）"
+      }
+    };
+
+    let selectedFeatureGrade = 'c3';
     let currentCard1Grade = 'c3';
     let currentCard2Grade = 'c3';
+    let currentCard3Grade = 'c3';
     let currentModalGrade = 'c3';
+
+    // 「選ばれる3つの理由」全3パネル一括切り替え関数
+    function switchFeatureGrade(grade) {
+      selectedFeatureGrade = grade;
+
+      // ヘッダーの切り替えボタングループのスタイル同期
+      ['c3', 'c12', 'p6'].forEach(g => {
+        const btn = document.getElementById(`feature-pill-${g}`);
+        if (!btn) return;
+        if (g === grade) {
+          btn.className = 'px-3.5 py-1.5 text-xs sm:text-sm font-bold rounded-lg transition-all bg-brand-green text-white shadow-xs cursor-pointer';
+        } else {
+          btn.className = 'px-3.5 py-1.5 text-xs sm:text-sm font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900 cursor-pointer';
+        }
+      });
+
+      // 全3パネルを一括連動
+      switchCard1Grade(grade);
+      switchCard2Grade(grade);
+      switchCard3Grade(grade);
+    }
 
     function switchCard1Grade(grade) {
       currentCard1Grade = grade;
       const data = featureCard1Data[grade];
       if (!data) return;
-
-      ['c3', 'c12', 'p6'].forEach(g => {
-        const btn = document.getElementById(`card1-pill-${g}`);
-        if (!btn) return;
-        if (g === grade) {
-          btn.className = 'px-2.5 sm:px-3 py-1 text-xs font-bold rounded-lg transition-all bg-brand-green text-white shadow-xs cursor-pointer';
-        } else {
-          btn.className = 'px-2.5 sm:px-3 py-1 text-xs font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900 cursor-pointer';
-        }
-      });
 
       const pointLabel = document.getElementById('card1-point-label');
       if (pointLabel) pointLabel.textContent = data.pointLabel;
@@ -2688,16 +2778,6 @@
       const data = featureCard2Data[grade];
       if (!data) return;
 
-      ['c3', 'c12', 'p6'].forEach(g => {
-        const btn = document.getElementById(`card2-pill-${g}`);
-        if (!btn) return;
-        if (g === grade) {
-          btn.className = 'px-2.5 sm:px-3 py-1 text-xs font-bold rounded-lg transition-all bg-brand-green text-white shadow-xs cursor-pointer';
-        } else {
-          btn.className = 'px-2.5 sm:px-3 py-1 text-xs font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900 cursor-pointer';
-        }
-      });
-
       const pointLabel = document.getElementById('card2-point-label');
       if (pointLabel) pointLabel.textContent = data.pointLabel;
 
@@ -2712,6 +2792,30 @@
 
       const minikarteContainer = document.getElementById('card2-minikarte-container');
       if (minikarteContainer) minikarteContainer.innerHTML = data.miniKarteHtml;
+    }
+
+    function switchCard3Grade(grade) {
+      currentCard3Grade = grade;
+      const data = featureCard3Data[grade];
+      if (!data) return;
+
+      const pointLabel = document.getElementById('card3-point-label');
+      if (pointLabel) pointLabel.textContent = data.pointLabel;
+
+      const titleText = document.getElementById('card3-title-text');
+      if (titleText) titleText.textContent = data.title;
+
+      const subtitle = document.getElementById('card3-subtitle');
+      if (subtitle) subtitle.textContent = data.sub;
+
+      const desc = document.getElementById('card3-desc');
+      if (desc) desc.textContent = data.desc;
+
+      const featuresContainer = document.getElementById('card3-features-container');
+      if (featuresContainer) featuresContainer.innerHTML = data.featuresHtml;
+
+      const previewBadge = document.getElementById('card3-preview-badge');
+      if (previewBadge) previewBadge.textContent = data.previewLabel;
     }
 
     // 診断シートモーダルの開閉関数
@@ -2755,8 +2859,10 @@
     }
 
     // グローバル公開
+    window.switchFeatureGrade = switchFeatureGrade;
     window.switchCard1Grade = switchCard1Grade;
     window.switchCard2Grade = switchCard2Grade;
+    window.switchCard3Grade = switchCard3Grade;
     window.openReportModal = openReportModal;
     window.switchModalGrade = switchModalGrade;
     window.closeReportModal = closeReportModal;
@@ -3144,10 +3250,10 @@
 
       selectGrade(initialGrade);
 
-      // 「選ばれる3つの理由」CARD 01 & CARD 02 およびモーダルの初期化
-      switchCard1Grade('c3');
-      switchCard2Grade('c3');
-      switchModalGrade('c3');
+      // 「選ばれる3つの理由」全3パネル一括初期化
+      const featureInitGrade = (initialGrade === 'p6') ? 'p6' : (initialGrade === 'c1' || initialGrade === 'c2') ? 'c12' : 'c3';
+      switchFeatureGrade(featureInitGrade);
+      switchModalGrade(featureInitGrade);
 
       // Features カルーセルの初期化・スクロール監視
       const featuresCarousel = document.getElementById('features-carousel');

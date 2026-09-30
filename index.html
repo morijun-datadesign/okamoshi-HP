@@ -844,14 +844,14 @@
 
               <!-- メインCTA（WEB申込ボタン） -->
               <div id="cta-container" class="space-y-3">
-                <a href="apply.html" id="card-cta-btn" class="w-full py-4 px-6 rounded-2xl bg-brand-green text-white font-bold text-base flex items-center justify-center gap-2 shadow-lg shadow-brand-green/20 active:scale-[0.98] transition-all hover:bg-brand-greenDark">
+                <a href="apply.html" id="card-cta-btn" class="w-full py-4 px-6 rounded-2xl bg-secondary text-white font-bold text-base sm:text-lg flex items-center justify-center gap-2 shadow-lg shadow-secondary/25 active:scale-[0.98] transition-all hover:bg-secondary-container hover:shadow-xl hover:shadow-secondary/35 hover:-translate-y-0.5">
                   <span>この回をWEBで申し込む</span>
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
                 </a>
                 
                 <div class="text-center">
                   <span class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 bg-slate-100/90 px-3.5 py-1.5 rounded-full border border-slate-200/80">
-                    <span class="w-2 h-2 rounded-full bg-brand-green"></span>
+                    <span class="w-2 h-2 rounded-full bg-secondary"></span>
                     <span>お申込みフォーム内で今後の回をまとめて選択可能です</span>
                   </span>
                 </div>
@@ -1255,7 +1255,7 @@
         <span id="floating-status-badge" class="inline-block text-[9px] font-bold text-brand-green bg-brand-greenLight px-1.5 py-0.5 rounded">次回受付中</span>
         <div id="floating-desc" class="text-xs font-bold text-slate-800 leading-tight">中3｜第4回 11/1(日) 実施</div>
       </div>
-      <a href="#schedule-selector" class="py-2.5 px-5 rounded-xl bg-brand-green text-white text-xs font-bold shadow-md shadow-brand-green/20 active:scale-95 transition-transform flex items-center gap-1.5 hover:bg-brand-greenDark">
+      <a href="#schedule-selector" class="py-2.5 px-5 rounded-xl bg-secondary text-white text-xs font-bold shadow-md shadow-secondary/25 active:scale-95 transition-transform flex items-center gap-1.5 hover:bg-secondary-container">
         <span>模試に申し込む</span>
         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
       </a>
@@ -2292,13 +2292,13 @@
           `;
 
           ctaContainer.innerHTML = `
-            <a href="apply.html?grade=${currentGrade}&round=${r.round}" class="w-full py-4 px-6 rounded-2xl bg-brand-green text-white font-bold text-base sm:text-lg flex items-center justify-center gap-2 shadow-lg shadow-brand-green/20 active:scale-[0.98] transition-all hover:bg-brand-greenDark">
+            <a href="apply.html?grade=${currentGrade}&round=${r.round}" class="w-full py-4 px-6 rounded-2xl bg-secondary text-white font-bold text-base sm:text-lg flex items-center justify-center gap-2 shadow-lg shadow-secondary/25 active:scale-[0.98] transition-all hover:bg-secondary-container hover:shadow-xl hover:shadow-secondary/35 hover:-translate-y-0.5">
               <span>第${r.round}回をWEBで申し込む</span>
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
             </a>
             <div class="text-center">
               <span class="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-slate-700 bg-slate-100 px-3.5 py-1.5 rounded-full border border-slate-200">
-                <span class="w-2 h-2 rounded-full bg-brand-green"></span>
+                <span class="w-2 h-2 rounded-full bg-secondary"></span>
                 <span>お申込みフォーム内で今後の回をまとめて選択可能です</span>
               </span>
             </div>

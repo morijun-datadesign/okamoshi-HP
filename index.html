@@ -450,11 +450,12 @@
 
         <!-- ヘッダー右側：学年一括切り替えボタン ＋ PC用ナビゲーション矢印ボタン -->
         <div class="flex items-center justify-between md:justify-end gap-3 shrink-0 w-full md:w-auto">
-          <!-- 3パネル一括学年切り替えスイッチ -->
-          <div class="flex items-center gap-1 bg-slate-100 p-1.5 rounded-xl border border-slate-200/80 shadow-2xs" role="tablist" aria-label="選ばれる理由 学年一括切り替え">
-            <button type="button" onclick="switchFeatureGrade('c3')" id="feature-pill-c3" class="px-3.5 py-1.5 text-xs sm:text-sm font-bold rounded-lg transition-all bg-brand-green text-white shadow-xs cursor-pointer">中3</button>
-            <button type="button" onclick="switchFeatureGrade('c12')" id="feature-pill-c12" class="px-3.5 py-1.5 text-xs sm:text-sm font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900 cursor-pointer">中1・2</button>
-            <button type="button" onclick="switchFeatureGrade('p6')" id="feature-pill-p6" class="px-3.5 py-1.5 text-xs sm:text-sm font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900 cursor-pointer">小6</button>
+          <!-- 3パネル一括学年切り替えスイッチ（中3 / 中2 / 中1 / 小6 の4学年完全統一） -->
+          <div class="flex items-center gap-1 bg-slate-100 p-1 sm:p-1.5 rounded-xl border border-slate-200/80 shadow-2xs" role="tablist" aria-label="選ばれる理由 学年一括切り替え">
+            <button type="button" onclick="selectGrade('c3')" id="feature-pill-c3" class="px-2.5 sm:px-3.5 py-1.5 text-xs sm:text-sm font-bold rounded-lg transition-all bg-brand-green text-white shadow-xs cursor-pointer">中3</button>
+            <button type="button" onclick="selectGrade('c2')" id="feature-pill-c2" class="px-2.5 sm:px-3.5 py-1.5 text-xs sm:text-sm font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900 cursor-pointer">中2</button>
+            <button type="button" onclick="selectGrade('c1')" id="feature-pill-c1" class="px-2.5 sm:px-3.5 py-1.5 text-xs sm:text-sm font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900 cursor-pointer">中1</button>
+            <button type="button" onclick="selectGrade('p6')" id="feature-pill-p6" class="px-2.5 sm:px-3.5 py-1.5 text-xs sm:text-sm font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900 cursor-pointer">小6</button>
           </div>
 
           <!-- PC用 左右ナビゲーション矢印ボタン（＜ ＞） -->
@@ -1819,23 +1820,30 @@
     let currentRoundIndex = 3; // デフォルトで第4回（受付中）
     let currentVenueIndex = 0;
 
-    // 学年選択
-    function selectGrade(gradeKey) {
-      currentGrade = gradeKey;
+    // 学年選択（模試日程・出題範囲・申込 ＆ 選ばれる3つの理由の双方向完全連動）
+    function selectGrade(gradeKey, syncFeatures = true) {
+      const normalized = (gradeKey === 'chu3') ? 'c3' : (gradeKey === 'chu2') ? 'c2' : (gradeKey === 'chu1') ? 'c1' : (gradeKey === 'sho6') ? 'p6' : gradeKey;
+      currentGrade = normalized;
       
+      // 申し込みエリアの学年タブのスタイル同期
       document.querySelectorAll('.grade-btn').forEach(btn => {
-        if (btn.dataset.grade === gradeKey) {
+        if (btn.dataset.grade === normalized) {
           btn.className = "grade-btn py-2 text-xs sm:text-sm font-bold rounded-xl transition-all bg-brand-green text-white shadow-xs";
         } else {
           btn.className = "grade-btn py-2 text-xs sm:text-sm font-bold rounded-xl transition-all text-slate-600 hover:text-slate-900";
         }
       });
 
+      // 「選ばれる3つの理由」セクションの学年ボタンおよび3パネルを完全同期連動
+      if (syncFeatures && typeof switchFeatureGrade === 'function') {
+        switchFeatureGrade(normalized, false);
+      }
+
       // 「おかもしを受験された生徒さんからの声」セクションの学年連動表示制御
-      // 中3(c3), 中2(c2), 中1(c1): 表示（block / visible）/ 小6(p6, sho6): 非表示（hidden）
+      // 中3(c3), 中2(c2), 中1(c1): 表示 / 小6(p6): 非表示
       const studentVoices = document.getElementById('student-voices');
       if (studentVoices) {
-        if (gradeKey === 'p6' || gradeKey === 'sho6') {
+        if (normalized === 'p6') {
           studentVoices.classList.add('hidden');
         } else {
           studentVoices.classList.remove('hidden');
@@ -1844,18 +1852,21 @@
 
       // 「最新のお知らせ（NEWS）」の学年連動フィルタリング描画
       if (typeof updateNewsByGrade === 'function') {
-        updateNewsByGrade(gradeKey);
+        updateNewsByGrade(normalized);
       }
 
-      const rounds = examData[gradeKey].rounds;
-      let targetIndex = rounds.findIndex(r => r.status === 'active');
-      if (targetIndex === -1) targetIndex = rounds.findIndex(r => r.status === 'open');
-      if (targetIndex === -1) targetIndex = rounds.length - 1;
+      const examInfo = examData[normalized];
+      if (examInfo && Array.isArray(examInfo.rounds)) {
+        const rounds = examInfo.rounds;
+        let targetIndex = rounds.findIndex(r => r.status === 'active');
+        if (targetIndex === -1) targetIndex = rounds.findIndex(r => r.status === 'open');
+        if (targetIndex === -1) targetIndex = Math.max(0, rounds.length - 1);
 
-      currentRoundIndex = targetIndex;
-      currentVenueIndex = 0;
-      renderRoundTabs();
-      renderCard();
+        currentRoundIndex = targetIndex;
+        currentVenueIndex = 0;
+        renderRoundTabs();
+        renderCard();
+      }
     }
 
     // 実施回タブのレンダリング
@@ -2718,25 +2729,42 @@
     let currentCard3Grade = 'c3';
     let currentModalGrade = 'c3';
 
-    // 「選ばれる3つの理由」全3パネル一括切り替え関数
-    function switchFeatureGrade(grade) {
-      selectedFeatureGrade = grade;
+    // 「選ばれる3つの理由」全3パネル一括切り替え関数（4ボタン同期 ＆ コンテンツマッピング ＆ 双方向連動）
+    function switchFeatureGrade(grade, syncSchedule = false) {
+      const normalized = (grade === 'chu3') ? 'c3' : (grade === 'chu2') ? 'c2' : (grade === 'chu1') ? 'c1' : (grade === 'sho6') ? 'p6' : grade;
+      selectedFeatureGrade = normalized;
 
-      // ヘッダーの切り替えボタングループのスタイル同期
-      ['c3', 'c12', 'p6'].forEach(g => {
+      // ヘッダーの切り替えボタングループ（中3 / 中2 / 中1 / 小6）のスタイル同期
+      ['c3', 'c2', 'c1', 'p6'].forEach(g => {
         const btn = document.getElementById(`feature-pill-${g}`);
         if (!btn) return;
-        if (g === grade) {
-          btn.className = 'px-3.5 py-1.5 text-xs sm:text-sm font-bold rounded-lg transition-all bg-brand-green text-white shadow-xs cursor-pointer';
+        if (g === normalized) {
+          btn.className = 'px-2.5 sm:px-3.5 py-1.5 text-xs sm:text-sm font-bold rounded-lg transition-all bg-brand-green text-white shadow-xs cursor-pointer';
         } else {
-          btn.className = 'px-3.5 py-1.5 text-xs sm:text-sm font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900 cursor-pointer';
+          btn.className = 'px-2.5 sm:px-3.5 py-1.5 text-xs sm:text-sm font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900 cursor-pointer';
         }
       });
 
+      // コンテンツマッピング：
+      // 中3(c3) ➔ c3用コンテンツ
+      // 中2(c2) または 中1(c1) ➔ 共通の c12（中1・2用）コンテンツ
+      // 小6(p6) ➔ p6用コンテンツ
+      let contentGrade = 'c3';
+      if (normalized === 'c2' || normalized === 'c1' || normalized === 'c12') {
+        contentGrade = 'c12';
+      } else if (normalized === 'p6') {
+        contentGrade = 'p6';
+      }
+
       // 全3パネルを一括連動
-      switchCard1Grade(grade);
-      switchCard2Grade(grade);
-      switchCard3Grade(grade);
+      switchCard1Grade(contentGrade);
+      switchCard2Grade(contentGrade);
+      switchCard3Grade(contentGrade);
+
+      // 下部の申し込みエリアとも双方向同期
+      if (syncSchedule && typeof selectGrade === 'function' && currentGrade !== normalized) {
+        selectGrade(normalized, false);
+      }
     }
 
     function switchCard1Grade(grade) {

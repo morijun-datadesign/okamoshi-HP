@@ -490,47 +490,45 @@
       });
     </script>
 
-  <main class="flex-1 w-full pt-3 sm:pt-4 pb-0">
+  <main class="flex-1 w-full pt-6 sm:pt-8 pb-0">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-      <div class="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 shadow-sm p-4 sm:p-8 lg:p-10 flex flex-col w-full">
-<!-- Editorial Page Title Banner & Articles List -->
-<div class="w-full mb-12 sm:mb-16">
-  <!-- Page Title -->
-  <div class="pt-1 pb-5 sm:pb-6">
-    <h1 class="text-2xl md:text-3xl font-bold text-[#1e3a2f] tracking-tight">
-      お知らせ・受験情報
-    </h1>
-    <p class="font-body-md text-sm sm:text-base text-on-surface-variant mt-1.5 leading-relaxed">
-      岡山県統一模擬試験（おかもし）の実施要項・重要なお知らせや、岡山県の高校入試・県立中高一貫校受験に役立つ受験情報・学習コラムをお届けします。
-    </p>
-  </div>
+      <!-- Editorial Page Title Banner & Articles List -->
+      <div class="w-full">
+        <!-- Page Title -->
+        <div class="pb-6 sm:pb-8">
+          <h1 class="text-2xl md:text-3xl font-bold text-[#1e3a2f] tracking-tight">
+            お知らせ・受験情報
+          </h1>
+          <p class="font-body-md text-sm sm:text-base text-on-surface-variant mt-1.5 leading-relaxed">
+            岡山県統一模擬試験（おかもし）の実施要項・重要なお知らせや、岡山県の高校入試・県立中高一貫校受験に役立つ受験情報・学習コラムをお届けします。
+          </p>
+        </div>
 
-  <!-- 記事一覧コンテナ（フラット・ヘアライン境界線） -->
-  <div id="articles-list-container" class="flex flex-col border-t border-gray-200/80">
-    <div class="p-8 text-center text-on-surface-variant flex flex-col items-center gap-2">
-      <div class="w-8 h-8 border-3 border-primary border-t-transparent rounded-full animate-spin"></div>
-      <span class="text-sm font-medium">記事を読み込んでいます...</span>
+        <!-- 記事一覧コンテナ（フラット・ヘアライン境界線） -->
+        <div id="articles-list-container" class="flex flex-col border-t border-gray-200/80">
+          <div class="p-8 text-center text-on-surface-variant flex flex-col items-center gap-2">
+            <div class="w-8 h-8 border-3 border-primary border-t-transparent rounded-full animate-spin"></div>
+            <span class="text-sm font-medium">記事を読み込んでいます...</span>
+          </div>
+        </div>
+        <!-- Pagination Component -->
+        <div class="flex items-center justify-center pt-8 sm:pt-10">
+          <nav class="flex items-center gap-space-xs bg-white border border-slate-200/80 p-space-xs rounded-lg shadow-xs">
+            <button aria-label="前へ" class="w-10 h-10 rounded-lg flex items-center justify-center text-outline hover:text-on-surface hover:bg-slate-100 transition-colors disabled:opacity-40" disabled="" type="button">
+              <span class="material-symbols-outlined text-[20px]">chevron_left</span>
+            </button>
+            <a class="w-10 h-10 rounded-lg bg-primary text-on-primary font-label-md text-label-md font-bold flex items-center justify-center shadow-sm" href="blog-detail.html">1</a>
+            <a class="w-10 h-10 rounded-lg text-on-surface-variant hover:text-primary hover:bg-slate-100 font-label-md text-label-md font-bold flex items-center justify-center transition-colors" href="blog-detail.html">2</a>
+            <a class="w-10 h-10 rounded-lg text-on-surface-variant hover:text-primary hover:bg-slate-100 font-label-md text-label-md font-bold flex items-center justify-center transition-colors" href="blog-detail.html">3</a>
+            <span class="w-8 h-10 flex items-center justify-center text-outline font-label-md text-label-md">…</span>
+            <a class="w-10 h-10 rounded-lg text-on-surface-variant hover:text-primary hover:bg-slate-100 font-label-md text-label-md font-bold flex items-center justify-center transition-colors" href="blog-detail.html">8</a>
+            <a aria-label="次へ" class="w-10 h-10 rounded-lg flex items-center justify-center text-primary hover:bg-slate-100 transition-colors" href="blog-detail.html">
+              <span class="material-symbols-outlined text-[20px]">chevron_right</span>
+            </a>
+          </nav>
+        </div>
+      </div>
     </div>
-  </div>
-<!-- Pagination Component -->
-<div class="flex items-center justify-center pt-space-lg">
-<nav class="flex items-center gap-space-xs bg-slate-50 border border-slate-200/80 p-space-xs rounded-lg shadow-xs">
-<button aria-label="前へ" class="w-10 h-10 rounded-lg flex items-center justify-center text-outline hover:text-on-surface hover:bg-surface-container transition-colors disabled:opacity-40" disabled="" type="button">
-<span class="material-symbols-outlined text-[20px]">chevron_left</span>
-</button>
-<a class="w-10 h-10 rounded-lg bg-primary text-on-primary font-label-md text-label-md font-bold flex items-center justify-center shadow-sm" href="blog-detail.html">1</a>
-<a class="w-10 h-10 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container font-label-md text-label-md font-bold flex items-center justify-center transition-colors" href="blog-detail.html">2</a>
-<a class="w-10 h-10 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container font-label-md text-label-md font-bold flex items-center justify-center transition-colors" href="blog-detail.html">3</a>
-<span class="w-8 h-10 flex items-center justify-center text-outline font-label-md text-label-md">…</span>
-<a class="w-10 h-10 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container font-label-md text-label-md font-bold flex items-center justify-center transition-colors" href="blog-detail.html">8</a>
-<a aria-label="次へ" class="w-10 h-10 rounded-lg flex items-center justify-center text-primary hover:bg-surface-container transition-colors" href="blog-detail.html">
-<span class="material-symbols-outlined text-[20px]">chevron_right</span>
-</a>
-</nav>
-</div>
-</div>
-</div>
-</div>
 
 <!-- おすすめ・関連ナビゲーション（外枠カードの二重枠を撤去し、セクション背景を薄いグレーで全幅化） -->
 <section class="w-full bg-[#F8F9FA] border-t border-slate-200/80 mt-10 sm:mt-16 py-10 sm:py-14">
@@ -879,7 +877,7 @@
 
       return `
         <article class="border-b border-gray-200/80 transition-colors group">
-          <a href="${detailUrl}" class="flex flex-col sm:flex-row sm:items-center justify-between py-3.5 sm:py-4 gap-2 sm:gap-4 cursor-pointer hover:bg-slate-50/50 sm:-mx-3 sm:px-3 rounded-lg transition-colors">
+          <a href="${detailUrl}" class="flex flex-col sm:flex-row sm:items-center justify-between py-3.5 sm:py-4 gap-2 sm:gap-4 cursor-pointer hover:bg-white hover:shadow-xs sm:-mx-3 sm:px-3 rounded-xl transition-all">
             <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 flex-1 min-w-0">
               <!-- メタ領域: [NEW] [日付] [カテゴリバッジ] -->
               <div class="flex items-center gap-2 shrink-0">

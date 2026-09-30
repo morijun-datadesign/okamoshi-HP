@@ -474,7 +474,7 @@
         <!-- ===================================================================
              CARD 01: 本番さながらの出題問題（模試用紙・問題画像）
              =================================================================== -->
-        <div class="features-card w-[86vw] sm:w-[80vw] md:w-[76%] lg:w-[78%] shrink-0 bg-slate-50 rounded-3xl p-5 sm:p-6 lg:p-8 border border-slate-200 shadow-md hover:shadow-lg transition-all flex flex-col md:flex-row items-stretch gap-6 lg:gap-8 relative overflow-hidden" style="scroll-snap-align: start;">
+        <div class="features-card w-[86vw] sm:w-[80vw] md:w-[76%] lg:w-[78%] shrink-0 bg-slate-50 rounded-3xl p-5 sm:p-6 lg:p-8 border border-slate-200/80 shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row items-stretch gap-6 lg:gap-8 relative overflow-hidden" style="scroll-snap-align: start;">
           
           <!-- テキストエリア（PC: 左側 / スマホ: 下側） -->
           <div class="flex-1 flex flex-col justify-between space-y-3.5 order-2 md:order-1 min-w-0">
@@ -535,7 +535,7 @@
         <!-- ===================================================================
              CARD 02: 学力診断シート（精密な成績カルテ画像・拡大モーダル対応）
              =================================================================== -->
-        <div class="features-card w-[86vw] sm:w-[80vw] md:w-[76%] lg:w-[78%] shrink-0 bg-slate-50 rounded-3xl p-5 sm:p-6 lg:p-8 border-2 border-brand-green/40 shadow-md hover:shadow-lg transition-all flex flex-col md:flex-row items-stretch gap-6 lg:gap-8 relative overflow-hidden" style="scroll-snap-align: start;">
+        <div class="features-card w-[86vw] sm:w-[80vw] md:w-[76%] lg:w-[78%] shrink-0 bg-slate-50 rounded-3xl p-5 sm:p-6 lg:p-8 border border-slate-200/80 shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row items-stretch gap-6 lg:gap-8 relative overflow-hidden" style="scroll-snap-align: start;">
           
           <div class="absolute -top-1 -right-1 bg-brand-green text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl shadow-xs z-10">
             一番の強み
@@ -607,7 +607,7 @@
         <!-- ===================================================================
              CARD 03: 詳しくよく分かる解答解説（解答解説冊子画像）
              =================================================================== -->
-        <div class="features-card w-[86vw] sm:w-[80vw] md:w-[76%] lg:w-[78%] shrink-0 bg-slate-50 rounded-3xl p-5 sm:p-6 lg:p-8 border border-slate-200 shadow-md hover:shadow-lg transition-all flex flex-col md:flex-row items-stretch gap-6 lg:gap-8 relative overflow-hidden" style="scroll-snap-align: start;">
+        <div class="features-card w-[86vw] sm:w-[80vw] md:w-[76%] lg:w-[78%] shrink-0 bg-slate-50 rounded-3xl p-5 sm:p-6 lg:p-8 border border-slate-200/80 shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row items-stretch gap-6 lg:gap-8 relative overflow-hidden" style="scroll-snap-align: start;">
           
           <!-- テキストエリア（PC: 左側 / スマホ: 下側） -->
           <div class="flex-1 flex flex-col justify-between space-y-3.5 order-2 md:order-1 min-w-0">
@@ -2214,6 +2214,17 @@
         cards.length - 1,
         Math.max(0, Math.round(scrollLeft / itemTotalWidth))
       );
+
+      // アクティブカードの控えめな差別化（枠線の太さは変えず、上品に枠線色と影を整える）
+      cards.forEach((c, idx) => {
+        if (idx === activeIndex) {
+          c.classList.add('border-slate-300', 'shadow-md');
+          c.classList.remove('border-slate-200/80', 'shadow-sm');
+        } else {
+          c.classList.remove('border-slate-300', 'shadow-md');
+          c.classList.add('border-slate-200/80', 'shadow-sm');
+        }
+      });
 
       // ドットインジケーター（スマホ向け）
       const dotsContainer = document.getElementById('features-dots');

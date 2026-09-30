@@ -143,7 +143,7 @@
     body {
       font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
       color: #1e293b;
-      background-color: #F8F9FA !important;
+      background-color: #F1F5F9 !important;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
@@ -155,7 +155,7 @@
   #nav-contact-container.is-open #nav-contact-chevron { transform: rotate(180deg) !important; }
 </style>
 </head>
-<body class="bg-[#F8F9FA] font-body-md text-body-md text-on-surface antialiased min-h-screen flex flex-col justify-between selection:bg-primary/20 selection:text-primary pt-16 sm:pt-[4.5rem]">
+<body class="bg-[#F1F5F9] font-body-md text-body-md text-on-surface antialiased min-h-screen flex flex-col justify-between selection:bg-primary/20 selection:text-primary pt-16 sm:pt-[4.5rem]">
 
     <header class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
     <div class="h-16 sm:h-[4.5rem] max-w-[75rem] mx-auto px-4 sm:px-6 flex items-center justify-between gap-3 lg:gap-4 xl:gap-8">
@@ -490,8 +490,8 @@
       });
     </script>
 
-  <main class="flex-1 w-full pt-6 sm:pt-8 pb-0">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+  <main class="flex-1 w-full flex flex-col items-center">
+    <div class="w-full max-w-7xl bg-white flex-1 min-h-full px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-12 sm:pb-16 flex flex-col justify-between">
       <!-- Editorial Page Title Banner & Articles List -->
       <div class="w-full">
         <!-- Page Title -->
@@ -513,7 +513,7 @@
         </div>
         <!-- Pagination Component -->
         <div class="flex items-center justify-center pt-8 sm:pt-10">
-          <nav class="flex items-center gap-space-xs bg-white border border-slate-200/80 p-space-xs rounded-lg shadow-xs">
+          <nav class="flex items-center gap-space-xs bg-slate-50 border border-slate-200/80 p-space-xs rounded-lg shadow-xs">
             <button aria-label="前へ" class="w-10 h-10 rounded-lg flex items-center justify-center text-outline hover:text-on-surface hover:bg-slate-100 transition-colors disabled:opacity-40" disabled="" type="button">
               <span class="material-symbols-outlined text-[20px]">chevron_left</span>
             </button>
@@ -528,85 +528,83 @@
           </nav>
         </div>
       </div>
-    </div>
 
-<!-- おすすめ・関連ナビゲーション（外枠カードの二重枠を撤去し、セクション背景を薄いグレーで全幅化） -->
-<section class="w-full bg-[#F8F9FA] border-t border-slate-200/80 mt-10 sm:mt-16 py-10 sm:py-14">
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-<div class="text-center pb-6 sm:pb-8">
-<span class="block text-[11px] font-semibold tracking-widest text-slate-400 uppercase">QUICK ACTION &amp; RESOURCES</span>
-<h2 class="text-lg sm:text-xl font-bold text-slate-800 mt-1">
-  おすすめ・関連ナビゲーション
-</h2>
-<p class="text-xs sm:text-sm text-slate-500 mt-1">受験準備やお近くの提携塾のご確認はこちらから</p>
-</div>
-<div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
-<!-- Quick Card 1: Exam Application -->
-<a class="group p-5 sm:p-6 bg-white rounded-2xl border border-slate-200/90 shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between" data-path="application-entry" href="apply.html">
-<div class="flex items-start justify-between gap-space-sm">
-<div class="w-10 h-10 rounded-xl bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center group-hover:scale-105 transition-transform">
-<span class="material-symbols-outlined text-xl">how_to_reg</span>
-</div>
-<span class="px-2.5 py-0.5 bg-secondary/10 text-secondary text-[11px] font-bold rounded-md">Web受付中</span>
-</div>
-<div class="mt-4">
-<h3 class="text-base font-bold text-slate-800 group-hover:text-secondary transition-colors">
-  次回模試のお申込みはこちら
-</h3>
-<p class="text-xs sm:text-sm text-slate-500 mt-1.5 leading-relaxed">
-  24時間オンラインでお申込み完了。クレジットカード・コンビニ決済対応。会場受験・自宅受験を選択いただけます。
-</p>
-</div>
-<div class="pt-4 mt-2 border-t border-slate-100 flex items-center gap-1.5 text-secondary text-xs sm:text-sm font-bold group-hover:translate-x-1 transition-transform">
-<span class="">申込みフォームへ進む</span>
-<span class="material-symbols-outlined text-base">arrow_forward</span>
-</div>
-</a>
-<!-- Quick Card 2: Partner Schools -->
-<a class="group p-5 sm:p-6 bg-white rounded-2xl border border-slate-200/90 shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between" data-path="partner-schools" href="schools_PC.html">
-<div class="flex items-start justify-between gap-space-sm">
-<div class="w-10 h-10 rounded-xl bg-primary-fixed text-on-primary-fixed flex items-center justify-center group-hover:scale-105 transition-transform">
-<span class="material-symbols-outlined text-xl">location_city</span>
-</div>
-<span class="px-2.5 py-0.5 bg-primary/10 text-primary text-[11px] font-bold rounded-md">県内120教室以上</span>
-</div>
-<div class="mt-4">
-<h3 class="text-base font-bold text-slate-800 group-hover:text-primary transition-colors">
-  岡山県内提携塾一覧を見る
-</h3>
-<p class="text-xs sm:text-sm text-slate-500 mt-1.5 leading-relaxed">
-  岡山市・倉敷市・津山市など県内各地の提携塾会場をエリア別で検索。通塾中の方は塾経由のお申込みも可能です。
-</p>
-</div>
-<div class="pt-4 mt-2 border-t border-slate-100 flex items-center gap-1.5 text-primary text-xs sm:text-sm font-bold group-hover:translate-x-1 transition-transform">
-<span class="">提携校・会場リストを見る</span>
-<span class="material-symbols-outlined text-base">arrow_forward</span>
-</div>
-</a>
-<!-- Quick Card 3: Social & Study Advice -->
-<a class="group p-5 sm:p-6 bg-white rounded-2xl border border-slate-200/90 shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between" data-path="social-instagram" href="https://www.instagram.com/okamoshi01/" target="_blank" rel="noopener noreferrer">
-<div class="flex items-start justify-between gap-space-sm">
-<div class="w-10 h-10 rounded-xl bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center group-hover:scale-105 transition-transform">
-<span class="material-symbols-outlined text-xl">photo_camera</span>
-</div>
-<span class="px-2.5 py-0.5 bg-tertiary-container/10 text-tertiary text-[11px] font-bold rounded-md">毎週更新</span>
-</div>
-<div class="mt-4">
-<h3 class="text-base font-bold text-slate-800 group-hover:text-tertiary transition-colors">
-  公式Instagram @okamoshi
-</h3>
-<p class="text-xs sm:text-sm text-slate-500 mt-1.5 leading-relaxed">
-  入試ワンポイント解説、英単語ミニクイズ、願書提出締切リマインドなど受験生・保護者向け情報をリアルタイム発信中。
-</p>
-</div>
-<div class="pt-4 mt-2 border-t border-slate-100 flex items-center gap-1.5 text-tertiary text-xs sm:text-sm font-bold group-hover:translate-x-1 transition-transform">
-<span class="">Instagramを見る</span>
-<span class="material-symbols-outlined text-base">open_in_new</span>
-</div>
-</a>
-</div>
-</div>
-</section>
+      <!-- おすすめ・関連ナビゲーション（白キャンバス内のフラット配置） -->
+      <section class="w-full border-t border-slate-200/80 mt-12 sm:mt-16 pt-10 sm:pt-14">
+        <div class="text-center pb-6 sm:pb-8">
+          <span class="block text-[11px] font-semibold tracking-widest text-slate-400 uppercase">QUICK ACTION &amp; RESOURCES</span>
+          <h2 class="text-lg sm:text-xl font-bold text-slate-800 mt-1">
+            おすすめ・関連ナビゲーション
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1">受験準備やお近くの提携塾のご確認はこちらから</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+          <!-- Quick Card 1: Exam Application -->
+          <a class="group p-5 sm:p-6 bg-slate-50/80 hover:bg-slate-50 rounded-2xl border border-slate-200/90 shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between" data-path="application-entry" href="apply.html">
+            <div class="flex items-start justify-between gap-space-sm">
+              <div class="w-10 h-10 rounded-xl bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center group-hover:scale-105 transition-transform">
+                <span class="material-symbols-outlined text-xl">how_to_reg</span>
+              </div>
+              <span class="px-2.5 py-0.5 bg-secondary/10 text-secondary text-[11px] font-bold rounded-md">Web受付中</span>
+            </div>
+            <div class="mt-4">
+              <h3 class="text-base font-bold text-slate-800 group-hover:text-secondary transition-colors">
+                次回模試のお申込みはこちら
+              </h3>
+              <p class="text-xs sm:text-sm text-slate-500 mt-1.5 leading-relaxed">
+                24時間オンラインでお申込み完了。クレジットカード・コンビニ決済対応。会場受験・自宅受験を選択いただけます。
+              </p>
+            </div>
+            <div class="pt-4 mt-2 border-t border-slate-200/60 flex items-center gap-1.5 text-secondary text-xs sm:text-sm font-bold group-hover:translate-x-1 transition-transform">
+              <span class="">申込みフォームへ進む</span>
+              <span class="material-symbols-outlined text-base">arrow_forward</span>
+            </div>
+          </a>
+          <!-- Quick Card 2: Partner Schools -->
+          <a class="group p-5 sm:p-6 bg-slate-50/80 hover:bg-slate-50 rounded-2xl border border-slate-200/90 shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between" data-path="partner-schools" href="schools_PC.html">
+            <div class="flex items-start justify-between gap-space-sm">
+              <div class="w-10 h-10 rounded-xl bg-primary-fixed text-on-primary-fixed flex items-center justify-center group-hover:scale-105 transition-transform">
+                <span class="material-symbols-outlined text-xl">location_city</span>
+              </div>
+              <span class="px-2.5 py-0.5 bg-primary/10 text-primary text-[11px] font-bold rounded-md">県内120教室以上</span>
+            </div>
+            <div class="mt-4">
+              <h3 class="text-base font-bold text-slate-800 group-hover:text-primary transition-colors">
+                岡山県内提携塾一覧を見る
+              </h3>
+              <p class="text-xs sm:text-sm text-slate-500 mt-1.5 leading-relaxed">
+                岡山市・倉敷市・津山市など県内各地の提携塾会場をエリア別で検索。通塾中の方は塾経由のお申込みも可能です。
+              </p>
+            </div>
+            <div class="pt-4 mt-2 border-t border-slate-200/60 flex items-center gap-1.5 text-primary text-xs sm:text-sm font-bold group-hover:translate-x-1 transition-transform">
+              <span class="">提携校・会場リストを見る</span>
+              <span class="material-symbols-outlined text-base">arrow_forward</span>
+            </div>
+          </a>
+          <!-- Quick Card 3: Social & Study Advice -->
+          <a class="group p-5 sm:p-6 bg-slate-50/80 hover:bg-slate-50 rounded-2xl border border-slate-200/90 shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between" data-path="social-instagram" href="https://www.instagram.com/okamoshi01/" target="_blank" rel="noopener noreferrer">
+            <div class="flex items-start justify-between gap-space-sm">
+              <div class="w-10 h-10 rounded-xl bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center group-hover:scale-105 transition-transform">
+                <span class="material-symbols-outlined text-xl">photo_camera</span>
+              </div>
+              <span class="px-2.5 py-0.5 bg-tertiary-container/10 text-tertiary text-[11px] font-bold rounded-md">毎週更新</span>
+            </div>
+            <div class="mt-4">
+              <h3 class="text-base font-bold text-slate-800 group-hover:text-tertiary transition-colors">
+                公式Instagram @okamoshi
+              </h3>
+              <p class="text-xs sm:text-sm text-slate-500 mt-1.5 leading-relaxed">
+                入試ワンポイント解説、英単語ミニクイズ、願書提出締切リマインドなど受験生・保護者向け情報をリアルタイム発信中。
+              </p>
+            </div>
+            <div class="pt-4 mt-2 border-t border-slate-200/60 flex items-center gap-1.5 text-tertiary text-xs sm:text-sm font-bold group-hover:translate-x-1 transition-transform">
+              <span class="">Instagramを見る</span>
+              <span class="material-symbols-outlined text-base">open_in_new</span>
+            </div>
+          </a>
+        </div>
+      </section>
+    </div>
 
 <!-- Inline Tab Filter Micro-Interaction Logic -->
 <script>

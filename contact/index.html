@@ -72,13 +72,13 @@
     body {
       font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
       color: #1e293b;
-      background-color: #F8F9FA !important;
+      background-color: #F1F5F9 !important;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
   </style>
 </head>
-<body class="bg-[#F8F9FA] font-sans text-body-md text-on-surface antialiased min-h-screen flex flex-col justify-between pt-16 sm:pt-[4.5rem]">
+<body class="bg-[#F1F5F9] font-sans text-body-md text-on-surface antialiased min-h-screen flex flex-col justify-between pt-16 sm:pt-[4.5rem]">
 
   <!-- Header -->
   <header class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
@@ -162,7 +162,9 @@
   </div>
 
   <!-- Main Content -->
-  <main class="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-12">
+  <main class="flex-1 w-full flex flex-col items-center">
+    <div class="w-full max-w-7xl bg-white flex-1 min-h-full px-4 sm:px-6 lg:px-8 py-6 sm:py-12 flex flex-col">
+      <div class="max-w-4xl w-full mx-auto">
     
     <!-- パンくずリスト -->
     <nav class="mb-6 flex items-center gap-2 text-xs text-on-surface-variant" aria-label="Breadcrumb">
@@ -308,6 +310,7 @@
         </div>
       </div>
     </div>
+    </div>
 
     <!-- 2. 個人申込の方 フォームコンテナ -->
     <div id="container-individual" class="hidden transition-opacity duration-200">
@@ -424,6 +427,7 @@
         </div>
       </div>
     </div>
+    </div>
 
     <!-- お電話でのお問い合わせカード -->
     <div class="p-5 sm:p-6 rounded-lg bg-white border border-slate-200 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -440,7 +444,8 @@
         <span>電話をかける</span>
       </a>
     </div>
-
+    </div>
+    </div>
   </main>
 
   <!-- Footer -->

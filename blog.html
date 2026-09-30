@@ -480,8 +480,8 @@
           </p>
         </div>
 
-        <!-- 記事一覧コンテナ（フラット・ヘアライン境界線） -->
-        <div id="articles-list-container" class="flex flex-col border-t border-gray-200/80">
+        <!-- 記事一覧コンテナ（トップページ統一のカード型デザイン） -->
+        <div id="articles-list-container" class="space-y-3">
           <div class="p-8 text-center text-on-surface-variant flex flex-col items-center gap-2">
             <div class="w-8 h-8 border-3 border-primary border-t-transparent rounded-full animate-spin"></div>
             <span class="text-sm font-medium">記事を読み込んでいます...</span>
@@ -489,16 +489,16 @@
         </div>
         <!-- Pagination Component -->
         <div class="flex items-center justify-center pt-8 sm:pt-10">
-          <nav class="flex items-center gap-space-xs bg-slate-50 border border-slate-200/80 p-space-xs rounded-lg shadow-xs">
-            <button aria-label="前へ" class="w-10 h-10 rounded-lg flex items-center justify-center text-outline hover:text-on-surface hover:bg-slate-100 transition-colors disabled:opacity-40" disabled="" type="button">
+          <nav class="flex items-center gap-1 sm:gap-2 bg-slate-50 border border-slate-200/80 p-1.5 rounded-2xl shadow-xs">
+            <button aria-label="前へ" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center text-slate-400 hover:text-slate-800 hover:bg-slate-200/60 transition-colors disabled:opacity-40 cursor-pointer" disabled="" type="button">
               <span class="material-symbols-outlined text-[20px]">chevron_left</span>
             </button>
-            <a class="w-10 h-10 rounded-lg bg-primary text-on-primary font-label-md text-label-md font-bold flex items-center justify-center shadow-sm" href="blog-detail.html">1</a>
-            <a class="w-10 h-10 rounded-lg text-on-surface-variant hover:text-primary hover:bg-slate-100 font-label-md text-label-md font-bold flex items-center justify-center transition-colors" href="blog-detail.html">2</a>
-            <a class="w-10 h-10 rounded-lg text-on-surface-variant hover:text-primary hover:bg-slate-100 font-label-md text-label-md font-bold flex items-center justify-center transition-colors" href="blog-detail.html">3</a>
-            <span class="w-8 h-10 flex items-center justify-center text-outline font-label-md text-label-md">…</span>
-            <a class="w-10 h-10 rounded-lg text-on-surface-variant hover:text-primary hover:bg-slate-100 font-label-md text-label-md font-bold flex items-center justify-center transition-colors" href="blog-detail.html">8</a>
-            <a aria-label="次へ" class="w-10 h-10 rounded-lg flex items-center justify-center text-primary hover:bg-slate-100 transition-colors" href="blog-detail.html">
+            <a class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-brand-green text-white font-bold text-sm sm:text-base flex items-center justify-center shadow-xs" href="news.html">1</a>
+            <a class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl text-slate-600 hover:text-brand-green hover:bg-slate-200/60 font-bold text-sm sm:text-base flex items-center justify-center transition-colors" href="news.html">2</a>
+            <a class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl text-slate-600 hover:text-brand-green hover:bg-slate-200/60 font-bold text-sm sm:text-base flex items-center justify-center transition-colors" href="news.html">3</a>
+            <span class="w-8 h-9 sm:h-10 flex items-center justify-center text-slate-400 text-sm font-bold">…</span>
+            <a class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl text-slate-600 hover:text-brand-green hover:bg-slate-200/60 font-bold text-sm sm:text-base flex items-center justify-center transition-colors" href="news.html">8</a>
+            <a aria-label="次へ" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center text-brand-green hover:bg-slate-200/60 transition-colors" href="news.html">
               <span class="material-symbols-outlined text-[20px]">chevron_right</span>
             </a>
           </nav>
@@ -823,20 +823,20 @@
     // カテゴリに応じたバッジスタイル決定
     function getCategoryBadgeClass(categoryText, fallbackClass) {
       if (fallbackClass) return fallbackClass;
-      if (!categoryText) return 'bg-surface-container-high text-on-surface-variant';
-      if (categoryText.includes('重要') || categoryText.includes('トピックス')) {
-        return 'bg-secondary-fixed text-on-secondary-fixed-variant';
+      if (!categoryText) return 'bg-slate-100 text-slate-700 border border-slate-200';
+      if (categoryText.includes('重要') || categoryText.includes('トピックス') || categoryText.includes('更新')) {
+        return 'bg-[#e8f5ee] text-[#134230] border border-[#a1d1b8]';
       } else if (categoryText.includes('入試') || categoryText.includes('受験') || categoryText.includes('受検')) {
-        return 'bg-primary-container text-on-primary-container';
+        return 'bg-[#e8f5ee] text-[#134230] border border-[#a1d1b8]';
       } else if (categoryText.includes('活用') || categoryText.includes('コラム')) {
-        return 'bg-tertiary-fixed text-on-tertiary-fixed';
-      } else if (categoryText.includes('要項') || categoryText.includes('日程')) {
-        return 'bg-secondary text-white';
+        return 'bg-[#fef3c7] text-[#92400e] border border-[#fde68a]';
+      } else if (categoryText.includes('要項') || categoryText.includes('日程') || categoryText.includes('模試')) {
+        return 'bg-[#ecfdf5] text-[#065f46] border border-[#a7f3d0]';
       }
-      return 'bg-primary-container text-on-primary-container';
+      return 'bg-slate-100 text-slate-700 border border-slate-200';
     }
 
-    // 5. 記事カード HTML 生成（画像なし・省スペース・NEWバッジ対応）
+    // 5. 記事カード HTML 生成（トップページの最新のお知らせと完全統一のカード型デザイン）
     function createPostCardHTML(post) {
       const categoryText = post.categoryLabel || (post.category && post.category.name) || (typeof post.category === 'string' ? post.category : 'お知らせ');
       const badgeCls = getCategoryBadgeClass(categoryText, post.badgeClass);
@@ -845,37 +845,39 @@
       const isNew = isNewArticle(rawDate);
 
       const newBadgeHtml = isNew 
-        ? `<span class="px-2 py-0.5 rounded-full bg-error text-white font-extrabold text-[10px] leading-none shrink-0 tracking-wide shadow-2xs">NEW</span>` 
+        ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#c85a32] text-white shadow-xs shrink-0 tracking-tight leading-none">NEW</span>` 
         : '';
 
       const detailUrl = `detail.html?id=${encodeURIComponent(post.id)}`;
 
       return `
-        <article class="border-b border-gray-200/80 transition-colors group">
-          <a href="${detailUrl}" class="flex flex-col sm:flex-row sm:items-center justify-between py-3.5 sm:py-4 gap-2 sm:gap-4 cursor-pointer hover:bg-white hover:shadow-xs sm:-mx-3 sm:px-3 rounded-xl transition-all">
-            <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 flex-1 min-w-0">
+        <article class="bg-white rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all overflow-hidden cursor-pointer group block">
+          <a href="${detailUrl}" class="flex flex-col sm:flex-row sm:items-center justify-between p-4 sm:p-5 gap-3 sm:gap-4 w-full">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 flex-1 min-w-0">
               <!-- メタ領域: [NEW] [日付] [カテゴリバッジ] -->
-              <div class="flex items-center gap-2 shrink-0">
+              <div class="flex items-center gap-2.5 shrink-0">
                 ${newBadgeHtml}
-                <span class="flex items-center gap-1 text-xs text-on-surface-variant font-medium">
-                  <span class="material-symbols-outlined text-[14px] text-outline">calendar_today</span>
+                <span class="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
+                  <span class="material-symbols-outlined text-[15px] text-slate-400">calendar_today</span>
                   <span>${pubDate}</span>
                 </span>
-                <span class="px-2 py-0.5 rounded text-[11px] font-bold ${badgeCls} shrink-0">
+                <span class="px-2.5 py-0.5 rounded-md text-[11px] font-bold ${badgeCls} shrink-0 shadow-2xs">
                   ${categoryText}
                 </span>
               </div>
 
-              <!-- 記事タイトル -->
-              <h3 class="font-bold text-sm sm:text-base text-on-surface group-hover:text-primary transition-colors truncate">
+              <!-- 記事タイトル（省略解除・全文表示・自然な折り返し） -->
+              <h3 class="font-bold text-sm sm:text-base text-slate-900 group-hover:text-brand-green transition-colors flex-1 leading-snug break-words">
                 ${post.title}
               </h3>
             </div>
 
-            <!-- 右端アクション: 詳細を読む (PCで表示) -->
-            <div class="hidden sm:flex items-center gap-1 text-xs font-bold text-secondary shrink-0 group-hover:translate-x-0.5 transition-transform">
-              <span>詳細を読む</span>
-              <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+            <!-- 右端アクション: 詳細を読む ＋ 丸型矢印ボタン -->
+            <div class="flex items-center gap-2 shrink-0 self-end sm:self-center">
+              <span class="text-xs font-bold text-slate-500 group-hover:text-brand-green transition-colors hidden md:inline">詳細を読む</span>
+              <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-100 group-hover:bg-emerald-50 flex items-center justify-center text-slate-400 group-hover:text-brand-green transition-colors shrink-0 group-hover:translate-x-0.5">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+              </div>
             </div>
           </a>
         </article>

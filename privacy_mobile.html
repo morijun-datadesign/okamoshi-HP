@@ -842,71 +842,91 @@
 </main>
 <!-- END: MainContent -->
 <!-- BEGIN: MainFooter -->
-  <!-- Unified Mobile Footer (Exact match with 中3おかもしページ) -->
-  <footer class="bg-surface-container-low border-t border-outline-variant/30 pt-8 pb-12 mt-10">
-    <div class="px-4 max-w-lg mx-auto space-y-6">
-      <!-- Organization Info -->
-      <div class="space-y-3">
-        <div class="flex items-center gap-2.5">
-          <div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-on-primary font-bold text-xs shadow-sm">
-            <span class="material-symbols-outlined text-lg">school</span>
+  <!-- Unified Footer -->
+  <footer class="w-full bg-[#F1F5F9] mt-16 sm:mt-24 border-t border-slate-200/80 flex flex-col items-center">
+    <div class="max-w-[75rem] mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 w-full">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-start">
+        
+        <!-- 左カラム: ロゴ・会社情報・公式SNS・お問い合わせ -->
+        <div class="md:col-span-5 space-y-3.5">
+          <!-- ブランドロゴ -->
+          <div class="flex items-center gap-2">
+            <span class="w-8 h-8 rounded-lg bg-[#134230] text-white flex items-center justify-center shrink-0 shadow-xs">
+              <span class="material-symbols-outlined text-lg">history_edu</span>
+            </span>
+            <span class="text-base sm:text-lg font-bold text-[#134230] tracking-tight">岡山県統一模擬試験（おかもし）</span>
           </div>
-          <div class="text-base font-bold text-primary">岡山県統一模擬試験（おかもし）</div>
-        </div>
-        <div class="text-xs text-on-surface-variant leading-relaxed pl-10 space-y-1">
-          <p>主催：中央教育研究所株式会社<br>岡山県統一模擬試験実行委員会</p>
-          <p>住所：広島県広島市中区八丁堀15番6号 広島ちゅうぎんビル3階</p>
-          <p>TEL：082-227-3999</p>
-          <p>MAIL：<a href="mailto:okayamamoshi@chuoh-kyouiku.co.jp" class="underline">okayamamoshi@chuoh-kyouiku.co.jp</a></p>
-        </div>
-      </div>
 
-      <!-- SNS -->
-      <div class="pl-10">
-        <a href="https://www.instagram.com/okamoshi01/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs font-medium text-on-surface-variant bg-surface-container hover:bg-surface-container-high border border-outline-variant/30 rounded-full px-3 py-1.5 transition-colors">
-          <span class="material-symbols-outlined text-base text-pink-600">photo_camera</span>
-          <span>公式Instagram</span>
-        </a>
-      </div>
+          <!-- 会社情報 -->
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            主催 : 中央教育研究所株式会社<br>
+            岡山県統一模擬試験実行委員会<br>
+            住所 : 広島県広島市中区八丁堀15番6号<br>
+            広島ちゅうぎんビル3階<br>
+            TEL : 082-227-3999<br>
+            MAIL : okayamamoshi@chuoh-kyouiku.co.jp
+          </p>
 
-      <!-- Contact Buttons -->
-      <div class="space-y-2 pt-1">
-        <div class="text-xs font-bold text-on-surface pl-1">お問い合わせ</div>
-        <div class="grid grid-cols-2 gap-2">
-          <a href="/contact/organization/" class="flex items-center justify-center gap-1 py-2 px-2 rounded-lg border border-primary/20 bg-[#e8f5ee] text-[#134230] text-xs font-bold shadow-sm active:scale-95 transition-all text-center">
-            <span class="material-symbols-outlined text-sm">corporate_fare</span>
-            <span class="truncate">塾・学校関係者様</span>
-          </a>
-          <a href="/contact/individual/" class="flex items-center justify-center gap-1 py-2 px-2 rounded-lg border border-primary/20 bg-[#e8f5ee] text-[#134230] text-xs font-bold shadow-sm active:scale-95 transition-all text-center">
-            <span class="material-symbols-outlined text-sm">mail</span>
-            <span class="truncate">個人申込の方</span>
-          </a>
-        </div>
-      </div>
+          <!-- 公式SNS -->
+          <div class="pt-0.5 flex items-center gap-2 text-xs sm:text-sm">
+            <span class="text-slate-600 font-medium">公式SNS:</span>
+            <a class="inline-flex items-center gap-1 text-slate-700 hover:text-[#134230] transition-colors font-medium" target="_blank" rel="noopener noreferrer" href="https://www.instagram.com/okamoshi01/">
+              <span class="material-symbols-outlined text-base">photo_camera</span>
+              <span>公式Instagram</span>
+            </a>
+          </div>
 
-      <!-- Navigation links (2 columns) -->
-      <div class="grid grid-cols-2 gap-4 pt-3 border-t border-outline-variant/20 text-xs text-on-surface-variant">
-        <div class="space-y-2">
-          <div class="font-bold text-on-surface mb-1">模試情報</div>
-          <div><a href="index.html#exam-tabs-section" class="hover:text-primary hover:underline">次回模試実施要項</a></div>
-          <div><a href="index.html#schedule-section" class="hover:text-primary hover:underline">年間スケジュール</a></div>
-          <div><a href="index.html#features-section" class="hover:text-primary hover:underline">適性検査・高校模試詳細</a></div>
+          <!-- お問い合わせ -->
+          <div class="pt-3 space-y-2">
+            <div class="text-xs sm:text-sm font-bold text-slate-800 flex items-center gap-1">
+              <span class="material-symbols-outlined text-sm sm:text-base text-[#134230]">contact_support</span>
+              <span>お問い合わせ</span>
+            </div>
+            <div class="flex flex-wrap sm:flex-nowrap gap-2 min-w-0">
+              <a class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg font-bold text-xs transition-all text-center shadow-xs border whitespace-nowrap" href="/contact/organization/" style="background-color: #e8f5ee; color: #134230; border-color: rgba(19, 66, 48, 0.2);" onmouseover="this.style.backgroundColor='#d8ede1'" onmouseout="this.style.backgroundColor='#e8f5ee'">
+                <span class="material-symbols-outlined text-base">corporate_fare</span>
+                <span>塾・学校関係者様</span>
+              </a>
+              <a class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg font-bold text-xs transition-all text-center shadow-xs border whitespace-nowrap" href="/contact/individual/" style="background-color: #e8f5ee; color: #134230; border-color: rgba(19, 66, 48, 0.2);" onmouseover="this.style.backgroundColor='#d8ede1'" onmouseout="this.style.backgroundColor='#e8f5ee'">
+                <span class="material-symbols-outlined text-base">mail</span>
+                <span>個人申込の方</span>
+              </a>
+            </div>
+          </div>
         </div>
-        <div class="space-y-2">
-          <div class="font-bold text-on-surface mb-1">ご案内・手続き</div>
-          <div><a href="schools_PC.html" class="hover:text-primary hover:underline">提携学習塾一覧</a></div>
-          <div><a href="apply.html" class="hover:text-primary hover:underline">個人受験のお申込み</a></div>
-          <div class="font-bold text-on-surface pt-2 mb-1">規約・運営</div>
-          <div><a href="privacy.html" class="text-primary font-bold underline">プライバシーポリシー</a></div>
-          <div><a href="tokushoho.html" class="hover:text-primary hover:underline">特定商取引法に基づく表記</a></div>
-        </div>
-      </div>
 
-      <!-- Copyright -->
-      <div class="pt-3 text-center border-t border-outline-variant/20">
-        <p class="text-[11px] text-on-surface-variant">
-          &copy; 中央教育研究所株式会社 岡山県統一模擬試験実行委員会 All Rights Reserved.
-        </p>
+        <!-- 右カラム: ナビゲーションリンク（3カテゴリ） -->
+        <div class="md:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-6 sm:gap-8 pt-2 md:pt-0">
+          <!-- 模試情報 -->
+          <div class="space-y-2.5">
+            <div class="font-bold text-xs sm:text-sm text-slate-900">模試情報</div>
+            <ul class="space-y-2 text-xs sm:text-sm">
+              <li><a class="text-slate-600 hover:text-[#134230] transition-colors" href="index.html#schedule-table">次回模試実施要項</a></li>
+              <li><a class="text-slate-600 hover:text-[#134230] transition-colors" href="index.html#schedule-table">年間スケジュール</a></li>
+              <li><a class="text-slate-600 hover:text-[#134230] transition-colors" href="index.html#schedule-selector">適性検査・高校模試詳細</a></li>
+            </ul>
+          </div>
+
+          <!-- ご案内・手続き -->
+          <div class="space-y-2.5 sm:col-span-2">
+            <div class="font-bold text-xs sm:text-sm text-slate-900">ご案内・手続き</div>
+            <ul class="space-y-2 text-xs sm:text-sm">
+              <li><a class="text-slate-600 hover:text-[#134230] transition-colors" href="schools_PC.html">提携学習塾一覧</a></li>
+              <li><a class="text-slate-600 hover:text-[#134230] transition-colors" href="apply.html">個人受験のお申込み</a></li>
+            </ul>
+          </div>
+
+          <!-- 規約・運営 -->
+          <div class="space-y-2.5">
+            <div class="font-bold text-xs sm:text-sm text-slate-900">規約・運営</div>
+            <ul class="space-y-2 text-xs sm:text-sm">
+              <li><a class="text-slate-600 hover:text-[#134230] transition-colors" href="privacy.html">プライバシーポリシー</a></li>
+              <li><a class="text-slate-600 hover:text-[#134230] transition-colors" href="tokushoho.html">特定商取引法に基づく表記</a></li>
+              <li><a class="text-slate-600 hover:text-[#134230] transition-colors" href="news.html">お知らせ・更新情報</a></li>
+            </ul>
+          </div>
+        </div>
+
       </div>
     </div>
   </footer>

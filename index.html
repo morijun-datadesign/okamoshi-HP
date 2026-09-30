@@ -697,21 +697,21 @@
         
         <!-- 上部：学年＆実施回タブ選択エリア（画面上部固定追従 Sticky バー） -->
         <div class="sticky top-16 sm:top-[4.5rem] z-30 bg-white/95 backdrop-blur-md -mx-6 md:-mx-10 px-6 md:px-10 -mt-6 md:-mt-10 pt-6 md:pt-10 pb-4 mb-6 border-b border-slate-200/80 rounded-t-3xl transition-all">
-          <div class="bg-slate-100 p-3 sm:p-4 rounded-2xl border border-slate-200 space-y-3">
+          <div class="bg-slate-200 p-3.5 sm:p-4 rounded-2xl border border-slate-300 shadow-inner space-y-3">
             <!-- ① 学年切り替えタブ (4択スリムピル) -->
             <div class="flex items-center gap-2 sm:gap-4">
-              <span class="text-xs font-bold text-slate-700 shrink-0 tracking-tight">学年:</span>
-              <div class="grid grid-cols-4 gap-2 flex-1 bg-white p-1 rounded-xl border border-slate-200/80 shadow-xs" id="grade-tabs">
-                <button onclick="selectGrade('c3')" data-grade="c3" class="grade-btn py-2 text-xs sm:text-sm font-bold rounded-lg transition-all bg-brand-green text-white shadow-xs">中3</button>
-                <button onclick="selectGrade('c2')" data-grade="c2" class="grade-btn py-2 text-xs sm:text-sm font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900">中2</button>
-                <button onclick="selectGrade('c1')" data-grade="c1" class="grade-btn py-2 text-xs sm:text-sm font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900">中1</button>
-                <button onclick="selectGrade('p6')" data-grade="p6" class="grade-btn py-2 text-xs sm:text-sm font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900">小6</button>
+              <span class="text-xs font-bold text-slate-800 shrink-0 tracking-tight">学年:</span>
+              <div class="grid grid-cols-4 gap-1.5 sm:gap-2 flex-1 bg-slate-300/70 p-1 rounded-xl border border-slate-300 shadow-inner" id="grade-tabs">
+                <button onclick="selectGrade('c3')" data-grade="c3" class="grade-btn py-2 text-xs sm:text-sm font-bold rounded-lg transition-all bg-brand-green text-white shadow-sm">中3</button>
+                <button onclick="selectGrade('c2')" data-grade="c2" class="grade-btn py-2 text-xs sm:text-sm font-bold rounded-lg transition-all text-slate-700 hover:text-slate-900 hover:bg-white/60">中2</button>
+                <button onclick="selectGrade('c1')" data-grade="c1" class="grade-btn py-2 text-xs sm:text-sm font-bold rounded-lg transition-all text-slate-700 hover:text-slate-900 hover:bg-white/60">中1</button>
+                <button onclick="selectGrade('p6')" data-grade="p6" class="grade-btn py-2 text-xs sm:text-sm font-bold rounded-lg transition-all text-slate-700 hover:text-slate-900 hover:bg-white/60">小6</button>
               </div>
             </div>
 
             <!-- ② 実施回切り替えタブ (1行横スクロール式ピル) -->
             <div class="flex items-center gap-2 sm:gap-4">
-              <span class="text-xs font-bold text-slate-700 shrink-0 tracking-tight">回:</span>
+              <span class="text-xs font-bold text-slate-800 shrink-0 tracking-tight">回:</span>
               <div class="flex gap-2 overflow-x-auto no-scrollbar py-0.5 flex-1" id="round-tabs">
                 <!-- JSで動的生成 -->
               </div>
@@ -1928,9 +1928,9 @@
       // 申し込みエリアの学年タブのスタイル同期
       document.querySelectorAll('.grade-btn').forEach(btn => {
         if (btn.dataset.grade === normalized) {
-          btn.className = "grade-btn py-2 text-xs sm:text-sm font-bold rounded-xl transition-all bg-brand-green text-white shadow-xs";
+          btn.className = "grade-btn py-2 text-xs sm:text-sm font-bold rounded-lg transition-all bg-brand-green text-white shadow-sm";
         } else {
-          btn.className = "grade-btn py-2 text-xs sm:text-sm font-bold rounded-xl transition-all text-slate-600 hover:text-slate-900";
+          btn.className = "grade-btn py-2 text-xs sm:text-sm font-bold rounded-lg transition-all text-slate-700 hover:text-slate-900 hover:bg-white/60";
         }
       });
 
@@ -1992,7 +1992,7 @@
         btn.className = `shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all border ${
           isSelected 
             ? 'bg-brand-green text-white border-brand-green shadow-sm' 
-            : 'bg-white text-slate-700 border-slate-200 hover:border-slate-300'
+            : 'bg-white text-slate-700 border-slate-300 hover:border-slate-400 hover:bg-white/90 shadow-2xs'
         }`;
 
         btn.innerHTML = `<span>第${r.round}回</span> ${statusBadge}`;

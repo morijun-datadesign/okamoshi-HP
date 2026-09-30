@@ -101,6 +101,37 @@
     window.location.href = "/index.html?grade=" + tabKey + "#next-exam";
   };
 
+  window.handleNavExamGuideClick = function (event, targetId) {
+    if (typeof window.closeNextExamDropdown === "function") {
+      window.closeNextExamDropdown();
+    }
+    var isTopPage =
+      window.location.pathname.endsWith("index.html") ||
+      window.location.pathname === "/" ||
+      window.location.pathname.endsWith("/");
+    if (isTopPage) {
+      var elem =
+        document.getElementById(targetId) ||
+        (targetId === "about"
+          ? document.getElementById("hero-features")
+          : document.getElementById("schedule-selector"));
+      if (elem) {
+        if (event) event.preventDefault();
+        elem.scrollIntoView({ behavior: "smooth" });
+        try {
+          history.pushState(null, "", "#" + targetId);
+        } catch (e) {}
+      }
+    }
+  };
+
+  window.handleMobileNavExamGuideClick = function (event, targetId) {
+    if (typeof window.closeMobileMenu === "function") {
+      window.closeMobileMenu();
+    }
+    window.handleNavExamGuideClick(event, targetId);
+  };
+
   // --- モバイルドロワー制御 ---
   window.openMobileMenu = function () {
     var drawer = document.getElementById("mobile-menu-drawer");

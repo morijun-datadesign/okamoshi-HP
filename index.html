@@ -145,31 +145,23 @@
       <!-- PC ナビゲーション -->
       <nav class="hidden lg:flex items-center gap-6 xl:gap-8 text-sm sm:text-base font-bold text-slate-600">
         
-        <!-- 模試を選ぶドロップダウン -->
+        <!-- 模試のご案内ドロップダウン -->
         <div class="relative inline-block text-left" id="nav-next-exam-container">
           <button type="button" id="nav-next-exam-btn" onclick="toggleNextExamDropdown(event)" aria-expanded="false" aria-haspopup="true" class="py-1 text-brand-green font-bold inline-flex items-center gap-1 cursor-pointer focus:outline-none hover:text-brand-greenDark transition-colors">
-            <span>模試を選ぶ</span>
+            <span>模試のご案内</span>
             <span id="nav-next-exam-chevron" class="material-symbols-outlined text-lg transition-transform duration-200 transform">expand_more</span>
           </button>
           
-          <div id="nav-next-exam-dropdown" class="hidden absolute left-0 top-full mt-2 w-60 rounded-2xl bg-white border border-slate-200 shadow-xl p-2 z-50">
-            <div class="space-y-1 text-xs sm:text-sm">
-              <button type="button" onclick="selectNavExamTab('chu3')" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl hover:bg-brand-greenLight hover:text-brand-green font-bold text-slate-700 transition-colors text-left cursor-pointer">
-                <span>中3 おかもし（公立高入試特化）</span>
-                <span class="text-xs text-slate-400">→</span>
-              </button>
-              <button type="button" onclick="selectNavExamTab('chu2')" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl hover:bg-brand-greenLight hover:text-brand-green font-bold text-slate-700 transition-colors text-left cursor-pointer">
-                <span>中2 学力診断模試</span>
-                <span class="text-xs text-slate-400">→</span>
-              </button>
-              <button type="button" onclick="selectNavExamTab('chu1')" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl hover:bg-brand-greenLight hover:text-brand-green font-bold text-slate-700 transition-colors text-left cursor-pointer">
-                <span>中1 学力診断模試</span>
-                <span class="text-xs text-slate-400">→</span>
-              </button>
-              <button type="button" onclick="selectNavExamTab('sho6')" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl hover:bg-brand-greenLight hover:text-brand-green font-bold text-slate-700 transition-colors text-left cursor-pointer">
-                <span>小6 適性検査対策模試</span>
-                <span class="text-xs text-slate-400">→</span>
-              </button>
+          <div id="nav-next-exam-dropdown" class="hidden absolute left-0 top-full mt-2 w-48 rounded-xl bg-white border border-slate-100 shadow-lg p-2 z-50 transition-all duration-200">
+            <div class="space-y-1 text-sm font-bold">
+              <a href="#about" onclick="handleNavExamGuideClick(event, 'about')" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-slate-700 hover:bg-slate-50 hover:text-brand-green transition-colors cursor-pointer">
+                <span>初めての方へ</span>
+                <span class="material-symbols-outlined text-base text-slate-400">chevron_right</span>
+              </a>
+              <a href="#schedule-entry" onclick="handleNavExamGuideClick(event, 'schedule-entry')" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-slate-700 hover:bg-slate-50 hover:text-brand-green transition-colors cursor-pointer">
+                <span>申し込む</span>
+                <span class="material-symbols-outlined text-base text-slate-400">chevron_right</span>
+              </a>
             </div>
           </div>
         </div>
@@ -232,27 +224,19 @@
         <button type="button" onclick="toggleMobileExamAccordion()" class="w-full px-4 py-3.5 flex items-center justify-between text-left font-bold text-slate-800 hover:bg-slate-100/70 transition-colors">
           <div class="flex items-center gap-2">
             <span class="material-symbols-outlined text-brand-green text-lg">school</span>
-            <span>模試を選ぶ（学年別）</span>
+            <span>模試のご案内</span>
           </div>
           <span id="mobile-exam-chevron" class="material-symbols-outlined text-slate-400 transition-transform duration-200 rotate-180">expand_more</span>
         </button>
         <div id="mobile-exam-menu" class="border-t border-slate-200 bg-white divide-y divide-slate-100">
-          <button type="button" onclick="selectMobileNavExamTab('chu3')" class="w-full flex items-center justify-between px-4 py-3 font-bold text-slate-700 hover:bg-brand-greenLight hover:text-brand-green transition-colors text-left">
-            <span>中3 おかもし（公立高入試特化）</span>
+          <a href="#about" onclick="handleMobileNavExamGuideClick(event, 'about')" class="w-full flex items-center justify-between px-4 py-3 font-bold text-slate-700 hover:bg-brand-greenLight hover:text-brand-green transition-colors text-left">
+            <span>初めての方へ</span>
             <span class="text-slate-300">→</span>
-          </button>
-          <button type="button" onclick="selectMobileNavExamTab('chu2')" class="w-full flex items-center justify-between px-4 py-3 font-bold text-slate-700 hover:bg-brand-greenLight hover:text-brand-green transition-colors text-left">
-            <span>中2 学力診断模試</span>
+          </a>
+          <a href="#schedule-entry" onclick="handleMobileNavExamGuideClick(event, 'schedule-entry')" class="w-full flex items-center justify-between px-4 py-3 font-bold text-slate-700 hover:bg-brand-greenLight hover:text-brand-green transition-colors text-left">
+            <span>申し込む</span>
             <span class="text-slate-300">→</span>
-          </button>
-          <button type="button" onclick="selectMobileNavExamTab('chu1')" class="w-full flex items-center justify-between px-4 py-3 font-bold text-slate-700 hover:bg-brand-greenLight hover:text-brand-green transition-colors text-left">
-            <span>中1 学力診断模試</span>
-            <span class="text-slate-300">→</span>
-          </button>
-          <button type="button" onclick="selectMobileNavExamTab('sho6')" class="w-full flex items-center justify-between px-4 py-3 font-bold text-slate-700 hover:bg-brand-greenLight hover:text-brand-green transition-colors text-left">
-            <span>小6 適性検査対策模試</span>
-            <span class="text-slate-300">→</span>
-          </button>
+          </a>
         </div>
       </div>
 
@@ -312,6 +296,8 @@
     <!-- =======================================================================
          ヒーローセクション（FV）: PC表示時1280px大判バナー ＆ スマホB案コンパクト
          ======================================================================= -->
+    <div id="about" class="scroll-mt-16 sm:scroll-mt-[4.5rem]"></div>
+    <div id="hero-features" class="scroll-mt-16 sm:scroll-mt-[4.5rem]"></div>
     <!-- 【PC表示: md以上】1280px全幅バナー＋右側テキストカード -->
     <section class="hidden md:block relative w-full overflow-hidden bg-white border-b border-slate-200/80">
       <!-- 背景写真コンテナ -->
@@ -693,6 +679,7 @@
     <!-- =======================================================================
          セクション②：模試日程・出題範囲・お申し込み（PC大画面ワイド最適化）
          ======================================================================= -->
+    <div id="schedule-entry" class="scroll-mt-16 sm:scroll-mt-[4.5rem]"></div>
     <section id="schedule-selector" class="py-16 md:py-20 px-4 sm:px-6 md:px-8 w-full relative scroll-mt-16 sm:scroll-mt-[4.5rem] bg-white border-b border-slate-200/80">
       
       <div class="text-center mb-6 md:mb-8">
@@ -3092,6 +3079,24 @@
       if (target) {
         target.scrollIntoView({ behavior: 'smooth' });
       }
+    };
+
+    window.handleNavExamGuideClick = function(event, targetId) {
+      closeNextExamDropdown();
+      const elem = document.getElementById(targetId) ||
+        (targetId === 'about' ? document.getElementById('hero-features') : document.getElementById('schedule-selector'));
+      if (elem) {
+        if (event) event.preventDefault();
+        elem.scrollIntoView({ behavior: 'smooth' });
+        try {
+          history.pushState(null, '', '#' + targetId);
+        } catch(e) {}
+      }
+    };
+
+    window.handleMobileNavExamGuideClick = function(event, targetId) {
+      closeMobileMenu();
+      window.handleNavExamGuideClick(event, targetId);
     };
 
     window.selectMobileNavExamTab = function(tabKey) {

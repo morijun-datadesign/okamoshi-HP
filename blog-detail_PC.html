@@ -567,23 +567,19 @@
       <nav class="hidden lg:flex items-center gap-5 xl:gap-8 text-base" data-active-classes="text-primary font-bold border-b-2 border-primary">
         <div class="relative inline-block text-left" id="nav-next-exam-container">
           <button type="button" id="nav-next-exam-btn" onclick="toggleNextExamDropdown(event)" aria-expanded="false" aria-haspopup="true" class="transition-colors py-1 text-primary font-bold border-b-2 border-primary whitespace-nowrap inline-flex items-center gap-1 cursor-pointer focus:outline-none text-base">
-            <span class="font-semibold">模試を選ぶ</span>
+            <span class="font-semibold">模試のご案内</span>
             <span id="nav-next-exam-chevron" class="material-symbols-outlined text-lg transition-transform duration-200 transform">expand_more</span>
           </button>
-          <div id="nav-next-exam-dropdown" class="hidden absolute left-0 top-full mt-2 w-56 rounded-lg bg-surface-container-lowest border border-outline-variant/30 shadow-xl p-2 z-50 transition-all duration-200">
-            <div class="space-y-1">
-              <button type="button" onclick="selectNavExamTab('chu3')" class="w-full flex items-center px-3 py-2.5 rounded-lg hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
-                <span class="text-base font-bold text-on-surface group-hover:text-primary transition-colors">中3 おかもし</span>
-              </button>
-              <button type="button" onclick="selectNavExamTab('chu2')" class="w-full flex items-center px-3 py-2.5 rounded-lg hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
-                <span class="text-base font-bold text-on-surface group-hover:text-primary transition-colors">中2 おかもし</span>
-              </button>
-              <button type="button" onclick="selectNavExamTab('chu1')" class="w-full flex items-center px-3 py-2.5 rounded-lg hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
-                <span class="text-base font-bold text-on-surface group-hover:text-primary transition-colors">中1 おかもし</span>
-              </button>
-              <button type="button" onclick="selectNavExamTab('sho6')" class="w-full flex items-center px-3 py-2.5 rounded-lg hover:bg-surface-container-low transition-colors text-left group cursor-pointer">
-                <span class="text-base font-bold text-on-surface group-hover:text-primary transition-colors whitespace-nowrap">小6 適性検査対策模試</span>
-              </button>
+          <div id="nav-next-exam-dropdown" class="hidden absolute left-0 top-full mt-2 w-48 rounded-xl bg-white border border-slate-100 shadow-lg p-2 z-50 transition-all duration-200">
+            <div class="space-y-1 text-sm font-bold">
+              <a href="index.html#about" class="flex items-center justify-between px-3.5 py-2.5 rounded-lg text-slate-700 hover:bg-slate-50 hover:text-primary transition-colors cursor-pointer">
+                <span>初めての方へ</span>
+                <span class="material-symbols-outlined text-base text-slate-400">chevron_right</span>
+              </a>
+              <a href="index.html#schedule-entry" class="flex items-center justify-between px-3.5 py-2.5 rounded-lg text-slate-700 hover:bg-slate-50 hover:text-primary transition-colors cursor-pointer">
+                <span>申し込む</span>
+                <span class="material-symbols-outlined text-base text-slate-400">chevron_right</span>
+              </a>
             </div>
           </div>
         </div>
@@ -640,46 +636,26 @@
 
       <!-- Drawer Navigation Links (Scrollable) -->
       <div class="flex-1 overflow-y-auto px-4 py-4 space-y-2.5">
-        <!-- 模試を選ぶ (Accordion) -->
+        <!-- 模試のご案内 (Accordion) -->
         <div class="rounded-lg border border-surface-container bg-surface-container-lowest overflow-hidden shadow-xs">
           <button type="button" id="mobile-exam-accordion-btn" onclick="toggleMobileExamAccordion()" class="w-full px-4 py-3.5 flex items-center justify-between text-left font-bold text-base text-primary hover:bg-surface-container-low transition-colors cursor-pointer" aria-expanded="true">
             <div class="flex items-center gap-2.5">
               <span class="material-symbols-outlined text-xl text-primary">school</span>
-              <span>模試を選ぶ</span>
+              <span>模試のご案内</span>
             </div>
             <span id="mobile-exam-chevron" class="material-symbols-outlined text-xl transition-transform duration-200 transform rotate-180">expand_more</span>
           </button>
-          <div id="mobile-exam-menu" class="border-t border-surface-container bg-surface-container-low/30 divide-y divide-surface-container/60">
-            <button type="button" onclick="selectMobileNavExamTab('chu3')" class="w-full flex items-center justify-between px-4 py-3 text-sm font-bold text-on-surface hover:bg-surface-container-low transition-colors text-left cursor-pointer">
-              <div class="flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
-                <span>中3 おかもし</span>
-              </div>
-              <span class="material-symbols-outlined text-base text-on-surface-variant">arrow_forward</span>
-            </button>
-            <button type="button" onclick="selectMobileNavExamTab('chu2')" class="w-full flex items-center justify-between px-4 py-3 text-sm font-bold text-on-surface hover:bg-surface-container-low transition-colors text-left cursor-pointer">
-              <div class="flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
-                <span>中2 おかもし</span>
-              </div>
-              <span class="material-symbols-outlined text-base text-on-surface-variant">arrow_forward</span>
-            </button>
-            <button type="button" onclick="selectMobileNavExamTab('chu1')" class="w-full flex items-center justify-between px-4 py-3 text-sm font-bold text-on-surface hover:bg-surface-container-low transition-colors text-left cursor-pointer">
-              <div class="flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
-                <span>中1 おかもし</span>
-              </div>
-              <span class="material-symbols-outlined text-base text-on-surface-variant">arrow_forward</span>
-            </button>
-            <button type="button" onclick="selectMobileNavExamTab('sho6')" class="w-full flex items-center justify-between px-4 py-3 text-sm font-bold text-on-surface hover:bg-surface-container-low transition-colors text-left cursor-pointer">
-              <div class="flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
-                <span>小6 適性検査対策模試</span>
-              </div>
-              <span class="material-symbols-outlined text-base text-on-surface-variant">arrow_forward</span>
-            </button>
-          </div>
+          <div id="mobile-exam-menu" class="border-t border-slate-200 bg-white divide-y divide-slate-100">
+          <a href="index.html#about" class="w-full flex items-center justify-between px-4 py-3 font-bold text-slate-700 hover:bg-slate-50 hover:text-primary transition-colors text-left">
+            <span>初めての方へ</span>
+            <span class="text-slate-300">→</span>
+          </a>
+          <a href="index.html#schedule-entry" class="w-full flex items-center justify-between px-4 py-3 font-bold text-slate-700 hover:bg-slate-50 hover:text-primary transition-colors text-left">
+            <span>申し込む</span>
+            <span class="text-slate-300">→</span>
+          </a>
         </div>
+      </div>
 
         <!-- お知らせ・受験情報 -->
         <a href="news.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-lg border border-surface-container bg-surface-container-lowest hover:bg-surface-container-low font-bold text-base text-on-surface shadow-xs transition-colors">

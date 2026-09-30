@@ -715,19 +715,29 @@
           </div>
         </div>
           
-          <!-- 回タイトル & ステータス -->
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-4 mb-6">
-            <div>
-              <span id="badge-status" class="inline-block px-3 py-1 rounded-full text-xs font-bold bg-brand-green text-white mb-1.5 shadow-xs">
-                受付中
-              </span>
-              <h4 id="card-title" class="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-900 tracking-tight">
-                中学3年生｜第4回 岡山県統一模擬試験
+          <!-- 回タイトル & ステータス & 受講料 -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-5 mb-6">
+            <!-- 左側: 2行タイトルエリア（上段: バッジ2種 / 下段: 模試名称） -->
+            <div class="min-w-0">
+              <!-- 上段: 学年バッジ ＆ 実施回バッジ -->
+              <div class="flex items-center gap-2 flex-wrap">
+                <span id="badge-grade" class="inline-flex items-center px-2.5 sm:px-3 py-1 rounded-md text-xs sm:text-sm font-bold bg-slate-100 text-slate-700 border border-slate-300/80 shadow-2xs">
+                  中学3年生
+                </span>
+                <span id="badge-status" class="inline-flex items-center px-2.5 sm:px-3 py-1 rounded-md text-xs sm:text-sm font-bold bg-brand-green text-white shadow-xs">
+                  第4回 受付中
+                </span>
+              </div>
+              <!-- 下段: メインタイトル -->
+              <h4 id="card-title" class="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-900 tracking-tight mt-1.5">
+                岡山県統一模擬試験
               </h4>
             </div>
-            <div class="text-left sm:text-right">
-              <span class="text-xs sm:text-sm text-slate-700 block font-bold">受験料（税込）</span>
-              <span id="card-price" class="text-2xl sm:text-3xl font-bold text-brand-green">5,500円</span>
+
+            <!-- 右側: 受験料エリア -->
+            <div class="text-left sm:text-right shrink-0 pt-1 sm:pt-0">
+              <span class="text-xs sm:text-sm text-slate-500 block font-bold mb-0.5">受験料（税込）</span>
+              <span id="card-price" class="text-2xl sm:text-3xl font-bold text-brand-green tracking-tight">5,500円</span>
             </div>
           </div>
 
@@ -2196,8 +2206,19 @@
       const cardTitle = document.getElementById('card-title');
       const cardPrice = document.getElementById('card-price');
       const cardDeadline = document.getElementById('card-deadline');
+      const badgeGrade = document.getElementById('badge-grade');
+      const badge = document.getElementById('badge-status');
 
-      if (cardTitle) cardTitle.textContent = `${data.gradeName}｜第${r.round}回 ${data.examName}`;
+      if (badgeGrade) badgeGrade.textContent = data.gradeName;
+
+      let examTitle = data.examName;
+      if (currentGrade === 'p6' || currentGrade === 'sho6' || currentGrade === 's6') {
+        examTitle = '岡山県適性検査対策模試';
+      } else {
+        examTitle = '岡山県統一模擬試験';
+      }
+      if (cardTitle) cardTitle.textContent = examTitle;
+
       if (cardPrice) {
         let priceText = '5,500円';
         if (data && data.price) {
@@ -2216,7 +2237,6 @@
       renderScheduleList(r.venuesList);
       renderVenueDetails(r);
 
-      const badge = document.getElementById('badge-status');
       const ctaContainer = document.getElementById('cta-container');
       const deadlineContainer = document.getElementById('deadline-container');
 
@@ -2235,8 +2255,8 @@
 
       if (badge && deadlineContainer && ctaContainer) {
         if (r.status === 'finished') {
-          badge.className = "inline-block px-3 py-1 rounded-full text-xs font-bold bg-slate-200 text-slate-600 mb-1.5";
-          badge.textContent = "受付終了";
+          badge.className = "inline-flex items-center px-2.5 sm:px-3 py-1 rounded-md text-xs sm:text-sm font-bold bg-slate-200 text-slate-600 border border-slate-300";
+          badge.textContent = `第${r.round}回 受付終了`;
           
           deadlineContainer.innerHTML = `
             <div class="bg-slate-100 rounded-2xl border border-slate-200 p-3.5 flex items-center justify-between text-xs sm:text-sm">
@@ -2251,8 +2271,8 @@
             </button>
           `;
         } else {
-          badge.className = "inline-block px-3 py-1 rounded-full text-xs font-bold bg-brand-green text-white mb-1.5 shadow-xs";
-          badge.textContent = r.status === 'active' ? "次回・受付中" : "受付中";
+          badge.className = "inline-flex items-center px-2.5 sm:px-3 py-1 rounded-md text-xs sm:text-sm font-bold bg-brand-green text-white shadow-xs";
+          badge.textContent = r.status === 'active' ? `第${r.round}回 受付中` : `第${r.round}回 申込可`;
           
           deadlineContainer.innerHTML = `
             <div class="bg-gradient-to-r from-emerald-50 via-teal-50/60 to-emerald-50 rounded-2xl border-2 border-emerald-300/80 p-4 flex items-center justify-between shadow-xs">

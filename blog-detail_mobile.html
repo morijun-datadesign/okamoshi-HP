@@ -72,17 +72,17 @@
           </button>
           <div id="nav-contact-dropdown" class="hidden group-hover:block absolute right-0 top-full mt-2 w-48 rounded-lg bg-surface-container-lowest border border-outline-variant/30 shadow-xl p-2 z-50 transition-all duration-200 before:content-[''] before:absolute before:-top-2 before:left-0 before:w-full before:h-2">
             <div class="space-y-1">
-              <a href="/contact/organization/" data-path="contact-partner" onclick="closeContactDropdown()" class="block px-3 py-2.5 rounded-lg hover:bg-surface-container-low transition-colors text-left group/item cursor-pointer">
+              <a href="contact/organization/index.html" data-path="contact-partner" onclick="closeContactDropdown()" class="block px-3 py-2.5 rounded-lg hover:bg-surface-container-low transition-colors text-left group/item cursor-pointer">
                 <span class="text-base font-bold text-on-surface group-hover/item:text-primary transition-colors">塾・学校関係者様</span>
               </a>
-              <a href="/contact/individual/" data-path="contact" onclick="closeContactDropdown()" class="block px-3 py-2.5 rounded-lg hover:bg-surface-container-low transition-colors text-left group/item cursor-pointer">
+              <a href="contact/individual/index.html" data-path="contact" onclick="closeContactDropdown()" class="block px-3 py-2.5 rounded-lg hover:bg-surface-container-low transition-colors text-left group/item cursor-pointer">
                 <span class="text-base font-bold text-on-surface group-hover/item:text-primary transition-colors">個人申込の方</span>
               </a>
             </div>
           </div>
         </div>
         <div class="hidden lg:block">
-          <a class="inline-flex items-center justify-center px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-secondary text-on-secondary font-semibold text-sm sm:text-[15px] shadow-[0_4px_14px_-2px_rgba(200,90,50,0.35)] hover:bg-secondary-container hover:shadow-[0_6px_20px_-2px_rgba(200,90,50,0.45)] hover:-translate-y-0.5 transition-all whitespace-nowrap tracking-wide" data-path="apply" href="apply.html">
+          <a class="inline-flex items-center justify-center px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-orange-500 hover:bg-orange-600 text-white font-bold text-sm sm:text-[15px] shadow-md shadow-orange-500/25 hover:shadow-lg hover:shadow-orange-500/35 hover:-translate-y-0.5 transition-all whitespace-nowrap tracking-wide" data-path="apply" href="apply.html">
             <span class="material-symbols-outlined mr-1 sm:mr-1.5 text-base sm:text-lg">edit_document</span>
             <span class="hidden xs:inline sm:inline">お申し込みはこちら</span>
             <span class="inline xs:hidden sm:hidden">お申込み</span>
@@ -163,14 +163,14 @@
             <span id="mobile-contact-chevron" class="material-symbols-outlined text-xl transition-transform duration-200 transform">expand_more</span>
           </button>
           <div id="mobile-contact-menu" class="hidden border-t border-surface-container bg-surface-container-low/30 divide-y divide-surface-container/60">
-            <a href="/contact/organization/" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3 text-sm font-bold text-on-surface hover:bg-surface-container-low transition-colors">
+            <a href="contact/organization/index.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3 text-sm font-bold text-on-surface hover:bg-surface-container-low transition-colors">
               <div class="flex items-center gap-2">
                 <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
                 <span>塾・学校関係者様</span>
               </div>
               <span class="material-symbols-outlined text-base text-on-surface-variant">arrow_forward</span>
             </a>
-            <a href="/contact/individual/" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3 text-sm font-bold text-on-surface hover:bg-surface-container-low transition-colors">
+            <a href="contact/individual/index.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3 text-sm font-bold text-on-surface hover:bg-surface-container-low transition-colors">
               <div class="flex items-center gap-2">
                 <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
                 <span>個人申込の方</span>
@@ -183,7 +183,7 @@
 
       <!-- Drawer Footer (Prominent CV Button) -->
       <div class="p-5 border-t border-surface-container bg-surface space-y-2 shrink-0">
-        <a href="apply.html" onclick="closeMobileMenu()" class="w-full py-3.5 px-5 rounded-lg bg-secondary text-white font-bold text-base shadow-[0_4px_16px_rgba(162,62,24,0.35)] hover:bg-secondary-container active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+        <a href="apply.html" onclick="closeMobileMenu()" class="w-full py-3.5 px-5 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-bold text-base shadow-md shadow-orange-500/25 hover:shadow-lg hover:shadow-orange-500/35 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
           <span class="material-symbols-outlined text-xl">edit_document</span>
           <span>お申し込みはこちら</span>
         </a>
@@ -871,7 +871,7 @@
     })();
   </script>
 </div>  <!-- Unified Footer -->
-  <footer class="w-full bg-slate-700 mt-0 border-t border-slate-600 flex flex-col items-center">
+  <footer class="w-full bg-zinc-600 mt-0 border-t border-zinc-500/30 flex flex-col items-center">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 w-full">
       <div class="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-start">
         
@@ -882,11 +882,11 @@
             <span class="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-xs">
               <span class="material-symbols-outlined text-lg">history_edu</span>
             </span>
-            <span class="text-base sm:text-lg font-bold text-slate-100 tracking-tight">岡山県統一模擬試験（おかもし）</span>
+            <span class="text-base sm:text-lg font-bold text-white tracking-tight">岡山県統一模擬試験（おかもし）</span>
           </div>
 
           <!-- 会社情報 -->
-          <p class="text-xs sm:text-sm text-slate-200 leading-relaxed">
+          <p class="text-xs sm:text-sm text-zinc-100 leading-relaxed">
             主催 : 中央教育研究所株式会社<br>
             岡山県統一模擬試験実行委員会<br>
             住所 : 広島県広島市中区八丁堀15番6号<br>
@@ -897,8 +897,8 @@
 
           <!-- 公式SNS -->
           <div class="pt-0.5 flex items-center gap-2 text-xs sm:text-sm">
-            <span class="text-slate-400 font-medium">公式SNS:</span>
-            <a class="inline-flex items-center gap-1 text-slate-200 hover:text-white transition-colors font-medium" target="_blank" rel="noopener noreferrer" href="https://www.instagram.com/okamoshi01/">
+            <span class="text-zinc-300 font-medium">公式SNS:</span>
+            <a class="inline-flex items-center gap-1 text-zinc-100 hover:text-white transition-colors font-medium" target="_blank" rel="noopener noreferrer" href="https://www.instagram.com/okamoshi01/">
               <span class="material-symbols-outlined text-base">photo_camera</span>
               <span>公式Instagram</span>
             </a>
@@ -906,16 +906,16 @@
 
           <!-- お問い合わせ -->
           <div class="pt-3 space-y-2">
-            <div class="text-xs sm:text-sm font-bold text-slate-100 flex items-center gap-1">
+            <div class="text-xs sm:text-sm font-bold text-white flex items-center gap-1">
               <span class="material-symbols-outlined text-sm sm:text-base text-emerald-400">contact_support</span>
               <span>お問い合わせ</span>
             </div>
             <div class="flex flex-wrap sm:flex-nowrap gap-2 min-w-0">
-              <a class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg font-bold text-xs transition-all text-center shadow-xs border border-slate-500 bg-slate-600/80 hover:bg-slate-600 text-slate-100 hover:text-white whitespace-nowrap" href="/contact/organization/">
+              <a class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg font-bold text-xs transition-all text-center shadow-xs border border-zinc-500 bg-zinc-500/50 hover:bg-zinc-500 text-white hover:text-white whitespace-nowrap" href="contact/organization/index.html">
                 <span class="material-symbols-outlined text-base text-emerald-400">corporate_fare</span>
                 <span>塾・学校関係者様</span>
               </a>
-              <a class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg font-bold text-xs transition-all text-center shadow-xs border border-slate-500 bg-slate-600/80 hover:bg-slate-600 text-slate-100 hover:text-white whitespace-nowrap" href="/contact/individual/">
+              <a class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg font-bold text-xs transition-all text-center shadow-xs border border-zinc-500 bg-zinc-500/50 hover:bg-zinc-500 text-white hover:text-white whitespace-nowrap" href="contact/individual/index.html">
                 <span class="material-symbols-outlined text-base text-emerald-400">mail</span>
                 <span>個人申込の方</span>
               </a>
@@ -927,30 +927,30 @@
         <div class="md:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-6 sm:gap-8 pt-2 md:pt-0">
           <!-- 模試情報 -->
           <div class="space-y-2.5">
-            <div class="font-bold text-xs sm:text-sm text-slate-100">模試情報</div>
+            <div class="font-bold text-xs sm:text-sm text-white">模試情報</div>
             <ul class="space-y-2 text-xs sm:text-sm">
-              <li><a class="text-slate-200 hover:text-white transition-colors" href="index.html#schedule-table">次回模試実施要項</a></li>
-              <li><a class="text-slate-200 hover:text-white transition-colors" href="index.html#schedule-table">年間スケジュール</a></li>
-              <li><a class="text-slate-200 hover:text-white transition-colors" href="index.html#schedule-selector">適性検査・高校模試詳細</a></li>
+              <li><a class="text-zinc-100 hover:text-white transition-colors" href="index.html#schedule-table">次回模試実施要項</a></li>
+              <li><a class="text-zinc-100 hover:text-white transition-colors" href="index.html#schedule-table">年間スケジュール</a></li>
+              <li><a class="text-zinc-100 hover:text-white transition-colors" href="index.html#schedule-selector">適性検査・高校模試詳細</a></li>
             </ul>
           </div>
 
           <!-- ご案内・手続き -->
           <div class="space-y-2.5 sm:col-span-2">
-            <div class="font-bold text-xs sm:text-sm text-slate-100">ご案内・手続き</div>
+            <div class="font-bold text-xs sm:text-sm text-white">ご案内・手続き</div>
             <ul class="space-y-2 text-xs sm:text-sm">
-              <li><a class="text-slate-200 hover:text-white transition-colors" href="schools_PC.html">提携学習塾一覧</a></li>
-              <li><a class="text-slate-200 hover:text-white transition-colors" href="apply.html">個人受験のお申込み</a></li>
+              <li><a class="text-zinc-100 hover:text-white transition-colors" href="schools_PC.html">提携学習塾一覧</a></li>
+              <li><a class="text-zinc-100 hover:text-white transition-colors" href="apply.html">個人受験のお申込み</a></li>
             </ul>
           </div>
 
           <!-- 規約・運営 -->
           <div class="space-y-2.5">
-            <div class="font-bold text-xs sm:text-sm text-slate-100">規約・運営</div>
+            <div class="font-bold text-xs sm:text-sm text-white">規約・運営</div>
             <ul class="space-y-2 text-xs sm:text-sm">
-              <li><a class="text-slate-200 hover:text-white transition-colors" href="privacy.html">プライバシーポリシー</a></li>
-              <li><a class="text-slate-200 hover:text-white transition-colors" href="tokushoho.html">特定商取引法に基づく表記</a></li>
-              <li><a class="text-slate-200 hover:text-white transition-colors" href="news.html">お知らせ・更新情報</a></li>
+              <li><a class="text-zinc-100 hover:text-white transition-colors" href="privacy.html">プライバシーポリシー</a></li>
+              <li><a class="text-zinc-100 hover:text-white transition-colors" href="tokushoho.html">特定商取引法に基づく表記</a></li>
+              <li><a class="text-zinc-100 hover:text-white transition-colors" href="news.html">お知らせ・更新情報</a></li>
             </ul>
           </div>
         </div>

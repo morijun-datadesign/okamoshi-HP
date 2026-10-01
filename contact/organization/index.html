@@ -156,17 +156,17 @@
           </button>
           <div id="nav-contact-dropdown" class="hidden group-hover:block absolute right-0 top-full mt-2 w-52 rounded-lg bg-surface-container-lowest border border-outline-variant/30 shadow-xl p-2 z-50 transition-all duration-200 before:content-[''] before:absolute before:-top-2 before:left-0 before:w-full before:h-2">
             <div class="space-y-1">
-              <a href="/contact/organization/" data-path="contact-partner" onclick="handleContactNavClick(event, '/contact/organization/')" class="block px-3 py-2.5 rounded-lg hover:bg-surface-container-low transition-colors text-left group/item cursor-pointer">
+              <a href="../organization/index.html" data-path="contact-partner" onclick="handleContactNavClick(event, '../organization/index.html')" class="block px-3 py-2.5 rounded-lg hover:bg-surface-container-low transition-colors text-left group/item cursor-pointer">
                 <span class="text-base font-bold text-on-surface group-hover/item:text-primary transition-colors">塾・学校関係者様</span>
               </a>
-              <a href="/contact/individual/" data-path="contact" onclick="handleContactNavClick(event, '/contact/individual/')" class="block px-3 py-2.5 rounded-lg hover:bg-surface-container-low transition-colors text-left group/item cursor-pointer">
+              <a href="../individual/index.html" data-path="contact" onclick="handleContactNavClick(event, '../individual/index.html')" class="block px-3 py-2.5 rounded-lg hover:bg-surface-container-low transition-colors text-left group/item cursor-pointer">
                 <span class="text-base font-bold text-on-surface group-hover/item:text-primary transition-colors">個人申込の方</span>
               </a>
             </div>
           </div>
         </div>
         <div class="hidden lg:block">
-          <a class="inline-flex items-center justify-center px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-secondary text-on-secondary font-semibold text-sm sm:text-[15px] shadow-[0_4px_14px_-2px_rgba(200,90,50,0.35)] hover:bg-secondary-container hover:shadow-[0_6px_20px_-2px_rgba(200,90,50,0.45)] hover:-translate-y-0.5 transition-all whitespace-nowrap tracking-wide" data-path="apply" href="/apply.html">
+          <a class="inline-flex items-center justify-center px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-orange-500 hover:bg-orange-600 text-white font-bold text-sm sm:text-[15px] shadow-md shadow-orange-500/25 hover:shadow-lg hover:shadow-orange-500/35 hover:-translate-y-0.5 transition-all whitespace-nowrap tracking-wide" data-path="apply" href="/apply.html">
             <span class="material-symbols-outlined mr-1 sm:mr-1.5 text-base sm:text-lg">edit_document</span>
             <span class="hidden xs:inline sm:inline">お申し込みはこちら</span>
             <span class="inline xs:hidden sm:hidden">お申込み</span>
@@ -247,14 +247,14 @@
           <span id="mobile-contact-chevron" class="material-symbols-outlined text-xl transition-transform duration-200 transform rotate-180">expand_more</span>
         </button>
         <div id="mobile-contact-menu" class="border-t border-surface-container bg-surface-container-low/30 divide-y divide-surface-container/60">
-          <a href="/contact/organization/" onclick="closeMobileMenu()" class="w-full flex items-center justify-between px-4 py-3 text-sm font-bold text-on-surface hover:bg-surface-container-low transition-colors text-left cursor-pointer">
+          <a href="../organization/index.html" onclick="closeMobileMenu()" class="w-full flex items-center justify-between px-4 py-3 text-sm font-bold text-on-surface hover:bg-surface-container-low transition-colors text-left cursor-pointer">
             <div class="flex items-center gap-2">
               <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
               <span>塾・学校関係者様</span>
             </div>
             <span class="material-symbols-outlined text-base text-on-surface-variant">arrow_forward</span>
           </a>
-          <a href="/contact/individual/" onclick="closeMobileMenu()" class="w-full flex items-center justify-between px-4 py-3 text-sm font-bold text-on-surface hover:bg-surface-container-low transition-colors text-left cursor-pointer">
+          <a href="../individual/index.html" onclick="closeMobileMenu()" class="w-full flex items-center justify-between px-4 py-3 text-sm font-bold text-on-surface hover:bg-surface-container-low transition-colors text-left cursor-pointer">
             <div class="flex items-center gap-2">
               <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
               <span>個人申込の方</span>
@@ -267,7 +267,7 @@
 
     <!-- Drawer Footer (CTA Button) -->
     <div class="p-4 border-t border-surface-container bg-surface">
-      <a href="/apply.html" onclick="closeMobileMenu()" class="w-full flex items-center justify-center gap-2 py-3.5 rounded-full bg-secondary text-on-secondary font-bold text-base shadow-[0_4px_14px_-2px_rgba(200,90,50,0.35)] hover:bg-secondary-container transition-all">
+      <a href="/apply.html" onclick="closeMobileMenu()" class="w-full flex items-center justify-center gap-2 py-3.5 rounded-full bg-orange-500 hover:bg-orange-600 text-white font-bold text-base shadow-md shadow-orange-500/25 hover:shadow-lg hover:shadow-orange-500/35 transition-all">
         <span class="material-symbols-outlined text-xl">edit_document</span>
         <span>お申し込みはこちら</span>
       </a>
@@ -281,13 +281,13 @@
     
     <!-- ヘッダーバナー -->
     <div class="mb-6">
-      <div class="bg-gradient-to-br from-primary to-primary-container text-white p-6 sm:p-8 rounded-2xl shadow-sm">
-        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 text-xs font-bold mb-3 backdrop-blur-xs">
+      <div class="bg-slate-50 border border-slate-200 border-l-4 border-l-emerald-800 p-6 sm:p-8 rounded-2xl shadow-xs">
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100/80 text-emerald-900 border border-emerald-200/80 text-xs font-bold mb-3">
           <span class="material-symbols-outlined text-sm">corporate_fare</span>
           <span>教育関係者様 専用窓口</span>
         </div>
-        <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight mb-3">塾・学校関係者様 お問い合わせ</h1>
-        <p class="text-sm sm:text-base text-white/90 leading-relaxed max-w-2xl">
+        <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight mb-3 text-slate-800">塾・学校関係者様 お問い合わせ</h1>
+        <p class="text-sm sm:text-base text-slate-600 leading-relaxed max-w-2xl">
           岡山県統一模擬試験（おかもし）の団体受験・導入のご相談、見本問題や資料請求、合同実施に関するご質問を承っております。<br class="hidden sm:inline">
           下記フォームに必要事項をご入力のうえ、送信してください。
         </p>
@@ -297,11 +297,11 @@
     <!-- お問い合わせ切り替えタブ -->
     <div class="mb-6 sm:mb-8">
       <div class="flex items-center bg-slate-200/60 p-1.5 rounded-lg border border-slate-300/70 max-w-md mx-auto">
-        <a href="/contact?type=organization" class="flex-1 text-center py-2.5 px-3 rounded-lg font-bold text-sm bg-white text-primary shadow-sm transition-all flex items-center justify-center gap-1.5">
+        <a href="../organization/index.html" class="flex-1 text-center py-2.5 px-3 rounded-lg font-bold text-sm bg-white text-primary shadow-sm transition-all flex items-center justify-center gap-1.5">
           <span class="material-symbols-outlined text-base">corporate_fare</span>
           <span>塾・学校関係者様</span>
         </a>
-        <a href="/contact?type=individual" class="flex-1 text-center py-2.5 px-3 rounded-lg font-semibold text-sm text-slate-600 hover:text-slate-900 transition-all flex items-center justify-center gap-1.5">
+        <a href="../individual/index.html" class="flex-1 text-center py-2.5 px-3 rounded-lg font-semibold text-sm text-slate-600 hover:text-slate-900 transition-all flex items-center justify-center gap-1.5">
           <span class="material-symbols-outlined text-base">person</span>
           <span>個人申込の方</span>
         </a>
@@ -487,11 +487,11 @@
               <span>お問い合わせ</span>
             </div>
             <div class="flex flex-wrap sm:flex-nowrap gap-2 min-w-0">
-              <a class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg font-bold text-xs transition-all text-center shadow-xs border border-slate-500 bg-slate-600/80 hover:bg-slate-600 text-slate-100 hover:text-white whitespace-nowrap" href="/contact/organization/">
+              <a class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg font-bold text-xs transition-all text-center shadow-xs border border-slate-500 bg-slate-600/80 hover:bg-slate-600 text-slate-100 hover:text-white whitespace-nowrap" href="../organization/index.html">
                 <span class="material-symbols-outlined text-base text-emerald-400">corporate_fare</span>
                 <span>塾・学校関係者様</span>
               </a>
-              <a class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg font-bold text-xs transition-all text-center shadow-xs border border-slate-500 bg-slate-600/80 hover:bg-slate-600 text-slate-100 hover:text-white whitespace-nowrap" href="/contact/individual/">
+              <a class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg font-bold text-xs transition-all text-center shadow-xs border border-slate-500 bg-slate-600/80 hover:bg-slate-600 text-slate-100 hover:text-white whitespace-nowrap" href="../individual/index.html">
                 <span class="material-symbols-outlined text-base text-emerald-400">mail</span>
                 <span>個人申込の方</span>
               </a>

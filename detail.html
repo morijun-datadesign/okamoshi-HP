@@ -926,60 +926,67 @@
 <div id="entry-content-body" class="entry-content blog-body prose">
   <!-- コンテンツはJavaScriptで動的に挿入されます -->
 </div><!-- /#entry-content-body -->
-<!-- Social Media Share Buttons (LINE-focused) -->
-<div class="py-3.5 px-4 bg-surface-container-lowest rounded-lg shadow-xs flex flex-col items-center gap-2.5">
-  <span class="font-bold text-xs sm:text-sm text-on-surface-variant flex items-center gap-1.5">
-    保護者の方・お知り合いへの共有はこちら
-  </span>
-  <div class="flex items-center justify-center gap-2.5 w-full max-w-sm">
-    <!-- LINE (Main Button - Prominent & Wide) -->
-    <button class="flex-1 py-2 px-5 rounded-lg bg-[#06c755] hover:bg-[#05b34c] text-white font-bold text-sm hover:shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs" onclick="window.open('https://social-plugins.line.me/lineit/share?url=' + encodeURIComponent(window.location.href), '_blank')" type="button">
-      <svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.477.254l2.484 3.374V8.108c0-.345.282-.63.63-.63.345 0 .626.285.626.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63.349 0 .631.285.631.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"></path></svg>
-      <span>LINEで送る</span>
-    </button>
-    <!-- Copy Link (Sub Button - Simple Gray) -->
-    <button class="px-4 py-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-medium text-xs sm:text-sm transition-colors flex items-center justify-center gap-1.5 cursor-pointer shrink-0 shadow-2xs" onclick="navigator.clipboard.writeText(window.location.href); alert('記事のURLをクリップボードにコピーしました');" type="button">
-      <span class="material-symbols-outlined text-[16px]">content_copy</span>
-      <span>URLをコピー</span>
-    </button>
-  </div>
-</div>
 
-<!-- Divider between Share Area and Article Navigation -->
-<div class="w-full border-t border-gray-200 my-8"></div>
+<!-- 記事本文直下の太めの区切り線 -->
+<div class="border-t-2 border-slate-200 my-8"></div>
 
-<!-- Pagination: Previous / Next Article Navigation -->
-<div class="flex flex-col gap-3">
-  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-    <!-- 前の記事 -->
-    <a class="py-2.5 px-3.5 bg-surface-container-lowest rounded-lg border border-outline-variant/30 shadow-2xs hover:shadow-md hover:-translate-y-0.5 hover:border-primary/50 transition-all flex flex-col gap-0.5 group cursor-pointer" data-path="news-detail-prev" href="news.html">
-      <div class="flex items-center gap-1 text-[11px] font-bold text-gray-500">
-        <span class="material-symbols-outlined text-[14px] group-hover:-translate-x-0.5 transition-transform">arrow_back</span>
-        <span>前の記事</span>
-      </div>
-      <span class="text-xs sm:text-[13px] font-medium text-on-surface truncate group-hover:text-primary transition-colors">
-        2026年度 岡山県公立高校入試実施日程および定員発表について
-      </span>
-    </a>
-
-    <!-- 次の記事 -->
-    <a class="py-2.5 px-3.5 bg-surface-container-lowest rounded-lg border border-outline-variant/30 shadow-2xs hover:shadow-md hover:-translate-y-0.5 hover:border-primary/50 transition-all flex flex-col gap-0.5 text-right group cursor-pointer" data-path="news-detail-next" href="detail.html?id=naishin-calc">
-      <div class="flex items-center justify-end gap-1 text-[11px] font-bold text-gray-500">
-        <span>次の記事</span>
-        <span class="material-symbols-outlined text-[14px] group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
-      </div>
-      <span class="text-xs sm:text-[13px] font-medium text-on-surface truncate group-hover:text-primary transition-colors">
-        今さら聞けない「岡山県公立高校の内申点」計算方法と当日の逆転可能ライン
-      </span>
-    </a>
+<!-- SNS共有・前後ナビゲーション統合ボックス -->
+<div class="bg-slate-50 p-6 rounded-xl border border-slate-200/60 flex flex-col gap-6">
+  <!-- SNS共有エリア -->
+  <div class="flex flex-col items-center gap-2.5">
+    <span class="font-bold text-xs sm:text-sm text-slate-600 flex items-center gap-1.5">
+      保護者の方・お知り合いへの共有はこちら
+    </span>
+    <div class="flex items-center justify-center gap-2.5 w-full max-w-sm">
+      <!-- LINE (Main Button - Prominent & Wide) -->
+      <button class="flex-1 py-2 px-5 rounded-lg bg-[#06c755] hover:bg-[#05b34c] text-white font-bold text-sm hover:shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs" onclick="window.open('https://social-plugins.line.me/lineit/share?url=' + encodeURIComponent(window.location.href), '_blank')" type="button">
+        <svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.477.254l2.484 3.374V8.108c0-.345.282-.63.63-.63.345 0 .626.285.626.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63.349 0 .631.285.631.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"></path></svg>
+        <span>LINEで送る</span>
+      </button>
+      <!-- Copy Link (Sub Button - Simple Gray) -->
+      <button class="px-4 py-2 rounded-lg bg-white hover:bg-slate-100 text-slate-700 border border-slate-200/80 font-medium text-xs sm:text-sm transition-colors flex items-center justify-center gap-1.5 cursor-pointer shrink-0 shadow-2xs" onclick="navigator.clipboard.writeText(window.location.href); alert('記事のURLをクリップボードにコピーしました');" type="button">
+        <span class="material-symbols-outlined text-[16px]">content_copy</span>
+        <span>URLをコピー</span>
+      </button>
+    </div>
   </div>
 
-  <!-- 記事一覧へ戻る (中央配置のシンプルで上品なテキストボタン) -->
-  <div class="flex justify-center pt-0.5">
-    <a class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold text-primary hover:text-primary-container bg-surface-container/60 hover:bg-surface-container transition-all" data-path="news" href="news.html">
-      <span class="material-symbols-outlined text-[16px]">grid_view</span>
-      <span>記事一覧に戻る</span>
-    </a>
+  <!-- ボックス内区切り線 -->
+  <div class="w-full border-t border-slate-200/70"></div>
+
+  <!-- Pagination: Previous / Next Article Navigation -->
+  <div class="flex flex-col gap-3">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <!-- 前の記事 -->
+      <a class="py-2.5 px-3.5 bg-white rounded-lg border border-slate-200/90 shadow-2xs hover:shadow-md hover:-translate-y-0.5 hover:border-emerald-600/50 transition-all flex flex-col gap-0.5 group cursor-pointer" data-path="news-detail-prev" href="news.html">
+        <div class="flex items-center gap-1 text-[11px] font-bold text-slate-500">
+          <span class="material-symbols-outlined text-[14px] group-hover:-translate-x-0.5 transition-transform">arrow_back</span>
+          <span>前の記事</span>
+        </div>
+        <span class="text-xs sm:text-[13px] font-medium text-slate-800 truncate group-hover:text-emerald-800 transition-colors">
+          2026年度 岡山県公立高校入試実施日程および定員発表について
+        </span>
+      </a>
+
+      <!-- 次の記事 -->
+      <a class="py-2.5 px-3.5 bg-white rounded-lg border border-slate-200/90 shadow-2xs hover:shadow-md hover:-translate-y-0.5 hover:border-emerald-600/50 transition-all flex flex-col gap-0.5 text-right group cursor-pointer" data-path="news-detail-next" href="detail.html?id=naishin-calc">
+        <div class="flex items-center justify-end gap-1 text-[11px] font-bold text-slate-500">
+          <span>次の記事</span>
+          <span class="material-symbols-outlined text-[14px] group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+        </div>
+        <span class="text-xs sm:text-[13px] font-medium text-slate-800 truncate group-hover:text-emerald-800 transition-colors">
+          今さら聞けない「岡山県公立高校の内申点」計算方法と当日の逆転可能ライン
+        </span>
+      </a>
+    </div>
+
+    <!-- 記事一覧へ戻る (中央配置のシンプルで上品なテキストボタン) -->
+    <div class="flex justify-center pt-0.5">
+      <a class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold text-emerald-800 hover:text-emerald-950 bg-slate-200/70 hover:bg-slate-200 transition-all" data-path="news" href="news.html">
+        <span class="material-symbols-outlined text-[16px]">grid_view</span>
+        <span>記事一覧に戻る</span>
+      </a>
+    </div>
   </div>
 </div>
 </article>
@@ -1018,10 +1025,10 @@
 </div>
 </div>
 <!-- Related Articles Section -->
-<section id="related-articles-section" class="w-full border-t border-slate-200/80 mt-10 sm:mt-14 pt-8 sm:pt-10">
+<section id="related-articles-section" class="w-full border-t-2 border-slate-200 mt-12 sm:mt-16 pt-8 sm:pt-10">
   <div class="w-full flex flex-col gap-4 sm:gap-5">
     <!-- Section Header -->
-    <div class="flex items-center justify-between pb-2 border-b border-surface-container-highest/60">
+    <div class="flex items-center justify-between pb-2 border-b border-slate-200">
       <h2 class="text-xl sm:text-2xl text-primary font-bold">こちらの記事も読まれています</h2>
       <a class="hidden md:flex items-center gap-1 text-primary text-xs sm:text-sm hover:underline font-bold" data-path="news" href="news.html">
         <span>記事一覧を見る</span>
@@ -1030,7 +1037,7 @@
     </div>
 
     <!-- Articles Card List (Horizontal Text List, Dynamic) -->
-    <div id="related-articles-grid" class="flex flex-col gap-2.5">
+    <div id="related-articles-grid" class="bg-slate-50/80 p-3 sm:p-4 rounded-xl border border-slate-200/80 flex flex-col gap-2.5">
       <div class="py-6 text-center text-on-surface-variant flex items-center justify-center gap-2">
         <span class="material-symbols-outlined animate-spin text-primary">sync</span>
         <span class="text-xs">関連記事を読み込み中...</span>
@@ -1391,6 +1398,68 @@
               p.remove();
             }
           });
+
+          // 記事末尾の案内リンク（おかもし日程一覧・申込等）のボタンカード化
+          const candidates = Array.from(contentBody.querySelectorAll('p, a, li, div'));
+          let scheduleTarget = null;
+          let applyTarget = null;
+
+          for (const el of candidates) {
+            const rawText = el.textContent.trim().replace(/\s+/g, '');
+            if (rawText === 'おかもし日程一覧' || rawText === 'おかもし日程一覧を見る') {
+              const target = (el.tagName.toLowerCase() === 'a' && el.parentElement && el.parentElement.tagName.toLowerCase() === 'p') ? el.parentElement : el;
+              if (!scheduleTarget) scheduleTarget = target;
+            } else if (rawText === 'おかもし詳細・お申し込み' || rawText === 'おかもし詳細・お申込み' || rawText === 'おかもし詳細お申し込み' || rawText === 'おかもし詳細お申込み') {
+              const target = (el.tagName.toLowerCase() === 'a' && el.parentElement && el.parentElement.tagName.toLowerCase() === 'p') ? el.parentElement : el;
+              if (!applyTarget) applyTarget = target;
+            }
+          }
+
+          if (scheduleTarget || applyTarget) {
+            const btnContainer = document.createElement('div');
+            btnContainer.className = 'not-prose my-6 grid grid-cols-1 sm:grid-cols-2 gap-3.5';
+
+            if (scheduleTarget) {
+              const scheduleLink = scheduleTarget.querySelector('a')?.getAttribute('href') || 'index.html#schedule';
+              const scheduleCard = document.createElement('a');
+              scheduleCard.href = scheduleLink;
+              scheduleCard.className = 'bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-200 py-3 px-4 rounded-lg flex justify-between items-center transition-all group font-bold shadow-2xs no-underline cursor-pointer';
+              scheduleCard.innerHTML = `
+                <div class="flex items-center gap-2.5 min-w-0">
+                  <span class="w-8 h-8 rounded-md bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                    <span class="material-symbols-outlined text-[20px]">calendar_month</span>
+                  </span>
+                  <span class="text-sm sm:text-base font-bold text-emerald-900 truncate">おかもし日程一覧</span>
+                </div>
+                <span class="material-symbols-outlined text-emerald-700 text-lg group-hover:translate-x-1 transition-transform shrink-0">arrow_forward</span>
+              `;
+              btnContainer.appendChild(scheduleCard);
+            }
+
+            if (applyTarget) {
+              const applyLink = applyTarget.querySelector('a')?.getAttribute('href') || 'apply.html';
+              const applyCard = document.createElement('a');
+              applyCard.href = applyLink;
+              applyCard.className = 'bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-200 py-3 px-4 rounded-lg flex justify-between items-center transition-all group font-bold shadow-2xs no-underline cursor-pointer';
+              applyCard.innerHTML = `
+                <div class="flex items-center gap-2.5 min-w-0">
+                  <span class="w-8 h-8 rounded-md bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                    <span class="material-symbols-outlined text-[20px]">how_to_reg</span>
+                  </span>
+                  <span class="text-sm sm:text-base font-bold text-emerald-900 truncate">おかもし詳細・お申し込み</span>
+                </div>
+                <span class="material-symbols-outlined text-emerald-700 text-lg group-hover:translate-x-1 transition-transform shrink-0">arrow_forward</span>
+              `;
+              btnContainer.appendChild(applyCard);
+            }
+
+            const insertRef = scheduleTarget || applyTarget;
+            if (insertRef && insertRef.parentNode) {
+              insertRef.parentNode.insertBefore(btnContainer, insertRef);
+            }
+            if (scheduleTarget && scheduleTarget.parentNode) scheduleTarget.remove();
+            if (applyTarget && applyTarget.parentNode) applyTarget.remove();
+          }
         } else {
           // フォールバック時: 本文なしの場合は焼き込み本文を隠してプレースホルダー表示
           contentBody.innerHTML = `
@@ -1603,14 +1672,14 @@
           : '';
 
         return `
-          <article class="bg-surface-container-lowest rounded-lg border border-outline-variant/30 hover:border-primary/50 shadow-2xs hover:shadow-xs transition-all duration-200 group">
+          <article class="bg-white rounded-lg border border-slate-200 shadow-2xs hover:shadow-xs hover:border-emerald-600/50 transition-all duration-200 group">
             <a href="${detailHref}" class="flex flex-col sm:flex-row sm:items-center justify-between px-4 py-3 sm:px-5 sm:py-3.5 gap-2 sm:gap-4 cursor-pointer">
               <div class="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-4 flex-1 min-w-0">
                 <!-- メタ領域: [NEW] [日付] [カテゴリバッジ] -->
                 <div class="flex items-center gap-2 shrink-0">
                   ${newBadgeHtml}
-                  <span class="flex items-center gap-1 text-xs text-on-surface-variant font-medium">
-                    <span class="material-symbols-outlined text-[14px] text-outline">calendar_today</span>
+                  <span class="flex items-center gap-1 text-xs text-slate-500 font-medium">
+                    <span class="material-symbols-outlined text-[14px] text-slate-400">calendar_today</span>
                     <span>${publishedDate}</span>
                   </span>
                   <span class="px-2 py-0.5 rounded text-[11px] font-bold ${badgeCls} shrink-0">
@@ -1619,13 +1688,13 @@
                 </div>
 
                 <!-- 記事タイトル -->
-                <h3 class="font-bold text-sm sm:text-[15px] text-on-surface group-hover:text-primary transition-colors truncate">
+                <h3 class="font-bold text-sm sm:text-[15px] text-slate-800 group-hover:text-emerald-800 transition-colors truncate">
                   ${item.title || ''}
                 </h3>
               </div>
 
               <!-- 右端アクション: 詳細を読む (PCで表示) -->
-              <div class="hidden sm:flex items-center gap-1 text-xs font-bold text-secondary shrink-0 group-hover:translate-x-0.5 transition-transform">
+              <div class="hidden sm:flex items-center gap-1 text-xs font-bold text-emerald-700 shrink-0 group-hover:translate-x-0.5 transition-transform">
                 <span>詳細を読む</span>
                 <span class="material-symbols-outlined text-[16px]">chevron_right</span>
               </div>
@@ -1984,8 +2053,12 @@
         const venuesSummary = extractVenuesSummary(session.schedules, fallbackSession && fallbackSession.venues_summary);
         const deadlineText = getFormattedDeadline(session, fallbackSession && fallbackSession.deadline);
 
+        const monthNumMatch = issueName.match(/(\d+)/);
+        const monthParam = monthNumMatch ? `&month=${monthNumMatch[1]}` : '';
+        const cardLink = `index.html?grade=${config.gradeKey}${monthParam}#schedule-selector`;
+
         return `
-          <a href="${config.link}" class="block p-3.5 bg-white hover:bg-slate-50/90 rounded-lg border border-gray-200/90 hover:border-emerald-600/40 shadow-xs hover:shadow-sm hover:-translate-y-0.5 transition-all duration-200 ease-in-out cursor-pointer group">
+          <a href="${cardLink}" class="block p-3.5 bg-white hover:bg-slate-50/90 rounded-lg border border-gray-200/90 hover:border-emerald-600/40 shadow-xs hover:shadow-sm hover:-translate-y-0.5 transition-all duration-200 ease-in-out cursor-pointer group">
             <div class="flex items-center justify-between gap-2 pb-2.5 border-b border-gray-100">
               <div class="flex items-center gap-1.5 flex-wrap">
                 <span class="inline-flex items-center justify-center px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 font-bold text-xs shrink-0 leading-tight">${config.gradeBadge}</span>

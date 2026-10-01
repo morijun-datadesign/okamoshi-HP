@@ -701,10 +701,11 @@
                   <label class="font-label-md text-sm font-bold text-on-surface" for="postalCode">郵便番号</label>
                   <span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span>
                 </div>
-                <div class="flex gap-2">
-                  <input class="flex-1 h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-sm border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="postalCode" name="postal_code" maxlength="8" placeholder="700-0822" required type="text">
-                  <button class="px-3.5 h-11 bg-primary hover:bg-primary-container text-on-primary font-label-sm text-xs rounded-lg transition-colors shadow-sm shrink-0 flex items-center gap-1 cursor-pointer" onclick="fillMockAddress()" type="button">
-                    <span class="material-symbols-outlined text-[16px]">location_searching</span>住所自動入力
+                <div class="flex items-center gap-2">
+                  <input class="w-32 sm:w-36 h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-sm border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40 shrink-0" id="postalCode" name="postal_code" maxlength="8" placeholder="700-0822" required type="text">
+                  <button class="flex-1 sm:flex-initial sm:w-auto px-3 sm:px-4 h-11 py-2.5 bg-primary hover:bg-primary-container text-on-primary font-bold text-xs sm:text-sm rounded-lg transition-colors shadow-sm shrink-0 max-w-full flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap active:scale-[0.98]" onclick="fillMockAddress()" type="button">
+                    <span class="material-symbols-outlined text-[16px] shrink-0">location_searching</span>
+                    <span>住所自動入力</span>
                   </button>
                 </div>
               </div>

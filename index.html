@@ -111,14 +111,38 @@
       transform: rotate(180deg);
     }
 
-    /* 共通ヘッダードロップダウン */
+    /* 共通ヘッダードロップダウン（隙間外れ防止ホバーブリッジ付き） */
+    #nav-contact-container {
+      position: relative;
+    }
     #nav-contact-container:hover #nav-contact-dropdown,
+    #nav-contact-container:focus-within #nav-contact-dropdown,
     #nav-contact-container.is-open #nav-contact-dropdown {
       display: block !important;
     }
     #nav-contact-container:hover #nav-contact-chevron,
     #nav-contact-container.is-open #nav-contact-chevron {
       transform: rotate(180deg) !important;
+    }
+    #nav-contact-dropdown::before {
+      content: "";
+      position: absolute;
+      top: -14px;
+      left: 0;
+      right: 0;
+      height: 16px;
+      display: block;
+      background: transparent;
+    }
+    #nav-next-exam-dropdown::before {
+      content: "";
+      position: absolute;
+      top: -14px;
+      left: 0;
+      right: 0;
+      height: 16px;
+      display: block;
+      background: transparent;
     }
   </style>
 </head>
@@ -175,7 +199,7 @@
             <span>お問い合わせ</span>
             <span id="nav-contact-chevron" class="material-symbols-outlined text-lg transition-transform duration-200 transform group-hover:rotate-180">expand_more</span>
           </button>
-          <div id="nav-contact-dropdown" class="hidden group-hover:block absolute right-0 top-full mt-2 w-52 rounded-2xl bg-white border border-slate-200 shadow-xl p-2 z-50">
+          <div id="nav-contact-dropdown" class="hidden group-hover:block absolute right-0 top-full mt-2 w-52 rounded-2xl bg-white border border-slate-200 shadow-xl p-2 z-50 before:content-[''] before:absolute before:-top-3.5 before:left-0 before:w-full before:h-3.5">
             <div class="space-y-1 text-xs sm:text-sm">
               <a href="contact/organization/index.html" class="block px-3.5 py-2.5 rounded-xl hover:bg-brand-greenLight hover:text-brand-green font-bold text-slate-700 transition-colors">
                 塾・学校関係者様
@@ -436,9 +460,8 @@
       <!-- セクションヘッダー ＆ 学年一括切り替えボタン ＆ PC用 左右ナビゲーション矢印ボタン -->
       <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6 md:mb-8">
         <div>
-          <span class="text-xs sm:text-sm font-bold text-brand-green uppercase tracking-wider">Features</span>
-          <h3 class="text-2xl md:text-3xl font-bold text-slate-900 mt-1">岡山県統一模擬試験（おかもし）が選ばれる3つの理由</h3>
-          <p class="text-xs sm:text-sm text-slate-700 font-medium mt-1">ただ点数を出すだけでなく、本番で合格を勝ち取るための確かな理由があります。</p>
+          <h3 class="text-2xl md:text-3xl font-bold text-slate-900 leading-tight">岡山県統一模擬試験（おかもし）が選ばれる3つの理由</h3>
+          <p class="text-xs sm:text-sm text-slate-700 font-medium mt-2">ただ点数を出すだけでなく、本番で合格を勝ち取るための確かな理由があります。</p>
         </div>
 
         <!-- ヘッダー右側：学年一括切り替えボタン ＋ PC用ナビゲーション矢印ボタン -->
@@ -683,9 +706,8 @@
     <section id="schedule-selector" class="py-16 md:py-20 px-4 sm:px-6 md:px-8 w-full relative scroll-mt-16 sm:scroll-mt-[4.5rem] bg-white border-b border-slate-200/80">
       
       <div class="text-center mb-6 md:mb-8">
-        <span class="text-xs sm:text-sm font-bold text-brand-green uppercase tracking-wider">Schedule & Entry</span>
-        <h3 class="text-2xl md:text-3xl font-bold text-slate-900 mt-1.5">模試日程・出題範囲・申込</h3>
-        <p class="text-xs sm:text-sm text-slate-700 font-medium mt-1.5">学年と実施回を選ぶと、詳細が瞬時に切り替わります</p>
+        <h3 class="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight">模試日程・出題範囲・申込</h3>
+        <p class="text-xs sm:text-sm text-slate-700 font-medium mt-2">学年と実施回を選ぶと、詳細が瞬時に切り替わります</p>
       </div>
 
       <!-- 模試日程・申込 メインカード囲み（独立した操作エリアのホワイトカード枠） -->
@@ -797,11 +819,11 @@
                   
                   <div class="p-4 bg-slate-50/70 border-t border-emerald-100/80 space-y-4">
                     <div>
-                      <div class="text-xs font-bold text-slate-700 mb-2 flex items-center justify-between">
+                      <div class="text-xs sm:text-sm font-bold text-slate-700 mb-2.5 flex flex-wrap items-center justify-between gap-1">
                         <span>会場または自宅受験を選択：</span>
-                        <span class="text-[11px] text-brand-green font-medium">※会場により日程・時間割が異なります</span>
+                        <span class="text-xs text-brand-green font-medium">※会場により日程・時間割が異なります</span>
                       </div>
-                      <div class="flex gap-2 overflow-x-auto pb-1 no-scrollbar" id="venue-tabs">
+                      <div class="flex flex-wrap sm:inline-flex p-1.5 bg-slate-100 rounded-xl border border-slate-200/80 gap-1 shadow-2xs w-full sm:w-auto" id="venue-tabs">
                         <!-- JSで動的生成 -->
                       </div>
                     </div>
@@ -820,23 +842,23 @@
               
               <!-- 申込締切日カード -->
               <div id="deadline-container">
-                <div class="bg-gradient-to-r from-emerald-50 via-teal-50/60 to-emerald-50 rounded-2xl border-2 border-emerald-300/80 p-4 flex items-center justify-between shadow-xs">
+                <div class="bg-slate-50/80 rounded-r-xl border-l-4 border-emerald-600 p-4 flex items-center justify-between">
                   <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-white border border-emerald-200 flex items-center justify-center text-xl shrink-0 shadow-xs">
+                    <div class="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-xl shrink-0 shadow-2xs">
                       ⏳
                     </div>
                     <div>
                       <div class="flex items-center gap-1.5">
-                        <span class="text-[10px] font-bold text-emerald-800 tracking-wide uppercase">お申し込み締切</span>
-                        <span class="text-[10px] font-bold text-emerald-800 bg-emerald-100 border border-emerald-200 px-2 py-0.5 rounded-full">期日厳守</span>
+                        <span class="text-xs font-bold text-slate-800 tracking-wide uppercase">お申し込み締切</span>
+                        <span class="text-[10px] font-bold text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">期日厳守</span>
                       </div>
-                      <div id="card-deadline" class="text-sm sm:text-base font-bold text-slate-900 tracking-tight mt-0.5">
+                      <div id="card-deadline" class="text-sm sm:text-base font-bold text-slate-800 tracking-tight mt-0.5">
                         2026年10月5日(月) 23:59まで
                       </div>
                     </div>
                   </div>
                   <div class="hidden sm:block text-right">
-                    <span class="text-xs font-bold text-emerald-700 bg-white/90 px-2.5 py-1 rounded-md border border-emerald-200 shadow-2xs">
+                    <span class="text-xs sm:text-sm font-medium text-emerald-700">
                       WEB受付中
                     </span>
                   </div>
@@ -910,22 +932,22 @@
             </div>
             
             <div class="space-y-3">
-              <div class="rounded-2xl bg-slate-50/80 p-4 sm:p-5 border border-slate-200/60 shadow-2xs space-y-2">
-                <div class="flex items-start gap-2 text-sm sm:text-base font-bold text-slate-900 leading-snug">
-                  <span class="material-symbols-outlined text-lg text-brand-green/80 shrink-0 mt-0.5 select-none">format_quote</span>
+              <div class="rounded-2xl bg-slate-100 p-4 sm:p-5 border border-slate-200/80 shadow-2xs space-y-2">
+                <div class="flex items-start gap-2 text-base sm:text-lg font-bold text-slate-900 leading-snug">
+                  <span class="material-symbols-outlined text-xl text-emerald-700 shrink-0 mt-0.5 select-none">format_quote</span>
                   <span>塾に通っていなくても、県全体での順位や実力を把握できました</span>
                 </div>
-                <p class="text-xs sm:text-sm text-slate-700 leading-relaxed pl-6 pt-0.5">
+                <p class="text-sm text-slate-700 leading-relaxed pl-7 pt-1">
                   「学校のテストだけでは分からない、岡山県全体の中で自分がどのくらいの位置にいるのかが分かって良かったです。塾や通信教育を利用していなかったので、偏差値や具体的な立ち位置を知ることができ、志望校を決める大きな目安になりました。」
                 </p>
               </div>
 
-              <div class="rounded-2xl bg-slate-50/80 p-4 sm:p-5 border border-slate-200/60 shadow-2xs space-y-2">
-                <div class="flex items-start gap-2 text-sm sm:text-base font-bold text-slate-900 leading-snug">
-                  <span class="material-symbols-outlined text-lg text-brand-green/80 shrink-0 mt-0.5 select-none">format_quote</span>
+              <div class="rounded-2xl bg-slate-100 p-4 sm:p-5 border border-slate-200/80 shadow-2xs space-y-2">
+                <div class="flex items-start gap-2 text-base sm:text-lg font-bold text-slate-900 leading-snug">
+                  <span class="material-symbols-outlined text-xl text-emerald-700 shrink-0 mt-0.5 select-none">format_quote</span>
                   <span>自分の現在地がわかり、受験勉強の励みになった</span>
                 </div>
-                <p class="text-xs sm:text-sm text-slate-700 leading-relaxed pl-6 pt-0.5">
+                <p class="text-sm text-slate-700 leading-relaxed pl-7 pt-1">
                   「模試を受けたことで今の自分のレベルが明確になり、これからの勉強に向けた危機感とやる気が出ました。『このままじゃダメだ』と気持ちを引き締め、直前期まで緊張感を持って勉強に取り組むことができました。」
                 </p>
               </div>
@@ -942,22 +964,22 @@
             </div>
             
             <div class="space-y-3">
-              <div class="rounded-2xl bg-slate-50/80 p-4 sm:p-5 border border-slate-200/60 shadow-2xs space-y-2">
-                <div class="flex items-start gap-2 text-sm sm:text-base font-bold text-slate-900 leading-snug">
-                  <span class="material-symbols-outlined text-lg text-brand-green/80 shrink-0 mt-0.5 select-none">format_quote</span>
+              <div class="rounded-2xl bg-slate-100 p-4 sm:p-5 border border-slate-200/80 shadow-2xs space-y-2">
+                <div class="flex items-start gap-2 text-base sm:text-lg font-bold text-slate-900 leading-snug">
+                  <span class="material-symbols-outlined text-xl text-emerald-700 shrink-0 mt-0.5 select-none">format_quote</span>
                   <span>試験会場での受験で、本番も落ち着いて臨めた</span>
                 </div>
-                <p class="text-xs sm:text-sm text-slate-700 leading-relaxed pl-6 pt-0.5">
+                <p class="text-sm text-slate-700 leading-relaxed pl-7 pt-1">
                   「実際の入試会場と同じような緊張感の中でテストを受けることができ、とても良い経験になりました。何度か会場で受けたおかげで試験の空気に慣れることができ、入試本番もリラックスして落ち着いて臨めました。」
                 </p>
               </div>
 
-              <div class="rounded-2xl bg-slate-50/80 p-4 sm:p-5 border border-slate-200/60 shadow-2xs space-y-2">
-                <div class="flex items-start gap-2 text-sm sm:text-base font-bold text-slate-900 leading-snug">
-                  <span class="material-symbols-outlined text-lg text-brand-green/80 shrink-0 mt-0.5 select-none">format_quote</span>
+              <div class="rounded-2xl bg-slate-100 p-4 sm:p-5 border border-slate-200/80 shadow-2xs space-y-2">
+                <div class="flex items-start gap-2 text-base sm:text-lg font-bold text-slate-900 leading-snug">
+                  <span class="material-symbols-outlined text-xl text-emerald-700 shrink-0 mt-0.5 select-none">format_quote</span>
                   <span>時間配分や朝からのスケジュールが良い練習になった</span>
                 </div>
-                <p class="text-xs sm:text-sm text-slate-700 leading-relaxed pl-6 pt-0.5">
+                <p class="text-sm text-slate-700 leading-relaxed pl-7 pt-1">
                   「朝から本番と同じ時間割で試験を受けたことで、当日の動きや時間配分の失敗・反省点を本番に活かすことができました。直前対策や予行練習として受けておいて本当に良かったです。」
                 </p>
               </div>
@@ -974,22 +996,22 @@
             </div>
             
             <div class="space-y-3">
-              <div class="rounded-2xl bg-slate-50/80 p-4 sm:p-5 border border-slate-200/60 shadow-2xs space-y-2">
-                <div class="flex items-start gap-2 text-sm sm:text-base font-bold text-slate-900 leading-snug">
-                  <span class="material-symbols-outlined text-lg text-brand-green/80 shrink-0 mt-0.5 select-none">format_quote</span>
+              <div class="rounded-2xl bg-slate-100 p-4 sm:p-5 border border-slate-200/80 shadow-2xs space-y-2">
+                <div class="flex items-start gap-2 text-base sm:text-lg font-bold text-slate-900 leading-snug">
+                  <span class="material-symbols-outlined text-xl text-emerald-700 shrink-0 mt-0.5 select-none">format_quote</span>
                   <span>自分の弱点や「解くべき問題」が詳しく分かった</span>
                 </div>
-                <p class="text-xs sm:text-sm text-slate-700 leading-relaxed pl-6 pt-0.5">
+                <p class="text-sm text-slate-700 leading-relaxed pl-7 pt-1">
                   「成績表で自分の苦手な分野や出題内容ごとの結果が視覚的にわかりやすく記載されていて、どこを重点的に復習すれば良いかが明確になりました。『自分の実力なら解けるはずの問題』も教えてくれたので、限られた時間で効率よく弱点克服ができました。」
                 </p>
               </div>
 
-              <div class="rounded-2xl bg-slate-50/80 p-4 sm:p-5 border border-slate-200/60 shadow-2xs space-y-2">
-                <div class="flex items-start gap-2 text-sm sm:text-base font-bold text-slate-900 leading-snug">
-                  <span class="material-symbols-outlined text-lg text-brand-green/80 shrink-0 mt-0.5 select-none">format_quote</span>
+              <div class="rounded-2xl bg-slate-100 p-4 sm:p-5 border border-slate-200/80 shadow-2xs space-y-2">
+                <div class="flex items-start gap-2 text-base sm:text-lg font-bold text-slate-900 leading-snug">
+                  <span class="material-symbols-outlined text-xl text-emerald-700 shrink-0 mt-0.5 select-none">format_quote</span>
                   <span>本番にそっくりな問題形式で実践的な対策ができた</span>
                 </div>
-                <p class="text-xs sm:text-sm text-slate-700 leading-relaxed pl-6 pt-0.5">
+                <p class="text-sm text-slate-700 leading-relaxed pl-7 pt-1">
                   「実際の岡山県の入試問題と形式や大問構成がそっくりで、出題傾向の対策や実践的な練習になりました。解説も分かりやすく、解き直しをする際にとても役に立ちました。」
                 </p>
               </div>
@@ -1006,22 +1028,22 @@
             </div>
             
             <div class="space-y-3">
-              <div class="rounded-2xl bg-slate-50/80 p-4 sm:p-5 border border-slate-200/60 shadow-2xs space-y-2">
-                <div class="flex items-start gap-2 text-sm sm:text-base font-bold text-slate-900 leading-snug">
-                  <span class="material-symbols-outlined text-lg text-brand-green/80 shrink-0 mt-0.5 select-none">format_quote</span>
+              <div class="rounded-2xl bg-slate-100 p-4 sm:p-5 border border-slate-200/80 shadow-2xs space-y-2">
+                <div class="flex items-start gap-2 text-base sm:text-lg font-bold text-slate-900 leading-snug">
+                  <span class="material-symbols-outlined text-xl text-emerald-700 shrink-0 mt-0.5 select-none">format_quote</span>
                   <span>合否判定や成績データが具体的で信頼できた</span>
                 </div>
-                <p class="text-xs sm:text-sm text-slate-700 leading-relaxed pl-6 pt-0.5">
+                <p class="text-sm text-slate-700 leading-relaxed pl-7 pt-1">
                   「志望校の判定や分布図など、有用なデータが豊富でとても参考になりました。実際の入試結果と模試の点数に大きな差がなく、判定の精度や信頼性の高さを実感しました。学校の先生や家族と進路を相談する際の大切な指標になりました。」
                 </p>
               </div>
 
-              <div class="rounded-2xl bg-slate-50/80 p-4 sm:p-5 border border-slate-200/60 shadow-2xs space-y-2">
-                <div class="flex items-start gap-2 text-sm sm:text-base font-bold text-slate-900 leading-snug">
-                  <span class="material-symbols-outlined text-lg text-brand-green/80 shrink-0 mt-0.5 select-none">format_quote</span>
+              <div class="rounded-2xl bg-slate-100 p-4 sm:p-5 border border-slate-200/80 shadow-2xs space-y-2">
+                <div class="flex items-start gap-2 text-base sm:text-lg font-bold text-slate-900 leading-snug">
+                  <span class="material-symbols-outlined text-xl text-emerald-700 shrink-0 mt-0.5 select-none">format_quote</span>
                   <span>模試の結果で自信がついた</span>
                 </div>
-                <p class="text-xs sm:text-sm text-slate-700 leading-relaxed pl-6 pt-0.5">
+                <p class="text-sm text-slate-700 leading-relaxed pl-7 pt-1">
                   「合格判定を見て『あと少しで届く』という目標が見えたり、良い判定が出たことで受験に向けて大きな自信につながりました。」
                 </p>
               </div>
@@ -1039,7 +1061,6 @@
       <div class="w-full max-w-4xl mx-auto">
         <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-6 sm:mb-8">
           <div>
-            <span class="text-xs font-bold text-brand-green uppercase tracking-wider block mb-1">News &amp; Topics</span>
             <h3 class="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight">最新のお知らせ</h3>
           </div>
           <a href="news.html" class="inline-flex items-center gap-1 text-xs sm:text-sm font-bold text-brand-green hover:underline group self-start sm:self-auto mb-1">
@@ -1146,9 +1167,8 @@
          ======================================================================= -->
     <section id="faq" class="py-16 md:py-20 px-4 sm:px-6 md:px-8 w-full scroll-mt-16 sm:scroll-mt-[4.5rem] bg-slate-50 border-b border-slate-200/80">
       <div class="text-center mb-6 md:mb-8">
-        <span class="text-xs sm:text-sm font-bold text-brand-green uppercase tracking-wider">FAQ</span>
-        <h3 class="text-2xl md:text-3xl font-bold text-slate-900 mt-1.5">よくあるご質問</h3>
-        <p class="text-xs sm:text-sm text-slate-600 font-medium mt-1.5">受験に関するご不明な点はお気軽にご確認ください</p>
+        <h3 class="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight">よくあるご質問</h3>
+        <p class="text-xs sm:text-sm text-slate-600 font-medium mt-2">受験に関するご不明な点はお気軽にご確認ください</p>
       </div>
 
       <!-- FAQカードリストコンテナ -->
@@ -1165,11 +1185,10 @@
     <section class="pt-12 md:pt-14 pb-10 md:pb-12 px-4 sm:px-6 md:px-8 w-full bg-white">
       <div class="w-full max-w-5xl mx-auto">
         <div class="text-center pb-8 sm:pb-10">
-          <span class="block text-[11px] font-bold tracking-widest text-brand-green uppercase">QUICK ACTION &amp; RESOURCES</span>
-          <h3 class="text-2xl md:text-3xl font-bold text-slate-900 mt-1">
+          <h3 class="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight">
             おすすめ・関連ナビゲーション
           </h3>
-          <p class="text-xs sm:text-sm text-slate-600 font-medium mt-1.5">受験準備やお近くの提携塾のご確認はこちらから</p>
+          <p class="text-xs sm:text-sm text-slate-600 font-medium mt-2">受験準備やお近くの提携塾のご確認はこちらから</p>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
           <!-- Quick Card 1: Exam Application -->
@@ -1471,7 +1490,7 @@
             venuesList: [
               { badge: "岡山会場", school: "山陽学園中学校・高等学校", date: "2026年11月1日(日)" },
               { badge: "津山会場", school: "美作高等学校", date: "2026年10月25日(日)" },
-              { badge: "自宅受験", school: "", date: "10/17(土)〜11/1(日)" }
+              { badge: "自宅受験", school: "全国どこからでも", date: "10/17(土)〜11/1(日)" }
             ],
             venueDetails: [
               {
@@ -1513,8 +1532,8 @@
               {
                 id: "home",
                 name: "🏠 自宅受験",
-                place: "ご自宅（全国どこからでも受験可能）",
-                examDate: "10月17日(土) 〜 11月1日(日) 答案返送締切",
+                place: "全国どこからでも",
+                examDate: "10/17(土)〜11/1(日) 答案返送締切",
                 ticketDispatch: "10月13日(火)頃に問題一式をご自宅へお届け",
                 reportDispatch: "答案受領後、約10日〜2週間で返送",
                 schedule: [
@@ -1832,7 +1851,7 @@
           }
           return {
             badge: badge,
-            school: sc.venue_name || '',
+            school: isHome ? '全国どこからでも' : (sc.venue_name || ''),
             date: dateText
           };
         });
@@ -1845,7 +1864,7 @@
           
           let examDateText = '';
           if (isHome && sc.date_start && sc.date_end) {
-            examDateText = `${formatJstDate(sc.date_start, false)} 〜 ${formatJstDate(sc.date_end, false)} 答案返送締切`;
+            examDateText = `${formatJstDate(sc.date_start, false)}〜${formatJstDate(sc.date_end, false)} 答案返送締切`;
           } else if (sc.date_start) {
             examDateText = formatJstDate(sc.date_start, true);
           }
@@ -1889,7 +1908,7 @@
           return {
             id: id,
             name: isHome ? '🏠 自宅受験' : badge,
-            place: sc.venue_name || (isHome ? "ご自宅（全国どこからでも受験可能）" : "指定会場"),
+            place: isHome ? '全国どこからでも' : (sc.venue_name || "指定会場"),
             examDate: examDateText,
             ticketDispatch: ticketDispatch,
             reportDispatch: reportDispatch,
@@ -2064,9 +2083,8 @@
 
       container.innerHTML = venuesList.map((item, idx) => {
         const isHome = item.badge.includes('自宅');
-        const badgeClass = isHome 
-          ? 'bg-slate-200 text-slate-800 border border-slate-300/60 font-medium' 
-          : 'bg-slate-200 text-slate-800 border border-slate-300/60 font-medium';
+        const badgeClass = 'bg-slate-200 text-slate-800 border border-slate-300/60 font-medium';
+        const placeText = isHome ? (item.school && item.school !== 'ご自宅' ? item.school : '全国どこからでも') : (item.school || '');
 
         return `
           <div class="flex items-start sm:items-center gap-3 sm:gap-4 ${idx !== 0 ? 'pt-3.5 border-t border-slate-100' : ''}">
@@ -2077,7 +2095,7 @@
             </div>
             
             <div class="flex-1 min-w-0 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-4">
-              ${item.school ? `<div class="text-base sm:text-lg font-bold text-slate-900 leading-snug">${item.school}</div>` : ''}
+              ${placeText ? `<div class="text-base sm:text-lg font-bold text-slate-900 leading-snug">${placeText}</div>` : ''}
               <div class="text-base sm:text-lg font-bold text-[#8B3A18] tracking-tight shrink-0 sm:text-right">
                 ${item.date}
               </div>
@@ -2111,10 +2129,11 @@
       venueList.forEach((venue, vIdx) => {
         const isSelected = vIdx === currentVenueIndex;
         const vBtn = document.createElement('button');
-        vBtn.className = `px-3.5 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-all border ${
+        vBtn.type = 'button';
+        vBtn.className = `flex-1 sm:flex-none text-center px-4 py-2 sm:px-5 sm:py-2 rounded-lg text-sm sm:text-base font-bold whitespace-nowrap transition-all duration-200 cursor-pointer select-none ${
           isSelected 
-            ? 'bg-emerald-800 text-white border-emerald-800 shadow-sm' 
-            : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
+            ? 'bg-emerald-800 text-white shadow-sm ring-1 ring-emerald-900/10' 
+            : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
         }`;
         vBtn.textContent = venue.name;
         vBtn.onclick = () => {
@@ -2126,7 +2145,7 @@
 
       const activeVenue = venueList[currentVenueIndex] || venueList[0];
       if (!activeVenue) {
-        venueDetailContainer.innerHTML = '<p class="text-xs text-slate-500">詳細はありません。</p>';
+        venueDetailContainer.innerHTML = '<p class="text-sm text-slate-500">詳細はありません。</p>';
         return;
       }
       
@@ -2137,45 +2156,58 @@
         scheduleHtml = activeVenue.schedule.map(item => {
           if (!item.time) {
             return `
-              <div class="py-1.5 border-b border-slate-100 text-xs sm:text-sm last:border-none text-slate-700 font-medium">
+              <div class="py-1.5 border-b border-slate-200/60 text-sm last:border-none text-slate-700 font-medium leading-relaxed">
                 ${item.label}
               </div>
             `;
           }
           return `
-            <div class="flex justify-between py-1.5 border-b border-slate-100 text-xs sm:text-sm last:border-none">
+            <div class="flex items-center justify-between py-1.5 border-b border-slate-200/60 text-sm last:border-none">
               <span class="text-slate-700 font-medium">${item.label}</span>
-              <span class="font-bold text-slate-900">${item.time}</span>
+              <span class="font-bold text-slate-900 shrink-0 ml-2">${item.time}</span>
             </div>
           `;
         }).join('');
       }
 
+      const venueBadgeText = isHome ? '自宅受験' : activeVenue.name.replace(/^🏠\s*/, '').trim();
+      const placeName = isHome ? '全国どこからでも' : (activeVenue.place || '').trim();
+      let examDateText = activeVenue.examDate;
+      if (isHome) {
+        examDateText = examDateText.replace(/(\d+)月(\d+)日/g, '$1/$2').replace(/\s*〜\s*/g, '〜');
+      }
+
       venueDetailContainer.innerHTML = `
-        <div class="border-b border-slate-100 pb-3">
-          <div class="flex items-center justify-between">
-            <span class="text-sm sm:text-base font-bold text-slate-900">${activeVenue.name}</span>
-            <span class="text-xs font-bold px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-100">実施日：${activeVenue.examDate}</span>
+        <div class="border-b border-slate-200/80 pb-3">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4">
+            <div class="flex items-center gap-2.5 sm:gap-3 shrink-0">
+              <span class="inline-block px-2.5 py-1 rounded-lg text-sm font-semibold tracking-wide bg-slate-200 text-slate-800 border border-slate-300/60 font-medium shadow-2xs shrink-0">
+                ${venueBadgeText}
+              </span>
+              ${placeName ? `<span class="text-base sm:text-lg font-bold text-slate-900 leading-snug">${placeName}</span>` : ''}
+            </div>
+            <div class="text-base sm:text-lg font-bold text-[#8B3A18] tracking-tight shrink-0 sm:text-right">
+              ${examDateText}
+            </div>
           </div>
-          <p class="text-xs sm:text-sm text-slate-700 font-bold mt-1.5">📍 場所：${activeVenue.place}</p>
         </div>
 
-        <div class="space-y-3.5 pt-1 text-xs sm:text-sm">
+        <div class="space-y-4 pt-1.5">
           <!-- ① 受験票等の発送 -->
           <div class="flex items-start gap-2.5">
-            <div class="w-5 h-5 rounded-full bg-slate-100 text-slate-800 flex items-center justify-center font-bold text-[11px] shrink-0 mt-0.5 border border-slate-200">1</div>
+            <div class="w-6 h-6 rounded-full bg-slate-100 text-slate-800 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5 border border-slate-200">1</div>
             <div class="flex-1">
-              <span class="font-bold text-slate-900 block text-xs sm:text-sm">${isHome ? '問題一式のお届け（発送日）' : '受験票等の発送'}</span>
-              <p class="text-slate-700 mt-0.5 font-medium leading-relaxed">${activeVenue.ticketDispatch}</p>
+              <span class="font-bold text-slate-900 block text-base">${isHome ? '問題一式のお届け（発送日）' : '受験票等の発送'}</span>
+              <p class="text-sm text-slate-700 mt-1 font-medium leading-relaxed">${activeVenue.ticketDispatch}</p>
             </div>
           </div>
 
           <!-- ② 当日持参物 -->
           <div class="flex items-start gap-2.5">
-            <div class="w-5 h-5 rounded-full bg-slate-100 text-slate-800 flex items-center justify-center font-bold text-[11px] shrink-0 mt-0.5 border border-slate-200">2</div>
+            <div class="w-6 h-6 rounded-full bg-slate-100 text-slate-800 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5 border border-slate-200">2</div>
             <div class="flex-1">
-              <span class="font-bold text-slate-900 block text-xs sm:text-sm">${isHome ? 'ご用意いただくもの' : '当日持参物'}</span>
-              <p class="text-slate-700 mt-1 leading-relaxed bg-slate-50 p-2.5 rounded-xl border border-slate-200/70 text-xs sm:text-sm font-medium whitespace-pre-line">
+              <span class="font-bold text-slate-900 block text-base">${isHome ? 'ご用意いただくもの' : '当日持参物'}</span>
+              <p class="text-sm text-slate-700 mt-1.5 leading-relaxed bg-slate-50 p-3 rounded-xl border border-slate-200/70 font-medium whitespace-pre-line">
                 ${activeVenue.items}
               </p>
             </div>
@@ -2183,10 +2215,10 @@
 
           <!-- ③ 時間割 -->
           <div class="flex items-start gap-2.5">
-            <div class="w-5 h-5 rounded-full bg-slate-100 text-slate-800 flex items-center justify-center font-bold text-[11px] shrink-0 mt-0.5 border border-slate-200">3</div>
+            <div class="w-6 h-6 rounded-full bg-slate-100 text-slate-800 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5 border border-slate-200">3</div>
             <div class="flex-1">
-              <span class="font-bold text-slate-900 block text-xs sm:text-sm mb-1.5">${isHome ? '受験方法・時間割' : '時間割'}</span>
-              <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200/70 space-y-1">
+              <span class="font-bold text-slate-900 block text-base mb-1.5">${isHome ? '受験方法・時間割' : '時間割'}</span>
+              <div class="bg-slate-50 p-3 rounded-xl border border-slate-200/70 space-y-0.5">
                 ${scheduleHtml}
               </div>
             </div>
@@ -2194,10 +2226,10 @@
 
           <!-- ④ 成績表のご返却予定 -->
           <div class="flex items-start gap-2.5">
-            <div class="w-5 h-5 rounded-full bg-emerald-100 text-brand-green flex items-center justify-center font-bold text-[11px] shrink-0 mt-0.5">4</div>
+            <div class="w-6 h-6 rounded-full bg-emerald-100 text-brand-green flex items-center justify-center font-bold text-xs shrink-0 mt-0.5 border border-emerald-200">4</div>
             <div class="flex-1">
-              <span class="font-bold text-slate-900 block text-xs sm:text-sm">成績表のご返却予定</span>
-              <p class="text-slate-700 mt-0.5 font-medium leading-relaxed">${activeVenue.reportDispatch}</p>
+              <span class="font-bold text-slate-900 block text-base">成績表のご返却予定</span>
+              <p class="text-sm text-slate-700 mt-1 font-medium leading-relaxed">${activeVenue.reportDispatch}</p>
             </div>
           </div>
         </div>
@@ -2265,8 +2297,8 @@
           badge.textContent = `第${r.round}回 受付終了`;
           
           deadlineContainer.innerHTML = `
-            <div class="bg-slate-100 rounded-2xl border border-slate-200 p-3.5 flex items-center justify-between text-xs sm:text-sm">
-              <span class="text-slate-500 font-bold">申込受付期限</span>
+            <div class="bg-slate-50/80 rounded-r-xl border-l-4 border-slate-300 p-3.5 sm:p-4 flex items-center justify-between text-xs sm:text-sm">
+              <span class="text-slate-600 font-bold">お申し込み締切</span>
               <span class="font-bold text-slate-600">${r.deadline}（受付終了）</span>
             </div>
           `;
@@ -2281,23 +2313,23 @@
           badge.textContent = r.status === 'active' ? `第${r.round}回 受付中` : `第${r.round}回 申込可`;
           
           deadlineContainer.innerHTML = `
-            <div class="bg-gradient-to-r from-emerald-50 via-teal-50/60 to-emerald-50 rounded-2xl border-2 border-emerald-300/80 p-4 flex items-center justify-between shadow-xs">
+            <div class="bg-slate-50/80 rounded-r-xl border-l-4 border-emerald-600 p-4 flex items-center justify-between">
               <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-white border border-emerald-200 flex items-center justify-center text-xl shrink-0 shadow-xs">
+                <div class="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-xl shrink-0 shadow-2xs">
                   ⏳
                 </div>
                 <div>
                   <div class="flex items-center gap-1.5">
-                    <span class="text-xs font-bold text-emerald-800 tracking-wide uppercase">お申し込み締切</span>
-                    <span class="text-[10px] font-bold text-emerald-800 bg-emerald-100 border border-emerald-200 px-2 py-0.5 rounded-full">期日厳守</span>
+                    <span class="text-xs font-bold text-slate-800 tracking-wide uppercase">お申し込み締切</span>
+                    <span class="text-[10px] font-bold text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">期日厳守</span>
                   </div>
-                  <div class="text-base sm:text-lg font-bold text-slate-900 tracking-tight mt-0.5">
+                  <div class="text-base sm:text-lg font-bold text-slate-800 tracking-tight mt-0.5">
                     ${r.deadline}
                   </div>
                 </div>
               </div>
               <div class="hidden sm:block text-right">
-                <span class="text-xs sm:text-sm font-bold text-emerald-700 bg-white/90 px-3 py-1 rounded-md border border-emerald-200 shadow-2xs">
+                <span class="text-xs sm:text-sm font-medium text-emerald-700">
                   WEB受付中
                 </span>
               </div>

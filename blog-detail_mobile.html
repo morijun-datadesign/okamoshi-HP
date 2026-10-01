@@ -26,10 +26,22 @@
           '3xl': '8px',
           'full': '9999px',
         }, spacing: { "space-2xl": "3rem", "space-md": "1rem", "space-xl": "2rem", "space-xs": "0.5rem", "space-4xl": "6rem", "space-lg": "1.5rem", "gutter-desktop": "1.5rem", "space-sm": "0.75rem", "container-max": "75rem", "space-2xs": "0.25rem", "space-3xl": "4.5rem", "gutter-mobile": "1rem" }, fontFamily: { "headline-xl": ["Plus Jakarta Sans", "Noto Sans JP"], "label-sm": ["Plus Jakarta Sans", "Noto Sans JP"], "label-lg": ["Plus Jakarta Sans", "Noto Sans JP"], "headline-md": ["Plus Jakarta Sans", "Noto Sans JP"], "headline-sm": ["Plus Jakarta Sans", "Noto Sans JP"], "headline-lg-mobile": ["Plus Jakarta Sans", "Noto Sans JP"], "label-md": ["Plus Jakarta Sans", "Noto Sans JP"], "headline-xl-mobile": ["Plus Jakarta Sans", "Noto Sans JP"], "body-sm": ["Noto Sans", "Noto Sans JP"], "body-md": ["Noto Sans", "Noto Sans JP"], "headline-lg": ["Plus Jakarta Sans", "Noto Sans JP"], "body-lg": ["Noto Sans", "Noto Sans JP"] }, fontSize: { "headline-xl": ["40px", { "lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "label-sm": ["11px", { "lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "700" }], "label-lg": ["15px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "600" }], "headline-md": ["22px", { "lineHeight": "32px", "letterSpacing": "0", "fontWeight": "600" }], "headline-sm": ["18px", { "lineHeight": "28px", "letterSpacing": "0", "fontWeight": "600" }], "headline-lg-mobile": ["24px", { "lineHeight": "34px", "letterSpacing": "0", "fontWeight": "700" }], "label-md": ["13px", { "lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "600" }], "headline-xl-mobile": ["30px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }], "body-sm": ["12px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "400" }], "body-md": ["14px", { "lineHeight": "24px", "letterSpacing": "0.01em", "fontWeight": "400" }], "headline-lg": ["32px", { "lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "700" }], "body-lg": ["16px", { "lineHeight": "28px", "letterSpacing": "0.015em", "fontWeight": "400" }] } } } };</script><style id="header-contact-dropdown-style">
+  #nav-contact-container { position: relative; }
   #nav-contact-container:hover #nav-contact-dropdown,
+  #nav-contact-container:focus-within #nav-contact-dropdown,
   #nav-contact-container.is-open #nav-contact-dropdown { display: block !important; }
   #nav-contact-container:hover #nav-contact-chevron,
   #nav-contact-container.is-open #nav-contact-chevron { transform: rotate(180deg) !important; }
+  #nav-contact-dropdown::before {
+    content: "" !important;
+    position: absolute !important;
+    top: -14px !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 16px !important;
+    display: block !important;
+    background: transparent !important;
+  }
 </style>
 </head><body class="bg-surface text-on-surface flex flex-col min-h-screen selection:bg-primary-fixed selection:text-on-primary-fixed">  <header class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
     <div class="h-16 sm:h-[4.5rem] max-w-[75rem] mx-auto px-4 sm:px-6 flex items-center justify-between gap-3 lg:gap-4 xl:gap-8">

@@ -149,10 +149,22 @@
     }
   </style>
 <style id="header-contact-dropdown-style">
+  #nav-contact-container { position: relative; }
   #nav-contact-container:hover #nav-contact-dropdown,
+  #nav-contact-container:focus-within #nav-contact-dropdown,
   #nav-contact-container.is-open #nav-contact-dropdown { display: block !important; }
   #nav-contact-container:hover #nav-contact-chevron,
   #nav-contact-container.is-open #nav-contact-chevron { transform: rotate(180deg) !important; }
+  #nav-contact-dropdown::before {
+    content: "" !important;
+    position: absolute !important;
+    top: -14px !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 16px !important;
+    display: block !important;
+    background: transparent !important;
+  }
 </style>
 </head>
 <body class="bg-[#F1F5F9] font-body-md text-body-md text-on-surface antialiased min-h-screen flex flex-col justify-between selection:bg-primary/20 selection:text-primary pt-16 sm:pt-[4.5rem]">
@@ -508,11 +520,10 @@
       <!-- おすすめ・関連ナビゲーション（白キャンバス内のフラット配置） -->
       <section class="w-full border-t border-slate-200/80 mt-8 sm:mt-10 pt-8 sm:pt-10">
         <div class="text-center pb-6 sm:pb-8">
-          <span class="block text-[11px] font-semibold tracking-widest text-slate-400 uppercase">QUICK ACTION &amp; RESOURCES</span>
-          <h2 class="text-lg sm:text-xl font-bold text-slate-800 mt-1">
+          <h2 class="text-lg sm:text-xl font-bold text-slate-800 tracking-tight">
             おすすめ・関連ナビゲーション
           </h2>
-          <p class="text-xs sm:text-sm text-slate-500 mt-1">受験準備やお近くの提携塾のご確認はこちらから</p>
+          <p class="text-xs sm:text-sm text-slate-500 mt-2">受験準備やお近くの提携塾のご確認はこちらから</p>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
           <!-- Quick Card 1: Exam Application -->

@@ -4,6 +4,44 @@
  */
 
 (function () {
+  // --- ドロップダウンのホバー隙間解消スタイルの注入 ---
+  (function injectDropdownBridgeStyle() {
+    var styleId = "header-contact-dropdown-bridge-style";
+    if (!document.getElementById(styleId)) {
+      var style = document.createElement("style");
+      style.id = styleId;
+      style.textContent = `
+        #nav-contact-container { position: relative; }
+        #nav-contact-container:hover #nav-contact-dropdown,
+        #nav-contact-container:focus-within #nav-contact-dropdown,
+        #nav-contact-container.is-open #nav-contact-dropdown { display: block !important; }
+        #nav-contact-container:hover #nav-contact-chevron,
+        #nav-contact-container.is-open #nav-contact-chevron { transform: rotate(180deg) !important; }
+        #nav-contact-dropdown::before {
+          content: "" !important;
+          position: absolute !important;
+          top: -14px !important;
+          left: 0 !important;
+          right: 0 !important;
+          height: 16px !important;
+          display: block !important;
+          background: transparent !important;
+        }
+        #nav-next-exam-dropdown::before {
+          content: "" !important;
+          position: absolute !important;
+          top: -14px !important;
+          left: 0 !important;
+          right: 0 !important;
+          height: 16px !important;
+          display: block !important;
+          background: transparent !important;
+        }
+      `;
+      document.head.appendChild(style);
+    }
+  })();
+
   // --- PC ドロップダウン制御 ---
   window.toggleNextExamDropdown = function (event) {
     if (event) event.stopPropagation();

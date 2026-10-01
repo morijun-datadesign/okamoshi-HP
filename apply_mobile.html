@@ -78,10 +78,22 @@
     }
   </style>
 <style id="header-contact-dropdown-style">
+  #nav-contact-container { position: relative; }
   #nav-contact-container:hover #nav-contact-dropdown,
+  #nav-contact-container:focus-within #nav-contact-dropdown,
   #nav-contact-container.is-open #nav-contact-dropdown { display: block !important; }
   #nav-contact-container:hover #nav-contact-chevron,
   #nav-contact-container.is-open #nav-contact-chevron { transform: rotate(180deg) !important; }
+  #nav-contact-dropdown::before {
+    content: "" !important;
+    position: absolute !important;
+    top: -14px !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 16px !important;
+    display: block !important;
+    background: transparent !important;
+  }
 </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between">

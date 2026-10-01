@@ -138,6 +138,11 @@
   }
   </script>
   <style>
+    /* 全セクション大見出し・中見出しのテーマカラー濃いグリーン（最優先） */
+    .section-title,
+    .section-heading {
+      color: #064e3b !important;
+    }
     body {
       font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
       color: #1e293b;
@@ -805,6 +810,16 @@
               </label>
 
             </div>
+
+            <!-- コンビニ決済 警告パネル（コンビニ選択時に動的表示） -->
+            <div id="convenienceWarningPanel" class="hidden bg-amber-50 border-2 border-amber-400 p-4 rounded-xl transition-all duration-300 shadow-xs">
+              <div class="flex items-start gap-3">
+                <span class="text-xl shrink-0 leading-tight">⚠️</span>
+                <div class="text-amber-950 text-xs sm:text-sm font-medium leading-relaxed">
+                  <span class="font-bold text-amber-900">ご確認ください：</span>本日お申し込みの場合の決済期限は【 <span id="convenienceDeadlineFull" class="font-bold text-red-600 underline decoration-red-400 decoration-2"></span> 】です。期日を過ぎますと、お申し込みは【<span class="font-bold text-red-600">自動キャンセル</span>】となりますのでご注意ください。
+                </div>
+              </div>
+            </div>
           </div>
 
         </div>
@@ -864,6 +879,11 @@
                   <a class="text-primary font-bold underline hover:text-primary-container" href="tokushoho.html" target="_blank" rel="noopener noreferrer">「特定商取引法に基づく表記」</a>に同意する
                 </span>
               </label>
+            </div>
+
+            <!-- コンビニ決済 注意書き（ボタン直上・連動表示） -->
+            <div id="convenienceSubmitWarning" class="hidden text-center text-xs sm:text-[13px] font-bold text-red-600 pb-0.5">
+              ※ <span id="convenienceDeadlineDate"></span>までにコンビニでのお支払いが必要です
             </div>
 
             <!-- 送信ボタン -->
@@ -1765,21 +1785,58 @@
       }
     }
 
-    // 決済方法ラジオボタン切り替え時のサマリー更新
+    // ========================================================
+    // 決済期限（本日＋4日後）の動的計算ロジック
+    // ========================================================
+    function getConvenienceDeadline() {
+      const now = new Date();
+      const deadline = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 4);
+      const m = deadline.getMonth() + 1;
+      const d = deadline.getDate();
+      const days = ['日', '月', '火', '水', '木', '金', '土'];
+      const w = days[deadline.getDay()];
+      return {
+        fullText: `${m}月${d}日(${w}) 23:59`,
+        dateText: `${m}月${d}日(${w})`,
+        shortText: `${m}/${d}(${w})`
+      };
+    }
+
+    // 決済方法ラジオボタン切り替え時のサマリー更新 & 警告連動表示
     function updatePaymentMethodSummary(method) {
       const elem = document.getElementById('summaryPaymentMethod');
-      if (!elem) return;
+      const warningPanel = document.getElementById('convenienceWarningPanel');
+      const submitWarning = document.getElementById('convenienceSubmitWarning');
+      const fullElem = document.getElementById('convenienceDeadlineFull');
+      const dateElem = document.getElementById('convenienceDeadlineDate');
+      const deadlineBadge = document.getElementById('convenience-deadline-text');
+
+      const dl = getConvenienceDeadline();
+
+      if (deadlineBadge) {
+        deadlineBadge.textContent = `お申込み完了後4日以内（${dl.shortText}まで）にお支払い`;
+      }
 
       if (method === 'credit_card') {
-        elem.innerHTML = `
-          <span class="material-symbols-outlined text-base text-primary-container">credit_card</span>
-          <span>クレジットカード決済（Stripe）</span>
-        `;
+        if (elem) {
+          elem.innerHTML = `
+            <span class="material-symbols-outlined text-base text-primary-container">credit_card</span>
+            <span>クレジットカード決済（Stripe）</span>
+          `;
+        }
+        if (warningPanel) warningPanel.classList.add('hidden');
+        if (submitWarning) submitWarning.classList.add('hidden');
       } else {
-        elem.innerHTML = `
-          <span class="material-symbols-outlined text-base text-tertiary-container">storefront</span>
-          <span>コンビニ決済（決済番号発行）</span>
-        `;
+        if (elem) {
+          elem.innerHTML = `
+            <span class="material-symbols-outlined text-base text-tertiary-container">storefront</span>
+            <span>コンビニ決済（期限：${dl.shortText}まで・未払時自動キャンセル）</span>
+          `;
+        }
+        if (fullElem) fullElem.textContent = dl.fullText;
+        if (dateElem) dateElem.textContent = dl.dateText;
+        if (warningPanel) warningPanel.classList.remove('hidden');
+        if (submitWarning) submitWarning.classList.remove('hidden');
       }
     }
 
@@ -2128,6 +2185,10 @@
 
       await loadExamsFromMicroCMS();
       selectFormGrade(initialGrade);
+
+      // お支払い方法の初期反映
+      const checkedMethod = document.querySelector('input[name="payment_method"]:checked')?.value || 'credit_card';
+      updatePaymentMethodSummary(checkedMethod);
     });
   </script>
 </body>

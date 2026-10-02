@@ -142,6 +142,13 @@
       max-width: 100%;
       overflow-x: hidden;
     }
+    /* フォームバリデーションエラー枠線スタイル */
+    .apply-input-error {
+      border-color: #ef4444 !important;
+      background-color: #fef2f2 !important;
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2) !important;
+      outline: none !important;
+    }
     /* iOS Safariで入力フィールド（input, select, textarea）タップ時の自動ズームを完全防止（16px以上確保） */
     input[type="text"],
     input[type="tel"],
@@ -505,7 +512,15 @@
   <!-- ========================================== -->
   <!-- MAIN APPLICATION FORM CONTENT              -->
   <!-- ========================================== -->
-  <main class="flex-1 w-full flex flex-col items-center">
+  <main class="flex-1 w-full flex flex-col items-center relative">
+    <!-- カスタムトースト通知（画面上部） -->
+    <div id="formToastNotification" class="fixed top-5 left-1/2 -translate-x-1/2 z-[9999] max-w-md w-[92%] sm:w-auto bg-white/95 backdrop-blur-md border border-red-200 text-slate-800 shadow-xl rounded-xl p-3 sm:p-3.5 flex items-center gap-2.5 sm:gap-3 transition-all duration-300 opacity-0 pointer-events-none -translate-y-4" role="alert" aria-live="assertive">
+      <span class="material-symbols-outlined text-red-500 text-xl sm:text-2xl shrink-0">error</span>
+      <p id="formToastText" class="text-xs sm:text-sm font-bold flex-1 text-slate-800 leading-snug"></p>
+      <button type="button" onclick="hideFormToast()" class="p-1 text-slate-400 hover:text-slate-600 rounded-md transition-colors" aria-label="閉じる">
+        <span class="material-symbols-outlined text-lg">close</span>
+      </button>
+    </div>
     <div class="w-full max-w-7xl bg-white flex-1 min-h-full px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-12 sm:pb-16 flex flex-col justify-between">
     
     <!-- Subheader & Breadcrumbs -->
@@ -576,6 +591,11 @@
                 <!-- 動的レンダリング先コンテナ -->
                 <div class="flex flex-col gap-3.5" id="examOptionGroup">
                   <!-- スクリプトによって動的に描画されます -->
+                </div>
+                <!-- 模試未選択エラー表示（インライン） -->
+                <div id="examSelectionInlineError" class="hidden text-xs sm:text-[13px] font-bold text-red-600 flex items-center gap-1.5 mt-1 p-3 rounded-lg bg-red-50 border border-red-200 transition-all">
+                  <span class="material-symbols-outlined text-base sm:text-lg text-red-600 shrink-0">error</span>
+                  <span>※ 受験を希望する模試を1つ以上選択してください。</span>
                 </div>
               </div>
 
@@ -920,6 +940,14 @@
               <!-- コンビニ決済 注意書き（ボタン直上・連動表示） -->
               <div id="convenienceSubmitWarning" class="hidden text-center text-xs sm:text-[13px] font-bold text-red-600 -mb-1">
                 ※ <span id="convenienceDeadlineDate"></span>までにコンビニでのお支払いが必要です
+              </div>
+
+              <!-- フォーム内インラインエラーメッセージ（送信ボタン直上） -->
+              <div id="formErrorMessage" class="hidden p-3.5 sm:p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs sm:text-sm font-bold flex items-start gap-2.5 shadow-xs transition-all duration-300" role="alert" aria-live="assertive">
+                <span class="material-symbols-outlined text-red-500 text-lg sm:text-xl shrink-0 mt-0.5">error</span>
+                <div class="flex-1">
+                  <p id="formErrorMessageText" class="leading-relaxed">※ 受験を希望する模試を1つ以上選択してください。</p>
+                </div>
               </div>
 
               <!-- 送信ボタン -->
@@ -1752,6 +1780,11 @@
         }
         if (venueWrapper) venueWrapper.classList.remove('opacity-50', 'pointer-events-none');
         if (venueSelect) venueSelect.disabled = false;
+
+        // 模試選択エラーの自動消去
+        const examInlineError = document.getElementById('examSelectionInlineError');
+        if (examInlineError) examInlineError.classList.add('hidden');
+        if (typeof clearFormError === 'function') clearFormError();
       } else {
         delete selectedExamsState[examId];
 
@@ -1773,6 +1806,10 @@
         const opt = selectElem.selectedIndex > 0 ? selectElem.options[selectElem.selectedIndex] : null;
         selectedExamsState[examId].venue = val;
         selectedExamsState[examId].venueLabel = opt ? opt.text : '';
+        if (val) {
+          selectElem.classList.remove('apply-input-error', '!border-red-500', '!ring-2', '!ring-red-200');
+          if (typeof clearFormError === 'function') clearFormError();
+        }
         updateSummary();
       }
     }
@@ -2263,6 +2300,97 @@
     window.updateSchoolInputPlaceholder = updateSchoolInputPlaceholder;
 
     // ========================================================
+    // 5.5 フォームエラー表示 & 通知ハンドラー（alert廃止・インライン化）
+    // ========================================================
+    let _formToastTimeout = null;
+
+    function showFormError(message, targetElem = null, scrollTarget = null) {
+      const cleanMsg = message.replace(/^※\s*/, '');
+      const formattedMsg = `※ ${cleanMsg}`;
+
+      // 1. 送信ボタン上のインラインエラーメッセージの更新・表示
+      const errorContainer = document.getElementById('formErrorMessage');
+      const errorText = document.getElementById('formErrorMessageText');
+      if (errorContainer && errorText) {
+        errorText.textContent = formattedMsg;
+        errorContainer.classList.remove('hidden');
+      }
+
+      // 2. 模試選択エリアのエラー（該当する場合）
+      const examGroup = document.getElementById('examOptionGroup');
+      const examInlineError = document.getElementById('examSelectionInlineError');
+      if (targetElem === examGroup || scrollTarget === examGroup) {
+        if (examInlineError) examInlineError.classList.remove('hidden');
+      } else {
+        if (examInlineError) examInlineError.classList.add('hidden');
+      }
+
+      // 3. 画面上部トースト通知の表示
+      const toast = document.getElementById('formToastNotification');
+      const toastText = document.getElementById('formToastText');
+      if (toast && toastText) {
+        toastText.textContent = cleanMsg;
+        toast.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-4');
+        toast.classList.add('opacity-100', 'pointer-events-auto', 'translate-y-0');
+
+        if (_formToastTimeout) clearTimeout(_formToastTimeout);
+        _formToastTimeout = setTimeout(() => {
+          hideFormToast();
+        }, 5000);
+      }
+
+      // 4. 既存のエラー枠線をすべて解除
+      document.querySelectorAll('.apply-input-error').forEach(el => {
+        el.classList.remove('apply-input-error', '!border-red-500', '!ring-2', '!ring-red-200');
+      });
+
+      // 5. 対象要素のハイライト & 入力変更時の自動解除
+      if (targetElem && targetElem !== examGroup) {
+        targetElem.classList.add('apply-input-error', '!border-red-500', '!ring-2', '!ring-red-200');
+
+        const clearHandler = () => {
+          targetElem.classList.remove('apply-input-error', '!border-red-500', '!ring-2', '!ring-red-200');
+          clearFormError();
+          targetElem.removeEventListener('input', clearHandler);
+          targetElem.removeEventListener('change', clearHandler);
+        };
+        targetElem.addEventListener('input', clearHandler);
+        targetElem.addEventListener('change', clearHandler);
+      }
+
+      // 6. スムーズスクロール & フォーカス
+      const elementToScroll = scrollTarget || targetElem || errorContainer;
+      if (elementToScroll) {
+        elementToScroll.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if (targetElem && typeof targetElem.focus === 'function' && targetElem !== examGroup) {
+          setTimeout(() => {
+            try {
+              targetElem.focus({ preventScroll: true });
+            } catch (e) {
+              targetElem.focus();
+            }
+          }, 350);
+        }
+      }
+    }
+
+    function hideFormToast() {
+      const toast = document.getElementById('formToastNotification');
+      if (toast) {
+        toast.classList.remove('opacity-100', 'pointer-events-auto', 'translate-y-0');
+        toast.classList.add('opacity-0', 'pointer-events-none', '-translate-y-4');
+      }
+    }
+
+    function clearFormError() {
+      const errorContainer = document.getElementById('formErrorMessage');
+      if (errorContainer) errorContainer.classList.add('hidden');
+      const examInlineError = document.getElementById('examSelectionInlineError');
+      if (examInlineError) examInlineError.classList.add('hidden');
+      hideFormToast();
+    }
+
+    // ========================================================
     // 6. フォームバリデーション & Stripe 決済接続ハンドラー
     // ========================================================
     async function handleApplySubmit(e) {
@@ -2274,21 +2402,16 @@
       // 1. 模試の選択確認
       const selectedExams = Object.values(selectedExamsState);
       if (selectedExams.length === 0) {
-        alert('受験を希望する模試を1つ以上選択してください。');
         const examGroup = document.getElementById('examOptionGroup');
-        if (examGroup) examGroup.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        showFormError('受験を希望する模試を1つ以上選択してください。', examGroup, examGroup);
         return;
       }
 
       // 1-2. 受験方法・希望会場の未選択チェック (選択必須バリデーション)
       for (const exam of selectedExams) {
         if (!exam.venue || exam.venue === '') {
-          alert(`「${exam.issueName} ${exam.title}」の受験方法・希望会場を選択してください。`);
           const venueElem = document.getElementById(`venue-${exam.id}`);
-          if (venueElem) {
-            venueElem.focus();
-            venueElem.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          }
+          showFormError(`「${exam.issueName} ${exam.title}」の受験方法・希望会場を選択してください。`, venueElem, venueElem);
           return;
         }
       }
@@ -2315,64 +2438,62 @@
 
       // 3. バリデーションチェック
       if (!studentLastName || !studentFirstName) {
-        alert('生徒氏名（漢字）を入力してください。');
-        document.getElementById('studentLastName')?.focus();
+        const target = !studentLastName ? document.getElementById('studentLastName') : document.getElementById('studentFirstName');
+        showFormError('生徒氏名（漢字）を入力してください。', target);
         return;
       }
       if (!studentKanaLastName || !studentKanaFirstName) {
-        alert('生徒氏名（フリガナ）を入力してください。');
-        document.getElementById('studentKanaLastName')?.focus();
+        const target = !studentKanaLastName ? document.getElementById('studentKanaLastName') : document.getElementById('studentKanaFirstName');
+        showFormError('生徒氏名（フリガナ）を入力してください。', target);
         return;
       }
       if (!currentSchool) {
-        alert('在籍中学校・小学校名を入力してください。');
-        document.getElementById('currentSchool')?.focus();
+        const target = document.getElementById('currentSchool');
+        showFormError('在籍中学校・小学校名を入力してください。', target);
         return;
       }
       if (!parentLastName || !parentFirstName) {
-        alert('保護者氏名を入力してください。');
-        document.getElementById('parentLastName')?.focus();
+        const target = !parentLastName ? document.getElementById('parentLastName') : document.getElementById('parentFirstName');
+        showFormError('保護者氏名を入力してください。', target);
         return;
       }
       if (!parentEmail || !parentEmail.includes('@')) {
-        alert('有効なメールアドレスを入力してください。');
-        document.getElementById('parentEmail')?.focus();
+        const target = document.getElementById('parentEmail');
+        showFormError('有効なメールアドレスを入力してください。', target);
         return;
       }
       if (parentEmail !== parentEmailConfirm) {
-        alert('確認用メールアドレスが一致しません。もう一度お確かめください。');
-        document.getElementById('parentEmailConfirm')?.focus();
+        const target = document.getElementById('parentEmailConfirm');
+        showFormError('確認用メールアドレスが一致しません。もう一度お確かめください。', target);
         return;
       }
       if (!parentTel || parentTel.replace(/\D/g, '').length < 10) {
-        alert('日中連絡可能な電話番号を正しく入力してください。');
-        document.getElementById('parentTel')?.focus();
+        const target = document.getElementById('parentTel');
+        showFormError('日中連絡可能な電話番号を正しく入力してください。', target);
         return;
       }
       if (!postalCode) {
-        alert('郵便番号を入力してください。');
-        document.getElementById('postalCode')?.focus();
+        const target = document.getElementById('postalCode');
+        showFormError('郵便番号を入力してください。', target);
         return;
       }
       if (!addressLine1) {
-        alert('市区町村・番地を入力してください。');
-        document.getElementById('addressLine1')?.focus();
+        const target = document.getElementById('addressLine1');
+        showFormError('市区町村・番地を入力してください。', target);
         return;
       }
       if (!agreeTerms) {
-        alert('「個人情報の取扱い」および「特定商取引法に基づく表記」への同意が必要です。');
-        document.getElementById('agreeTerms')?.focus();
+        const target = document.getElementById('agreeTerms');
+        const container = target ? target.closest('label') : null;
+        showFormError('「個人情報の取扱い」および「特定商取引法に基づく表記」への同意が必要です。', target, container);
         return;
       }
       if (paymentMethod === 'convenience_store') {
         const agreeConvenience = document.getElementById('agreeConvenienceTerms')?.checked;
         if (!agreeConvenience) {
-          alert('コンビニ決済期限および自動キャンセルについての確認・同意が必要です。');
           const convInput = document.getElementById('agreeConvenienceTerms');
-          if (convInput) {
-            convInput.focus();
-            convInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          }
+          const container = convInput ? convInput.closest('label') : null;
+          showFormError('コンビニ決済期限および自動キャンセルについての確認・同意が必要です。', convInput, container);
           return;
         }
       }
@@ -2476,13 +2597,12 @@
         if (modal) {
           modal.classList.remove('hidden');
         } else {
-          alert(`お申し込みを受け付けました。\n受付番号: ${stripePayload.client_reference_id}\n合計金額: ¥${totalAmount.toLocaleString()}`);
           window.location.href = 'index.html';
         }
 
       } catch (err) {
         console.error('[申し込み処理エラー]:', err);
-        alert('処理中にエラーが発生しました。お手数ですが、再度お試しいただくかお電話にてお問い合わせください。');
+        showFormError('処理中にエラーが発生しました。お手数ですが、再度お試しいただくかお電話にてお問い合わせください。');
       } finally {
         if (submitBtn) {
           submitBtn.disabled = false;

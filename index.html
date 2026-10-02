@@ -66,6 +66,17 @@
           fontFamily: {
             sans: ['"Noto Sans JP"', '"Hiragino Kaku Gothic ProN"', 'Meiryo', 'sans-serif'],
             headline: ['"Plus Jakarta Sans"', '"Noto Sans JP"', '"Hiragino Kaku Gothic ProN"', 'sans-serif']
+          },
+          borderRadius: {
+            'none': '0px',
+            'sm': '4px',
+            'DEFAULT': '6px',
+            'md': '6px',
+            'lg': '8px',
+            'xl': '8px',
+            '2xl': '8px',
+            '3xl': '8px',
+            'full': '9999px',
           }
         }
       }
@@ -166,7 +177,7 @@
       
       <!-- ロゴ（他ページと完全統一） -->
       <a href="index.html" class="flex items-center gap-2.5 sm:gap-3 min-w-0 shrink-0 group">
-        <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-brand-green flex items-center justify-center text-white font-headline font-bold shrink-0 shadow-sm group-hover:bg-brand-greenDark transition-colors">
+        <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-brand-green flex items-center justify-center text-white font-headline font-bold shrink-0 shadow-sm group-hover:bg-brand-greenDark transition-colors">
           <span class="material-symbols-outlined text-xl sm:text-2xl">school</span>
         </div>
         <div class="flex items-center gap-1.5 sm:gap-2 min-w-0">
@@ -185,7 +196,7 @@
             <span id="nav-next-exam-chevron" class="material-symbols-outlined text-lg transition-transform duration-200 transform">expand_more</span>
           </button>
           
-          <div id="nav-next-exam-dropdown" class="hidden absolute left-0 top-full mt-2 w-48 rounded-xl bg-white border border-slate-100 shadow-lg p-2 z-50 transition-all duration-200">
+          <div id="nav-next-exam-dropdown" class="hidden absolute left-0 top-full mt-2 w-48 rounded-lg bg-white border border-slate-100 shadow-lg p-2 z-50 transition-all duration-200">
             <div class="space-y-1 text-sm font-bold">
               <a href="#about" onclick="handleNavExamGuideClick(event, 'about')" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-slate-700 hover:bg-slate-50 hover:text-brand-green transition-colors cursor-pointer">
                 <span>初めての方へ</span>
@@ -208,12 +219,12 @@
             <span>お問い合わせ</span>
             <span id="nav-contact-chevron" class="material-symbols-outlined text-lg transition-transform duration-200 transform group-hover:rotate-180">expand_more</span>
           </button>
-          <div id="nav-contact-dropdown" class="hidden group-hover:block absolute right-0 top-full mt-2 w-52 rounded-2xl bg-white border border-slate-200 shadow-xl p-2 z-50 before:content-[''] before:absolute before:-top-3.5 before:left-0 before:w-full before:h-3.5">
+          <div id="nav-contact-dropdown" class="hidden group-hover:block absolute right-0 top-full mt-2 w-52 rounded-lg bg-white border border-slate-200 shadow-xl p-2 z-50 before:content-[''] before:absolute before:-top-3.5 before:left-0 before:w-full before:h-3.5">
             <div class="space-y-1 text-xs sm:text-sm">
-              <a href="contact/organization/index.html" class="block px-3.5 py-2.5 rounded-xl hover:bg-brand-greenLight hover:text-brand-green font-bold text-slate-700 transition-colors">
+              <a href="contact/organization/index.html" class="block px-3.5 py-2.5 rounded-lg hover:bg-brand-greenLight hover:text-brand-green font-bold text-slate-700 transition-colors">
                 塾・学校関係者様
               </a>
-              <a href="contact/individual/index.html" class="block px-3.5 py-2.5 rounded-xl hover:bg-brand-greenLight hover:text-brand-green font-bold text-slate-700 transition-colors">
+              <a href="contact/individual/index.html" class="block px-3.5 py-2.5 rounded-lg hover:bg-brand-greenLight hover:text-brand-green font-bold text-slate-700 transition-colors">
                 個人申込の方
               </a>
             </div>
@@ -229,7 +240,7 @@
         </a>
 
         <!-- モバイルメニュー開閉ボタン -->
-        <button type="button" id="mobile-menu-open-btn" onclick="openMobileMenu()" aria-label="メニューを開く" aria-expanded="false" class="lg:hidden flex items-center justify-center w-10 h-10 -mr-1 rounded-xl text-slate-700 hover:bg-slate-100 active:bg-slate-200 transition-colors cursor-pointer">
+        <button type="button" id="mobile-menu-open-btn" onclick="openMobileMenu()" aria-label="メニューを開く" aria-expanded="false" class="lg:hidden flex items-center justify-center w-10 h-10 -mr-1 rounded-lg text-slate-700 hover:bg-slate-100 active:bg-slate-200 transition-colors cursor-pointer">
           <span class="material-symbols-outlined text-[28px]">menu</span>
         </button>
       </div>
@@ -244,16 +255,16 @@
   <div id="mobile-menu-drawer" class="fixed top-0 right-0 bottom-0 w-[84vw] max-w-[340px] bg-white z-[999] shadow-2xl flex flex-col justify-between transition-transform duration-300 transform translate-x-full ease-in-out lg:hidden" role="dialog" aria-modal="true" aria-label="モバイルメニュー">
     <div class="h-16 px-5 border-b border-slate-100 flex items-center justify-between shrink-0">
       <div class="flex items-center gap-2">
-        <span class="w-8 h-8 rounded-xl bg-brand-green flex items-center justify-center text-white font-bold text-sm">岡</span>
+        <span class="w-8 h-8 rounded-lg bg-brand-green flex items-center justify-center text-white font-bold text-sm">岡</span>
         <span class="font-bold text-slate-900 text-sm">メニュー</span>
       </div>
-      <button type="button" onclick="closeMobileMenu()" aria-label="メニューを閉じる" class="w-9 h-9 rounded-xl flex items-center justify-center text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors">
+      <button type="button" onclick="closeMobileMenu()" aria-label="メニューを閉じる" class="w-9 h-9 rounded-lg flex items-center justify-center text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors">
         ✕
       </button>
     </div>
 
     <div class="flex-1 overflow-y-auto px-4 py-4 space-y-2.5 text-xs sm:text-sm">
-      <div class="rounded-2xl border border-slate-200 overflow-hidden bg-slate-50/50">
+      <div class="rounded-lg border border-slate-200 overflow-hidden bg-slate-50/50">
         <button type="button" onclick="toggleMobileExamAccordion()" class="w-full px-4 py-3.5 flex items-center justify-between text-left font-bold text-slate-800 hover:bg-slate-100/70 transition-colors">
           <div class="flex items-center gap-2">
             <span class="material-symbols-outlined text-brand-green text-lg">school</span>
@@ -273,7 +284,7 @@
         </div>
       </div>
 
-      <a href="news.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-2xl border border-slate-200 bg-white font-bold text-slate-800 hover:bg-slate-50 transition-colors">
+      <a href="news.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-lg border border-slate-200 bg-white font-bold text-slate-800 hover:bg-slate-50 transition-colors">
         <div class="flex items-center gap-2">
           <span class="material-symbols-outlined text-brand-green text-lg">feed</span>
           <span>お知らせ・受験情報</span>
@@ -281,7 +292,7 @@
         <span class="text-slate-300">→</span>
       </a>
 
-      <a href="schools_PC.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-2xl border border-slate-200 bg-white font-bold text-slate-800 hover:bg-slate-50 transition-colors">
+      <a href="schools_PC.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-lg border border-slate-200 bg-white font-bold text-slate-800 hover:bg-slate-50 transition-colors">
         <div class="flex items-center gap-2">
           <span class="material-symbols-outlined text-brand-green text-lg">apartment</span>
           <span>参加塾一覧</span>
@@ -289,7 +300,7 @@
         <span class="text-slate-300">→</span>
       </a>
 
-      <div class="rounded-2xl border border-slate-200 overflow-hidden bg-slate-50/50">
+      <div class="rounded-lg border border-slate-200 overflow-hidden bg-slate-50/50">
         <button type="button" onclick="toggleMobileContactAccordion()" class="w-full px-4 py-3.5 flex items-center justify-between text-left font-bold text-slate-800 hover:bg-slate-100/70 transition-colors">
           <div class="flex items-center gap-2">
             <span class="material-symbols-outlined text-brand-green text-lg">mail</span>
@@ -311,7 +322,7 @@
     </div>
 
     <div class="p-5 border-t border-slate-100 space-y-2 shrink-0 bg-slate-50">
-      <a href="apply.html" onclick="closeMobileMenu()" class="w-full py-3.5 px-4 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-bold text-sm shadow-md shadow-orange-500/25 flex items-center justify-center gap-2 transition-all">
+      <a href="apply.html" onclick="closeMobileMenu()" class="w-full py-3.5 px-4 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-bold text-sm shadow-md shadow-orange-500/25 flex items-center justify-center gap-2 transition-all">
         <span class="material-symbols-outlined text-lg">edit_document</span>
         <span>お申し込みはこちら</span>
       </a>
@@ -351,7 +362,7 @@
 
       <!-- 白いパネルコンテナ（右側配置・テキスト＋2大導線ボタン一体化） -->
       <div class="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-16 lg:py-24 flex flex-col justify-center items-end min-h-[540px] lg:min-h-[600px]">
-        <div class="w-full max-w-xl lg:max-w-2xl flex flex-col items-start gap-4 ml-auto bg-white/95 backdrop-blur-md p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200/80">
+        <div class="w-full max-w-xl lg:max-w-2xl flex flex-col items-start gap-4 ml-auto bg-white/95 backdrop-blur-md p-6 sm:p-8 rounded-lg shadow-sm border border-slate-200/80">
           <div class="space-y-3 w-full">
             <p class="text-sm sm:text-lg lg:text-xl font-bold text-[#9E3A14] tracking-normal sm:tracking-wide">志望校合格への確かな現在地を知る</p>
             <h1 class="tracking-tight leading-snug flex flex-col gap-2 sm:gap-2.5">
@@ -371,7 +382,7 @@
 
           <!-- 2大導線ボタン（下段：左「初めての方へ」 / 右「次回に申し込む」：アフォーダンス強化デザイン） -->
           <div class="grid grid-cols-2 gap-3 sm:gap-4 w-full pt-4 border-t border-slate-100">
-            <a href="#features" class="flex items-center justify-center gap-2.5 py-3.5 px-4 rounded-2xl bg-slate-50 hover:bg-white border border-slate-300/80 hover:border-brand-green text-slate-900 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all group">
+            <a href="#features" class="flex items-center justify-center gap-2.5 py-3.5 px-4 rounded-lg bg-slate-50 hover:bg-white border border-slate-300/80 hover:border-brand-green text-slate-900 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all group">
               <div class="w-8 h-8 rounded-full bg-white border border-slate-200/90 shadow-2xs flex items-center justify-center text-brand-green text-xs font-black shrink-0 group-hover:bg-brand-green group-hover:text-white group-hover:border-brand-green transition-all">？</div>
               <div class="text-left">
                 <span class="text-[10px] font-bold text-slate-500 block leading-tight">どんな模試？</span>
@@ -382,7 +393,7 @@
               </div>
             </a>
 
-            <a href="#schedule-selector" class="flex items-center justify-center gap-2.5 py-3.5 px-4 rounded-2xl bg-slate-50 hover:bg-white border border-slate-300/80 hover:border-brand-green text-slate-900 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all group">
+            <a href="#schedule-selector" class="flex items-center justify-center gap-2.5 py-3.5 px-4 rounded-lg bg-slate-50 hover:bg-white border border-slate-300/80 hover:border-brand-green text-slate-900 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all group">
               <div class="w-8 h-8 rounded-full bg-white border border-slate-200/90 shadow-2xs flex items-center justify-center text-brand-green text-xs font-bold shrink-0 group-hover:bg-brand-green group-hover:text-white group-hover:border-brand-green transition-all">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
               </div>
@@ -419,7 +430,7 @@
 
       <!-- 重ねテキスト＆2大ボタン統合カード（全幅ビジュアル下部に被さる白い角丸カード） -->
       <div class="px-4 -mt-14 relative z-10">
-        <div class="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-slate-200/80 space-y-3.5">
+        <div class="bg-white rounded-lg p-5 sm:p-6 shadow-sm border border-slate-200/80 space-y-3.5">
           <!-- 上段：キャッチコピー ＋ 学年バッジ ＋ 模試タイトル -->
           <div class="space-y-2">
             <p class="text-xs sm:text-sm font-bold text-[#9E3A14] tracking-wide">志望校合格への確かな現在地を知る</p>
@@ -443,7 +454,7 @@
 
           <!-- 下段：2大導線ボタン（左：「初めての方へ」 / 右：「次回に申し込む」：アフォーダンス強化デザイン） -->
           <div class="grid grid-cols-2 gap-2.5 pt-3 border-t border-slate-100">
-            <a href="#features" class="flex flex-col items-center justify-center p-2.5 rounded-2xl bg-slate-50 hover:bg-white border border-slate-300/80 hover:border-brand-green text-slate-900 text-center active:scale-98 transition-all shadow-sm">
+            <a href="#features" class="flex flex-col items-center justify-center p-2.5 rounded-lg bg-slate-50 hover:bg-white border border-slate-300/80 hover:border-brand-green text-slate-900 text-center active:scale-98 transition-all shadow-sm">
               <span class="text-[10px] font-bold text-slate-500">どんな模試？</span>
               <span class="text-xs sm:text-sm font-bold text-slate-900 mt-0.5 flex items-center justify-center gap-0.5">
                 初めての方へ
@@ -452,7 +463,7 @@
               <span class="text-[9px] text-slate-500 mt-0.5">特徴と診断シート</span>
             </a>
 
-            <a href="#schedule-selector" class="flex flex-col items-center justify-center p-2.5 rounded-2xl bg-slate-50 hover:bg-white border border-slate-300/80 hover:border-brand-green text-slate-900 text-center active:scale-98 transition-all shadow-sm">
+            <a href="#schedule-selector" class="flex flex-col items-center justify-center p-2.5 rounded-lg bg-slate-50 hover:bg-white border border-slate-300/80 hover:border-brand-green text-slate-900 text-center active:scale-98 transition-all shadow-sm">
               <span class="inline-block px-1.5 py-0.2 rounded-full bg-emerald-50 text-[9px] font-bold text-brand-green border border-emerald-200/60">次回受付中</span>
               <span class="text-xs sm:text-sm font-bold text-slate-900 mt-0.5 flex items-center justify-center gap-0.5">
                 次回に申し込む
@@ -480,7 +491,7 @@
         <!-- ヘッダー右側：学年一括切り替えボタン ＋ PC用ナビゲーション矢印ボタン -->
         <div class="flex items-center justify-between md:justify-end gap-3 shrink-0 w-full md:w-auto">
           <!-- 3パネル一括学年切り替えスイッチ（中3 / 中2 / 中1 / 小6 の4学年完全統一） -->
-          <div class="flex items-center gap-1 bg-slate-100 p-1 sm:p-1.5 rounded-xl border border-slate-200/80 shadow-2xs" role="tablist" aria-label="選ばれる理由 学年一括切り替え">
+          <div class="flex items-center gap-1 bg-slate-100 p-1 sm:p-1.5 rounded-lg border border-slate-200/80 shadow-2xs" role="tablist" aria-label="選ばれる理由 学年一括切り替え">
             <button type="button" onclick="selectGrade('c3')" id="feature-pill-c3" class="px-2.5 sm:px-3.5 py-1.5 text-xs sm:text-sm font-bold rounded-lg transition-all bg-emerald-800 text-white shadow-xs cursor-pointer">中3</button>
             <button type="button" onclick="selectGrade('c2')" id="feature-pill-c2" class="px-2.5 sm:px-3.5 py-1.5 text-xs sm:text-sm font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900 cursor-pointer">中2</button>
             <button type="button" onclick="selectGrade('c1')" id="feature-pill-c1" class="px-2.5 sm:px-3.5 py-1.5 text-xs sm:text-sm font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900 cursor-pointer">中1</button>
@@ -499,13 +510,13 @@
         </div>
       </div>
 
-      <!-- 横スクロール カルーセルコンテナ（PC・スマホ共通：約1.2枚見せ Apple風カルーセル） -->
-      <div id="features-carousel" class="flex gap-6 md:gap-8 overflow-x-auto no-scrollbar scroll-smooth pb-4 px-1" style="scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;">
+      <!-- 横スクロール カルーセルコンテナ（PC・スマホ共通：Apple風 peek効果＋スクロールスナップ） -->
+      <div id="features-carousel" class="flex gap-4 sm:gap-6 md:gap-8 overflow-x-auto no-scrollbar scroll-smooth pb-4 -mx-4 px-4 sm:-mx-6 sm:px-6 md:mx-0 md:px-0" style="scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;">
         
         <!-- ===================================================================
              CARD 01: 本番さながらの出題問題（模試用紙・問題画像）
              =================================================================== -->
-        <div class="features-card w-[86vw] sm:w-[80vw] md:w-[76%] lg:w-[78%] shrink-0 bg-white rounded-3xl p-5 sm:p-6 lg:p-8 border border-slate-200/80 shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row items-stretch gap-6 lg:gap-8 relative overflow-hidden" style="scroll-snap-align: start;">
+        <div class="features-card w-[84vw] max-w-[325px] sm:w-[80vw] sm:max-w-[400px] md:max-w-none md:w-[76%] lg:w-[78%] shrink-0 bg-white rounded-lg p-5 sm:p-6 lg:p-8 border border-slate-200/80 shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row items-stretch gap-6 lg:gap-8 relative overflow-hidden" style="scroll-snap-align: center; scroll-snap-stop: always;">
           
           <!-- テキストエリア（PC: 左側 / スマホ: 下側） -->
           <div class="flex-1 flex flex-col justify-between space-y-3.5 order-2 md:order-1 min-w-0">
@@ -529,7 +540,7 @@
 
             <!-- 補足枠（学年別に動的切り替え） -->
             <div id="card1-features-container" class="space-y-2 pt-1 text-xs">
-              <div class="p-3 rounded-2xl bg-slate-50/80 border border-slate-200/70 shadow-2xs space-y-0.5">
+              <div class="p-3 rounded-lg bg-slate-50/80 border border-slate-200/70 shadow-2xs space-y-0.5">
                 <div class="flex items-center gap-1.5 font-bold text-slate-900">
                   <span class="px-1.5 py-0.2 rounded bg-brand-green text-white text-[10px] font-bold">中3生</span>
                   <span class="text-xs font-bold">岡山県公立高校入試の完全シミュレーション</span>
@@ -539,7 +550,7 @@
                 </p>
               </div>
 
-              <div class="p-2.5 rounded-xl bg-white border border-emerald-200/80 shadow-2xs flex items-center justify-between">
+              <div class="p-2.5 rounded-lg bg-white border border-emerald-200/80 shadow-2xs flex items-center justify-between">
                 <span class="text-[11px] font-bold text-brand-green">★ 幾何図形の証明記述・理科の実験手順論述・英語の条件英作文まで完全準拠</span>
                 <span class="text-[10px] font-bold text-emerald-800 shrink-0 ml-2">県内最多クラス</span>
               </div>
@@ -548,12 +559,12 @@
 
           <!-- 画像エリア（PC: 右側 / スマホ: 上側） -->
           <div class="w-full md:w-[260px] lg:w-[300px] xl:w-[320px] shrink-0 flex flex-col justify-center order-1 md:order-2">
-            <div id="card1-preview-container" class="relative w-full h-[200px] sm:h-[240px] md:h-full min-h-[220px] rounded-2xl overflow-hidden shadow-xs border border-slate-200 bg-white p-1">
+            <div id="card1-preview-container" class="relative w-full h-[200px] sm:h-[240px] md:h-full min-h-[220px] rounded-lg overflow-hidden shadow-xs border border-slate-200 bg-white p-1">
               <img 
                 id="card1-preview-img"
                 src="images/preview-card-exam.webp" 
                 alt="岡山県統一模擬試験 問題用紙見本" 
-                class="w-full h-full object-cover object-center rounded-xl"
+                class="w-full h-full object-cover object-center rounded-lg"
                 width="483"
                 height="512"
                 loading="lazy"
@@ -570,9 +581,9 @@
         <!-- ===================================================================
              CARD 02: 学力診断シート（精密な成績カルテ画像・拡大モーダル対応）
              =================================================================== -->
-        <div class="features-card w-[86vw] sm:w-[80vw] md:w-[76%] lg:w-[78%] shrink-0 bg-white rounded-3xl p-5 sm:p-6 lg:p-8 border border-slate-200/80 shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row items-stretch gap-6 lg:gap-8 relative overflow-hidden" style="scroll-snap-align: start;">
+        <div class="features-card w-[84vw] max-w-[325px] sm:w-[80vw] sm:max-w-[400px] md:max-w-none md:w-[76%] lg:w-[78%] shrink-0 bg-white rounded-lg p-5 sm:p-6 lg:p-8 border border-slate-200/80 shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row items-stretch gap-6 lg:gap-8 relative overflow-hidden" style="scroll-snap-align: center; scroll-snap-stop: always;">
           
-          <div class="absolute -top-1 -right-1 bg-brand-green text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl shadow-xs z-10">
+          <div class="absolute -top-1 -right-1 bg-brand-green text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg shadow-xs z-10">
             一番の強み
           </div>
 
@@ -599,20 +610,20 @@
             <!-- 補足枠（ミニカルテ：学年別に動的切り替え） -->
             <div id="card2-minikarte-container" class="space-y-2 pt-1 text-xs">
               <div class="grid grid-cols-2 gap-2">
-                <div class="p-2.5 rounded-xl bg-slate-50/80 border border-slate-200/70 shadow-2xs">
+                <div class="p-2.5 rounded-lg bg-slate-50/80 border border-slate-200/70 shadow-2xs">
                   <div class="flex items-center justify-between">
                     <span class="font-bold text-brand-green block text-[11px]">岡山朝日高校 A判定</span>
                     <span class="px-1.5 py-0.2 rounded bg-brand-green text-white text-[9px] font-bold">可能性85%以上</span>
                   </div>
                   <p class="text-[10px] text-slate-600 mt-1 leading-snug">合格ラインまで <strong class="text-brand-green text-xs font-bold">あと+14点</strong> (安全圏)</p>
                 </div>
-                <div class="p-2.5 rounded-xl bg-slate-50/80 border border-slate-200/70 shadow-2xs">
+                <div class="p-2.5 rounded-lg bg-slate-50/80 border border-slate-200/70 shadow-2xs">
                   <span class="font-bold text-slate-800 block text-[11px]">志望者内順位：28位 / 342人</span>
                   <p class="text-[10px] text-slate-600 mt-1 leading-snug">要復習：数学「関数 y=ax²」</p>
                 </div>
               </div>
 
-              <div class="p-3 rounded-2xl bg-white border border-emerald-300/80 shadow-2xs flex items-center justify-between cursor-pointer hover:bg-emerald-50/50 transition-colors" onclick="openReportModal()">
+              <div class="p-3 rounded-lg bg-white border border-emerald-300/80 shadow-2xs flex items-center justify-between cursor-pointer hover:bg-emerald-50/50 transition-colors" onclick="openReportModal()">
                 <div>
                   <span class="font-bold text-emerald-800 block text-xs">志望校判定（当日点＋内申点総合判定）</span>
                   <p class="text-[11px] text-slate-700 mt-0.5 leading-snug">県内ほぼ全ての公立・私立・国立に対応。一般・特別入試それぞれで精密判定。</p>
@@ -624,12 +635,12 @@
 
           <!-- 画像エリア（PC: 右側 / スマホ: 上側 / クリックで拡大モーダル） -->
           <div onclick="openReportModal()" class="w-full md:w-[260px] lg:w-[300px] xl:w-[320px] shrink-0 flex flex-col justify-center order-1 md:order-2 cursor-pointer group">
-            <div class="relative w-full h-[200px] sm:h-[240px] md:h-full min-h-[220px] rounded-2xl overflow-hidden shadow-xs border border-emerald-200 bg-white p-1 flex items-center justify-center group-hover:border-brand-green transition-all">
+            <div class="relative w-full h-[200px] sm:h-[240px] md:h-full min-h-[220px] rounded-lg overflow-hidden shadow-xs border border-emerald-200 bg-white p-1 flex items-center justify-center group-hover:border-brand-green transition-all">
               <img 
                 id="card2-preview-img"
                 src="images/preview-card-report.webp" 
                 alt="おかもし成績表サンプル（学力診断シート）" 
-                class="w-full h-full object-contain object-center rounded-xl bg-white p-1"
+                class="w-full h-full object-contain object-center rounded-lg bg-white p-1"
                 width="512"
                 height="346"
                 loading="lazy"
@@ -646,7 +657,7 @@
         <!-- ===================================================================
              CARD 03: 詳しくよく分かる解答解説（解答解説冊子画像）
              =================================================================== -->
-        <div class="features-card w-[86vw] sm:w-[80vw] md:w-[76%] lg:w-[78%] shrink-0 bg-white rounded-3xl p-5 sm:p-6 lg:p-8 border border-slate-200/80 shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row items-stretch gap-6 lg:gap-8 relative overflow-hidden" style="scroll-snap-align: start;">
+        <div class="features-card w-[84vw] max-w-[325px] sm:w-[80vw] sm:max-w-[400px] md:max-w-none md:w-[76%] lg:w-[78%] shrink-0 bg-white rounded-lg p-5 sm:p-6 lg:p-8 border border-slate-200/80 shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row items-stretch gap-6 lg:gap-8 relative overflow-hidden" style="scroll-snap-align: center; scroll-snap-stop: always;">
           
           <!-- テキストエリア（PC: 左側 / スマホ: 下側） -->
           <div class="flex-1 flex flex-col justify-between space-y-3.5 order-2 md:order-1 min-w-0">
@@ -668,7 +679,7 @@
 
             <!-- 補足枠（途中式ステップ ＆ 自学自習完結） -->
             <div id="card3-features-container" class="space-y-2 pt-1 text-xs">
-              <div class="p-3 rounded-2xl bg-slate-50/80 border border-slate-200/70 shadow-2xs space-y-0.5">
+              <div class="p-3 rounded-lg bg-slate-50/80 border border-slate-200/70 shadow-2xs space-y-0.5">
                 <div class="flex items-center gap-1.5 font-bold text-slate-900">
                   <span class="material-symbols-outlined text-sm text-[#C85A32]">check_circle</span>
                   <span class="text-xs font-bold">疑問を残さない途中式・ステップ解説と重要公式</span>
@@ -678,7 +689,7 @@
                 </p>
               </div>
 
-              <div class="p-3 rounded-2xl bg-slate-50/80 border border-slate-200/70 shadow-2xs space-y-0.5">
+              <div class="p-3 rounded-lg bg-slate-50/80 border border-slate-200/70 shadow-2xs space-y-0.5">
                 <div class="flex items-center gap-1.5 font-bold text-slate-900">
                   <span class="material-symbols-outlined text-sm text-[#C85A32]">check_circle</span>
                   <span class="text-xs font-bold">自学自習を完結させる、圧倒的に詳しい網羅的な解説</span>
@@ -692,12 +703,12 @@
 
           <!-- 画像エリア（PC: 右側 / スマホ: 上側） -->
           <div class="w-full md:w-[260px] lg:w-[300px] xl:w-[320px] shrink-0 flex flex-col justify-center order-1 md:order-2">
-            <div class="relative w-full h-[200px] sm:h-[240px] md:h-full min-h-[220px] rounded-2xl overflow-hidden shadow-xs border border-slate-200 bg-white flex items-center justify-center p-2">
+            <div class="relative w-full h-[200px] sm:h-[240px] md:h-full min-h-[220px] rounded-lg overflow-hidden shadow-xs border border-slate-200 bg-white flex items-center justify-center p-2">
               <img 
                 id="card3-preview-img"
                 src="images/preview-card-answer.webp" 
                 alt="岡山県統一模擬試験 解答と解説冊子" 
-                class="w-full h-full object-cover object-center rounded-xl"
+                class="w-full h-full object-cover object-center rounded-lg"
                 width="359"
                 height="512"
                 loading="lazy"
@@ -711,16 +722,31 @@
 
         </div>
 
-        <!-- カルーセル末尾の余白スペーサー -->
-        <div class="shrink-0 w-2 md:w-8" aria-hidden="true"></div>
+        <!-- カルーセル末尾の余白スペーサー（スクロール時の右端の切れ防止） -->
+        <div class="shrink-0 w-4 md:w-8" aria-hidden="true"></div>
 
       </div>
 
-      <!-- スマホ向けドットインジケーター -->
-      <div id="features-dots" class="flex md:hidden justify-center items-center gap-1.5 mt-3">
-        <span class="w-2 h-2 rounded-full bg-brand-green"></span>
-        <span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
-        <span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
+      <!-- Apple風 フローティング・ナビゲーション＆インジケーターバー -->
+      <div class="flex justify-center items-center mt-5 md:mt-6">
+        <div class="inline-flex items-center gap-2.5 sm:gap-3 bg-slate-900/10 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-slate-900/5 shadow-2xs">
+          <!-- 前へボタン -->
+          <button type="button" onclick="scrollFeaturesCarousel(-1)" id="features-sp-prev-btn" aria-label="前の特徴へ" class="w-7 h-7 rounded-full bg-white/90 hover:bg-white text-slate-700 flex items-center justify-center transition-all shadow-xs active:scale-95 cursor-pointer disabled:opacity-30 disabled:pointer-events-none">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
+          </button>
+
+          <!-- ドット群（現在地インジケーター：アクティブ時は細長いカプセル型） -->
+          <div id="features-dots" class="flex items-center gap-1.5 px-1">
+            <button type="button" onclick="goToFeaturesCard(0)" aria-label="特徴1へ" class="feature-dot w-5 h-2 rounded-full bg-brand-green transition-all duration-300 cursor-pointer shadow-2xs"></button>
+            <button type="button" onclick="goToFeaturesCard(1)" aria-label="特徴2へ" class="feature-dot w-2 h-2 rounded-full bg-slate-400/60 hover:bg-slate-500 transition-all duration-300 cursor-pointer"></button>
+            <button type="button" onclick="goToFeaturesCard(2)" aria-label="特徴3へ" class="feature-dot w-2 h-2 rounded-full bg-slate-400/60 hover:bg-slate-500 transition-all duration-300 cursor-pointer"></button>
+          </div>
+
+          <!-- 次へボタン -->
+          <button type="button" onclick="scrollFeaturesCarousel(1)" id="features-sp-next-btn" aria-label="次の特徴へ" class="w-7 h-7 rounded-full bg-white/90 hover:bg-white text-slate-700 flex items-center justify-center transition-all shadow-xs active:scale-95 cursor-pointer disabled:opacity-30 disabled:pointer-events-none">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+          </button>
+        </div>
       </div>
     </section>
 
@@ -736,30 +762,57 @@
       </div>
 
       <!-- 模試日程・申込 メインカード囲み（独立した操作エリアのホワイトカード枠） -->
-      <div class="bg-transparent md:bg-white rounded-none md:rounded-3xl border-0 md:border-2 border-slate-200 p-0 md:p-10 shadow-none md:shadow-lg transition-all" id="card-container">
+      <div class="bg-transparent md:bg-white rounded-none md:rounded-lg border-0 md:border-2 border-slate-200 p-0 md:p-10 shadow-none md:shadow-lg transition-all" id="card-container">
         
         <!-- 上部：学年＆実施回タブ選択エリア（画面上部固定追従 Sticky バー） -->
-        <div class="sticky top-16 sm:top-[4.5rem] z-30 bg-white/95 backdrop-blur-md -mx-4 md:-mx-10 px-4 md:px-10 -mt-2 md:-mt-10 pt-3 md:pt-10 pb-3 md:pb-4 mb-5 md:mb-6 border-b border-slate-200/80 md:rounded-t-3xl transition-all">
-          <div class="bg-slate-100 sm:bg-slate-200 p-2.5 sm:p-4 rounded-xl sm:rounded-2xl border border-slate-200 sm:border-slate-300 shadow-none sm:shadow-inner space-y-2 sm:space-y-3">
+        <div class="sticky top-16 sm:top-[4.5rem] z-30 bg-white/90 backdrop-blur-md -mx-4 md:-mx-10 px-4 md:px-10 -mt-2 md:-mt-10 py-2 sm:py-2.5 md:pt-8 md:pb-4 mb-4 md:mb-6 border-b border-slate-200/80 md:rounded-t-lg transition-all shadow-xs md:shadow-none">
+          
+          <!-- 【SP表示（md:hidden）】高さと余白を極限まで抑えた1行コンパクトバー（40px〜48px設計） -->
+          <div class="md:hidden flex items-center gap-2 w-full">
+            <!-- 学年選択セレクト（アイコン付き） -->
+            <div class="relative flex-1">
+              <select id="sp-grade-select" onchange="selectGrade(this.value)" class="w-full h-10 pl-8 pr-7 bg-slate-100 hover:bg-slate-200/80 text-slate-800 font-bold text-xs rounded-lg border border-slate-300/80 appearance-none focus:outline-none focus:ring-2 focus:ring-emerald-600/30 transition-all cursor-pointer">
+                <option value="c3" selected>中3 (高校入試対策)</option>
+                <option value="c2">中2 (公立入試基礎)</option>
+                <option value="c1">中1 (基礎・標準模試)</option>
+                <option value="p6">小6 (適性検査対策)</option>
+              </select>
+              <span class="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-[16px] text-emerald-800 pointer-events-none">school</span>
+              <span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-[18px] text-slate-400 pointer-events-none">expand_more</span>
+            </div>
+
+            <!-- 月号選択セレクト（アイコン付き） -->
+            <div class="relative flex-1">
+              <select id="sp-round-select" onchange="handleSpRoundSelect(this.value)" class="w-full h-10 pl-8 pr-7 bg-slate-100 hover:bg-slate-200/80 text-slate-800 font-bold text-xs rounded-lg border border-slate-300/80 appearance-none focus:outline-none focus:ring-2 focus:ring-emerald-600/30 transition-all cursor-pointer">
+                <!-- JSで動的生成 -->
+              </select>
+              <span class="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-[16px] text-emerald-800 pointer-events-none">calendar_month</span>
+              <span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-[18px] text-slate-400 pointer-events-none">expand_more</span>
+            </div>
+          </div>
+
+          <!-- 【PC表示（hidden md:block）】広々としたタブセレクタースタイル -->
+          <div class="hidden md:block bg-slate-200 p-4 rounded-lg border border-slate-300 shadow-inner space-y-3">
             <!-- ① 学年切り替えタブ (4択カードスタイル) -->
-            <div class="flex items-center gap-2 sm:gap-4">
+            <div class="flex items-center gap-4">
               <span class="text-xs font-bold text-slate-800 shrink-0 tracking-tight">学年:</span>
-              <div class="grid grid-cols-4 gap-1.5 sm:gap-2 flex-1" id="grade-tabs">
-                <button type="button" onclick="selectGrade('c3')" data-grade="c3" class="grade-btn py-2 text-xs sm:text-sm font-bold rounded-xl transition-all bg-emerald-800 text-white border border-emerald-800 shadow-sm flex items-center justify-center cursor-pointer">中3</button>
-                <button type="button" onclick="selectGrade('c2')" data-grade="c2" class="grade-btn py-2 text-xs sm:text-sm font-bold rounded-xl transition-all bg-white text-slate-700 border border-slate-300/80 shadow-2xs hover:bg-slate-50 hover:border-emerald-600 hover:-translate-y-0.5 flex items-center justify-center cursor-pointer">中2</button>
-                <button type="button" onclick="selectGrade('c1')" data-grade="c1" class="grade-btn py-2 text-xs sm:text-sm font-bold rounded-xl transition-all bg-white text-slate-700 border border-slate-300/80 shadow-2xs hover:bg-slate-50 hover:border-emerald-600 hover:-translate-y-0.5 flex items-center justify-center cursor-pointer">中1</button>
-                <button type="button" onclick="selectGrade('p6')" data-grade="p6" class="grade-btn py-2 text-xs sm:text-sm font-bold rounded-xl transition-all bg-white text-slate-700 border border-slate-300/80 shadow-2xs hover:bg-slate-50 hover:border-emerald-600 hover:-translate-y-0.5 flex items-center justify-center cursor-pointer">小6</button>
+              <div class="grid grid-cols-4 gap-2 flex-1" id="grade-tabs">
+                <button type="button" onclick="selectGrade('c3')" data-grade="c3" class="grade-btn py-2 text-sm font-bold rounded-lg transition-all bg-emerald-800 text-white border border-emerald-800 shadow-sm flex items-center justify-center cursor-pointer">中3</button>
+                <button type="button" onclick="selectGrade('c2')" data-grade="c2" class="grade-btn py-2 text-sm font-bold rounded-lg transition-all bg-white text-slate-700 border border-slate-300/80 shadow-2xs hover:bg-slate-50 hover:border-emerald-600 hover:-translate-y-0.5 flex items-center justify-center cursor-pointer">中2</button>
+                <button type="button" onclick="selectGrade('c1')" data-grade="c1" class="grade-btn py-2 text-sm font-bold rounded-lg transition-all bg-white text-slate-700 border border-slate-300/80 shadow-2xs hover:bg-slate-50 hover:border-emerald-600 hover:-translate-y-0.5 flex items-center justify-center cursor-pointer">中1</button>
+                <button type="button" onclick="selectGrade('p6')" data-grade="p6" class="grade-btn py-2 text-sm font-bold rounded-lg transition-all bg-white text-slate-700 border border-slate-300/80 shadow-2xs hover:bg-slate-50 hover:border-emerald-600 hover:-translate-y-0.5 flex items-center justify-center cursor-pointer">小6</button>
               </div>
             </div>
 
             <!-- ② 実施回切り替えタブ (1行横スクロール式ピル) -->
-            <div class="flex items-center gap-2 sm:gap-4">
+            <div class="flex items-center gap-4">
               <span class="text-xs font-bold text-slate-800 shrink-0 tracking-tight">月号:</span>
               <div class="flex gap-2 overflow-x-auto no-scrollbar py-0.5 flex-1" id="round-tabs">
                 <!-- JSで動的生成 -->
               </div>
             </div>
           </div>
+
         </div>
           
           <!-- 回タイトル & ステータス & 受講料 -->
@@ -795,7 +848,7 @@
             <div class="lg:col-span-7 space-y-4">
               
               <!-- 実施日程リスト -->
-              <div class="bg-white rounded-2xl border border-slate-200/80 p-4 sm:p-5 shadow-sm">
+              <div class="bg-white rounded-lg border border-slate-200/80 p-4 sm:p-5 shadow-sm">
                 <div class="flex items-center gap-2.5 mb-4">
                   <span class="w-2 h-5 bg-brand-green rounded-full inline-block shrink-0"></span>
                   <h5 class="section-title text-base sm:text-lg font-bold text-emerald-950 tracking-tight" style="color: #064e3b !important;">実施日程・会場</h5>
@@ -848,12 +901,12 @@
                         <span>会場または自宅受験を選択：</span>
                         <span class="text-xs text-brand-green font-medium">※会場により日程・時間割が異なります</span>
                       </div>
-                      <div class="flex flex-wrap sm:inline-flex p-1.5 bg-slate-100 rounded-xl border border-slate-200/80 gap-1 shadow-2xs w-full sm:w-auto" id="venue-tabs">
+                      <div class="flex flex-wrap sm:inline-flex p-1.5 bg-slate-100 rounded-lg border border-slate-200/80 gap-1 shadow-2xs w-full sm:w-auto" id="venue-tabs">
                         <!-- JSで動的生成 -->
                       </div>
                     </div>
 
-                    <div class="bg-white rounded-2xl border border-slate-200/80 p-4 shadow-sm space-y-3" id="venue-detail-content">
+                    <div class="bg-white rounded-lg border border-slate-200/80 p-4 shadow-sm space-y-3" id="venue-detail-content">
                       <!-- JSで動的レンダリング -->
                     </div>
                   </div>
@@ -867,9 +920,9 @@
               
               <!-- 申込締切日カード -->
               <div id="deadline-container">
-                <div class="bg-slate-50/80 rounded-r-xl border-l-4 border-emerald-600 p-4 flex items-center justify-between">
+                <div class="bg-slate-50/80 rounded-r-lg border-l-4 border-emerald-600 p-4 flex items-center justify-between">
                   <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-xl shrink-0 shadow-2xs">
+                    <div class="w-10 h-10 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-xl shrink-0 shadow-2xs">
                       ⏳
                     </div>
                     <div>
@@ -892,7 +945,7 @@
 
               <!-- メインCTA（WEB申込ボタン） -->
               <div id="cta-container" class="space-y-3">
-                <a href="apply.html" id="card-cta-btn" class="w-full py-4 px-6 rounded-2xl bg-orange-500 hover:bg-orange-600 text-white font-bold text-base sm:text-lg flex items-center justify-center gap-2 shadow-lg shadow-orange-500/25 active:scale-[0.98] transition-all hover:shadow-xl hover:shadow-orange-500/35 hover:-translate-y-0.5">
+                <a href="apply.html" id="card-cta-btn" class="w-full py-4 px-6 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-bold text-base sm:text-lg flex items-center justify-center gap-2 shadow-lg shadow-orange-500/25 active:scale-[0.98] transition-all hover:shadow-xl hover:shadow-orange-500/35 hover:-translate-y-0.5">
                   <span>10月号をWEBで申し込む</span>
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
                 </a>
@@ -906,7 +959,7 @@
               </div>
 
               <!-- 安心・信頼のサポート保証カード（PC向け補足） -->
-              <div class="bg-slate-50 rounded-2xl border border-slate-200/80 p-4 space-y-2.5 text-xs">
+              <div class="bg-slate-50 rounded-lg border border-slate-200/80 p-4 space-y-2.5 text-xs">
                 <div class="font-bold text-slate-800 flex items-center gap-1.5">
                   <span class="text-brand-green">🛡️</span>
                   <span>個人受験のお申し込みについて</span>
@@ -949,15 +1002,15 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
         
         <!-- CARD 01 -->
-        <div class="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/80 p-4 sm:p-7 shadow-xs sm:shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-4">
+        <div class="bg-white rounded-lg border border-slate-200/80 p-4 sm:p-7 shadow-xs sm:shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-4">
           <div class="space-y-4">
             <div class="flex items-center gap-3 pb-2 border-b border-slate-200/60">
-              <span class="w-8 h-8 rounded-xl bg-brand-green text-white font-bold text-sm flex items-center justify-center shrink-0 shadow-xs">01</span>
+              <span class="w-8 h-8 rounded-lg bg-brand-green text-white font-bold text-sm flex items-center justify-center shrink-0 shadow-xs">01</span>
               <h4 class="font-bold text-base sm:text-lg text-brand-green leading-snug">自分の「県内での立ち位置・レベル」がわかった！</h4>
             </div>
             
             <div class="space-y-3 sm:space-y-3">
-              <div class="rounded-none sm:rounded-2xl bg-transparent sm:bg-slate-100 p-0 sm:p-5 border-0 sm:border sm:border-slate-200/80 shadow-none sm:shadow-2xs space-y-1.5 sm:space-y-2 pb-3.5 sm:pb-0 border-b sm:border-b-0 border-slate-100">
+              <div class="rounded-none sm:rounded-lg bg-transparent sm:bg-slate-100 p-0 sm:p-5 border-0 sm:border sm:border-slate-200/80 shadow-none sm:shadow-2xs space-y-1.5 sm:space-y-2 pb-3.5 sm:pb-0 border-b sm:border-b-0 border-slate-100">
                 <div class="flex items-start gap-2 text-base sm:text-lg font-bold text-slate-900 leading-snug">
                   <span class="material-symbols-outlined text-xl text-emerald-700 shrink-0 mt-0.5 select-none">format_quote</span>
                   <span>塾に通っていなくても、県全体での順位や実力を把握できました</span>
@@ -967,7 +1020,7 @@
                 </p>
               </div>
 
-              <div class="rounded-none sm:rounded-2xl bg-transparent sm:bg-slate-100 p-0 sm:p-5 border-0 sm:border sm:border-slate-200/80 shadow-none sm:shadow-2xs space-y-1.5 sm:space-y-2 pt-1 sm:pt-0">
+              <div class="rounded-none sm:rounded-lg bg-transparent sm:bg-slate-100 p-0 sm:p-5 border-0 sm:border sm:border-slate-200/80 shadow-none sm:shadow-2xs space-y-1.5 sm:space-y-2 pt-1 sm:pt-0">
                 <div class="flex items-start gap-2 text-base sm:text-lg font-bold text-slate-900 leading-snug">
                   <span class="material-symbols-outlined text-xl text-emerald-700 shrink-0 mt-0.5 select-none">format_quote</span>
                   <span>自分の現在地がわかり、受験勉強の励みになった</span>
@@ -981,15 +1034,15 @@
         </div>
 
         <!-- CARD 02 -->
-        <div class="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/80 p-4 sm:p-7 shadow-xs sm:shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-4">
+        <div class="bg-white rounded-lg border border-slate-200/80 p-4 sm:p-7 shadow-xs sm:shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-4">
           <div class="space-y-4">
             <div class="flex items-center gap-3 pb-2 border-b border-slate-200/60">
-              <span class="w-8 h-8 rounded-xl bg-[#8B3A18] text-white font-bold text-sm flex items-center justify-center shrink-0 shadow-xs">02</span>
+              <span class="w-8 h-8 rounded-lg bg-[#8B3A18] text-white font-bold text-sm flex items-center justify-center shrink-0 shadow-xs">02</span>
               <h4 class="font-bold text-base sm:text-lg text-[#8B3A18] leading-snug">本番さながらの「緊張感・会場の雰囲気」に慣れることができた！</h4>
             </div>
             
             <div class="space-y-3 sm:space-y-3">
-              <div class="rounded-none sm:rounded-2xl bg-transparent sm:bg-slate-100 p-0 sm:p-5 border-0 sm:border sm:border-slate-200/80 shadow-none sm:shadow-2xs space-y-1.5 sm:space-y-2 pb-3.5 sm:pb-0 border-b sm:border-b-0 border-slate-100">
+              <div class="rounded-none sm:rounded-lg bg-transparent sm:bg-slate-100 p-0 sm:p-5 border-0 sm:border sm:border-slate-200/80 shadow-none sm:shadow-2xs space-y-1.5 sm:space-y-2 pb-3.5 sm:pb-0 border-b sm:border-b-0 border-slate-100">
                 <div class="flex items-start gap-2 text-base sm:text-lg font-bold text-slate-900 leading-snug">
                   <span class="material-symbols-outlined text-xl text-emerald-700 shrink-0 mt-0.5 select-none">format_quote</span>
                   <span>試験会場での受験で、本番も落ち着いて臨めた</span>
@@ -999,7 +1052,7 @@
                 </p>
               </div>
 
-              <div class="rounded-none sm:rounded-2xl bg-transparent sm:bg-slate-100 p-0 sm:p-5 border-0 sm:border sm:border-slate-200/80 shadow-none sm:shadow-2xs space-y-1.5 sm:space-y-2 pt-1 sm:pt-0">
+              <div class="rounded-none sm:rounded-lg bg-transparent sm:bg-slate-100 p-0 sm:p-5 border-0 sm:border sm:border-slate-200/80 shadow-none sm:shadow-2xs space-y-1.5 sm:space-y-2 pt-1 sm:pt-0">
                 <div class="flex items-start gap-2 text-base sm:text-lg font-bold text-slate-900 leading-snug">
                   <span class="material-symbols-outlined text-xl text-emerald-700 shrink-0 mt-0.5 select-none">format_quote</span>
                   <span>時間配分や朝からのスケジュールが良い練習になった</span>
@@ -1013,15 +1066,15 @@
         </div>
 
         <!-- CARD 03 -->
-        <div class="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/80 p-4 sm:p-7 shadow-xs sm:shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-4">
+        <div class="bg-white rounded-lg border border-slate-200/80 p-4 sm:p-7 shadow-xs sm:shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-4">
           <div class="space-y-4">
             <div class="flex items-center gap-3 pb-2 border-b border-slate-200/60">
-              <span class="w-8 h-8 rounded-xl bg-[#7A5B18] text-white font-bold text-sm flex items-center justify-center shrink-0 shadow-xs">03</span>
+              <span class="w-8 h-8 rounded-lg bg-[#7A5B18] text-white font-bold text-sm flex items-center justify-center shrink-0 shadow-xs">03</span>
               <h4 class="font-bold text-base sm:text-lg text-[#7A5B18] leading-snug">「得意・苦手」や「出題傾向」が明確になり、直前対策に役立った！</h4>
             </div>
             
             <div class="space-y-3 sm:space-y-3">
-              <div class="rounded-none sm:rounded-2xl bg-transparent sm:bg-slate-100 p-0 sm:p-5 border-0 sm:border sm:border-slate-200/80 shadow-none sm:shadow-2xs space-y-1.5 sm:space-y-2 pb-3.5 sm:pb-0 border-b sm:border-b-0 border-slate-100">
+              <div class="rounded-none sm:rounded-lg bg-transparent sm:bg-slate-100 p-0 sm:p-5 border-0 sm:border sm:border-slate-200/80 shadow-none sm:shadow-2xs space-y-1.5 sm:space-y-2 pb-3.5 sm:pb-0 border-b sm:border-b-0 border-slate-100">
                 <div class="flex items-start gap-2 text-base sm:text-lg font-bold text-slate-900 leading-snug">
                   <span class="material-symbols-outlined text-xl text-emerald-700 shrink-0 mt-0.5 select-none">format_quote</span>
                   <span>自分の弱点や「解くべき問題」が詳しく分かった</span>
@@ -1031,7 +1084,7 @@
                 </p>
               </div>
 
-              <div class="rounded-none sm:rounded-2xl bg-transparent sm:bg-slate-100 p-0 sm:p-5 border-0 sm:border sm:border-slate-200/80 shadow-none sm:shadow-2xs space-y-1.5 sm:space-y-2 pt-1 sm:pt-0">
+              <div class="rounded-none sm:rounded-lg bg-transparent sm:bg-slate-100 p-0 sm:p-5 border-0 sm:border sm:border-slate-200/80 shadow-none sm:shadow-2xs space-y-1.5 sm:space-y-2 pt-1 sm:pt-0">
                 <div class="flex items-start gap-2 text-base sm:text-lg font-bold text-slate-900 leading-snug">
                   <span class="material-symbols-outlined text-xl text-emerald-700 shrink-0 mt-0.5 select-none">format_quote</span>
                   <span>本番にそっくりな問題形式で実践的な対策ができた</span>
@@ -1045,15 +1098,15 @@
         </div>
 
         <!-- CARD 04 -->
-        <div class="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/80 p-4 sm:p-7 shadow-xs sm:shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-4">
+        <div class="bg-white rounded-lg border border-slate-200/80 p-4 sm:p-7 shadow-xs sm:shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-4">
           <div class="space-y-4">
             <div class="flex items-center gap-3 pb-2 border-b border-slate-200/60">
-              <span class="w-8 h-8 rounded-xl bg-[#1F6B51] text-white font-bold text-sm flex items-center justify-center shrink-0 shadow-xs">04</span>
+              <span class="w-8 h-8 rounded-lg bg-[#1F6B51] text-white font-bold text-sm flex items-center justify-center shrink-0 shadow-xs">04</span>
               <h4 class="font-bold text-base sm:text-lg text-[#1F6B51] leading-snug">信頼できる「判定データ」で志望校選びの基準になった！</h4>
             </div>
             
             <div class="space-y-3 sm:space-y-3">
-              <div class="rounded-none sm:rounded-2xl bg-transparent sm:bg-slate-100 p-0 sm:p-5 border-0 sm:border sm:border-slate-200/80 shadow-none sm:shadow-2xs space-y-1.5 sm:space-y-2 pb-3.5 sm:pb-0 border-b sm:border-b-0 border-slate-100">
+              <div class="rounded-none sm:rounded-lg bg-transparent sm:bg-slate-100 p-0 sm:p-5 border-0 sm:border sm:border-slate-200/80 shadow-none sm:shadow-2xs space-y-1.5 sm:space-y-2 pb-3.5 sm:pb-0 border-b sm:border-b-0 border-slate-100">
                 <div class="flex items-start gap-2 text-base sm:text-lg font-bold text-slate-900 leading-snug">
                   <span class="material-symbols-outlined text-xl text-emerald-700 shrink-0 mt-0.5 select-none">format_quote</span>
                   <span>合否判定や成績データが具体的で信頼できた</span>
@@ -1063,7 +1116,7 @@
                 </p>
               </div>
 
-              <div class="rounded-none sm:rounded-2xl bg-transparent sm:bg-slate-100 p-0 sm:p-5 border-0 sm:border sm:border-slate-200/80 shadow-none sm:shadow-2xs space-y-1.5 sm:space-y-2 pt-1 sm:pt-0">
+              <div class="rounded-none sm:rounded-lg bg-transparent sm:bg-slate-100 p-0 sm:p-5 border-0 sm:border sm:border-slate-200/80 shadow-none sm:shadow-2xs space-y-1.5 sm:space-y-2 pt-1 sm:pt-0">
                 <div class="flex items-start gap-2 text-base sm:text-lg font-bold text-slate-900 leading-snug">
                   <span class="material-symbols-outlined text-xl text-emerald-700 shrink-0 mt-0.5 select-none">format_quote</span>
                   <span>模試の結果で自信がついた</span>
@@ -1092,7 +1145,7 @@
         <div id="latest-news-list" class="space-y-3">
           
           <!-- 記事 1 -->
-          <article class="bg-slate-50 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all mb-3 overflow-hidden cursor-pointer group block">
+          <article class="bg-slate-50 rounded-lg border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all mb-3 overflow-hidden cursor-pointer group block">
             <a href="detail.html?id=leoodvgmoet" class="flex flex-col sm:flex-row sm:items-center justify-between p-4 sm:p-5 gap-3 sm:gap-4 w-full">
               <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 flex-1 min-w-0">
                 <div class="flex items-center gap-2.5 shrink-0">
@@ -1121,7 +1174,7 @@
           </article>
 
           <!-- 記事 2 -->
-          <article class="bg-slate-50 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all mb-3 overflow-hidden cursor-pointer group block">
+          <article class="bg-slate-50 rounded-lg border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all mb-3 overflow-hidden cursor-pointer group block">
             <a href="detail.html?id=b055d-p_k7" class="flex flex-col sm:flex-row sm:items-center justify-between p-4 sm:p-5 gap-3 sm:gap-4 w-full">
               <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 flex-1 min-w-0">
                 <div class="flex items-center gap-2.5 shrink-0">
@@ -1150,7 +1203,7 @@
           </article>
 
           <!-- 記事 3 -->
-          <article class="bg-slate-50 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all mb-3 overflow-hidden cursor-pointer group block">
+          <article class="bg-slate-50 rounded-lg border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all mb-3 overflow-hidden cursor-pointer group block">
             <a href="detail.html?id=20p7a-hecrv" class="flex flex-col sm:flex-row sm:items-center justify-between p-4 sm:p-5 gap-3 sm:gap-4 w-full">
               <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 flex-1 min-w-0">
                 <div class="flex items-center gap-2.5 shrink-0">
@@ -1182,7 +1235,7 @@
 
         <!-- すべてのお知らせを見る 導線ボタン/リンク -->
         <div class="text-center mt-6 sm:mt-8">
-          <a href="news.html" class="inline-flex items-center justify-center gap-2 px-6 py-2.5 sm:py-3 rounded-xl bg-slate-50 hover:bg-emerald-50/80 text-brand-green hover:text-emerald-950 border border-slate-200/90 hover:border-emerald-300 font-bold text-xs sm:text-sm shadow-2xs hover:shadow-xs transition-all duration-200 group">
+          <a href="news.html" class="inline-flex items-center justify-center gap-2 px-6 py-2.5 sm:py-3 rounded-lg bg-slate-50 hover:bg-emerald-50/80 text-brand-green hover:text-emerald-950 border border-slate-200/90 hover:border-emerald-300 font-bold text-xs sm:text-sm shadow-2xs hover:shadow-xs transition-all duration-200 group">
             <span>すべてのお知らせを見る</span>
             <span class="material-symbols-outlined text-base group-hover:translate-x-1 transition-transform">arrow_forward</span>
           </a>
@@ -1220,10 +1273,10 @@
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
           <!-- Quick Card 1: Exam Application -->
-          <a class="group p-5 sm:p-6 bg-slate-50/80 hover:bg-slate-50 rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-between" href="apply.html">
+          <a class="group p-5 sm:p-6 bg-slate-50/80 hover:bg-slate-50 rounded-lg border border-slate-200/90 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-between" href="apply.html">
             <div>
               <div class="flex items-start justify-between">
-                <div class="w-10 h-10 rounded-xl bg-emerald-100 text-brand-green flex items-center justify-center group-hover:scale-105 transition-transform">
+                <div class="w-10 h-10 rounded-lg bg-emerald-100 text-brand-green flex items-center justify-center group-hover:scale-105 transition-transform">
                   <span class="material-symbols-outlined text-xl">how_to_reg</span>
                 </div>
                 <span class="px-2.5 py-0.5 bg-emerald-50 text-brand-green text-[11px] font-bold rounded-md border border-emerald-200/60">Web受付中</span>
@@ -1244,10 +1297,10 @@
           </a>
 
           <!-- Quick Card 2: Partner Schools -->
-          <a class="group p-5 sm:p-6 bg-slate-50/80 hover:bg-slate-50 rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-between" href="schools_PC.html">
+          <a class="group p-5 sm:p-6 bg-slate-50/80 hover:bg-slate-50 rounded-lg border border-slate-200/90 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-between" href="schools_PC.html">
             <div>
               <div class="flex items-start justify-between">
-                <div class="w-10 h-10 rounded-xl bg-emerald-100 text-brand-green flex items-center justify-center group-hover:scale-105 transition-transform">
+                <div class="w-10 h-10 rounded-lg bg-emerald-100 text-brand-green flex items-center justify-center group-hover:scale-105 transition-transform">
                   <span class="material-symbols-outlined text-xl">location_city</span>
                 </div>
                 <span class="px-2.5 py-0.5 bg-emerald-50 text-brand-green text-[11px] font-bold rounded-md border border-emerald-200/60">県内120教室以上</span>
@@ -1268,10 +1321,10 @@
           </a>
 
           <!-- Quick Card 3: Social & Study Advice -->
-          <a class="group p-5 sm:p-6 bg-slate-50/80 hover:bg-slate-50 rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-between" href="https://www.instagram.com/okamoshi01/" target="_blank" rel="noopener noreferrer">
+          <a class="group p-5 sm:p-6 bg-slate-50/80 hover:bg-slate-50 rounded-lg border border-slate-200/90 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-between" href="https://www.instagram.com/okamoshi01/" target="_blank" rel="noopener noreferrer">
             <div>
               <div class="flex items-start justify-between">
-                <div class="w-10 h-10 rounded-xl bg-emerald-100 text-brand-green flex items-center justify-center group-hover:scale-105 transition-transform">
+                <div class="w-10 h-10 rounded-lg bg-emerald-100 text-brand-green flex items-center justify-center group-hover:scale-105 transition-transform">
                   <span class="material-symbols-outlined text-xl">photo_camera</span>
                 </div>
                 <span class="px-2.5 py-0.5 bg-emerald-50 text-brand-green text-[11px] font-bold rounded-md border border-emerald-200/60">公式SNS</span>
@@ -1296,14 +1349,14 @@
   </div>
   </main>
 
-  <!-- スマホ用 固定追従フッターバー -->
-  <div class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 p-3 md:hidden">
+  <!-- スマホ用 固定追従フッターバー（Sticky CTA） -->
+  <div id="floating-cta-bar" class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/90 p-3 md:hidden shadow-[0_-4px_20px_rgba(0,0,0,0.08)] transition-all duration-300 ease-out transform translate-y-full opacity-0 pointer-events-none">
     <div class="max-w-md mx-auto flex items-center justify-between gap-3">
-      <div class="flex-1">
+      <div class="flex-1 min-w-0">
         <span id="floating-status-badge" class="inline-block text-[9px] font-bold text-emerald-900 bg-emerald-100 border border-emerald-300 px-1.5 py-0.5 rounded">次回受付中</span>
-        <div id="floating-desc" class="text-xs font-bold text-slate-800 leading-tight">中3｜第4回 11/1(日) 実施</div>
+        <div id="floating-desc" class="text-xs font-bold text-slate-800 leading-tight truncate">中3｜第4回 11/1(日) 実施</div>
       </div>
-      <a href="#schedule-selector" class="py-2.5 px-5 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold shadow-md shadow-orange-500/25 active:scale-95 transition-all flex items-center gap-1.5">
+      <a href="#schedule-selector" class="py-2.5 px-5 rounded-lg bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold shadow-md shadow-orange-500/25 active:scale-95 transition-all flex items-center gap-1.5 shrink-0">
         <span>模試に申し込む</span>
         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
       </a>
@@ -1312,7 +1365,7 @@
 
   <!-- 学力診断シート拡大見本モーダル -->
   <div id="report-modal" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-xs flex items-center justify-center p-4 hidden">
-    <div class="bg-white rounded-3xl max-w-xl w-full max-h-[92vh] overflow-y-auto p-5 sm:p-7 shadow-2xl relative">
+    <div class="bg-white rounded-lg max-w-xl w-full max-h-[92vh] overflow-y-auto p-5 sm:p-7 shadow-2xl relative">
       <button onclick="closeReportModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 font-bold text-base cursor-pointer">✕</button>
       
       <!-- モーダルヘッダー ＆ 学年別ミニピル切替 -->
@@ -1322,7 +1375,7 @@
           <h4 id="modal-report-title" class="section-title text-base sm:text-lg font-bold text-emerald-950" style="color: #064e3b !important;">中3生｜学力診断シート（成績カルテ）見本</h4>
         </div>
         <!-- モーダル内学年ピル -->
-        <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl w-fit" role="tablist" aria-label="モーダル内学年切り替え">
+        <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-lg w-fit" role="tablist" aria-label="モーダル内学年切り替え">
           <button type="button" onclick="switchModalGrade('c3')" id="modal-pill-c3" class="px-2.5 sm:px-3 py-1 text-xs font-bold rounded-lg transition-all bg-emerald-800 text-white shadow-xs cursor-pointer">中3</button>
           <button type="button" onclick="switchModalGrade('c12')" id="modal-pill-c12" class="px-2.5 sm:px-3 py-1 text-xs font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900 cursor-pointer">中1・2</button>
           <button type="button" onclick="switchModalGrade('p6')" id="modal-pill-p6" class="px-2.5 sm:px-3 py-1 text-xs font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900 cursor-pointer">小6</button>
@@ -1334,12 +1387,12 @@
       </p>
 
       <!-- 動的カルテコンテナ -->
-      <div id="modal-report-body" class="border-2 border-slate-200 rounded-2xl p-4 bg-slate-50 space-y-4 text-xs">
+      <div id="modal-report-body" class="border-2 border-slate-200 rounded-lg p-4 bg-slate-50 space-y-4 text-xs">
         <!-- JSで初期生成・動的レンダリング -->
       </div>
 
       <div class="mt-5 text-center">
-        <button onclick="closeReportModal()" class="w-full py-3.5 rounded-2xl bg-emerald-800 text-white font-bold text-xs sm:text-sm shadow-md hover:bg-emerald-700 transition-colors cursor-pointer">
+        <button onclick="closeReportModal()" class="w-full py-3.5 rounded-lg bg-emerald-800 text-white font-bold text-xs sm:text-sm shadow-md hover:bg-emerald-700 transition-colors cursor-pointer">
           見本を閉じる
         </button>
       </div>
@@ -2093,9 +2146,9 @@
       // 申し込みエリアの学年タブのスタイル同期
       document.querySelectorAll('.grade-btn').forEach(btn => {
         if (btn.dataset.grade === normalized) {
-          btn.className = "grade-btn py-2 text-xs sm:text-sm font-bold rounded-xl transition-all bg-emerald-800 text-white border border-emerald-800 shadow-sm flex items-center justify-center cursor-pointer";
+          btn.className = "grade-btn py-2 text-xs sm:text-sm font-bold rounded-lg transition-all bg-emerald-800 text-white border border-emerald-800 shadow-sm flex items-center justify-center cursor-pointer";
         } else {
-          btn.className = "grade-btn py-2 text-xs sm:text-sm font-bold rounded-xl transition-all bg-white text-slate-700 border border-slate-300/80 shadow-2xs hover:bg-slate-50 hover:border-emerald-600 hover:-translate-y-0.5 flex items-center justify-center cursor-pointer";
+          btn.className = "grade-btn py-2 text-xs sm:text-sm font-bold rounded-lg transition-all bg-white text-slate-700 border border-slate-300/80 shadow-2xs hover:bg-slate-50 hover:border-emerald-600 hover:-translate-y-0.5 flex items-center justify-center cursor-pointer";
         }
       });
 
@@ -2114,9 +2167,20 @@
         }
       }
 
+      // スマホ追従CTAバーの表示判定更新
+      if (typeof checkFloatingCtaVisibility === 'function') {
+        checkFloatingCtaVisibility();
+      }
+
       // 「最新のお知らせ（NEWS）」の学年連動フィルタリング描画
       if (typeof updateNewsByGrade === 'function') {
         updateNewsByGrade(normalized);
+      }
+
+      // スマホ版学年セレクトボックスの値同期
+      const spGradeSelect = document.getElementById('sp-grade-select');
+      if (spGradeSelect && spGradeSelect.value !== normalized) {
+        spGradeSelect.value = normalized;
       }
 
       const examInfo = examData[normalized];
@@ -2133,10 +2197,35 @@
       }
     }
 
+    // SP版月号セレクト変更時のハンドラー
+    function handleSpRoundSelect(indexStr) {
+      const idx = parseInt(indexStr, 10);
+      if (isNaN(idx)) return;
+      currentRoundIndex = idx;
+      currentVenueIndex = 0;
+      renderRoundTabs();
+      renderCard();
+    }
+    window.handleSpRoundSelect = handleSpRoundSelect;
+
     // 実施回（○月号）タブの動的レンダリング
     function renderRoundTabs() {
       const data = examData[currentGrade];
       const rounds = (data && Array.isArray(data.rounds)) ? data.rounds : [];
+
+      // スマホ版月号セレクトボックスの動的更新
+      const spRoundSelect = document.getElementById('sp-round-select');
+      if (spRoundSelect) {
+        spRoundSelect.innerHTML = rounds.map((r, idx) => {
+          let statusText = '';
+          if (r.status === 'active') statusText = '【受付中】';
+          else if (r.status === 'open') statusText = '【申込可】';
+          else if (r.status === 'pending') statusText = '【準備中】';
+          else statusText = '【終了】';
+          return `<option value="${idx}" ${idx === currentRoundIndex ? 'selected' : ''}>${r.monthName} ${statusText}</option>`;
+        }).join('');
+      }
+
       const container = document.getElementById('round-tabs');
       if (!container) return;
       container.innerHTML = '';
@@ -2157,7 +2246,7 @@
           statusBadge = `<span class="text-[9px] px-1.5 py-0.5 rounded-full ${isSelected ? 'bg-white/30 text-white' : 'bg-slate-100 text-slate-400'}">終了</span>`;
         }
 
-        btn.className = `shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all border cursor-pointer ${
+        btn.className = `shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all border cursor-pointer ${
           isSelected 
             ? 'bg-emerald-800 text-white border-emerald-800 shadow-sm' 
             : 'bg-white text-slate-700 border-slate-300 hover:border-slate-400 hover:bg-white/90 shadow-2xs'
@@ -2185,7 +2274,7 @@
       }
 
       container.innerHTML = scopeList.map(item => `
-        <div class="flex items-center gap-2.5 sm:gap-3 bg-white rounded-xl p-2.5 border border-slate-200/80 shadow-xs overflow-hidden">
+        <div class="flex items-center gap-2.5 sm:gap-3 bg-white rounded-lg p-2.5 border border-slate-200/80 shadow-xs overflow-hidden">
           <div class="shrink-0 w-14 sm:w-16 text-center py-1.5 rounded-lg text-xs sm:text-sm font-bold bg-slate-200 text-slate-800 tracking-wide border border-slate-300/60 shadow-2xs">
             ${item.subject}
           </div>
@@ -2335,7 +2424,7 @@
             <div class="w-6 h-6 rounded-full bg-slate-100 text-slate-800 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5 border border-slate-200">2</div>
             <div class="flex-1">
               <span class="font-bold text-slate-900 block text-base">${isHome ? 'ご用意いただくもの' : '当日持参物'}</span>
-              <p class="text-sm text-slate-700 mt-1.5 leading-relaxed bg-slate-50 p-3 rounded-xl border border-slate-200/70 font-medium whitespace-pre-line">
+              <p class="text-sm text-slate-700 mt-1.5 leading-relaxed bg-slate-50 p-3 rounded-lg border border-slate-200/70 font-medium whitespace-pre-line">
                 ${activeVenue.items}
               </p>
             </div>
@@ -2346,7 +2435,7 @@
             <div class="w-6 h-6 rounded-full bg-slate-100 text-slate-800 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5 border border-slate-200">3</div>
             <div class="flex-1">
               <span class="font-bold text-slate-900 block text-base mb-1.5">${isHome ? '受験方法・時間割' : '時間割'}</span>
-              <div class="bg-slate-50 p-3 rounded-xl border border-slate-200/70 space-y-0.5">
+              <div class="bg-slate-50 p-3 rounded-lg border border-slate-200/70 space-y-0.5">
                 ${scheduleHtml}
               </div>
             </div>
@@ -2433,14 +2522,14 @@
           badge.textContent = `${r.monthName} 受付終了`;
           
           deadlineContainer.innerHTML = `
-            <div class="bg-slate-50/80 rounded-r-xl border-l-4 border-slate-300 p-3.5 sm:p-4 flex items-center justify-between text-xs sm:text-sm">
+            <div class="bg-slate-50/80 rounded-r-lg border-l-4 border-slate-300 p-3.5 sm:p-4 flex items-center justify-between text-xs sm:text-sm">
               <span class="text-slate-600 font-bold">お申し込み締切</span>
               <span class="font-bold text-slate-600">${r.deadline || '受付期間終了'}（受付終了）</span>
             </div>
           `;
 
           ctaContainer.innerHTML = `
-            <button disabled class="w-full py-4 px-6 rounded-2xl bg-slate-200 text-slate-400 font-bold text-sm sm:text-base cursor-not-allowed">
+            <button disabled class="w-full py-4 px-6 rounded-lg bg-slate-200 text-slate-400 font-bold text-sm sm:text-base cursor-not-allowed">
               ${r.monthName}の受付は終了しました
             </button>
           `;
@@ -2449,14 +2538,14 @@
           badge.textContent = `${r.monthName} 準備中`;
           
           deadlineContainer.innerHTML = `
-            <div class="bg-slate-50/80 rounded-r-xl border-l-4 border-slate-300 p-3.5 sm:p-4 flex items-center justify-between text-xs sm:text-sm">
+            <div class="bg-slate-50/80 rounded-r-lg border-l-4 border-slate-300 p-3.5 sm:p-4 flex items-center justify-between text-xs sm:text-sm">
               <span class="text-slate-600 font-bold">お申し込み締切</span>
               <span class="font-bold text-slate-500">準備中（受付開始まで今しばらくお待ちください）</span>
             </div>
           `;
 
           ctaContainer.innerHTML = `
-            <button disabled class="w-full py-4 px-6 rounded-2xl bg-slate-100 text-slate-400 border border-slate-200 font-bold text-sm sm:text-base cursor-not-allowed">
+            <button disabled class="w-full py-4 px-6 rounded-lg bg-slate-100 text-slate-400 border border-slate-200 font-bold text-sm sm:text-base cursor-not-allowed">
               ${r.monthName}は現在準備中です
             </button>
           `;
@@ -2465,9 +2554,9 @@
           badge.textContent = r.status === 'active' ? `${r.monthName} 受付中` : `${r.monthName} 申込可`;
           
           deadlineContainer.innerHTML = `
-            <div class="bg-slate-50/80 rounded-r-xl border-l-4 border-emerald-600 p-4 flex items-center justify-between">
+            <div class="bg-slate-50/80 rounded-r-lg border-l-4 border-emerald-600 p-4 flex items-center justify-between">
               <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-xl shrink-0 shadow-2xs">
+                <div class="w-10 h-10 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-xl shrink-0 shadow-2xs">
                   ⏳
                 </div>
                 <div>
@@ -2489,7 +2578,7 @@
           `;
 
           ctaContainer.innerHTML = `
-            <a href="apply.html?grade=${currentGrade}&month=${r.monthNum}" class="w-full py-4 px-6 rounded-2xl bg-orange-500 hover:bg-orange-600 text-white font-bold text-base sm:text-lg flex items-center justify-center gap-2 shadow-lg shadow-orange-500/25 hover:shadow-orange-500/35 active:scale-[0.98] transition-all hover:-translate-y-0.5">
+            <a href="apply.html?grade=${currentGrade}&month=${r.monthNum}" class="w-full py-4 px-6 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-bold text-base sm:text-lg flex items-center justify-center gap-2 shadow-lg shadow-orange-500/25 hover:shadow-orange-500/35 active:scale-[0.98] transition-all hover:-translate-y-0.5">
               <span>${r.monthName}をWEBで申し込む</span>
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
             </a>
@@ -2508,11 +2597,28 @@
     function scrollFeaturesCarousel(direction) {
       const carousel = document.getElementById('features-carousel');
       if (!carousel) return;
-      const card = carousel.querySelector('.features-card');
-      const cardWidth = card ? card.getBoundingClientRect().width : 700;
-      const gap = window.innerWidth >= 768 ? 32 : 24;
-      carousel.scrollBy({ left: (cardWidth + gap) * direction, behavior: 'smooth' });
+      const cards = carousel.querySelectorAll('.features-card');
+      if (cards.length === 0) return;
+
+      const card = cards[0];
+      const cardRect = card.getBoundingClientRect();
+      const style = window.getComputedStyle(carousel);
+      const gap = parseFloat(style.gap) || (window.innerWidth >= 768 ? 32 : 16);
+      const scrollStep = cardRect.width + gap;
+
+      carousel.scrollBy({ left: scrollStep * direction, behavior: 'smooth' });
     }
+    window.scrollFeaturesCarousel = scrollFeaturesCarousel;
+
+    function goToFeaturesCard(index) {
+      const carousel = document.getElementById('features-carousel');
+      if (!carousel) return;
+      const cards = carousel.querySelectorAll('.features-card');
+      if (cards[index]) {
+        cards[index].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      }
+    }
+    window.goToFeaturesCard = goToFeaturesCard;
 
     function updateFeaturesCarouselState() {
       const carousel = document.getElementById('features-carousel');
@@ -2523,14 +2629,21 @@
       const cards = carousel.querySelectorAll('.features-card');
       if (cards.length === 0) return;
 
-      const card = cards[0];
-      const cardWidth = card.getBoundingClientRect().width;
-      const gap = window.innerWidth >= 768 ? 32 : 24;
-      const itemTotalWidth = cardWidth + gap;
-      const activeIndex = Math.min(
-        cards.length - 1,
-        Math.max(0, Math.round(scrollLeft / itemTotalWidth))
-      );
+      // カルーセル中央位置との距離比較でアクティブカードを特定
+      const carouselRect = carousel.getBoundingClientRect();
+      const carouselCenterX = carouselRect.left + carouselRect.width / 2;
+
+      let activeIndex = 0;
+      let minDistance = Infinity;
+      cards.forEach((c, idx) => {
+        const r = c.getBoundingClientRect();
+        const cardCenterX = r.left + r.width / 2;
+        const dist = Math.abs(carouselCenterX - cardCenterX);
+        if (dist < minDistance) {
+          minDistance = dist;
+          activeIndex = idx;
+        }
+      });
 
       // アクティブカードの控えめな差別化（枠線の太さは変えず、上品に枠線色と影を整える）
       cards.forEach((c, idx) => {
@@ -2543,40 +2656,37 @@
         }
       });
 
-      // ドットインジケーター（スマホ向け）
+      // Apple風ドットインジケーター（アクティブ時は細長いカプセル型）
       const dotsContainer = document.getElementById('features-dots');
       if (dotsContainer) {
         const dots = dotsContainer.children;
         for (let i = 0; i < dots.length; i++) {
           if (i === activeIndex) {
-            dots[i].className = 'w-4 h-1.5 rounded-full bg-brand-green transition-all';
+            dots[i].className = 'feature-dot w-5 h-2 rounded-full bg-brand-green transition-all duration-300 cursor-pointer shadow-2xs';
           } else {
-            dots[i].className = 'w-1.5 h-1.5 rounded-full bg-slate-300 transition-all';
+            dots[i].className = 'feature-dot w-2 h-2 rounded-full bg-slate-400/60 hover:bg-slate-500 transition-all duration-300 cursor-pointer';
           }
         }
       }
 
-      // PC矢印ボタンの活性・非活性状態
-      const prevBtn = document.getElementById('features-prev-btn');
-      const nextBtn = document.getElementById('features-next-btn');
-      if (prevBtn) {
-        if (scrollLeft <= 10) {
-          prevBtn.classList.add('opacity-30', 'cursor-not-allowed', 'pointer-events-none');
-          prevBtn.classList.remove('hover:bg-slate-50', 'active:bg-slate-100');
+      // 左右矢印ボタンの活性・非活性状態（PCおよびApple風フローティングバー両方）
+      const isAtStart = scrollLeft <= 15;
+      const isAtEnd = scrollLeft >= maxScrollLeft - 15;
+
+      const updateBtn = (btn, isDisabled) => {
+        if (!btn) return;
+        btn.disabled = isDisabled;
+        if (isDisabled) {
+          btn.classList.add('opacity-30', 'cursor-not-allowed', 'pointer-events-none');
         } else {
-          prevBtn.classList.remove('opacity-30', 'cursor-not-allowed', 'pointer-events-none');
-          prevBtn.classList.add('hover:bg-slate-50', 'active:bg-slate-100');
+          btn.classList.remove('opacity-30', 'cursor-not-allowed', 'pointer-events-none');
         }
-      }
-      if (nextBtn) {
-        if (scrollLeft >= maxScrollLeft - 10) {
-          nextBtn.classList.add('opacity-30', 'cursor-not-allowed', 'pointer-events-none');
-          nextBtn.classList.remove('hover:bg-slate-50', 'active:bg-slate-100');
-        } else {
-          nextBtn.classList.remove('opacity-30', 'cursor-not-allowed', 'pointer-events-none');
-          nextBtn.classList.add('hover:bg-slate-50', 'active:bg-slate-100');
-        }
-      }
+      };
+
+      updateBtn(document.getElementById('features-prev-btn'), isAtStart);
+      updateBtn(document.getElementById('features-next-btn'), isAtEnd);
+      updateBtn(document.getElementById('features-sp-prev-btn'), isAtStart);
+      updateBtn(document.getElementById('features-sp-next-btn'), isAtEnd);
     }
 
     // =========================================================================
@@ -2590,7 +2700,7 @@
         sub: "出題傾向・難易度・問題用紙の体裁まで岡山県入試を精密再現",
         desc: "岡山の県立高校入試を長年研究。記述量や配点バランスまで本番そっくりです。単なる知識の暗記では解けない、岡山県特有の「思考力・判断力・表現力」を問う記述問題やグラフ・資料分析問題にも徹底して合わせています。",
         featuresHtml: `
-          <div class="p-3 rounded-2xl bg-slate-50/80 border border-slate-200/70 shadow-2xs space-y-0.5">
+          <div class="p-3 rounded-lg bg-slate-50/80 border border-slate-200/70 shadow-2xs space-y-0.5">
             <div class="flex items-center gap-1.5 font-bold text-slate-900">
               <span class="px-1.5 py-0.2 rounded bg-brand-green text-white text-[10px] font-bold">中3生</span>
               <span class="text-xs font-bold">岡山県公立高校入試の完全シミュレーション</span>
@@ -2599,7 +2709,7 @@
               一般入試の出題形式・配点・難易度を完全再現。実物さながらのB4判・横綴じ冊子で本番当日の時間配分や独特の解答用紙に慣れることができます。
             </p>
           </div>
-          <div class="p-2.5 rounded-xl bg-emerald-50/60 border border-emerald-200/70 flex items-center justify-between">
+          <div class="p-2.5 rounded-lg bg-emerald-50/60 border border-emerald-200/70 flex items-center justify-between">
             <span class="text-[11px] font-bold text-brand-green">★ 幾何図形の証明記述・理科の実験手順論述・英語の条件英作文まで完全準拠</span>
             <span class="text-[10px] font-bold text-emerald-800 shrink-0 ml-2">県内最多クラス</span>
           </div>
@@ -2613,7 +2723,7 @@
         sub: "教科書の基礎から応用・新傾向の思考力問題まで高校入試に向けた早期の弱点発見に最適",
         desc: "教科書の基礎から応用・新傾向の思考力問題まで。高校入試に向けた早期の弱点発見に最適です。定期テストの暗記学習だけでは見えてこない、高校入試に必要な初見問題への対応力と真の学力を客観的に測ります。",
         featuresHtml: `
-          <div class="p-3 rounded-2xl bg-slate-50/80 border border-slate-200/70 shadow-2xs space-y-0.5">
+          <div class="p-3 rounded-lg bg-slate-50/80 border border-slate-200/70 shadow-2xs space-y-0.5">
             <div class="flex items-center gap-1.5 font-bold text-slate-900">
               <span class="px-1.5 py-0.2 rounded bg-emerald-100 text-brand-green text-[10px] font-bold">中1・2生</span>
               <span class="text-xs font-bold">学力診断型（標準〜応用構成・初見問題対応力・つまずき単元特定）</span>
@@ -2622,7 +2732,7 @@
               既習範囲から出題されるため、未習内容に不安を感じることなく現在の真の定着度と弱点分野を客観的に明確化できます。
             </p>
           </div>
-          <div class="p-2.5 rounded-xl bg-white border border-slate-200/70 shadow-2xs flex items-center justify-between">
+          <div class="p-2.5 rounded-lg bg-white border border-slate-200/70 shadow-2xs flex items-center justify-between">
             <span class="text-[11px] font-bold text-slate-700">★ 教科書の基礎から新傾向の思考力問題までバランス出題</span>
             <span class="text-[10px] font-bold text-brand-green shrink-0 ml-2">早期の弱点克服</span>
           </div>
@@ -2636,7 +2746,7 @@
         sub: "公立中高一貫3校特有の「複数資料読み取り・会話文抽出・作文記述」を忠実にシミュレート",
         desc: "岡山県立中高一貫3校特有の「複数資料読み取り・会話文抽出・作文記述」を忠実にシミュレート。適性I・適性IIの長文資料読み取りやグラフ分析、400字作文の条件記述枠まで本番そっくりにシミュレートします。",
         featuresHtml: `
-          <div class="p-3 rounded-2xl bg-slate-50/80 border border-slate-200/70 shadow-2xs space-y-0.5">
+          <div class="p-3 rounded-lg bg-slate-50/80 border border-slate-200/70 shadow-2xs space-y-0.5">
             <div class="flex items-center gap-1.5 font-bold text-slate-900">
               <span class="px-1.5 py-0.2 rounded bg-amber-500 text-white text-[10px] font-bold">小6生</span>
               <span class="text-xs font-bold">公立中高一貫型（適性I・適性II、400字作文・要約記述枠、プロ添削対応）</span>
@@ -2645,7 +2755,7 @@
               適性検査特有の長いリード文と図表・グラフの読み解き、指定字数・段落構成の条件作文を本番形式で実戦演習できます。
             </p>
           </div>
-          <div class="p-2.5 rounded-xl bg-amber-50/80 border border-amber-200/80 flex items-center justify-between">
+          <div class="p-2.5 rounded-lg bg-amber-50/80 border border-amber-200/80 flex items-center justify-between">
             <span class="text-[11px] font-bold text-amber-900">★ 記述答案・400字作文はプロ講師による個別添削付き</span>
             <span class="text-[10px] font-bold text-amber-700 shrink-0 ml-2">県立3校完全対応</span>
           </div>
@@ -2662,7 +2772,7 @@
         desc: "個人成績表は、単なる点数や全県偏差値の提示にとどまりません。公立高校の選抜制度（当日点＋内申点の総合評価）に対応し、本番入試に最も近い高精度の合否可能性（A〜E判定）を算出します。",
         miniKarteHtml: `
           <div class="grid grid-cols-2 gap-2">
-            <div class="p-2.5 rounded-xl bg-slate-50/80 border border-slate-200/70 shadow-2xs">
+            <div class="p-2.5 rounded-lg bg-slate-50/80 border border-slate-200/70 shadow-2xs">
               <div class="flex items-center justify-between">
                 <span class="font-bold text-brand-green block text-[11px]">岡山朝日高校 A判定</span>
                 <span class="px-1.5 py-0.2 rounded bg-brand-green text-white text-[9px] font-bold">可能性85%以上</span>
@@ -2677,7 +2787,7 @@
                 </div>
               </div>
             </div>
-            <div class="p-2.5 rounded-xl bg-slate-50/80 border border-slate-200/70 shadow-2xs">
+            <div class="p-2.5 rounded-lg bg-slate-50/80 border border-slate-200/70 shadow-2xs">
               <div class="flex items-center justify-between">
                 <span class="font-bold text-slate-800 block text-[11px]">志望者内順位</span>
                 <span class="text-[10px] font-bold text-brand-green">28位 / 342人</span>
@@ -2688,7 +2798,7 @@
               </div>
             </div>
           </div>
-          <div class="p-3 rounded-2xl bg-emerald-50/60 border border-emerald-200/80 flex items-center justify-between cursor-pointer hover:bg-emerald-50 transition-colors" onclick="openReportModal('c3')">
+          <div class="p-3 rounded-lg bg-emerald-50/60 border border-emerald-200/80 flex items-center justify-between cursor-pointer hover:bg-emerald-50 transition-colors" onclick="openReportModal('c3')">
             <div>
               <span class="font-bold text-emerald-800 block text-xs">志望校判定（当日点＋内申点総合判定）</span>
               <p class="text-[11px] text-slate-700 mt-0.5 leading-snug">県内ほぼ全ての公立・私立・国立に対応。一般・特別入試それぞれで精密判定。</p>
@@ -2700,7 +2810,7 @@
           title: "中3生｜学力診断シート（成績カルテ）見本",
           desc: "試験後にお届けする個人カルテです。単なる点数や偏差値だけでなく、志望校合格までの具体的な「あと何点」や優先して克服すべき単元がひと目で分かります。",
           bodyHtml: `
-            <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs">
+            <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-xs">
               <div class="text-[11px] font-bold text-slate-400 mb-2">総合学力データ（5教科合計）</div>
               <div class="grid grid-cols-3 gap-2 text-center">
                 <div class="border-r border-slate-100">
@@ -2718,7 +2828,7 @@
               </div>
             </div>
 
-            <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs space-y-2">
+            <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-xs space-y-2">
               <div class="text-[11px] font-bold text-slate-400 mb-1">公立高校 志望校判定結果（内申点＋当日点総合判定）</div>
               
               <div class="flex items-center justify-between p-2.5 rounded-lg bg-emerald-50/70 border border-emerald-100">
@@ -2746,7 +2856,7 @@
               </div>
             </div>
 
-            <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs">
+            <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-xs">
               <div class="text-[11px] font-bold text-slate-400 mb-2">教科別診断・弱点単元カルテ</div>
               <div class="space-y-2 text-[11px]">
                 <div class="flex items-start gap-2.5">
@@ -2769,7 +2879,7 @@
         desc: "教科書の単元ごとの定着度を県内平均と比較。中1・2のうちに克服しておくべき優先復習単元を具体的に提示し、日々の自学自習や定期テスト対策へ直結させます。",
         miniKarteHtml: `
           <div class="grid grid-cols-2 gap-2">
-            <div class="p-2.5 rounded-xl bg-slate-50/80 border border-slate-200/70 shadow-2xs">
+            <div class="p-2.5 rounded-lg bg-slate-50/80 border border-slate-200/70 shadow-2xs">
               <div class="flex items-center justify-between">
                 <span class="font-bold text-brand-green block text-[11px]">総合学力到達度 S</span>
                 <span class="px-1.5 py-0.2 rounded bg-emerald-100 text-brand-green text-[9px] font-bold">上位10%</span>
@@ -2785,12 +2895,12 @@
                 </div>
               </div>
             </div>
-            <div class="p-2.5 rounded-xl bg-slate-50/80 border border-slate-200/70 shadow-2xs">
+            <div class="p-2.5 rounded-lg bg-slate-50/80 border border-slate-200/70 shadow-2xs">
               <span class="font-bold text-slate-800 block text-[11px]">中1・2総復習優先単元カルテ</span>
               <p class="text-[10px] text-slate-600 mt-1 leading-snug">要克服：<strong class="font-bold text-slate-900 block truncate">数学「方程式の応用」</strong></p>
             </div>
           </div>
-          <div class="p-3 rounded-2xl bg-white border border-slate-200/80 shadow-2xs flex items-center justify-between cursor-pointer hover:bg-slate-50 transition-colors" onclick="openReportModal('c12')">
+          <div class="p-3 rounded-lg bg-white border border-slate-200/80 shadow-2xs flex items-center justify-between cursor-pointer hover:bg-slate-50 transition-colors" onclick="openReportModal('c12')">
             <div>
               <span class="font-bold text-slate-900 block text-xs">単元別到達度・県内客観順位判定</span>
               <p class="text-[11px] text-slate-700 mt-0.5 leading-snug">定期テストでは見えない県内全体での位置と、次学年に向けた弱点を早期発見。</p>
@@ -2802,7 +2912,7 @@
           title: "中1・2生｜学力診断シート（成績カルテ）見本",
           desc: "教科書の基礎から応用まで、単元ごとの定着度を県内平均と比較。現時点での到達度と、高校入試に向けた「つまずき単元」がひと目で分かります。",
           bodyHtml: `
-            <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs">
+            <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-xs">
               <div class="text-[11px] font-bold text-slate-400 mb-2">総合学力到達度データ</div>
               <div class="grid grid-cols-3 gap-2 text-center">
                 <div class="border-r border-slate-100">
@@ -2820,7 +2930,7 @@
               </div>
             </div>
 
-            <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs space-y-2">
+            <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-xs space-y-2">
               <div class="text-[11px] font-bold text-slate-400 mb-1">志望校目安判定（現時点での学力到達水準）</div>
               
               <div class="flex items-center justify-between p-2.5 rounded-lg bg-emerald-50/70 border border-emerald-100">
@@ -2848,7 +2958,7 @@
               </div>
             </div>
 
-            <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs">
+            <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-xs">
               <div class="text-[11px] font-bold text-slate-400 mb-2">中1・2総復習優先単元カルテ</div>
               <div class="space-y-2 text-[11px]">
                 <div class="flex items-start gap-2.5">
@@ -2871,7 +2981,7 @@
         desc: "岡山県立中高一貫3校特有の適性検査I・IIに加え、作文・論述問題に対するプロ添削者からの具体的講評を掲載。部分点基準や減点要因を明確にし、合格に必要な記述力を可視化します。",
         miniKarteHtml: `
           <div class="grid grid-cols-2 gap-2">
-            <div class="p-2.5 rounded-xl bg-slate-50/80 border border-slate-200/70 shadow-2xs">
+            <div class="p-2.5 rounded-lg bg-slate-50/80 border border-slate-200/70 shadow-2xs">
               <div class="flex items-center justify-between">
                 <span class="font-bold text-brand-green block text-[11px]">岡山県立操山中学校 B判定</span>
                 <span class="px-1.5 py-0.2 rounded bg-amber-100 text-amber-800 text-[9px] font-bold">可能性70%以上</span>
@@ -2886,12 +2996,12 @@
                 </div>
               </div>
             </div>
-            <div class="p-2.5 rounded-xl bg-slate-50/80 border border-slate-200/70 shadow-2xs">
+            <div class="p-2.5 rounded-lg bg-slate-50/80 border border-slate-200/70 shadow-2xs">
               <span class="font-bold text-slate-800 block text-[11px]">作文・論述添削講評</span>
               <p class="text-[10px] text-slate-600 mt-1 leading-snug">「要約の字数制限と条件設定の減点箇所」</p>
             </div>
           </div>
-          <div class="p-3 rounded-2xl bg-amber-50/80 border border-amber-200/80 flex items-center justify-between cursor-pointer hover:bg-amber-100/70 transition-colors" onclick="openReportModal('p6')">
+          <div class="p-3 rounded-lg bg-amber-50/80 border border-amber-200/80 flex items-center justify-between cursor-pointer hover:bg-amber-100/70 transition-colors" onclick="openReportModal('p6')">
             <div>
               <span class="font-bold text-amber-900 block text-xs">操山・大安寺・天城の記述講評 小6適性検査判定カルテ</span>
               <p class="text-[11px] text-slate-700 mt-0.5 leading-snug">プロ添削者による論述講評で、合格基準に達するための減点防止策がわかる。</p>
@@ -2903,7 +3013,7 @@
           title: "小6生｜公立中高一貫適性検査対策模試 学力診断シート見本",
           desc: "岡山県立中高一貫3校（操山・大安寺・天城）の適性検査I・IIおよび作文の得点バランスと、プロ添削者による記述講評を詳細にフィードバックします。",
           bodyHtml: `
-            <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs">
+            <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-xs">
               <div class="text-[11px] font-bold text-slate-400 mb-2">適性検査 得点バランス（200点満点）</div>
               <div class="grid grid-cols-3 gap-2 text-center">
                 <div class="border-r border-slate-100">
@@ -2921,7 +3031,7 @@
               </div>
             </div>
 
-            <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs space-y-2">
+            <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-xs space-y-2">
               <div class="text-[11px] font-bold text-slate-400 mb-1">公立中高一貫校 志望校判定結果</div>
               
               <div class="flex items-center justify-between p-2.5 rounded-lg bg-amber-50/70 border border-amber-200/80">
@@ -2949,7 +3059,7 @@
               </div>
             </div>
 
-            <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs">
+            <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-xs">
               <div class="text-[11px] font-bold text-slate-400 mb-2">作文・論述添削 プロ講評カルテ</div>
               <div class="space-y-2 text-[11px]">
                 <div class="flex items-start gap-2.5">
@@ -2974,7 +3084,7 @@
         sub: "模試は解いた後が最重要。減点されない記述法と途中式を完全図解",
         desc: "模試の最大の価値は「受験後の解き直し」にあります。単に正解を示すだけでなく、「なぜその解法を選択するのか」「部分点がもらえる採点基準や落とし穴はどこか」を徹底解説した別冊を配付。自宅学習で疑問を残しません。",
         featuresHtml: `
-          <div class="p-3 rounded-2xl bg-slate-50/80 border border-slate-200/70 shadow-2xs space-y-0.5">
+          <div class="p-3 rounded-lg bg-slate-50/80 border border-slate-200/70 shadow-2xs space-y-0.5">
             <div class="flex items-center gap-1.5 font-bold text-slate-900">
               <span class="material-symbols-outlined text-sm text-[#C85A32]">check_circle</span>
               <span class="text-xs font-bold">疑問を残さない途中式・ステップ解説と重要公式</span>
@@ -2983,7 +3093,7 @@
               数学の途中式や理科の計算過程、英語の構文分析、国語の読解ポイントを丁寧に図解。復習時に理解が進む構成です。
             </p>
           </div>
-          <div class="p-3 rounded-2xl bg-slate-50/80 border border-slate-200/70 shadow-2xs space-y-0.5">
+          <div class="p-3 rounded-lg bg-slate-50/80 border border-slate-200/70 shadow-2xs space-y-0.5">
             <div class="flex items-center gap-1.5 font-bold text-slate-900">
               <span class="material-symbols-outlined text-sm text-[#C85A32]">check_circle</span>
               <span class="text-xs font-bold">自学自習を完結させる、圧倒的に詳しい網羅的な解説</span>
@@ -3001,7 +3111,7 @@
         sub: "間違えた原因がすぐわかる！次回の定期テスト・実力テストに直結",
         desc: "中1・2の学習で最も大切なのは、つまずいた単元をそのまま放置しないことです。基礎事項の確認から標準・応用問題の着眼点まで、順を追って理解できる親切な解説で自学自習を強力にバックアップします。",
         featuresHtml: `
-          <div class="p-3 rounded-2xl bg-slate-50/80 border border-slate-200/70 shadow-2xs space-y-0.5">
+          <div class="p-3 rounded-lg bg-slate-50/80 border border-slate-200/70 shadow-2xs space-y-0.5">
             <div class="flex items-center gap-1.5 font-bold text-slate-900">
               <span class="material-symbols-outlined text-sm text-brand-green">check_circle</span>
               <span class="text-xs font-bold">つまずきの原因がすぐわかる途中式・基本事項のまとめ</span>
@@ -3010,7 +3120,7 @@
               「どこで計算を間違えたか」「どの公式・文法を忘れていたか」が一目でわかる構成。定期テスト前の総復習にも役立ちます。
             </p>
           </div>
-          <div class="p-3 rounded-2xl bg-slate-50/80 border border-slate-200/70 shadow-2xs space-y-0.5">
+          <div class="p-3 rounded-lg bg-slate-50/80 border border-slate-200/70 shadow-2xs space-y-0.5">
             <div class="flex items-center gap-1.5 font-bold text-slate-900">
               <span class="material-symbols-outlined text-sm text-brand-green">check_circle</span>
               <span class="text-xs font-bold">次につながる類題演習ヒントと学習アドバイス</span>
@@ -3028,7 +3138,7 @@
         sub: "資料読み取りの着眼点と400字作文の合格基準を徹底ガイダンス",
         desc: "答えが一つではない適性検査だからこそ、正解に至る「思考の道筋（ロジック）」を丁寧に言語化。なぜその数値を読み取るのか、どのように条件を満たして論述・作文をまとめるのかをわかりやすく指南します。",
         featuresHtml: `
-          <div class="p-3 rounded-2xl bg-slate-50/80 border border-slate-200/70 shadow-2xs space-y-0.5">
+          <div class="p-3 rounded-lg bg-slate-50/80 border border-slate-200/70 shadow-2xs space-y-0.5">
             <div class="flex items-center gap-1.5 font-bold text-slate-900">
               <span class="material-symbols-outlined text-sm text-amber-600">check_circle</span>
               <span class="text-xs font-bold">複数資料・グラフの読み解き手順と条件整理を可視化</span>
@@ -3037,7 +3147,7 @@
               適性検査特有の長い会話文や図表から、必要な情報を取り出して立式・記述するプロセスをステップごとに図解解説します。
             </p>
           </div>
-          <div class="p-3 rounded-2xl bg-slate-50/80 border border-slate-200/70 shadow-2xs space-y-0.5">
+          <div class="p-3 rounded-lg bg-slate-50/80 border border-slate-200/70 shadow-2xs space-y-0.5">
             <div class="flex items-center gap-1.5 font-bold text-slate-900">
               <span class="material-symbols-outlined text-sm text-amber-600">check_circle</span>
               <span class="text-xs font-bold">作文・記述の採点ポイントと模範解答・プロ添削の講評</span>
@@ -3536,7 +3646,7 @@
         const detailUrl = `detail.html?id=${encodeURIComponent(post.id)}`;
 
         return `
-          <article class="bg-slate-50 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all mb-3 overflow-hidden cursor-pointer group block">
+          <article class="bg-slate-50 rounded-lg border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all mb-3 overflow-hidden cursor-pointer group block">
             <a href="${detailUrl}" class="flex flex-col sm:flex-row sm:items-center justify-between p-4 sm:p-5 gap-3 sm:gap-4 w-full">
               <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 flex-1 min-w-0">
                 <!-- メタ領域: [NEW] [日付] [カテゴリバッジ] -->
@@ -3650,7 +3760,7 @@
       if (!container) return;
 
       container.innerHTML = faqData.map((item) => `
-        <details class="group bg-white rounded-2xl shadow-sm hover:shadow-md border border-slate-200/80 mb-3 overflow-hidden transition-all duration-200">
+        <details class="group bg-white rounded-lg shadow-sm hover:shadow-md border border-slate-200/80 mb-3 overflow-hidden transition-all duration-200">
           <summary class="flex justify-between items-center p-4 sm:p-5 font-bold text-slate-800 cursor-pointer list-none select-none text-sm sm:text-base group-hover:text-brand-green transition-colors gap-3 bg-white hover:bg-slate-50/50">
             <div class="flex items-start gap-3 sm:gap-3.5 min-w-0">
               <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-emerald-50 text-brand-green font-bold text-xs sm:text-sm flex items-center justify-center shrink-0 shadow-2xs border border-emerald-200/60 mt-0.5 group-hover:scale-105 transition-transform">
@@ -3739,6 +3849,88 @@
     window.addEventListener('hashchange', initDeepLink);
     window.addEventListener('popstate', initDeepLink);
 
+    // =======================================================================
+    // スマホ用 追従申し込みボタン（Sticky CTA）動的表示制御
+    // =======================================================================
+    function checkFloatingCtaVisibility() {
+      const ctaBar = document.getElementById('floating-cta-bar');
+      if (!ctaBar) return;
+
+      const scheduleSec = document.getElementById('schedule-selector');
+      const studentVoicesSec = document.getElementById('student-voices');
+      const vpHeight = window.innerHeight || document.documentElement.clientHeight;
+
+      // 1. 出現トリガーセクションの特定（生徒の声セクション、非表示時は日程選択の次セクション）
+      let triggerSec = studentVoicesSec;
+      if (!triggerSec || triggerSec.classList.contains('hidden') || triggerSec.offsetHeight === 0) {
+        triggerSec = scheduleSec ? scheduleSec.nextElementSibling : null;
+      }
+
+      // 2. まだ「生徒の声（検討・共感ゾーン）」に到達していない場合は非表示
+      let hasReachedTrigger = false;
+      if (triggerSec) {
+        const triggerRect = triggerSec.getBoundingClientRect();
+        // セクション上部が画面内に入ってきた時（画面下部から20%以内）
+        if (triggerRect.top <= vpHeight * 0.85) {
+          hasReachedTrigger = true;
+        }
+      }
+
+      // 3. 「模試日程・出題範囲・申し込み（#schedule-selector）」エリア内にいる場合は非表示
+      // （熟読・検討中、またはすでに画面内に申込ボタンが存在するため重複防止）
+      let isInsideSchedule = false;
+      if (scheduleSec) {
+        const schedRect = scheduleSec.getBoundingClientRect();
+        if (schedRect.top < vpHeight * 0.75 && schedRect.bottom > 80) {
+          isInsideSchedule = true;
+        }
+      }
+
+      // 4. お申し込みフォーム（サマリー含む）エリア内（もし存在する場合）
+      let isInsideApply = false;
+      const applyContainers = document.querySelectorAll('#apply-form, [data-section="apply-summary"]');
+      applyContainers.forEach(el => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < vpHeight && rect.bottom > 0) {
+          isInsideApply = true;
+        }
+      });
+
+      // 表示判定: 生徒の声以降に到達しており、かつ模試詳細エリア・申込フォーム内にいないこと
+      const shouldShow = hasReachedTrigger && !isInsideSchedule && !isInsideApply;
+
+      if (shouldShow) {
+        ctaBar.classList.remove('translate-y-full', 'opacity-0', 'pointer-events-none');
+        ctaBar.classList.add('translate-y-0', 'opacity-100', 'pointer-events-auto');
+      } else {
+        ctaBar.classList.remove('translate-y-0', 'opacity-100', 'pointer-events-auto');
+        ctaBar.classList.add('translate-y-full', 'opacity-0', 'pointer-events-none');
+      }
+    }
+    window.checkFloatingCtaVisibility = checkFloatingCtaVisibility;
+
+    function initFloatingCtaVisibility() {
+      window.addEventListener('scroll', checkFloatingCtaVisibility, { passive: true });
+      window.addEventListener('resize', checkFloatingCtaVisibility, { passive: true });
+
+      const scheduleSec = document.getElementById('schedule-selector');
+      const studentVoicesSec = document.getElementById('student-voices');
+
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver(() => {
+          checkFloatingCtaVisibility();
+        }, {
+          threshold: [0, 0.2, 0.5, 0.8, 1.0]
+        });
+
+        if (scheduleSec) observer.observe(scheduleSec);
+        if (studentVoicesSec) observer.observe(studentVoicesSec);
+      }
+
+      // 初期実行
+      checkFloatingCtaVisibility();
+    }
+
     // 初期化 & 各種コンポーネント初期化
     window.addEventListener('DOMContentLoaded', () => {
       let initialGrade = 'c3';
@@ -3767,6 +3959,9 @@
         updateFeaturesCarouselState();
       }
 
+      // スマホ用 追従申し込みボタン動的制御の初期化
+      initFloatingCtaVisibility();
+
       // ディープリンク（?grade=...&month=...#schedule-selector）連動実行
       initDeepLink();
 
@@ -3780,5 +3975,6 @@
       renderFaq();
     });
   </script>
+  <script defer src="js/floating-cta.js"></script>
 </body>
 </html>

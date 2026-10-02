@@ -95,7 +95,7 @@
 
       return `
         <article class="border-b border-gray-200/80 last:border-b-0 transition-colors group">
-          <a href="${detailUrl}" class="flex flex-col sm:flex-row sm:items-center justify-between py-3.5 sm:py-4 gap-2 sm:gap-4 cursor-pointer hover:bg-slate-50/50 sm:-mx-3 sm:px-3 rounded-lg transition-colors">
+          <a href="${detailUrl}" class="flex items-center justify-between py-3.5 sm:py-4 gap-2 sm:gap-4 cursor-pointer hover:bg-slate-50/50 sm:-mx-3 sm:px-3 rounded-lg transition-colors">
             <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 flex-1 min-w-0">
               <!-- メタ領域: [NEW] [日付] [カテゴリバッジ] -->
               <div class="flex items-center gap-2 shrink-0">
@@ -116,7 +116,7 @@
             </div>
 
             <!-- 右端アクション: 詳細を読む (PCで表示) -->
-            <div class="flex items-center gap-1 text-xs font-bold text-secondary shrink-0 group-hover:translate-x-0.5 transition-transform self-end sm:self-center">
+            <div class="flex items-center gap-1 text-xs font-bold text-secondary shrink-0 group-hover:translate-x-0.5 transition-transform">
               <span>詳細を読む</span>
               <span class="material-symbols-outlined text-[16px]">chevron_right</span>
             </div>

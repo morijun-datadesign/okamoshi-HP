@@ -2,7 +2,7 @@
 <html lang="ja" class="scroll-smooth">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <title>個人申込の方 お問い合わせ | 岡山県統一模擬試験（おかもし）</title>
   <meta name="description" content="岡山県統一模擬試験（おかもし）のお問い合わせ窓口。個人でのWebお申し込みのご案内から、塾・学校関係者様の団体受験・導入に関するご相談まで承っております。">
   <link rel="canonical" href="https://okamoshi.pages.dev/contact/individual/">
@@ -98,6 +98,10 @@
     };
   </script>
   <style>
+    html, body {
+      max-width: 100%;
+      overflow-x: hidden;
+    }
     /* 全セクション大見出し・中見出しのテーマカラー濃いグリーン（最優先） */
     .section-title,
     .section-heading {
@@ -109,6 +113,11 @@
       background-color: #F1F5F9 !important;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
+    }
+    /* iOS Safariフォームズーム防止（16px未満でフォーカス時に自動ズームする仕様への対策） */
+    input[type="text"], input[type="tel"], input[type="email"], input[type="number"],
+    input[type="password"], input[type="search"], input[type="url"], select, textarea {
+      font-size: 16px !important;
     }
     #nav-contact-container { position: relative; }
     #nav-contact-container:hover #nav-contact-dropdown,

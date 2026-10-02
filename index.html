@@ -2,7 +2,7 @@
 <html lang="ja" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <title>岡山県統一模擬試験・適性検査対策模試【おかもし】公式</title>
   <meta name="description" content="岡山県内の高校受験・中高一貫校受験なら「岡山県統一模擬試験（おかもし）」。県内最大級の母集団データと精緻な合否判定で、志望校合格への確かな現在地を弾き出します。日程確認やオンラインお申し込みはこちら。">
   <link rel="canonical" href="https://okamoshi.pages.dev/">
@@ -84,12 +84,21 @@
   </script>
 
   <style>
+    html, body {
+      max-width: 100%;
+      overflow-x: hidden;
+    }
     body {
       font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
       color: #1e293b;
       background-color: #F1F5F9 !important;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
+    }
+    /* iOS Safariフォームズーム防止（16px未満でフォーカス時に自動ズームする仕様への対策） */
+    input[type="text"], input[type="tel"], input[type="email"], input[type="number"],
+    input[type="password"], input[type="search"], input[type="url"], select, textarea {
+      font-size: 16px !important;
     }
     /* 全セクション大見出し・中見出しのテーマカラー濃いグリーン（最優先） */
     .section-title,
@@ -725,11 +734,11 @@
           <div class="md:hidden flex items-center gap-2 w-full">
             <!-- 学年選択セレクト（アイコン付き） -->
             <div class="relative flex-1">
-              <select id="sp-grade-select" onchange="selectGrade(this.value)" class="w-full h-10 pl-8 pr-7 bg-slate-100 hover:bg-slate-200/80 text-slate-800 font-bold text-xs rounded-lg border border-slate-300/80 appearance-none focus:outline-none focus:ring-2 focus:ring-emerald-600/30 transition-all cursor-pointer">
-                <option value="c3" selected>中3 (高校入試対策)</option>
-                <option value="c2">中2 (公立入試基礎)</option>
-                <option value="c1">中1 (基礎・標準模試)</option>
-                <option value="p6">小6 (適性検査対策)</option>
+              <select id="sp-grade-select" onchange="selectGrade(this.value)" class="w-full h-10 pl-8 pr-7 bg-slate-100 hover:bg-slate-200/80 text-slate-800 font-bold text-base rounded-lg border border-slate-300/80 appearance-none focus:outline-none focus:ring-2 focus:ring-emerald-600/30 transition-all cursor-pointer">
+                <option value="c3" selected>中3</option>
+                <option value="c2">中2</option>
+                <option value="c1">中1</option>
+                <option value="p6">小6</option>
               </select>
               <span class="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-[16px] text-emerald-800 pointer-events-none">school</span>
               <span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-[18px] text-slate-400 pointer-events-none">expand_more</span>
@@ -737,7 +746,7 @@
 
             <!-- 月号選択セレクト（アイコン付き） -->
             <div class="relative flex-1">
-              <select id="sp-round-select" onchange="handleSpRoundSelect(this.value)" class="w-full h-10 pl-8 pr-7 bg-slate-100 hover:bg-slate-200/80 text-slate-800 font-bold text-xs rounded-lg border border-slate-300/80 appearance-none focus:outline-none focus:ring-2 focus:ring-emerald-600/30 transition-all cursor-pointer">
+              <select id="sp-round-select" onchange="handleSpRoundSelect(this.value)" class="w-full h-10 pl-8 pr-7 bg-slate-100 hover:bg-slate-200/80 text-slate-800 font-bold text-base rounded-lg border border-slate-300/80 appearance-none focus:outline-none focus:ring-2 focus:ring-emerald-600/30 transition-all cursor-pointer">
                 <!-- JSで動的生成 -->
               </select>
               <span class="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-[16px] text-emerald-800 pointer-events-none">calendar_month</span>
@@ -769,29 +778,27 @@
 
         </div>
           
-          <!-- 回タイトル & ステータス & 受講料 -->
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-5 mb-6">
-            <!-- 左側: 2行タイトルエリア（上段: バッジ2種 / 下段: 模試名称） -->
-            <div class="min-w-0">
-              <!-- 上段: 学年バッジ ＆ 実施回バッジ -->
-              <div class="flex items-center gap-2 flex-wrap">
-                <span id="badge-grade" class="inline-flex items-center px-2.5 sm:px-3 py-1 rounded-md text-xs sm:text-sm font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 shadow-2xs">
-                  中学3年生
-                </span>
-                <span id="badge-status" class="inline-flex items-center px-2.5 sm:px-3 py-1 rounded-md text-xs sm:text-sm font-bold bg-emerald-100 text-emerald-900 border border-emerald-300 shadow-2xs">
-                  10月号 受付中
-                </span>
-              </div>
-              <!-- 下段: メインタイトル -->
-              <h4 id="card-title" class="section-title text-xl sm:text-2xl lg:text-3xl font-bold text-emerald-950 tracking-tight mt-1.5" style="color: #064e3b !important;">
-                岡山県統一模擬試験
-              </h4>
-            </div>
+          <!-- 上段: 学年バッジ ＆ 実施回バッジ -->
+          <div class="flex items-center gap-2 flex-wrap mb-1.5 sm:mb-2">
+            <span id="badge-grade" class="inline-flex items-center px-2.5 sm:px-3 py-1 rounded-md text-xs sm:text-sm font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 shadow-2xs">
+              中学3年生
+            </span>
+            <span id="badge-status" class="inline-flex items-center px-2.5 sm:px-3 py-1 rounded-md text-xs sm:text-sm font-bold bg-emerald-100 text-emerald-900 border border-emerald-300 shadow-2xs">
+              10月号 受付中
+            </span>
+          </div>
 
-            <!-- 右側: 受験料エリア -->
-            <div class="text-left sm:text-right shrink-0 pt-1 sm:pt-0">
-              <span class="text-xs sm:text-sm text-slate-500 block font-bold mb-0.5">受験料（税込）</span>
-              <span id="card-price" class="text-2xl sm:text-3xl font-bold text-brand-green tracking-tight">5,500円</span>
+          <!-- タイトル＆金額エリア（スマホでも必ず1行横並び） -->
+          <div class="flex items-center justify-between gap-2 border-b border-slate-200 pb-4 sm:pb-5 mb-5 sm:mb-6">
+            <!-- 左側: メインタイトル -->
+            <h4 id="card-title" class="section-title text-lg sm:text-2xl lg:text-3xl font-bold text-emerald-950 tracking-tight truncate sm:overflow-visible shrink min-w-0" style="color: #064e3b !important;">
+              岡山県統一模擬試験
+            </h4>
+
+            <!-- 右側: 受験料エリア（折り返し防止） -->
+            <div class="flex items-baseline gap-1 sm:gap-1.5 whitespace-nowrap shrink-0">
+              <span class="text-[11px] sm:text-xs text-slate-500 font-bold">受験料 (税込)</span>
+              <span id="card-price" class="text-xl sm:text-3xl font-bold text-brand-green tracking-tight">5,500円</span>
             </div>
           </div>
 
@@ -816,10 +823,7 @@
                 <!-- 出題範囲アコーディオン -->
                 <details class="group bg-white rounded-lg border border-emerald-200/60 overflow-hidden shadow-2xs transition-all">
                   <summary class="flex justify-between items-center p-3.5 sm:p-4 font-bold text-slate-800 cursor-pointer list-none select-none bg-emerald-50/70 hover:bg-emerald-100/80 transition-colors">
-                    <span class="flex items-center gap-2.5">
-                      <span class="text-lg">📖</span>
-                      <span class="text-sm sm:text-base font-bold text-emerald-950 group-hover:text-emerald-800 transition-colors">今回の出題範囲を確認する</span>
-                    </span>
+                    <span class="text-sm sm:text-base font-bold text-emerald-950 group-hover:text-emerald-800 transition-colors">今回の出題範囲を確認する</span>
                     <span class="w-7 h-7 bg-white rounded-full flex items-center justify-center border border-emerald-200 shrink-0 shadow-2xs group-hover:border-emerald-300 transition-colors">
                       <svg class="w-4 h-4 text-emerald-800 group-open:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
                     </span>
@@ -840,10 +844,7 @@
                 <!-- 実施詳細・受験の流れアコーディオン -->
                 <details class="group bg-white rounded-lg border border-emerald-200/60 overflow-hidden shadow-2xs transition-all" id="details-accordion">
                   <summary class="flex justify-between items-center p-3.5 sm:p-4 font-bold text-slate-800 cursor-pointer list-none select-none bg-emerald-50/70 hover:bg-emerald-100/80 transition-colors">
-                    <span class="flex items-center gap-2.5">
-                      <span class="text-lg">📋</span>
-                      <span class="text-sm sm:text-base font-bold text-emerald-950 group-hover:text-emerald-800 transition-colors">実施詳細・受験の流れ（会場別・自宅）</span>
-                    </span>
+                    <span class="text-sm sm:text-base font-bold text-emerald-950 group-hover:text-emerald-800 transition-colors">実施詳細・受験の流れ（会場別・自宅）</span>
                     <span class="w-7 h-7 bg-white rounded-full flex items-center justify-center border border-emerald-200 shrink-0 shadow-2xs group-hover:border-emerald-300 transition-colors">
                       <svg class="w-4 h-4 text-emerald-800 group-open:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
                     </span>
@@ -869,65 +870,59 @@
               </div>
             </div>
 
-            <!-- 右カラム（申込締切ハイライト ＆ 個人受験について ＆ メインCTAカード） -->
+            <!-- 右カラム（申込締切＆個人受験統合カード ＆ メインCTA） -->
             <div class="lg:col-span-5 space-y-4 flex flex-col justify-between">
               
-              <!-- 1. 申込締切日カード -->
-              <div id="deadline-container">
-                <div class="bg-slate-50/80 rounded-r-lg border-l-4 border-emerald-600 p-4 flex items-center justify-between">
-                  <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-xl shrink-0 shadow-2xs">
-                      ⏳
-                    </div>
+              <!-- 統合カード（お申し込み締め切り ＆ 個人受験について） -->
+              <div class="bg-slate-50/90 rounded-lg border border-slate-200/90 overflow-hidden shadow-2xs">
+                <!-- 申込締切エリア（JS動的更新エリア） -->
+                <div id="deadline-container" class="p-4 sm:p-5 bg-white border-b border-slate-200/80">
+                  <div class="flex items-center justify-between gap-3">
                     <div>
-                      <div class="flex items-center gap-1.5">
-                        <span class="text-xs font-bold text-slate-800 tracking-wide uppercase">お申し込み締切</span>
+                      <div class="flex items-center gap-2">
+                        <span class="text-xs font-bold text-slate-600 tracking-wide">お申し込み締切</span>
                         <span class="text-[10px] font-bold text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">期日厳守</span>
                       </div>
-                      <div id="card-deadline" class="text-sm sm:text-base font-bold text-slate-800 tracking-tight mt-0.5">
+                      <div id="card-deadline" class="text-base sm:text-lg font-bold text-slate-900 tracking-tight mt-1">
                         2026年10月5日(月) 23:59まで
                       </div>
                     </div>
-                  </div>
-                  <div class="hidden sm:block text-right">
-                    <span class="text-xs sm:text-sm font-medium text-emerald-700">
-                      WEB受付中
-                    </span>
+                    <div class="text-right shrink-0">
+                      <span class="text-xs sm:text-sm font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200/60">
+                        WEB受付中
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <!-- 2. 安心・信頼のサポート保証カード（個人受験のお申し込みについて） -->
-              <div class="bg-slate-50/90 rounded-lg border border-slate-200/80 p-4 sm:p-4.5 space-y-2.5 sm:space-y-3">
-                <div class="font-bold text-sm sm:text-base text-slate-900 flex items-center gap-2">
-                  <span class="text-base sm:text-lg text-brand-green shrink-0">🛡️</span>
-                  <span>個人受験のお申し込みについて</span>
+                <!-- 個人受験のお申し込みについて -->
+                <div class="p-4 sm:p-5 space-y-3">
+                  <h6 class="font-bold text-sm sm:text-base text-slate-900 tracking-tight">
+                    個人受験のお申し込みについて
+                  </h6>
+                  <ul class="space-y-2 text-slate-700 leading-relaxed text-xs sm:text-sm">
+                    <li class="flex items-start gap-2">
+                      <span class="text-slate-400 font-bold shrink-0 mt-0.5">•</span>
+                      <span>塾に通っていない方でも1回から個人でお申し込みいただけます。</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <span class="text-slate-400 font-bold shrink-0 mt-0.5">•</span>
+                      <span>クレジットカード決済・コンビニ払い等に対応しています。</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <span class="text-slate-400 font-bold shrink-0 mt-0.5">•</span>
+                      <span>ご自宅受験の場合、問題は試験前にご自宅宛てに郵送されます。</span>
+                    </li>
+                  </ul>
                 </div>
-                <ul class="space-y-2 text-slate-700 leading-relaxed text-xs sm:text-sm">
-                  <li class="flex items-start gap-2">
-                    <span class="text-brand-green font-bold shrink-0 mt-0.5">✓</span>
-                    <span>塾に通っていない方でも1回から個人でお申し込みいただけます。</span>
-                  </li>
-                  <li class="flex items-start gap-2">
-                    <span class="text-brand-green font-bold shrink-0 mt-0.5">✓</span>
-                    <span>クレジットカード決済・コンビニ払い等に対応しています。</span>
-                  </li>
-                  <li class="flex items-start gap-2">
-                    <span class="text-brand-green font-bold shrink-0 mt-0.5">✓</span>
-                    <span>ご自宅受験の場合、問題は試験前にご自宅宛てに郵送されます。</span>
-                  </li>
-                </ul>
               </div>
 
               <!-- 3 & 4. 補足テキスト ＆ メインCTA（WEB申込ボタン） -->
-              <div id="cta-container" class="space-y-3 pt-1">
-                <!-- 3. 補足テキスト -->
-                <div class="text-center">
-                  <span class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 bg-slate-100/90 px-3.5 py-1.5 rounded-full border border-slate-200/80">
-                    <span class="w-2 h-2 rounded-full bg-secondary"></span>
-                    <span>お申込みフォーム内で今後の回をまとめて選択可能です</span>
-                  </span>
-                </div>
+              <div id="cta-container" class="space-y-2 pt-1">
+                <!-- 3. 補足テキスト（枠なしダイレクト配置） -->
+                <p class="text-xs text-gray-600 text-center font-medium">
+                  お申込みフォーム内で今後の回をまとめて選択可能です
+                </p>
 
                 <!-- 4. お申し込みボタン -->
                 <a href="apply.html" id="card-cta-btn" class="w-full py-4 px-6 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-bold text-base sm:text-lg flex items-center justify-center gap-2 shadow-lg shadow-orange-500/25 active:scale-[0.98] transition-all hover:shadow-xl hover:shadow-orange-500/35 hover:-translate-y-0.5">
@@ -1102,8 +1097,8 @@
           
           <!-- 記事 1 -->
           <article class="bg-slate-50 rounded-lg border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all mb-3 overflow-hidden cursor-pointer group block">
-            <a href="detail.html?id=leoodvgmoet" class="flex flex-col sm:flex-row sm:items-center justify-between p-4 sm:p-5 gap-3 sm:gap-4 w-full">
-              <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 flex-1 min-w-0">
+            <a href="detail.html?id=leoodvgmoet" class="flex items-center justify-between p-4 sm:p-5 gap-3 sm:gap-4 w-full">
+              <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 flex-1 min-w-0">
                 <div class="flex items-center gap-2.5 shrink-0">
                   <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#c85a32] text-white shadow-xs shrink-0 tracking-tight leading-none">NEW</span>
                   <span class="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
@@ -1118,7 +1113,7 @@
                   【8月号結果】岡山5校を志望校とした受験生が計1100名を超えました！
                 </h4>
               </div>
-              <div class="flex items-center gap-2 shrink-0 self-end sm:self-center">
+              <div class="flex items-center gap-2 shrink-0">
                 <span class="text-xs font-bold text-slate-500 group-hover:text-brand-green transition-colors hidden md:inline">詳細を読む</span>
                 <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white border border-slate-200 group-hover:bg-emerald-50 flex items-center justify-center text-slate-400 group-hover:text-brand-green transition-colors shrink-0 group-hover:translate-x-0.5">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1131,8 +1126,8 @@
 
           <!-- 記事 2 -->
           <article class="bg-slate-50 rounded-lg border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all mb-3 overflow-hidden cursor-pointer group block">
-            <a href="detail.html?id=b055d-p_k7" class="flex flex-col sm:flex-row sm:items-center justify-between p-4 sm:p-5 gap-3 sm:gap-4 w-full">
-              <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 flex-1 min-w-0">
+            <a href="detail.html?id=b055d-p_k7" class="flex items-center justify-between p-4 sm:p-5 gap-3 sm:gap-4 w-full">
+              <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 flex-1 min-w-0">
                 <div class="flex items-center gap-2.5 shrink-0">
                   <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#c85a32] text-white shadow-xs shrink-0 tracking-tight leading-none">NEW</span>
                   <span class="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
@@ -1147,7 +1142,7 @@
                   【岡山県の高校受験】合格への近道はここにある！「おかもし」が受験生から支持される理由
                 </h4>
               </div>
-              <div class="flex items-center gap-2 shrink-0 self-end sm:self-center">
+              <div class="flex items-center gap-2 shrink-0">
                 <span class="text-xs font-bold text-slate-500 group-hover:text-brand-green transition-colors hidden md:inline">詳細を読む</span>
                 <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white border border-slate-200 group-hover:bg-emerald-50 flex items-center justify-center text-slate-400 group-hover:text-brand-green transition-colors shrink-0 group-hover:translate-x-0.5">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1160,8 +1155,8 @@
 
           <!-- 記事 3 -->
           <article class="bg-slate-50 rounded-lg border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all mb-3 overflow-hidden cursor-pointer group block">
-            <a href="detail.html?id=20p7a-hecrv" class="flex flex-col sm:flex-row sm:items-center justify-between p-4 sm:p-5 gap-3 sm:gap-4 w-full">
-              <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 flex-1 min-w-0">
+            <a href="detail.html?id=20p7a-hecrv" class="flex items-center justify-between p-4 sm:p-5 gap-3 sm:gap-4 w-full">
+              <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 flex-1 min-w-0">
                 <div class="flex items-center gap-2.5 shrink-0">
                   <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#c85a32] text-white shadow-xs shrink-0 tracking-tight leading-none">NEW</span>
                   <span class="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
@@ -1176,7 +1171,7 @@
                   おかもし　決済用リンク
                 </h4>
               </div>
-              <div class="flex items-center gap-2 shrink-0 self-end sm:self-center">
+              <div class="flex items-center gap-2 shrink-0">
                 <span class="text-xs font-bold text-slate-500 group-hover:text-brand-green transition-colors hidden md:inline">詳細を読む</span>
                 <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white border border-slate-200 group-hover:bg-emerald-50 flex items-center justify-center text-slate-400 group-hover:text-brand-green transition-colors shrink-0 group-hover:translate-x-0.5">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1541,8 +1536,8 @@
   <div id="floating-cta-bar" class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/90 p-3 md:hidden shadow-[0_-4px_20px_rgba(0,0,0,0.08)] transition-all duration-300 ease-out transform translate-y-full opacity-0 pointer-events-none">
     <div class="max-w-md mx-auto flex items-center justify-between gap-3">
       <div class="flex-1 min-w-0">
-        <span id="floating-status-badge" class="inline-block text-[9px] font-bold text-emerald-900 bg-emerald-100 border border-emerald-300 px-1.5 py-0.5 rounded">次回受付中</span>
-        <div id="floating-desc" class="text-xs font-bold text-slate-800 leading-tight truncate">中3｜第4回 11/1(日) 実施</div>
+        <span id="floating-status-badge" class="inline-block text-[9px] font-bold text-emerald-900 bg-emerald-100 border border-emerald-300 px-1.5 py-0.5 rounded">次回模試 受付中</span>
+        <div id="floating-desc" class="text-xs font-bold text-slate-800 leading-tight truncate">岡山県統一模擬試験（おかもし）</div>
       </div>
       <a href="#schedule-selector" class="py-2.5 px-5 rounded-lg bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold shadow-md shadow-orange-500/25 active:scale-95 transition-all flex items-center gap-1.5 shrink-0">
         <span>模試に申し込む</span>
@@ -1551,42 +1546,59 @@
     </div>
   </div>
 
-  <!-- 学力診断シート拡大見本モーダル（画像ライトボックス） -->
-  <div id="report-modal" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-sm flex flex-col items-center justify-center p-3 sm:p-5 md:p-6 hidden select-none" onclick="if(event.target === this) closeReportModal()" role="dialog" aria-modal="true" aria-labelledby="modal-report-title">
+  <!-- 学力診断シート拡大見本モーダル（コンテナ内専用 Transform ズーム＆パン対応） -->
+  <div id="report-modal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md flex flex-col items-center justify-between p-2.5 sm:p-4 md:p-6 hidden select-none" onclick="if(event.target === this) closeReportModal()" role="dialog" aria-modal="true" aria-labelledby="modal-report-title" style="touch-action: none;">
     
     <!-- モーダルヘッダーバー -->
-    <div class="w-full max-w-5xl flex items-center justify-between pb-2 px-1 text-white">
-      <div class="flex items-center gap-2">
-        <span class="w-2.5 h-2.5 rounded-full bg-brand-green"></span>
-        <h4 id="modal-report-title" class="text-sm sm:text-base font-bold text-white tracking-wide">
+    <div class="w-full max-w-5xl flex items-center justify-between py-1.5 px-2 text-white shrink-0">
+      <div class="flex items-center gap-2 min-w-0 pr-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-brand-green shrink-0"></span>
+        <h4 id="modal-report-title" class="text-xs sm:text-base font-bold text-white tracking-wide truncate">
           学力診断シート（個人成績表・2面構成）見本
         </h4>
-        <span class="hidden sm:inline text-xs text-slate-300">（当日点＋内申点の総合評価・弱点分析）</span>
+        <span class="hidden md:inline text-xs text-slate-300 shrink-0">（当日点＋内申点の総合評価・弱点分析）</span>
       </div>
-      <button type="button" onclick="closeReportModal()" aria-label="閉じる" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs sm:text-sm font-bold transition-colors cursor-pointer border border-white/20 shadow-xs">
-        <span class="text-base leading-none">✕</span>
-        <span>閉じる</span>
+
+      <!-- ズーム操作コントロール群（＋ / ー / 100%リセット / ✕閉じる） -->
+      <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+        <div class="inline-flex items-center bg-white/10 rounded-lg p-0.5 border border-white/20">
+          <button type="button" onclick="modalZoomStep(-0.5)" aria-label="縮小" class="w-7 h-7 flex items-center justify-center text-white hover:bg-white/20 rounded text-sm font-bold transition-colors cursor-pointer">－</button>
+          <span id="modal-zoom-display" class="px-1.5 text-[11px] font-bold text-slate-200 min-w-[42px] text-center">100%</span>
+          <button type="button" onclick="modalZoomStep(0.5)" aria-label="拡大" class="w-7 h-7 flex items-center justify-center text-white hover:bg-white/20 rounded text-sm font-bold transition-colors cursor-pointer">＋</button>
+          <button type="button" onclick="modalResetZoom()" aria-label="リセット" class="hidden sm:inline-flex px-2 py-1 text-[11px] font-bold text-slate-200 hover:text-white hover:bg-white/20 rounded transition-colors cursor-pointer">リセット</button>
+        </div>
+        <button type="button" onclick="closeReportModal()" aria-label="閉じる" class="flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 text-white text-xs sm:text-sm font-bold transition-colors cursor-pointer border border-white/25 shadow-xs">
+          <span class="text-sm leading-none">✕</span>
+          <span class="hidden xs:inline">閉じる</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 画像コンテナ（画面いっぱいの高解像度拡大表示・コンテナ内Transformズーム＆パン） -->
+    <div id="modal-img-container" class="relative w-full max-w-5xl flex-1 min-h-0 my-1 overflow-hidden rounded-lg bg-slate-900/60 border border-white/10 shadow-2xl flex items-center justify-center select-none" style="touch-action: none;">
+      <div id="modal-img-wrapper" class="w-full h-full flex items-center justify-center cursor-zoom-in origin-center" style="will-change: transform;">
+        <img 
+          id="modal-report-img"
+          src="images/preview-card-report.webp" 
+          alt="学力診断シート（成績カルテ・2面構成）高解像度見本" 
+          class="max-w-full max-h-full object-contain rounded-md block pointer-events-none select-none transition-opacity duration-200"
+          draggable="false"
+        />
+      </div>
+
+      <!-- ズーム時のみ表示されるリセット用フロートバッジ（スマホ向け） -->
+      <button id="modal-mobile-reset-btn" type="button" onclick="modalResetZoom()" class="absolute bottom-3 right-3 hidden items-center gap-1 px-3 py-1.5 rounded-full bg-slate-900/80 backdrop-blur-md text-white text-xs font-bold border border-white/20 shadow-lg cursor-pointer transition-all active:scale-95">
+        <span>🔄 元のサイズに戻す</span>
       </button>
     </div>
 
-    <!-- 画像コンテナ（画面いっぱいの高解像度拡大表示・スクロール＆ズーム対応） -->
-    <div id="modal-img-container" class="w-full max-w-5xl max-h-[82vh] overflow-auto rounded-lg bg-white p-2 sm:p-4 shadow-2xl flex items-center justify-center overscroll-contain" style="touch-action: pan-x pan-y pinch-zoom;">
-      <img 
-        id="modal-report-img"
-        src="images/preview-card-report.webp" 
-        alt="学力診断シート（成績カルテ・2面構成）高解像度見本" 
-        class="w-full h-auto max-h-[76vh] object-contain rounded-md block cursor-zoom-in transition-all duration-200"
-        onclick="toggleModalImageZoom(this)"
-      />
-    </div>
-
     <!-- 下部操作ガイドバー -->
-    <div class="w-full max-w-5xl pt-2 px-1 flex items-center justify-between text-[11px] sm:text-xs text-slate-300">
-      <span class="flex items-center gap-1">
+    <div class="w-full max-w-5xl py-1 px-2 flex items-center justify-between text-[11px] sm:text-xs text-slate-300 shrink-0">
+      <span class="flex items-center gap-1 truncate mr-2">
         <span>🔍</span>
-        <span>画像クリックで拡大／標準サイズ切替。スマホではピンチアウトで自由拡大・スクロールできます。</span>
+        <span class="truncate">ピンチ（2本指）やタップ・＋－ボタンで枠内拡大、ドラッグで移動できます</span>
       </span>
-      <button type="button" onclick="closeReportModal()" class="text-slate-300 hover:text-white underline cursor-pointer shrink-0 ml-3">✕ 閉じる</button>
+      <button type="button" onclick="closeReportModal()" class="text-slate-300 hover:text-white underline cursor-pointer shrink-0">✕ 閉じる</button>
     </div>
   </div>
 
@@ -2687,24 +2699,13 @@
       const ctaContainer = document.getElementById('cta-container');
       const deadlineContainer = document.getElementById('deadline-container');
 
-      // 下部固定バー連動
+      // 下部固定バー連動（全学年・月号共通の汎用表記を維持）
       const floatBadge = document.getElementById('floating-status-badge');
       const floatDesc = document.getElementById('floating-desc');
       if (floatBadge && floatDesc) {
-        if (r.status === 'finished') {
-          floatBadge.textContent = '受付終了';
-          floatBadge.className = 'inline-block text-[9px] font-bold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded';
-        } else if (r.status === 'pending') {
-          floatBadge.textContent = '準備中';
-          floatBadge.className = 'inline-block text-[9px] font-bold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded';
-        } else {
-          floatBadge.textContent = r.status === 'active' ? '次回受付中' : '受付中';
-          floatBadge.className = 'inline-block text-[9px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/60 px-1.5 py-0.5 rounded';
-        }
-        
-        const firstVenue = r.venuesList && r.venuesList[0] ? r.venuesList[0].date : '';
-        const dateDisplay = firstVenue ? `${firstVenue.split('(')[0].replace(/.*年/, '')}実施` : '';
-        floatDesc.textContent = `${data.gradeName.replace('年生', '')}｜${r.monthName} ${dateDisplay}`.trim();
+        floatBadge.textContent = '次回模試 受付中';
+        floatBadge.className = 'inline-block text-[9px] font-bold text-emerald-900 bg-emerald-100 border border-emerald-300 px-1.5 py-0.5 rounded';
+        floatDesc.textContent = '岡山県統一模擬試験（おかもし）';
       }
 
       if (badge && deadlineContainer && ctaContainer) {
@@ -2713,19 +2714,14 @@
           badge.textContent = `${r.monthName} 受付終了`;
           
           deadlineContainer.innerHTML = `
-            <div class="bg-slate-50/80 rounded-r-lg border-l-4 border-slate-300 p-3.5 sm:p-4 flex items-center justify-between text-xs sm:text-sm">
+            <div class="flex items-center justify-between text-xs sm:text-sm">
               <span class="text-slate-600 font-bold">お申し込み締切</span>
               <span class="font-bold text-slate-600">${r.deadline || '受付期間終了'}（受付終了）</span>
             </div>
           `;
 
           ctaContainer.innerHTML = `
-            <div class="text-center">
-              <span class="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-slate-600 bg-slate-100/90 px-3.5 py-1.5 rounded-full border border-slate-200/80">
-                <span class="w-2 h-2 rounded-full bg-slate-400"></span>
-                <span>お申込みフォーム内で今後の回をまとめて選択可能です</span>
-              </span>
-            </div>
+            <p class="text-xs text-gray-600 text-center font-medium">お申込みフォーム内で今後の回をまとめて選択可能です</p>
             <button disabled class="w-full py-4 px-6 rounded-lg bg-slate-200 text-slate-400 font-bold text-sm sm:text-base cursor-not-allowed">
               ${r.monthName}の受付は終了しました
             </button>
@@ -2735,19 +2731,14 @@
           badge.textContent = `${r.monthName} 準備中`;
           
           deadlineContainer.innerHTML = `
-            <div class="bg-slate-50/80 rounded-r-lg border-l-4 border-slate-300 p-3.5 sm:p-4 flex items-center justify-between text-xs sm:text-sm">
+            <div class="flex items-center justify-between text-xs sm:text-sm">
               <span class="text-slate-600 font-bold">お申し込み締切</span>
               <span class="font-bold text-slate-500">準備中（受付開始まで今しばらくお待ちください）</span>
             </div>
           `;
 
           ctaContainer.innerHTML = `
-            <div class="text-center">
-              <span class="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-slate-600 bg-slate-100/90 px-3.5 py-1.5 rounded-full border border-slate-200/80">
-                <span class="w-2 h-2 rounded-full bg-slate-400"></span>
-                <span>お申込みフォーム内で今後の回をまとめて選択可能です</span>
-              </span>
-            </div>
+            <p class="text-xs text-gray-600 text-center font-medium">お申込みフォーム内で今後の回をまとめて選択可能です</p>
             <button disabled class="w-full py-4 px-6 rounded-lg bg-slate-100 text-slate-400 border border-slate-200 font-bold text-sm sm:text-base cursor-not-allowed">
               ${r.monthName}は現在準備中です
             </button>
@@ -2757,23 +2748,18 @@
           badge.textContent = r.status === 'active' ? `${r.monthName} 受付中` : `${r.monthName} 申込可`;
           
           deadlineContainer.innerHTML = `
-            <div class="bg-slate-50/80 rounded-r-lg border-l-4 border-emerald-600 p-4 flex items-center justify-between">
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-xl shrink-0 shadow-2xs">
-                  ⏳
+            <div class="flex items-center justify-between gap-3">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-bold text-slate-600 tracking-wide">お申し込み締切</span>
+                  <span class="text-[10px] font-bold text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">期日厳守</span>
                 </div>
-                <div>
-                  <div class="flex items-center gap-1.5">
-                    <span class="text-xs font-bold text-slate-800 tracking-wide uppercase">お申し込み締切</span>
-                    <span class="text-[10px] font-bold text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">期日厳守</span>
-                  </div>
-                  <div class="text-base sm:text-lg font-bold text-slate-800 tracking-tight mt-0.5">
-                    ${r.deadline}
-                  </div>
+                <div class="text-base sm:text-lg font-bold text-slate-900 tracking-tight mt-1">
+                  ${r.deadline}
                 </div>
               </div>
-              <div class="hidden sm:block text-right">
-                <span class="text-xs sm:text-sm font-medium text-emerald-700">
+              <div class="text-right shrink-0">
+                <span class="text-xs sm:text-sm font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200/60">
                   WEB受付中
                 </span>
               </div>
@@ -2781,12 +2767,7 @@
           `;
 
           ctaContainer.innerHTML = `
-            <div class="text-center">
-              <span class="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-slate-700 bg-slate-100/90 px-3.5 py-1.5 rounded-full border border-slate-200/80">
-                <span class="w-2 h-2 rounded-full bg-orange-500"></span>
-                <span>お申込みフォーム内で今後の回をまとめて選択可能です</span>
-              </span>
-            </div>
+            <p class="text-xs text-gray-600 text-center font-medium">お申込みフォーム内で今後の回をまとめて選択可能です</p>
             <a href="apply.html?grade=${currentGrade}&month=${r.monthNum}" class="w-full py-4 px-6 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-bold text-base sm:text-lg flex items-center justify-center gap-2 shadow-lg shadow-orange-500/25 hover:shadow-orange-500/35 active:scale-[0.98] transition-all hover:-translate-y-0.5">
               <span>${r.monthName}をWEBで申し込む</span>
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
@@ -3389,38 +3370,316 @@
       if (previewBadge) previewBadge.textContent = data.previewLabel;
     }
 
-    // 診断シート拡大モーダル（画像ライトボックス）の開閉・操作関数
-    function openReportModal(grade) {
-      const modal = document.getElementById('report-modal');
-      if (modal) {
-        modal.classList.remove('hidden');
-        const img = document.getElementById('modal-report-img');
-        if (img && img.classList.contains('is-zoomed')) {
-          toggleModalImageZoom(img);
+    // =========================================================================
+    // 診断シート拡大モーダル（コンテナ内専用 Transform ズーム＆パン ＆ ビューポート復元）
+    // =========================================================================
+    let origViewportMetaContent = '';
+    const modalZoomState = {
+      scale: 1.0,
+      panX: 0,
+      panY: 0,
+      minScale: 1.0,
+      maxScale: 4.0,
+      isPanning: false,
+      startX: 0,
+      startY: 0,
+      lastTapTime: 0,
+      initialPinchDist: 0,
+      initialScale: 1.0
+    };
+
+    function updateModalTransform(animate = false) {
+      const wrapper = document.getElementById('modal-img-wrapper');
+      const container = document.getElementById('modal-img-container');
+      const zoomDisplay = document.getElementById('modal-zoom-display');
+      const resetBtn = document.getElementById('modal-mobile-reset-btn');
+      if (!wrapper || !container) return;
+
+      if (modalZoomState.scale <= 1.02) {
+        modalZoomState.scale = 1.0;
+        modalZoomState.panX = 0;
+        modalZoomState.panY = 0;
+      } else {
+        const cw = container.clientWidth;
+        const ch = container.clientHeight;
+        const maxPanX = Math.max(0, (cw * (modalZoomState.scale - 1)) / 2 + 50);
+        const maxPanY = Math.max(0, (ch * (modalZoomState.scale - 1)) / 2 + 50);
+        modalZoomState.panX = Math.max(-maxPanX, Math.min(maxPanX, modalZoomState.panX));
+        modalZoomState.panY = Math.max(-maxPanY, Math.min(maxPanY, modalZoomState.panY));
+      }
+
+      if (animate) {
+        wrapper.style.transition = 'transform 0.22s cubic-bezier(0.2, 0, 0, 1)';
+      } else {
+        wrapper.style.transition = 'none';
+      }
+
+      wrapper.style.transform = `translate3d(${modalZoomState.panX}px, ${modalZoomState.panY}px, 0) scale(${modalZoomState.scale})`;
+
+      if (zoomDisplay) {
+        zoomDisplay.textContent = Math.round(modalZoomState.scale * 100) + '%';
+      }
+
+      if (resetBtn) {
+        if (modalZoomState.scale > 1.05) {
+          resetBtn.classList.remove('hidden');
+          resetBtn.classList.add('inline-flex');
+        } else {
+          resetBtn.classList.add('hidden');
+          resetBtn.classList.remove('inline-flex');
         }
       }
-      document.body.style.overflow = 'hidden';
+
+      if (modalZoomState.scale > 1.05) {
+        wrapper.style.cursor = 'grab';
+      } else {
+        wrapper.style.cursor = 'zoom-in';
+      }
     }
 
-    function toggleModalImageZoom(img) {
-      if (!img) return;
-      const isZoomed = img.classList.contains('is-zoomed');
-      if (isZoomed) {
-        img.classList.remove('is-zoomed', 'cursor-zoom-out', 'min-w-[900px]', 'md:min-w-[1200px]');
-        img.classList.add('cursor-zoom-in', 'max-h-[76vh]', 'object-contain');
+    function modalZoomStep(delta) {
+      const targetScale = Math.min(modalZoomState.maxScale, Math.max(modalZoomState.minScale, modalZoomState.scale + delta));
+      if (targetScale <= 1.02) {
+        modalZoomState.scale = 1.0;
+        modalZoomState.panX = 0;
+        modalZoomState.panY = 0;
       } else {
-        img.classList.remove('cursor-zoom-in', 'max-h-[76vh]', 'object-contain');
-        img.classList.add('is-zoomed', 'cursor-zoom-out', 'min-w-[900px]', 'md:min-w-[1200px]');
+        modalZoomState.scale = targetScale;
       }
+      updateModalTransform(true);
+    }
+
+    function modalResetZoom() {
+      modalZoomState.scale = 1.0;
+      modalZoomState.panX = 0;
+      modalZoomState.panY = 0;
+      updateModalTransform(true);
+    }
+
+    function toggleModalImageZoom() {
+      if (modalZoomState.scale > 1.2) {
+        modalResetZoom();
+      } else {
+        modalZoomStep(1.2);
+      }
+    }
+
+    function initModalPanZoomListeners() {
+      const container = document.getElementById('modal-img-container');
+      const wrapper = document.getElementById('modal-img-wrapper');
+      if (!container || !wrapper) return;
+      if (container._panzoomInitialized) return;
+      container._panzoomInitialized = true;
+
+      function getTouchDist(t1, t2) {
+        const dx = t1.clientX - t2.clientX;
+        const dy = t1.clientY - t2.clientY;
+        return Math.sqrt(dx * dx + dy * dy);
+      }
+
+      // 1. Touch Events (Passive: false でブラウザ全体のビューポートズーム・スクロールを完全防止)
+      container.addEventListener('touchstart', function(e) {
+        if (e.touches.length === 2) {
+          modalZoomState.isPanning = false;
+          modalZoomState.initialPinchDist = getTouchDist(e.touches[0], e.touches[1]);
+          modalZoomState.initialScale = modalZoomState.scale;
+          wrapper.style.transition = 'none';
+        } else if (e.touches.length === 1) {
+          const now = Date.now();
+          const touch = e.touches[0];
+          // ダブルタップ検知（拡大/リセット切り替え）
+          if (now - modalZoomState.lastTapTime < 320) {
+            e.preventDefault();
+            modalZoomState.lastTapTime = 0;
+            if (modalZoomState.scale > 1.2) {
+              modalResetZoom();
+            } else {
+              const rect = container.getBoundingClientRect();
+              const offsetX = (touch.clientX - rect.left) - rect.width / 2;
+              const offsetY = (touch.clientY - rect.top) - rect.height / 2;
+              modalZoomState.scale = 2.4;
+              modalZoomState.panX = -offsetX * 0.7;
+              modalZoomState.panY = -offsetY * 0.7;
+              updateModalTransform(true);
+            }
+            return;
+          }
+          modalZoomState.lastTapTime = now;
+
+          if (modalZoomState.scale > 1.0) {
+            modalZoomState.isPanning = true;
+            modalZoomState.startX = touch.clientX - modalZoomState.panX;
+            modalZoomState.startY = touch.clientY - modalZoomState.panY;
+            wrapper.style.cursor = 'grabbing';
+            wrapper.style.transition = 'none';
+          }
+        }
+      }, { passive: false });
+
+      container.addEventListener('touchmove', function(e) {
+        // ブラウザ全体のズームおよび背景スクロールを確実に遮断
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (e.touches.length === 2 && modalZoomState.initialPinchDist > 0) {
+          const dist = getTouchDist(e.touches[0], e.touches[1]);
+          const ratio = dist / modalZoomState.initialPinchDist;
+          const newScale = Math.min(modalZoomState.maxScale, Math.max(modalZoomState.minScale, modalZoomState.initialScale * ratio));
+          modalZoomState.scale = newScale;
+          updateModalTransform(false);
+        } else if (e.touches.length === 1 && modalZoomState.isPanning && modalZoomState.scale > 1.0) {
+          const touch = e.touches[0];
+          modalZoomState.panX = touch.clientX - modalZoomState.startX;
+          modalZoomState.panY = touch.clientY - modalZoomState.startY;
+          updateModalTransform(false);
+        }
+      }, { passive: false });
+
+      container.addEventListener('touchend', function(e) {
+        if (e.touches.length === 0) {
+          modalZoomState.isPanning = false;
+          modalZoomState.initialPinchDist = 0;
+          if (modalZoomState.scale < 1.05) {
+            modalResetZoom();
+          } else {
+            updateModalTransform(true);
+          }
+        } else if (e.touches.length === 1) {
+          modalZoomState.initialPinchDist = 0;
+          if (modalZoomState.scale > 1.0) {
+            modalZoomState.isPanning = true;
+            const touch = e.touches[0];
+            modalZoomState.startX = touch.clientX - modalZoomState.panX;
+            modalZoomState.startY = touch.clientY - modalZoomState.panY;
+          }
+        }
+      }, { passive: false });
+
+      // 2. マウスホイール（PC操作）
+      container.addEventListener('wheel', function(e) {
+        e.preventDefault();
+        const delta = e.deltaY < 0 ? 0.35 : -0.35;
+        const targetScale = Math.min(modalZoomState.maxScale, Math.max(modalZoomState.minScale, modalZoomState.scale + delta));
+        if (targetScale <= 1.02) {
+          modalResetZoom();
+        } else {
+          modalZoomState.scale = targetScale;
+          updateModalTransform(true);
+        }
+      }, { passive: false });
+
+      // 3. マウスドラッグ＆クリック（PC操作）
+      let isMouseDown = false;
+      let mouseStartX = 0;
+      let mouseStartY = 0;
+      let mouseMoved = false;
+
+      container.addEventListener('mousedown', function(e) {
+        if (e.button !== 0) return;
+        isMouseDown = true;
+        mouseMoved = false;
+        mouseStartX = e.clientX - modalZoomState.panX;
+        mouseStartY = e.clientY - modalZoomState.panY;
+        if (modalZoomState.scale > 1.0) {
+          wrapper.style.cursor = 'grabbing';
+          wrapper.style.transition = 'none';
+        }
+      });
+
+      window.addEventListener('mousemove', function(e) {
+        if (!isMouseDown) return;
+        const dx = Math.abs(e.clientX - (mouseStartX + modalZoomState.panX));
+        const dy = Math.abs(e.clientY - (mouseStartY + modalZoomState.panY));
+        if (dx > 3 || dy > 3) mouseMoved = true;
+
+        if (modalZoomState.scale > 1.0) {
+          modalZoomState.panX = e.clientX - mouseStartX;
+          modalZoomState.panY = e.clientY - mouseStartY;
+          updateModalTransform(false);
+        }
+      });
+
+      window.addEventListener('mouseup', function(e) {
+        if (!isMouseDown) return;
+        isMouseDown = false;
+        if (modalZoomState.scale > 1.0) {
+          wrapper.style.cursor = 'grab';
+          updateModalTransform(true);
+        }
+      });
+
+      container.addEventListener('click', function(e) {
+        if (mouseMoved || e.target.closest('button')) return;
+        if (modalZoomState.scale > 1.2) {
+          modalResetZoom();
+        } else {
+          const rect = container.getBoundingClientRect();
+          const offsetX = (e.clientX - rect.left) - rect.width / 2;
+          const offsetY = (e.clientY - rect.top) - rect.height / 2;
+          modalZoomState.scale = 2.4;
+          modalZoomState.panX = -offsetX * 0.7;
+          modalZoomState.panY = -offsetY * 0.7;
+          updateModalTransform(true);
+        }
+      });
+    }
+
+    function openReportModal(grade) {
+      const modal = document.getElementById('report-modal');
+      if (!modal) return;
+
+      // 1. ビューポート保護: モーダル表示中はブラウザ全体のピンチズームを無効化
+      const viewportMeta = document.querySelector('meta[name="viewport"]');
+      if (viewportMeta) {
+        origViewportMetaContent = viewportMeta.getAttribute('content') || 'width=device-width, initial-scale=1.0';
+        viewportMeta.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+      }
+
+      // 2. 背面のスクロール・タッチ挙動を完全ロック
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
+      document.body.style.touchAction = 'none';
+
+      // 3. タイトル調整
+      const effectiveGrade = grade || (typeof selectedFeatureGrade !== 'undefined' ? selectedFeatureGrade : 'c3');
+      if (typeof featureCard2Data !== 'undefined' && featureCard2Data[effectiveGrade]?.modal?.title) {
+        const titleElem = document.getElementById('modal-report-title');
+        if (titleElem) titleElem.textContent = featureCard2Data[effectiveGrade].modal.title;
+      }
+
+      // 4. コンテナ内Transformリセット＆表示
+      initModalPanZoomListeners();
+      modalResetZoom();
+      modal.classList.remove('hidden');
     }
 
     function closeReportModal() {
       const modal = document.getElementById('report-modal');
       if (modal) modal.classList.add('hidden');
+
+      // 1. モーダル内Transform状態をリセット
+      modalResetZoom();
+
+      // 2. ドキュメント全体の overflow / touch-action を正常復帰
+      document.documentElement.style.overflow = '';
+      document.documentElement.style.overflowX = 'hidden';
       document.body.style.overflow = '';
-      const img = document.getElementById('modal-report-img');
-      if (img && img.classList.contains('is-zoomed')) {
-        toggleModalImageZoom(img);
+      document.body.style.overflowX = 'hidden';
+      document.body.style.touchAction = '';
+      document.body.style.width = '100%';
+
+      // 3. ビューポートのスケールを強制リセット（スマホの画面幅100%へ確実に復元）
+      const viewportMeta = document.querySelector('meta[name="viewport"]');
+      if (viewportMeta) {
+        // maximum-scale=1.0 でブラウザの visualViewport ズームを1.0に吸着
+        viewportMeta.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+        void document.documentElement.offsetHeight; // リフロー強制
+        setTimeout(function() {
+          viewportMeta.setAttribute('content', origViewportMetaContent || 'width=device-width, initial-scale=1.0');
+          if (window.visualViewport) {
+            window.scrollTo(window.scrollX, window.scrollY);
+          }
+        }, 120);
       }
     }
 
@@ -3445,6 +3704,8 @@
     window.openReportModal = openReportModal;
     window.closeReportModal = closeReportModal;
     window.toggleModalImageZoom = toggleModalImageZoom;
+    window.modalZoomStep = modalZoomStep;
+    window.modalResetZoom = modalResetZoom;
 
     // 共通ヘッダー制御ロジック
     function toggleNextExamDropdown(event) {
@@ -3769,8 +4030,8 @@
 
         return `
           <article class="bg-slate-50 rounded-lg border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all mb-3 overflow-hidden cursor-pointer group block">
-            <a href="${detailUrl}" class="flex flex-col sm:flex-row sm:items-center justify-between p-4 sm:p-5 gap-3 sm:gap-4 w-full">
-              <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 flex-1 min-w-0">
+            <a href="${detailUrl}" class="flex items-center justify-between p-4 sm:p-5 gap-3 sm:gap-4 w-full">
+              <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 flex-1 min-w-0">
                 <!-- メタ領域: [NEW] [日付] [カテゴリバッジ] -->
                 <div class="flex items-center gap-2.5 shrink-0">
                   ${newBadgeHtml}
@@ -3790,7 +4051,7 @@
               </div>
 
               <!-- 右端アクション: FAQと同調した矢印ボタン -->
-              <div class="flex items-center gap-2 shrink-0 self-end sm:self-center">
+              <div class="flex items-center gap-2 shrink-0">
                 <span class="text-xs font-bold text-slate-500 group-hover:text-brand-green transition-colors hidden md:inline">詳細を読む</span>
                 <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white border border-slate-200 group-hover:bg-emerald-50 flex items-center justify-center text-slate-400 group-hover:text-brand-green transition-colors shrink-0 group-hover:translate-x-0.5">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

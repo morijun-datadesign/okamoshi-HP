@@ -2,7 +2,7 @@
 <html lang="ja" class="scroll-smooth">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <title>参加塾一覧（提携教室）| 岡山県統一模擬試験（おかもし）</title>
   <meta name="description" content="岡山県統一模擬試験（おかもし）の参加塾・実施会場一覧。岡山・東備、倉敷、美作、西備の各学区でお近くの提携学習塾や公開会場を簡単に検索・確認いただけます。">
   <link rel="canonical" href="https://okamoshi.pages.dev/schools.html">
@@ -138,6 +138,10 @@
   }
   </script>
   <style>
+    html, body {
+      max-width: 100%;
+      overflow-x: hidden;
+    }
     /* 全セクション大見出し・中見出しのテーマカラー濃いグリーン（最優先） */
     .section-title,
     .section-heading {
@@ -149,6 +153,11 @@
       background-color: #F1F5F9 !important;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
+    }
+    /* iOS Safariフォームズーム防止（16px未満でフォーカス時に自動ズームする仕様への対策） */
+    input[type="text"], input[type="tel"], input[type="email"], input[type="number"],
+    input[type="password"], input[type="search"], input[type="url"], select, textarea {
+      font-size: 16px !important;
     }
     #nav-contact-container { position: relative; }
     #nav-contact-container:hover #nav-contact-dropdown,
@@ -554,7 +563,7 @@
 <!-- Quick Search Input with Clear Button -->
 <div class="w-full md:w-80 relative flex items-center">
 <span class="material-symbols-outlined text-outline absolute left-3 top-1/2 -translate-y-1/2 text-[18px] pointer-events-none">search</span>
-<input class="w-full pl-9 pr-9 py-2 bg-surface-container-lowest text-on-surface rounded-lg font-body-sm text-body-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-outline border border-outline-variant/30 transition-all" id="jukuSearch" placeholder="塾名・教室名で絞り込み..." type="text" autocomplete="off">
+<input class="w-full pl-9 pr-9 py-2 bg-surface-container-lowest text-on-surface rounded-lg font-body-sm text-base shadow-sm focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-outline border border-outline-variant/30 transition-all" id="jukuSearch" placeholder="塾名・教室名で絞り込み..." type="text" autocomplete="off">
 <button type="button" id="clearSearchBtn" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-surface-variant hover:bg-outline-variant text-on-surface-variant flex items-center justify-center transition-colors" title="検索条件をクリア">
   <span class="material-symbols-outlined text-[14px]">close</span>
 </button>

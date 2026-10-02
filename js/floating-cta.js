@@ -84,8 +84,8 @@
       ctaBar.innerHTML = `
         <div class="max-w-md mx-auto flex items-center justify-between gap-3">
           <div class="flex-1 min-w-0">
-            <span id="floating-status-badge" class="inline-block text-[9px] font-bold text-emerald-900 bg-emerald-100 border border-emerald-300 px-1.5 py-0.5 rounded">次回受付中</span>
-            <div id="floating-desc" class="text-xs font-bold text-slate-800 leading-tight truncate">中3・中2・中1・小6 模試受付中</div>
+            <span id="floating-status-badge" class="inline-block text-[9px] font-bold text-emerald-900 bg-emerald-100 border border-emerald-300 px-1.5 py-0.5 rounded">次回模試 受付中</span>
+            <div id="floating-desc" class="text-xs font-bold text-slate-800 leading-tight truncate">岡山県統一模擬試験（おかもし）</div>
           </div>
           <a href="${targetLink}" class="py-2.5 px-5 rounded-lg bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold shadow-md shadow-orange-500/25 active:scale-95 transition-all flex items-center gap-1.5 shrink-0">
             <span>模試に申し込む</span>

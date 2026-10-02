@@ -2,7 +2,7 @@
 <html lang="ja" class="scroll-smooth">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <title>模試Webお申込みフォーム | 岡山県統一模擬試験（おかもし）</title>
   <meta name="description" content="岡山県統一模擬試験（おかもし）の個人受験Webお申込みフォームです。中3・中2・中1・小6対象。希望模試、会場受験（岡山・倉敷・津山）または自宅受験を選択して簡単にお申し込みいただけます。">
   <link rel="canonical" href="https://okamoshi.pages.dev/apply.html">
@@ -138,6 +138,22 @@
   }
   </script>
   <style>
+    html, body {
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+    /* iOS Safariで入力フィールド（input, select, textarea）タップ時の自動ズームを完全防止（16px以上確保） */
+    input[type="text"],
+    input[type="tel"],
+    input[type="email"],
+    input[type="number"],
+    input[type="password"],
+    input[type="search"],
+    input[type="url"],
+    select,
+    textarea {
+      font-size: 16px !important;
+    }
     /* 全セクション大見出し・中見出しのテーマカラー濃いグリーン（最優先） */
     .section-title,
     .section-heading {
@@ -585,10 +601,10 @@
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                   <div>
-                    <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-sm border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="studentLastName" name="student_last_name" placeholder="姓（例: 岡山）" required type="text">
+                    <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="studentLastName" name="student_last_name" placeholder="姓（例: 岡山）" required type="text">
                   </div>
                   <div>
-                    <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-sm border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="studentFirstName" name="student_first_name" placeholder="名（例: 太郎）" required type="text">
+                    <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="studentFirstName" name="student_first_name" placeholder="名（例: 太郎）" required type="text">
                   </div>
                 </div>
               </div>
@@ -601,10 +617,10 @@
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                   <div>
-                    <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-sm border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="studentKanaLastName" name="student_kana_last_name" placeholder="セイ（例: オカヤマ）" required type="text">
+                    <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="studentKanaLastName" name="student_kana_last_name" placeholder="セイ（例: オカヤマ）" required type="text">
                   </div>
                   <div>
-                    <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-sm border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="studentKanaFirstName" name="student_kana_first_name" placeholder="メイ（例: タロウ）" required type="text">
+                    <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="studentKanaFirstName" name="student_kana_first_name" placeholder="メイ（例: タロウ）" required type="text">
                   </div>
                 </div>
               </div>
@@ -638,7 +654,7 @@
                   <span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span>
                 </div>
                 <div class="relative w-full">
-                  <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-sm border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="currentSchool" name="current_school" placeholder="例: 岡山市立操南中学校（学校名を入力すると候補が表示されます）" required type="text" autocomplete="off">
+                  <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="currentSchool" name="current_school" placeholder="例: 岡山市立操南中学校（学校名を入力すると候補が表示されます）" required type="text" autocomplete="off">
                   <div id="schoolSuggestDropdown" class="absolute left-0 right-0 top-full mt-1.5 bg-white rounded-lg border border-slate-200 shadow-xl overflow-hidden z-50 max-h-64 overflow-y-auto divide-y divide-slate-100 hidden">
                     <!-- サジェスト候補リストが動的に描画されます -->
                   </div>
@@ -668,10 +684,10 @@
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                   <div>
-                    <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-sm border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="parentLastName" name="parent_last_name" placeholder="保護者 姓" required type="text">
+                    <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="parentLastName" name="parent_last_name" placeholder="保護者 姓" required type="text">
                   </div>
                   <div>
-                    <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-sm border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="parentFirstName" name="parent_first_name" placeholder="保護者 名" required type="text">
+                    <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="parentFirstName" name="parent_first_name" placeholder="保護者 名" required type="text">
                   </div>
                 </div>
               </div>
@@ -682,7 +698,7 @@
                   <label class="font-label-md text-sm font-bold text-on-surface" for="parentEmail">メールアドレス</label>
                   <span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span>
                 </div>
-                <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-sm border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="parentEmail" name="parent_email" placeholder="example@domain.com" required type="email">
+                <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="parentEmail" name="parent_email" placeholder="example@domain.com" required type="email">
                 <p class="font-body-sm text-[11px] text-on-surface-variant flex items-center gap-1">
                   <span class="material-symbols-outlined text-[14px] text-primary-container">info</span>携帯キャリアメール（docomo, ezweb等）は迷惑メール設定にご注意ください
                 </p>
@@ -694,7 +710,7 @@
                   <label class="font-label-md text-sm font-bold text-on-surface" for="parentEmailConfirm">メールアドレス（確認用）</label>
                   <span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span>
                 </div>
-                <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-sm border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="parentEmailConfirm" name="parent_email_confirm" placeholder="もう一度ご入力ください" required type="email">
+                <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="parentEmailConfirm" name="parent_email_confirm" placeholder="もう一度ご入力ください" required type="email">
               </div>
 
               <!-- 電話番号 -->
@@ -703,7 +719,7 @@
                   <label class="font-label-md text-sm font-bold text-on-surface" for="parentTel">電話番号（日中連絡先）</label>
                   <span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span>
                 </div>
-                <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-sm border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="parentTel" name="parent_tel" placeholder="09012345678（ハイフンなし可）" required type="tel">
+                <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="parentTel" name="parent_tel" placeholder="09012345678（ハイフンなし可）" required type="tel">
               </div>
 
               <!-- 郵便番号 + 自動入力ボタン -->
@@ -713,7 +729,7 @@
                   <span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span>
                 </div>
                 <div class="flex items-center gap-2">
-                  <input class="w-32 sm:w-36 h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-sm border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40 shrink-0 font-mono" id="postalCode" name="postal_code" maxlength="8" placeholder="700-0822" required type="text" autocomplete="postal-code">
+                  <input class="w-32 sm:w-36 h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40 shrink-0 font-mono" id="postalCode" name="postal_code" maxlength="8" placeholder="700-0822" required type="text" autocomplete="postal-code">
                   <button id="btnSearchAddress" class="flex-1 sm:flex-initial sm:w-auto px-3 sm:px-4 h-11 py-2.5 bg-primary hover:bg-primary-container disabled:opacity-60 disabled:cursor-not-allowed text-on-primary font-bold text-xs sm:text-sm rounded-lg transition-colors shadow-sm shrink-0 max-w-full flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap active:scale-[0.98]" onclick="searchAddressByPostalCode(true)" type="button">
                     <span id="btnSearchAddressIcon" class="material-symbols-outlined text-[16px] shrink-0">location_searching</span>
                     <span id="btnSearchAddressText">住所自動入力</span>
@@ -729,7 +745,7 @@
                   <span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span>
                 </div>
                 <div class="relative">
-                  <select class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-sm border border-outline-variant/30 appearance-none focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="prefecture" name="prefecture" required>
+                  <select class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 appearance-none focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="prefecture" name="prefecture" required>
                     <option selected value="岡山県">岡山県</option>
                     <option value="広島県">広島県</option>
                     <option value="香川県">香川県</option>
@@ -747,7 +763,7 @@
                   <label class="font-label-md text-sm font-bold text-on-surface" for="addressLine1">市区町村・番地</label>
                   <span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span>
                 </div>
-                <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-sm border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="addressLine1" name="address_line1" placeholder="例: 岡山市北区表町1丁目5-1" required type="text">
+                <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="addressLine1" name="address_line1" placeholder="例: 岡山市北区表町1丁目5-1" required type="text">
               </div>
 
               <!-- 建物名・部屋番号 -->
@@ -756,7 +772,7 @@
                   <label class="font-label-md text-sm font-bold text-on-surface" for="addressLine2">建物名・部屋番号</label>
                   <span class="bg-surface-container-high text-on-surface-variant font-label-sm text-[10px] px-2 py-0.5 rounded-full font-bold">任意</span>
                 </div>
-                <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-sm border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="addressLine2" name="address_line2" placeholder="例: 岡山教育ビル 3F" type="text">
+                <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="addressLine2" name="address_line2" placeholder="例: 岡山教育ビル 3F" type="text">
               </div>
 
             </div>
@@ -1695,7 +1711,7 @@
               <div class="md:col-span-8 relative">
                 <select id="venue-${exam.id}" disabled required
                   onchange="updateExamVenue('${exam.id}', this)"
-                  class="w-full h-10 sm:h-11 pl-3 pr-9 bg-surface-container-lowest text-on-surface rounded-lg font-body-sm text-xs sm:text-sm appearance-none border border-outline-variant/40 focus:outline-none focus:ring-2 focus:ring-primary-container shadow-2xs cursor-pointer">
+                  class="w-full h-10 sm:h-11 pl-3 pr-9 bg-surface-container-lowest text-on-surface rounded-lg font-body-sm text-base appearance-none border border-outline-variant/40 focus:outline-none focus:ring-2 focus:ring-primary-container shadow-2xs cursor-pointer">
                   ${venueOptionsHtml}
                 </select>
                 <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant text-base">expand_more</span>

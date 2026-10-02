@@ -65,12 +65,20 @@
   </script>
 <!-- BEGIN: Custom Styles -->
 <style data-purpose="typography">
+    html, body {
+      max-width: 100%;
+      overflow-x: hidden;
+    }
     body {
       font-family: 'Noto Sans JP', 'Plus Jakarta Sans', sans-serif;
       -webkit-font-smoothing: antialiased;
       -webkit-tap-highlight-color: transparent;
       background-color: #f7f9f8;
       color: #1f2937;
+    }
+    input[type="text"], input[type="tel"], input[type="email"], input[type="number"],
+    input[type="password"], input[type="search"], input[type="url"], select, textarea {
+      font-size: 16px !important;
     }
   </style>
 <style data-purpose="layout">
@@ -454,7 +462,7 @@
 <div class="sticky top-14 z-40 bg-fuchsia-50/0 py-2 -mx-4 px-4 backdrop-blur-md mb-4" data-purpose="filter-bar" id="directory">
 <!-- Search Box Input -->
 <div class="relative mb-2.5">
-<input class="w-full bg-white border border-slate-300 rounded-lg py-2 pl-9 pr-8 text-xs placeholder:text-slate-400 shadow-2xs focus:ring-2 focus:ring-brand-forest focus:border-brand-forest transition-all" id="school-search" placeholder="塾名・教室名で絞り込み検索..." type="text">
+<input class="w-full bg-white border border-slate-300 rounded-lg py-2 pl-9 pr-8 text-base placeholder:text-slate-400 shadow-2xs focus:ring-2 focus:ring-brand-forest focus:border-brand-forest transition-all" id="school-search" placeholder="塾名・教室名で絞り込み検索..." type="text">
 <svg class="w-4 h-4 text-slate-400 absolute left-3 top-2.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
 </svg>

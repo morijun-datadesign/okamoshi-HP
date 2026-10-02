@@ -733,8 +733,8 @@
           <!-- 【SP表示（md:hidden）】高さと余白を極限まで抑えた1行コンパクトバー（40px〜48px設計） -->
           <div class="md:hidden flex items-center gap-2 w-full">
             <!-- 学年選択セレクト（アイコン付き） -->
-            <div class="relative flex-1">
-              <select id="sp-grade-select" onchange="selectGrade(this.value)" class="w-full h-10 pl-8 pr-7 bg-slate-100 hover:bg-slate-200/80 text-slate-800 font-bold text-base rounded-lg border border-slate-300/80 appearance-none focus:outline-none focus:ring-2 focus:ring-emerald-600/30 transition-all cursor-pointer">
+            <div class="relative w-1/3">
+              <select id="sp-grade-select" onchange="selectGrade(this.value)" class="w-full h-10 pl-8 pr-7 bg-slate-100 hover:bg-slate-200/80 text-slate-800 font-bold text-sm sm:text-base rounded-lg border border-slate-300/80 appearance-none focus:outline-none focus:ring-2 focus:ring-emerald-600/30 transition-all cursor-pointer">
                 <option value="c3" selected>中3</option>
                 <option value="c2">中2</option>
                 <option value="c1">中1</option>
@@ -744,13 +744,23 @@
               <span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-[18px] text-slate-400 pointer-events-none">expand_more</span>
             </div>
 
-            <!-- 月号選択セレクト（アイコン付き） -->
-            <div class="relative flex-1">
-              <select id="sp-round-select" onchange="handleSpRoundSelect(this.value)" class="w-full h-10 pl-8 pr-7 bg-slate-100 hover:bg-slate-200/80 text-slate-800 font-bold text-base rounded-lg border border-slate-300/80 appearance-none focus:outline-none focus:ring-2 focus:ring-emerald-600/30 transition-all cursor-pointer">
+            <!-- 月号選択セレクト（見た目カスタム＋上に透明selectを配置） -->
+            <div class="relative w-2/3">
+              <select id="sp-round-select" onchange="handleSpRoundSelect(this.value)" class="peer absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" aria-label="実施回・月号選択">
                 <!-- JSで動的生成 -->
               </select>
-              <span class="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-[16px] text-emerald-800 pointer-events-none">calendar_month</span>
-              <span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-[18px] text-slate-400 pointer-events-none">expand_more</span>
+
+              <!-- 見た目のUIコンテナ -->
+              <div id="sp-round-display" class="w-full h-10 px-2.5 sm:px-3 bg-slate-100 hover:bg-slate-200/80 rounded-lg border border-slate-300/80 flex items-center justify-between gap-1.5 transition-all pointer-events-none peer-focus:ring-2 peer-focus:ring-emerald-600/30 peer-focus:border-emerald-600">
+                <div class="flex items-center gap-1.5 min-w-0">
+                  <span class="material-symbols-outlined text-[16px] text-emerald-800 shrink-0">calendar_month</span>
+                  <span id="sp-round-month-text" class="text-slate-800 font-bold text-sm truncate">10月号</span>
+                </div>
+                <div class="flex items-center gap-1.5 shrink-0">
+                  <span id="sp-round-badge" class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2 py-0.5 rounded-full whitespace-nowrap">受付中</span>
+                  <span class="material-symbols-outlined text-[18px] text-slate-400">expand_more</span>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -2427,6 +2437,28 @@
           else statusText = '【終了】';
           return `<option value="${idx}" ${idx === currentRoundIndex ? 'selected' : ''}>${r.monthName} ${statusText}</option>`;
         }).join('');
+        spRoundSelect.value = currentRoundIndex;
+      }
+
+      // スマホ版カスタム表示UI（テキスト＋バッジ）の動的更新
+      const currentRound = rounds[currentRoundIndex] || rounds[0];
+      const monthTextEl = document.getElementById('sp-round-month-text');
+      const badgeEl = document.getElementById('sp-round-badge');
+      if (currentRound && monthTextEl && badgeEl) {
+        monthTextEl.textContent = currentRound.monthName;
+        if (currentRound.status === 'active') {
+          badgeEl.textContent = '受付中';
+          badgeEl.className = 'bg-emerald-100 text-emerald-800 text-xs font-bold px-2 py-0.5 rounded-full whitespace-nowrap';
+        } else if (currentRound.status === 'open') {
+          badgeEl.textContent = '申込可';
+          badgeEl.className = 'bg-emerald-100 text-emerald-800 text-xs font-bold px-2 py-0.5 rounded-full whitespace-nowrap';
+        } else if (currentRound.status === 'pending') {
+          badgeEl.textContent = '準備中';
+          badgeEl.className = 'bg-slate-100 text-slate-600 text-xs font-bold px-2 py-0.5 rounded-full border border-slate-200 whitespace-nowrap';
+        } else {
+          badgeEl.textContent = '終了';
+          badgeEl.className = 'bg-slate-100 text-slate-400 text-xs font-medium px-2 py-0.5 rounded-full border border-slate-200 whitespace-nowrap';
+        }
       }
 
       const container = document.getElementById('round-tabs');

@@ -516,61 +516,49 @@
         <!-- ===================================================================
              CARD 01: 本番さながらの出題問題（模試用紙・問題画像）
              =================================================================== -->
-        <div class="features-card w-[84vw] max-w-[325px] sm:w-[80vw] sm:max-w-[400px] md:max-w-none md:w-[76%] lg:w-[78%] shrink-0 bg-white rounded-lg p-5 sm:p-6 lg:p-8 border border-slate-200/80 shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row items-stretch gap-6 lg:gap-8 relative overflow-hidden" style="scroll-snap-align: center; scroll-snap-stop: always;">
+        <div class="features-card w-[84vw] max-w-[325px] sm:w-[80vw] sm:max-w-[400px] md:max-w-none md:w-[76%] lg:w-[78%] shrink-0 bg-white rounded-lg p-5 sm:p-6 lg:p-7 md:pr-5 lg:pr-6 border border-slate-200/80 shadow-sm hover:shadow-md transition-all flex flex-col md:grid md:grid-cols-12 items-center gap-5 lg:gap-6 relative overflow-hidden" style="scroll-snap-align: center; scroll-snap-stop: always;">
           
-          <!-- テキストエリア（PC: 左側 / スマホ: 下側） -->
-          <div class="flex-1 flex flex-col justify-between space-y-3.5 order-2 md:order-1 min-w-0">
-            <div class="space-y-2.5">
-              <!-- ラベル -->
-              <div class="flex items-center gap-2 border-b border-slate-200/60 pb-2">
-                <span class="px-2.5 py-0.5 rounded-lg bg-brand-green text-white font-bold text-xs tracking-wide shadow-xs flex items-center gap-1">
+          <!-- テキストエリア（PC: 左側 5カラム / スマホ: 下側） -->
+          <div class="w-full md:col-span-5 flex flex-col justify-center space-y-3 sm:space-y-3.5 order-2 md:order-1 min-w-0 pr-0">
+            <div class="space-y-2.5 sm:space-y-3">
+              <!-- 【上段】独立バッジ「POINT 01」 -->
+              <div class="inline-flex">
+                <span class="px-2.5 py-1 rounded-lg bg-brand-green text-white font-bold text-xs tracking-wide shadow-xs flex items-center gap-1">
                   <span>✓</span> POINT 01
                 </span>
-                <span id="card1-point-label" class="text-xs sm:text-sm font-bold text-emerald-950">岡山県入試の徹底分析</span>
               </div>
+              <span id="card1-point-label" class="hidden"></span>
 
+              <!-- 【見出し】POINT 02と完全に統一した見出しフォントサイズ -->
               <h4 id="card1-title" class="section-title text-lg sm:text-xl md:text-2xl font-bold text-emerald-950 leading-snug" style="color: #064e3b !important;">
                 <span id="card1-title-text">岡山県公立高校入試の出題傾向を完全再現</span>
-                <span id="card1-subtitle" class="block text-xs sm:text-sm font-bold text-brand-green mt-0.5">出題傾向・難易度・問題用紙の体裁まで岡山県入試を精密再現</span>
+                <span id="card1-subtitle" class="hidden"></span>
               </h4>
-              <p id="card1-desc" class="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed">
-                岡山の県立高校入試を長年研究。記述量や配点バランスまで本番そっくりです。単なる知識の暗記では解けない、岡山県特有の「思考力・判断力・表現力」を問う記述問題やグラフ・資料分析問題にも徹底して合わせています。
+
+              <!-- 【本文】ゆったりと読みやすい本文2文 -->
+              <p id="card1-desc" class="text-xs sm:text-sm md:text-base text-slate-700 font-medium leading-relaxed">
+                岡山の県立高校入試の記述量や配点バランスまで本番そっくりです。単なる知識の暗記では解けない、岡山県特有の「思考力・判断力・表現力」を問う記述問題やグラフ・資料分析問題にも徹底して合わせています。
               </p>
             </div>
 
-            <!-- 補足枠（学年別に動的切り替え） -->
-            <div id="card1-features-container" class="space-y-2 pt-1 text-xs">
-              <div class="p-3 rounded-lg bg-slate-50/80 border border-slate-200/70 shadow-2xs space-y-0.5">
-                <div class="flex items-center gap-1.5 font-bold text-slate-900">
-                  <span class="px-1.5 py-0.2 rounded bg-brand-green text-white text-[10px] font-bold">中3生</span>
-                  <span class="text-xs font-bold">岡山県公立高校入試の完全シミュレーション</span>
-                </div>
-                <p class="text-[11px] sm:text-xs text-slate-700 font-medium leading-relaxed">
-                  一般入試の出題形式・配点・難易度を完全再現。実物さながらのB4判・横綴じ冊子で本番当日の時間配分や独特の解答用紙に慣れることができます。
-                </p>
-              </div>
-
-              <div class="p-2.5 rounded-lg bg-white border border-emerald-200/80 shadow-2xs flex items-center justify-between">
-                <span class="text-[11px] font-bold text-brand-green">★ 幾何図形の証明記述・理科の実験手順論述・英語の条件英作文まで完全準拠</span>
-                <span class="text-[10px] font-bold text-emerald-800 shrink-0 ml-2">県内最多クラス</span>
-              </div>
-            </div>
+            <!-- 補足枠（中3先行適用では空・JS切り替え用コンテナ保持） -->
+            <div id="card1-features-container" class="empty:hidden"></div>
           </div>
 
-          <!-- 画像エリア（PC: 右側 / スマホ: 上側） -->
-          <div class="w-full md:w-[260px] lg:w-[300px] xl:w-[320px] shrink-0 flex flex-col justify-center order-1 md:order-2">
-            <div id="card1-preview-container" class="relative w-full h-[200px] sm:h-[240px] md:h-full min-h-[220px] rounded-lg overflow-hidden shadow-xs border border-slate-200 bg-white p-1">
+          <!-- 画像エリア（PC: 右側 7カラム / スマホ: 上側） -->
+          <div class="w-full md:col-span-7 flex flex-col justify-center order-1 md:order-2">
+            <div id="card1-preview-container" class="relative w-full flex items-center justify-center overflow-hidden">
               <img 
                 id="card1-preview-img"
                 src="images/preview-card-exam.webp" 
                 alt="岡山県統一模擬試験 問題用紙見本" 
-                class="w-full h-full object-cover object-center rounded-lg"
+                class="w-full h-auto object-contain rounded-lg block"
                 width="483"
                 height="512"
                 loading="lazy"
                 decoding="async"
               />
-              <span id="card1-preview-badge" class="absolute bottom-2 left-2 bg-slate-900/70 backdrop-blur-xs text-white text-[9px] px-2 py-0.5 rounded-full font-bold">
+              <span id="card1-preview-badge" class="absolute bottom-3 left-3 bg-slate-900/80 backdrop-blur-xs text-white text-[10px] sm:text-xs px-2.5 py-1 rounded-full font-bold shadow-xs">
                 公立高校入試型 模試用紙（B4判）
               </span>
             </div>
@@ -581,72 +569,53 @@
         <!-- ===================================================================
              CARD 02: 学力診断シート（精密な成績カルテ画像・拡大モーダル対応）
              =================================================================== -->
-        <div class="features-card w-[84vw] max-w-[325px] sm:w-[80vw] sm:max-w-[400px] md:max-w-none md:w-[76%] lg:w-[78%] shrink-0 bg-white rounded-lg p-5 sm:p-6 lg:p-8 border border-slate-200/80 shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row items-stretch gap-6 lg:gap-8 relative overflow-hidden" style="scroll-snap-align: center; scroll-snap-stop: always;">
+        <div class="features-card w-[84vw] max-w-[325px] sm:w-[80vw] sm:max-w-[400px] md:max-w-none md:w-[76%] lg:w-[78%] shrink-0 bg-white rounded-lg p-5 sm:p-6 lg:p-7 md:pr-5 lg:pr-6 border border-slate-200/80 shadow-sm hover:shadow-md transition-all flex flex-col md:grid md:grid-cols-12 items-center gap-5 lg:gap-6 relative overflow-hidden" style="scroll-snap-align: center; scroll-snap-stop: always;">
           
           <div class="absolute -top-1 -right-1 bg-brand-green text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg shadow-xs z-10">
             一番の強み
           </div>
 
-          <!-- テキストエリア（PC: 左側 / スマホ: 下側） -->
-          <div class="flex-1 flex flex-col justify-between space-y-3.5 order-2 md:order-1 min-w-0">
-            <div class="space-y-2.5">
-              <!-- ラベル -->
-              <div class="flex items-center gap-2 border-b border-slate-200/60 pb-2">
-                <span class="px-2.5 py-0.5 rounded-lg bg-brand-green text-white font-bold text-xs tracking-wide shadow-xs flex items-center gap-1">
+          <!-- テキストエリア（PC: 左側 5カラム / スマホ: 下側） -->
+          <div class="w-full md:col-span-5 flex flex-col justify-center space-y-3 sm:space-y-3.5 order-2 md:order-1 min-w-0 pr-0">
+            <div class="space-y-2.5 sm:space-y-3">
+              <!-- 【上段】独立バッジ「POINT 02」 -->
+              <div class="inline-flex">
+                <span class="px-2.5 py-1 rounded-lg bg-brand-green text-white font-bold text-xs tracking-wide shadow-xs flex items-center gap-1">
                   <span>✓</span> POINT 02
                 </span>
-                <span id="card2-point-label" class="text-xs sm:text-sm font-bold text-emerald-950">入試内申点も加味した高精度判定</span>
               </div>
+              <span id="card2-point-label" class="hidden"></span>
 
+              <!-- 【見出し】POINT 01と完全に統一した見出しフォントサイズ -->
               <h4 id="card2-title" class="section-title text-lg sm:text-xl md:text-2xl font-bold text-emerald-950 leading-snug" style="color: #064e3b !important;">
                 <span id="card2-title-text">合否可能性と弱点がわかる精密な学力診断シート</span>
-                <span id="card2-subtitle" class="block text-xs sm:text-sm font-bold text-[#8B3A18] mt-0.5">志望校合格可能性から科目ごとの弱点分野まで一目瞭然</span>
+                <span id="card2-subtitle" class="hidden"></span>
               </h4>
-              <p id="card2-desc" class="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed">
-                個人成績表は、単なる点数や全県偏差値の提示にとどまりません。公立高校の選抜制度（当日点＋内申点の総合評価）に対応し、本番入試に最も近い高精度の合否可能性（A〜E判定）を算出します。
+
+              <!-- 【本文】指定の本文文章 -->
+              <p id="card2-desc" class="text-xs sm:text-sm md:text-base text-slate-700 font-medium leading-relaxed">
+                岡山県立高校の選抜制度（当日点＋内申点の総合評価）に対応し、特別入試、一般入試も合否可能性を判定します。また、私立、国立高校の判定にも対応しています。
               </p>
             </div>
 
-            <!-- 補足枠（ミニカルテ：学年別に動的切り替え） -->
-            <div id="card2-minikarte-container" class="space-y-2 pt-1 text-xs">
-              <div class="grid grid-cols-2 gap-2">
-                <div class="p-2.5 rounded-lg bg-slate-50/80 border border-slate-200/70 shadow-2xs">
-                  <div class="flex items-center justify-between">
-                    <span class="font-bold text-brand-green block text-[11px]">岡山朝日高校 A判定</span>
-                    <span class="px-1.5 py-0.2 rounded bg-brand-green text-white text-[9px] font-bold">可能性85%以上</span>
-                  </div>
-                  <p class="text-[10px] text-slate-600 mt-1 leading-snug">合格ラインまで <strong class="text-brand-green text-xs font-bold">あと+14点</strong> (安全圏)</p>
-                </div>
-                <div class="p-2.5 rounded-lg bg-slate-50/80 border border-slate-200/70 shadow-2xs">
-                  <span class="font-bold text-slate-800 block text-[11px]">志望者内順位：28位 / 342人</span>
-                  <p class="text-[10px] text-slate-600 mt-1 leading-snug">要復習：数学「関数 y=ax²」</p>
-                </div>
-              </div>
-
-              <div class="p-3 rounded-lg bg-white border border-emerald-300/80 shadow-2xs flex items-center justify-between cursor-pointer hover:bg-emerald-50/50 transition-colors" onclick="openReportModal()">
-                <div>
-                  <span class="font-bold text-emerald-800 block text-xs">志望校判定（当日点＋内申点総合判定）</span>
-                  <p class="text-[11px] text-slate-700 mt-0.5 leading-snug">県内ほぼ全ての公立・私立・国立に対応。一般・特別入試それぞれで精密判定。</p>
-                </div>
-                <span class="text-[10px] font-bold text-brand-green shrink-0 ml-2">🔍 拡大で見る</span>
-              </div>
-            </div>
+            <!-- 補足枠（中3先行適用では空・JS切り替え用コンテナ保持） -->
+            <div id="card2-minikarte-container" class="empty:hidden"></div>
           </div>
 
-          <!-- 画像エリア（PC: 右側 / スマホ: 上側 / クリックで拡大モーダル） -->
-          <div onclick="openReportModal()" class="w-full md:w-[260px] lg:w-[300px] xl:w-[320px] shrink-0 flex flex-col justify-center order-1 md:order-2 cursor-pointer group">
-            <div class="relative w-full h-[200px] sm:h-[240px] md:h-full min-h-[220px] rounded-lg overflow-hidden shadow-xs border border-emerald-200 bg-white p-1 flex items-center justify-center group-hover:border-brand-green transition-all">
+          <!-- 画像エリア（PC: 右側 7カラム / スマホ: 上側 / クリックで拡大モーダル） -->
+          <div onclick="openReportModal()" class="w-full md:col-span-7 flex flex-col justify-center order-1 md:order-2 cursor-pointer group">
+            <div id="card2-preview-container" class="relative w-full flex items-center justify-center overflow-hidden">
               <img 
                 id="card2-preview-img"
                 src="images/preview-card-report.webp" 
                 alt="おかもし成績表サンプル（学力診断シート）" 
-                class="w-full h-full object-contain object-center rounded-lg bg-white p-1"
+                class="w-full h-auto object-contain rounded-lg block"
                 width="512"
                 height="346"
                 loading="lazy"
                 decoding="async"
               />
-              <span id="card2-preview-badge" class="absolute bottom-2 right-2 bg-slate-900/70 backdrop-blur-xs text-white text-[9px] px-2 py-0.5 rounded-full font-bold shadow-xs flex items-center gap-1">
+              <span id="card2-preview-badge" class="absolute bottom-3 right-3 bg-slate-900/80 backdrop-blur-xs text-white text-[10px] sm:text-xs px-2.5 py-1 rounded-full font-bold shadow-xs flex items-center gap-1">
                 <span>🔍 拡大して見る</span>
               </span>
             </div>
@@ -657,64 +626,49 @@
         <!-- ===================================================================
              CARD 03: 詳しくよく分かる解答解説（解答解説冊子画像）
              =================================================================== -->
-        <div class="features-card w-[84vw] max-w-[325px] sm:w-[80vw] sm:max-w-[400px] md:max-w-none md:w-[76%] lg:w-[78%] shrink-0 bg-white rounded-lg p-5 sm:p-6 lg:p-8 border border-slate-200/80 shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row items-stretch gap-6 lg:gap-8 relative overflow-hidden" style="scroll-snap-align: center; scroll-snap-stop: always;">
+        <div class="features-card w-[84vw] max-w-[325px] sm:w-[80vw] sm:max-w-[400px] md:max-w-none md:w-[76%] lg:w-[78%] shrink-0 bg-white rounded-lg p-5 sm:p-6 lg:p-7 md:pr-5 lg:pr-6 border border-slate-200/80 shadow-sm hover:shadow-md transition-all flex flex-col md:grid md:grid-cols-12 items-center md:items-stretch gap-5 lg:gap-6 relative overflow-hidden" style="scroll-snap-align: center; scroll-snap-stop: always;">
           
-          <!-- テキストエリア（PC: 左側 / スマホ: 下側） -->
-          <div class="flex-1 flex flex-col justify-between space-y-3.5 order-2 md:order-1 min-w-0">
-            <div class="space-y-2">
-              <div class="flex items-center gap-2 pb-2 border-b border-slate-200/60">
-                <span class="px-2.5 py-0.5 rounded-lg bg-brand-green text-white font-bold text-xs tracking-wide shadow-xs flex items-center gap-1">
+          <!-- テキストエリア（PC: 左側 5カラム / スマホ: 下側） -->
+          <div class="w-full md:col-span-5 flex flex-col justify-center space-y-3 sm:space-y-3.5 order-2 md:order-1 min-w-0 pr-0 self-center">
+            <div class="space-y-2.5 sm:space-y-3">
+              <!-- 【上段】独立バッジ「POINT 03」 -->
+              <div class="inline-flex">
+                <span class="px-2.5 py-1 rounded-lg bg-brand-green text-white font-bold text-xs tracking-wide shadow-xs flex items-center gap-1">
                   <span>✓</span> POINT 03
                 </span>
-                <span id="card3-point-label" class="text-xs sm:text-sm font-bold text-emerald-950">復習・弱点克服を完全サポート</span>
               </div>
+              <span id="card3-point-label" class="hidden"></span>
+
+              <!-- 【見出し】POINT 01・02と完全に統一した見出しフォントサイズ -->
               <h4 id="card3-title" class="section-title text-lg sm:text-xl md:text-2xl font-bold text-emerald-950 leading-snug" style="color: #064e3b !important;">
-                <span id="card3-title-text">詳しくよく分かる解答解説</span>
-                <span id="card3-subtitle" class="block text-xs sm:text-sm font-bold text-[#C85A32] mt-0.5">模試は解いた後が最重要。復習効率を劇的に高める丁寧な全問解説</span>
+                <span id="card3-title-text"><span class="inline-block">解き直しに疑問を残さない、</span><span class="inline-block">詳細な解答解説集</span></span>
+                <span id="card3-subtitle" class="hidden"></span>
               </h4>
-              <p id="card3-desc" class="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed">
-                模試の最大の価値は「受験後の解き直し」にあります。単に正解を示すだけでなく、「なぜその解法を選択するのか」「間違えやすい落とし穴はどこか」を徹底解説した別冊を配付。自宅学習で疑問を残しません。
+
+              <!-- 【本文】指定の本文文章 -->
+              <p id="card3-desc" class="text-xs sm:text-sm md:text-base text-slate-700 font-medium leading-relaxed">
+                模試の最大の価値は「受験後の解き直し」にあります。単に正解を示すだけでなく、解法のプロセスや採点基準まで徹底解説。自宅での解き直しに疑問を残しません。
               </p>
             </div>
 
-            <!-- 補足枠（途中式ステップ ＆ 自学自習完結） -->
-            <div id="card3-features-container" class="space-y-2 pt-1 text-xs">
-              <div class="p-3 rounded-lg bg-slate-50/80 border border-slate-200/70 shadow-2xs space-y-0.5">
-                <div class="flex items-center gap-1.5 font-bold text-slate-900">
-                  <span class="material-symbols-outlined text-sm text-[#C85A32]">check_circle</span>
-                  <span class="text-xs font-bold">疑問を残さない途中式・ステップ解説と重要公式</span>
-                </div>
-                <p class="text-[11px] sm:text-xs text-slate-700 font-medium leading-relaxed pl-5">
-                  数学の途中式や理科の計算過程、英語の構文分析、国語の読解ポイントを丁寧に図解。復習時に理解が進む構成です。
-                </p>
-              </div>
-
-              <div class="p-3 rounded-lg bg-slate-50/80 border border-slate-200/70 shadow-2xs space-y-0.5">
-                <div class="flex items-center gap-1.5 font-bold text-slate-900">
-                  <span class="material-symbols-outlined text-sm text-[#C85A32]">check_circle</span>
-                  <span class="text-xs font-bold">自学自習を完結させる、圧倒的に詳しい網羅的な解説</span>
-                </div>
-                <p class="text-[11px] sm:text-xs text-slate-700 font-medium leading-relaxed pl-5">
-                  大問から小問に至るまで計算過程が記載。「読んで納得できる」詳しさで、家庭学習での解き直しをスムーズに完結できます。
-                </p>
-              </div>
-            </div>
+            <!-- 補足枠（中3先行適用では空・JS切り替え用コンテナ保持） -->
+            <div id="card3-features-container" class="empty:hidden"></div>
           </div>
 
-          <!-- 画像エリア（PC: 右側 / スマホ: 上側） -->
-          <div class="w-full md:w-[260px] lg:w-[300px] xl:w-[320px] shrink-0 flex flex-col justify-center order-1 md:order-2">
-            <div class="relative w-full h-[200px] sm:h-[240px] md:h-full min-h-[220px] rounded-lg overflow-hidden shadow-xs border border-slate-200 bg-white flex items-center justify-center p-2">
+          <!-- 画像エリア（PC: 右側 7カラム / スマホ: 上側 / h-full stretch・object-cover object-topで上下いっぱいに表示） -->
+          <div class="w-full md:col-span-7 self-stretch order-1 md:order-2">
+            <div id="card3-preview-container" class="relative w-full h-full min-h-[240px] overflow-hidden">
               <img 
                 id="card3-preview-img"
                 src="images/preview-card-answer.webp" 
                 alt="岡山県統一模擬試験 解答と解説冊子" 
-                class="w-full h-full object-cover object-center rounded-lg"
+                class="absolute inset-0 w-full h-full object-cover object-top block"
                 width="359"
                 height="512"
                 loading="lazy"
                 decoding="async"
               />
-              <span id="card3-preview-badge" class="absolute bottom-2 left-2 bg-slate-900/70 backdrop-blur-xs text-white text-[9px] px-2 py-0.5 rounded-full font-bold">
+              <span id="card3-preview-badge" class="absolute bottom-3 left-3 bg-slate-900/80 backdrop-blur-xs text-white text-[10px] sm:text-xs px-2.5 py-1 rounded-full font-bold shadow-xs">
                 高校入試型 別冊解答解説（全問途中式・採点基準掲載）
               </span>
             </div>
@@ -915,10 +869,10 @@
               </div>
             </div>
 
-            <!-- 右カラム（申込締切ハイライト ＆ メインCTAカード） -->
-            <div class="lg:col-span-5 space-y-4">
+            <!-- 右カラム（申込締切ハイライト ＆ 個人受験について ＆ メインCTAカード） -->
+            <div class="lg:col-span-5 space-y-4 flex flex-col justify-between">
               
-              <!-- 申込締切日カード -->
+              <!-- 1. 申込締切日カード -->
               <div id="deadline-container">
                 <div class="bg-slate-50/80 rounded-r-lg border-l-4 border-emerald-600 p-4 flex items-center justify-between">
                   <div class="flex items-center gap-3">
@@ -943,41 +897,43 @@
                 </div>
               </div>
 
-              <!-- メインCTA（WEB申込ボタン） -->
-              <div id="cta-container" class="space-y-3">
-                <a href="apply.html" id="card-cta-btn" class="w-full py-4 px-6 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-bold text-base sm:text-lg flex items-center justify-center gap-2 shadow-lg shadow-orange-500/25 active:scale-[0.98] transition-all hover:shadow-xl hover:shadow-orange-500/35 hover:-translate-y-0.5">
-                  <span>10月号をWEBで申し込む</span>
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
-                </a>
-                
+              <!-- 2. 安心・信頼のサポート保証カード（個人受験のお申し込みについて） -->
+              <div class="bg-slate-50/90 rounded-lg border border-slate-200/80 p-4 sm:p-4.5 space-y-2.5 sm:space-y-3">
+                <div class="font-bold text-sm sm:text-base text-slate-900 flex items-center gap-2">
+                  <span class="text-base sm:text-lg text-brand-green shrink-0">🛡️</span>
+                  <span>個人受験のお申し込みについて</span>
+                </div>
+                <ul class="space-y-2 text-slate-700 leading-relaxed text-xs sm:text-sm">
+                  <li class="flex items-start gap-2">
+                    <span class="text-brand-green font-bold shrink-0 mt-0.5">✓</span>
+                    <span>塾に通っていない方でも1回から個人でお申し込みいただけます。</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <span class="text-brand-green font-bold shrink-0 mt-0.5">✓</span>
+                    <span>クレジットカード決済・コンビニ払い等に対応しています。</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <span class="text-brand-green font-bold shrink-0 mt-0.5">✓</span>
+                    <span>ご自宅受験の場合、問題は試験前にご自宅宛てに郵送されます。</span>
+                  </li>
+                </ul>
+              </div>
+
+              <!-- 3 & 4. 補足テキスト ＆ メインCTA（WEB申込ボタン） -->
+              <div id="cta-container" class="space-y-3 pt-1">
+                <!-- 3. 補足テキスト -->
                 <div class="text-center">
                   <span class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 bg-slate-100/90 px-3.5 py-1.5 rounded-full border border-slate-200/80">
                     <span class="w-2 h-2 rounded-full bg-secondary"></span>
                     <span>お申込みフォーム内で今後の回をまとめて選択可能です</span>
                   </span>
                 </div>
-              </div>
 
-              <!-- 安心・信頼のサポート保証カード（PC向け補足） -->
-              <div class="bg-slate-50 rounded-lg border border-slate-200/80 p-4 space-y-2.5 text-xs">
-                <div class="font-bold text-slate-800 flex items-center gap-1.5">
-                  <span class="text-brand-green">🛡️</span>
-                  <span>個人受験のお申し込みについて</span>
-                </div>
-                <ul class="space-y-1.5 text-slate-600 leading-relaxed text-[11px] sm:text-xs">
-                  <li class="flex items-start gap-1.5">
-                    <span class="text-brand-green font-bold">✓</span>
-                    <span>塾に通っていない方でも1回から個人でお申し込みいただけます。</span>
-                  </li>
-                  <li class="flex items-start gap-1.5">
-                    <span class="text-brand-green font-bold">✓</span>
-                    <span>クレジットカード決済・コンビニ払い等に対応しています。</span>
-                  </li>
-                  <li class="flex items-start gap-1.5">
-                    <span class="text-brand-green font-bold">✓</span>
-                    <span>ご自宅受験の場合、問題は試験前にご自宅宛てに郵送されます。</span>
-                  </li>
-                </ul>
+                <!-- 4. お申し込みボタン -->
+                <a href="apply.html" id="card-cta-btn" class="w-full py-4 px-6 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-bold text-base sm:text-lg flex items-center justify-center gap-2 shadow-lg shadow-orange-500/25 active:scale-[0.98] transition-all hover:shadow-xl hover:shadow-orange-500/35 hover:-translate-y-0.5">
+                  <span>10月号をWEBで申し込む</span>
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+                </a>
               </div>
 
             </div>
@@ -1255,7 +1211,239 @@
       <!-- FAQカードリストコンテナ -->
       <div class="w-full max-w-4xl mx-auto" id="faq-card">
         <div id="faq-list" class="space-y-3 text-xs sm:text-sm">
-          <!-- JS (renderFaq) により全9件のQ&Aが動的にレンダリングされます -->
+          <details class="group bg-white rounded-lg shadow-sm hover:shadow-md border border-slate-200/80 mb-3 overflow-hidden transition-all duration-200">
+            <summary class="flex justify-between items-center p-4 sm:p-5 font-bold text-slate-800 cursor-pointer list-none select-none text-sm sm:text-base group-hover:text-brand-green transition-colors gap-3 bg-white hover:bg-slate-50/50">
+              <div class="flex items-start gap-3 sm:gap-3.5 min-w-0">
+                <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-emerald-50 text-brand-green font-bold text-xs sm:text-sm flex items-center justify-center shrink-0 shadow-2xs border border-emerald-200/60 mt-0.5 group-hover:scale-105 transition-transform">
+                  Q
+                </span>
+                <span class="leading-snug pt-0.5 sm:pt-1 font-bold text-slate-900 group-hover:text-brand-green transition-colors">
+                  1回でも受験できますか？（途中からでも受験できますか？）
+                </span>
+              </div>
+              <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-100 group-hover:bg-emerald-50 flex items-center justify-center text-slate-400 group-hover:text-brand-green transition-colors shrink-0 ml-2 group-open:bg-emerald-100 group-open:text-brand-green">
+                <svg class="w-4 h-4 transition-transform duration-200 group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </div>
+            </summary>
+            <div class="p-4 sm:p-5 pt-3.5 sm:pt-4 border-t border-slate-100 bg-slate-50/40 flex items-start gap-3 sm:gap-3.5 text-slate-700 font-medium leading-relaxed text-xs sm:text-sm">
+              <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-amber-50 text-amber-700 font-bold text-xs sm:text-sm flex items-center justify-center shrink-0 border border-amber-200/70 shadow-2xs mt-0.5">
+                A
+              </span>
+              <div class="leading-relaxed flex-1 pt-0.5 sm:pt-1 text-slate-700">
+                はい、できます。いずれのどの回でも受験いただけます。
+              </div>
+            </div>
+          </details>
+
+          <details class="group bg-white rounded-lg shadow-sm hover:shadow-md border border-slate-200/80 mb-3 overflow-hidden transition-all duration-200">
+            <summary class="flex justify-between items-center p-4 sm:p-5 font-bold text-slate-800 cursor-pointer list-none select-none text-sm sm:text-base group-hover:text-brand-green transition-colors gap-3 bg-white hover:bg-slate-50/50">
+              <div class="flex items-start gap-3 sm:gap-3.5 min-w-0">
+                <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-emerald-50 text-brand-green font-bold text-xs sm:text-sm flex items-center justify-center shrink-0 shadow-2xs border border-emerald-200/60 mt-0.5 group-hover:scale-105 transition-transform">
+                  Q
+                </span>
+                <span class="leading-snug pt-0.5 sm:pt-1 font-bold text-slate-900 group-hover:text-brand-green transition-colors">
+                  申し込みはどんな方法がありますか？
+                </span>
+              </div>
+              <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-100 group-hover:bg-emerald-50 flex items-center justify-center text-slate-400 group-hover:text-brand-green transition-colors shrink-0 ml-2 group-open:bg-emerald-100 group-open:text-brand-green">
+                <svg class="w-4 h-4 transition-transform duration-200 group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </div>
+            </summary>
+            <div class="p-4 sm:p-5 pt-3.5 sm:pt-4 border-t border-slate-100 bg-slate-50/40 flex items-start gap-3 sm:gap-3.5 text-slate-700 font-medium leading-relaxed text-xs sm:text-sm">
+              <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-amber-50 text-amber-700 font-bold text-xs sm:text-sm flex items-center justify-center shrink-0 border border-amber-200/70 shadow-2xs mt-0.5">
+                A
+              </span>
+              <div class="leading-relaxed flex-1 pt-0.5 sm:pt-1 text-slate-700">
+                ホームページからの申込みになります。クレジットカード決済、コンビニ決済の2つの方法があります。
+              </div>
+            </div>
+          </details>
+
+          <details class="group bg-white rounded-lg shadow-sm hover:shadow-md border border-slate-200/80 mb-3 overflow-hidden transition-all duration-200">
+            <summary class="flex justify-between items-center p-4 sm:p-5 font-bold text-slate-800 cursor-pointer list-none select-none text-sm sm:text-base group-hover:text-brand-green transition-colors gap-3 bg-white hover:bg-slate-50/50">
+              <div class="flex items-start gap-3 sm:gap-3.5 min-w-0">
+                <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-emerald-50 text-brand-green font-bold text-xs sm:text-sm flex items-center justify-center shrink-0 shadow-2xs border border-emerald-200/60 mt-0.5 group-hover:scale-105 transition-transform">
+                  Q
+                </span>
+                <span class="leading-snug pt-0.5 sm:pt-1 font-bold text-slate-900 group-hover:text-brand-green transition-colors">
+                  受験申し込み後、都合により試験当日欠席した場合はどうなりますか？
+                </span>
+              </div>
+              <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-100 group-hover:bg-emerald-50 flex items-center justify-center text-slate-400 group-hover:text-brand-green transition-colors shrink-0 ml-2 group-open:bg-emerald-100 group-open:text-brand-green">
+                <svg class="w-4 h-4 transition-transform duration-200 group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </div>
+            </summary>
+            <div class="p-4 sm:p-5 pt-3.5 sm:pt-4 border-t border-slate-100 bg-slate-50/40 flex items-start gap-3 sm:gap-3.5 text-slate-700 font-medium leading-relaxed text-xs sm:text-sm">
+              <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-amber-50 text-amber-700 font-bold text-xs sm:text-sm flex items-center justify-center shrink-0 border border-amber-200/70 shadow-2xs mt-0.5">
+                A
+              </span>
+              <div class="leading-relaxed flex-1 pt-0.5 sm:pt-1 text-slate-700">
+                問題冊子を郵送いたします。
+              </div>
+            </div>
+          </details>
+
+          <details class="group bg-white rounded-lg shadow-sm hover:shadow-md border border-slate-200/80 mb-3 overflow-hidden transition-all duration-200">
+            <summary class="flex justify-between items-center p-4 sm:p-5 font-bold text-slate-800 cursor-pointer list-none select-none text-sm sm:text-base group-hover:text-brand-green transition-colors gap-3 bg-white hover:bg-slate-50/50">
+              <div class="flex items-start gap-3 sm:gap-3.5 min-w-0">
+                <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-emerald-50 text-brand-green font-bold text-xs sm:text-sm flex items-center justify-center shrink-0 shadow-2xs border border-emerald-200/60 mt-0.5 group-hover:scale-105 transition-transform">
+                  Q
+                </span>
+                <span class="leading-snug pt-0.5 sm:pt-1 font-bold text-slate-900 group-hover:text-brand-green transition-colors">
+                  会場受験と自宅受験の違いについて教えてください。
+                </span>
+              </div>
+              <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-100 group-hover:bg-emerald-50 flex items-center justify-center text-slate-400 group-hover:text-brand-green transition-colors shrink-0 ml-2 group-open:bg-emerald-100 group-open:text-brand-green">
+                <svg class="w-4 h-4 transition-transform duration-200 group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </div>
+            </summary>
+            <div class="p-4 sm:p-5 pt-3.5 sm:pt-4 border-t border-slate-100 bg-slate-50/40 flex items-start gap-3 sm:gap-3.5 text-slate-700 font-medium leading-relaxed text-xs sm:text-sm">
+              <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-amber-50 text-amber-700 font-bold text-xs sm:text-sm flex items-center justify-center shrink-0 border border-amber-200/70 shadow-2xs mt-0.5">
+                A
+              </span>
+              <div class="leading-relaxed flex-1 pt-0.5 sm:pt-1 text-slate-700">
+                会場受験は各実施日に会場にお越しいただき、受験していただきます。自宅受験は事前に問題用紙を郵送させていただき、実施日に受験いただきます。
+              </div>
+            </div>
+          </details>
+
+          <details class="group bg-white rounded-lg shadow-sm hover:shadow-md border border-slate-200/80 mb-3 overflow-hidden transition-all duration-200">
+            <summary class="flex justify-between items-center p-4 sm:p-5 font-bold text-slate-800 cursor-pointer list-none select-none text-sm sm:text-base group-hover:text-brand-green transition-colors gap-3 bg-white hover:bg-slate-50/50">
+              <div class="flex items-start gap-3 sm:gap-3.5 min-w-0">
+                <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-emerald-50 text-brand-green font-bold text-xs sm:text-sm flex items-center justify-center shrink-0 shadow-2xs border border-emerald-200/60 mt-0.5 group-hover:scale-105 transition-transform">
+                  Q
+                </span>
+                <span class="leading-snug pt-0.5 sm:pt-1 font-bold text-slate-900 group-hover:text-brand-green transition-colors">
+                  試験は何時からですか？
+                </span>
+              </div>
+              <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-100 group-hover:bg-emerald-50 flex items-center justify-center text-slate-400 group-hover:text-brand-green transition-colors shrink-0 ml-2 group-open:bg-emerald-100 group-open:text-brand-green">
+                <svg class="w-4 h-4 transition-transform duration-200 group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </div>
+            </summary>
+            <div class="p-4 sm:p-5 pt-3.5 sm:pt-4 border-t border-slate-100 bg-slate-50/40 flex items-start gap-3 sm:gap-3.5 text-slate-700 font-medium leading-relaxed text-xs sm:text-sm">
+              <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-amber-50 text-amber-700 font-bold text-xs sm:text-sm flex items-center justify-center shrink-0 border border-amber-200/70 shadow-2xs mt-0.5">
+                A
+              </span>
+              <div class="leading-relaxed flex-1 pt-0.5 sm:pt-1 text-slate-700">
+                模試により、また実施回により異なります。詳細決まりましたら当ホームページお知らせに実施時間も含めて実施要項を掲載いたします。そちらをご覧ください。
+              </div>
+            </div>
+          </details>
+
+          <details class="group bg-white rounded-lg shadow-sm hover:shadow-md border border-slate-200/80 mb-3 overflow-hidden transition-all duration-200">
+            <summary class="flex justify-between items-center p-4 sm:p-5 font-bold text-slate-800 cursor-pointer list-none select-none text-sm sm:text-base group-hover:text-brand-green transition-colors gap-3 bg-white hover:bg-slate-50/50">
+              <div class="flex items-start gap-3 sm:gap-3.5 min-w-0">
+                <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-emerald-50 text-brand-green font-bold text-xs sm:text-sm flex items-center justify-center shrink-0 shadow-2xs border border-emerald-200/60 mt-0.5 group-hover:scale-105 transition-transform">
+                  Q
+                </span>
+                <span class="leading-snug pt-0.5 sm:pt-1 font-bold text-slate-900 group-hover:text-brand-green transition-colors">
+                  試験当日の持参物は？（会場受験時）
+                </span>
+              </div>
+              <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-100 group-hover:bg-emerald-50 flex items-center justify-center text-slate-400 group-hover:text-brand-green transition-colors shrink-0 ml-2 group-open:bg-emerald-100 group-open:text-brand-green">
+                <svg class="w-4 h-4 transition-transform duration-200 group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </div>
+            </summary>
+            <div class="p-4 sm:p-5 pt-3.5 sm:pt-4 border-t border-slate-100 bg-slate-50/40 flex items-start gap-3 sm:gap-3.5 text-slate-700 font-medium leading-relaxed text-xs sm:text-sm">
+              <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-amber-50 text-amber-700 font-bold text-xs sm:text-sm flex items-center justify-center shrink-0 border border-amber-200/70 shadow-2xs mt-0.5">
+                A
+              </span>
+              <div class="leading-relaxed flex-1 pt-0.5 sm:pt-1 text-slate-700">
+                筆記用具、定規、コンパス、昼食、受験票・志望校記入用紙・志望校コード表をご用意ください。（会場によって上履きが必要です）
+              </div>
+            </div>
+          </details>
+
+          <details class="group bg-white rounded-lg shadow-sm hover:shadow-md border border-slate-200/80 mb-3 overflow-hidden transition-all duration-200">
+            <summary class="flex justify-between items-center p-4 sm:p-5 font-bold text-slate-800 cursor-pointer list-none select-none text-sm sm:text-base group-hover:text-brand-green transition-colors gap-3 bg-white hover:bg-slate-50/50">
+              <div class="flex items-start gap-3 sm:gap-3.5 min-w-0">
+                <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-emerald-50 text-brand-green font-bold text-xs sm:text-sm flex items-center justify-center shrink-0 shadow-2xs border border-emerald-200/60 mt-0.5 group-hover:scale-105 transition-transform">
+                  Q
+                </span>
+                <span class="leading-snug pt-0.5 sm:pt-1 font-bold text-slate-900 group-hover:text-brand-green transition-colors">
+                  おかもしでは、総合判定に通知表評価点が必要とのことですが、わからない場合どうなりますか？
+                </span>
+              </div>
+              <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-100 group-hover:bg-emerald-50 flex items-center justify-center text-slate-400 group-hover:text-brand-green transition-colors shrink-0 ml-2 group-open:bg-emerald-100 group-open:text-brand-green">
+                <svg class="w-4 h-4 transition-transform duration-200 group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </div>
+            </summary>
+            <div class="p-4 sm:p-5 pt-3.5 sm:pt-4 border-t border-slate-100 bg-slate-50/40 flex items-start gap-3 sm:gap-3.5 text-slate-700 font-medium leading-relaxed text-xs sm:text-sm">
+              <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-amber-50 text-amber-700 font-bold text-xs sm:text-sm flex items-center justify-center shrink-0 border border-amber-200/70 shadow-2xs mt-0.5">
+                A
+              </span>
+              <div class="leading-relaxed flex-1 pt-0.5 sm:pt-1 text-slate-700">
+                学力診断シートの総合判定に目安が表示されます。より精度の高い総合判定をするために通知表評価点は必要となりますので、事前にお伝えいただけるようご準備ください。
+              </div>
+            </div>
+          </details>
+
+          <details class="group bg-white rounded-lg shadow-sm hover:shadow-md border border-slate-200/80 mb-3 overflow-hidden transition-all duration-200">
+            <summary class="flex justify-between items-center p-4 sm:p-5 font-bold text-slate-800 cursor-pointer list-none select-none text-sm sm:text-base group-hover:text-brand-green transition-colors gap-3 bg-white hover:bg-slate-50/50">
+              <div class="flex items-start gap-3 sm:gap-3.5 min-w-0">
+                <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-emerald-50 text-brand-green font-bold text-xs sm:text-sm flex items-center justify-center shrink-0 shadow-2xs border border-emerald-200/60 mt-0.5 group-hover:scale-105 transition-transform">
+                  Q
+                </span>
+                <span class="leading-snug pt-0.5 sm:pt-1 font-bold text-slate-900 group-hover:text-brand-green transition-colors">
+                  ホームページから申し込みをしましたが、おかもしからの案内メールが届きません。
+                </span>
+              </div>
+              <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-100 group-hover:bg-emerald-50 flex items-center justify-center text-slate-400 group-hover:text-brand-green transition-colors shrink-0 ml-2 group-open:bg-emerald-100 group-open:text-brand-green">
+                <svg class="w-4 h-4 transition-transform duration-200 group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </div>
+            </summary>
+            <div class="p-4 sm:p-5 pt-3.5 sm:pt-4 border-t border-slate-100 bg-slate-50/40 flex items-start gap-3 sm:gap-3.5 text-slate-700 font-medium leading-relaxed text-xs sm:text-sm">
+              <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-amber-50 text-amber-700 font-bold text-xs sm:text-sm flex items-center justify-center shrink-0 border border-amber-200/70 shadow-2xs mt-0.5">
+                A
+              </span>
+              <div class="leading-relaxed flex-1 pt-0.5 sm:pt-1 text-slate-700">
+                受信が拒否されていることが考えられます。メールアドレス <a href="mailto:info-okamoshi@rakugaku.co.jp" class="text-brand-green font-bold underline hover:text-brand-greenDark">info-okamoshi@rakugaku.co.jp</a> の受信ができるようメール設定の上、ご連絡ください。
+              </div>
+            </div>
+          </details>
+
+          <details class="group bg-white rounded-lg shadow-sm hover:shadow-md border border-slate-200/80 mb-3 overflow-hidden transition-all duration-200">
+            <summary class="flex justify-between items-center p-4 sm:p-5 font-bold text-slate-800 cursor-pointer list-none select-none text-sm sm:text-base group-hover:text-brand-green transition-colors gap-3 bg-white hover:bg-slate-50/50">
+              <div class="flex items-start gap-3 sm:gap-3.5 min-w-0">
+                <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-emerald-50 text-brand-green font-bold text-xs sm:text-sm flex items-center justify-center shrink-0 shadow-2xs border border-emerald-200/60 mt-0.5 group-hover:scale-105 transition-transform">
+                  Q
+                </span>
+                <span class="leading-snug pt-0.5 sm:pt-1 font-bold text-slate-900 group-hover:text-brand-green transition-colors">
+                  試験の申し込みのキャンセルはできますか？
+                </span>
+              </div>
+              <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-100 group-hover:bg-emerald-50 flex items-center justify-center text-slate-400 group-hover:text-brand-green transition-colors shrink-0 ml-2 group-open:bg-emerald-100 group-open:text-brand-green">
+                <svg class="w-4 h-4 transition-transform duration-200 group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </div>
+            </summary>
+            <div class="p-4 sm:p-5 pt-3.5 sm:pt-4 border-t border-slate-100 bg-slate-50/40 flex items-start gap-3 sm:gap-3.5 text-slate-700 font-medium leading-relaxed text-xs sm:text-sm">
+              <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-amber-50 text-amber-700 font-bold text-xs sm:text-sm flex items-center justify-center shrink-0 border border-amber-200/70 shadow-2xs mt-0.5">
+                A
+              </span>
+              <div class="leading-relaxed flex-1 pt-0.5 sm:pt-1 text-slate-700">
+                原則として、受験料のご返金を伴うキャンセルは受け付けておりません。予めご了承ください。
+              </div>
+            </div>
+          </details>
         </div>
       </div>
     </section>
@@ -1363,39 +1551,42 @@
     </div>
   </div>
 
-  <!-- 学力診断シート拡大見本モーダル -->
-  <div id="report-modal" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-xs flex items-center justify-center p-4 hidden">
-    <div class="bg-white rounded-lg max-w-xl w-full max-h-[92vh] overflow-y-auto p-5 sm:p-7 shadow-2xl relative">
-      <button onclick="closeReportModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 font-bold text-base cursor-pointer">✕</button>
-      
-      <!-- モーダルヘッダー ＆ 学年別ミニピル切替 -->
-      <div class="pr-8 mb-3">
-        <div class="flex items-center gap-2 mb-2">
-          <span class="w-2.5 h-2.5 rounded-full bg-brand-green"></span>
-          <h4 id="modal-report-title" class="section-title text-base sm:text-lg font-bold text-emerald-950" style="color: #064e3b !important;">中3生｜学力診断シート（成績カルテ）見本</h4>
-        </div>
-        <!-- モーダル内学年ピル -->
-        <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-lg w-fit" role="tablist" aria-label="モーダル内学年切り替え">
-          <button type="button" onclick="switchModalGrade('c3')" id="modal-pill-c3" class="px-2.5 sm:px-3 py-1 text-xs font-bold rounded-lg transition-all bg-emerald-800 text-white shadow-xs cursor-pointer">中3</button>
-          <button type="button" onclick="switchModalGrade('c12')" id="modal-pill-c12" class="px-2.5 sm:px-3 py-1 text-xs font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900 cursor-pointer">中1・2</button>
-          <button type="button" onclick="switchModalGrade('p6')" id="modal-pill-p6" class="px-2.5 sm:px-3 py-1 text-xs font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900 cursor-pointer">小6</button>
-        </div>
+  <!-- 学力診断シート拡大見本モーダル（画像ライトボックス） -->
+  <div id="report-modal" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-sm flex flex-col items-center justify-center p-3 sm:p-5 md:p-6 hidden select-none" onclick="if(event.target === this) closeReportModal()" role="dialog" aria-modal="true" aria-labelledby="modal-report-title">
+    
+    <!-- モーダルヘッダーバー -->
+    <div class="w-full max-w-5xl flex items-center justify-between pb-2 px-1 text-white">
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-brand-green"></span>
+        <h4 id="modal-report-title" class="text-sm sm:text-base font-bold text-white tracking-wide">
+          学力診断シート（個人成績表・2面構成）見本
+        </h4>
+        <span class="hidden sm:inline text-xs text-slate-300">（当日点＋内申点の総合評価・弱点分析）</span>
       </div>
+      <button type="button" onclick="closeReportModal()" aria-label="閉じる" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs sm:text-sm font-bold transition-colors cursor-pointer border border-white/20 shadow-xs">
+        <span class="text-base leading-none">✕</span>
+        <span>閉じる</span>
+      </button>
+    </div>
 
-      <p id="modal-report-desc" class="text-xs sm:text-sm text-slate-600 mb-4 leading-relaxed">
-        試験後にお届けする個人カルテです。単なる点数や偏差値だけでなく、志望校合格までの具体的な「あと何点」や優先して克服すべき単元がひと目で分かります。
-      </p>
+    <!-- 画像コンテナ（画面いっぱいの高解像度拡大表示・スクロール＆ズーム対応） -->
+    <div id="modal-img-container" class="w-full max-w-5xl max-h-[82vh] overflow-auto rounded-lg bg-white p-2 sm:p-4 shadow-2xl flex items-center justify-center overscroll-contain" style="touch-action: pan-x pan-y pinch-zoom;">
+      <img 
+        id="modal-report-img"
+        src="images/preview-card-report.webp" 
+        alt="学力診断シート（成績カルテ・2面構成）高解像度見本" 
+        class="w-full h-auto max-h-[76vh] object-contain rounded-md block cursor-zoom-in transition-all duration-200"
+        onclick="toggleModalImageZoom(this)"
+      />
+    </div>
 
-      <!-- 動的カルテコンテナ -->
-      <div id="modal-report-body" class="border-2 border-slate-200 rounded-lg p-4 bg-slate-50 space-y-4 text-xs">
-        <!-- JSで初期生成・動的レンダリング -->
-      </div>
-
-      <div class="mt-5 text-center">
-        <button onclick="closeReportModal()" class="w-full py-3.5 rounded-lg bg-emerald-800 text-white font-bold text-xs sm:text-sm shadow-md hover:bg-emerald-700 transition-colors cursor-pointer">
-          見本を閉じる
-        </button>
-      </div>
+    <!-- 下部操作ガイドバー -->
+    <div class="w-full max-w-5xl pt-2 px-1 flex items-center justify-between text-[11px] sm:text-xs text-slate-300">
+      <span class="flex items-center gap-1">
+        <span>🔍</span>
+        <span>画像クリックで拡大／標準サイズ切替。スマホではピンチアウトで自由拡大・スクロールできます。</span>
+      </span>
+      <button type="button" onclick="closeReportModal()" class="text-slate-300 hover:text-white underline cursor-pointer shrink-0 ml-3">✕ 閉じる</button>
     </div>
   </div>
 
@@ -2529,6 +2720,12 @@
           `;
 
           ctaContainer.innerHTML = `
+            <div class="text-center">
+              <span class="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-slate-600 bg-slate-100/90 px-3.5 py-1.5 rounded-full border border-slate-200/80">
+                <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+                <span>お申込みフォーム内で今後の回をまとめて選択可能です</span>
+              </span>
+            </div>
             <button disabled class="w-full py-4 px-6 rounded-lg bg-slate-200 text-slate-400 font-bold text-sm sm:text-base cursor-not-allowed">
               ${r.monthName}の受付は終了しました
             </button>
@@ -2545,6 +2742,12 @@
           `;
 
           ctaContainer.innerHTML = `
+            <div class="text-center">
+              <span class="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-slate-600 bg-slate-100/90 px-3.5 py-1.5 rounded-full border border-slate-200/80">
+                <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+                <span>お申込みフォーム内で今後の回をまとめて選択可能です</span>
+              </span>
+            </div>
             <button disabled class="w-full py-4 px-6 rounded-lg bg-slate-100 text-slate-400 border border-slate-200 font-bold text-sm sm:text-base cursor-not-allowed">
               ${r.monthName}は現在準備中です
             </button>
@@ -2578,16 +2781,16 @@
           `;
 
           ctaContainer.innerHTML = `
-            <a href="apply.html?grade=${currentGrade}&month=${r.monthNum}" class="w-full py-4 px-6 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-bold text-base sm:text-lg flex items-center justify-center gap-2 shadow-lg shadow-orange-500/25 hover:shadow-orange-500/35 active:scale-[0.98] transition-all hover:-translate-y-0.5">
-              <span>${r.monthName}をWEBで申し込む</span>
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
-            </a>
             <div class="text-center">
-              <span class="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-slate-700 bg-slate-100 px-3.5 py-1.5 rounded-full border border-slate-200">
+              <span class="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-slate-700 bg-slate-100/90 px-3.5 py-1.5 rounded-full border border-slate-200/80">
                 <span class="w-2 h-2 rounded-full bg-orange-500"></span>
                 <span>お申込みフォーム内で今後の回をまとめて選択可能です</span>
               </span>
             </div>
+            <a href="apply.html?grade=${currentGrade}&month=${r.monthNum}" class="w-full py-4 px-6 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-bold text-base sm:text-lg flex items-center justify-center gap-2 shadow-lg shadow-orange-500/25 hover:shadow-orange-500/35 active:scale-[0.98] transition-all hover:-translate-y-0.5">
+              <span>${r.monthName}をWEBで申し込む</span>
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+            </a>
           `;
         }
       }
@@ -2695,49 +2898,21 @@
     const featureCard1Data = {
       c3: {
         badge: "中3生",
-        pointLabel: "岡山県入試の徹底分析",
+        pointLabel: "",
         title: "岡山県公立高校入試の出題傾向を完全再現",
-        sub: "出題傾向・難易度・問題用紙の体裁まで岡山県入試を精密再現",
-        desc: "岡山の県立高校入試を長年研究。記述量や配点バランスまで本番そっくりです。単なる知識の暗記では解けない、岡山県特有の「思考力・判断力・表現力」を問う記述問題やグラフ・資料分析問題にも徹底して合わせています。",
-        featuresHtml: `
-          <div class="p-3 rounded-lg bg-slate-50/80 border border-slate-200/70 shadow-2xs space-y-0.5">
-            <div class="flex items-center gap-1.5 font-bold text-slate-900">
-              <span class="px-1.5 py-0.2 rounded bg-brand-green text-white text-[10px] font-bold">中3生</span>
-              <span class="text-xs font-bold">岡山県公立高校入試の完全シミュレーション</span>
-            </div>
-            <p class="text-[11px] sm:text-xs text-slate-700 font-medium leading-relaxed">
-              一般入試の出題形式・配点・難易度を完全再現。実物さながらのB4判・横綴じ冊子で本番当日の時間配分や独特の解答用紙に慣れることができます。
-            </p>
-          </div>
-          <div class="p-2.5 rounded-lg bg-emerald-50/60 border border-emerald-200/70 flex items-center justify-between">
-            <span class="text-[11px] font-bold text-brand-green">★ 幾何図形の証明記述・理科の実験手順論述・英語の条件英作文まで完全準拠</span>
-            <span class="text-[10px] font-bold text-emerald-800 shrink-0 ml-2">県内最多クラス</span>
-          </div>
-        `,
-        previewLabel: "公立高校入試型（大問・幾何図形・記述式採点基準・5教科対応）"
+        sub: "",
+        desc: "岡山の県立高校入試の記述量や配点バランスまで本番そっくりです。単なる知識の暗記では解けない、岡山県特有の「思考力・判断力・表現力」を問う記述問題やグラフ・資料分析問題にも徹底して合わせています。",
+        featuresHtml: "",
+        previewLabel: "公立高校入試型 模試用紙（B4判）"
       },
       c12: {
         badge: "中1・2生",
-        pointLabel: "中1・2 学力到達度の客観判定",
-        title: "定期テストでは測れない県内基準の標準・応用問題",
-        sub: "教科書の基礎から応用・新傾向の思考力問題まで高校入試に向けた早期の弱点発見に最適",
-        desc: "教科書の基礎から応用・新傾向の思考力問題まで。高校入試に向けた早期の弱点発見に最適です。定期テストの暗記学習だけでは見えてこない、高校入試に必要な初見問題への対応力と真の学力を客観的に測ります。",
-        featuresHtml: `
-          <div class="p-3 rounded-lg bg-slate-50/80 border border-slate-200/70 shadow-2xs space-y-0.5">
-            <div class="flex items-center gap-1.5 font-bold text-slate-900">
-              <span class="px-1.5 py-0.2 rounded bg-emerald-100 text-brand-green text-[10px] font-bold">中1・2生</span>
-              <span class="text-xs font-bold">学力診断型（標準〜応用構成・初見問題対応力・つまずき単元特定）</span>
-            </div>
-            <p class="text-[11px] sm:text-xs text-slate-700 font-medium leading-relaxed">
-              既習範囲から出題されるため、未習内容に不安を感じることなく現在の真の定着度と弱点分野を客観的に明確化できます。
-            </p>
-          </div>
-          <div class="p-2.5 rounded-lg bg-white border border-slate-200/70 shadow-2xs flex items-center justify-between">
-            <span class="text-[11px] font-bold text-slate-700">★ 教科書の基礎から新傾向の思考力問題までバランス出題</span>
-            <span class="text-[10px] font-bold text-brand-green shrink-0 ml-2">早期の弱点克服</span>
-          </div>
-        `,
-        previewLabel: "学力診断型（標準〜応用構成・初見問題対応力・つまずき単元特定）"
+        pointLabel: "",
+        title: "学校の定期テストでは測れない、「県全体」での本当の学力",
+        sub: "",
+        desc: "定期テストの暗記学習だけでは見えてこない、高校入試に必要な初見問題への対応力を測定。学校内の順位ではなく、岡山県全体の受験者の中での「真の現在地」と弱点を早期に把握できます。",
+        featuresHtml: "",
+        previewLabel: "中1・2生 学力診断型 模試用紙"
       },
       p6: {
         badge: "小6生",
@@ -2766,46 +2941,11 @@
 
     const featureCard2Data = {
       c3: {
-        pointLabel: "入試内申点も加味した高精度判定",
+        pointLabel: "",
         title: "合否可能性と弱点がわかる精密な学力診断シート",
-        sub: "志望校合格可能性から科目ごとの弱点分野まで一目瞭然",
-        desc: "個人成績表は、単なる点数や全県偏差値の提示にとどまりません。公立高校の選抜制度（当日点＋内申点の総合評価）に対応し、本番入試に最も近い高精度の合否可能性（A〜E判定）を算出します。",
-        miniKarteHtml: `
-          <div class="grid grid-cols-2 gap-2">
-            <div class="p-2.5 rounded-lg bg-slate-50/80 border border-slate-200/70 shadow-2xs">
-              <div class="flex items-center justify-between">
-                <span class="font-bold text-brand-green block text-[11px]">岡山朝日高校 A判定</span>
-                <span class="px-1.5 py-0.2 rounded bg-brand-green text-white text-[9px] font-bold">可能性85%以上</span>
-              </div>
-              <div class="mt-1.5 space-y-1">
-                <div class="flex justify-between items-center text-[10px] text-slate-600">
-                  <span>合格まで</span>
-                  <span class="text-brand-green font-bold text-[11px]">あと+14点 (安全圏)</span>
-                </div>
-                <div class="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden" title="合格ラインゲージ">
-                  <div class="bg-brand-green h-full rounded-full" style="width: 86%;"></div>
-                </div>
-              </div>
-            </div>
-            <div class="p-2.5 rounded-lg bg-slate-50/80 border border-slate-200/70 shadow-2xs">
-              <div class="flex items-center justify-between">
-                <span class="font-bold text-slate-800 block text-[11px]">志望者内順位</span>
-                <span class="text-[10px] font-bold text-brand-green">28位 / 342人</span>
-              </div>
-              <div class="mt-1.5 text-[10px] text-slate-600">
-                <span>要復習単元:</span>
-                <span class="font-bold text-slate-900 block truncate">数学「関数 y=ax²」</span>
-              </div>
-            </div>
-          </div>
-          <div class="p-3 rounded-lg bg-emerald-50/60 border border-emerald-200/80 flex items-center justify-between cursor-pointer hover:bg-emerald-50 transition-colors" onclick="openReportModal('c3')">
-            <div>
-              <span class="font-bold text-emerald-800 block text-xs">志望校判定（当日点＋内申点総合判定）</span>
-              <p class="text-[11px] text-slate-700 mt-0.5 leading-snug">県内ほぼ全ての公立・私立・国立に対応。一般・特別入試それぞれで精密判定。</p>
-            </div>
-            <span class="text-[10px] font-bold text-brand-green shrink-0 ml-2">🔍 拡大で見る</span>
-          </div>
-        `,
+        sub: "",
+        desc: "岡山県立高校の選抜制度（当日点＋内申点の総合評価）に対応し、特別入試、一般入試も合否可能性を判定します。また、私立、国立高校の判定にも対応しています。",
+        miniKarteHtml: "",
         modal: {
           title: "中3生｜学力診断シート（成績カルテ）見本",
           desc: "試験後にお届けする個人カルテです。単なる点数や偏差値だけでなく、志望校合格までの具体的な「あと何点」や優先して克服すべき単元がひと目で分かります。",
@@ -2873,41 +3013,11 @@
         }
       },
       c12: {
-        pointLabel: "定期テストを超えた客観的到達度",
-        title: "県内での現在地と苦手単元がひと目でわかる学習カルテ",
-        sub: "教科書単元ごとの定着度と優先復習分野をピンポイント可視化",
-        desc: "教科書の単元ごとの定着度を県内平均と比較。中1・2のうちに克服しておくべき優先復習単元を具体的に提示し、日々の自学自習や定期テスト対策へ直結させます。",
-        miniKarteHtml: `
-          <div class="grid grid-cols-2 gap-2">
-            <div class="p-2.5 rounded-lg bg-slate-50/80 border border-slate-200/70 shadow-2xs">
-              <div class="flex items-center justify-between">
-                <span class="font-bold text-brand-green block text-[11px]">総合学力到達度 S</span>
-                <span class="px-1.5 py-0.2 rounded bg-emerald-100 text-brand-green text-[9px] font-bold">上位10%</span>
-              </div>
-              <div class="mt-1.5 space-y-1">
-                <div class="flex justify-between items-center text-[10px] text-slate-600">
-                  <span>県平均比較グラフ</span>
-                  <span class="text-brand-green font-bold text-[11px]">+32点</span>
-                </div>
-                <div class="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden flex" title="県平均比較">
-                  <div class="bg-slate-400 h-full" style="width: 50%;"></div>
-                  <div class="bg-brand-green h-full" style="width: 38%;"></div>
-                </div>
-              </div>
-            </div>
-            <div class="p-2.5 rounded-lg bg-slate-50/80 border border-slate-200/70 shadow-2xs">
-              <span class="font-bold text-slate-800 block text-[11px]">中1・2総復習優先単元カルテ</span>
-              <p class="text-[10px] text-slate-600 mt-1 leading-snug">要克服：<strong class="font-bold text-slate-900 block truncate">数学「方程式の応用」</strong></p>
-            </div>
-          </div>
-          <div class="p-3 rounded-lg bg-white border border-slate-200/80 shadow-2xs flex items-center justify-between cursor-pointer hover:bg-slate-50 transition-colors" onclick="openReportModal('c12')">
-            <div>
-              <span class="font-bold text-slate-900 block text-xs">単元別到達度・県内客観順位判定</span>
-              <p class="text-[11px] text-slate-700 mt-0.5 leading-snug">定期テストでは見えない県内全体での位置と、次学年に向けた弱点を早期発見。</p>
-            </div>
-            <span class="text-[10px] font-bold text-brand-green shrink-0 ml-2">🔍 拡大で見る</span>
-          </div>
-        `,
+        pointLabel: "",
+        title: "苦手単元がひと目でわかり、高校入試に向けて志望校の合格可能性がわかる成績カルテ",
+        sub: "",
+        desc: "教科書レベルの定着度を県内受験者と比較。中1・2のうちに克服しておくべき優先復習単元を具体的に提示し、日々の学習や定期テスト対策へ直結させます。また志望校判定により、今の学力での到達点も計測できます。",
+        miniKarteHtml: "",
         modal: {
           title: "中1・2生｜学力診断シート（成績カルテ）見本",
           desc: "教科書の基礎から応用まで、単元ごとの定着度を県内平均と比較。現時点での到達度と、高校入試に向けた「つまずき単元」がひと目で分かります。",
@@ -3079,57 +3189,19 @@
 
     const featureCard3Data = {
       c3: {
-        pointLabel: "入試本番を見据えた復習・採点基準",
-        title: "公立高校入試の採点基準まで網羅した解答解説",
-        sub: "模試は解いた後が最重要。減点されない記述法と途中式を完全図解",
-        desc: "模試の最大の価値は「受験後の解き直し」にあります。単に正解を示すだけでなく、「なぜその解法を選択するのか」「部分点がもらえる採点基準や落とし穴はどこか」を徹底解説した別冊を配付。自宅学習で疑問を残しません。",
-        featuresHtml: `
-          <div class="p-3 rounded-lg bg-slate-50/80 border border-slate-200/70 shadow-2xs space-y-0.5">
-            <div class="flex items-center gap-1.5 font-bold text-slate-900">
-              <span class="material-symbols-outlined text-sm text-[#C85A32]">check_circle</span>
-              <span class="text-xs font-bold">疑問を残さない途中式・ステップ解説と重要公式</span>
-            </div>
-            <p class="text-[11px] sm:text-xs text-slate-700 font-medium leading-relaxed pl-5">
-              数学の途中式や理科の計算過程、英語の構文分析、国語の読解ポイントを丁寧に図解。復習時に理解が進む構成です。
-            </p>
-          </div>
-          <div class="p-3 rounded-lg bg-slate-50/80 border border-slate-200/70 shadow-2xs space-y-0.5">
-            <div class="flex items-center gap-1.5 font-bold text-slate-900">
-              <span class="material-symbols-outlined text-sm text-[#C85A32]">check_circle</span>
-              <span class="text-xs font-bold">自学自習を完結させる、圧倒的に詳しい網羅的な解説</span>
-            </div>
-            <p class="text-[11px] sm:text-xs text-slate-700 font-medium leading-relaxed pl-5">
-              大問から小問に至るまで計算過程が記載。「読んで納得できる」詳しさで、家庭学習での解き直しをスムーズに完結できます。
-            </p>
-          </div>
-        `,
+        pointLabel: "",
+        title: '<span class="inline-block">解き直しに疑問を残さない、</span><span class="inline-block">詳細な解答解説集</span>',
+        sub: "",
+        desc: "模試の最大の価値は「受験後の解き直し」にあります。単に正解を示すだけでなく、解法のプロセスや採点基準まで徹底解説。自宅での解き直しに疑問を残しません。",
+        featuresHtml: "",
         previewLabel: "高校入試型 別冊解答解説（全問途中式・採点基準掲載）"
       },
       c12: {
-        pointLabel: "つまずきを早期解消する基礎〜応用解説",
-        title: "解き直しで苦手をゼロにする単元別ステップ解説",
-        sub: "間違えた原因がすぐわかる！次回の定期テスト・実力テストに直結",
+        pointLabel: "",
+        title: "解き直しで苦手をゼロにする問題別ステップ解説",
+        sub: "",
         desc: "中1・2の学習で最も大切なのは、つまずいた単元をそのまま放置しないことです。基礎事項の確認から標準・応用問題の着眼点まで、順を追って理解できる親切な解説で自学自習を強力にバックアップします。",
-        featuresHtml: `
-          <div class="p-3 rounded-lg bg-slate-50/80 border border-slate-200/70 shadow-2xs space-y-0.5">
-            <div class="flex items-center gap-1.5 font-bold text-slate-900">
-              <span class="material-symbols-outlined text-sm text-brand-green">check_circle</span>
-              <span class="text-xs font-bold">つまずきの原因がすぐわかる途中式・基本事項のまとめ</span>
-            </div>
-            <p class="text-[11px] sm:text-xs text-slate-700 font-medium leading-relaxed pl-5">
-              「どこで計算を間違えたか」「どの公式・文法を忘れていたか」が一目でわかる構成。定期テスト前の総復習にも役立ちます。
-            </p>
-          </div>
-          <div class="p-3 rounded-lg bg-slate-50/80 border border-slate-200/70 shadow-2xs space-y-0.5">
-            <div class="flex items-center gap-1.5 font-bold text-slate-900">
-              <span class="material-symbols-outlined text-sm text-brand-green">check_circle</span>
-              <span class="text-xs font-bold">次につながる類題演習ヒントと学習アドバイス</span>
-            </div>
-            <p class="text-[11px] sm:text-xs text-slate-700 font-medium leading-relaxed pl-5">
-              教科書の基礎から応用へのステップアップを丁寧にナビゲート。家庭学習でも一人で無理なく復習を完結できます。
-            </p>
-          </div>
-        `,
+        featuresHtml: "",
         previewLabel: "中1・2学力診断型 解答解説（ステップ式途中解説・重要事項まとめ）"
       },
       p6: {
@@ -3207,23 +3279,37 @@
 
     function switchCard1Grade(grade) {
       currentCard1Grade = grade;
-      const data = featureCard1Data[grade];
+      const data = featureCard1Data[grade] || featureCard1Data.c12;
       if (!data) return;
 
       const pointLabel = document.getElementById('card1-point-label');
-      if (pointLabel) pointLabel.textContent = data.pointLabel;
+      if (pointLabel) {
+        pointLabel.textContent = data.pointLabel || '';
+        if (data.pointLabel) {
+          pointLabel.classList.remove('hidden');
+        } else {
+          pointLabel.classList.add('hidden');
+        }
+      }
 
       const titleText = document.getElementById('card1-title-text');
       if (titleText) titleText.textContent = data.title;
 
       const subtitle = document.getElementById('card1-subtitle');
-      if (subtitle) subtitle.textContent = data.sub;
+      if (subtitle) {
+        subtitle.textContent = data.sub || '';
+        if (data.sub) {
+          subtitle.classList.remove('hidden');
+        } else {
+          subtitle.classList.add('hidden');
+        }
+      }
 
       const desc = document.getElementById('card1-desc');
       if (desc) desc.textContent = data.desc;
 
       const featuresContainer = document.getElementById('card1-features-container');
-      if (featuresContainer) featuresContainer.innerHTML = data.featuresHtml;
+      if (featuresContainer) featuresContainer.innerHTML = data.featuresHtml || '';
 
       const previewBadge = document.getElementById('card1-preview-badge');
       if (previewBadge) previewBadge.textContent = data.previewLabel;
@@ -3232,97 +3318,133 @@
     function switchCard2Grade(grade) {
       currentCard2Grade = grade;
       currentModalGrade = grade;
-      const data = featureCard2Data[grade];
+      const data = featureCard2Data[grade] || featureCard2Data.c12;
       if (!data) return;
 
       const pointLabel = document.getElementById('card2-point-label');
-      if (pointLabel) pointLabel.textContent = data.pointLabel;
+      if (pointLabel) {
+        pointLabel.textContent = data.pointLabel || '';
+        if (data.pointLabel) {
+          pointLabel.classList.remove('hidden');
+        } else {
+          pointLabel.classList.add('hidden');
+        }
+      }
 
       const titleText = document.getElementById('card2-title-text');
       if (titleText) titleText.textContent = data.title;
 
       const subtitle = document.getElementById('card2-subtitle');
-      if (subtitle) subtitle.textContent = data.sub;
+      if (subtitle) {
+        subtitle.textContent = data.sub || '';
+        if (data.sub) {
+          subtitle.classList.remove('hidden');
+        } else {
+          subtitle.classList.add('hidden');
+        }
+      }
 
       const desc = document.getElementById('card2-desc');
       if (desc) desc.textContent = data.desc;
 
       const minikarteContainer = document.getElementById('card2-minikarte-container');
-      if (minikarteContainer) minikarteContainer.innerHTML = data.miniKarteHtml;
+      if (minikarteContainer) minikarteContainer.innerHTML = data.miniKarteHtml || '';
     }
 
     function switchCard3Grade(grade) {
       currentCard3Grade = grade;
-      const data = featureCard3Data[grade];
+      const data = featureCard3Data[grade] || featureCard3Data.c12;
       if (!data) return;
 
       const pointLabel = document.getElementById('card3-point-label');
-      if (pointLabel) pointLabel.textContent = data.pointLabel;
+      if (pointLabel) {
+        pointLabel.textContent = data.pointLabel || '';
+        if (data.pointLabel) {
+          pointLabel.classList.remove('hidden');
+        } else {
+          pointLabel.classList.add('hidden');
+        }
+      }
 
       const titleText = document.getElementById('card3-title-text');
-      if (titleText) titleText.textContent = data.title;
+      if (titleText) titleText.innerHTML = data.title;
 
       const subtitle = document.getElementById('card3-subtitle');
-      if (subtitle) subtitle.textContent = data.sub;
+      if (subtitle) {
+        subtitle.textContent = data.sub || '';
+        if (data.sub) {
+          subtitle.classList.remove('hidden');
+        } else {
+          subtitle.classList.add('hidden');
+        }
+      }
 
       const desc = document.getElementById('card3-desc');
       if (desc) desc.textContent = data.desc;
 
       const featuresContainer = document.getElementById('card3-features-container');
-      if (featuresContainer) featuresContainer.innerHTML = data.featuresHtml;
+      if (featuresContainer) featuresContainer.innerHTML = data.featuresHtml || '';
 
       const previewBadge = document.getElementById('card3-preview-badge');
       if (previewBadge) previewBadge.textContent = data.previewLabel;
     }
 
-    // 診断シートモーダルの開閉関数
+    // 診断シート拡大モーダル（画像ライトボックス）の開閉・操作関数
     function openReportModal(grade) {
-      const targetGrade = grade || currentCard2Grade || 'c3';
-      switchModalGrade(targetGrade);
       const modal = document.getElementById('report-modal');
-      if (modal) modal.classList.remove('hidden');
+      if (modal) {
+        modal.classList.remove('hidden');
+        const img = document.getElementById('modal-report-img');
+        if (img && img.classList.contains('is-zoomed')) {
+          toggleModalImageZoom(img);
+        }
+      }
       document.body.style.overflow = 'hidden';
     }
 
-    function switchModalGrade(grade) {
-      currentModalGrade = grade;
-      const data = featureCard2Data[grade];
-      if (!data) return;
-
-      ['c3', 'c12', 'p6'].forEach(g => {
-        const btn = document.getElementById(`modal-pill-${g}`);
-        if (!btn) return;
-        if (g === grade) {
-          btn.className = 'px-2.5 sm:px-3 py-1 text-xs font-bold rounded-lg transition-all bg-emerald-800 text-white shadow-xs cursor-pointer';
-        } else {
-          btn.className = 'px-2.5 sm:px-3 py-1 text-xs font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900 cursor-pointer';
-        }
-      });
-
-      const modalTitle = document.getElementById('modal-report-title');
-      if (modalTitle) modalTitle.textContent = data.modal.title;
-
-      const modalDesc = document.getElementById('modal-report-desc');
-      if (modalDesc) modalDesc.textContent = data.modal.desc;
-
-      const modalBody = document.getElementById('modal-report-body');
-      if (modalBody) modalBody.innerHTML = data.modal.bodyHtml;
+    function toggleModalImageZoom(img) {
+      if (!img) return;
+      const isZoomed = img.classList.contains('is-zoomed');
+      if (isZoomed) {
+        img.classList.remove('is-zoomed', 'cursor-zoom-out', 'min-w-[900px]', 'md:min-w-[1200px]');
+        img.classList.add('cursor-zoom-in', 'max-h-[76vh]', 'object-contain');
+      } else {
+        img.classList.remove('cursor-zoom-in', 'max-h-[76vh]', 'object-contain');
+        img.classList.add('is-zoomed', 'cursor-zoom-out', 'min-w-[900px]', 'md:min-w-[1200px]');
+      }
     }
 
     function closeReportModal() {
       const modal = document.getElementById('report-modal');
       if (modal) modal.classList.add('hidden');
       document.body.style.overflow = '';
+      const img = document.getElementById('modal-report-img');
+      if (img && img.classList.contains('is-zoomed')) {
+        toggleModalImageZoom(img);
+      }
     }
 
+    // Escキーで閉じる対応
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        const modal = document.getElementById('report-modal');
+        if (modal && !modal.classList.contains('hidden')) {
+          closeReportModal();
+        }
+      }
+    });
+
     // グローバル公開
+    window.selectGrade = selectGrade;
+    window.renderRoundTabs = renderRoundTabs;
+    window.renderCard = renderCard;
     window.switchFeatureGrade = switchFeatureGrade;
     window.switchCard1Grade = switchCard1Grade;
     window.switchCard2Grade = switchCard2Grade;
     window.switchCard3Grade = switchCard3Grade;
     window.openReportModal = openReportModal;
-    window.switchModalGrade = switchModalGrade;
     window.closeReportModal = closeReportModal;
+    window.toggleModalImageZoom = toggleModalImageZoom;
 
     // 共通ヘッダー制御ロジック
     function toggleNextExamDropdown(event) {
@@ -3950,7 +4072,6 @@
       // 「選ばれる3つの理由」全3パネル一括初期化
       const featureInitGrade = (initialGrade === 'p6') ? 'p6' : (initialGrade === 'c1' || initialGrade === 'c2') ? 'c12' : 'c3';
       switchFeatureGrade(featureInitGrade);
-      switchModalGrade(featureInitGrade);
 
       // Features カルーセルの初期化・スクロール監視
       const featuresCarousel = document.getElementById('features-carousel');

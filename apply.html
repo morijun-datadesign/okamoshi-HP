@@ -219,7 +219,7 @@
           </button>
           <div id="nav-next-exam-dropdown" class="hidden absolute left-0 top-full mt-2 w-48 rounded-lg bg-white border border-slate-100 shadow-lg p-2 z-50 transition-all duration-200">
             <div class="space-y-1 text-sm font-bold">
-              <a href="index.html#about" class="flex items-center justify-between px-3.5 py-2.5 rounded-lg text-slate-700 hover:bg-slate-50 hover:text-primary transition-colors cursor-pointer">
+              <a href="index.html#features" class="flex items-center justify-between px-3.5 py-2.5 rounded-lg text-slate-700 hover:bg-slate-50 hover:text-primary transition-colors cursor-pointer">
                 <span>初めての方へ</span>
                 <span class="material-symbols-outlined text-base text-slate-400">chevron_right</span>
               </a>
@@ -293,7 +293,7 @@
             <span id="mobile-exam-chevron" class="material-symbols-outlined text-xl transition-transform duration-200 transform rotate-180">expand_more</span>
           </button>
           <div id="mobile-exam-menu" class="border-t border-slate-200 bg-white divide-y divide-slate-100">
-          <a href="index.html#about" class="w-full flex items-center justify-between px-4 py-3 font-bold text-slate-700 hover:bg-slate-50 hover:text-primary transition-colors text-left">
+          <a href="index.html#features" class="w-full flex items-center justify-between px-4 py-3 font-bold text-slate-700 hover:bg-slate-50 hover:text-primary transition-colors text-left">
             <span>初めての方へ</span>
             <span class="text-slate-300">→</span>
           </a>
@@ -905,8 +905,8 @@
               <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
                 <span class="font-bold text-slate-700 text-xs sm:text-[13px]">お支払い方法</span>
                 <div id="summaryPaymentMethod">
-                  <div class="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-900 border border-emerald-200/80 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold shadow-2xs self-start sm:self-auto">
-                    <span class="material-symbols-outlined text-base text-emerald-700">credit_card</span>
+                  <div class="flex items-center gap-1.5 text-xs sm:text-sm font-bold text-slate-800">
+                    <span class="material-symbols-outlined text-base text-slate-600">credit_card</span>
                     <span>クレジットカード決済（Stripe）</span>
                   </div>
                 </div>
@@ -935,11 +935,6 @@
                   コンビニ決済期限（<strong id="agreeConvenienceDeadlineText" class="text-red-600 font-bold">10/4(日)まで</strong>）および自動キャンセルについて確認した
                 </span>
               </label>
-
-              <!-- コンビニ決済 注意書き（ボタン直上・連動表示） -->
-              <div id="convenienceSubmitWarning" class="hidden text-center text-xs sm:text-[13px] font-bold text-red-600">
-                ※ <span id="convenienceDeadlineDate"></span>までにコンビニでのお支払いが必要です
-              </div>
 
               <!-- フォーム内インラインエラーメッセージ（送信ボタン直上） -->
               <div id="formErrorMessage" class="hidden p-3.5 sm:p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs sm:text-sm font-bold flex items-start gap-2.5 shadow-xs transition-all duration-300" role="alert" aria-live="assertive">
@@ -1844,18 +1839,17 @@
           `;
         } else {
           listContainer.innerHTML = selectedList.map((item, idx) => `
-            <div class="flex flex-col gap-1.5 ${idx > 0 ? 'pt-2.5 border-t border-slate-100' : ''}">
+            <div class="flex flex-col gap-1.5 ${idx > 0 ? 'pt-2.5 border-t border-slate-200/60' : ''}">
               <div class="flex items-start justify-between gap-2">
                 <span class="font-bold text-emerald-950 text-xs sm:text-[14px] leading-snug">${item.title} (${item.issueName})</span>
                 <span class="font-headline-sm text-xs sm:text-[15px] font-bold text-emerald-950 shrink-0">¥${item.price.toLocaleString()}</span>
               </div>
-              <div class="flex items-center gap-2 text-slate-500 font-body-sm text-[11px] sm:text-xs">
+              <div class="flex items-center gap-2 text-slate-600 font-body-sm text-[11px] sm:text-xs">
                 ${item.venueLabel ? `
-                  <span class="px-2 py-0.5 rounded bg-slate-100 text-slate-700 font-medium">形式: ${item.venueLabel}</span>
+                  <span class="font-medium text-slate-700">形式: ${item.venueLabel}</span>
                 ` : `
                   <span class="px-2 py-0.5 rounded bg-secondary/10 text-secondary font-bold">形式: 会場未選択（要選択）</span>
                 `}
-                <span>申込締切: ${item.deadlineDisplay}</span>
               </div>
             </div>
           `).join('');
@@ -1903,8 +1897,8 @@
       if (method === 'credit_card') {
         if (elem) {
           elem.innerHTML = `
-            <div class="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-900 border border-emerald-200 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold shadow-2xs self-start sm:self-auto">
-              <span class="material-symbols-outlined text-base text-emerald-700">credit_card</span>
+            <div class="flex items-center gap-1.5 text-xs sm:text-sm font-bold text-slate-800">
+              <span class="material-symbols-outlined text-base text-slate-600">credit_card</span>
               <span>クレジットカード決済（Stripe）</span>
             </div>
           `;
@@ -1920,8 +1914,8 @@
       } else {
         if (elem) {
           elem.innerHTML = `
-            <div class="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-900 border border-emerald-200 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold shadow-2xs self-start sm:self-auto">
-              <span class="material-symbols-outlined text-base text-emerald-700">storefront</span>
+            <div class="flex items-center gap-1.5 text-xs sm:text-sm font-bold text-slate-800">
+              <span class="material-symbols-outlined text-base text-slate-600">storefront</span>
               <span>コンビニ決済（決済番号発行）</span>
             </div>
           `;

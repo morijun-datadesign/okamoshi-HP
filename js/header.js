@@ -143,23 +143,27 @@
     if (typeof window.closeNextExamDropdown === "function") {
       window.closeNextExamDropdown();
     }
+    var effectiveId = (targetId === "about" || targetId === "features") ? "features" : targetId;
     var isTopPage =
       window.location.pathname.endsWith("index.html") ||
       window.location.pathname === "/" ||
       window.location.pathname.endsWith("/");
     if (isTopPage) {
       var elem =
+        document.getElementById(effectiveId) ||
         document.getElementById(targetId) ||
-        (targetId === "about"
-          ? document.getElementById("hero-features")
+        (effectiveId === "features"
+          ? document.getElementById("features")
           : document.getElementById("schedule-selector"));
       if (elem) {
         if (event) event.preventDefault();
         elem.scrollIntoView({ behavior: "smooth" });
         try {
-          history.pushState(null, "", "#" + targetId);
+          history.pushState(null, "", "#" + effectiveId);
         } catch (e) {}
       }
+    } else {
+      window.location.href = "/index.html#" + effectiveId;
     }
   };
 

@@ -846,10 +846,6 @@
                   </div>
                   <span class="material-symbols-outlined text-tertiary-container text-2xl shrink-0">storefront</span>
                 </div>
-                <p class="text-secondary font-body-sm pl-7 mt-1 flex items-center gap-1 leading-tight text-[10px]">
-                  <span class="material-symbols-outlined shrink-0 text-xs">info</span>
-                  期日までにご入金が確認できない場合、お申し込みは自動キャンセルとなります。
-                </p>
               </label>
 
             </div>
@@ -963,15 +959,20 @@
           </div>
 
           <!-- セキュリティ案内 -->
-          <div class="bg-surface-container-low rounded-lg p-4 border border-outline-variant/30 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-            <div class="flex items-center gap-2 text-on-surface-variant text-xs">
-              <span class="material-symbols-outlined text-primary-container text-lg">lock</span>
-              <span>SSL 256bit 暗号化通信により、ご入力情報は厳重に保護されています。</span>
+          <div class="bg-surface-container-low rounded-lg p-4 border border-outline-variant/30 space-y-2.5">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-1.5">
+              <div class="flex items-center gap-2 text-on-surface-variant text-xs">
+                <span class="material-symbols-outlined text-primary-container text-lg shrink-0">lock</span>
+                <span>SSL 256bit 暗号化通信により、ご入力情報は厳重に保護されています。</span>
+              </div>
+              <div class="flex items-center gap-1 text-[11px] text-on-surface-variant pl-6 md:pl-0">
+                <span>決済処理: </span>
+                <strong class="text-on-surface font-semibold">Stripe Secure Payment</strong>
+              </div>
             </div>
-            <div class="flex items-center gap-1 text-[11px] text-on-surface-variant">
-              <span>決済処理: </span>
-              <strong class="text-on-surface font-semibold">Stripe Secure Payment</strong>
-            </div>
+            <p class="text-xs text-slate-500 leading-relaxed border-t border-outline-variant/20 pt-2">
+              カード情報は当サイトに保存されず、世界基準の決済システム（Stripe）で直接保護・安全に処理されます。
+            </p>
           </div>
         </div>
 
@@ -1713,14 +1714,14 @@
                   <!-- バッジとタイトルの配置（レスポンシブ対応: PC=1行, スマホ=バッジ2つとタイトルで2行折り返し） -->
                   <div class="flex flex-col md:flex-row md:items-center gap-1.5 md:gap-2.5 flex-wrap">
                     <div class="flex items-center gap-1.5 shrink-0">
-                      <span class="inline-flex items-center justify-center px-2.5 py-0.5 rounded-md bg-slate-100 text-slate-700 border border-slate-200 font-bold text-xs sm:text-[13px] shrink-0 shadow-2xs leading-normal">${exam.gradeName}</span>
-                      <span class="inline-flex items-center justify-center px-2.5 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200/80 font-bold text-xs sm:text-[13px] shrink-0 shadow-2xs leading-normal">${exam.issueName}</span>
+                      <span class="inline-flex items-center justify-center px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200/60 font-bold text-base shrink-0 shadow-2xs leading-normal">${exam.gradeName}</span>
+                      <span class="inline-flex items-center justify-center px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200/60 font-bold text-base shrink-0 shadow-2xs leading-normal">${exam.issueName}</span>
                     </div>
                     <span class="font-headline-sm text-base sm:text-lg font-bold text-on-surface leading-snug">${exam.title}</span>
                   </div>
                   <!-- 申込締切のみ強調表示（実施日行は削除） -->
-                  <div class="text-xs sm:text-[13px] font-body-sm">
-                    <span class="text-on-surface-variant font-medium">申込締切: <strong class="text-secondary font-bold text-xs sm:text-[13px]">${exam.deadlineDisplay}</strong></span>
+                  <div class="text-base sm:text-lg font-body-sm">
+                    <span class="text-on-surface-variant font-medium">申込締切: <strong class="text-secondary font-bold text-base sm:text-lg">${exam.deadlineDisplay}</strong></span>
                   </div>
                 </div>
               </div>

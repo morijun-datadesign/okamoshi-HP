@@ -932,76 +932,71 @@
   <!-- コンテンツはJavaScriptで動的に挿入されます -->
 </div><!-- /#entry-content-body -->
 
-<!-- 記事本文直下の太めの区切り線 -->
-<div class="border-t-2 border-slate-200 my-8"></div>
+<!-- 記事本文直下の区切り線 -->
+<div class="border-t border-slate-200 my-8"></div>
 
-<!-- SNS共有・前後ナビゲーション統合ボックス -->
-<div class="bg-transparent sm:bg-slate-50 p-0 sm:p-6 rounded-none sm:rounded-lg border-0 sm:border border-slate-200/60 flex flex-col gap-5 sm:gap-6">
-  <!-- SNS共有エリア -->
-  <div class="flex flex-col items-center gap-2.5">
-    <span class="font-bold text-xs sm:text-sm text-slate-600 flex items-center gap-1.5">
-      保護者の方・お知り合いへの共有はこちら
-    </span>
-    <div class="flex items-center justify-center gap-2.5 w-full max-w-sm">
-      <!-- LINE (Main Button - Prominent & Wide) -->
-      <button class="flex-1 py-2 px-5 rounded-lg bg-[#06c755] hover:bg-[#05b34c] text-white font-bold text-sm hover:shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs" onclick="window.open('https://social-plugins.line.me/lineit/share?url=' + encodeURIComponent(window.location.href), '_blank')" type="button">
-        <svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.477.254l2.484 3.374V8.108c0-.345.282-.63.63-.63.345 0 .626.285.626.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63.349 0 .631.285.631.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"></path></svg>
-        <span>LINEで送る</span>
-      </button>
-      <!-- Copy Link (Sub Button - Simple Gray) -->
-      <button class="px-4 py-2 rounded-lg bg-white hover:bg-slate-100 text-slate-700 border border-slate-200/80 font-medium text-xs sm:text-sm transition-colors flex items-center justify-center gap-1.5 cursor-pointer shrink-0 shadow-2xs" onclick="navigator.clipboard.writeText(window.location.href); alert('記事のURLをクリップボードにコピーしました');" type="button">
-        <span class="material-symbols-outlined text-[16px]">content_copy</span>
-        <span>URLをコピー</span>
-      </button>
-    </div>
-  </div>
-
-  <!-- ボックス内区切り線 -->
-  <div class="w-full border-t border-slate-200/70"></div>
-
-  <!-- Pagination: Previous / Next Article Navigation -->
-  <div class="flex flex-col gap-3">
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-      <!-- 前の記事 -->
-      <a class="py-2.5 px-3.5 bg-white rounded-lg border border-slate-200/90 shadow-2xs hover:shadow-md hover:-translate-y-0.5 hover:border-emerald-600/50 transition-all flex flex-col gap-0.5 group cursor-pointer" data-path="news-detail-prev" href="news.html">
-        <div class="flex items-center gap-1 text-[11px] font-bold text-slate-500">
-          <span class="material-symbols-outlined text-[14px] group-hover:-translate-x-0.5 transition-transform">arrow_back</span>
-          <span>前の記事</span>
-        </div>
-        <span class="text-xs sm:text-[13px] font-medium text-slate-800 truncate group-hover:text-emerald-800 transition-colors">
-          2026年度 岡山県公立高校入試実施日程および定員発表について
-        </span>
-      </a>
-
-      <!-- 次の記事 -->
-      <a class="py-2.5 px-3.5 bg-white rounded-lg border border-slate-200/90 shadow-2xs hover:shadow-md hover:-translate-y-0.5 hover:border-emerald-600/50 transition-all flex flex-col gap-0.5 text-right group cursor-pointer" data-path="news-detail-next" href="detail.html?id=naishin-calc">
-        <div class="flex items-center justify-end gap-1 text-[11px] font-bold text-slate-500">
-          <span>次の記事</span>
-          <span class="material-symbols-outlined text-[14px] group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
-        </div>
-        <span class="text-xs sm:text-[13px] font-medium text-slate-800 truncate group-hover:text-emerald-800 transition-colors">
-          今さら聞けない「岡山県公立高校の内申点」計算方法と当日の逆転可能ライン
-        </span>
-      </a>
-    </div>
-
-    <!-- 記事一覧へ戻る (中央配置のシンプルで上品なテキストボタン) -->
-    <div class="flex justify-center pt-0.5">
-      <a class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold text-emerald-800 hover:text-emerald-950 bg-slate-200/70 hover:bg-slate-200 transition-all" data-path="news" href="news.html">
-        <span class="material-symbols-outlined text-[16px]">grid_view</span>
-        <span>記事一覧に戻る</span>
-      </a>
-    </div>
+<!-- 1. SNS共有エリア -->
+<div class="flex flex-col items-center gap-2.5">
+  <span class="font-bold text-xs sm:text-sm text-slate-600 flex items-center gap-1.5">
+    保護者の方・お知り合いへの共有はこちら
+  </span>
+  <div class="flex items-center justify-center gap-2.5 w-full max-w-sm">
+    <!-- LINE (Main Button - Prominent & Wide) -->
+    <button class="flex-1 py-2 px-5 rounded-lg bg-[#06c755] hover:bg-[#05b34c] text-white font-bold text-sm hover:shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs" onclick="window.open('https://social-plugins.line.me/lineit/share?url=' + encodeURIComponent(window.location.href), '_blank')" type="button">
+      <svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.477.254l2.484 3.374V8.108c0-.345.282-.63.63-.63.345 0 .626.285.626.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63.349 0 .631.285.631.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"></path></svg>
+      <span>LINEで送る</span>
+    </button>
+    <!-- Copy Link (Sub Button - Simple Gray) -->
+    <button class="px-4 py-2 rounded-lg bg-white hover:bg-slate-100 text-slate-700 border border-slate-200/80 font-medium text-xs sm:text-sm transition-colors flex items-center justify-center gap-1.5 cursor-pointer shrink-0 shadow-2xs" onclick="navigator.clipboard.writeText(window.location.href); alert('記事のURLをクリップボードにコピーしました');" type="button">
+      <span class="material-symbols-outlined text-[16px]">content_copy</span>
+      <span>URLをコピー</span>
+    </button>
   </div>
 </div>
+
+<!-- セクション間区切り線 -->
+<div class="border-t border-slate-200 my-6 sm:my-8"></div>
+
+<!-- 2. 前後記事ナビエリア -->
+<div class="flex flex-col gap-3">
+  <!-- 前後記事 1行（左右対比配置・カード枠撤去） -->
+  <div class="flex items-center justify-between gap-3 w-full py-1">
+    <!-- 前の記事 -->
+    <a class="flex items-center gap-1.5 text-xs sm:text-sm text-slate-600 hover:text-emerald-700 font-medium transition-colors max-w-[48%] min-w-0 group cursor-pointer" data-path="news-detail-prev" href="news.html">
+      <span class="material-symbols-outlined text-[16px] text-slate-400 group-hover:text-emerald-600 group-hover:-translate-x-0.5 transition-transform shrink-0">arrow_back</span>
+      <span class="font-bold text-slate-700 group-hover:text-emerald-700 shrink-0">前の記事</span>
+      <span class="hidden sm:inline text-slate-300 shrink-0">:</span>
+      <span class="hidden sm:inline text-slate-600 group-hover:text-emerald-700 truncate font-normal">2026年度 岡山県公立高校入試実施日程および定員発表について</span>
+    </a>
+
+    <!-- 次の記事 -->
+    <a class="flex items-center justify-end gap-1.5 text-xs sm:text-sm text-slate-600 hover:text-emerald-700 font-medium transition-colors max-w-[48%] min-w-0 text-right group cursor-pointer ml-auto" data-path="news-detail-next" href="detail.html?id=naishin-calc">
+      <span class="hidden sm:inline text-slate-600 group-hover:text-emerald-700 truncate font-normal">今さら聞けない「岡山県公立高校の内申点」計算方法と当日の逆転可能ライン</span>
+      <span class="hidden sm:inline text-slate-300 shrink-0">:</span>
+      <span class="font-bold text-slate-700 group-hover:text-emerald-700 shrink-0">次の記事</span>
+      <span class="material-symbols-outlined text-[16px] text-slate-400 group-hover:text-emerald-600 group-hover:translate-x-0.5 transition-transform shrink-0">arrow_forward</span>
+    </a>
+  </div>
+
+  <!-- 記事一覧へ戻る (直下に配置・控えめなグレーのピル型ボタン) -->
+  <div class="flex justify-center pt-2 sm:pt-3">
+    <a class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-medium text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200/80 border border-slate-200/70 transition-all shadow-2xs" data-path="news" href="news.html">
+      <span class="material-symbols-outlined text-[15px] text-slate-500">grid_view</span>
+      <span>記事一覧に戻る</span>
+    </a>
+  </div>
+</div>
+
+<!-- モバイル表示時の前後ナビと次回模試CTA間の区切り線 -->
+<div class="border-t border-slate-200 my-6 sm:my-8 lg:hidden"></div>
 </article>
 <!-- Sticky Sidebar Column -->
 <aside class="lg:col-span-4 flex flex-col gap-4 lg:sticky lg:top-24">
-<!-- 1. Exam Quick Signup Card -->
-<div class="p-4 bg-white rounded-lg border border-gray-200 shadow-xs flex flex-col gap-3" id="sidebar-next-exam-widget">
-  <div class="flex items-center justify-between px-3 py-2.5 bg-[#f0fdf4] border border-[#dcfce7] rounded-lg">
-    <div class="flex items-center gap-1.5 text-primary text-[14px] font-bold">
-      <span class="material-symbols-outlined text-[18px] text-secondary">edit_calendar</span>
+<!-- 3. 次回の模試・お申込みCTAエリア（全体を1つのカードコンテナで一体化） -->
+<div class="p-4 sm:p-5 bg-slate-50 rounded-xl border border-slate-200 shadow-xs flex flex-col gap-3.5" id="sidebar-next-exam-widget">
+  <div class="flex items-center justify-between px-3.5 py-2.5 bg-slate-100 border border-slate-200/90 rounded-lg">
+    <div class="flex items-center gap-2 text-slate-800 text-[14px] font-bold">
+      <span class="material-symbols-outlined text-[18px] text-slate-600">edit_calendar</span>
       <span>次回の模試・お申込み</span>
     </div>
     <span class="text-[10px] font-bold text-secondary bg-[#ffdbcf] px-2 py-0.5 rounded-full">受付中</span>
@@ -2069,7 +2064,9 @@
                 <span class="inline-flex items-center justify-center px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 font-bold text-xs shrink-0 leading-tight">${config.gradeBadge}</span>
                 <span class="inline-flex items-center justify-center px-2 py-0.5 rounded bg-emerald-100 text-emerald-900 border border-emerald-300 font-bold text-xs shrink-0 leading-tight">${issueName}</span>
               </div>
-              <span class="material-symbols-outlined text-[18px] text-gray-400 group-hover:text-emerald-700 group-hover:translate-x-1 transition-all duration-200 ease-in-out shrink-0">chevron_right</span>
+              <div class="w-7 h-7 rounded-full bg-emerald-800 text-white flex items-center justify-center shrink-0 group-hover:scale-105 group-hover:bg-emerald-900 transition-all shadow-2xs">
+                <span class="material-symbols-outlined text-[16px] text-white">chevron_right</span>
+              </div>
             </div>
             <div class="space-y-2 pt-2.5 text-sm leading-snug">
               <div class="flex items-center justify-between gap-2">

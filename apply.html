@@ -842,10 +842,6 @@
                   </div>
                   <span class="material-symbols-outlined text-tertiary-container text-2xl shrink-0">storefront</span>
                 </div>
-                <p class="text-secondary font-body-sm pl-7 mt-1 flex items-center gap-1 leading-tight text-[10px]">
-                  <span class="material-symbols-outlined shrink-0 text-xs">info</span>
-                  期日までにご入金が確認できない場合、お申し込みは自動キャンセルとなります。
-                </p>
               </label>
 
             </div>
@@ -957,15 +953,20 @@
           </div>
 
           <!-- セキュリティ案内 -->
-          <div class="bg-surface-container-low rounded-lg p-4 border border-outline-variant/30 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-            <div class="flex items-center gap-2 text-on-surface-variant text-xs">
-              <span class="material-symbols-outlined text-primary-container text-lg">lock</span>
-              <span>SSL 256bit 暗号化通信により、ご入力情報は厳重に保護されています。</span>
+          <div class="bg-surface-container-low rounded-lg p-4 border border-outline-variant/30 space-y-2.5">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-1.5">
+              <div class="flex items-center gap-2 text-on-surface-variant text-xs">
+                <span class="material-symbols-outlined text-primary-container text-lg shrink-0">lock</span>
+                <span>SSL 256bit 暗号化通信により、ご入力情報は厳重に保護されています。</span>
+              </div>
+              <div class="flex items-center gap-1 text-[11px] text-on-surface-variant pl-6 md:pl-0">
+                <span>決済処理: </span>
+                <strong class="text-on-surface font-semibold">Stripe Secure Payment</strong>
+              </div>
             </div>
-            <div class="flex items-center gap-1 text-[11px] text-on-surface-variant">
-              <span>決済処理: </span>
-              <strong class="text-on-surface font-semibold">Stripe Secure Payment</strong>
-            </div>
+            <p class="text-xs text-slate-500 leading-relaxed border-t border-outline-variant/20 pt-2">
+              カード情報は当サイトに保存されず、世界基準の決済システム（Stripe）で直接保護・安全に処理されます。
+            </p>
           </div>
         </div>
 
@@ -1687,9 +1688,9 @@
 
         // 会場選択肢（先頭に未選択の初期値を配置）
         const venueOptionsHtml = [
-          `<option value="" selected disabled>選択してください</option>`,
+          `<option value="" selected disabled class="text-rose-500 font-normal">選択してください</option>`,
           ...(exam.venues || []).map(v => `
-            <option value="${v.value}">${v.label}</option>
+            <option value="${v.value}" class="text-slate-900 font-normal">${v.label}</option>
           `)
         ].join('');
 
@@ -1699,28 +1700,28 @@
               <input type="checkbox" id="check-${exam.id}" name="selected_exams" value="${exam.id}"
                 onchange="toggleExamSelection('${exam.id}')"
                 class="mt-1 w-5 h-5 text-primary-container accent-primary-container rounded cursor-pointer shrink-0">
-              <div class="flex flex-col gap-1.5 flex-1 min-w-0">
+              <div class="flex flex-col gap-2 sm:gap-2.5 flex-1 min-w-0">
                 <!-- 上段：バッジと金額（右端1行化） -->
                 <div class="flex items-center justify-between gap-2">
-                  <div class="flex items-center gap-1.5 shrink-0">
-                    <span class="inline-flex items-center justify-center px-2 sm:px-2.5 py-0.5 rounded-md bg-slate-100 text-slate-700 border border-slate-200 font-bold text-xs sm:text-[13px] shrink-0 shadow-2xs leading-normal">${exam.gradeName}</span>
-                    <span class="inline-flex items-center justify-center px-2 sm:px-2.5 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200/80 font-bold text-xs sm:text-[13px] shrink-0 shadow-2xs leading-normal">${exam.issueName}</span>
+                  <div class="flex items-center gap-1.5 sm:gap-2 shrink-0" id="badge-group-${exam.id}">
+                    <span id="badge-grade-${exam.id}" class="inline-flex items-center justify-center px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200/60 font-bold text-base shrink-0 shadow-2xs leading-normal transition-colors">${exam.gradeName}</span>
+                    <span id="badge-issue-${exam.id}" class="inline-flex items-center justify-center px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200/60 font-bold text-base shrink-0 shadow-2xs leading-normal transition-colors">${exam.issueName}</span>
                   </div>
                   <!-- 金額（¥5,500 (税込) を1行化） -->
                   <div class="flex items-baseline gap-1 shrink-0 whitespace-nowrap ml-auto">
-                    <span class="font-headline-sm text-base sm:text-xl font-extrabold text-primary-container">¥${exam.price.toLocaleString()}</span>
-                    <span class="font-body-sm text-[11px] sm:text-xs text-on-surface-variant font-bold">(税込)</span>
+                    <span class="font-headline-sm text-lg sm:text-xl font-extrabold text-primary-container">¥${exam.price.toLocaleString()}</span>
+                    <span class="font-body-sm text-xs text-on-surface-variant font-bold">(税込)</span>
                   </div>
                 </div>
 
                 <!-- 中段：模試タイトル（十分な横幅を確保して1行表示） -->
                 <div class="w-full min-w-0">
-                  <span class="font-headline-sm text-[15px] sm:text-base md:text-lg font-bold text-on-surface leading-snug tracking-tight block">${exam.title}</span>
+                  <span class="font-headline-sm text-base sm:text-lg font-bold text-on-surface leading-snug tracking-tight block">${exam.title}</span>
                 </div>
 
-                <!-- 下段：申込締切のみ強調表示 -->
-                <div class="text-xs sm:text-[13px] font-body-sm">
-                  <span class="text-on-surface-variant font-medium">申込締切: <strong class="text-secondary font-bold text-xs sm:text-[13px]">${exam.deadlineDisplay}</strong></span>
+                <!-- 下段：申込締切のみ強調表示（タイトル同等サイズへ拡大） -->
+                <div class="text-base sm:text-lg font-body-sm">
+                  <span class="text-on-surface-variant font-medium">申込締切: <strong class="text-secondary font-bold text-base sm:text-lg">${exam.deadlineDisplay}</strong></span>
                 </div>
               </div>
             </label>
@@ -1734,10 +1735,10 @@
               <div class="md:col-span-8 relative">
                 <select id="venue-${exam.id}" disabled required
                   onchange="updateExamVenue('${exam.id}', this)"
-                  class="w-full h-10 sm:h-11 pl-3 pr-9 bg-surface-container-lowest text-on-surface rounded-lg font-body-sm text-base appearance-none border border-outline-variant/40 focus:outline-none focus:ring-2 focus:ring-primary-container shadow-2xs cursor-pointer">
+                  class="w-full h-10 sm:h-11 pl-3 pr-9 rounded-lg font-body-sm text-base appearance-none border shadow-2xs cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-primary-container text-rose-500 bg-rose-50/50 border-rose-200/80">
                   ${venueOptionsHtml}
                 </select>
-                <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant text-base">expand_more</span>
+                <span id="venue-arrow-${exam.id}" class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-rose-400 text-base transition-colors">expand_more</span>
               </div>
             </div>
           </div>
@@ -1773,8 +1774,22 @@
           card.classList.remove('bg-white', 'border-slate-200/80', 'bg-surface-container-lowest', 'border-outline-variant/30');
           card.classList.add('bg-primary-fixed/30', 'border-2', 'border-primary-container', 'ring-1', 'ring-primary-container/20');
         }
+
+        // バッジ配色反転（選択時：白背景＋ダークスレート文字＋薄ボーダー）
+        const badgeGrade = document.getElementById('badge-grade-' + examId);
+        const badgeIssue = document.getElementById('badge-issue-' + examId);
+        if (badgeGrade) {
+          badgeGrade.className = 'inline-flex items-center justify-center px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-md bg-white text-slate-800 border border-slate-200 font-bold text-base shrink-0 shadow-2xs leading-normal transition-colors';
+        }
+        if (badgeIssue) {
+          badgeIssue.className = 'inline-flex items-center justify-center px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-md bg-white text-slate-800 border border-slate-200 font-bold text-base shrink-0 shadow-2xs leading-normal transition-colors';
+        }
+
         if (venueWrapper) venueWrapper.classList.remove('opacity-50', 'pointer-events-none');
-        if (venueSelect) venueSelect.disabled = false;
+        if (venueSelect) {
+          venueSelect.disabled = false;
+          updateVenueSelectStyle(venueSelect);
+        }
 
         // 模試選択エラーの自動消去
         const examInlineError = document.getElementById('examSelectionInlineError');
@@ -1787,15 +1802,52 @@
           card.classList.remove('bg-primary-fixed/30', 'border-2', 'border-primary-container', 'ring-1', 'ring-primary-container/20');
           card.classList.add('bg-white', 'border-slate-200/80');
         }
+
+        // バッジ配色反転（未選択時：薄いグリーン背景＋エメラルド文字＋エメラルドボーダー）
+        const badgeGrade = document.getElementById('badge-grade-' + examId);
+        const badgeIssue = document.getElementById('badge-issue-' + examId);
+        if (badgeGrade) {
+          badgeGrade.className = 'inline-flex items-center justify-center px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200/60 font-bold text-base shrink-0 shadow-2xs leading-normal transition-colors';
+        }
+        if (badgeIssue) {
+          badgeIssue.className = 'inline-flex items-center justify-center px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200/60 font-bold text-base shrink-0 shadow-2xs leading-normal transition-colors';
+        }
+
         if (venueWrapper) venueWrapper.classList.add('opacity-50', 'pointer-events-none');
-        if (venueSelect) venueSelect.disabled = true;
+        if (venueSelect) {
+          venueSelect.disabled = true;
+          updateVenueSelectStyle(venueSelect);
+        }
       }
 
       updateSummary();
     }
 
+    // 会場セレクトボックスの未選択/選択済ステートスタイル切り替え
+    function updateVenueSelectStyle(selectElem) {
+      if (!selectElem) return;
+      const isUnselected = !selectElem.value;
+      const arrow = selectElem.parentElement ? selectElem.parentElement.querySelector('.material-symbols-outlined') : null;
+      if (isUnselected) {
+        selectElem.classList.remove('text-slate-900', 'font-medium', 'bg-white', 'border-slate-200/80');
+        selectElem.classList.add('text-rose-500', 'bg-rose-50/50', 'border-rose-200/80');
+        if (arrow) {
+          arrow.classList.remove('text-slate-400');
+          arrow.classList.add('text-rose-400');
+        }
+      } else {
+        selectElem.classList.remove('text-rose-500', 'bg-rose-50/50', 'border-rose-200/80');
+        selectElem.classList.add('text-slate-900', 'font-medium', 'bg-white', 'border-slate-200/80');
+        if (arrow) {
+          arrow.classList.remove('text-rose-400');
+          arrow.classList.add('text-slate-400');
+        }
+      }
+    }
+
     // 会場選択の変更
     function updateExamVenue(examId, selectElem) {
+      updateVenueSelectStyle(selectElem);
       if (selectedExamsState[examId]) {
         const val = selectElem.value;
         const opt = selectElem.selectedIndex > 0 ? selectElem.options[selectElem.selectedIndex] : null;

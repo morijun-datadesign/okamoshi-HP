@@ -173,6 +173,73 @@
       display: block;
       background: transparent;
     }
+    /* =========================================================================
+       「選ばれる3つの理由」カルーセル操作バー スクロール出現・吸着アニメーション
+       ========================================================================= */
+    .features-nav-bar {
+      transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                  background-color 0.3s ease,
+                  box-shadow 0.3s ease,
+                  border-color 0.3s ease;
+      will-change: transform, opacity;
+      user-select: none;
+    }
+
+    /* 1. 非表示状態（進入前・完全に通過後） */
+    .features-nav-bar.is-hidden {
+      position: fixed;
+      bottom: 1.25rem;
+      left: 50%;
+      transform: translate(-50%, 16px) scale(0.96);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 40;
+      background-color: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.12), 0 8px 10px -6px rgba(15, 23, 42, 0.08);
+    }
+
+    /* 2. カルーセル進入時（画面下部オーバーレイ・浮遊固定） */
+    .features-nav-bar.is-floating {
+      position: fixed;
+      bottom: 1.25rem;
+      left: 50%;
+      transform: translate(-50%, 0) scale(1);
+      opacity: 1;
+      pointer-events: auto;
+      z-index: 40;
+      background-color: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(203, 213, 225, 0.9);
+      box-shadow: 0 12px 28px -4px rgba(15, 23, 42, 0.16), 0 8px 12px -6px rgba(15, 23, 42, 0.1);
+    }
+
+    /* 3. 所定位置への吸着（カード直下の定位置固定） */
+    .features-nav-bar.is-docked {
+      position: relative;
+      bottom: auto;
+      left: auto;
+      transform: translate(0, 0) scale(1);
+      opacity: 1;
+      pointer-events: auto;
+      z-index: 10;
+      background-color: rgba(15, 23, 42, 0.08);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(15, 23, 42, 0.06);
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    }
+
+    @supports (padding-bottom: env(safe-area-inset-bottom)) {
+      .features-nav-bar.is-hidden,
+      .features-nav-bar.is-floating {
+        bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
+      }
+    }
   </style>
 </head>
 
@@ -690,11 +757,11 @@
 
       </div>
 
-      <!-- Apple風 フローティング・ナビゲーション＆インジケーターバー -->
-      <div class="flex justify-center items-center mt-5 md:mt-6">
-        <div class="inline-flex items-center gap-2.5 sm:gap-3 bg-slate-900/10 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-slate-900/5 shadow-2xs">
+      <!-- カルーセル操作バー（スクロール進入・吸着アニメーション対応） -->
+      <div id="features-nav-container" class="relative flex justify-center items-center mt-5 md:mt-6 min-h-[44px]">
+        <div id="features-nav-bar" class="features-nav-bar is-hidden inline-flex items-center gap-2.5 sm:gap-3 px-3.5 py-1.5 rounded-full">
           <!-- 前へボタン -->
-          <button type="button" onclick="scrollFeaturesCarousel(-1)" id="features-sp-prev-btn" aria-label="前の特徴へ" class="w-7 h-7 rounded-full bg-white/90 hover:bg-white text-slate-700 flex items-center justify-center transition-all shadow-xs active:scale-95 cursor-pointer disabled:opacity-30 disabled:pointer-events-none">
+          <button type="button" onclick="scrollFeaturesCarousel(-1)" id="features-sp-prev-btn" aria-label="前の特徴へ" class="w-7 h-7 rounded-full bg-white/95 hover:bg-white text-slate-700 flex items-center justify-center transition-all shadow-xs active:scale-95 cursor-pointer disabled:opacity-30 disabled:pointer-events-none">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
           </button>
 
@@ -706,7 +773,7 @@
           </div>
 
           <!-- 次へボタン -->
-          <button type="button" onclick="scrollFeaturesCarousel(1)" id="features-sp-next-btn" aria-label="次の特徴へ" class="w-7 h-7 rounded-full bg-white/90 hover:bg-white text-slate-700 flex items-center justify-center transition-all shadow-xs active:scale-95 cursor-pointer disabled:opacity-30 disabled:pointer-events-none">
+          <button type="button" onclick="scrollFeaturesCarousel(1)" id="features-sp-next-btn" aria-label="次の特徴へ" class="w-7 h-7 rounded-full bg-white/95 hover:bg-white text-slate-700 flex items-center justify-center transition-all shadow-xs active:scale-95 cursor-pointer disabled:opacity-30 disabled:pointer-events-none">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
           </button>
         </div>
@@ -831,15 +898,15 @@
               <div class="space-y-3">
                 
                 <!-- 出題範囲アコーディオン -->
-                <details class="group bg-white rounded-lg border border-emerald-200/60 overflow-hidden shadow-2xs transition-all">
-                  <summary class="flex justify-between items-center p-3.5 sm:p-4 font-bold text-slate-800 cursor-pointer list-none select-none bg-emerald-50/70 hover:bg-emerald-100/80 transition-colors">
-                    <span class="text-sm sm:text-base font-bold text-emerald-950 group-hover:text-emerald-800 transition-colors">今回の出題範囲を確認する</span>
-                    <span class="w-7 h-7 bg-white rounded-full flex items-center justify-center border border-emerald-200 shrink-0 shadow-2xs group-hover:border-emerald-300 transition-colors">
-                      <svg class="w-4 h-4 text-emerald-800 group-open:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
+                <details class="group bg-white rounded-lg border border-slate-200/90 hover:border-slate-300 overflow-hidden shadow-2xs transition-all">
+                  <summary class="flex justify-between items-center p-3.5 sm:p-4 font-bold text-slate-800 cursor-pointer list-none select-none bg-white hover:bg-slate-50 transition-colors">
+                    <span class="text-sm sm:text-base font-bold text-slate-800 group-hover:text-emerald-950 transition-colors">今回の出題範囲を確認する</span>
+                    <span class="w-7 h-7 bg-brand-green group-hover:bg-emerald-800 rounded-full flex items-center justify-center shrink-0 shadow-2xs transition-colors">
+                      <svg class="w-4 h-4 text-white group-open:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
                     </span>
                   </summary>
                   
-                  <div class="p-4 bg-slate-50/70 border-t border-emerald-100/80">
+                  <div class="p-4 bg-slate-50/70 border-t border-slate-200">
                     <div class="flex items-center justify-between mb-2.5">
                       <span class="text-xs font-bold text-slate-400">科目別出題単元</span>
                       <span class="text-[11px] text-brand-green font-medium flex items-center gap-1">
@@ -852,17 +919,17 @@
                 </details>
 
                 <!-- 実施詳細・受験の流れアコーディオン -->
-                <details class="group bg-white rounded-lg border border-emerald-200/60 overflow-hidden shadow-2xs transition-all" id="details-accordion">
-                  <summary class="flex justify-between items-center p-3.5 sm:p-4 font-bold text-slate-800 cursor-pointer list-none select-none bg-emerald-50/70 hover:bg-emerald-100/80 transition-colors">
-                    <span class="text-sm sm:text-base font-bold text-emerald-950 group-hover:text-emerald-800 transition-colors">実施詳細・受験の流れ（会場別・自宅）</span>
-                    <span class="w-7 h-7 bg-white rounded-full flex items-center justify-center border border-emerald-200 shrink-0 shadow-2xs group-hover:border-emerald-300 transition-colors">
-                      <svg class="w-4 h-4 text-emerald-800 group-open:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
+                <details class="group bg-white rounded-lg border border-slate-200/90 hover:border-slate-300 overflow-hidden shadow-2xs transition-all" id="details-accordion">
+                  <summary class="flex justify-between items-center p-3.5 sm:p-4 font-bold text-slate-800 cursor-pointer list-none select-none bg-white hover:bg-slate-50 transition-colors">
+                    <span class="text-sm sm:text-base font-bold text-slate-800 group-hover:text-emerald-950 transition-colors">実施詳細・受験の流れ（会場別・自宅）</span>
+                    <span class="w-7 h-7 bg-brand-green group-hover:bg-emerald-800 rounded-full flex items-center justify-center shrink-0 shadow-2xs transition-colors">
+                      <svg class="w-4 h-4 text-white group-open:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
                     </span>
                   </summary>
                   
-                  <div class="p-4 bg-slate-50/70 border-t border-emerald-100/80 space-y-4">
+                  <div class="p-4 sm:p-5 bg-white border-t border-slate-200 space-y-4">
                     <div>
-                      <div class="text-xs sm:text-sm font-bold text-slate-700 mb-2.5 flex flex-wrap items-center justify-between gap-1">
+                      <div class="text-xs sm:text-sm font-bold text-slate-700 mb-2 flex flex-wrap items-center justify-between gap-1">
                         <span>会場または自宅受験を選択：</span>
                         <span class="text-xs text-brand-green font-medium">※会場により日程・時間割が異なります</span>
                       </div>
@@ -871,7 +938,7 @@
                       </div>
                     </div>
 
-                    <div class="bg-white rounded-lg border border-slate-200/80 p-4 shadow-sm space-y-3" id="venue-detail-content">
+                    <div id="venue-detail-content" class="space-y-4 pt-1">
                       <!-- JSで動的レンダリング -->
                     </div>
                   </div>
@@ -883,10 +950,10 @@
             <!-- 右カラム（申込締切＆個人受験統合カード ＆ メインCTA） -->
             <div class="lg:col-span-5 space-y-4 flex flex-col justify-between">
               
-              <!-- 統合カード（お申し込み締め切り ＆ 個人受験について） -->
-              <div class="bg-slate-50/90 rounded-lg border border-slate-200/90 overflow-hidden shadow-2xs">
+              <!-- 統合カード（お申し込み締め切り ＆ 個人受験について：一体化白カード） -->
+              <div class="bg-white rounded-lg border border-slate-200/80 shadow-2xs overflow-hidden">
                 <!-- 申込締切エリア（JS動的更新エリア） -->
-                <div id="deadline-container" class="p-4 sm:p-5 bg-white border-b border-slate-200/80">
+                <div id="deadline-container" class="p-5 sm:p-6 bg-white">
                   <div class="flex items-center justify-between gap-3">
                     <div>
                       <div class="flex items-center gap-2">
@@ -905,12 +972,12 @@
                   </div>
                 </div>
 
-                <!-- 個人受験のお申し込みについて -->
-                <div class="p-4 sm:p-5 space-y-3">
+                <!-- 個人受験のお申し込みについて（薄い1本線で区切った同一背景エリア） -->
+                <div class="p-5 sm:p-6 border-t border-slate-100 bg-white space-y-3">
                   <h6 class="font-bold text-sm sm:text-base text-slate-900 tracking-tight">
                     個人受験のお申し込みについて
                   </h6>
-                  <ul class="space-y-2 text-slate-700 leading-relaxed text-xs sm:text-sm">
+                  <ul class="space-y-2.5 text-slate-700 leading-relaxed text-xs sm:text-sm">
                     <li class="flex items-start gap-2">
                       <span class="text-slate-400 font-bold shrink-0 mt-0.5">•</span>
                       <span>塾に通っていない方でも1回から個人でお申し込みいただけます。</span>
@@ -2652,59 +2719,57 @@
       }
 
       venueDetailContainer.innerHTML = `
-        <div class="border-b border-slate-200/80 pb-3">
-          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4">
-            <div class="flex items-center gap-2.5 sm:gap-3 shrink-0">
-              <span class="inline-block px-2.5 py-1 rounded-lg text-sm font-semibold tracking-wide bg-slate-200 text-slate-800 border border-slate-300/60 font-medium shadow-2xs shrink-0">
-                ${venueBadgeText}
-              </span>
-              ${placeName ? `<span class="text-base sm:text-lg font-bold text-slate-900 leading-snug">${placeName}</span>` : ''}
+        <div class="pb-3 border-b border-slate-200">
+          <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1.5 sm:gap-4">
+            <div class="flex flex-wrap items-baseline gap-2 sm:gap-2.5">
+              <span class="font-bold text-slate-900 text-base sm:text-lg">${venueBadgeText}</span>
+              ${placeName ? `<span class="font-bold text-slate-700 text-sm sm:text-base">${placeName}</span>` : ''}
             </div>
-            <div class="text-base sm:text-lg font-bold text-[#8B3A18] tracking-tight shrink-0 sm:text-right">
+            <div class="text-base sm:text-lg font-bold text-[#8B3A18] tracking-tight">
               ${examDateText}
             </div>
           </div>
         </div>
 
-        <div class="space-y-4 pt-1.5">
+        <div class="space-y-4 pt-1">
           <!-- ① 受験票等の発送 -->
-          <div>
+          <div class="space-y-1">
             <div class="flex items-center gap-2">
-              <div class="w-6 h-6 rounded-full bg-slate-100 text-slate-800 flex items-center justify-center font-bold text-xs shrink-0 border border-slate-200">1</div>
+              <div class="w-6 h-6 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center font-bold text-xs shrink-0 border border-slate-200">1</div>
               <span class="font-bold text-slate-900 text-sm sm:text-base">${isHome ? '問題一式のお届け（発送日）' : '受験票等の発送'}</span>
             </div>
-            <p class="text-xs sm:text-sm text-slate-700 pl-7 sm:pl-8 pt-1 font-medium leading-relaxed">${activeVenue.ticketDispatch}</p>
+            <p class="text-xs sm:text-sm text-slate-700 pl-8 font-medium leading-relaxed">${activeVenue.ticketDispatch}</p>
           </div>
 
           <!-- ② 当日持参物 -->
-          <div>
+          <div class="space-y-1">
             <div class="flex items-center gap-2">
-              <div class="w-6 h-6 rounded-full bg-slate-100 text-slate-800 flex items-center justify-center font-bold text-xs shrink-0 border border-slate-200">2</div>
+              <div class="w-6 h-6 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center font-bold text-xs shrink-0 border border-slate-200">2</div>
               <span class="font-bold text-slate-900 text-sm sm:text-base">${isHome ? 'ご用意いただくもの' : '当日持参物'}</span>
             </div>
-            <div class="pl-7 sm:pl-8 pt-1">
+            <div class="pl-8">
               ${itemsHtml}
             </div>
           </div>
 
           <!-- ③ 時間割 -->
-          <div>
+          <div class="space-y-1">
             <div class="flex items-center gap-2">
-              <div class="w-6 h-6 rounded-full bg-slate-100 text-slate-800 flex items-center justify-center font-bold text-xs shrink-0 border border-slate-200">3</div>
+              <div class="w-6 h-6 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center font-bold text-xs shrink-0 border border-slate-200">3</div>
               <span class="font-bold text-slate-900 text-sm sm:text-base">${isHome ? '受験方法・時間割' : '時間割'}</span>
             </div>
-            <div class="pl-7 sm:pl-8 pt-1">
+            <div class="pl-8">
               ${scheduleHtml}
             </div>
           </div>
 
           <!-- ④ 成績表のご返却予定 -->
-          <div>
+          <div class="space-y-1">
             <div class="flex items-center gap-2">
               <div class="w-6 h-6 rounded-full bg-emerald-100 text-brand-green flex items-center justify-center font-bold text-xs shrink-0 border border-emerald-200">4</div>
               <span class="font-bold text-slate-900 text-sm sm:text-base">成績表のご返却予定</span>
             </div>
-            <p class="text-xs sm:text-sm text-slate-700 pl-7 sm:pl-8 pt-1 font-medium leading-relaxed">${activeVenue.reportDispatch}</p>
+            <p class="text-xs sm:text-sm text-slate-700 pl-8 font-medium leading-relaxed">${activeVenue.reportDispatch}</p>
           </div>
         </div>
       `;
@@ -2926,6 +2991,64 @@
       updateBtn(document.getElementById('features-sp-prev-btn'), isAtStart);
       updateBtn(document.getElementById('features-sp-next-btn'), isAtEnd);
     }
+
+    // =========================================================================
+    // 「選ばれる3つの理由」カルーセル操作バー スクロール出現・吸着アニメーション制御
+    // =========================================================================
+    let isFeaturesNavTicking = false;
+
+    function updateFeaturesNavPosition() {
+      const carousel = document.getElementById('features-carousel');
+      const container = document.getElementById('features-nav-container');
+      const bar = document.getElementById('features-nav-bar');
+      if (!carousel || !container || !bar) return;
+
+      const carouselRect = carousel.getBoundingClientRect();
+      const containerRect = container.getBoundingClientRect();
+      const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+
+      // 操作バーの高さと底面余白
+      const barHeight = bar.offsetHeight || 42;
+      const computedBottom = parseFloat(window.getComputedStyle(bar).bottom) || 20;
+
+      // 定位置吸着ライン：コンテナの上端が浮遊バーの上端位置に達したか
+      const dockThreshold = viewportHeight - computedBottom - barHeight;
+
+      if (containerRect.top <= dockThreshold) {
+        // 【所定位置へ吸着（定位置固定）】
+        // スクロール進行に伴い、カード直下の定位置プレースホルダーにピタッと吸着
+        bar.classList.remove('is-hidden', 'is-floating');
+        bar.classList.add('is-docked');
+      } else if (carouselRect.top < viewportHeight - 50 && carouselRect.bottom > 80) {
+        // 【カルーセル進入時（オーバーレイ浮遊表示）】
+        // カルーセルカードが画面に入り始めた段階で、画面下部に fixed + 半透明でふんわりフェードイン
+        bar.classList.remove('is-hidden', 'is-docked');
+        bar.classList.add('is-floating');
+      } else {
+        // 【非表示】カルーセル進入前または完全に画面外へ通過
+        bar.classList.remove('is-floating', 'is-docked');
+        bar.classList.add('is-hidden');
+      }
+    }
+    window.updateFeaturesNavPosition = updateFeaturesNavPosition;
+
+    function onFeaturesNavScroll() {
+      if (!isFeaturesNavTicking) {
+        window.requestAnimationFrame(() => {
+          updateFeaturesNavPosition();
+          isFeaturesNavTicking = false;
+        });
+        isFeaturesNavTicking = true;
+      }
+    }
+
+    function initFeaturesNavScroll() {
+      window.addEventListener('scroll', onFeaturesNavScroll, { passive: true });
+      window.addEventListener('resize', onFeaturesNavScroll, { passive: true });
+      updateFeaturesNavPosition();
+    }
+    window.initFeaturesNavScroll = initFeaturesNavScroll;
+
 
     // =========================================================================
     // 「選ばれる3つの理由」CARD 01 & CARD 02 学年別切り替えロジック
@@ -3309,6 +3432,10 @@
       // 下部の申し込みエリアとも双方向同期
       if (syncSchedule && typeof selectGrade === 'function' && currentGrade !== normalized) {
         selectGrade(normalized, false);
+      }
+
+      if (typeof updateFeaturesNavPosition === 'function') {
+        updateFeaturesNavPosition();
       }
     }
 
@@ -4394,6 +4521,9 @@
         featuresCarousel.addEventListener('scroll', updateFeaturesCarouselState, { passive: true });
         updateFeaturesCarouselState();
       }
+
+      // カルーセル操作バー（前後矢印・ドット）のスクロール出現・吸着初期化
+      initFeaturesNavScroll();
 
       // スマホ用 追従申し込みボタン動的制御の初期化
       initFloatingCtaVisibility();

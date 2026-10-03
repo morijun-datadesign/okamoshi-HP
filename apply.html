@@ -543,12 +543,12 @@
           <!-- SECTION 1: 希望模試・受験形式の選択         -->
           <!-- ========================================== -->
           <div class="bg-transparent sm:bg-surface-container-lowest rounded-none sm:rounded-lg p-0 sm:p-7 border-0 sm:border border-outline-variant/30 shadow-none sm:shadow-sm flex flex-col gap-5 sm:gap-6 pb-8 sm:pb-7 border-b sm:border-b-0 border-slate-200/80">
-            <div class="flex items-center justify-between pb-3 border-b border-surface-container">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2 pb-3 border-b border-surface-container">
               <div class="flex items-center gap-2">
-                <span class="w-7 h-7 rounded-md bg-primary-container text-on-primary flex items-center justify-center font-label-md font-bold text-[13px]">1</span>
-                <h2 class="font-headline-md text-lg sm:text-[20px] font-bold text-primary">模試・受験形式の選択</h2>
+                <span class="w-7 h-7 rounded-md bg-primary-container text-on-primary flex items-center justify-center font-label-md font-bold text-[13px] shrink-0">1</span>
+                <h2 class="font-headline-md text-base sm:text-lg md:text-[20px] font-bold text-primary whitespace-nowrap">模試・受験形式の選択</h2>
               </div>
-              <span class="font-label-sm text-[11px] sm:text-[12px] text-on-surface-variant">複数模試の一括申込みが可能です</span>
+              <span class="font-label-sm text-[11px] sm:text-[12px] text-on-surface-variant pl-9 sm:pl-0">複数模試の一括申込みが可能です</span>
             </div>
 
             <div class="flex flex-col gap-5">
@@ -561,21 +561,17 @@
                 </div>
 
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3" id="gradeButtonGroup" role="radiogroup" aria-label="学年選択">
-                  <button type="button" onclick="selectFormGrade('sho6')" id="grade-btn-sho6" class="grade-select-btn flex flex-col items-center justify-center p-3 sm:p-4 rounded-lg bg-surface-container-low border border-outline-variant/30 cursor-pointer hover:bg-surface-container transition-all text-center">
-                    <span class="font-headline-md text-lg sm:text-xl font-extrabold text-on-surface leading-tight">小6</span>
-                    <span class="text-[11px] text-on-surface-variant mt-0.5">適性検査対策</span>
+                  <button type="button" onclick="selectFormGrade('sho6')" id="grade-btn-sho6" class="grade-select-btn flex items-center justify-center py-3.5 sm:py-4 px-3 rounded-lg bg-surface-container-low border border-outline-variant/30 cursor-pointer hover:bg-surface-container transition-all text-center">
+                    <span class="font-headline-md text-xl sm:text-2xl font-black text-on-surface leading-none">小6</span>
                   </button>
-                  <button type="button" onclick="selectFormGrade('chu1')" id="grade-btn-chu1" class="grade-select-btn flex flex-col items-center justify-center p-3 sm:p-4 rounded-lg bg-surface-container-low border border-outline-variant/30 cursor-pointer hover:bg-surface-container transition-all text-center">
-                    <span class="font-headline-md text-lg sm:text-xl font-extrabold text-on-surface leading-tight">中1</span>
-                    <span class="text-[11px] text-on-surface-variant mt-0.5">基礎・標準模試</span>
+                  <button type="button" onclick="selectFormGrade('chu1')" id="grade-btn-chu1" class="grade-select-btn flex items-center justify-center py-3.5 sm:py-4 px-3 rounded-lg bg-surface-container-low border border-outline-variant/30 cursor-pointer hover:bg-surface-container transition-all text-center">
+                    <span class="font-headline-md text-xl sm:text-2xl font-black text-on-surface leading-none">中1</span>
                   </button>
-                  <button type="button" onclick="selectFormGrade('chu2')" id="grade-btn-chu2" class="grade-select-btn flex flex-col items-center justify-center p-3 sm:p-4 rounded-lg bg-surface-container-low border border-outline-variant/30 cursor-pointer hover:bg-surface-container transition-all text-center">
-                    <span class="font-headline-md text-lg sm:text-xl font-extrabold text-on-surface leading-tight">中2</span>
-                    <span class="text-[11px] text-on-surface-variant mt-0.5">公立入試基礎</span>
+                  <button type="button" onclick="selectFormGrade('chu2')" id="grade-btn-chu2" class="grade-select-btn flex items-center justify-center py-3.5 sm:py-4 px-3 rounded-lg bg-surface-container-low border border-outline-variant/30 cursor-pointer hover:bg-surface-container transition-all text-center">
+                    <span class="font-headline-md text-xl sm:text-2xl font-black text-on-surface leading-none">中2</span>
                   </button>
-                  <button type="button" onclick="selectFormGrade('chu3')" id="grade-btn-chu3" class="grade-select-btn flex flex-col items-center justify-center p-3 sm:p-4 rounded-lg bg-primary-fixed/50 border-2 border-primary-container ring-2 ring-primary-container/20 cursor-pointer hover:bg-primary-fixed/60 transition-all text-center shadow-xs">
-                    <span class="font-headline-md text-lg sm:text-xl font-extrabold text-primary-container leading-tight">中3</span>
-                    <span class="text-[11px] text-primary-container font-bold mt-0.5">高校入試対策</span>
+                  <button type="button" onclick="selectFormGrade('chu3')" id="grade-btn-chu3" class="grade-select-btn flex items-center justify-center py-3.5 sm:py-4 px-3 rounded-lg bg-primary-fixed/50 border-2 border-primary-container ring-2 ring-primary-container/20 cursor-pointer hover:bg-primary-fixed/60 transition-all text-center shadow-xs">
+                    <span class="font-headline-md text-xl sm:text-2xl font-black text-primary-container leading-none">中3</span>
                   </button>
                 </div>
               </div>
@@ -871,8 +867,11 @@
         <!-- SUMMARY CARD: お支払いサマリー（確認パネル）-->
         <!-- ========================================== -->
         <div class="flex flex-col gap-4">
-          <div class="bg-transparent sm:bg-slate-100 rounded-none sm:rounded-lg p-0 sm:p-7 border-0 sm:border border-slate-200/90 shadow-none sm:shadow-sm flex flex-col gap-4 sm:gap-5">
-            <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+          <!-- 1つの統合サマリーカード（外枠グレーコンテナ） -->
+          <div class="bg-slate-100 rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-7 border border-slate-300/70 shadow-sm flex flex-col gap-4">
+            
+            <!-- ヘッダー：お申し込みサマリー ＆ 選択件数バッジ -->
+            <div class="flex items-center justify-between pb-3.5 border-b border-slate-200">
               <div class="flex items-center gap-2">
                 <span class="material-symbols-outlined text-slate-700 text-2xl">receipt_long</span>
                 <h3 class="font-headline-sm text-lg sm:text-xl font-bold text-emerald-950">お申し込みサマリー</h3>
@@ -880,20 +879,20 @@
               <span id="summarySelectedCount" class="font-label-sm text-xs bg-slate-700 text-white px-3 py-1 rounded-full font-bold">1回分選択中</span>
             </div>
 
-            <!-- 1. 受験模試の内訳（独立カード枠） -->
-            <div class="rounded-lg p-4 sm:p-5 border border-slate-200/80 flex flex-col gap-3 bg-slate-50/70 sm:bg-white shadow-2xs" id="summarySelectedContainer">
-              <div class="flex items-center gap-2 text-slate-700 font-label-sm text-xs font-bold border-b border-slate-200/60 pb-2">
+            <!-- 1. 受験模試の内訳（フラット配置） -->
+            <div class="flex flex-col gap-2.5" id="summarySelectedContainer">
+              <div class="flex items-center gap-2 text-slate-700 font-label-sm text-xs font-bold">
                 <span class="material-symbols-outlined text-base text-slate-500">inventory_2</span>
                 <span>受験模試の内訳</span>
               </div>
               
-              <div class="flex flex-col gap-3" id="summarySelectedList">
+              <div class="flex flex-col gap-2.5" id="summarySelectedList">
                 <!-- JSで動的に内訳行を生成 -->
               </div>
             </div>
 
-            <!-- 2. お支払い合計金額（独立カード枠） -->
-            <div class="bg-slate-50/70 sm:bg-white p-4 sm:p-5 rounded-lg border border-slate-200/80 shadow-2xs flex items-center justify-between">
+            <!-- 2. お支払い合計金額（薄い仕切り線でフラット区切り） -->
+            <div class="pt-3.5 border-t border-slate-200/80 flex items-center justify-between">
               <span class="font-headline-md text-sm sm:text-base font-bold text-slate-800">お支払い合計金額</span>
               <div class="flex items-baseline gap-1.5">
                 <span class="font-headline-lg text-2xl sm:text-3xl font-extrabold text-emerald-950 tracking-tight" id="summaryTotalAmount">¥0</span>
@@ -901,27 +900,27 @@
               </div>
             </div>
 
-            <!-- 3. お支払い方法（独立カード枠・バッジ化） -->
-            <div class="bg-slate-50/70 sm:bg-white p-4 sm:p-5 rounded-lg border border-slate-200/80 shadow-2xs flex flex-col gap-2">
+            <!-- 3. お支払い方法（薄い仕切り線でフラット区切り） -->
+            <div class="pt-3.5 border-t border-slate-200/80 flex flex-col gap-2">
               <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
                 <span class="font-bold text-slate-700 text-xs sm:text-[13px]">お支払い方法</span>
                 <div id="summaryPaymentMethod">
-                  <div class="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-900 border border-emerald-200 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold shadow-2xs self-start sm:self-auto">
+                  <div class="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-900 border border-emerald-200/80 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold shadow-2xs self-start sm:self-auto">
                     <span class="material-symbols-outlined text-base text-emerald-700">credit_card</span>
                     <span>クレジットカード決済（Stripe）</span>
                   </div>
                 </div>
               </div>
               <!-- コンビニ決済時の項目直下期限注記 -->
-              <div id="summaryConvenienceNotice" class="hidden text-right text-[11px] sm:text-xs font-bold text-red-600 pt-1 border-t border-slate-100">
+              <div id="summaryConvenienceNotice" class="hidden text-right text-[11px] sm:text-xs font-bold text-red-600 pt-1">
                 ※ 決済期限：<span id="summaryConvenienceDeadlineDate">10月4日(日)</span>まで（未払時自動キャンセル）
               </div>
             </div>
 
-            <!-- アクションエリア（同意チェック & 送信ボタン） -->
-            <div class="flex flex-col gap-3 pt-1">
-              <!-- 規約同意チェック -->
-              <label class="flex items-start gap-2.5 cursor-pointer select-none text-xs sm:text-sm text-slate-800 leading-relaxed p-3.5 rounded-lg bg-slate-50/70 sm:bg-white border border-slate-200/80 shadow-2xs">
+            <!-- 4. 同意チェック ＆ 送信アクションエリア（薄い仕切り線でシームレスに結合） -->
+            <div class="pt-3.5 border-t border-slate-200/80 flex flex-col gap-3">
+              <!-- 規約同意チェック（枠なしフラット配置） -->
+              <label class="flex items-start gap-2.5 cursor-pointer select-none text-xs sm:text-sm text-slate-800 leading-relaxed">
                 <input checked class="mt-0.5 w-5 h-5 text-emerald-800 accent-emerald-800 shrink-0 rounded cursor-pointer focus:ring-emerald-800" id="agreeTerms" required type="checkbox">
                 <span>
                   <a class="text-emerald-800 font-bold underline hover:text-emerald-950" href="privacy.html" target="_blank" rel="noopener noreferrer">「個人情報の取扱い」</a>および
@@ -930,7 +929,7 @@
               </label>
 
               <!-- コンビニ決済期限 同意チェック（コンビニ決済選択時のみ動的表示） -->
-              <label id="convenienceAgreeContainer" class="hidden flex items-start gap-2.5 cursor-pointer select-none text-xs sm:text-sm text-slate-800 leading-relaxed p-3.5 rounded-lg bg-amber-50/70 border border-amber-300/80 shadow-2xs transition-all">
+              <label id="convenienceAgreeContainer" class="hidden flex items-start gap-2.5 cursor-pointer select-none text-xs sm:text-sm text-slate-800 leading-relaxed pt-1">
                 <input class="mt-0.5 w-5 h-5 text-emerald-800 accent-emerald-800 shrink-0 rounded cursor-pointer focus:ring-emerald-800" id="agreeConvenienceTerms" type="checkbox">
                 <span class="font-medium text-slate-800">
                   コンビニ決済期限（<strong id="agreeConvenienceDeadlineText" class="text-red-600 font-bold">10/4(日)まで</strong>）および自動キャンセルについて確認した
@@ -938,7 +937,7 @@
               </label>
 
               <!-- コンビニ決済 注意書き（ボタン直上・連動表示） -->
-              <div id="convenienceSubmitWarning" class="hidden text-center text-xs sm:text-[13px] font-bold text-red-600 -mb-1">
+              <div id="convenienceSubmitWarning" class="hidden text-center text-xs sm:text-[13px] font-bold text-red-600">
                 ※ <span id="convenienceDeadlineDate"></span>までにコンビニでのお支払いが必要です
               </div>
 
@@ -950,13 +949,13 @@
                 </div>
               </div>
 
-              <!-- 送信ボタン -->
-              <button id="submitApplyBtn" class="w-full py-4 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-headline-sm text-base sm:text-lg font-extrabold tracking-wide shadow-md shadow-orange-500/25 hover:shadow-lg hover:shadow-orange-500/35 transition-all flex items-center justify-center gap-2 active:scale-[0.99] cursor-pointer" type="submit">
+              <!-- 送信ボタン（カード内蔵・一体型） -->
+              <button id="submitApplyBtn" class="w-full py-4 mt-1 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-headline-sm text-base sm:text-lg font-extrabold tracking-wide shadow-md shadow-orange-500/25 hover:shadow-lg hover:shadow-orange-500/35 transition-all flex items-center justify-center gap-2 active:scale-[0.99] cursor-pointer" type="submit">
                 <span>入力内容を確認し、お支払いへ進む</span>
                 <span class="material-symbols-outlined text-xl">arrow_forward</span>
               </button>
               
-              <a class="w-full py-1 text-center text-on-surface-variant hover:text-emerald-900 font-label-sm text-xs transition-colors" href="index.html">
+              <a class="w-full py-1 text-center text-slate-500 hover:text-emerald-900 font-label-sm text-xs transition-colors" href="index.html">
                 ← お申込みをやり直す（トップへ戻る）
               </a>
             </div>
@@ -1485,17 +1484,14 @@
         const btn = document.getElementById('grade-btn-' + g);
         if (!btn) return;
 
-        const title = btn.querySelector('span:first-child');
-        const desc = btn.querySelector('span:last-child');
+        const title = btn.querySelector('span');
 
         if (g === gradeKey) {
-          btn.className = 'grade-select-btn flex flex-col items-center justify-center p-3 sm:p-4 rounded-lg bg-primary-fixed/50 border-2 border-primary-container ring-2 ring-primary-container/20 cursor-pointer hover:bg-primary-fixed/60 transition-all text-center shadow-xs';
-          if (title) title.className = 'font-headline-md text-lg sm:text-xl font-extrabold text-primary-container leading-tight';
-          if (desc) desc.className = 'text-[11px] text-primary-container font-bold mt-0.5';
+          btn.className = 'grade-select-btn flex items-center justify-center py-3.5 sm:py-4 px-3 rounded-lg bg-primary-fixed/50 border-2 border-primary-container ring-2 ring-primary-container/20 cursor-pointer hover:bg-primary-fixed/60 transition-all text-center shadow-xs';
+          if (title) title.className = 'font-headline-md text-xl sm:text-2xl font-black text-primary-container leading-none';
         } else {
-          btn.className = 'grade-select-btn flex flex-col items-center justify-center p-3 sm:p-4 rounded-lg bg-surface-container-low border border-outline-variant/30 cursor-pointer hover:bg-surface-container transition-all text-center';
-          if (title) title.className = 'font-headline-md text-lg sm:text-xl font-extrabold text-on-surface leading-tight';
-          if (desc) desc.className = 'text-[11px] text-on-surface-variant mt-0.5';
+          btn.className = 'grade-select-btn flex items-center justify-center py-3.5 sm:py-4 px-3 rounded-lg bg-surface-container-low border border-outline-variant/30 cursor-pointer hover:bg-surface-container transition-all text-center';
+          if (title) title.className = 'font-headline-md text-xl sm:text-2xl font-black text-on-surface leading-none';
         }
       });
 
@@ -1704,29 +1700,33 @@
 
         return `
           <div class="relative flex flex-col p-4 sm:p-5 rounded-lg bg-white border border-slate-200/80 shadow-2xs sm:shadow-sm gap-3.5 transition-all duration-200" id="card-${exam.id}">
-            <label class="flex items-start justify-between gap-3 cursor-pointer">
-              <div class="flex items-start gap-3 flex-1">
-                <input type="checkbox" id="check-${exam.id}" name="selected_exams" value="${exam.id}"
-                  onchange="toggleExamSelection('${exam.id}')"
-                  class="mt-1 w-5 h-5 text-primary-container accent-primary-container rounded cursor-pointer shrink-0">
-                <div class="flex flex-col gap-1.5 flex-1 min-w-0">
-                  <!-- バッジとタイトルの配置（レスポンシブ対応: PC=1行, スマホ=バッジ2つとタイトルで2行折り返し） -->
-                  <div class="flex flex-col md:flex-row md:items-center gap-1.5 md:gap-2.5 flex-wrap">
-                    <div class="flex items-center gap-1.5 shrink-0">
-                      <span class="inline-flex items-center justify-center px-2.5 py-0.5 rounded-md bg-slate-100 text-slate-700 border border-slate-200 font-bold text-xs sm:text-[13px] shrink-0 shadow-2xs leading-normal">${exam.gradeName}</span>
-                      <span class="inline-flex items-center justify-center px-2.5 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200/80 font-bold text-xs sm:text-[13px] shrink-0 shadow-2xs leading-normal">${exam.issueName}</span>
-                    </div>
-                    <span class="font-headline-sm text-base sm:text-lg font-bold text-on-surface leading-snug">${exam.title}</span>
+            <label class="flex items-start gap-3 cursor-pointer">
+              <input type="checkbox" id="check-${exam.id}" name="selected_exams" value="${exam.id}"
+                onchange="toggleExamSelection('${exam.id}')"
+                class="mt-1 w-5 h-5 text-primary-container accent-primary-container rounded cursor-pointer shrink-0">
+              <div class="flex flex-col gap-1.5 flex-1 min-w-0">
+                <!-- 上段：バッジと金額（右端1行化） -->
+                <div class="flex items-center justify-between gap-2">
+                  <div class="flex items-center gap-1.5 shrink-0">
+                    <span class="inline-flex items-center justify-center px-2 sm:px-2.5 py-0.5 rounded-md bg-slate-100 text-slate-700 border border-slate-200 font-bold text-xs sm:text-[13px] shrink-0 shadow-2xs leading-normal">${exam.gradeName}</span>
+                    <span class="inline-flex items-center justify-center px-2 sm:px-2.5 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200/80 font-bold text-xs sm:text-[13px] shrink-0 shadow-2xs leading-normal">${exam.issueName}</span>
                   </div>
-                  <!-- 申込締切のみ強調表示（実施日行は削除） -->
-                  <div class="text-xs sm:text-[13px] font-body-sm">
-                    <span class="text-on-surface-variant font-medium">申込締切: <strong class="text-secondary font-bold text-xs sm:text-[13px]">${exam.deadlineDisplay}</strong></span>
+                  <!-- 金額（¥5,500 (税込) を1行化） -->
+                  <div class="flex items-baseline gap-1 shrink-0 whitespace-nowrap ml-auto">
+                    <span class="font-headline-sm text-base sm:text-xl font-extrabold text-primary-container">¥${exam.price.toLocaleString()}</span>
+                    <span class="font-body-sm text-[11px] sm:text-xs text-on-surface-variant font-bold">(税込)</span>
                   </div>
                 </div>
-              </div>
-              <div class="flex flex-col items-end shrink-0 pl-2">
-                <span class="font-headline-sm text-base sm:text-xl font-extrabold text-primary-container">¥${exam.price.toLocaleString()}</span>
-                <span class="font-body-sm text-[11px] text-on-surface-variant font-bold">税込</span>
+
+                <!-- 中段：模試タイトル（十分な横幅を確保して1行表示） -->
+                <div class="w-full min-w-0">
+                  <span class="font-headline-sm text-[15px] sm:text-base md:text-lg font-bold text-on-surface leading-snug tracking-tight block">${exam.title}</span>
+                </div>
+
+                <!-- 下段：申込締切のみ強調表示 -->
+                <div class="text-xs sm:text-[13px] font-body-sm">
+                  <span class="text-on-surface-variant font-medium">申込締切: <strong class="text-secondary font-bold text-xs sm:text-[13px]">${exam.deadlineDisplay}</strong></span>
+                </div>
               </div>
             </label>
 

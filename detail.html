@@ -933,11 +933,11 @@
 </div><!-- /#entry-content-body -->
 
 <!-- 記事本文直下の区切り線 -->
-<div class="border-t border-slate-200 my-8"></div>
+<div class="border-t border-slate-200 my-6"></div>
 
-<!-- 1. SNS共有エリア -->
-<div class="flex flex-col items-center gap-2.5">
-  <span class="font-bold text-xs sm:text-sm text-slate-600 flex items-center gap-1.5">
+<!-- 1. SNS共有エリア（少し強めのグレー背景・角丸コンテナでグループ化） -->
+<div class="p-4 sm:p-5 bg-slate-100 rounded-xl border border-slate-200/80 flex flex-col items-center gap-3 my-6">
+  <span class="font-bold text-xs sm:text-sm text-slate-700 flex items-center gap-1.5">
     保護者の方・お知り合いへの共有はこちら
   </span>
   <div class="flex items-center justify-center gap-2.5 w-full max-w-sm">
@@ -947,61 +947,49 @@
       <span>LINEで送る</span>
     </button>
     <!-- Copy Link (Sub Button - Simple Gray) -->
-    <button class="px-4 py-2 rounded-lg bg-white hover:bg-slate-100 text-slate-700 border border-slate-200/80 font-medium text-xs sm:text-sm transition-colors flex items-center justify-center gap-1.5 cursor-pointer shrink-0 shadow-2xs" onclick="navigator.clipboard.writeText(window.location.href); alert('記事のURLをクリップボードにコピーしました');" type="button">
+    <button class="px-4 py-2 rounded-lg bg-white hover:bg-slate-50 text-slate-700 border border-slate-200/90 font-medium text-xs sm:text-sm transition-colors flex items-center justify-center gap-1.5 cursor-pointer shrink-0 shadow-2xs" onclick="navigator.clipboard.writeText(window.location.href); alert('記事のURLをクリップボードにコピーしました');" type="button">
       <span class="material-symbols-outlined text-[16px]">content_copy</span>
       <span>URLをコピー</span>
     </button>
   </div>
 </div>
 
-<!-- セクション間区切り線 -->
-<div class="border-t border-slate-200 my-6 sm:my-8"></div>
+<!-- 2. 前後記事ナビエリア (前後記事・一覧に戻る 1行コンパクト化) -->
+<nav class="flex items-center justify-between gap-2 w-full py-2.5 my-4 sm:my-6" aria-label="記事ナビゲーション">
+  <!-- 前の記事 -->
+  <a class="flex items-center gap-1 text-xs sm:text-sm text-slate-600 hover:text-emerald-700 font-medium transition-colors shrink-0 group cursor-pointer" data-path="news-detail-prev" href="news.html">
+    <span class="material-symbols-outlined text-[16px] text-slate-400 group-hover:text-emerald-600 group-hover:-translate-x-0.5 transition-transform shrink-0">arrow_back</span>
+    <span class="font-bold text-slate-700 group-hover:text-emerald-700">前の記事</span>
+  </a>
 
-<!-- 2. 前後記事ナビエリア -->
-<div class="flex flex-col gap-3">
-  <!-- 前後記事 1行（左右対比配置・カード枠撤去） -->
-  <div class="flex items-center justify-between gap-3 w-full py-1">
-    <!-- 前の記事 -->
-    <a class="flex items-center gap-1.5 text-xs sm:text-sm text-slate-600 hover:text-emerald-700 font-medium transition-colors max-w-[48%] min-w-0 group cursor-pointer" data-path="news-detail-prev" href="news.html">
-      <span class="material-symbols-outlined text-[16px] text-slate-400 group-hover:text-emerald-600 group-hover:-translate-x-0.5 transition-transform shrink-0">arrow_back</span>
-      <span class="font-bold text-slate-700 group-hover:text-emerald-700 shrink-0">前の記事</span>
-      <span class="hidden sm:inline text-slate-300 shrink-0">:</span>
-      <span class="hidden sm:inline text-slate-600 group-hover:text-emerald-700 truncate font-normal">2026年度 岡山県公立高校入試実施日程および定員発表について</span>
-    </a>
+  <!-- 記事一覧に戻る (中央配置) -->
+  <a class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[11px] sm:text-xs font-medium text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200/80 border border-slate-200/80 transition-all shadow-2xs shrink-0" data-path="news" href="news.html">
+    <span class="material-symbols-outlined text-[14px] text-slate-500">grid_view</span>
+    <span>記事一覧に戻る</span>
+  </a>
 
-    <!-- 次の記事 -->
-    <a class="flex items-center justify-end gap-1.5 text-xs sm:text-sm text-slate-600 hover:text-emerald-700 font-medium transition-colors max-w-[48%] min-w-0 text-right group cursor-pointer ml-auto" data-path="news-detail-next" href="detail.html?id=naishin-calc">
-      <span class="hidden sm:inline text-slate-600 group-hover:text-emerald-700 truncate font-normal">今さら聞けない「岡山県公立高校の内申点」計算方法と当日の逆転可能ライン</span>
-      <span class="hidden sm:inline text-slate-300 shrink-0">:</span>
-      <span class="font-bold text-slate-700 group-hover:text-emerald-700 shrink-0">次の記事</span>
-      <span class="material-symbols-outlined text-[16px] text-slate-400 group-hover:text-emerald-600 group-hover:translate-x-0.5 transition-transform shrink-0">arrow_forward</span>
-    </a>
-  </div>
-
-  <!-- 記事一覧へ戻る (直下に配置・控えめなグレーのピル型ボタン) -->
-  <div class="flex justify-center pt-2 sm:pt-3">
-    <a class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-medium text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200/80 border border-slate-200/70 transition-all shadow-2xs" data-path="news" href="news.html">
-      <span class="material-symbols-outlined text-[15px] text-slate-500">grid_view</span>
-      <span>記事一覧に戻る</span>
-    </a>
-  </div>
-</div>
+  <!-- 次の記事 -->
+  <a class="flex items-center justify-end gap-1 text-xs sm:text-sm text-slate-600 hover:text-emerald-700 font-medium transition-colors shrink-0 text-right group cursor-pointer" data-path="news-detail-next" href="detail.html?id=naishin-calc">
+    <span class="font-bold text-slate-700 group-hover:text-emerald-700">次の記事</span>
+    <span class="material-symbols-outlined text-[16px] text-slate-400 group-hover:text-emerald-600 group-hover:translate-x-0.5 transition-transform shrink-0">arrow_forward</span>
+  </a>
+</nav>
 
 <!-- モバイル表示時の前後ナビと次回模試CTA間の区切り線 -->
 <div class="border-t border-slate-200 my-6 sm:my-8 lg:hidden"></div>
 </article>
 <!-- Sticky Sidebar Column -->
 <aside class="lg:col-span-4 flex flex-col gap-4 lg:sticky lg:top-24">
-<!-- 3. 次回の模試・お申込みCTAエリア（全体を1つのカードコンテナで一体化） -->
-<div class="p-4 sm:p-5 bg-slate-50 rounded-xl border border-slate-200 shadow-xs flex flex-col gap-3.5" id="sidebar-next-exam-widget">
-  <div class="flex items-center justify-between px-3.5 py-2.5 bg-slate-100 border border-slate-200/90 rounded-lg">
+<!-- 3. 次回の模試・お申込みCTAエリア（全体を1つのカードコンテナで一体化・二重枠全撤去） -->
+<div class="bg-slate-50 rounded-xl border border-slate-200 overflow-hidden shadow-xs" id="sidebar-next-exam-widget">
+  <div class="px-4 py-3 bg-slate-100 border-b border-slate-200 flex items-center justify-between">
     <div class="flex items-center gap-2 text-slate-800 text-[14px] font-bold">
       <span class="material-symbols-outlined text-[18px] text-slate-600">edit_calendar</span>
       <span>次回の模試・お申込み</span>
     </div>
     <span class="text-[10px] font-bold text-secondary bg-[#ffdbcf] px-2 py-0.5 rounded-full">受付中</span>
   </div>
-  <div class="flex flex-col gap-2.5" id="sidebar-exam-widget-list">
+  <div class="divide-y divide-slate-200" id="sidebar-exam-widget-list">
     <div class="py-6 text-center text-on-surface-variant flex items-center justify-center gap-2">
       <span class="material-symbols-outlined animate-spin text-primary">sync</span>
       <span class="text-xs">模試情報を読み込み中...</span>
@@ -2058,34 +2046,34 @@
         const cardLink = `index.html?grade=${config.gradeKey}${monthParam}#schedule-selector`;
 
         return `
-          <a href="${cardLink}" class="block p-3.5 bg-white hover:bg-slate-50/90 rounded-lg border border-gray-200/90 hover:border-emerald-600/40 shadow-xs hover:shadow-sm hover:-translate-y-0.5 transition-all duration-200 ease-in-out cursor-pointer group">
-            <div class="flex items-center justify-between gap-2 pb-2.5 border-b border-gray-100">
+          <a href="${cardLink}" class="block p-3.5 sm:p-4 hover:bg-slate-100/70 transition-colors cursor-pointer group">
+            <div class="flex items-center justify-between gap-2 mb-2">
               <div class="flex items-center gap-1.5 flex-wrap">
                 <span class="inline-flex items-center justify-center px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 font-bold text-xs shrink-0 leading-tight">${config.gradeBadge}</span>
                 <span class="inline-flex items-center justify-center px-2 py-0.5 rounded bg-emerald-100 text-emerald-900 border border-emerald-300 font-bold text-xs shrink-0 leading-tight">${issueName}</span>
               </div>
-              <div class="w-7 h-7 rounded-full bg-emerald-800 text-white flex items-center justify-center shrink-0 group-hover:scale-105 group-hover:bg-emerald-900 transition-all shadow-2xs">
-                <span class="material-symbols-outlined text-[16px] text-white">chevron_right</span>
+              <div class="w-6 h-6 rounded-full bg-emerald-800 text-white flex items-center justify-center shrink-0 group-hover:scale-105 group-hover:bg-emerald-900 transition-all shadow-2xs">
+                <span class="material-symbols-outlined text-[15px] text-white">chevron_right</span>
               </div>
             </div>
-            <div class="space-y-2 pt-2.5 text-sm leading-snug">
+            <div class="space-y-1.5 text-xs sm:text-sm leading-snug">
               <div class="flex items-center justify-between gap-2">
-                <span class="text-slate-500 shrink-0 font-medium flex items-center gap-1 text-sm">
-                  <span class="material-symbols-outlined text-[15px] text-slate-400">schedule</span>日程
+                <span class="text-slate-500 shrink-0 font-medium flex items-center gap-1 text-xs sm:text-sm">
+                  <span class="material-symbols-outlined text-[14px] text-slate-400">schedule</span>日程
                 </span>
-                <span class="font-bold text-secondary text-right truncate text-sm">${homePeriod}</span>
+                <span class="font-bold text-secondary text-right truncate text-xs sm:text-sm">${homePeriod}</span>
               </div>
               <div class="flex items-center justify-between gap-2">
-                <span class="text-slate-500 shrink-0 font-medium flex items-center gap-1 text-sm">
-                  <span class="material-symbols-outlined text-[15px] text-slate-400">location_on</span>会場
+                <span class="text-slate-500 shrink-0 font-medium flex items-center gap-1 text-xs sm:text-sm">
+                  <span class="material-symbols-outlined text-[14px] text-slate-400">location_on</span>会場
                 </span>
-                <span class="text-right truncate font-medium text-slate-700 text-sm">${venuesSummary}</span>
+                <span class="text-right truncate font-medium text-slate-700 text-xs sm:text-sm">${venuesSummary}</span>
               </div>
-              <div class="flex items-center justify-between gap-2 pt-2 border-t border-gray-100">
-                <span class="text-slate-500 shrink-0 font-medium flex items-center gap-1 text-sm">
-                  <span class="material-symbols-outlined text-[15px] text-slate-400">event</span>申込締切
+              <div class="flex items-center justify-between gap-2 pt-1.5 border-t border-slate-200/60">
+                <span class="text-slate-500 shrink-0 font-medium flex items-center gap-1 text-xs sm:text-sm">
+                  <span class="material-symbols-outlined text-[14px] text-slate-400">event</span>申込締切
                 </span>
-                <span class="font-bold text-slate-800 text-right text-sm">${deadlineText}</span>
+                <span class="font-bold text-slate-800 text-right text-xs sm:text-sm">${deadlineText}</span>
               </div>
             </div>
           </a>

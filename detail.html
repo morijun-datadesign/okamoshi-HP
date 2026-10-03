@@ -427,6 +427,135 @@
     }
 
     /* ==================================================== */
+    /* microCMS リッチエディタ用カスタムコールアウト (.box-fact, .box-action, .box-warning) */
+    /* ==================================================== */
+    .box-fact,
+    .box-action,
+    .box-warning,
+    .entry-content .box-fact,
+    .entry-content .box-action,
+    .entry-content .box-warning,
+    .entry-content p.box-fact,
+    .entry-content p.box-action,
+    .entry-content p.box-warning,
+    .blog-body .box-fact,
+    .blog-body .box-action,
+    .blog-body .box-warning,
+    .prose .box-fact,
+    .prose .box-action,
+    .prose .box-warning,
+    .prose p.box-fact,
+    .prose p.box-action,
+    .prose p.box-warning {
+      display: block !important;
+      padding: 1rem !important; /* p-4 (16px) */
+      margin-top: 1rem !important; /* my-4 */
+      margin-bottom: 1rem !important; /* my-4 */
+      border-radius: 0 0.5rem 0.5rem 0 !important; /* rounded-r-lg (8px) */
+      border-top: none !important;
+      border-right: none !important;
+      border-bottom: none !important;
+      border-left-width: 4px !important;
+      border-left-style: solid !important;
+      color: #334155 !important; /* text-slate-700 */
+      font-size: 0.875rem !important; /* text-sm (14px) */
+      line-height: 1.625 !important; /* leading-relaxed */
+      box-sizing: border-box !important;
+    }
+
+    @media (min-width: 768px) {
+      .box-fact,
+      .box-action,
+      .box-warning,
+      .entry-content .box-fact,
+      .entry-content .box-action,
+      .entry-content .box-warning,
+      .entry-content p.box-fact,
+      .entry-content p.box-action,
+      .entry-content p.box-warning,
+      .blog-body .box-fact,
+      .blog-body .box-action,
+      .blog-body .box-warning,
+      .prose .box-fact,
+      .prose .box-action,
+      .prose .box-warning,
+      .prose p.box-fact,
+      .prose p.box-action,
+      .prose p.box-warning {
+        font-size: 1rem !important; /* md:text-base (16px) */
+      }
+    }
+
+    /* 1. .box-fact（ファクト・補足用）: 薄いブルー / アクセントブルー */
+    .box-fact,
+    .entry-content .box-fact,
+    .blog-body .box-fact,
+    .prose .box-fact {
+      background-color: #f0f9ff !important; /* bg-sky-50 */
+      border-left-color: #0284c7 !important; /* border-sky-500 */
+    }
+
+    /* 2. .box-action（実践テクニック・アクション用）: 薄いグリーン / エメラルドグリーン */
+    .box-action,
+    .entry-content .box-action,
+    .blog-body .box-action,
+    .prose .box-action {
+      background-color: #ecfdf5 !important; /* bg-emerald-50 */
+      border-left-color: #10b981 !important; /* border-emerald-500 */
+    }
+
+    /* 3. .box-warning（注意・重要ポイント用）: 薄いオレンジ/イエロー / オレンジ */
+    .box-warning,
+    .entry-content .box-warning,
+    .blog-body .box-warning,
+    .prose .box-warning {
+      background-color: #fffbeb !important; /* bg-amber-50 */
+      border-left-color: #f59e0b !important; /* border-amber-500 */
+    }
+
+    /* コールアウトボックス内部のテキスト・段落タグ最適化 */
+    .box-fact p,
+    .box-action p,
+    .box-warning p,
+    .entry-content .box-fact p,
+    .entry-content .box-action p,
+    .entry-content .box-warning p,
+    .blog-body .box-fact p,
+    .blog-body .box-action p,
+    .blog-body .box-warning p,
+    .prose .box-fact p,
+    .prose .box-action p,
+    .prose .box-warning p {
+      margin-top: 0 !important;
+      margin-bottom: 0.5rem !important;
+      color: inherit !important;
+      font-size: inherit !important;
+      line-height: inherit !important;
+    }
+    .box-fact p:last-child,
+    .box-action p:last-child,
+    .box-warning p:last-child,
+    .entry-content .box-fact p:last-child,
+    .entry-content .box-action p:last-child,
+    .entry-content .box-warning p:last-child,
+    .blog-body .box-fact p:last-child,
+    .blog-body .box-action p:last-child,
+    .blog-body .box-warning p:last-child,
+    .prose .box-fact p:last-child,
+    .prose .box-action p:last-child,
+    .prose .box-warning p:last-child {
+      margin-bottom: 0 !important;
+    }
+    .box-fact strong,
+    .box-action strong,
+    .box-warning strong,
+    .box-fact b,
+    .box-action b,
+    .box-warning b {
+      color: #0f172a !important;
+    }
+
+    /* ==================================================== */
     /* スマートフォン向け（sm未満: 〜639.98px）タイポグラフィ最適化 */
     /* Wired等のWebメディアを意識した、1画面の情報密度と読みやすさを高めるタイト設計 */
     /* ==================================================== */
@@ -1475,6 +1604,18 @@
     async function loadArticleDetail() {
       const params = new URLSearchParams(window.location.search);
       const articleId = params.get('id');
+      const draftKey = params.get('draftKey');
+
+      // 下書きプレビュー時は検索エンジンにインデックスされないよう noindex を付与
+      if (draftKey) {
+        let robotsMeta = document.querySelector('meta[name="robots"]');
+        if (!robotsMeta) {
+          robotsMeta = document.createElement('meta');
+          robotsMeta.name = 'robots';
+          document.head.appendChild(robotsMeta);
+        }
+        robotsMeta.content = 'noindex, nofollow';
+      }
 
       // IDが指定されている場合は焼き込み本文を即座にクリア（他記事への誤表示防止）
       if (articleId) {
@@ -1493,13 +1634,29 @@
 
       if (articleId && hasMicroCMSConfig) {
         try {
-          const url = `https://${MICROCMS_CONFIG.serviceDomain}.microcms.io/api/v1/${MICROCMS_CONFIG.endpoint}/${articleId}`;
+          let url = `https://${MICROCMS_CONFIG.serviceDomain}.microcms.io/api/v1/${MICROCMS_CONFIG.endpoint}/${articleId}`;
+          if (draftKey) {
+            url += `?draftKey=${encodeURIComponent(draftKey)}`;
+          }
           const res = await fetch(url, {
             headers: { 'X-MICROCMS-API-KEY': MICROCMS_CONFIG.apiKey }
           });
           if (res.ok) {
             const post = await res.json();
             renderPostDetail(post);
+
+            // 下書きプレビュー時はヘッダーにバッジを表示
+            if (draftKey) {
+              const badgesContainer = document.getElementById('article-badges-container');
+              if (badgesContainer && !document.getElementById('article-draft-badge')) {
+                const previewBadge = document.createElement('span');
+                previewBadge.id = 'article-draft-badge';
+                previewBadge.className = 'px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-xs font-bold flex items-center gap-1 border border-amber-300';
+                previewBadge.innerHTML = '<span class="material-symbols-outlined text-[13px]">visibility</span>下書きプレビュー';
+                badgesContainer.appendChild(previewBadge);
+              }
+            }
+
             loadRelatedArticles(post, articleId);
             return;
           }

@@ -86,7 +86,7 @@
   <style>
     html, body {
       max-width: 100%;
-      overflow-x: hidden;
+      overflow-x: clip;
     }
     body {
       font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
@@ -802,10 +802,10 @@
       </div>
 
       <!-- 模試日程・申込 メインカード囲み（独立した操作エリアのホワイトカード枠） -->
-      <div class="bg-transparent md:bg-white rounded-none md:rounded-lg border-0 md:border-2 border-slate-200 p-0 md:p-10 shadow-none md:shadow-lg transition-all" id="card-container">
+      <div class="relative bg-transparent md:bg-white rounded-none md:rounded-lg border-0 md:border-2 border-slate-200 p-0 md:pt-0 md:px-10 md:pb-10 shadow-none md:shadow-lg transition-all" id="card-container">
         
         <!-- 上部：学年＆実施回タブ選択エリア（画面上部固定追従 Sticky バー） -->
-        <div class="sticky top-16 sm:top-[4.5rem] z-30 bg-white/90 backdrop-blur-md -mx-4 md:-mx-10 px-4 md:px-10 -mt-2 md:-mt-10 py-2 sm:py-2.5 md:pt-8 md:pb-4 mb-4 md:mb-6 border-b border-slate-200/80 md:rounded-t-lg transition-all shadow-xs md:shadow-none">
+        <div class="sticky top-16 sm:top-[4.5rem] z-20 bg-white -mx-4 md:-mx-10 px-4 md:px-10 py-2.5 sm:py-3 md:pt-6 md:pb-4 mb-4 md:mb-6 border-b border-slate-200 shadow-sm transition-all md:rounded-t-lg">
           
           <!-- 【SP表示（md:hidden）】高さと余白を極限まで抑えた1行コンパクトバー（40px〜48px設計） -->
           <div class="md:hidden flex items-center gap-2 w-full">
@@ -3843,9 +3843,9 @@
 
       // 2. ドキュメント全体の overflow / touch-action を正常復帰
       document.documentElement.style.overflow = '';
-      document.documentElement.style.overflowX = 'hidden';
+      document.documentElement.style.overflowX = 'clip';
       document.body.style.overflow = '';
-      document.body.style.overflowX = 'hidden';
+      document.body.style.overflowX = 'clip';
       document.body.style.touchAction = '';
       document.body.style.width = '100%';
 

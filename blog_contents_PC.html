@@ -191,14 +191,14 @@
             <span class="font-semibold">模試のご案内</span>
             <span id="nav-next-exam-chevron" class="material-symbols-outlined text-lg transition-transform duration-200 transform">expand_more</span>
           </button>
-          <div id="nav-next-exam-dropdown" class="hidden absolute left-0 top-full mt-2 w-48 rounded-lg bg-white border border-slate-100 shadow-lg p-2 z-50 transition-all duration-200">
+          <div id="nav-next-exam-dropdown" class="hidden absolute left-0 top-full mt-2 w-52 rounded-lg bg-white border border-slate-100 shadow-lg p-2 z-50 transition-all duration-200">
             <div class="space-y-1 text-sm font-bold">
               <a href="index.html#about" class="flex items-center justify-between px-3.5 py-2.5 rounded-lg text-slate-700 hover:bg-slate-50 hover:text-primary transition-colors cursor-pointer">
-                <span>初めての方へ</span>
+                <span class="whitespace-nowrap">初めての方へ</span>
                 <span class="material-symbols-outlined text-base text-slate-400">chevron_right</span>
               </a>
               <a href="index.html#schedule-entry" class="flex items-center justify-between px-3.5 py-2.5 rounded-lg text-slate-700 hover:bg-slate-50 hover:text-primary transition-colors cursor-pointer">
-                <span>申し込む</span>
+                <span class="whitespace-nowrap">模試のお申し込み</span>
                 <span class="material-symbols-outlined text-base text-slate-400">chevron_right</span>
               </a>
             </div>
@@ -272,7 +272,7 @@
             <span class="text-slate-300">→</span>
           </a>
           <a href="index.html#schedule-entry" class="w-full flex items-center justify-between px-4 py-3 font-bold text-slate-700 hover:bg-slate-50 hover:text-primary transition-colors text-left">
-            <span>申し込む</span>
+            <span>模試のお申し込み</span>
             <span class="text-slate-300">→</span>
           </a>
         </div>
@@ -530,67 +530,64 @@
           </h2>
           <p class="text-xs sm:text-sm text-slate-500 mt-2">受験準備やお近くの提携塾のご確認はこちらから</p>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
           <!-- Quick Card 1: Exam Application -->
-          <a class="group p-5 sm:p-6 bg-slate-50/80 hover:bg-slate-50 rounded-lg border border-slate-200/90 shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between" data-path="application-entry" href="apply.html">
-            <div class="flex items-start justify-between gap-space-sm">
-              <div class="w-10 h-10 rounded-lg bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center group-hover:scale-105 transition-transform">
-                <span class="material-symbols-outlined text-xl">how_to_reg</span>
+          <a class="group p-3.5 sm:p-4 bg-slate-50/80 hover:bg-slate-50 rounded-lg border border-slate-200/90 shadow-2xs hover:shadow-md transition-all duration-300 flex flex-col justify-between" data-path="application-entry" href="apply.html">
+            <div>
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                  <span class="material-symbols-outlined text-xl">how_to_reg</span>
+                </div>
+                <h3 class="text-sm sm:text-base font-bold text-slate-800 group-hover:text-secondary transition-colors leading-snug">
+                  次回模試のお申込みはこちら
+                </h3>
               </div>
-              <span class="px-2.5 py-0.5 bg-secondary/10 text-secondary text-[11px] font-bold rounded-md">Web受付中</span>
-            </div>
-            <div class="mt-4">
-              <h3 class="text-base font-bold text-slate-800 group-hover:text-secondary transition-colors">
-                次回模試のお申込みはこちら
-              </h3>
-              <p class="text-xs sm:text-sm text-slate-500 mt-1.5 leading-relaxed">
+              <p class="text-xs text-slate-600 mt-2 leading-relaxed">
                 24時間オンラインでお申込み完了。クレジットカード・コンビニ決済対応。会場受験・自宅受験を選択いただけます。
               </p>
             </div>
-            <div class="pt-4 mt-2 border-t border-slate-200/60 flex items-center gap-1.5 text-secondary text-xs sm:text-sm font-bold group-hover:translate-x-1 transition-transform">
-              <span class="">申込みフォームへ進む</span>
+            <div class="pt-2.5 mt-2.5 border-t border-slate-200/60 flex items-center gap-1.5 text-secondary text-xs sm:text-[13px] font-bold group-hover:translate-x-1 transition-transform">
+              <span>申込みフォームへ進む</span>
               <span class="material-symbols-outlined text-base">arrow_forward</span>
             </div>
           </a>
           <!-- Quick Card 2: Partner Schools -->
-          <a class="group p-5 sm:p-6 bg-slate-50/80 hover:bg-slate-50 rounded-lg border border-slate-200/90 shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between" data-path="partner-schools" href="schools_PC.html">
-            <div class="flex items-start justify-between gap-space-sm">
-              <div class="w-10 h-10 rounded-lg bg-primary-fixed text-on-primary-fixed flex items-center justify-center group-hover:scale-105 transition-transform">
-                <span class="material-symbols-outlined text-xl">location_city</span>
+          <a class="group p-3.5 sm:p-4 bg-slate-50/80 hover:bg-slate-50 rounded-lg border border-slate-200/90 shadow-2xs hover:shadow-md transition-all duration-300 flex flex-col justify-between" data-path="partner-schools" href="schools_PC.html">
+            <div>
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-primary-fixed text-on-primary-fixed flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                  <span class="material-symbols-outlined text-xl">location_city</span>
+                </div>
+                <h3 class="text-sm sm:text-base font-bold text-slate-800 group-hover:text-primary transition-colors leading-snug">
+                  岡山県内提携塾一覧を見る
+                </h3>
               </div>
-              <span class="px-2.5 py-0.5 bg-primary/10 text-primary text-[11px] font-bold rounded-md">県内120教室以上</span>
-            </div>
-            <div class="mt-4">
-              <h3 class="text-base font-bold text-slate-800 group-hover:text-primary transition-colors">
-                岡山県内提携塾一覧を見る
-              </h3>
-              <p class="text-xs sm:text-sm text-slate-500 mt-1.5 leading-relaxed">
+              <p class="text-xs text-slate-600 mt-2 leading-relaxed">
                 岡山市・倉敷市・津山市など県内各地の提携塾会場をエリア別で検索。通塾中の方は塾経由のお申込みも可能です。
               </p>
             </div>
-            <div class="pt-4 mt-2 border-t border-slate-200/60 flex items-center gap-1.5 text-primary text-xs sm:text-sm font-bold group-hover:translate-x-1 transition-transform">
-              <span class="">提携校・会場リストを見る</span>
+            <div class="pt-2.5 mt-2.5 border-t border-slate-200/60 flex items-center gap-1.5 text-primary text-xs sm:text-[13px] font-bold group-hover:translate-x-1 transition-transform">
+              <span>提携校・会場リストを見る</span>
               <span class="material-symbols-outlined text-base">arrow_forward</span>
             </div>
           </a>
           <!-- Quick Card 3: Social & Study Advice -->
-          <a class="group p-5 sm:p-6 bg-slate-50/80 hover:bg-slate-50 rounded-lg border border-slate-200/90 shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between" data-path="social-instagram" href="https://www.instagram.com/okamoshi01/" target="_blank" rel="noopener noreferrer">
-            <div class="flex items-start justify-between gap-space-sm">
-              <div class="w-10 h-10 rounded-lg bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center group-hover:scale-105 transition-transform">
-                <span class="material-symbols-outlined text-xl">photo_camera</span>
+          <a class="group p-3.5 sm:p-4 bg-slate-50/80 hover:bg-slate-50 rounded-lg border border-slate-200/90 shadow-2xs hover:shadow-md transition-all duration-300 flex flex-col justify-between" data-path="social-instagram" href="https://www.instagram.com/okamoshi01/" target="_blank" rel="noopener noreferrer">
+            <div>
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                  <span class="material-symbols-outlined text-xl">photo_camera</span>
+                </div>
+                <h3 class="text-sm sm:text-base font-bold text-slate-800 group-hover:text-tertiary transition-colors leading-snug">
+                  公式Instagram @okamoshi
+                </h3>
               </div>
-              <span class="px-2.5 py-0.5 bg-tertiary-container/10 text-tertiary text-[11px] font-bold rounded-md">毎週更新</span>
-            </div>
-            <div class="mt-4">
-              <h3 class="text-base font-bold text-slate-800 group-hover:text-tertiary transition-colors">
-                公式Instagram @okamoshi
-              </h3>
-              <p class="text-xs sm:text-sm text-slate-500 mt-1.5 leading-relaxed">
+              <p class="text-xs text-slate-600 mt-2 leading-relaxed">
                 入試ワンポイント解説、英単語ミニクイズ、願書提出締切リマインドなど受験生・保護者向け情報をリアルタイム発信中。
               </p>
             </div>
-            <div class="pt-4 mt-2 border-t border-slate-200/60 flex items-center gap-1.5 text-tertiary text-xs sm:text-sm font-bold group-hover:translate-x-1 transition-transform">
-              <span class="">Instagramを見る</span>
+            <div class="pt-2.5 mt-2.5 border-t border-slate-200/60 flex items-center gap-1.5 text-tertiary text-xs sm:text-[13px] font-bold group-hover:translate-x-1 transition-transform">
+              <span>Instagramを見る</span>
               <span class="material-symbols-outlined text-base">open_in_new</span>
             </div>
           </a>

@@ -560,18 +560,18 @@
                   <span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span>
                 </div>
 
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3" id="gradeButtonGroup" role="radiogroup" aria-label="学年選択">
-                  <button type="button" onclick="selectFormGrade('sho6')" id="grade-btn-sho6" class="grade-select-btn flex items-center justify-center py-3.5 sm:py-4 px-3 rounded-lg bg-surface-container-low border border-outline-variant/30 cursor-pointer hover:bg-surface-container transition-all text-center">
-                    <span class="font-headline-md text-xl sm:text-2xl font-black text-on-surface leading-none">小6</span>
+                <div class="grid grid-cols-4 gap-1.5 sm:gap-2" id="gradeButtonGroup" role="radiogroup" aria-label="学年選択">
+                  <button type="button" onclick="selectFormGrade('sho6')" id="grade-btn-sho6" class="grade-select-btn flex items-center justify-center py-2.5 sm:py-3 px-1 sm:px-2 rounded-lg bg-surface-container-low border border-outline-variant/30 cursor-pointer hover:bg-surface-container transition-all text-center">
+                    <span class="font-bold text-sm sm:text-base text-on-surface leading-none">小6</span>
                   </button>
-                  <button type="button" onclick="selectFormGrade('chu1')" id="grade-btn-chu1" class="grade-select-btn flex items-center justify-center py-3.5 sm:py-4 px-3 rounded-lg bg-surface-container-low border border-outline-variant/30 cursor-pointer hover:bg-surface-container transition-all text-center">
-                    <span class="font-headline-md text-xl sm:text-2xl font-black text-on-surface leading-none">中1</span>
+                  <button type="button" onclick="selectFormGrade('chu1')" id="grade-btn-chu1" class="grade-select-btn flex items-center justify-center py-2.5 sm:py-3 px-1 sm:px-2 rounded-lg bg-surface-container-low border border-outline-variant/30 cursor-pointer hover:bg-surface-container transition-all text-center">
+                    <span class="font-bold text-sm sm:text-base text-on-surface leading-none">中1</span>
                   </button>
-                  <button type="button" onclick="selectFormGrade('chu2')" id="grade-btn-chu2" class="grade-select-btn flex items-center justify-center py-3.5 sm:py-4 px-3 rounded-lg bg-surface-container-low border border-outline-variant/30 cursor-pointer hover:bg-surface-container transition-all text-center">
-                    <span class="font-headline-md text-xl sm:text-2xl font-black text-on-surface leading-none">中2</span>
+                  <button type="button" onclick="selectFormGrade('chu2')" id="grade-btn-chu2" class="grade-select-btn flex items-center justify-center py-2.5 sm:py-3 px-1 sm:px-2 rounded-lg bg-surface-container-low border border-outline-variant/30 cursor-pointer hover:bg-surface-container transition-all text-center">
+                    <span class="font-bold text-sm sm:text-base text-on-surface leading-none">中2</span>
                   </button>
-                  <button type="button" onclick="selectFormGrade('chu3')" id="grade-btn-chu3" class="grade-select-btn flex items-center justify-center py-3.5 sm:py-4 px-3 rounded-lg bg-primary-fixed/50 border-2 border-primary-container ring-2 ring-primary-container/20 cursor-pointer hover:bg-primary-fixed/60 transition-all text-center shadow-xs">
-                    <span class="font-headline-md text-xl sm:text-2xl font-black text-primary-container leading-none">中3</span>
+                  <button type="button" onclick="selectFormGrade('chu3')" id="grade-btn-chu3" class="grade-select-btn flex items-center justify-center py-2.5 sm:py-3 px-1 sm:px-2 rounded-lg bg-primary-fixed/50 border-2 border-primary-container ring-2 ring-primary-container/20 cursor-pointer hover:bg-primary-fixed/60 transition-all text-center shadow-xs">
+                    <span class="font-bold text-sm sm:text-base text-primary-container leading-none">中3</span>
                   </button>
                 </div>
               </div>
@@ -649,15 +649,15 @@
                 </div>
                 <div class="grid grid-cols-3 gap-3">
                   <label class="flex items-center justify-center gap-2 h-11 rounded-lg bg-surface-container-low border border-outline-variant/30 text-on-surface cursor-pointer has-[:checked]:bg-primary-fixed/40 has-[:checked]:border-primary-container transition-colors">
-                    <input checked class="w-4 h-4 text-primary-container accent-primary-container" name="gender" type="radio" value="male">
+                    <input class="w-4 h-4 text-primary-container accent-primary-container" name="gender" type="radio" value="male" required>
                     <span class="font-label-md text-sm">男子</span>
                   </label>
                   <label class="flex items-center justify-center gap-2 h-11 rounded-lg bg-surface-container-low border border-outline-variant/30 text-on-surface cursor-pointer has-[:checked]:bg-primary-fixed/40 has-[:checked]:border-primary-container transition-colors">
-                    <input class="w-4 h-4 text-primary-container accent-primary-container" name="gender" type="radio" value="female">
+                    <input class="w-4 h-4 text-primary-container accent-primary-container" name="gender" type="radio" value="female" required>
                     <span class="font-label-md text-sm">女子</span>
                   </label>
                   <label class="flex items-center justify-center gap-2 h-11 rounded-lg bg-surface-container-low border border-outline-variant/30 text-on-surface cursor-pointer has-[:checked]:bg-primary-fixed/40 has-[:checked]:border-primary-container transition-colors">
-                    <input class="w-4 h-4 text-primary-container accent-primary-container" name="gender" type="radio" value="no_answer">
+                    <input class="w-4 h-4 text-primary-container accent-primary-container" name="gender" type="radio" value="no_answer" required>
                     <span class="font-label-md text-xs sm:text-[13px]">回答しない</span>
                   </label>
                 </div>
@@ -744,9 +744,9 @@
                   <label class="font-label-md text-sm font-bold text-on-surface" for="postalCode">郵便番号</label>
                   <span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span>
                 </div>
-                <div class="flex items-center gap-2">
-                  <input class="w-32 sm:w-36 h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40 shrink-0 font-mono" id="postalCode" name="postal_code" maxlength="8" placeholder="700-0822" required type="text" autocomplete="postal-code">
-                  <button id="btnSearchAddress" class="flex-1 sm:flex-initial sm:w-auto px-3 sm:px-4 h-11 py-2.5 bg-primary hover:bg-primary-container disabled:opacity-60 disabled:cursor-not-allowed text-on-primary font-bold text-xs sm:text-sm rounded-lg transition-colors shadow-sm shrink-0 max-w-full flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap active:scale-[0.98]" onclick="searchAddressByPostalCode(true)" type="button">
+                <div class="flex items-center gap-2 w-full">
+                  <input class="w-[62%] sm:w-48 h-11 px-3.5 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40 shrink-0 font-mono" id="postalCode" name="postal_code" maxlength="8" placeholder="700-0822" required type="text" autocomplete="postal-code">
+                  <button id="btnSearchAddress" class="w-[38%] sm:w-auto px-2.5 sm:px-4 h-11 py-2.5 bg-primary hover:bg-primary-container disabled:opacity-60 disabled:cursor-not-allowed text-on-primary font-bold text-xs sm:text-sm rounded-lg transition-colors shadow-sm shrink-0 flex items-center justify-center gap-1 sm:gap-1.5 cursor-pointer whitespace-nowrap active:scale-[0.98]" onclick="searchAddressByPostalCode(true)" type="button">
                     <span id="btnSearchAddressIcon" class="material-symbols-outlined text-[16px] shrink-0">location_searching</span>
                     <span id="btnSearchAddressText">住所自動入力</span>
                   </button>
@@ -809,7 +809,7 @@
               <label class="p-4 rounded-lg bg-surface-container-low border border-outline-variant/30 cursor-pointer hover:bg-surface-container flex flex-col justify-between gap-3 transition-all has-[:checked]:bg-primary-fixed/40 has-[:checked]:border-primary-container has-[:checked]:ring-1 has-[:checked]:ring-primary-container">
                 <div class="flex items-start justify-between gap-3">
                   <div class="flex items-start gap-2.5">
-                    <input checked class="w-4 h-4 mt-1 text-primary-container accent-primary-container shrink-0" name="payment_method" type="radio" value="credit_card" onchange="updatePaymentMethodSummary('credit_card')">
+                    <input class="w-4 h-4 mt-1 text-primary-container accent-primary-container shrink-0" name="payment_method" type="radio" value="credit_card" onchange="updatePaymentMethodSummary('credit_card')" required>
                     <div class="flex flex-col gap-1">
                       <span class="font-label-md font-bold text-on-surface text-[15px]">クレジットカード決済</span>
                       <span class="font-body-sm text-[11px] text-primary-container font-bold">Stripe即時安全決済・手数料 0円</span>
@@ -829,7 +829,7 @@
               <label class="p-4 rounded-lg bg-surface-container-low border border-outline-variant/30 cursor-pointer hover:bg-surface-container flex flex-col justify-between gap-3 transition-all has-[:checked]:bg-primary-fixed/40 has-[:checked]:border-primary-container has-[:checked]:ring-1 has-[:checked]:ring-primary-container">
                 <div class="flex items-start justify-between gap-3">
                   <div class="flex items-start gap-2.5">
-                    <input class="w-4 h-4 mt-1 text-primary-container accent-primary-container shrink-0" name="payment_method" type="radio" value="convenience_store" onchange="updatePaymentMethodSummary('convenience_store')">
+                    <input class="w-4 h-4 mt-1 text-primary-container accent-primary-container shrink-0" name="payment_method" type="radio" value="convenience_store" onchange="updatePaymentMethodSummary('convenience_store')" required>
                     <div class="flex flex-col gap-1">
                       <span class="font-label-md font-bold text-on-surface text-[15px]">コンビニ決済</span>
                       <span class="font-body-sm text-[11px] text-on-surface-variant" id="convenience-deadline-text">お申込み完了後4日以内（10/4(日)まで）にお支払い</span>
@@ -901,10 +901,7 @@
               <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
                 <span class="font-bold text-slate-700 text-xs sm:text-[13px]">お支払い方法</span>
                 <div id="summaryPaymentMethod">
-                  <div class="flex items-center gap-1.5 text-xs sm:text-sm font-bold text-slate-800">
-                    <span class="material-symbols-outlined text-base text-slate-600">credit_card</span>
-                    <span>クレジットカード決済（Stripe）</span>
-                  </div>
+                  <span class="text-xs sm:text-sm font-medium text-amber-700">お支払い方法を選択してください（未選択）</span>
                 </div>
               </div>
               <!-- コンビニ決済時の項目直下期限注記 -->
@@ -952,21 +949,51 @@
             </div>
           </div>
 
-          <!-- セキュリティ案内 -->
-          <div class="bg-surface-container-low rounded-lg p-4 border border-outline-variant/30 space-y-2.5">
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-1.5">
-              <div class="flex items-center gap-2 text-on-surface-variant text-xs">
-                <span class="material-symbols-outlined text-primary-container text-lg shrink-0">lock</span>
-                <span>SSL 256bit 暗号化通信により、ご入力情報は厳重に保護されています。</span>
+          <!-- セキュリティ・決済保護のご案内 -->
+          <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 sm:p-5 shadow-xs">
+            <div class="flex items-start gap-3.5 sm:gap-4">
+              <!-- セキュリティアイコンバッジ -->
+              <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0 shadow-2xs mt-0.5">
+                <span class="material-symbols-outlined text-2xl sm:text-[26px]">verified_user</span>
               </div>
-              <div class="flex items-center gap-1 text-[11px] text-on-surface-variant pl-6 md:pl-0">
-                <span>決済処理: </span>
-                <strong class="text-on-surface font-semibold">Stripe Secure Payment</strong>
+              
+              <div class="flex-1 min-w-0">
+                <!-- 2項目（SSL暗号化 / Stripe決済）: スマホで縦並び、md以上で左右2列 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5 md:gap-4 pb-3 border-b border-slate-200/80">
+                  <!-- SSL 256bit 暗号化通信 -->
+                  <div class="flex items-start gap-2">
+                    <span class="material-symbols-outlined text-emerald-700 text-lg shrink-0 mt-0.5">lock</span>
+                    <div>
+                      <div class="font-bold text-slate-800 text-xs sm:text-sm flex items-center gap-1.5 flex-wrap">
+                        <span>SSL 256bit 暗号化通信</span>
+                        <span class="bg-emerald-100 text-emerald-800 text-[10px] px-1.5 py-0.5 rounded font-bold">保護中</span>
+                      </div>
+                      <p class="text-xs text-slate-600 mt-0.5 leading-relaxed">ご入力情報は厳重に暗号化され、安全に保護されています。</p>
+                    </div>
+                  </div>
+
+                  <!-- Stripe Secure Payment -->
+                  <div class="flex items-start gap-2">
+                    <span class="material-symbols-outlined text-emerald-700 text-lg shrink-0 mt-0.5">credit_score</span>
+                    <div>
+                      <div class="font-bold text-slate-800 text-xs sm:text-sm flex items-center gap-1.5 flex-wrap">
+                        <span>Stripe Secure Payment</span>
+                        <span class="bg-slate-200/80 text-slate-700 text-[10px] px-1.5 py-0.5 rounded font-bold">世界標準</span>
+                      </div>
+                      <p class="text-xs text-slate-600 mt-0.5 leading-relaxed">国際最高基準（PCI DSS Level 1）準拠の決済システムを採用。</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 補足文章（カード情報は当サイトに保存されない） -->
+                <div class="pt-3 flex items-start gap-1.5 text-xs text-slate-600">
+                  <span class="material-symbols-outlined text-sm text-slate-400 shrink-0 mt-0.5">info</span>
+                  <p class="leading-relaxed">
+                    カード情報は当サイトに保存されず、世界基準の決済システム（Stripe）で直接保護・安全に処理されます。
+                  </p>
+                </div>
               </div>
             </div>
-            <p class="text-xs text-slate-500 leading-relaxed border-t border-outline-variant/20 pt-2">
-              カード情報は当サイトに保存されず、世界基準の決済システム（Stripe）で直接保護・安全に処理されます。
-            </p>
           </div>
         </div>
 
@@ -1483,11 +1510,11 @@
         const title = btn.querySelector('span');
 
         if (g === gradeKey) {
-          btn.className = 'grade-select-btn flex items-center justify-center py-3.5 sm:py-4 px-3 rounded-lg bg-primary-fixed/50 border-2 border-primary-container ring-2 ring-primary-container/20 cursor-pointer hover:bg-primary-fixed/60 transition-all text-center shadow-xs';
-          if (title) title.className = 'font-headline-md text-xl sm:text-2xl font-black text-primary-container leading-none';
+          btn.className = 'grade-select-btn flex items-center justify-center py-2.5 sm:py-3 px-1 sm:px-2 rounded-lg bg-primary-fixed/50 border-2 border-primary-container ring-2 ring-primary-container/20 cursor-pointer hover:bg-primary-fixed/60 transition-all text-center shadow-xs';
+          if (title) title.className = 'font-bold text-sm sm:text-base text-primary-container leading-none';
         } else {
-          btn.className = 'grade-select-btn flex items-center justify-center py-3.5 sm:py-4 px-3 rounded-lg bg-surface-container-low border border-outline-variant/30 cursor-pointer hover:bg-surface-container transition-all text-center';
-          if (title) title.className = 'font-headline-md text-xl sm:text-2xl font-black text-on-surface leading-none';
+          btn.className = 'grade-select-btn flex items-center justify-center py-2.5 sm:py-3 px-1 sm:px-2 rounded-lg bg-surface-container-low border border-outline-variant/30 cursor-pointer hover:bg-surface-container transition-all text-center';
+          if (title) title.className = 'font-bold text-sm sm:text-base text-on-surface leading-none';
         }
       });
 
@@ -1735,10 +1762,10 @@
               <div class="md:col-span-8 relative">
                 <select id="venue-${exam.id}" disabled required
                   onchange="updateExamVenue('${exam.id}', this)"
-                  class="w-full h-10 sm:h-11 pl-3 pr-9 rounded-lg font-body-sm text-base appearance-none border shadow-2xs cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-primary-container text-rose-500 bg-rose-50/50 border-rose-200/80">
+                  class="w-full h-10 sm:h-11 pl-3 pr-9 rounded-lg font-body-sm text-base appearance-none border shadow-2xs cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-primary-container text-gray-400 bg-gray-50 border-gray-200">
                   ${venueOptionsHtml}
                 </select>
-                <span id="venue-arrow-${exam.id}" class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-rose-400 text-base transition-colors">expand_more</span>
+                <span id="venue-arrow-${exam.id}" class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400 text-base transition-colors">expand_more</span>
               </div>
             </div>
           </div>
@@ -1826,22 +1853,35 @@
     // 会場セレクトボックスの未選択/選択済ステートスタイル切り替え
     function updateVenueSelectStyle(selectElem) {
       if (!selectElem) return;
-      const isUnselected = !selectElem.value;
+      const examId = selectElem.id.replace('venue-', '');
+      const chk = document.getElementById('check-' + examId);
+      const isExamChecked = chk ? chk.checked : false;
+      const isVenueSelected = !!selectElem.value;
       const arrow = selectElem.parentElement ? selectElem.parentElement.querySelector('.material-symbols-outlined') : null;
-      if (isUnselected) {
-        selectElem.classList.remove('text-slate-900', 'font-medium', 'bg-white', 'border-slate-200/80');
-        selectElem.classList.add('text-rose-500', 'bg-rose-50/50', 'border-rose-200/80');
-        if (arrow) {
-          arrow.classList.remove('text-slate-400');
-          arrow.classList.add('text-rose-400');
-        }
+
+      // クラスのリセット
+      selectElem.classList.remove(
+        'text-gray-400', 'bg-gray-50', 'border-gray-200',
+        'text-red-500', 'bg-red-50', 'border-red-300',
+        'text-rose-500', 'bg-rose-50/50', 'border-rose-200/80',
+        'text-slate-900', 'font-medium', 'bg-white', 'border-slate-200/80'
+      );
+      if (arrow) {
+        arrow.classList.remove('text-gray-400', 'text-red-400', 'text-rose-400', 'text-slate-400');
+      }
+
+      if (!isExamChecked) {
+        // 1. 模試未選択時（初期状態）：標準的な薄いグレー
+        selectElem.classList.add('text-gray-400', 'bg-gray-50', 'border-gray-200');
+        if (arrow) arrow.classList.add('text-gray-400');
+      } else if (!isVenueSelected) {
+        // 2. 模試選択中 かつ 会場未選択：警告表示（赤系）
+        selectElem.classList.add('text-red-500', 'bg-red-50', 'border-red-300');
+        if (arrow) arrow.classList.add('text-red-400');
       } else {
-        selectElem.classList.remove('text-rose-500', 'bg-rose-50/50', 'border-rose-200/80');
+        // 3. 模試選択中 かつ 会場選択済み：標準白背景・通常テキスト
         selectElem.classList.add('text-slate-900', 'font-medium', 'bg-white', 'border-slate-200/80');
-        if (arrow) {
-          arrow.classList.remove('text-rose-400');
-          arrow.classList.add('text-slate-400');
-        }
+        if (arrow) arrow.classList.add('text-slate-400');
       }
     }
 
@@ -1963,7 +2003,7 @@
           convAgreeInput.required = false;
           convAgreeInput.checked = false;
         }
-      } else {
+      } else if (method === 'convenience_store') {
         if (elem) {
           elem.innerHTML = `
             <div class="flex items-center gap-1.5 text-xs sm:text-sm font-bold text-slate-800">
@@ -1981,6 +2021,21 @@
         if (convAgreeContainer) convAgreeContainer.classList.remove('hidden');
         if (convAgreeInput) convAgreeInput.required = true;
         if (convAgreeDeadlineText) convAgreeDeadlineText.textContent = `${dl.shortText}まで`;
+      } else {
+        // 未選択初期状態
+        if (elem) {
+          elem.innerHTML = `
+            <span class="text-xs sm:text-sm font-medium text-amber-700">お支払い方法を選択してください（未選択）</span>
+          `;
+        }
+        if (warningPanel) warningPanel.classList.add('hidden');
+        if (submitWarning) submitWarning.classList.add('hidden');
+        if (summaryNotice) summaryNotice.classList.add('hidden');
+        if (convAgreeContainer) convAgreeContainer.classList.add('hidden');
+        if (convAgreeInput) {
+          convAgreeInput.required = false;
+          convAgreeInput.checked = false;
+        }
       }
     }
 
@@ -2457,6 +2512,7 @@
       for (const exam of selectedExams) {
         if (!exam.venue || exam.venue === '') {
           const venueElem = document.getElementById(`venue-${exam.id}`);
+          if (venueElem) updateVenueSelectStyle(venueElem);
           showFormError(`「${exam.issueName} ${exam.title}」の受験方法・希望会場を選択してください。`, venueElem, venueElem);
           return;
         }
@@ -2467,7 +2523,7 @@
       const studentFirstName = document.getElementById('studentFirstName')?.value.trim();
       const studentKanaLastName = document.getElementById('studentKanaLastName')?.value.trim();
       const studentKanaFirstName = document.getElementById('studentKanaFirstName')?.value.trim();
-      const gender = form.querySelector('input[name="gender"]:checked')?.value || 'male';
+      const gender = form.querySelector('input[name="gender"]:checked')?.value || null;
       const currentSchool = document.getElementById('currentSchool')?.value.trim();
 
       const parentLastName = document.getElementById('parentLastName')?.value.trim();
@@ -2479,7 +2535,7 @@
       const prefecture = document.getElementById('prefecture')?.value;
       const addressLine1 = document.getElementById('addressLine1')?.value.trim();
       const addressLine2 = document.getElementById('addressLine2')?.value.trim();
-      const paymentMethod = form.querySelector('input[name="payment_method"]:checked')?.value || 'credit_card';
+      const paymentMethod = form.querySelector('input[name="payment_method"]:checked')?.value || null;
       const agreeTerms = document.getElementById('agreeTerms')?.checked;
 
       // 3. バリデーションチェック
@@ -2491,6 +2547,12 @@
       if (!studentKanaLastName || !studentKanaFirstName) {
         const target = !studentKanaLastName ? document.getElementById('studentKanaLastName') : document.getElementById('studentKanaFirstName');
         showFormError('生徒氏名（フリガナ）を入力してください。', target);
+        return;
+      }
+      if (!gender) {
+        const genderElem = form.querySelector('input[name="gender"]');
+        const genderGroup = genderElem?.closest('.flex.flex-col') || genderElem;
+        showFormError('性別を選択してください。', genderElem, genderGroup);
         return;
       }
       if (!currentSchool) {
@@ -2526,6 +2588,12 @@
       if (!addressLine1) {
         const target = document.getElementById('addressLine1');
         showFormError('市区町村・番地を入力してください。', target);
+        return;
+      }
+      if (!paymentMethod) {
+        const paymentElem = form.querySelector('input[name="payment_method"]');
+        const paymentGroup = paymentElem?.closest('.flex.flex-col') || paymentElem;
+        showFormError('お支払い方法（クレジットカード決済またはコンビニ決済）を選択してください。', paymentElem, paymentGroup);
         return;
       }
       if (!agreeTerms) {
@@ -2771,8 +2839,8 @@
       await loadExamsFromMicroCMS();
       selectFormGrade(initialGrade);
 
-      // お支払い方法の初期反映
-      const checkedMethod = document.querySelector('input[name="payment_method"]:checked')?.value || 'credit_card';
+      // お支払い方法の初期反映（未選択のまま初期化）
+      const checkedMethod = document.querySelector('input[name="payment_method"]:checked')?.value || null;
       updatePaymentMethodSummary(checkedMethod);
 
       // 郵便番号自動入力リスナーの初期化

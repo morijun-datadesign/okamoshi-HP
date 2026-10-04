@@ -1800,7 +1800,7 @@
 
         const cardClasses = isChecked
           ? 'relative flex flex-col p-4 sm:p-5 rounded-lg shadow-2xs sm:shadow-sm gap-3.5 transition-all duration-200 bg-primary-fixed/30 border-2 border-primary-container ring-1 ring-primary-container/20'
-          : 'relative flex flex-col p-4 sm:p-5 rounded-lg bg-white border border-slate-200/80 shadow-2xs sm:shadow-sm gap-3.5 transition-all duration-200';
+          : 'relative flex flex-col p-4 sm:p-5 rounded-lg bg-white border border-slate-300 shadow-2xs sm:shadow-sm gap-3.5 transition-all duration-200';
 
         const badgeGradeClass = isChecked
           ? 'inline-flex items-center justify-center px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-md bg-white text-slate-800 border border-slate-200 font-bold text-base shrink-0 shadow-2xs leading-normal transition-colors'
@@ -1815,6 +1815,17 @@
           : 'pt-3 border-t border-outline-variant/20 grid grid-cols-1 md:grid-cols-12 gap-2 items-center opacity-50 pointer-events-none';
 
         const venueDisabledAttr = isChecked ? '' : 'disabled';
+
+        const isVenueEmpty = !selectedExamsState[exam.id]?.venue;
+        const venueSelectClass = isChecked
+          ? (isVenueEmpty
+              ? 'w-full h-10 sm:h-11 pl-3 pr-9 rounded-lg font-body-sm text-base appearance-none border shadow-2xs cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-primary-container text-red-500 bg-red-50 border-red-300'
+              : 'w-full h-10 sm:h-11 pl-3 pr-9 rounded-lg font-body-sm text-base appearance-none border shadow-2xs cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-primary-container text-slate-900 font-medium bg-white border-slate-300')
+          : 'w-full h-10 sm:h-11 pl-3 pr-9 rounded-lg font-body-sm text-base appearance-none border shadow-2xs cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-primary-container text-gray-400 bg-gray-50 border-gray-200';
+
+        const venueArrowClass = isChecked
+          ? (isVenueEmpty ? 'text-red-400' : 'text-slate-400')
+          : 'text-gray-400';
 
         return `
           <div class="${cardClasses}" id="card-${exam.id}">
@@ -1858,10 +1869,10 @@
               <div class="md:col-span-8 relative">
                 <select id="venue-${exam.id}" ${venueDisabledAttr} required
                   onchange="updateExamVenue('${exam.id}', this)"
-                  class="w-full h-10 sm:h-11 pl-3 pr-9 rounded-lg font-body-sm text-base appearance-none border shadow-2xs cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-primary-container text-gray-400 bg-gray-50 border-gray-200">
+                  class="${venueSelectClass}">
                   ${venueOptionsHtml}
                 </select>
-                <span id="venue-arrow-${exam.id}" class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400 text-base transition-colors">expand_more</span>
+                <span id="venue-arrow-${exam.id}" class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none ${venueArrowClass} text-base transition-colors">expand_more</span>
               </div>
             </div>
           </div>
@@ -1873,6 +1884,12 @@
         const examInlineError = document.getElementById('examSelectionInlineError');
         if (examInlineError) examInlineError.classList.add('hidden');
       }
+
+      // 初期描画時（URLパラメータ自動選択等を含む）の全セレクトボックスのスタイル同期
+      availableExams.forEach((exam) => {
+        const sel = document.getElementById('venue-' + exam.id);
+        if (sel) updateVenueSelectStyle(sel);
+      });
 
       updateSummary();
     }
@@ -1900,7 +1917,7 @@
         };
 
         if (card) {
-          card.classList.remove('bg-white', 'border-slate-200/80', 'bg-surface-container-lowest', 'border-outline-variant/30');
+          card.classList.remove('bg-white', 'border-slate-300', 'border-slate-200/80', 'bg-surface-container-lowest', 'border-outline-variant/30');
           card.classList.add('bg-primary-fixed/30', 'border-2', 'border-primary-container', 'ring-1', 'ring-primary-container/20');
         }
 
@@ -1929,7 +1946,7 @@
 
         if (card) {
           card.classList.remove('bg-primary-fixed/30', 'border-2', 'border-primary-container', 'ring-1', 'ring-primary-container/20');
-          card.classList.add('bg-white', 'border-slate-200/80');
+          card.classList.add('bg-white', 'border-slate-300');
         }
 
         // バッジ配色反転（未選択時：薄いグリーン背景＋エメラルド文字＋エメラルドボーダー）
@@ -1964,12 +1981,12 @@
       // クラスのリセット
       selectElem.classList.remove(
         'text-gray-400', 'bg-gray-50', 'border-gray-200',
-        'text-red-500', 'bg-red-50', 'border-red-300',
+        'text-red-500', 'bg-red-50', 'border-red-300', 'border-red-400',
         'text-rose-500', 'bg-rose-50/50', 'border-rose-200/80',
-        'text-slate-900', 'font-medium', 'bg-white', 'border-slate-200/80'
+        'text-slate-900', 'font-medium', 'bg-white', 'border-slate-200/80', 'border-slate-300'
       );
       if (arrow) {
-        arrow.classList.remove('text-gray-400', 'text-red-400', 'text-rose-400', 'text-slate-400');
+        arrow.classList.remove('text-gray-400', 'text-red-400', 'text-rose-400', 'text-slate-400', 'text-on-surface-variant');
       }
 
       if (!isExamChecked) {
@@ -1977,12 +1994,12 @@
         selectElem.classList.add('text-gray-400', 'bg-gray-50', 'border-gray-200');
         if (arrow) arrow.classList.add('text-gray-400');
       } else if (!isVenueSelected) {
-        // 2. 模試選択中 かつ 会場未選択：警告表示（赤系）
+        // 2. 模試選択中 かつ 会場未選択：警告表示（赤系ハイライト）
         selectElem.classList.add('text-red-500', 'bg-red-50', 'border-red-300');
         if (arrow) arrow.classList.add('text-red-400');
       } else {
         // 3. 模試選択中 かつ 会場選択済み：標準白背景・通常テキスト
-        selectElem.classList.add('text-slate-900', 'font-medium', 'bg-white', 'border-slate-200/80');
+        selectElem.classList.add('text-slate-900', 'font-medium', 'bg-white', 'border-slate-300');
         if (arrow) arrow.classList.add('text-slate-400');
       }
     }

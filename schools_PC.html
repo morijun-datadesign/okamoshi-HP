@@ -226,37 +226,52 @@
       }
     }
 
-    /* 学区選択タブボタンスタイル（選択中・未選択のコントラスト強化） */
+    /* 学区選択タブボタンスタイル（iOSタップ最適化 & コントラスト強化） */
     .district-nav-btn {
+      display: inline-flex !important;
+      align-items: center !important;
       background-color: #f1f5f9 !important;
       color: #334155 !important;
       border: 1px solid #cbd5e1 !important;
+      cursor: pointer !important;
+      touch-action: manipulation !important;
+      -webkit-tap-highlight-color: transparent !important;
+      -webkit-appearance: none !important;
+      appearance: none !important;
+      user-select: none !important;
+      -webkit-user-select: none !important;
+      outline: none !important;
       transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
     }
-    .district-nav-btn:hover {
-      background-color: #e2e8f0 !important;
-      color: #0f172a !important;
+    /* PCマウス操作時のみホバー効果を適用（モバイルiOSでの:hover残留・誤動作を防止） */
+    @media (hover: hover) and (pointer: fine) {
+      .district-nav-btn:not(.active):hover {
+        background-color: #e2e8f0 !important;
+        color: #0f172a !important;
+        border-color: #94a3b8 !important;
+      }
     }
     .district-nav-btn .count-badge {
       background-color: #e2e8f0 !important;
       color: #334155 !important;
       font-weight: 700 !important;
       transition: background-color 0.15s ease, color 0.15s ease;
+      pointer-events: none !important;
     }
-    /* アクティブ（選択中）状態：ブランド濃いグリーン #004d3d + 白文字 + 白背景に濃い緑数字のバッジ */
+    /* アクティブ（選択中）状態：ブランド濃いグリーン #004d3d + 白文字 + 白背景に濃い緑数字のバッジ（最優先適用） */
     .district-nav-btn.active,
     .district-nav-btn.active:hover,
-    .district-nav-btn.active:focus {
+    .district-nav-btn.active:focus,
+    .district-nav-btn.active:active {
       background-color: #004d3d !important;
       color: #ffffff !important;
       border-color: #004d3d !important;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15) !important;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18) !important;
     }
     .district-nav-btn.active .count-badge,
     .district-nav-btn.active:hover .count-badge,
-    .district-nav-btn.active:focus .count-badge {
+    .district-nav-btn.active:focus .count-badge,
+    .district-nav-btn.active:active .count-badge {
       background-color: #ffffff !important;
       color: #004d3d !important;
       font-weight: 800 !important;
@@ -596,22 +611,22 @@
       <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3 flex flex-col md:flex-row items-center justify-between gap-2.5 sm:gap-3">
         <!-- District Pills (横スクロール要素：左右パディング px-4 を持たせて端まで綺麗にスクロール) -->
         <div class="flex items-center gap-1.5 sm:gap-space-2xs overflow-x-auto w-full md:w-auto pb-1 md:pb-0 scrollbar-none -mx-4 px-4 sm:mx-0 sm:px-0" id="districtTabs" role="tablist">
-          <a class="px-3 py-1.5 rounded-full text-sm sm:text-label-md font-bold whitespace-nowrap shadow-sm transition-all flex items-center gap-1.5 district-nav-btn active cursor-pointer shrink-0" href="#area-okayama" data-target="area-okayama" role="tab" aria-selected="true">
+          <button type="button" class="px-3 py-1.5 rounded-full text-sm sm:text-label-md font-bold whitespace-nowrap shadow-sm transition-all flex items-center gap-1.5 district-nav-btn active cursor-pointer shrink-0" data-target="area-okayama" role="tab" aria-selected="true">
             <span>岡山・東備学区</span>
             <span id="badge-okayama" class="w-5 h-5 rounded-full text-xs sm:text-label-sm inline-flex items-center justify-center count-badge font-mono shrink-0" data-total="58">58</span>
-          </a>
-          <a class="px-3 py-1.5 rounded-full text-sm sm:text-label-md font-bold transition-all whitespace-nowrap flex items-center gap-1.5 district-nav-btn cursor-pointer shrink-0" href="#area-kurashiki" data-target="area-kurashiki" role="tab" aria-selected="false">
+          </button>
+          <button type="button" class="px-3 py-1.5 rounded-full text-sm sm:text-label-md font-bold transition-all whitespace-nowrap flex items-center gap-1.5 district-nav-btn cursor-pointer shrink-0" data-target="area-kurashiki" role="tab" aria-selected="false">
             <span>倉敷学区</span>
             <span id="badge-kurashiki" class="w-5 h-5 rounded-full text-xs sm:text-label-sm inline-flex items-center justify-center count-badge font-mono shrink-0" data-total="30">30</span>
-          </a>
-          <a class="px-3 py-1.5 rounded-full text-sm sm:text-label-md font-bold transition-all whitespace-nowrap flex items-center gap-1.5 district-nav-btn cursor-pointer shrink-0" href="#area-mimasaka" data-target="area-mimasaka" role="tab" aria-selected="false">
+          </button>
+          <button type="button" class="px-3 py-1.5 rounded-full text-sm sm:text-label-md font-bold transition-all whitespace-nowrap flex items-center gap-1.5 district-nav-btn cursor-pointer shrink-0" data-target="area-mimasaka" role="tab" aria-selected="false">
             <span>美作学区</span>
             <span id="badge-mimasaka" class="w-5 h-5 rounded-full text-xs sm:text-label-sm inline-flex items-center justify-center count-badge font-mono shrink-0" data-total="24">24</span>
-          </a>
-          <a class="px-3 py-1.5 rounded-full text-sm sm:text-label-md font-bold transition-all whitespace-nowrap flex items-center gap-1.5 district-nav-btn cursor-pointer shrink-0" href="#area-seibi" data-target="area-seibi" role="tab" aria-selected="false">
+          </button>
+          <button type="button" class="px-3 py-1.5 rounded-full text-sm sm:text-label-md font-bold transition-all whitespace-nowrap flex items-center gap-1.5 district-nav-btn cursor-pointer shrink-0" data-target="area-seibi" role="tab" aria-selected="false">
             <span>西備学区</span>
             <span id="badge-seibi" class="w-5 h-5 rounded-full text-xs sm:text-label-sm inline-flex items-center justify-center count-badge font-mono shrink-0" data-total="7">7</span>
-          </a>
+          </button>
         </div>
         <!-- Quick Search Input with Clear Button (全幅 w-full 展開) -->
         <div class="w-full md:w-80 relative flex items-center">
@@ -2670,81 +2685,144 @@
         });
       }
 
-      // 3. 学区タブ スムーズスクロール & アクティブ連動
+      // 3. 学区タブ スムーズスクロール & アクティブ連動（iOSタップ対応）
       const navBtns = document.querySelectorAll('.district-nav-btn');
       const sections = districtConfigs.map(function(c) {
         return document.getElementById(c.areaId);
       }).filter(Boolean);
 
+      let currentActiveDistrict = 'area-okayama';
+
       function setActiveTab(targetId) {
+        if (!targetId) return;
+        currentActiveDistrict = targetId;
         navBtns.forEach(function(btn) {
           const isTarget = btn.getAttribute('data-target') === targetId || btn.getAttribute('href') === '#' + targetId;
+          const badge = btn.querySelector('.count-badge');
           if (isTarget) {
             btn.classList.add('active');
             btn.setAttribute('aria-selected', 'true');
+            btn.style.setProperty('background-color', '#004d3d', 'important');
+            btn.style.setProperty('color', '#ffffff', 'important');
+            btn.style.setProperty('border-color', '#004d3d', 'important');
+            if (badge) {
+              badge.style.setProperty('background-color', '#ffffff', 'important');
+              badge.style.setProperty('color', '#004d3d', 'important');
+            }
           } else {
             btn.classList.remove('active');
             btn.setAttribute('aria-selected', 'false');
+            btn.style.removeProperty('background-color');
+            btn.style.removeProperty('color');
+            btn.style.removeProperty('border-color');
+            if (badge) {
+              badge.style.removeProperty('background-color');
+              badge.style.removeProperty('color');
+            }
           }
         });
       }
 
+      // 初期アクティブ状態の確実な適用
+      setActiveTab('area-okayama');
+
       let isClickScrolling = false;
-      let clickScrollTimeout;
+      let scrollEndDebounce = null;
+
+      function getTargetScrollTop(targetEl) {
+        const header = document.querySelector('header');
+        const anchorBar = document.getElementById('district-anchor');
+        const totalOffset = (header ? header.offsetHeight : 64) + (anchorBar ? anchorBar.offsetHeight : 54) + 12;
+        const rect = targetEl.getBoundingClientRect();
+        return window.pageYOffset + rect.top - totalOffset;
+      }
+
+      function updateActiveTabOnScroll() {
+        // ページ最下部付近に達した場合は最後のセクションをアクティブにする
+        if ((window.innerHeight + window.pageYOffset) >= document.documentElement.scrollHeight - 60) {
+          if (sections.length > 0) {
+            setActiveTab(sections[sections.length - 1].id);
+            return;
+          }
+        }
+
+        const header = document.querySelector('header');
+        const anchorBar = document.getElementById('district-anchor');
+        const offsetThreshold = (header ? header.offsetHeight : 64) + (anchorBar ? anchorBar.offsetHeight : 54) + 40;
+        const scrollPos = window.pageYOffset + offsetThreshold;
+
+        for (let i = sections.length - 1; i >= 0; i--) {
+          const sec = sections[i];
+          if (sec && sec.offsetTop <= scrollPos) {
+            setActiveTab(sec.id);
+            break;
+          }
+        }
+      }
+
+      function handleTabClick(btn, e) {
+        if (e) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+        const targetId = btn.getAttribute('data-target') || (btn.getAttribute('href') || '').replace('#', '');
+        const targetEl = document.getElementById(targetId);
+        if (!targetId || !targetEl) return;
+
+        // 1. 即座にアクティブ状態（UI）を更新
+        setActiveTab(targetId);
+
+        // 2. タブバー横スクロールコンテナ内での位置を中央へスムーズスクロール（独立動作）
+        const tabsContainer = document.getElementById('districtTabs');
+        if (tabsContainer) {
+          const containerRect = tabsContainer.getBoundingClientRect();
+          const btnRect = btn.getBoundingClientRect();
+          const scrollOffset = (btnRect.left + btnRect.width / 2) - (containerRect.left + containerRect.width / 2);
+          tabsContainer.scrollBy({ left: scrollOffset, behavior: 'smooth' });
+        }
+
+        // 3. ページ縦スクロールとスクロールリスナーのロック制御
+        isClickScrolling = true;
+        if (scrollEndDebounce) clearTimeout(scrollEndDebounce);
+        scrollEndDebounce = setTimeout(function() {
+          isClickScrolling = false;
+        }, 1500);
+
+        const targetTop = getTargetScrollTop(targetEl);
+        window.scrollTo({
+          top: targetTop,
+          behavior: 'smooth'
+        });
+      }
 
       navBtns.forEach(function(btn) {
         btn.addEventListener('click', function(e) {
-          e.preventDefault();
-          const targetId = btn.getAttribute('data-target') || (btn.getAttribute('href') || '').replace('#', '');
-          const targetEl = document.getElementById(targetId);
-          if (targetEl) {
-            isClickScrolling = true;
-            setActiveTab(targetId);
-
-            // モバイル等でタブが画面端にある場合、横スクロールコンテナ内で中央に見えるよう調整
-            btn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-
-            // 固定ヘッダー（約64px/72px）＋固定タブバー（約48px/56px）のオフセット
-            const headerOffset = 135;
-            const elementPosition = targetEl.getBoundingClientRect().top;
-            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-
-            window.scrollTo({
-              top: offsetPosition,
-              behavior: 'smooth'
-            });
-
-            if (clickScrollTimeout) clearTimeout(clickScrollTimeout);
-            clickScrollTimeout = setTimeout(function() {
-              isClickScrolling = false;
-            }, 800);
-          }
+          handleTabClick(btn, e);
         });
       });
+
+      // ユーザーが手動で画面タッチした場合はスクロールロックを即座に解除
+      window.addEventListener('touchstart', function() {
+        if (isClickScrolling) {
+          isClickScrolling = false;
+          if (scrollEndDebounce) clearTimeout(scrollEndDebounce);
+        }
+      }, { passive: true });
 
       // スクロール位置に応じた自動タブハイライト
       let scrollTimeout;
       window.addEventListener('scroll', function() {
-        if (isClickScrolling) return; // タブクリックによるスクロール中は上書きしない
+        if (isClickScrolling) {
+          // クリック移動中：スクロールが停止するまでロックを維持し、停止150ms後に解除
+          if (scrollEndDebounce) clearTimeout(scrollEndDebounce);
+          scrollEndDebounce = setTimeout(function() {
+            isClickScrolling = false;
+            updateActiveTabOnScroll();
+          }, 150);
+          return;
+        }
         if (scrollTimeout) cancelAnimationFrame(scrollTimeout);
-        scrollTimeout = requestAnimationFrame(function() {
-          // ページ最下部付近に達した場合は最後のセクションをアクティブにする
-          if ((window.innerHeight + window.pageYOffset) >= document.documentElement.scrollHeight - 50) {
-            if (sections.length > 0) {
-              setActiveTab(sections[sections.length - 1].id);
-              return;
-            }
-          }
-
-          const scrollPos = window.pageYOffset + 160;
-          for (let i = sections.length - 1; i >= 0; i--) {
-            const sec = sections[i];
-            if (sec && sec.offsetTop <= scrollPos) {
-              setActiveTab(sec.id);
-              break;
-            }
-          }
-        });
+        scrollTimeout = requestAnimationFrame(updateActiveTabOnScroll);
       }, { passive: true });
 
       // 4. ヘッダーナビゲーション用ドロップダウン制御

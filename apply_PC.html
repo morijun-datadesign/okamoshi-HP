@@ -2812,16 +2812,94 @@
     });
 
     // ========================================================
-    // 9. 初期実行
+    // 9. URLパラメータ連動 & 初期実行
     // ========================================================
+    /**
+     * URLパラメータの学年指定を正規化 ('sho6' | 'chu1' | 'chu2' | 'chu3' | null)
+     * 日本語表記（中3, 中２, 中学3年, 小6等）および内部コード（chu3, c3, sho6, p6等）に柔軟対応
+     */
+    function normalizeGradeParam(param) {
+      if (!param) return null;
+      try {
+        const p = decodeURIComponent(param).trim().toLowerCase();
+        if (['chu3', 'c3', '3', '中3', '中３', '中学3年', '中学3年生', '中三'].includes(p) || p.includes('中3') || p.includes('中３') || p.includes('中学3')) {
+          return 'chu3';
+        }
+        if (['chu2', 'c2', '2', '中2', '中２', '中学2年', '中学2年生', '中二'].includes(p) || p.includes('中2') || p.includes('中２') || p.includes('中学2')) {
+          return 'chu2';
+        }
+        if (['chu1', 'c1', '1', '中1', '中１', '中学1年', '中学1年生', '中一'].includes(p) || p.includes('中1') || p.includes('中１') || p.includes('中学1')) {
+          return 'chu1';
+        }
+        if (['sho6', 'p6', 'e6', 's6', '6', '小6', '小６', '小学6年', '小学6年生', '小六'].includes(p) || p.includes('小6') || p.includes('小６') || p.includes('小学6')) {
+          return 'sho6';
+        }
+      } catch (e) {}
+      return null;
+    }
+
+    /**
+     * URLパラメータの月号指定から数値を取得 (例: "10", "10月号", "10月" -> 10)
+     */
+    function parseMonthParam(param) {
+      if (!param) return null;
+      try {
+        const p = decodeURIComponent(param).trim();
+        const match = p.match(/(\d+)/);
+        if (match) {
+          return parseInt(match[1], 10);
+        }
+      } catch (e) {}
+      return null;
+    }
+
+    /**
+     * URLパラメータで指定された月号の模試を初期状態でON（選択済）にする
+     */
+    function applyInitialExamSelection(gradeKey, monthParam) {
+      if (!monthParam) return;
+      const targetMonthNum = parseMonthParam(monthParam);
+      if (!targetMonthNum) return;
+
+      const availableExams = getAvailableExamsForGrade(gradeKey);
+      if (!availableExams || availableExams.length === 0) return;
+
+      const targetExam = availableExams.find(exam => {
+        if (exam.issueName) {
+          const m = exam.issueName.match(/(\d+)/);
+          if (m && parseInt(m[1], 10) === targetMonthNum) return true;
+        }
+        if (exam.id) {
+          const m = exam.id.match(/(?:_|^)(\d+)(?:_|$)/);
+          if (m && parseInt(m[1], 10) === targetMonthNum) return true;
+        }
+        return false;
+      });
+
+      if (targetExam) {
+        const chk = document.getElementById('check-' + targetExam.id);
+        if (chk && !chk.checked) {
+          chk.checked = true;
+          toggleExamSelection(targetExam.id);
+        }
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', async function() {
-      // URLパラメータから学年（grade）の指定があれば取得
+      // URLパラメータから学年（grade）および月号（month）の指定を取得
       const urlParams = new URLSearchParams(window.location.search);
-      const gradeParam = urlParams.get('grade');
-      const initialGrade = ['sho6', 'chu1', 'chu2', 'chu3'].includes(gradeParam) ? gradeParam : 'chu3';
+      const rawGradeParam = urlParams.get('grade');
+      const normalizedGrade = normalizeGradeParam(rawGradeParam);
+      const initialGrade = normalizedGrade || 'chu3';
+      const monthParam = urlParams.get('month');
 
       await loadExamsFromMicroCMS();
       selectFormGrade(initialGrade);
+
+      // 月号パラメータが指定されている場合、該当する模試のチェックボックスを初期状態でONにする
+      if (monthParam) {
+        applyInitialExamSelection(initialGrade, monthParam);
+      }
 
       // お支払い方法の初期反映
       const checkedMethod = document.querySelector('input[name="payment_method"]:checked')?.value || null;

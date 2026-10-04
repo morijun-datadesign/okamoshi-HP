@@ -439,18 +439,15 @@
     div.box-fact,
     div.box-action,
     div.box-warning,
-    span.box-fact,
-    span.box-action,
-    span.box-warning,
     .entry-content .box-fact,
     .entry-content .box-action,
     .entry-content .box-warning,
     .entry-content p.box-fact,
     .entry-content p.box-action,
     .entry-content p.box-warning,
-    .entry-content span.box-fact,
-    .entry-content span.box-action,
-    .entry-content span.box-warning,
+    .entry-content div.box-fact,
+    .entry-content div.box-action,
+    .entry-content div.box-warning,
     .blog-body .box-fact,
     .blog-body .box-action,
     .blog-body .box-warning,
@@ -459,13 +456,16 @@
     .prose .box-warning,
     .prose p.box-fact,
     .prose p.box-action,
-    .prose p.box-warning {
+    .prose p.box-warning,
+    .prose div.box-fact,
+    .prose div.box-action,
+    .prose div.box-warning {
       display: block !important;
       width: 100% !important;
       box-sizing: border-box !important;
-      padding: 1rem !important; /* p-4 (16px) */
-      margin-top: 1rem !important; /* my-4 */
-      margin-bottom: 1rem !important; /* my-4 */
+      padding: 1rem 1.25rem !important; /* p-4 sm:p-5 (16px〜20px) */
+      margin-top: 1.25rem !important; /* my-5 */
+      margin-bottom: 1.25rem !important; /* my-5 */
       border-radius: 0 0.5rem 0.5rem 0 !important; /* rounded-r-lg (8px) */
       border-top: none !important;
       border-right: none !important;
@@ -473,10 +473,9 @@
       border-left-width: 4px !important;
       border-left-style: solid !important;
       color: #334155 !important; /* text-slate-700 */
-      font-size: 0.875rem !important; /* text-sm (14px) */
-      line-height: 1.625 !important; /* leading-relaxed (改行後も均一な行間を維持) */
-      -webkit-box-decoration-break: clone;
-      box-decoration-break: clone;
+      font-size: 0.9375rem !important; /* 15px */
+      line-height: 1.75 !important; /* leading-relaxed (改行後も均一な行間を維持) */
+      white-space: pre-wrap; /* 自然な改行を保持 */
       word-break: break-word;
       overflow-wrap: break-word;
     }
@@ -491,18 +490,15 @@
       div.box-fact,
       div.box-action,
       div.box-warning,
-      span.box-fact,
-      span.box-action,
-      span.box-warning,
       .entry-content .box-fact,
       .entry-content .box-action,
       .entry-content .box-warning,
       .entry-content p.box-fact,
       .entry-content p.box-action,
       .entry-content p.box-warning,
-      .entry-content span.box-fact,
-      .entry-content span.box-action,
-      .entry-content span.box-warning,
+      .entry-content div.box-fact,
+      .entry-content div.box-action,
+      .entry-content div.box-warning,
       .blog-body .box-fact,
       .blog-body .box-action,
       .blog-body .box-warning,
@@ -511,8 +507,12 @@
       .prose .box-warning,
       .prose p.box-fact,
       .prose p.box-action,
-      .prose p.box-warning {
+      .prose p.box-warning,
+      .prose div.box-fact,
+      .prose div.box-action,
+      .prose div.box-warning {
         font-size: 1rem !important; /* md:text-base (16px) */
+        padding: 1.25rem 1.5rem !important;
       }
     }
 
@@ -520,7 +520,6 @@
     .box-fact,
     p.box-fact,
     div.box-fact,
-    span.box-fact,
     .entry-content .box-fact,
     .blog-body .box-fact,
     .prose .box-fact {
@@ -532,7 +531,6 @@
     .box-action,
     p.box-action,
     div.box-action,
-    span.box-action,
     .entry-content .box-action,
     .blog-body .box-action,
     .prose .box-action {
@@ -544,7 +542,6 @@
     .box-warning,
     p.box-warning,
     div.box-warning,
-    span.box-warning,
     .entry-content .box-warning,
     .blog-body .box-warning,
     .prose .box-warning {
@@ -552,12 +549,132 @@
       border-left-color: #f59e0b !important; /* border-amber-500 */
     }
 
-    /* 内部の改行 (<br>) の余白・行間保持 */
+    /* 内部の改行 (<br>) の余白・行間保持（display: block や余計な margin/padding を確実に解除） */
     .box-fact br,
     .box-action br,
-    .box-warning br {
+    .box-warning br,
+    .entry-content .box-fact br,
+    .entry-content .box-action br,
+    .entry-content .box-warning br {
       display: inline !important;
+      margin: 0 !important;
+      padding: 0 !important;
       line-height: inherit !important;
+      content: normal !important;
+    }
+
+    /* コールアウト内部のインライン要素リセット（多重ボーダー・背景の重複防止） */
+    .box-fact .box-fact,
+    .box-action .box-action,
+    .box-warning .box-warning,
+    .box-fact span,
+    .box-action span,
+    .box-warning span,
+    .box-fact p,
+    .box-action p,
+    .box-warning p {
+      background: transparent !important;
+      border: none !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      border-radius: 0 !important;
+      display: inline !important;
+      color: inherit !important;
+      font-size: inherit !important;
+      line-height: inherit !important;
+    }
+
+    /* CSSフォールバック（JavaScript実行前または未実行時の :has() セレクタ対応） */
+    .entry-content p:has(> span.box-fact),
+    .blog-body p:has(> span.box-fact),
+    .prose p:has(> span.box-fact),
+    p:has(> span.box-fact) {
+      display: block !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+      padding: 1rem 1.25rem !important;
+      margin-top: 1.25rem !important;
+      margin-bottom: 1.25rem !important;
+      border-radius: 0 0.5rem 0.5rem 0 !important;
+      border-top: none !important;
+      border-right: none !important;
+      border-bottom: none !important;
+      border-left: 4px solid #0284c7 !important;
+      background-color: #f0f9ff !important;
+      color: #334155 !important;
+      line-height: 1.75 !important;
+    }
+
+    .entry-content p:has(> span.box-action),
+    .blog-body p:has(> span.box-action),
+    .prose p:has(> span.box-action),
+    p:has(> span.box-action) {
+      display: block !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+      padding: 1rem 1.25rem !important;
+      margin-top: 1.25rem !important;
+      margin-bottom: 1.25rem !important;
+      border-radius: 0 0.5rem 0.5rem 0 !important;
+      border-top: none !important;
+      border-right: none !important;
+      border-bottom: none !important;
+      border-left: 4px solid #10b981 !important;
+      background-color: #ecfdf5 !important;
+      color: #334155 !important;
+      line-height: 1.75 !important;
+    }
+
+    .entry-content p:has(> span.box-warning),
+    .blog-body p:has(> span.box-warning),
+    .prose p:has(> span.box-warning),
+    p:has(> span.box-warning) {
+      display: block !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+      padding: 1rem 1.25rem !important;
+      margin-top: 1.25rem !important;
+      margin-bottom: 1.25rem !important;
+      border-radius: 0 0.5rem 0.5rem 0 !important;
+      border-top: none !important;
+      border-right: none !important;
+      border-bottom: none !important;
+      border-left: 4px solid #f59e0b !important;
+      background-color: #fffbeb !important;
+      color: #334155 !important;
+      line-height: 1.75 !important;
+    }
+
+    p:has(> span.box-fact) span.box-fact,
+    p:has(> span.box-action) span.box-action,
+    p:has(> span.box-warning) span.box-warning {
+      display: inline !important;
+      background: transparent !important;
+      border: none !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      border-radius: 0 !important;
+    }
+
+    /* 単独の span.box-fact （親がpでない場合等）のフォールバック */
+    span.box-fact:not(p:has(> span.box-fact) span.box-fact):not(.box-fact span),
+    span.box-action:not(p:has(> span.box-action) span.box-action):not(.box-action span),
+    span.box-warning:not(p:has(> span.box-warning) span.box-warning):not(.box-warning span) {
+      display: block !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+      padding: 1rem 1.25rem !important;
+      margin-top: 1.25rem !important;
+      margin-bottom: 1.25rem !important;
+      border-radius: 0 0.5rem 0.5rem 0 !important;
+      border-top: none !important;
+      border-right: none !important;
+      border-bottom: none !important;
+      border-left-width: 4px !important;
+      border-left-style: solid !important;
+      color: #334155 !important;
+      font-size: 0.9375rem !important;
+      line-height: 1.75 !important;
     }
 
     /* エディタ側で改行時にタグが連続分割された場合のシームレス結合（1つの繋がったボックスとして描画） */
@@ -567,7 +684,7 @@
     .entry-content .box-fact + .box-fact,
     .entry-content .box-action + .box-action,
     .entry-content .box-warning + .box-warning {
-      margin-top: -1rem !important; /* 直前のボックスの下マージンと相殺 */
+      margin-top: -1.25rem !important; /* 直前のボックスの下マージンと相殺 */
       padding-top: 0.25rem !important; /* 隙間なく連続 */
       border-top-right-radius: 0 !important;
     }
@@ -579,53 +696,6 @@
       border-bottom-right-radius: 0 !important;
     }
 
-    /* 親の <p> の中にボックスが含まれる場合の余白干渉を排除 */
-    .entry-content p:has(> .box-fact),
-    .entry-content p:has(> .box-action),
-    .entry-content p:has(> .box-warning),
-    .blog-body p:has(> .box-fact),
-    .blog-body p:has(> .box-action),
-    .blog-body p:has(> .box-warning),
-    .prose p:has(> .box-fact),
-    .prose p:has(> .box-action),
-    .prose p:has(> .box-warning) {
-      margin-top: 0 !important;
-      margin-bottom: 0 !important;
-    }
-
-    /* コールアウトボックス内部のテキスト・段落タグ最適化 */
-    .box-fact p,
-    .box-action p,
-    .box-warning p,
-    .entry-content .box-fact p,
-    .entry-content .box-action p,
-    .entry-content .box-warning p,
-    .blog-body .box-fact p,
-    .blog-body .box-action p,
-    .blog-body .box-warning p,
-    .prose .box-fact p,
-    .prose .box-action p,
-    .prose .box-warning p {
-      margin-top: 0 !important;
-      margin-bottom: 0.5rem !important;
-      color: inherit !important;
-      font-size: inherit !important;
-      line-height: inherit !important;
-    }
-    .box-fact p:last-child,
-    .box-action p:last-child,
-    .box-warning p:last-child,
-    .entry-content .box-fact p:last-child,
-    .entry-content .box-action p:last-child,
-    .entry-content .box-warning p:last-child,
-    .blog-body .box-fact p:last-child,
-    .blog-body .box-action p:last-child,
-    .blog-body .box-warning p:last-child,
-    .prose .box-fact p:last-child,
-    .prose .box-action p:last-child,
-    .prose .box-warning p:last-child {
-      margin-bottom: 0 !important;
-    }
     .box-fact strong,
     .box-action strong,
     .box-warning strong,
@@ -1553,6 +1623,73 @@
       }
     };
 
+    // microCMS コールアウト要素 (.box-fact, .box-action, .box-warning) の正規化
+    // Shift+Enter (<br>) によるタグ分割や連続段落を1つの装飾カードに統合
+    function normalizeCalloutBoxes(container) {
+      if (!container) return;
+      const boxClasses = ['box-fact', 'box-action', 'box-warning'];
+
+      boxClasses.forEach(cls => {
+        // 1. <p> や <div> 内の <span class="box-..."> などのインライン要素を親ブロックごと装飾コンテナへ昇格
+        const spans = Array.from(container.querySelectorAll(`span.${cls}`));
+        spans.forEach(span => {
+          const parent = span.parentElement;
+          if (!parent || parent === container) return;
+
+          // 親が既にいずれかのコールアウトコンテナなら span のクラスを解除
+          if (boxClasses.some(c => parent.classList.contains(c))) {
+            span.classList.remove(cls);
+            return;
+          }
+
+          // 親が段落 <p> または <div> の場合
+          if (parent.tagName.toLowerCase() === 'p' || parent.tagName.toLowerCase() === 'div') {
+            const hasOtherBoxClass = boxClasses.filter(c => c !== cls).some(c => parent.querySelector(`.${c}`));
+            if (!hasOtherBoxClass) {
+              const newDiv = document.createElement('div');
+              newDiv.className = cls;
+              while (parent.firstChild) {
+                newDiv.appendChild(parent.firstChild);
+              }
+              // 新しいコンテナ内の同一クラスを解除
+              newDiv.querySelectorAll(`.${cls}`).forEach(child => child.classList.remove(cls));
+              if (parent.parentNode) {
+                parent.parentNode.replaceChild(newDiv, parent);
+              }
+            }
+          }
+        });
+
+        // 2. 連続する同一クラスのコールアウトコンテナ（<div class="box-..."> が連続する場合）を1つに統合
+        const boxes = Array.from(container.querySelectorAll(`div.${cls}, p.${cls}`));
+        for (let i = 0; i < boxes.length; i++) {
+          const curr = boxes[i];
+          if (!curr || !curr.parentNode) continue;
+
+          let next = curr.nextElementSibling;
+          // 間の空要素や空白テキストをスキップ・除去
+          while (next && (
+            (next.tagName.toLowerCase() === 'p' && !next.textContent.trim()) ||
+            (next.nodeType === 3 && !next.textContent.trim())
+          )) {
+            const emptyEl = next;
+            next = next.nextElementSibling;
+            emptyEl.remove();
+          }
+
+          if (next && next.classList.contains(cls)) {
+            const br = document.createElement('br');
+            curr.appendChild(br);
+            while (next.firstChild) {
+              curr.appendChild(next.firstChild);
+            }
+            next.remove();
+            i--; // マージ後に次も同一クラスが続く可能性があるため再チェック
+          }
+        }
+      });
+    }
+
     // 3. 本文内の <h2> <h3> を自動走査して目次（TOC）を生成する関数
     function generateTableOfContents() {
       const contentBody = document.getElementById('entry-content-body');
@@ -1707,6 +1844,10 @@
               p.remove();
             }
           });
+
+          // microCMS コールアウトボックス (.box-fact, .box-action, .box-warning) の正規化
+          // Shift+Enter (<br>) によるタグ分割を1つの装飾ボックスに統合
+          normalizeCalloutBoxes(contentBody);
 
           // 記事末尾の案内リンク（おかもし日程一覧・申込等）のボタンカード化
           const candidates = Array.from(contentBody.querySelectorAll('p, a, li, div'));

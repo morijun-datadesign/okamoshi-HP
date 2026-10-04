@@ -1059,7 +1059,7 @@
                 </p>
 
                 <!-- 4. お申し込みボタン -->
-                <a href="apply.html" id="card-cta-btn" class="w-full py-4 px-6 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-bold text-base sm:text-lg flex items-center justify-center gap-2 shadow-lg shadow-orange-500/25 active:scale-[0.98] transition-all hover:shadow-xl hover:shadow-orange-500/35 hover:-translate-y-0.5">
+                <a href="apply.html?grade=%E4%B8%AD3&month=10" id="card-cta-btn" class="w-full py-4 px-6 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-bold text-base sm:text-lg flex items-center justify-center gap-2 shadow-lg shadow-orange-500/25 active:scale-[0.98] transition-all hover:shadow-xl hover:shadow-orange-500/35 hover:-translate-y-0.5">
                   <span>10月号をWEBで申し込む</span>
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
                 </a>
@@ -2936,9 +2936,21 @@
             </div>
           `;
 
+          const gradeParamMap = {
+            c3: '中3',
+            c2: '中2',
+            c1: '中1',
+            p6: '小6',
+            chu3: '中3',
+            chu2: '中2',
+            chu1: '中1',
+            sho6: '小6'
+          };
+          const gradeParamVal = gradeParamMap[currentGrade] || '中3';
+
           ctaContainer.innerHTML = `
             <p class="text-xs text-gray-600 text-center font-medium">お申込みフォーム内で今後の回をまとめて選択可能です</p>
-            <a href="apply.html?grade=${currentGrade}&month=${r.monthNum}" class="w-full py-4 px-6 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-bold text-base sm:text-lg flex items-center justify-center gap-2 shadow-lg shadow-orange-500/25 hover:shadow-orange-500/35 active:scale-[0.98] transition-all hover:-translate-y-0.5">
+            <a href="apply.html?grade=${encodeURIComponent(gradeParamVal)}&month=${r.monthNum}" id="card-cta-btn" class="w-full py-4 px-6 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-bold text-base sm:text-lg flex items-center justify-center gap-2 shadow-lg shadow-orange-500/25 hover:shadow-orange-500/35 active:scale-[0.98] transition-all hover:-translate-y-0.5">
               <span>${r.monthName}をWEBで申し込む</span>
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
             </a>
@@ -4422,10 +4434,11 @@
         const m = params.get('month');
 
         if (g) {
-          if (g === 'chu3' || g === 'c3') targetGrade = 'c3';
-          else if (g === 'chu2' || g === 'c2') targetGrade = 'c2';
-          else if (g === 'chu1' || g === 'c1') targetGrade = 'c1';
-          else if (g === 'sho6' || g === 'p6' || g === 'e6') targetGrade = 'p6';
+          const gDecoded = decodeURIComponent(g).trim().toLowerCase();
+          if (['chu3', 'c3', '3', '中3', '中３'].includes(gDecoded) || gDecoded.includes('中3') || gDecoded.includes('中３')) targetGrade = 'c3';
+          else if (['chu2', 'c2', '2', '中2', '中２'].includes(gDecoded) || gDecoded.includes('中2') || gDecoded.includes('中２')) targetGrade = 'c2';
+          else if (['chu1', 'c1', '1', '中1', '中１'].includes(gDecoded) || gDecoded.includes('中1') || gDecoded.includes('中１')) targetGrade = 'c1';
+          else if (['sho6', 'p6', 'e6', 's6', '6', '小6', '小６'].includes(gDecoded) || gDecoded.includes('小6') || gDecoded.includes('小６')) targetGrade = 'p6';
         }
 
         if (m) {
@@ -4559,10 +4572,11 @@
         const params = new URLSearchParams(window.location.search);
         const g = params.get('grade');
         if (g) {
-          if (g === 'chu3' || g === 'c3') initialGrade = 'c3';
-          else if (g === 'chu2' || g === 'c2') initialGrade = 'c2';
-          else if (g === 'chu1' || g === 'c1') initialGrade = 'c1';
-          else if (g === 'sho6' || g === 'p6' || g === 'e6') initialGrade = 'p6';
+          const gDecoded = decodeURIComponent(g).trim().toLowerCase();
+          if (['chu3', 'c3', '3', '中3', '中３'].includes(gDecoded) || gDecoded.includes('中3') || gDecoded.includes('中３')) initialGrade = 'c3';
+          else if (['chu2', 'c2', '2', '中2', '中２'].includes(gDecoded) || gDecoded.includes('中2') || gDecoded.includes('中２')) initialGrade = 'c2';
+          else if (['chu1', 'c1', '1', '中1', '中１'].includes(gDecoded) || gDecoded.includes('中1') || gDecoded.includes('中１')) initialGrade = 'c1';
+          else if (['sho6', 'p6', 'e6', 's6', '6', '小6', '小６'].includes(gDecoded) || gDecoded.includes('小6') || gDecoded.includes('小６')) initialGrade = 'p6';
         }
       } catch (e) {}
 

@@ -570,8 +570,8 @@
                   <button type="button" onclick="selectFormGrade('chu2')" id="grade-btn-chu2" class="grade-select-btn flex items-center justify-center py-2.5 sm:py-3 px-1 sm:px-2 rounded-lg bg-surface-container-low border border-outline-variant/30 cursor-pointer hover:bg-surface-container transition-all text-center">
                     <span class="font-bold text-sm sm:text-base text-on-surface leading-none">中2</span>
                   </button>
-                  <button type="button" onclick="selectFormGrade('chu3')" id="grade-btn-chu3" class="grade-select-btn flex items-center justify-center py-2.5 sm:py-3 px-1 sm:px-2 rounded-lg bg-primary-fixed/50 border-2 border-primary-container ring-2 ring-primary-container/20 cursor-pointer hover:bg-primary-fixed/60 transition-all text-center shadow-xs">
-                    <span class="font-bold text-sm sm:text-base text-primary-container leading-none">中3</span>
+                  <button type="button" onclick="selectFormGrade('chu3')" id="grade-btn-chu3" class="grade-select-btn flex items-center justify-center py-2.5 sm:py-3 px-1 sm:px-2 rounded-lg bg-surface-container-low border border-outline-variant/30 cursor-pointer hover:bg-surface-container transition-all text-center">
+                    <span class="font-bold text-sm sm:text-base text-on-surface leading-none">中3</span>
                   </button>
                 </div>
               </div>
@@ -1329,8 +1329,8 @@
       }
     ];
 
-    // 現在の選択状態
-    let currentSelectedGrade = 'chu3';
+    // 現在の選択状態（デフォルトは未選択 null）
+    let currentSelectedGrade = null;
     let initialTargetGrade = null; // URLパラメータで指定された初期学年
     let initialTargetMonth = null; // URLパラメータで指定された初期月号（数値: 例 10）
     let _examGuidesCache = null; // microCMS exam-guides キャッシュ
@@ -1540,7 +1540,7 @@
     // 3. 学年切り替えロジック
     // ========================================================
     function selectFormGrade(gradeKey, targetMonth = null) {
-      currentSelectedGrade = gradeKey;
+      currentSelectedGrade = gradeKey || null;
       const grades = ['sho6', 'chu1', 'chu2', 'chu3'];
 
       grades.forEach(g => {
@@ -1549,7 +1549,7 @@
 
         const title = btn.querySelector('span');
 
-        if (g === gradeKey) {
+        if (gradeKey && g === gradeKey) {
           btn.className = 'grade-select-btn flex items-center justify-center py-2.5 sm:py-3 px-1 sm:px-2 rounded-lg bg-primary-fixed/50 border-2 border-primary-container ring-2 ring-primary-container/20 cursor-pointer hover:bg-primary-fixed/60 transition-all text-center shadow-xs';
           if (title) title.className = 'font-bold text-sm sm:text-base text-primary-container leading-none';
         } else {
@@ -1733,9 +1733,23 @@
       const container = document.getElementById('examOptionGroup');
       if (!container) return;
 
+      selectedExamsState = {}; // 初期選択は未選択状態（空）にリセット
+
+      // 学年が未選択の場合の案内メッセージ
+      if (!gradeKey) {
+        container.innerHTML = `
+          <div class="p-6 sm:p-8 rounded-lg bg-surface-container-low border border-outline-variant/30 text-center space-y-2.5">
+            <span class="material-symbols-outlined text-3xl sm:text-4xl text-outline">school</span>
+            <p class="font-bold text-on-surface text-sm sm:text-base">まず上の学年（小6 / 中1〜中3）を選択してください</p>
+            <p class="text-xs sm:text-sm text-on-surface-variant">学年を選択すると、お申し込み可能な模試一覧が表示されます。</p>
+          </div>
+        `;
+        updateSummary();
+        return;
+      }
+
       // 該当学年の受付中模試を抽出（締切前・自動非表示適用済み）
       const availableExams = getAvailableExamsForGrade(gradeKey);
-      selectedExamsState = {}; // 初期選択は未選択状態（空）にリセット
 
       if (availableExams.length === 0) {
         container.innerHTML = `
@@ -2415,8 +2429,10 @@
       if (!input) return;
       if (gradeKey === 'sho6') {
         input.placeholder = '例: 岡山市立岡山中央小学校（学校名を入力すると候補が表示されます）';
-      } else {
+      } else if (gradeKey) {
         input.placeholder = '例: 岡山市立操南中学校（学校名を入力すると候補が表示されます）';
+      } else {
+        input.placeholder = '在籍校を入力（学校名を入力すると候補が表示されます）';
       }
     }
 
@@ -2587,6 +2603,13 @@
 
       const form = document.getElementById('applicationForm');
       if (!form) return;
+
+      // 0. 学年の選択確認
+      if (!currentSelectedGrade) {
+        const gradeGroup = document.getElementById('gradeButtonGroup');
+        showFormError('学年をお選びください。', gradeGroup, gradeGroup);
+        return;
+      }
 
       // 1. 模試の選択確認
       const selectedExams = Object.values(selectedExamsState);
@@ -2925,13 +2948,13 @@
       const urlParams = new URLSearchParams(window.location.search);
       const rawGradeParam = urlParams.get('grade');
       const normalizedGrade = normalizeGradeParam(rawGradeParam);
-      initialTargetGrade = normalizedGrade || 'chu3';
+      initialTargetGrade = normalizedGrade || null; // パラメータ未指定時は null（未選択）
       initialTargetMonth = parseMonthParam(urlParams.get('month'));
 
       // microCMSデータ取得（存在する場合）
       await loadExamsFromMicroCMS();
 
-      // 初期学年および指定月号を初期選択状態としてフォームを描画
+      // 初期学年および指定月号をフォームに反映（URL指定があれば選択、なければ未選択で待機）
       selectFormGrade(initialTargetGrade, initialTargetMonth);
 
       // お支払い方法の初期反映（未選択のまま初期化）

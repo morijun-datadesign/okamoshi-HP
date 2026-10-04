@@ -1337,12 +1337,52 @@
 
     // 現在の選択状態
     let currentSelectedGrade = 'chu3';
+    let initialTargetGrade = null; // URLパラメータで指定された初期学年
+    let initialTargetMonth = null; // URLパラメータで指定された初期月号（数値: 例 10）
     let _examGuidesCache = null; // microCMS exam-guides キャッシュ
     let selectedExamsState = {}; // { [examId]: { ...exam, venue, venueLabel } }
 
     // ========================================================
-    // 2. 日時パース & 整形ユーティリティ
+    // 2. 日時・パラメータパース & 整形ユーティリティ
     // ========================================================
+    /**
+     * URLパラメータの学年指定を正規化 ('sho6' | 'chu1' | 'chu2' | 'chu3' | null)
+     * 日本語表記（中3, 中２, 中学3年, 小6等）および内部コード（chu3, c3, sho6, p6等）に柔軟対応
+     */
+    function normalizeGradeParam(param) {
+      if (!param) return null;
+      try {
+        const p = decodeURIComponent(String(param)).trim().toLowerCase();
+        if (['chu3', 'c3', '3', '中3', '中３', '中学3年', '中学3年生', '中三'].includes(p) || p.includes('中3') || p.includes('中３') || p.includes('中学3')) {
+          return 'chu3';
+        }
+        if (['chu2', 'c2', '2', '中2', '中２', '中学2年', '中学2年生', '中二'].includes(p) || p.includes('中2') || p.includes('中２') || p.includes('中学2')) {
+          return 'chu2';
+        }
+        if (['chu1', 'c1', '1', '中1', '中１', '中学1年', '中学1年生', '中一'].includes(p) || p.includes('中1') || p.includes('中１') || p.includes('中学1')) {
+          return 'chu1';
+        }
+        if (['sho6', 'p6', 'e6', 's6', '6', '小6', '小６', '小学6年', '小学6年生', '小六'].includes(p) || p.includes('小6') || p.includes('小６') || p.includes('小学6')) {
+          return 'sho6';
+        }
+      } catch (e) {}
+      return null;
+    }
+
+    /**
+     * URLパラメータや模試情報から月号数値をパース (例: "10", "10月号", "10月", 10 -> 10)
+     */
+    function parseMonthParam(param) {
+      if (param === null || param === undefined) return null;
+      try {
+        const p = decodeURIComponent(String(param)).trim();
+        const match = p.match(/(\d+)/);
+        if (match) {
+          return parseInt(match[1], 10);
+        }
+      } catch (e) {}
+      return null;
+    }
     /**
      * 申込締切日時をパースしてタイムスタンプ(ms)を返却
      * ISO文字列、または日本語表記（例: "2026年10月5日(月)", "12月14日(月)", "10/25(日) 23:59"）に対応
@@ -1505,7 +1545,7 @@
     // ========================================================
     // 3. 学年切り替えロジック
     // ========================================================
-    function selectFormGrade(gradeKey) {
+    function selectFormGrade(gradeKey, targetMonth = null) {
       currentSelectedGrade = gradeKey;
       const grades = ['sho6', 'chu1', 'chu2', 'chu3'];
 
@@ -1527,7 +1567,7 @@
         }
       });
 
-      renderExamCards(gradeKey);
+      renderExamCards(gradeKey, targetMonth);
       if (typeof updateSchoolInputPlaceholder === 'function') {
         updateSchoolInputPlaceholder(gradeKey);
       }
@@ -1698,13 +1738,13 @@
       return candidateExams;
     }
 
-    function renderExamCards(gradeKey) {
+    function renderExamCards(gradeKey, targetMonth = null) {
       const container = document.getElementById('examOptionGroup');
       if (!container) return;
 
       // 該当学年の受付中模試を抽出（締切前・自動非表示適用済み）
       const availableExams = getAvailableExamsForGrade(gradeKey);
-      selectedExamsState = {}; // 初期選択は未選択状態（空）
+      selectedExamsState = {}; // 初期選択は未選択状態（空）にリセット
 
       if (availableExams.length === 0) {
         container.innerHTML = `
@@ -1718,9 +1758,32 @@
         return;
       }
 
-      // カード群を生成（初期値はすべてチェックを外し、お客様に選択してもらう仕様）
+      // 対象月号の判定（引数、またはURLパラメータ初期値連動）
+      let effectiveTargetMonth = null;
+      if (targetMonth !== null && targetMonth !== undefined) {
+        effectiveTargetMonth = parseMonthParam(targetMonth);
+      } else if (typeof initialTargetMonth !== 'undefined' && initialTargetMonth !== null && gradeKey === initialTargetGrade) {
+        effectiveTargetMonth = initialTargetMonth;
+      }
+
+      // カード群を生成（URL等で指定された該当模試は初期状態でチェックON・活性化）
       container.innerHTML = availableExams.map((exam) => {
-        const isChecked = false; // 初期値は未選択
+        let isChecked = false;
+        if (effectiveTargetMonth !== null) {
+          const mNum = parseMonthParam(exam.issueName) || (exam.id ? parseMonthParam(exam.id) : null);
+          if (mNum === effectiveTargetMonth) {
+            isChecked = true;
+          }
+        }
+
+        // 初期選択されている場合、状態マップに登録
+        if (isChecked) {
+          selectedExamsState[exam.id] = {
+            ...exam,
+            venue: '',
+            venueLabel: ''
+          };
+        }
 
         // 会場選択肢（先頭に未選択の初期値を配置）
         const venueOptionsHtml = [
@@ -1730,19 +1793,38 @@
           `)
         ].join('');
 
+        const cardClasses = isChecked
+          ? 'relative flex flex-col p-4 sm:p-5 rounded-lg shadow-2xs sm:shadow-sm gap-3.5 transition-all duration-200 bg-primary-fixed/30 border-2 border-primary-container ring-1 ring-primary-container/20'
+          : 'relative flex flex-col p-4 sm:p-5 rounded-lg bg-white border border-slate-200/80 shadow-2xs sm:shadow-sm gap-3.5 transition-all duration-200';
+
+        const badgeGradeClass = isChecked
+          ? 'inline-flex items-center justify-center px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-md bg-white text-slate-800 border border-slate-200 font-bold text-base shrink-0 shadow-2xs leading-normal transition-colors'
+          : 'inline-flex items-center justify-center px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200/60 font-bold text-base shrink-0 shadow-2xs leading-normal transition-colors';
+
+        const badgeIssueClass = isChecked
+          ? 'inline-flex items-center justify-center px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-md bg-white text-slate-800 border border-slate-200 font-bold text-base shrink-0 shadow-2xs leading-normal transition-colors'
+          : 'inline-flex items-center justify-center px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200/60 font-bold text-base shrink-0 shadow-2xs leading-normal transition-colors';
+
+        const venueWrapperClass = isChecked
+          ? 'pt-3 border-t border-outline-variant/20 grid grid-cols-1 md:grid-cols-12 gap-2 items-center'
+          : 'pt-3 border-t border-outline-variant/20 grid grid-cols-1 md:grid-cols-12 gap-2 items-center opacity-50 pointer-events-none';
+
+        const venueDisabledAttr = isChecked ? '' : 'disabled';
+
         return `
-          <div class="relative flex flex-col p-4 sm:p-5 rounded-lg bg-white border border-slate-200/80 shadow-2xs sm:shadow-sm gap-3.5 transition-all duration-200" id="card-${exam.id}">
+          <div class="${cardClasses}" id="card-${exam.id}">
             <label class="flex items-start justify-between gap-3 cursor-pointer">
               <div class="flex items-start gap-3 flex-1">
                 <input type="checkbox" id="check-${exam.id}" name="selected_exams" value="${exam.id}"
                   onchange="toggleExamSelection('${exam.id}')"
+                  ${isChecked ? 'checked' : ''}
                   class="mt-1 w-5 h-5 text-primary-container accent-primary-container rounded cursor-pointer shrink-0">
                 <div class="flex flex-col gap-1.5 flex-1 min-w-0">
                   <!-- バッジとタイトルの配置（レスポンシブ対応: PC=1行, スマホ=バッジ2つとタイトルで2行折り返し） -->
                   <div class="flex flex-col md:flex-row md:items-center gap-1.5 md:gap-2.5 flex-wrap">
                     <div class="flex items-center gap-1.5 shrink-0">
-                      <span class="inline-flex items-center justify-center px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200/60 font-bold text-base shrink-0 shadow-2xs leading-normal">${exam.gradeName}</span>
-                      <span class="inline-flex items-center justify-center px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200/60 font-bold text-base shrink-0 shadow-2xs leading-normal">${exam.issueName}</span>
+                      <span class="${badgeGradeClass}">${exam.gradeName}</span>
+                      <span class="${badgeIssueClass}">${exam.issueName}</span>
                     </div>
                     <span class="font-headline-sm text-base sm:text-lg font-bold text-on-surface leading-snug">${exam.title}</span>
                   </div>
@@ -1759,13 +1841,13 @@
             </label>
 
             <!-- 会場・受験形式セレクトボックス（初期状態は無効化・チェックで活性化） -->
-            <div class="pt-3 border-t border-outline-variant/20 grid grid-cols-1 md:grid-cols-12 gap-2 items-center opacity-50 pointer-events-none" id="venue-wrapper-${exam.id}">
+            <div class="${venueWrapperClass}" id="venue-wrapper-${exam.id}">
               <label class="md:col-span-4 font-label-md text-xs sm:text-sm font-bold text-primary flex items-center gap-1.5 pl-1" for="venue-${exam.id}">
                 <span class="material-symbols-outlined text-base">apartment</span>受験方法・希望会場
                 <span class="bg-secondary text-on-secondary font-label-sm text-[10px] px-1.5 py-0.2 rounded-full font-bold ml-1">必須</span>
               </label>
               <div class="md:col-span-8 relative">
-                <select id="venue-${exam.id}" disabled required
+                <select id="venue-${exam.id}" ${venueDisabledAttr} required
                   onchange="updateExamVenue('${exam.id}', this)"
                   class="w-full h-10 sm:h-11 pl-3 pr-9 rounded-lg font-body-sm text-base appearance-none border shadow-2xs cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-primary-container text-gray-400 bg-gray-50 border-gray-200">
                   ${venueOptionsHtml}
@@ -1776,6 +1858,12 @@
           </div>
         `;
       }).join('');
+
+      // エラーメッセージの自動消去（選択がある場合）
+      if (Object.keys(selectedExamsState).length > 0) {
+        const examInlineError = document.getElementById('examSelectionInlineError');
+        if (examInlineError) examInlineError.classList.add('hidden');
+      }
 
       updateSummary();
     }
@@ -2814,94 +2902,21 @@
     // ========================================================
     // 9. URLパラメータ連動 & 初期実行
     // ========================================================
-    /**
-     * URLパラメータの学年指定を正規化 ('sho6' | 'chu1' | 'chu2' | 'chu3' | null)
-     * 日本語表記（中3, 中２, 中学3年, 小6等）および内部コード（chu3, c3, sho6, p6等）に柔軟対応
-     */
-    function normalizeGradeParam(param) {
-      if (!param) return null;
-      try {
-        const p = decodeURIComponent(param).trim().toLowerCase();
-        if (['chu3', 'c3', '3', '中3', '中３', '中学3年', '中学3年生', '中三'].includes(p) || p.includes('中3') || p.includes('中３') || p.includes('中学3')) {
-          return 'chu3';
-        }
-        if (['chu2', 'c2', '2', '中2', '中２', '中学2年', '中学2年生', '中二'].includes(p) || p.includes('中2') || p.includes('中２') || p.includes('中学2')) {
-          return 'chu2';
-        }
-        if (['chu1', 'c1', '1', '中1', '中１', '中学1年', '中学1年生', '中一'].includes(p) || p.includes('中1') || p.includes('中１') || p.includes('中学1')) {
-          return 'chu1';
-        }
-        if (['sho6', 'p6', 'e6', 's6', '6', '小6', '小６', '小学6年', '小学6年生', '小六'].includes(p) || p.includes('小6') || p.includes('小６') || p.includes('小学6')) {
-          return 'sho6';
-        }
-      } catch (e) {}
-      return null;
-    }
-
-    /**
-     * URLパラメータの月号指定から数値を取得 (例: "10", "10月号", "10月" -> 10)
-     */
-    function parseMonthParam(param) {
-      if (!param) return null;
-      try {
-        const p = decodeURIComponent(param).trim();
-        const match = p.match(/(\d+)/);
-        if (match) {
-          return parseInt(match[1], 10);
-        }
-      } catch (e) {}
-      return null;
-    }
-
-    /**
-     * URLパラメータで指定された月号の模試を初期状態でON（選択済）にする
-     */
-    function applyInitialExamSelection(gradeKey, monthParam) {
-      if (!monthParam) return;
-      const targetMonthNum = parseMonthParam(monthParam);
-      if (!targetMonthNum) return;
-
-      const availableExams = getAvailableExamsForGrade(gradeKey);
-      if (!availableExams || availableExams.length === 0) return;
-
-      const targetExam = availableExams.find(exam => {
-        if (exam.issueName) {
-          const m = exam.issueName.match(/(\d+)/);
-          if (m && parseInt(m[1], 10) === targetMonthNum) return true;
-        }
-        if (exam.id) {
-          const m = exam.id.match(/(?:_|^)(\d+)(?:_|$)/);
-          if (m && parseInt(m[1], 10) === targetMonthNum) return true;
-        }
-        return false;
-      });
-
-      if (targetExam) {
-        const chk = document.getElementById('check-' + targetExam.id);
-        if (chk && !chk.checked) {
-          chk.checked = true;
-          toggleExamSelection(targetExam.id);
-        }
-      }
-    }
-
     document.addEventListener('DOMContentLoaded', async function() {
       // URLパラメータから学年（grade）および月号（month）の指定を取得
       const urlParams = new URLSearchParams(window.location.search);
       const rawGradeParam = urlParams.get('grade');
       const normalizedGrade = normalizeGradeParam(rawGradeParam);
-      const initialGrade = normalizedGrade || 'chu3';
-      const monthParam = urlParams.get('month');
+      initialTargetGrade = normalizedGrade || 'chu3';
+      initialTargetMonth = parseMonthParam(urlParams.get('month'));
 
+      // microCMSデータ取得（存在する場合）
       await loadExamsFromMicroCMS();
-      selectFormGrade(initialGrade);
 
-      // 月号パラメータが指定されている場合、該当する模試のチェックボックスを初期状態でONにする
-      if (monthParam) {
-        applyInitialExamSelection(initialGrade, monthParam);
-      }
+      // 初期学年および指定月号を初期選択状態としてフォームを描画
+      selectFormGrade(initialTargetGrade, initialTargetMonth);
 
-      // お支払い方法の初期反映
+      // お支払い方法の初期反映（未選択のまま初期化）
       const checkedMethod = document.querySelector('input[name="payment_method"]:checked')?.value || null;
       updatePaymentMethodSummary(checkedMethod);
 

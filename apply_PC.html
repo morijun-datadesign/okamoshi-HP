@@ -271,18 +271,14 @@
     <!-- Mobile Drawer Panel -->
     <div id="mobile-menu-drawer" class="fixed top-0 right-0 bottom-0 w-[84vw] max-w-[340px] bg-surface z-[999] shadow-2xl flex flex-col justify-between transition-transform duration-300 transform translate-x-full ease-in-out lg:hidden" role="dialog" aria-modal="true" aria-label="モバイルメニュー">
       <!-- Drawer Header -->
-      <div class="h-16 px-5 border-b border-surface-container flex items-center justify-between shrink-0 bg-surface">
-        <div class="flex items-center gap-2">
-          <span class="material-symbols-outlined text-primary text-xl">menu</span>
-          <span class="font-bold text-on-surface text-base">メニュー</span>
-        </div>
-        <button type="button" onclick="closeMobileMenu()" aria-label="メニューを閉じる" class="w-10 h-10 -mr-2 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors cursor-pointer">
+      <div class="h-10 px-3 flex items-center justify-end shrink-0 bg-surface">
+        <button type="button" onclick="closeMobileMenu()" aria-label="メニューを閉じる" class="w-9 h-9 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors cursor-pointer">
           <span class="material-symbols-outlined text-2xl">close</span>
         </button>
       </div>
 
       <!-- Drawer Navigation Links (Scrollable) -->
-      <div class="flex-1 overflow-y-auto px-4 py-4 space-y-2.5">
+      <div id="mobile-menu-scroll" class="flex-1 min-h-0 overflow-y-auto overscroll-contain px-4 pt-0 pb-32 space-y-2.5">
         <!-- 模試のご案内 (Accordion) -->
         <div class="rounded-lg border border-surface-container bg-surface-container-lowest overflow-hidden shadow-xs">
           <button type="button" id="mobile-exam-accordion-btn" onclick="toggleMobileExamAccordion()" class="w-full px-4 py-3.5 flex items-center justify-between text-left font-bold text-base text-primary hover:bg-surface-container-low transition-colors cursor-pointer" aria-expanded="true">
@@ -407,6 +403,27 @@
         }
       }
 
+      // モバイルメニュー内のアコーディオン展開時、展開部分がドロワー下部の固定CTAに隠れないよう自動スクロール
+      function revealMobileMenuSection(target) {
+        if (!target) return;
+        var scroller = document.getElementById("mobile-menu-scroll") || target.closest(".overflow-y-auto");
+        if (!scroller) return;
+        requestAnimationFrame(function () {
+          var sRect = scroller.getBoundingClientRect();
+          var tRect = target.getBoundingClientRect();
+          var visibleBottom = sRect.bottom;
+          // ドロワー下部の固定CTA（お申し込みはこちら）がスクロール領域に重なる場合はその上端を表示下限とする
+          var footer = scroller.nextElementSibling;
+          if (footer) visibleBottom = Math.min(visibleBottom, footer.getBoundingClientRect().top);
+          var delta = tRect.bottom - (visibleBottom - 16);
+          if (delta <= 0) return;
+          // セクション見出しが上に見切れない範囲でスクロール
+          var maxDelta = tRect.top - sRect.top - 8;
+          if (maxDelta <= 0) return;
+          scroller.scrollTo({ top: scroller.scrollTop + Math.min(delta, maxDelta), behavior: "smooth" });
+        });
+      }
+
       function toggleMobileContactAccordion() {
         var menu = document.getElementById("mobile-contact-menu");
         var chevron = document.getElementById("mobile-contact-chevron");
@@ -421,6 +438,7 @@
           menu.classList.remove("hidden");
           if (chevron) chevron.style.transform = "rotate(180deg)";
           if (btn) btn.setAttribute("aria-expanded", "true");
+          revealMobileMenuSection(menu.parentElement);
         }
       }
 
@@ -956,49 +974,34 @@
           </div>
 
           <!-- セキュリティ・決済保護のご案内 -->
-          <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 sm:p-5 shadow-xs">
-            <div class="flex items-start gap-3.5 sm:gap-4">
-              <!-- セキュリティアイコンバッジ -->
-              <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0 shadow-2xs mt-0.5">
-                <span class="material-symbols-outlined text-2xl sm:text-[26px]">verified_user</span>
-              </div>
-              
-              <div class="flex-1 min-w-0">
-                <!-- 2項目（SSL暗号化 / Stripe決済）: スマホで縦並び、md以上で左右2列 -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5 md:gap-4 pb-3 border-b border-slate-200/80">
-                  <!-- SSL 256bit 暗号化通信 -->
-                  <div class="flex items-start gap-2">
-                    <span class="material-symbols-outlined text-emerald-700 text-lg shrink-0 mt-0.5">lock</span>
-                    <div>
-                      <div class="font-bold text-slate-800 text-xs sm:text-sm flex items-center gap-1.5 flex-wrap">
-                        <span>SSL 256bit 暗号化通信</span>
-                        <span class="bg-emerald-100 text-emerald-800 text-[10px] px-1.5 py-0.5 rounded font-bold">保護中</span>
-                      </div>
-                      <p class="text-xs text-slate-600 mt-0.5 leading-relaxed">ご入力情報は厳重に暗号化され、安全に保護されています。</p>
-                    </div>
-                  </div>
-
-                  <!-- Stripe Secure Payment -->
-                  <div class="flex items-start gap-2">
-                    <span class="material-symbols-outlined text-emerald-700 text-lg shrink-0 mt-0.5">credit_score</span>
-                    <div>
-                      <div class="font-bold text-slate-800 text-xs sm:text-sm flex items-center gap-1.5 flex-wrap">
-                        <span>Stripe Secure Payment</span>
-                        <span class="bg-slate-200/80 text-slate-700 text-[10px] px-1.5 py-0.5 rounded font-bold">世界標準</span>
-                      </div>
-                      <p class="text-xs text-slate-600 mt-0.5 leading-relaxed">国際最高基準（PCI DSS Level 1）準拠の決済システムを採用。</p>
-                    </div>
-                  </div>
+          <div class="bg-slate-50/60 border border-slate-200/60 rounded-xl p-3 sm:p-3.5">
+            <!-- 2項目（SSL暗号化 / Stripe決済）: スマホで縦並び、md以上で左右2列 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4 pb-2 border-b border-slate-200/60">
+              <!-- SSL 256bit 暗号化通信 -->
+              <div>
+                <div class="font-semibold text-slate-700 text-xs sm:text-[13px] flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-emerald-700/80 text-[17px] shrink-0">lock</span>
+                  <span>SSL 256bit 暗号化通信</span>
                 </div>
-
-                <!-- 補足文章（カード情報は当サイトに保存されない） -->
-                <div class="pt-3 flex items-start gap-1.5 text-xs text-slate-600">
-                  <span class="material-symbols-outlined text-sm text-slate-400 shrink-0 mt-0.5">info</span>
-                  <p class="leading-relaxed">
-                    カード情報は当サイトに保存されず、世界基準の決済システム（Stripe）で直接保護・安全に処理されます。
-                  </p>
-                </div>
+                <p class="text-[11px] text-slate-500 mt-0.5 pl-[23px] leading-relaxed">ご入力情報は厳重に暗号化され、安全に保護されています。</p>
               </div>
+
+              <!-- Stripe Secure Payment -->
+              <div>
+                <div class="font-semibold text-slate-700 text-xs sm:text-[13px] flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-emerald-700/80 text-[17px] shrink-0">credit_score</span>
+                  <span>Stripe Secure Payment</span>
+                </div>
+                <p class="text-[11px] text-slate-500 mt-0.5 pl-[23px] leading-relaxed">国際最高基準（PCI DSS Level 1）準拠の決済システムを採用。</p>
+              </div>
+            </div>
+
+            <!-- 補足文章（カード情報は当サイトに保存されない） -->
+            <div class="pt-2 flex items-start gap-1.5 text-[11px] text-slate-500">
+              <span class="material-symbols-outlined text-sm text-slate-400 shrink-0 mt-0.5">info</span>
+              <p class="leading-relaxed">
+                カード情報は当サイトに保存されず、世界基準の決済システム（Stripe）で直接保護・安全に処理されます。
+              </p>
             </div>
           </div>
         </div>
@@ -1828,12 +1831,17 @@
         const isVenueEmpty = !selectedExamsState[exam.id]?.venue;
         const venueSelectClass = isChecked
           ? (isVenueEmpty
-              ? 'w-full h-10 sm:h-11 pl-3 pr-9 rounded-lg font-body-sm text-base appearance-none border shadow-2xs cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-primary-container text-red-500 bg-red-50 border-red-300'
-              : 'w-full h-10 sm:h-11 pl-3 pr-9 rounded-lg font-body-sm text-base appearance-none border shadow-2xs cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-primary-container text-slate-900 font-medium bg-white border-slate-300')
-          : 'w-full h-10 sm:h-11 pl-3 pr-9 rounded-lg font-body-sm text-base appearance-none border shadow-2xs cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-primary-container text-gray-400 bg-gray-50 border-gray-200';
+              ? 'absolute inset-0 w-full h-full pl-3 pr-9 rounded-lg font-body-sm text-base appearance-none border shadow-2xs cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-primary-container text-red-500 bg-red-50 border-red-300'
+              : 'absolute inset-0 w-full h-full pl-3 pr-9 rounded-lg font-body-sm text-base appearance-none border shadow-2xs cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-primary-container text-slate-900 font-medium bg-white border-slate-300')
+          : 'absolute inset-0 w-full h-full pl-3 pr-9 rounded-lg font-body-sm text-base appearance-none border shadow-2xs cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-primary-container text-gray-400 bg-gray-50 border-gray-200';
 
         const venueArrowClass = isChecked
           ? (isVenueEmpty ? 'text-red-400' : 'text-slate-400')
+          : 'text-gray-400';
+
+        // 選択テキスト表示用ラベルの文字色（select本体と同じステート配色）
+        const venueDisplayColorClass = isChecked
+          ? (isVenueEmpty ? 'text-red-500' : 'text-slate-900 font-medium')
           : 'text-gray-400';
 
         return `
@@ -1874,10 +1882,13 @@
               <div class="md:col-span-8 relative">
                 <select id="venue-${exam.id}" ${venueDisabledAttr} required
                   onchange="updateExamVenue('${exam.id}', this)"
-                  class="${venueSelectClass}">
+                  class="${venueSelectClass}" style="color: transparent;">
                   ${venueOptionsHtml}
                 </select>
-                <span id="venue-arrow-${exam.id}" class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none ${venueArrowClass} text-base transition-colors">expand_more</span>
+                <!-- 選択中の会場名表示（ネイティブselectは改行不可・iOSで「...」省略されるため、折り返し可能なラベルで全文表示） -->
+                <!-- スマホ時は13px・左右余白を詰めて表示幅を確保（右側は矢印アイコン幅＋余白分のpr-8を確保し文字と被らないようにする） -->
+                <span id="venue-display-${exam.id}" aria-hidden="true" class="relative flex items-center min-h-10 sm:min-h-11 py-2 pl-2.5 pr-8 sm:pl-3 sm:pr-9 font-body-sm text-[13px] sm:text-base leading-snug tracking-tight sm:tracking-normal whitespace-normal break-words text-left pointer-events-none ${venueDisplayColorClass}">選択してください</span>
+                <span id="venue-arrow-${exam.id}" class="material-symbols-outlined absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 pointer-events-none ${venueArrowClass} text-base transition-colors">expand_more</span>
               </div>
             </div>
           </div>
@@ -1970,6 +1981,21 @@
       );
       if (arrow) {
         arrow.classList.remove('text-gray-400', 'text-red-400', 'text-rose-400', 'text-slate-400', 'text-on-surface-variant');
+      }
+
+      // 選択テキスト表示用ラベル（省略せず折り返して全文表示）の同期
+      const display = document.getElementById('venue-display-' + examId);
+      if (display) {
+        const opt = selectElem.selectedIndex >= 0 ? selectElem.options[selectElem.selectedIndex] : null;
+        display.textContent = opt ? opt.text : '選択してください';
+        display.classList.remove('text-gray-400', 'text-red-500', 'text-slate-900', 'font-medium');
+        if (!isExamChecked) {
+          display.classList.add('text-gray-400');
+        } else if (!isVenueSelected) {
+          display.classList.add('text-red-500');
+        } else {
+          display.classList.add('text-slate-900', 'font-medium');
+        }
       }
 
       if (!isExamChecked) {

@@ -218,6 +218,27 @@
     }
   };
 
+  // モバイルメニュー内のアコーディオン展開時、展開部分がドロワー下部の固定CTAに隠れないよう自動スクロール
+  window.revealMobileMenuSection = function (target) {
+    if (!target) return;
+    var scroller = document.getElementById("mobile-menu-scroll") || target.closest(".overflow-y-auto");
+    if (!scroller) return;
+    requestAnimationFrame(function () {
+      var sRect = scroller.getBoundingClientRect();
+      var tRect = target.getBoundingClientRect();
+      var visibleBottom = sRect.bottom;
+      // ドロワー下部の固定CTA（お申し込みはこちら）がスクロール領域に重なる場合はその上端を表示下限とする
+      var footer = scroller.nextElementSibling;
+      if (footer) visibleBottom = Math.min(visibleBottom, footer.getBoundingClientRect().top);
+      var delta = tRect.bottom - (visibleBottom - 16);
+      if (delta <= 0) return;
+      // セクション見出しが上に見切れない範囲でスクロール
+      var maxDelta = tRect.top - sRect.top - 8;
+      if (maxDelta <= 0) return;
+      scroller.scrollTo({ top: scroller.scrollTop + Math.min(delta, maxDelta), behavior: "smooth" });
+    });
+  };
+
   window.toggleMobileContactAccordion = function () {
     var menu = document.getElementById("mobile-contact-menu");
     var chevron = document.getElementById("mobile-contact-chevron");
@@ -232,6 +253,7 @@
       menu.classList.remove("hidden");
       if (chevron) chevron.style.transform = "rotate(180deg)";
       if (btn) btn.setAttribute("aria-expanded", "true");
+      window.revealMobileMenuSection(menu.parentElement);
     }
   };
 

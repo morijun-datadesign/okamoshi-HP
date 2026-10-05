@@ -353,18 +353,14 @@
     <!-- Mobile Drawer Panel -->
     <div id="mobile-menu-drawer" class="fixed top-0 right-0 bottom-0 w-[84vw] max-w-[340px] bg-surface z-[999] shadow-2xl flex flex-col justify-between transition-transform duration-300 transform translate-x-full ease-in-out lg:hidden" role="dialog" aria-modal="true" aria-label="モバイルメニュー">
       <!-- Drawer Header -->
-      <div class="h-16 px-5 border-b border-surface-container flex items-center justify-between shrink-0 bg-surface">
-        <div class="flex items-center gap-2">
-          <span class="material-symbols-outlined text-primary text-xl">menu</span>
-          <span class="font-bold text-on-surface text-base">メニュー</span>
-        </div>
-        <button type="button" onclick="closeMobileMenu()" aria-label="メニューを閉じる" class="w-10 h-10 -mr-2 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors cursor-pointer">
+      <div class="h-10 px-3 flex items-center justify-end shrink-0 bg-surface">
+        <button type="button" onclick="closeMobileMenu()" aria-label="メニューを閉じる" class="w-9 h-9 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors cursor-pointer">
           <span class="material-symbols-outlined text-2xl">close</span>
         </button>
       </div>
 
       <!-- Drawer Navigation Links (Scrollable) -->
-      <div class="flex-1 overflow-y-auto px-4 py-4 space-y-2.5">
+      <div id="mobile-menu-scroll" class="flex-1 min-h-0 overflow-y-auto overscroll-contain px-4 pt-0 pb-32 space-y-2.5">
         <!-- 模試のご案内 (Accordion) -->
         <div class="rounded-lg border border-surface-container bg-surface-container-lowest overflow-hidden shadow-xs">
           <button type="button" id="mobile-exam-accordion-btn" onclick="toggleMobileExamAccordion()" class="w-full px-4 py-3.5 flex items-center justify-between text-left font-bold text-base text-primary hover:bg-surface-container-low transition-colors cursor-pointer" aria-expanded="true">
@@ -489,6 +485,27 @@
         }
       }
 
+      // モバイルメニュー内のアコーディオン展開時、展開部分がドロワー下部の固定CTAに隠れないよう自動スクロール
+      function revealMobileMenuSection(target) {
+        if (!target) return;
+        var scroller = document.getElementById("mobile-menu-scroll") || target.closest(".overflow-y-auto");
+        if (!scroller) return;
+        requestAnimationFrame(function () {
+          var sRect = scroller.getBoundingClientRect();
+          var tRect = target.getBoundingClientRect();
+          var visibleBottom = sRect.bottom;
+          // ドロワー下部の固定CTA（お申し込みはこちら）がスクロール領域に重なる場合はその上端を表示下限とする
+          var footer = scroller.nextElementSibling;
+          if (footer) visibleBottom = Math.min(visibleBottom, footer.getBoundingClientRect().top);
+          var delta = tRect.bottom - (visibleBottom - 16);
+          if (delta <= 0) return;
+          // セクション見出しが上に見切れない範囲でスクロール
+          var maxDelta = tRect.top - sRect.top - 8;
+          if (maxDelta <= 0) return;
+          scroller.scrollTo({ top: scroller.scrollTop + Math.min(delta, maxDelta), behavior: "smooth" });
+        });
+      }
+
       function toggleMobileContactAccordion() {
         var menu = document.getElementById("mobile-contact-menu");
         var chevron = document.getElementById("mobile-contact-chevron");
@@ -503,6 +520,7 @@
           menu.classList.remove("hidden");
           if (chevron) chevron.style.transform = "rotate(180deg)";
           if (btn) btn.setAttribute("aria-expanded", "true");
+          revealMobileMenuSection(menu.parentElement);
         }
       }
 

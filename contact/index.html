@@ -133,16 +133,12 @@
   <!-- モバイルメニュードロワー -->
   <div id="mobile-menu-backdrop" onclick="closeMobileMenu()" class="fixed inset-0 bg-black/50 backdrop-blur-xs z-[998] transition-opacity duration-300 opacity-0 pointer-events-none lg:hidden" aria-hidden="true"></div>
   <div id="mobile-menu-drawer" class="fixed top-0 right-0 bottom-0 w-[84vw] max-w-[340px] bg-surface z-[999] shadow-2xl flex flex-col justify-between transition-transform duration-300 transform translate-x-full ease-in-out lg:hidden" role="dialog" aria-modal="true">
-    <div class="h-16 px-5 border-b border-surface-container flex items-center justify-between shrink-0 bg-surface">
-      <div class="flex items-center gap-2">
-        <span class="w-8 h-8 rounded-lg bg-primary text-white flex items-center justify-center font-bold text-sm">岡</span>
-        <span class="font-bold text-base text-primary">メニュー</span>
-      </div>
-      <button type="button" onclick="closeMobileMenu()" aria-label="メニューを閉じる" class="w-10 h-10 -mr-2 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors">
+    <div class="h-10 px-3 flex items-center justify-end shrink-0 bg-surface">
+      <button type="button" onclick="closeMobileMenu()" aria-label="メニューを閉じる" class="w-9 h-9 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors">
         <span class="material-symbols-outlined text-2xl">close</span>
       </button>
     </div>
-    <div class="flex-1 overflow-y-auto px-5 py-6 space-y-4">
+    <div class="flex-1 min-h-0 overflow-y-auto overscroll-contain px-5 pt-2 pb-32 space-y-4">
       <a href="/index.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-lg border border-surface-container bg-surface-container-lowest font-bold text-base text-on-surface shadow-xs">
         <span>トップページ</span>
         <span class="material-symbols-outlined text-outline">chevron_right</span>

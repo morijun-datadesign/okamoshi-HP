@@ -2275,8 +2275,8 @@
         const detailHref = `detail.html?id=${encodeURIComponent(item.id)}`;
 
         const newBadgeHtml = isNew 
-          ? `<span class="px-2 py-0.5 rounded-full bg-error text-white font-extrabold text-[10px] leading-none shrink-0 tracking-wide shadow-2xs">NEW</span>` 
-          : '';
+          ? `<span class="px-2 py-0.5 rounded-full bg-error text-white font-extrabold text-[10px] leading-none shrink-0 tracking-wide shadow-2xs text-center">NEW</span>` 
+          : `<span class="px-2 py-0.5 rounded-full text-transparent font-extrabold text-[10px] leading-none shrink-0 tracking-wide select-none pointer-events-none invisible text-center" aria-hidden="true">NEW</span>`;
 
         return `
           <article class="bg-white rounded-lg border border-slate-200 shadow-2xs hover:shadow-xs hover:border-emerald-600/50 transition-all duration-200 group">
@@ -2287,7 +2287,7 @@
                   ${newBadgeHtml}
                   <span class="flex items-center gap-1 text-xs text-slate-500 font-medium">
                     <span class="material-symbols-outlined text-[14px] text-slate-400">calendar_today</span>
-                    <span>${publishedDate}</span>
+                    <span class="tabular-nums">${publishedDate}</span>
                   </span>
                   <span class="px-2 py-0.5 rounded text-[11px] font-bold ${badgeCls} shrink-0">
                     ${categoryName}

@@ -864,8 +864,8 @@
       const isNew = isNewArticle(rawDate);
 
       const newBadgeHtml = isNew 
-        ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#c85a32] text-white shadow-xs shrink-0 tracking-tight leading-none">NEW</span>` 
-        : '';
+        ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#c85a32] text-white shadow-xs shrink-0 tracking-tight leading-none text-center">NEW</span>` 
+        : `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold text-transparent select-none pointer-events-none invisible shrink-0 tracking-tight leading-none text-center" aria-hidden="true">NEW</span>`;
 
       const detailUrl = `detail.html?id=${encodeURIComponent(post.id)}`;
 
@@ -878,7 +878,7 @@
                 ${newBadgeHtml}
                 <span class="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
                   <span class="material-symbols-outlined text-[15px] text-slate-400">calendar_today</span>
-                  <span>${pubDate}</span>
+                  <span class="tabular-nums">${pubDate}</span>
                 </span>
                 <span class="px-2.5 py-0.5 rounded-md text-[11px] font-bold ${badgeCls} shrink-0 shadow-2xs">
                   ${categoryText}
@@ -886,7 +886,7 @@
               </div>
 
               <!-- 記事タイトル（省略解除・全文表示・自然な折り返し） -->
-              <h3 class="font-bold text-sm sm:text-base text-slate-900 group-hover:text-brand-green transition-colors flex-1 leading-snug break-words">
+              <h3 class="font-bold text-[15px] sm:text-base text-slate-900 group-hover:text-brand-green transition-colors flex-1 leading-snug break-words">
                 ${post.title}
               </h3>
             </div>

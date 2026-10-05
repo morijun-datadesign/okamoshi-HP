@@ -90,8 +90,8 @@
       const detailUrl = `detail.html?id=${encodeURIComponent(post.id)}`;
 
       const newBadgeHtml = isNew
-        ? `<span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-[#c85a32] text-white shadow-sm shrink-0 tracking-tight leading-tight">NEW</span>`
-        : '';
+        ? `<span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-[#c85a32] text-white shadow-sm shrink-0 tracking-tight leading-tight text-center">NEW</span>`
+        : `<span class="px-2 py-0.5 rounded-full text-[11px] font-bold text-transparent select-none pointer-events-none invisible shrink-0 tracking-tight leading-tight text-center" aria-hidden="true">NEW</span>`;
 
       return `
         <article class="border-b border-gray-200/80 last:border-b-0 transition-colors group">
@@ -102,7 +102,7 @@
                 ${newBadgeHtml}
                 <span class="flex items-center gap-1 text-xs text-on-surface-variant font-medium">
                   <span class="material-symbols-outlined text-[14px] text-outline">calendar_today</span>
-                  <span>${dateStr}</span>
+                  <span class="tabular-nums">${dateStr}</span>
                 </span>
                 <span class="px-2.5 py-0.5 rounded text-[11px] font-bold ${badgeClass} shrink-0">
                   ${catName}
@@ -110,7 +110,7 @@
               </div>
 
               <!-- 記事タイトル -->
-              <h3 class="font-bold text-sm sm:text-base text-on-surface group-hover:text-primary transition-colors truncate flex-1">
+              <h3 class="font-bold text-[15px] sm:text-base text-on-surface group-hover:text-primary transition-colors truncate flex-1">
                 ${post.title || '無題の記事'}
               </h3>
             </div>

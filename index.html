@@ -1247,7 +1247,7 @@
                     模試活用法
                   </span>
                 </div>
-                <h4 class="font-bold text-sm sm:text-base text-slate-900 group-hover:text-brand-green transition-colors flex-1 leading-snug break-words">
+                <h4 class="font-bold text-[15px] sm:text-base text-slate-900 group-hover:text-brand-green transition-colors flex-1 leading-snug break-words">
                   【8月号結果】岡山5校を志望校とした受験生が計1100名を超えました！
                 </h4>
               </div>
@@ -1276,7 +1276,7 @@
                     模試活用法
                   </span>
                 </div>
-                <h4 class="font-bold text-sm sm:text-base text-slate-900 group-hover:text-brand-green transition-colors flex-1 leading-snug break-words">
+                <h4 class="font-bold text-[15px] sm:text-base text-slate-900 group-hover:text-brand-green transition-colors flex-1 leading-snug break-words">
                   【岡山県の高校受験】合格への近道はここにある！「おかもし」が受験生から支持される理由
                 </h4>
               </div>
@@ -1305,7 +1305,7 @@
                     模試活用法
                   </span>
                 </div>
-                <h4 class="font-bold text-sm sm:text-base text-slate-900 group-hover:text-brand-green transition-colors flex-1 leading-snug break-words">
+                <h4 class="font-bold text-[15px] sm:text-base text-slate-900 group-hover:text-brand-green transition-colors flex-1 leading-snug break-words">
                   おかもし　決済用リンク
                 </h4>
               </div>
@@ -4345,8 +4345,8 @@
         const { catName, badgeClass } = getNewsBadgeInfo(post.category, post.title);
         const isNew = isNewNewsArticle(rawDate);
         const newBadgeHtml = isNew
-          ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#c85a32] text-white shadow-xs shrink-0 tracking-tight leading-none">NEW</span>`
-          : '';
+          ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#c85a32] text-white shadow-xs shrink-0 tracking-tight leading-none text-center">NEW</span>`
+          : `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold text-transparent select-none pointer-events-none invisible shrink-0 tracking-tight leading-none text-center" aria-hidden="true">NEW</span>`;
         const detailUrl = `detail.html?id=${encodeURIComponent(post.id)}`;
 
         return `
@@ -4358,7 +4358,7 @@
                   ${newBadgeHtml}
                   <span class="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
                     <span class="material-symbols-outlined text-[15px] text-slate-400">calendar_today</span>
-                    <span>${pubDate}</span>
+                    <span class="tabular-nums">${pubDate}</span>
                   </span>
                   <span class="px-2.5 py-0.5 rounded-md text-[11px] font-bold ${badgeClass} shrink-0 shadow-2xs">
                     ${catName}
@@ -4366,7 +4366,7 @@
                 </div>
 
                 <!-- 記事タイトル -->
-                <h4 class="font-bold text-sm sm:text-base text-slate-900 group-hover:text-brand-green transition-colors flex-1 leading-snug break-words">
+                <h4 class="font-bold text-[15px] sm:text-base text-slate-900 group-hover:text-brand-green transition-colors flex-1 leading-snug break-words">
                   ${post.title || '無題のお知らせ'}
                 </h4>
               </div>

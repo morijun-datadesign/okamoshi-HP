@@ -592,59 +592,57 @@
       });
     </script>
 
-  <main class="flex-1 w-full flex flex-col items-center">
-    <!-- Top Area: Page Title -->
-    <div class="w-full max-w-7xl bg-white px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-4">
-      <div class="w-full">
+  <main class="flex-1 w-full min-w-0 flex flex-col items-center">
+    <!-- 1280px Central Canvas Wrapper -->
+    <div class="w-full max-w-7xl min-w-0 bg-white flex-1 min-h-full flex flex-col shadow-sm">
+      <!-- Top Area: Page Title -->
+      <div class="w-full px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-4">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-space-sm">
           <h1 class="text-2xl md:text-3xl font-bold text-[#1e3a2f] tracking-tight">実施塾一覧</h1>
-          <a href="https://c-moshi.net/okayama/index/check_login" target="_blank" rel="noopener noreferrer" data-path="juku-portal" class="hidden sm:inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg bg-primary hover:bg-primary/90 text-white text-sm font-semibold transition-all shadow-sm shrink-0 whitespace-nowrap self-start sm:self-auto">
-            <span class="material-symbols-outlined text-[17px]">corporate_fare</span>
-            <span>実施塾様専用サイト</span>
-            <span class="material-symbols-outlined text-[17px]">open_in_new</span>
+          <a href="#exam-methods" class="hidden sm:inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg bg-primary hover:bg-primary/90 text-white text-sm font-semibold transition-all shadow-sm shrink-0 whitespace-nowrap self-start sm:self-auto cursor-pointer group">
+            <span class="material-symbols-outlined text-[18px]">info</span>
+            <span>個人申込、実施塾での受験方法</span>
+            <span class="material-symbols-outlined text-[18px] group-hover:translate-y-0.5 transition-transform">arrow_downward</span>
           </a>
         </div>
       </div>
-    </div>
 
-    <!-- Interactive District Nav & Filter Bar (Sticky Full Width: w-full left-0 right-0 bg-white) -->
-    <section class="w-full sticky top-[4rem] sm:top-[4.5rem] z-30 bg-white left-0 right-0 shadow-sm border-b border-slate-200/80 transition-all" id="district-anchor">
-      <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3 flex flex-col md:flex-row items-center justify-between gap-2.5 sm:gap-3">
-        <!-- District Pills (横スクロール要素：左右パディング px-4 を持たせて端まで綺麗にスクロール) -->
-        <div class="flex items-center gap-1.5 sm:gap-space-2xs overflow-x-auto w-full md:w-auto pb-1 md:pb-0 scrollbar-none -mx-4 px-4 sm:mx-0 sm:px-0" id="districtTabs" role="tablist">
-          <button type="button" class="px-3 py-1.5 rounded-full text-sm sm:text-label-md font-bold whitespace-nowrap shadow-sm transition-all flex items-center gap-1.5 district-nav-btn active cursor-pointer shrink-0" data-target="area-okayama" role="tab" aria-selected="true">
-            <span>岡山・東備学区</span>
-            <span id="badge-okayama" class="w-5 h-5 rounded-full text-xs sm:text-label-sm inline-flex items-center justify-center count-badge font-mono shrink-0" data-total="58">58</span>
-          </button>
-          <button type="button" class="px-3 py-1.5 rounded-full text-sm sm:text-label-md font-bold transition-all whitespace-nowrap flex items-center gap-1.5 district-nav-btn cursor-pointer shrink-0" data-target="area-kurashiki" role="tab" aria-selected="false">
-            <span>倉敷学区</span>
-            <span id="badge-kurashiki" class="w-5 h-5 rounded-full text-xs sm:text-label-sm inline-flex items-center justify-center count-badge font-mono shrink-0" data-total="30">30</span>
-          </button>
-          <button type="button" class="px-3 py-1.5 rounded-full text-sm sm:text-label-md font-bold transition-all whitespace-nowrap flex items-center gap-1.5 district-nav-btn cursor-pointer shrink-0" data-target="area-mimasaka" role="tab" aria-selected="false">
-            <span>美作学区</span>
-            <span id="badge-mimasaka" class="w-5 h-5 rounded-full text-xs sm:text-label-sm inline-flex items-center justify-center count-badge font-mono shrink-0" data-total="24">24</span>
-          </button>
-          <button type="button" class="px-3 py-1.5 rounded-full text-sm sm:text-label-md font-bold transition-all whitespace-nowrap flex items-center gap-1.5 district-nav-btn cursor-pointer shrink-0" data-target="area-seibi" role="tab" aria-selected="false">
-            <span>西備学区</span>
-            <span id="badge-seibi" class="w-5 h-5 rounded-full text-xs sm:text-label-sm inline-flex items-center justify-center count-badge font-mono shrink-0" data-total="7">7</span>
-          </button>
-        </div>
-        <!-- Quick Search Input with Clear Button (全幅 w-full 展開) -->
-        <div class="w-full md:w-80 relative flex items-center">
-          <span class="material-symbols-outlined text-outline absolute left-3 top-1/2 -translate-y-1/2 text-[18px] pointer-events-none">search</span>
-          <input class="w-full pl-9 pr-9 py-2 bg-surface-container-lowest text-on-surface rounded-lg font-body-sm text-base shadow-sm focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-outline border border-outline-variant/30 transition-all" id="jukuSearch" placeholder="塾名・教室名で絞り込み..." type="text" autocomplete="off">
-          <button type="button" id="clearSearchBtn" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-surface-variant hover:bg-outline-variant text-on-surface-variant flex items-center justify-center transition-colors" title="検索条件をクリア">
-            <span class="material-symbols-outlined text-[14px]">close</span>
-          </button>
+      <!-- Interactive District Nav & Filter Bar (Sticky 1280px Container) -->
+      <div class="w-full sticky top-[4rem] sm:top-[4.5rem] z-30 bg-white shadow-sm border-b border-slate-200/80 transition-all" id="district-anchor">
+        <div class="w-full px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3 flex flex-col md:flex-row items-center justify-between gap-2.5 sm:gap-3">
+          <!-- District Pills (横スクロール要素：左右パディング px-4 を持たせて端まで綺麗にスクロール) -->
+          <div class="flex items-center gap-1.5 sm:gap-space-2xs overflow-x-auto w-full md:w-auto pb-1 md:pb-0 scrollbar-none -mx-4 px-4 sm:mx-0 sm:px-0" id="districtTabs" role="tablist">
+            <button type="button" class="px-3 py-1.5 rounded-full text-sm sm:text-label-md font-bold whitespace-nowrap shadow-sm transition-all flex items-center gap-1.5 district-nav-btn active cursor-pointer shrink-0" data-target="area-okayama" role="tab" aria-selected="true">
+              <span>岡山・東備学区</span>
+              <span id="badge-okayama" class="w-5 h-5 rounded-full text-xs sm:text-label-sm inline-flex items-center justify-center count-badge font-mono shrink-0" data-total="58">58</span>
+            </button>
+            <button type="button" class="px-3 py-1.5 rounded-full text-sm sm:text-label-md font-bold transition-all whitespace-nowrap flex items-center gap-1.5 district-nav-btn cursor-pointer shrink-0" data-target="area-kurashiki" role="tab" aria-selected="false">
+              <span>倉敷学区</span>
+              <span id="badge-kurashiki" class="w-5 h-5 rounded-full text-xs sm:text-label-sm inline-flex items-center justify-center count-badge font-mono shrink-0" data-total="30">30</span>
+            </button>
+            <button type="button" class="px-3 py-1.5 rounded-full text-sm sm:text-label-md font-bold transition-all whitespace-nowrap flex items-center gap-1.5 district-nav-btn cursor-pointer shrink-0" data-target="area-mimasaka" role="tab" aria-selected="false">
+              <span>美作学区</span>
+              <span id="badge-mimasaka" class="w-5 h-5 rounded-full text-xs sm:text-label-sm inline-flex items-center justify-center count-badge font-mono shrink-0" data-total="24">24</span>
+            </button>
+            <button type="button" class="px-3 py-1.5 rounded-full text-sm sm:text-label-md font-bold transition-all whitespace-nowrap flex items-center gap-1.5 district-nav-btn cursor-pointer shrink-0" data-target="area-seibi" role="tab" aria-selected="false">
+              <span>西備学区</span>
+              <span id="badge-seibi" class="w-5 h-5 rounded-full text-xs sm:text-label-sm inline-flex items-center justify-center count-badge font-mono shrink-0" data-total="7">7</span>
+            </button>
+          </div>
+          <!-- Quick Search Input with Clear Button (全幅 w-full 展開) -->
+          <div class="w-full md:w-80 relative flex items-center">
+            <span class="material-symbols-outlined text-outline absolute left-3 top-1/2 -translate-y-1/2 text-[18px] pointer-events-none">search</span>
+            <input class="w-full pl-9 pr-9 py-2 bg-surface-container-lowest text-on-surface rounded-lg font-body-sm text-base shadow-sm focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-outline border border-outline-variant/30 transition-all" id="jukuSearch" placeholder="塾名・教室名で絞り込み..." type="text" autocomplete="off">
+            <button type="button" id="clearSearchBtn" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-surface-variant hover:bg-outline-variant text-on-surface-variant flex items-center justify-center transition-colors" title="検索条件をクリア">
+              <span class="material-symbols-outlined text-[14px]">close</span>
+            </button>
+          </div>
         </div>
       </div>
-    </section>
 
-    <!-- School Directory Tables Container -->
-    <div class="w-full max-w-7xl bg-white flex-1 min-h-full px-4 sm:px-6 lg:px-8 pb-12 sm:pb-16 flex flex-col">
-      <!-- School Directory Tables Section -->
-      <section class="w-full py-5 sm:py-space-xl bg-transparent">
-      <div class="max-w-[75rem] mx-auto px-0 flex flex-col gap-6 sm:gap-space-2xl">
+      <!-- School Directory Tables Container -->
+      <div class="w-full min-w-0 px-4 sm:px-6 lg:px-8 py-5 sm:py-space-xl flex-1 flex flex-col">
+        <div class="w-full min-w-0 flex flex-col gap-6 sm:gap-space-2xl">
 <!-- Area 1: 岡山・東備学区 -->
 <div class="district-section scroll-mt-36" id="area-okayama">
 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-xs mb-space-md">
@@ -2338,16 +2336,16 @@
 </div>
 </div>
 </div>
-</section>
+</div>
 
-<!-- Guidance Cards Section: 実施塾・通塾先での受験について -->
-<section class="w-full pt-10 sm:pt-space-2xl pb-8 sm:pb-space-2xl bg-white border-t border-gray-200/70" id="exam-guidance">
-  <div class="max-w-[75rem] mx-auto px-2.5 sm:px-6 lg:px-8">
+<!-- Guidance Cards Section: 個人申込、実施塾での受験方法 -->
+<section class="w-full pt-10 sm:pt-space-2xl pb-8 sm:pb-space-2xl bg-white border-t border-gray-200/70 scroll-mt-20 sm:scroll-mt-24" id="exam-methods">
+  <div class="w-full px-4 sm:px-6 lg:px-8">
     <!-- Section Sub-heading -->
     <div class="mb-6 sm:mb-8">
       <div class="flex items-center gap-2 mb-1.5">
         <span class="w-2.5 h-6 bg-primary rounded-full shrink-0"></span>
-        <h2 class="text-xl md:text-2xl font-bold text-emerald-950 tracking-tight section-title" style="color: #064e3b !important;">実施塾・通塾先での受験について</h2>
+        <h2 class="text-xl md:text-2xl font-bold text-emerald-950 tracking-tight section-title" style="color: #064e3b !important;">個人申込、実施塾での受験方法</h2>
       </div>
       <p class="text-sm text-on-surface-variant pl-4.5 sm:pl-5">
         塾に通われていない方やお近くの実施教室での受験、現在通塾中の学習塾での団体受験に関するご案内です。
@@ -2463,27 +2461,27 @@
 </section>
 
 <!-- Educational & Institutional Partner CTA Banner (Pre-footer) -->
-<section class="w-full py-8 sm:py-space-3xl bg-transparent">
-<div class="max-w-[75rem] mx-auto px-2.5 sm:px-6 lg:px-8">
-<div class="relative overflow-hidden rounded-xl bg-slate-50 border border-slate-200/90 p-6 sm:p-space-xl lg:p-space-2xl shadow-sm">
+<section class="w-full min-w-0 py-6 sm:py-8 bg-transparent">
+<div class="w-full min-w-0 px-4 sm:px-6 lg:px-8">
+<div class="relative overflow-hidden rounded-xl bg-slate-50 border border-slate-200/90 p-5 sm:p-6 shadow-sm">
 <!-- Academic Decorative Watermark Badge -->
 
-<div class="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-space-xl">
-<div class="flex flex-col gap-space-xs max-w-2xl">
+<div class="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 sm:gap-6">
+<div class="flex flex-col gap-2 max-w-2xl">
 <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100/90 text-emerald-900 border border-emerald-300/70 font-bold text-xs sm:text-sm w-fit shadow-2xs">
 <span class="material-symbols-outlined text-[16px] text-emerald-800">handshake</span>
 <span class="text-emerald-900">教育機関・学習塾運営者様へ</span>
 </div>
-<h2 class="text-emerald-950 font-bold leading-tight font-headline-md text-headline-md tracking-tight" style="color: #064e3b !important;">
-              岡山県統一模擬試験（おかもし）・適性検査模試の<br class="hidden sm:inline">団体受験・一括導入のご相談
+<h2 class="text-emerald-950 font-bold leading-snug text-[15px] sm:text-lg md:text-[18px] tracking-tight" style="color: #064e3b !important;">
+              岡山県統一模擬試験（おかもし）・<br class="sm:hidden">適性検査模試の<br class="hidden sm:inline">団体受験・一括導入のご相談
             </h2>
 
 </div>
 <div class="shrink-0 w-full sm:w-auto">
-<a class="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-emerald-800 hover:bg-emerald-900 text-white rounded-lg font-bold text-sm sm:text-base shadow-md hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98] transition-all text-center" data-path="juku-inquiry" href="contact/organization/index.html">
-<span class="material-symbols-outlined text-[20px] text-white">corporate_fare</span>
-<span class="text-white">団体受験のご相談・お問い合わせ</span>
-<span class="material-symbols-outlined text-[18px] text-white">chevron_right</span>
+<a class="inline-flex items-center justify-center gap-1.5 sm:gap-2 w-full sm:w-auto px-4 sm:px-6 py-3 sm:py-3.5 bg-emerald-800 hover:bg-emerald-900 text-white rounded-lg font-bold text-xs sm:text-sm shadow-md hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98] transition-all text-center whitespace-nowrap" data-path="juku-inquiry" href="contact/organization/index.html">
+<span class="material-symbols-outlined text-[18px] text-white shrink-0">corporate_fare</span>
+<span class="text-white whitespace-nowrap text-xs sm:text-sm">団体受験のご相談・お問い合わせ</span>
+<span class="material-symbols-outlined text-[16px] text-white shrink-0">chevron_right</span>
 </a>
 </div>
 </div>

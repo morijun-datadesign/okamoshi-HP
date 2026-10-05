@@ -396,20 +396,20 @@
     </div>
 
     <div id="mobile-menu-scroll" class="flex-1 min-h-0 overflow-y-auto overscroll-contain px-4 pt-0 pb-32 space-y-2.5 text-xs sm:text-sm">
-      <div class="rounded-lg border border-slate-200 overflow-hidden bg-slate-50/50">
-        <button type="button" onclick="toggleMobileExamAccordion()" class="w-full px-4 py-3.5 flex items-center justify-between text-left font-bold text-slate-800 hover:bg-slate-100/70 transition-colors">
-          <div class="flex items-center gap-2">
-            <span class="material-symbols-outlined text-brand-green text-lg">school</span>
+      <!-- 模試のご案内 -->
+      <div class="rounded-lg border border-slate-200 overflow-hidden bg-white shadow-xs">
+        <div class="w-full px-4 py-3 flex items-center text-left font-bold text-base text-brand-green bg-slate-50 border-b border-slate-200">
+          <div class="flex items-center gap-2.5">
+            <span class="material-symbols-outlined text-brand-green text-xl">school</span>
             <span>模試のご案内</span>
           </div>
-          <span id="mobile-exam-chevron" class="material-symbols-outlined text-slate-400 transition-transform duration-200 rotate-180">expand_more</span>
-        </button>
-        <div id="mobile-exam-menu" class="border-t border-slate-200 bg-white divide-y divide-slate-100">
-          <a href="#features" onclick="handleMobileNavExamGuideClick(event, 'features')" class="w-full flex items-center justify-between px-4 py-3 font-bold text-slate-700 hover:bg-brand-greenLight hover:text-brand-green transition-colors text-left">
+        </div>
+        <div class="bg-white divide-y divide-slate-100">
+          <a href="#features" onclick="handleMobileNavExamGuideClick(event, 'features')" class="w-full flex items-center justify-between pl-8 pr-4 py-3 font-medium text-sm text-slate-700 hover:bg-brand-greenLight hover:text-brand-green transition-colors text-left">
             <span>初めての方へ</span>
             <span class="text-slate-300">→</span>
           </a>
-          <a href="#schedule-entry" onclick="handleMobileNavExamGuideClick(event, 'schedule-entry')" class="w-full flex items-center justify-between px-4 py-3 font-bold text-slate-700 hover:bg-brand-greenLight hover:text-brand-green transition-colors text-left">
+          <a href="#schedule-entry" onclick="handleMobileNavExamGuideClick(event, 'schedule-entry')" class="w-full flex items-center justify-between pl-8 pr-4 py-3 font-medium text-sm text-slate-700 hover:bg-brand-greenLight hover:text-brand-green transition-colors text-left">
             <span>模試のお申し込み</span>
             <span class="text-slate-300">→</span>
           </a>
@@ -432,20 +432,20 @@
         <span class="text-slate-300">→</span>
       </a>
 
-      <div class="rounded-lg border border-slate-200 overflow-hidden bg-slate-50/50">
-        <button type="button" onclick="toggleMobileContactAccordion()" class="w-full px-4 py-3.5 flex items-center justify-between text-left font-bold text-slate-800 hover:bg-slate-100/70 transition-colors">
-          <div class="flex items-center gap-2">
-            <span class="material-symbols-outlined text-brand-green text-lg">mail</span>
+      <!-- お問い合わせ -->
+      <div class="rounded-lg border border-slate-200 overflow-hidden bg-white shadow-xs">
+        <div class="w-full px-4 py-3 flex items-center text-left font-bold text-base text-brand-green bg-slate-50 border-b border-slate-200">
+          <div class="flex items-center gap-2.5">
+            <span class="material-symbols-outlined text-brand-green text-xl">mail</span>
             <span>お問い合わせ</span>
           </div>
-          <span id="mobile-contact-chevron" class="material-symbols-outlined text-slate-400 transition-transform duration-200">expand_more</span>
-        </button>
-        <div id="mobile-contact-menu" class="hidden border-t border-slate-200 bg-white divide-y divide-slate-100">
-          <a href="contact/organization/index.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3 font-bold text-slate-700 hover:bg-slate-50 transition-colors">
+        </div>
+        <div class="bg-white divide-y divide-slate-100">
+          <a href="contact/organization/index.html" onclick="closeMobileMenu()" class="w-full flex items-center justify-between pl-8 pr-4 py-3 font-medium text-sm text-slate-700 hover:bg-slate-50 transition-colors text-left">
             <span>塾・学校関係者様</span>
             <span class="text-slate-300">→</span>
           </a>
-          <a href="contact/individual/index.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3 font-bold text-slate-700 hover:bg-slate-50 transition-colors">
+          <a href="contact/individual/index.html" onclick="closeMobileMenu()" class="w-full flex items-center justify-between pl-8 pr-4 py-3 font-medium text-sm text-slate-700 hover:bg-slate-50 transition-colors text-left">
             <span>個人申込の方</span>
             <span class="text-slate-300">→</span>
           </a>

@@ -212,26 +212,25 @@
 
       <!-- Drawer Navigation Links (Scrollable) -->
       <div id="mobile-menu-scroll" class="flex-1 min-h-0 overflow-y-auto overscroll-contain px-4 pt-0 pb-32 space-y-2.5">
-        <!-- 模試のご案内 (Accordion) -->
+                <!-- 模試のご案内 -->
         <div class="rounded-lg border border-surface-container bg-surface-container-lowest overflow-hidden shadow-xs">
-          <button type="button" id="mobile-exam-accordion-btn" onclick="toggleMobileExamAccordion()" class="w-full px-4 py-3.5 flex items-center justify-between text-left font-bold text-base text-primary hover:bg-surface-container-low transition-colors cursor-pointer" aria-expanded="true">
+          <div class="w-full px-4 py-3 flex items-center text-left font-bold text-base text-primary bg-surface-container-low/50 border-b border-surface-container">
             <div class="flex items-center gap-2.5">
               <span class="material-symbols-outlined text-xl text-primary">school</span>
               <span>模試のご案内</span>
             </div>
-            <span id="mobile-exam-chevron" class="material-symbols-outlined text-xl transition-transform duration-200 transform rotate-180">expand_more</span>
-          </button>
-          <div id="mobile-exam-menu" class="border-t border-slate-200 bg-white divide-y divide-slate-100">
-          <a href="index.html#about" class="w-full flex items-center justify-between px-4 py-3 font-bold text-slate-700 hover:bg-slate-50 hover:text-primary transition-colors text-left">
-            <span>初めての方へ</span>
-            <span class="text-slate-300">→</span>
-          </a>
-          <a href="index.html#schedule-entry" class="w-full flex items-center justify-between px-4 py-3 font-bold text-slate-700 hover:bg-slate-50 hover:text-primary transition-colors text-left">
-            <span>模試のお申し込み</span>
-            <span class="text-slate-300">→</span>
-          </a>
+          </div>
+          <div class="bg-surface-container-lowest divide-y divide-surface-container/60">
+            <a href="index.html#features" onclick="closeMobileMenu()" class="w-full flex items-center justify-between pl-8 pr-4 py-3 font-medium text-sm text-on-surface hover:bg-surface-container-low hover:text-primary transition-colors text-left">
+              <span>初めての方へ</span>
+              <span class="material-symbols-outlined text-base text-on-surface-variant">arrow_forward</span>
+            </a>
+            <a href="index.html#schedule-entry" onclick="closeMobileMenu()" class="w-full flex items-center justify-between pl-8 pr-4 py-3 font-medium text-sm text-on-surface hover:bg-surface-container-low hover:text-primary transition-colors text-left">
+              <span>模試のお申し込み</span>
+              <span class="material-symbols-outlined text-base text-on-surface-variant">arrow_forward</span>
+            </a>
+          </div>
         </div>
-      </div>
 
         <!-- お知らせ・受験情報 -->
         <a href="news.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-lg border border-surface-container bg-surface-container-lowest hover:bg-surface-container-low font-bold text-base text-on-surface shadow-xs transition-colors">
@@ -251,28 +250,21 @@
           <span class="material-symbols-outlined text-base text-on-surface-variant">arrow_forward</span>
         </a>
 
-        <!-- お問い合わせ (Accordion) -->
+                <!-- お問い合わせ -->
         <div class="rounded-lg border border-surface-container bg-surface-container-lowest overflow-hidden shadow-xs">
-          <button type="button" id="mobile-contact-accordion-btn" onclick="toggleMobileContactAccordion()" class="w-full px-4 py-3.5 flex items-center justify-between text-left font-bold text-base text-on-surface hover:bg-surface-container-low transition-colors cursor-pointer" aria-expanded="false">
+          <div class="w-full px-4 py-3 flex items-center text-left font-bold text-base text-primary bg-surface-container-low/50 border-b border-surface-container">
             <div class="flex items-center gap-2.5">
               <span class="material-symbols-outlined text-xl text-primary">mail</span>
               <span>お問い合わせ</span>
             </div>
-            <span id="mobile-contact-chevron" class="material-symbols-outlined text-xl transition-transform duration-200 transform">expand_more</span>
-          </button>
-          <div id="mobile-contact-menu" class="hidden border-t border-surface-container bg-surface-container-low/30 divide-y divide-surface-container/60">
-            <a href="contact/organization/index.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3 text-sm font-bold text-on-surface hover:bg-surface-container-low transition-colors">
-              <div class="flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
-                <span>塾・学校関係者様</span>
-              </div>
+          </div>
+          <div class="bg-surface-container-lowest divide-y divide-surface-container/60">
+            <a href="contact/organization/index.html" onclick="closeMobileMenu()" class="w-full flex items-center justify-between pl-8 pr-4 py-3 font-medium text-sm text-on-surface hover:bg-surface-container-low hover:text-primary transition-colors text-left">
+              <span>塾・学校関係者様</span>
               <span class="material-symbols-outlined text-base text-on-surface-variant">arrow_forward</span>
             </a>
-            <a href="contact/individual/index.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3 text-sm font-bold text-on-surface hover:bg-surface-container-low transition-colors">
-              <div class="flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
-                <span>個人申込の方</span>
-              </div>
+            <a href="contact/individual/index.html" onclick="closeMobileMenu()" class="w-full flex items-center justify-between pl-8 pr-4 py-3 font-medium text-sm text-on-surface hover:bg-surface-container-low hover:text-primary transition-colors text-left">
+              <span>個人申込の方</span>
               <span class="material-symbols-outlined text-base text-on-surface-variant">arrow_forward</span>
             </a>
           </div>

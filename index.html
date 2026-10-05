@@ -347,7 +347,7 @@
         </div>
 
         <a href="news.html" class="hover:text-brand-green transition-colors py-1">お知らせ・受験情報</a>
-        <a href="schools_PC.html" class="hover:text-brand-green transition-colors py-1">参加塾一覧</a>
+        <a href="schools_PC.html" class="hover:text-brand-green transition-colors py-1">実施塾一覧</a>
 
         <!-- お問い合わせドロップダウン -->
         <div class="relative group inline-block text-left" id="nav-contact-container">
@@ -414,7 +414,7 @@
         </div>
       </div>
 
-      <!-- 【グループ2】お知らせ・参加塾一覧（独立メニュー） -->
+      <!-- 【グループ2】お知らせ・実施塾一覧（独立メニュー） -->
       <div class="space-y-2 mb-6">
         <!-- お知らせ・受験情報 -->
         <a href="news.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-lg border border-slate-200 bg-white font-bold text-base text-slate-800 hover:bg-slate-50 shadow-xs transition-colors">
@@ -422,9 +422,9 @@
           <span class="material-symbols-outlined text-base text-slate-400">arrow_forward</span>
         </a>
 
-        <!-- 参加塾一覧 -->
+        <!-- 実施塾一覧 -->
         <a href="schools_PC.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-lg border border-slate-200 bg-white font-bold text-base text-slate-800 hover:bg-slate-50 shadow-xs transition-colors">
-          <span>参加塾一覧</span>
+          <span>実施塾一覧</span>
           <span class="material-symbols-outlined text-base text-slate-400">arrow_forward</span>
         </a>
       </div>
@@ -937,12 +937,27 @@
             <div class="lg:col-span-7 space-y-4">
               
               <!-- 実施日程リスト -->
-              <div class="bg-white rounded-lg border border-slate-200/80 p-4 sm:p-5 shadow-sm min-h-[290px] sm:min-h-[310px]">
-                <div class="flex items-center gap-2.5 mb-4">
-                  <span class="w-2 h-5 bg-brand-green rounded-full inline-block shrink-0"></span>
-                  <h5 class="section-title text-base sm:text-lg font-bold text-emerald-950 tracking-tight" style="color: #064e3b !important;">実施日程・会場</h5>
+              <div class="bg-white rounded-lg border border-slate-200/80 p-4 sm:p-5 shadow-sm min-h-[290px] sm:min-h-[310px] flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center gap-2.5 mb-4">
+                    <span class="w-2 h-5 bg-brand-green rounded-full inline-block shrink-0"></span>
+                    <h5 class="section-title text-base sm:text-lg font-bold text-emerald-950 tracking-tight" style="color: #064e3b !important;">実施日程・会場</h5>
+                  </div>
+                  <div id="schedule-list" class="space-y-3.5 min-h-[200px]"></div>
                 </div>
-                <div id="schedule-list" class="space-y-3.5 min-h-[200px]"></div>
+
+                <!-- 実施日程・会場パネル最下部の締切情報エリア（区切り線＋横並び締切＋バッジ） -->
+                <div id="schedule-deadline-container" class="mt-4 pt-3.5 border-t border-slate-200/80">
+                  <div class="flex items-center justify-between gap-2 mb-1 sm:mb-1.5">
+                    <div class="text-xs sm:text-sm font-bold text-slate-600 tracking-wide">お申し込み締切</div>
+                    <span class="text-[11px] sm:text-xs font-semibold text-emerald-700 bg-emerald-50 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md border border-emerald-200/60 shrink-0">
+                      WEB受付中
+                    </span>
+                  </div>
+                  <div class="text-base sm:text-lg font-bold text-slate-900 tracking-tight leading-tight">
+                    2026年10月5日(月) 23:59まで
+                  </div>
+                </div>
               </div>
 
               <!-- アコーディオン（出題範囲 ＆ 実施詳細） -->
@@ -1001,25 +1016,10 @@
             <!-- 右カラム（申込締切＆個人受験統合カード ＆ メインCTA） -->
             <div class="lg:col-span-5 space-y-4 flex flex-col justify-between">
               
-              <!-- 統合カード（お申し込み締め切り ＆ 個人受験について：一体化白カード） -->
+              <!-- 統合カード（個人受験について ＆ お申し込み締め切り：一体化白カード） -->
               <div class="bg-white rounded-lg border border-slate-200/80 shadow-2xs overflow-hidden">
-                <!-- 申込締切エリア（JS動的更新エリア） -->
-                <div id="deadline-container" class="p-5 sm:p-6 bg-white">
-                  <!-- 上段: 見出し「お申し込み締切」 ＆ バッジ「WEB受付中」 -->
-                  <div class="flex items-center justify-between gap-2 mb-1.5 sm:mb-2">
-                    <div class="text-xs sm:text-sm font-bold text-slate-600 tracking-wide">お申し込み締切</div>
-                    <span class="text-[11px] sm:text-xs font-semibold text-emerald-700 bg-emerald-50 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md border border-emerald-200/60 shrink-0">
-                      WEB受付中
-                    </span>
-                  </div>
-                  <!-- 下段: 日時（カード横幅100%フル使用、1行厳格維持） -->
-                  <div id="card-deadline" class="text-[clamp(0.95rem,4.1vw,1.125rem)] sm:text-lg font-bold text-slate-900 tracking-tight whitespace-nowrap leading-tight">
-                    2026年10月5日(月) 23:59まで
-                  </div>
-                </div>
-
-                <!-- 個人受験のお申し込みについて（薄い1本線で区切った同一背景エリア） -->
-                <div class="p-5 sm:p-6 border-t border-slate-100 bg-white space-y-3">
+                <!-- 個人受験のお申し込みについて（上部エリア） -->
+                <div class="p-5 sm:p-6 bg-white space-y-3">
                   <h6 class="font-bold text-sm sm:text-base text-slate-900 tracking-tight">
                     個人受験のお申し込みについて
                   </h6>
@@ -1037,6 +1037,21 @@
                       <span>ご自宅受験は、試験前にご自宅宛てに問題郵送。</span>
                     </li>
                   </ul>
+                </div>
+
+                <!-- 申込締切エリア（JS動的更新エリア：薄い1本線で区切ったCTA直前エリア） -->
+                <div id="deadline-container" class="p-4 sm:p-5 border-t border-slate-100 bg-slate-50/50">
+                  <!-- 上段: 見出し「お申し込み締切」 ＆ バッジ「WEB受付中」 -->
+                  <div class="flex items-center justify-between gap-2 mb-1.5 sm:mb-2">
+                    <div class="text-xs sm:text-sm font-bold text-slate-600 tracking-wide">お申し込み締切</div>
+                    <span class="text-[11px] sm:text-xs font-semibold text-emerald-700 bg-emerald-50 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md border border-emerald-200/60 shrink-0">
+                      WEB受付中
+                    </span>
+                  </div>
+                  <!-- 下段: 日時（カード横幅100%フル使用、1行厳格維持） -->
+                  <div id="card-deadline" class="text-[clamp(0.95rem,4.1vw,1.125rem)] sm:text-lg font-bold text-slate-900 tracking-tight whitespace-nowrap leading-tight">
+                    2026年10月5日(月) 23:59まで
+                  </div>
                 </div>
               </div>
 
@@ -1575,7 +1590,7 @@
           <h3 class="section-title text-2xl md:text-3xl font-bold text-emerald-950 tracking-tight" style="color: #064e3b !important;">
             おすすめ・関連ナビゲーション
           </h3>
-          <p class="text-xs sm:text-sm text-slate-600 font-medium mt-2">受験準備やお近くの提携塾のご確認はこちらから</p>
+          <p class="text-xs sm:text-sm text-slate-600 font-medium mt-2">受験準備やお近くの実施塾のご確認はこちらから</p>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
           <!-- Quick Card 1: Exam Application -->
@@ -1609,16 +1624,16 @@
                   <span class="material-symbols-outlined text-2xl">location_city</span>
                 </div>
                 <h4 class="text-base sm:text-lg font-bold text-slate-900 group-hover:text-brand-green transition-colors leading-snug">
-                  岡山県内提携塾一覧を見る
+                  岡山県内実施塾一覧を見る
                 </h4>
               </div>
               <p class="text-sm text-slate-700 mt-2.5 leading-relaxed">
-                岡山市・倉敷市・津山市など県内各地の提携塾会場をエリア別で検索。通塾中の方は塾経由のお申込みも可能です。
+                岡山市・倉敷市・津山市など県内各地の実施塾会場をエリア別で検索。通塾中の方は塾経由のお申込みも可能です。
               </p>
             </div>
             <div class="mt-4 pt-3 border-t border-slate-200/80">
               <div class="w-full py-2.5 px-4 rounded-lg bg-white group-hover:bg-emerald-50 text-emerald-700 border-2 border-emerald-600 font-bold text-sm sm:text-base flex items-center justify-center gap-1.5 transition-colors">
-                <span>提携校・会場リストを見る</span>
+                <span>実施塾・会場リストを見る</span>
                 <span class="material-symbols-outlined text-lg sm:text-xl group-hover:translate-x-1 transition-transform">arrow_forward</span>
               </div>
             </div>
@@ -1794,7 +1809,7 @@
           <div class="space-y-2.5 sm:col-span-2">
             <div class="font-bold text-xs sm:text-sm text-white">ご案内・手続き</div>
             <ul class="space-y-2 text-xs sm:text-sm">
-              <li><a class="text-zinc-100 hover:text-white transition-colors" href="schools_PC.html">提携学習塾一覧</a></li>
+              <li><a class="text-zinc-100 hover:text-white transition-colors" href="schools_PC.html">実施塾一覧</a></li>
               <li><a class="text-zinc-100 hover:text-white transition-colors" href="apply.html">個人受験のお申込み</a></li>
             </ul>
           </div>
@@ -2873,6 +2888,7 @@
 
       const ctaContainer = document.getElementById('cta-container');
       const deadlineContainer = document.getElementById('deadline-container');
+      const scheduleDeadlineContainer = document.getElementById('schedule-deadline-container');
 
       // 下部固定バー連動（全学年・月号共通の汎用表記を維持）
       const floatBadge = document.getElementById('floating-status-badge');
@@ -2888,12 +2904,21 @@
           badge.className = "inline-flex items-center px-2.5 sm:px-3 py-1 rounded-md text-xs sm:text-sm font-bold bg-slate-100 text-slate-500 border border-slate-200";
           badge.textContent = `${r.monthName} 受付終了`;
           
-          deadlineContainer.innerHTML = `
-            <div class="flex items-center justify-between text-xs sm:text-sm">
-              <span class="text-slate-600 font-bold">お申し込み締切</span>
-              <span class="font-bold text-slate-600">${r.deadline || '受付期間終了'}（受付終了）</span>
+          const finishedHtml = `
+            <div class="flex items-center justify-between gap-2 mb-1.5 sm:mb-2">
+              <div class="text-xs sm:text-sm font-bold text-slate-600 tracking-wide">お申し込み締切</div>
+              <span class="text-[11px] sm:text-xs font-semibold text-slate-600 bg-slate-100 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md border border-slate-200 shrink-0">
+                受付終了
+              </span>
+            </div>
+            <div class="text-base sm:text-lg font-bold text-slate-500 tracking-tight leading-tight">
+              ${r.deadline || '受付期間終了'}
             </div>
           `;
+          deadlineContainer.innerHTML = finishedHtml;
+          if (scheduleDeadlineContainer) {
+            scheduleDeadlineContainer.innerHTML = finishedHtml;
+          }
 
           ctaContainer.innerHTML = `
             <p class="text-xs text-gray-600 text-center font-medium">お申込みフォーム内で今後の回をまとめて選択可能です</p>
@@ -2905,12 +2930,21 @@
           badge.className = "inline-flex items-center px-2.5 sm:px-3 py-1 rounded-md text-xs sm:text-sm font-bold bg-slate-100 text-slate-600 border border-slate-300 shadow-2xs";
           badge.textContent = `${r.monthName} 準備中`;
           
-          deadlineContainer.innerHTML = `
-            <div class="flex items-center justify-between text-xs sm:text-sm">
-              <span class="text-slate-600 font-bold">お申し込み締切</span>
-              <span class="font-bold text-slate-500">準備中（受付開始まで今しばらくお待ちください）</span>
+          const pendingHtml = `
+            <div class="flex items-center justify-between gap-2 mb-1.5 sm:mb-2">
+              <div class="text-xs sm:text-sm font-bold text-slate-600 tracking-wide">お申し込み締切</div>
+              <span class="text-[11px] sm:text-xs font-semibold text-slate-600 bg-slate-100 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md border border-slate-200 shrink-0">
+                準備中
+              </span>
+            </div>
+            <div class="text-base sm:text-lg font-bold text-slate-500 tracking-tight leading-tight">
+              準備中（受付開始まで今しばらくお待ちください）
             </div>
           `;
+          deadlineContainer.innerHTML = pendingHtml;
+          if (scheduleDeadlineContainer) {
+            scheduleDeadlineContainer.innerHTML = pendingHtml;
+          }
 
           ctaContainer.innerHTML = `
             <p class="text-xs text-gray-600 text-center font-medium">お申込みフォーム内で今後の回をまとめて選択可能です</p>
@@ -2922,7 +2956,7 @@
           badge.className = "inline-flex items-center px-2.5 sm:px-3 py-1 rounded-md text-xs sm:text-sm font-bold bg-emerald-100 text-emerald-900 border border-emerald-300 shadow-2xs";
           badge.textContent = r.status === 'active' ? `${r.monthName} 受付中` : `${r.monthName} 申込可`;
           
-          deadlineContainer.innerHTML = `
+          const activeHtml = `
             <!-- 上段: 見出し「お申し込み締切」 ＆ バッジ「WEB受付中」 -->
             <div class="flex items-center justify-between gap-2 mb-1.5 sm:mb-2">
               <div class="text-xs sm:text-sm font-bold text-slate-600 tracking-wide">お申し込み締切</div>
@@ -2935,6 +2969,21 @@
               ${r.deadline}
             </div>
           `;
+          deadlineContainer.innerHTML = activeHtml;
+
+          if (scheduleDeadlineContainer) {
+            scheduleDeadlineContainer.innerHTML = `
+              <div class="flex items-center justify-between gap-2 mb-1 sm:mb-1.5">
+                <div class="text-xs sm:text-sm font-bold text-slate-600 tracking-wide">お申し込み締切</div>
+                <span class="text-[11px] sm:text-xs font-semibold text-emerald-700 bg-emerald-50 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md border border-emerald-200/60 shrink-0">
+                  WEB受付中
+                </span>
+              </div>
+              <div class="text-base sm:text-lg font-bold text-slate-900 tracking-tight leading-tight">
+                ${r.deadline}
+              </div>
+            `;
+          }
 
           const gradeParamMap = {
             c3: '中3',

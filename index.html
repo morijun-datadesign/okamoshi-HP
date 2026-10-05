@@ -936,17 +936,17 @@
             <!-- 左カラム（日程リスト ＆ 各種アコーディオン） -->
             <div class="lg:col-span-7 space-y-4">
               
-              <!-- 実施日程リスト -->
-              <div class="bg-white rounded-lg border border-slate-200/80 p-4 sm:p-5 shadow-sm min-h-[290px] sm:min-h-[310px] flex flex-col justify-between">
+              <!-- 実施日程・会場セクション（パネル外枠を撤去しフラットに配置） -->
+              <div class="mb-6 sm:mb-7 flex flex-col justify-between">
                 <div>
-                  <div class="flex items-center gap-2.5 mb-4">
-                    <span class="w-2 h-5 bg-brand-green rounded-full inline-block shrink-0"></span>
+                  <div class="flex items-center gap-2.5 mb-3.5 sm:mb-4">
+                    <span class="w-1.5 h-5 bg-brand-green rounded-full inline-block shrink-0"></span>
                     <h5 class="section-title text-base sm:text-lg font-bold text-emerald-950 tracking-tight" style="color: #064e3b !important;">実施日程・会場</h5>
                   </div>
-                  <div id="schedule-list" class="space-y-3.5 min-h-[200px]"></div>
+                  <div id="schedule-list" class="space-y-3.5"></div>
                 </div>
 
-                <!-- 実施日程・会場パネル最下部の締切情報エリア（区切り線＋横並び締切＋バッジ） -->
+                <!-- 実施日程・会場最下部の締切情報エリア（区切り線＋横並び締切＋バッジ） -->
                 <div id="schedule-deadline-container" class="mt-4 pt-3.5 border-t border-slate-200/80">
                   <div class="flex items-center justify-between gap-2 mb-1 sm:mb-1.5">
                     <div class="text-xs sm:text-sm font-bold text-slate-600 tracking-wide">お申し込み締切</div>
@@ -1013,60 +1013,57 @@
               </div>
             </div>
 
-            <!-- 右カラム（申込締切＆個人受験統合カード ＆ メインCTA） -->
-            <div class="lg:col-span-5 space-y-4 flex flex-col justify-between">
+            <!-- 右カラム（2. 申込ボタン ＆ 3. 申込締切 ＆ 4. 個人受験について） -->
+            <div class="lg:col-span-5 space-y-4 sm:space-y-5 flex flex-col justify-start">
               
-              <!-- 統合カード（個人受験について ＆ お申し込み締め切り：一体化白カード） -->
-              <div class="bg-white rounded-lg border border-slate-200/80 shadow-2xs overflow-hidden">
-                <!-- 個人受験のお申し込みについて（上部エリア） -->
-                <div class="p-5 sm:p-6 bg-white space-y-3">
-                  <h6 class="font-bold text-sm sm:text-base text-slate-900 tracking-tight">
-                    個人受験のお申し込みについて
-                  </h6>
-                  <ul class="space-y-2.5 text-slate-700 leading-relaxed text-xs sm:text-sm">
-                    <li class="flex items-start gap-2">
-                      <span class="text-slate-400 font-bold shrink-0 mt-0.5">•</span>
-                      <span>1回から個人でお申し込みできます。</span>
-                    </li>
-                    <li class="flex items-start gap-2">
-                      <span class="text-slate-400 font-bold shrink-0 mt-0.5">•</span>
-                      <span>クレジットカード決済・コンビニ払いに対応。</span>
-                    </li>
-                    <li class="flex items-start gap-2">
-                      <span class="text-slate-400 font-bold shrink-0 mt-0.5">•</span>
-                      <span>ご自宅受験は、試験前にご自宅宛てに問題郵送。</span>
-                    </li>
-                  </ul>
-                </div>
-
-                <!-- 申込締切エリア（JS動的更新エリア：薄い1本線で区切ったCTA直前エリア） -->
-                <div id="deadline-container" class="p-4 sm:p-5 border-t border-slate-100 bg-slate-50/50">
-                  <!-- 上段: 見出し「お申し込み締切」 ＆ バッジ「WEB受付中」 -->
-                  <div class="flex items-center justify-between gap-2 mb-1.5 sm:mb-2">
-                    <div class="text-xs sm:text-sm font-bold text-slate-600 tracking-wide">お申し込み締切</div>
-                    <span class="text-[11px] sm:text-xs font-semibold text-emerald-700 bg-emerald-50 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md border border-emerald-200/60 shrink-0">
-                      WEB受付中
-                    </span>
-                  </div>
-                  <!-- 下段: 日時（カード横幅100%フル使用、1行厳格維持） -->
-                  <div id="card-deadline" class="text-[clamp(0.95rem,4.1vw,1.125rem)] sm:text-lg font-bold text-slate-900 tracking-tight whitespace-nowrap leading-tight">
-                    2026年10月5日(月) 23:59まで
-                  </div>
-                </div>
-              </div>
-
-              <!-- 3 & 4. 補足テキスト ＆ メインCTA（WEB申込ボタン） -->
-              <div id="cta-container" class="space-y-2 pt-1">
-                <!-- 3. 補足テキスト（枠なしダイレクト配置） -->
+              <!-- 2. 申し込みボタン（注記＋WEB申込ボタン） -->
+              <div id="cta-container" class="space-y-2">
+                <!-- 補足テキスト（枠なしダイレクト配置） -->
                 <p class="text-xs text-gray-600 text-center font-medium">
                   お申込みフォーム内で今後の回をまとめて選択可能です
                 </p>
 
-                <!-- 4. お申し込みボタン -->
+                <!-- お申し込みボタン -->
                 <a href="apply.html?grade=%E4%B8%AD3&month=10" id="card-cta-btn" class="w-full py-4 px-6 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-bold text-base sm:text-lg flex items-center justify-center gap-2 shadow-lg shadow-orange-500/25 active:scale-[0.98] transition-all hover:shadow-xl hover:shadow-orange-500/35 hover:-translate-y-0.5">
                   <span>10月号をWEBで申し込む</span>
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
                 </a>
+              </div>
+
+              <!-- 3. お申し込み締切エリア（独立したカードブロック） -->
+              <div id="deadline-container" class="p-4 sm:p-5 bg-slate-50/70 rounded-lg border border-slate-200/80 shadow-2xs">
+                <!-- 上段: 見出し「お申し込み締切」 ＆ バッジ「WEB受付中」 -->
+                <div class="flex items-center justify-between gap-2 mb-1.5 sm:mb-2">
+                  <div class="text-xs sm:text-sm font-bold text-slate-600 tracking-wide">お申し込み締切</div>
+                  <span class="text-[11px] sm:text-xs font-semibold text-emerald-700 bg-emerald-50 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md border border-emerald-200/60 shrink-0">
+                    WEB受付中
+                  </span>
+                </div>
+                <!-- 下段: 日時（カード横幅100%フル使用、1行厳格維持） -->
+                <div id="card-deadline" class="text-[clamp(0.95rem,4.1vw,1.125rem)] sm:text-lg font-bold text-slate-900 tracking-tight whitespace-nowrap leading-tight">
+                  2026年10月5日(月) 23:59まで
+                </div>
+              </div>
+
+              <!-- 4. 個人受験のお申し込みについて（独立したカード枠） -->
+              <div class="bg-white rounded-lg border border-slate-200/80 shadow-2xs p-5 sm:p-6 space-y-3">
+                <h6 class="font-bold text-sm sm:text-base text-slate-900 tracking-tight">
+                  個人受験のお申し込みについて
+                </h6>
+                <ul class="space-y-2.5 text-slate-700 leading-relaxed text-xs sm:text-sm">
+                  <li class="flex items-start gap-2">
+                    <span class="text-slate-400 font-bold shrink-0 mt-0.5">•</span>
+                    <span>1回から個人でお申し込みできます。</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <span class="text-slate-400 font-bold shrink-0 mt-0.5">•</span>
+                    <span>クレジットカード決済・コンビニ払いに対応。</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <span class="text-slate-400 font-bold shrink-0 mt-0.5">•</span>
+                    <span>ご自宅受験は、試験前にご自宅宛てに問題郵送。</span>
+                  </li>
+                </ul>
               </div>
 
             </div>

@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title id="page-title">【岡山県の高校受験】合格への近道はここにある！先輩受験生が語る「おかもし」活用法 | 岡山県統一模擬試験</title>
-  <meta id="page-desc" name="description" content="岡山県公立高校入試の出題傾向とおかもしの合致点、内申点を加味した合否判定、先輩受験生たちの体験談を詳しく解説します。">
+  <title id="page-title">お知らせ・受験情報詳細 | 岡山県統一模擬試験（おかもし）</title>
+  <meta id="page-desc" name="description" content="岡山県統一模擬試験（おかもし）のお知らせ・受験情報詳細ページです。">
   <link rel="canonical" href="https://okamoshi.pages.dev/blog-detail.html">
   
   <!-- OGP -->
-  <meta id="og-title" property="og:title" content="【岡山県の高校受験】合格への近道はここにある！先輩受験生が語る「おかもし」活用法">
-  <meta id="og-desc" property="og:description" content="岡山県公立高校入試の出題傾向とおかもしの合致点、内申点を加味した合否判定、先輩受験生たちの体験談を解説。">
+  <meta id="og-title" property="og:title" content="お知らせ・受験情報詳細 | 岡山県統一模擬試験（おかもし）">
+  <meta id="og-desc" property="og:description" content="岡山県統一模擬試験（おかもし）のお知らせ・受験情報詳細ページです。">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://okamoshi.pages.dev/blog-detail.html">
   <meta id="og-image" property="og:image" content="https://okamoshi.pages.dev/og-image.jpg">
@@ -162,6 +162,23 @@
       background-color: #F1F5F9 !important;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
+    }
+    /* フェードインアニメーション & スケルトン表示制御 */
+    @keyframes articleFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .animate-fade-in {
+      animation: articleFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+    }
+    #article-content-wrapper.hidden {
+      display: none !important;
     }
     #article-title {
       line-height: 1.8 !important;
@@ -1290,6 +1307,34 @@
     <span>お知らせ一覧へ戻る</span>
   </a>
 </div>
+
+<!-- Article Skeleton Loader (データ＆画像取得待機中の美しいスケルトンUI) -->
+<div id="article-skeleton" class="w-full flex flex-col gap-5 sm:gap-6 animate-pulse" aria-busy="true" aria-label="記事を読み込んでいます">
+  <!-- Meta Badges Skeleton -->
+  <div class="flex items-center justify-between gap-4">
+    <div class="h-6 w-24 bg-slate-200 rounded-full"></div>
+    <div class="h-4 w-28 bg-slate-200 rounded"></div>
+  </div>
+  <!-- Heading Skeleton -->
+  <div class="space-y-3 my-2">
+    <div class="h-7 sm:h-9 bg-slate-200 rounded w-11/12"></div>
+    <div class="h-7 sm:h-9 bg-slate-200 rounded w-3/4"></div>
+  </div>
+  <!-- Eye-catcher Image Skeleton -->
+  <div class="w-full aspect-[16/9] bg-slate-200 rounded-lg"></div>
+  <!-- Body Paragraph Skeleton -->
+  <div class="space-y-3 pt-3">
+    <div class="h-4 bg-slate-200 rounded w-full"></div>
+    <div class="h-4 bg-slate-200 rounded w-5/6"></div>
+    <div class="h-4 bg-slate-200 rounded w-4/6"></div>
+    <div class="h-4 bg-slate-200 rounded w-full mt-6"></div>
+    <div class="h-4 bg-slate-200 rounded w-11/12"></div>
+    <div class="h-4 bg-slate-200 rounded w-3/4"></div>
+  </div>
+</div>
+
+<!-- Real Article Content Wrapper (ロード完了後にフェードイン表示) -->
+<div id="article-content-wrapper" class="hidden opacity-0 flex flex-col gap-5 sm:gap-space-xl w-full">
 <!-- Article Header -->
 <header class="w-full flex flex-col gap-space-md">
 <!-- Category & Metadata Badges -->
@@ -1308,13 +1353,13 @@
 </div>
 </div>
 <!-- Main Heading -->
-<h1 id="article-title" class="text-xl sm:text-2xl md:text-3xl text-[#1e3a2f] tracking-tight font-bold leading-snug sm:leading-[1.4] mt-3 sm:mt-4 mb-2">【岡山県の高校受験】合格への近道はここにある！「おかもし」が受験生から支持される理由</h1>
+<h1 id="article-title" class="text-xl sm:text-2xl md:text-3xl text-[#1e3a2f] tracking-tight font-bold leading-snug sm:leading-[1.4] mt-3 sm:mt-4 mb-2"></h1>
 <!-- Lead Paragraph -->
 <p id="article-lead" class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed"></p>
 <!-- Eye-catcher Image Container -->
-<div class="relative w-full rounded-lg overflow-hidden shadow-sm aspect-[16/9] bg-surface-container mt-4 sm:mt-6">
-<img id="article-hero-img" class="w-full h-full object-cover" data-alt="岡山県統一模擬試験 ブログアイキャッチ" src="images/article-classroom.webp" width="1200" height="675" fetchpriority="high" decoding="async">
-<div class="absolute bottom-3 right-3 px-space-xs py-1 bg-primary/80 backdrop-blur-md rounded-lg text-on-primary font-label-sm text-label-sm flex items-center gap-1">
+<div id="article-hero-container" class="relative w-full rounded-lg overflow-hidden shadow-sm aspect-[16/9] bg-slate-100 mt-4 sm:mt-6 hidden">
+<img id="article-hero-img" class="w-full h-full object-cover opacity-0 transition-opacity duration-300" data-alt="岡山県統一模擬試験 ブログアイキャッチ" src="" width="1200" height="675" fetchpriority="high" decoding="async">
+<div class="absolute bottom-3 right-3 px-space-xs py-1 bg-primary/80 backdrop-blur-md rounded-lg text-on-primary font-label-sm text-label-sm flex items-center gap-1" id="article-hero-tag-badge">
 <span class="material-symbols-outlined text-[14px]">insights</span>
 <span id="article-hero-tag"></span>
 </div>
@@ -1374,6 +1419,7 @@
   <!-- モバイル表示時の前後ナビと次回模試CTA間の区切り線 -->
   <div class="border-t border-slate-200/80 lg:hidden"></div>
 </div>
+</div><!-- /#article-content-wrapper -->
 </article>
 <!-- Sticky Sidebar Column -->
 <aside class="lg:col-span-4 flex flex-col gap-5 lg:sticky lg:top-24">
@@ -1805,8 +1851,41 @@
       }
     }
 
+    // 画像プリロード関数（ブラウザへの読み込み完了まで待機しチラつき・Hydration Flashを防止）
+    function preloadImage(src) {
+      return new Promise((resolve) => {
+        if (!src) return resolve(false);
+        const img = new Image();
+        let settled = false;
+        const done = (ok) => {
+          if (!settled) {
+            settled = true;
+            resolve(ok);
+          }
+        };
+        img.onload = () => done(true);
+        img.onerror = () => done(false);
+        img.src = src;
+        // 低速回線でもユーザーを待たせすぎない安全弁タイマー (1200ms)
+        setTimeout(() => done(false), 1200);
+      });
+    }
+
+    // 記事コンテンツのフェードイン表示制御（スケルトンUIからのスムーズな切り替え）
+    function showArticleContent() {
+      const skeletonEl = document.getElementById('article-skeleton');
+      const contentWrapper = document.getElementById('article-content-wrapper');
+      if (skeletonEl) skeletonEl.style.display = 'none';
+      if (contentWrapper) {
+        contentWrapper.classList.remove('hidden');
+        void contentWrapper.offsetWidth; // リフロー強制
+        contentWrapper.classList.add('animate-fade-in');
+        contentWrapper.classList.remove('opacity-0');
+      }
+    }
+
     // 5. 記事本文・メタの画面反映
-    function renderPostDetail(post) {
+    async function renderPostDetail(post) {
       if (!post) return;
 
       const titleEl = document.getElementById('article-title');
@@ -1834,10 +1913,28 @@
         pubEl.textContent = new Date(pubDate).toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '.');
       }
 
+      // アイキャッチ画像のチラつき防止＆ロード待機
+      const heroContainer = document.getElementById('article-hero-container');
       const heroImg = document.getElementById('article-hero-img');
-      if (heroImg && post.eyecatch && post.eyecatch.url) {
-        heroImg.src = post.eyecatch.url;
-        heroImg.alt = post.title;
+      const heroTag = document.getElementById('article-hero-tag');
+
+      if (heroContainer && heroImg) {
+        if (post.eyecatch && post.eyecatch.url) {
+          // 画像がブラウザで完全にロードされるまで待機（一瞬のチラつき・旧画像・白枠を防止）
+          await preloadImage(post.eyecatch.url);
+          heroImg.src = post.eyecatch.url;
+          heroImg.alt = post.title || 'ブログアイキャッチ';
+          heroContainer.classList.remove('hidden');
+          heroImg.classList.remove('opacity-0');
+          if (heroTag) {
+            const catName = post.category ? (post.category.name || post.category) : 'おかもし';
+            heroTag.textContent = catName;
+          }
+        } else {
+          // アイキャッチ画像が無い記事はコンテナ枠を非表示にして無駄な空白を防ぐ
+          heroContainer.classList.add('hidden');
+          heroImg.src = '';
+        }
       }
 
       // 本文HTMLの反映（リッチエディタのHTMLタグを流し込み）
@@ -1933,11 +2030,13 @@
         }
       }
 
-
       // 目次の再生成
       generateTableOfContents();
       // メタタグ更新
       updatePageMetadata(post);
+
+      // 全データおよびアイキャッチ画像の準備が完了したタイミングでスケルトンを消してフェードイン表示
+      showArticleContent();
     }
 
     // 6. microCMS から記事詳細を取得
@@ -1957,16 +2056,6 @@
         robotsMeta.content = 'noindex, nofollow';
       }
 
-      // IDが指定されている場合は焼き込み本文を即座にクリア（他記事への誤表示防止）
-      if (articleId) {
-        const contentBody = document.getElementById('entry-content-body');
-        if (contentBody) {
-          contentBody.innerHTML = '<div class="p-8 text-center text-on-surface-variant flex flex-col items-center gap-2"><div class="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div><span class="text-sm font-medium mt-2">記事を読み込んでいます...</span></div>';
-        }
-        const titleEl = document.getElementById('article-title');
-        if (titleEl) titleEl.textContent = '読み込み中...';
-      }
-
       const hasMicroCMSConfig = MICROCMS_CONFIG.serviceDomain &&
                                 MICROCMS_CONFIG.serviceDomain !== 'YOUR_SERVICE_DOMAIN' &&
                                 MICROCMS_CONFIG.apiKey &&
@@ -1983,7 +2072,7 @@
           });
           if (res.ok) {
             const post = await res.json();
-            renderPostDetail(post);
+            await renderPostDetail(post);
 
             // 下書きプレビュー時はヘッダーにバッジを表示
             if (draftKey) {
@@ -2008,10 +2097,18 @@
       // フォールバック処理
       if (articleId && DETAIL_FALLBACK_POSTS[articleId]) {
         const post = DETAIL_FALLBACK_POSTS[articleId];
-        renderPostDetail(post);
+        await renderPostDetail(post);
         loadRelatedArticles(post, articleId);
       } else if (articleId) {
-        // IDはあるがフォールバックにも存在しない場合
+        // IDはあるがフォールバックにも存在しない場合（404表示）
+        const skeletonEl = document.getElementById('article-skeleton');
+        if (skeletonEl) skeletonEl.style.display = 'none';
+        const contentWrapper = document.getElementById('article-content-wrapper');
+        if (contentWrapper) {
+          contentWrapper.classList.remove('hidden', 'opacity-0');
+        }
+        const heroContainer = document.getElementById('article-hero-container');
+        if (heroContainer) heroContainer.classList.add('hidden');
         const contentBody = document.getElementById('entry-content-body');
         if (contentBody) {
           contentBody.innerHTML = '<div class="p-8 text-center text-on-surface-variant flex flex-col items-center gap-space-sm rounded-lg bg-surface-container-low"><span class="material-symbols-outlined text-4xl text-outline">article</span><p class="font-bold text-base text-on-surface mt-2">記事が見つかりませんでした</p><p class="text-sm mt-1">URLを確認するか、<a href="news.html" class="text-primary underline">記事一覧</a>からお探しください。</p></div>';
@@ -2020,9 +2117,14 @@
         if (titleEl) titleEl.textContent = '記事が見つかりませんでした';
         loadRelatedArticles(null, articleId);
       } else {
-        // ID未指定：デフォルトの焼き込み記事を表示（開発確認用）
-        generateTableOfContents();
-        loadRelatedArticles(null, '');
+        // ID未指定：デフォルト記事をレンダリングしてフェードイン
+        const defaultPost = DETAIL_FALLBACK_POSTS['leoodvgmoet'] || Object.values(DETAIL_FALLBACK_POSTS)[0];
+        if (defaultPost) {
+          await renderPostDetail(defaultPost);
+          loadRelatedArticles(defaultPost, defaultPost.id || '');
+        } else {
+          showArticleContent();
+        }
       }
     }
 

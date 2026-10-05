@@ -2694,13 +2694,38 @@
 
       let currentActiveDistrict = 'area-okayama';
 
-      function setActiveTab(targetId) {
+      // タブボタンを横スクロールコンテナ内の中央へスムーズ移動
+      function scrollActiveTabIntoView(targetBtn) {
+        if (!targetBtn) return;
+        const tabsContainer = document.getElementById('districtTabs');
+        if (!tabsContainer) {
+          try {
+            targetBtn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+          } catch (e) {}
+          return;
+        }
+
+        const containerRect = tabsContainer.getBoundingClientRect();
+        const btnRect = targetBtn.getBoundingClientRect();
+        const scrollOffset = (btnRect.left + btnRect.width / 2) - (containerRect.left + containerRect.width / 2);
+
+        if (Math.abs(scrollOffset) > 2) {
+          tabsContainer.scrollBy({ left: scrollOffset, behavior: 'smooth' });
+        }
+      }
+
+      function setActiveTab(targetId, shouldScroll) {
         if (!targetId) return;
+        if (typeof shouldScroll === 'undefined') shouldScroll = true;
+        const isChanged = (currentActiveDistrict !== targetId);
         currentActiveDistrict = targetId;
+        let activeBtn = null;
+
         navBtns.forEach(function(btn) {
           const isTarget = btn.getAttribute('data-target') === targetId || btn.getAttribute('href') === '#' + targetId;
           const badge = btn.querySelector('.count-badge');
           if (isTarget) {
+            activeBtn = btn;
             btn.classList.add('active');
             btn.setAttribute('aria-selected', 'true');
             btn.style.setProperty('background-color', '#004d3d', 'important');
@@ -2722,10 +2747,15 @@
             }
           }
         });
+
+        // 学区が切り替わった場合、アクティブボタンを可視領域の中央へスムーズに横スクロール
+        if (shouldScroll && isChanged && activeBtn) {
+          scrollActiveTabIntoView(activeBtn);
+        }
       }
 
-      // 初期アクティブ状態の確実な適用
-      setActiveTab('area-okayama');
+      // 初期アクティブ状態の確実な適用（初回ロード時はスクロール抑制）
+      setActiveTab('area-okayama', false);
 
       let isClickScrolling = false;
       let scrollEndDebounce = null;
@@ -2742,7 +2772,7 @@
         // ページ最下部付近に達した場合は最後のセクションをアクティブにする
         if ((window.innerHeight + window.pageYOffset) >= document.documentElement.scrollHeight - 60) {
           if (sections.length > 0) {
-            setActiveTab(sections[sections.length - 1].id);
+            setActiveTab(sections[sections.length - 1].id, true);
             return;
           }
         }
@@ -2750,13 +2780,15 @@
         const header = document.querySelector('header');
         const anchorBar = document.getElementById('district-anchor');
         const offsetThreshold = (header ? header.offsetHeight : 64) + (anchorBar ? anchorBar.offsetHeight : 54) + 40;
-        const scrollPos = window.pageYOffset + offsetThreshold;
 
         for (let i = sections.length - 1; i >= 0; i--) {
           const sec = sections[i];
-          if (sec && sec.offsetTop <= scrollPos) {
-            setActiveTab(sec.id);
-            break;
+          if (sec) {
+            const rect = sec.getBoundingClientRect();
+            if (rect.top <= offsetThreshold) {
+              setActiveTab(sec.id, true);
+              break;
+            }
           }
         }
       }
@@ -2770,24 +2802,16 @@
         const targetEl = document.getElementById(targetId);
         if (!targetId || !targetEl) return;
 
-        // 1. 即座にアクティブ状態（UI）を更新
-        setActiveTab(targetId);
+        // 1. 即座にアクティブ状態（UI）を更新 & タブを画面中央へスムーズ移動
+        setActiveTab(targetId, true);
+        scrollActiveTabIntoView(btn);
 
-        // 2. タブバー横スクロールコンテナ内での位置を中央へスムーズスクロール（独立動作）
-        const tabsContainer = document.getElementById('districtTabs');
-        if (tabsContainer) {
-          const containerRect = tabsContainer.getBoundingClientRect();
-          const btnRect = btn.getBoundingClientRect();
-          const scrollOffset = (btnRect.left + btnRect.width / 2) - (containerRect.left + containerRect.width / 2);
-          tabsContainer.scrollBy({ left: scrollOffset, behavior: 'smooth' });
-        }
-
-        // 3. ページ縦スクロールとスクロールリスナーのロック制御
+        // 2. ページ縦スクロールとスクロールリスナーのロック制御
         isClickScrolling = true;
         if (scrollEndDebounce) clearTimeout(scrollEndDebounce);
         scrollEndDebounce = setTimeout(function() {
           isClickScrolling = false;
-        }, 1500);
+        }, 1200);
 
         const targetTop = getTargetScrollTop(targetEl);
         window.scrollTo({

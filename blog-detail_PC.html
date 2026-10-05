@@ -1597,22 +1597,24 @@
 </div>
 </article>
 <!-- Sticky Sidebar Column -->
-<aside class="lg:col-span-4 flex flex-col gap-4 lg:sticky lg:top-24">
-<!-- 3. 次回の模試・お申込みCTAエリア（全体を1つのカードコンテナで一体化・二重枠全撤去） -->
-<div class="bg-slate-50 rounded-xl border border-slate-200 overflow-hidden shadow-xs" id="sidebar-next-exam-widget">
-<div class="px-4 py-3 bg-slate-100 border-b border-slate-200 flex items-center justify-between">
-  <div class="flex items-center gap-2 text-slate-800 text-[14px] font-bold">
-    <span class="material-symbols-outlined text-[18px] text-slate-600">edit_calendar</span>
-    <span>次回の模試・お申込み</span>
+<!-- Sticky Sidebar Column -->
+<aside class="lg:col-span-4 flex flex-col gap-5 lg:sticky lg:top-24">
+<!-- 3. 次回の模試・お申込みCTAエリア -->
+<div class="w-full">
+  <div class="flex items-center justify-between gap-3 mb-3">
+    <h3 class="section-title text-xl sm:text-2xl font-bold text-emerald-950 tracking-tight" style="color: #064e3b !important;">
+      次回の模試・お申込み
+    </h3>
+    <span class="text-[11px] font-bold text-secondary bg-[#ffdbcf] px-2.5 py-0.5 rounded-full shadow-2xs shrink-0">受付中</span>
   </div>
-  <span class="text-[10px] font-bold text-secondary bg-[#ffdbcf] px-2 py-0.5 rounded-full">受付中</span>
-</div>
-<div class="divide-y divide-slate-200" id="sidebar-exam-widget-list">
-  <div class="py-6 text-center text-on-surface-variant flex items-center justify-center gap-2">
-    <span class="material-symbols-outlined animate-spin text-primary">sync</span>
-    <span class="text-xs">模試情報を読み込み中...</span>
+  <div class="bg-slate-50 rounded-xl border border-slate-200 overflow-hidden shadow-xs" id="sidebar-next-exam-widget">
+    <div class="divide-y divide-slate-200" id="sidebar-exam-widget-list">
+      <div class="py-6 text-center text-on-surface-variant flex items-center justify-center gap-2">
+        <span class="material-symbols-outlined animate-spin text-primary">sync</span>
+        <span class="text-xs">模試情報を読み込み中...</span>
+      </div>
+    </div>
   </div>
-</div>
 </div>
 
 <!-- 2. Official Instagram Banner (Compact) -->
@@ -1634,8 +1636,8 @@
 <section id="related-articles-section" class="w-full border-t-2 border-slate-200 mt-12 sm:mt-16 pt-8 sm:pt-10">
   <div class="w-full flex flex-col gap-4 sm:gap-5">
     <!-- Section Header -->
-    <div class="flex items-center justify-between pb-2 border-b border-slate-200">
-      <h2 class="text-xl sm:text-2xl text-primary font-bold">こちらの記事も読まれています</h2>
+    <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+      <h2 class="section-title text-xl sm:text-2xl font-bold text-emerald-950 tracking-tight" style="color: #064e3b !important;">こちらの記事も読まれています</h2>
       <a class="hidden md:flex items-center gap-1 text-primary text-xs sm:text-sm hover:underline font-bold" data-path="news" href="news.html">
         <span>記事一覧を見る</span>
         <span class="material-symbols-outlined text-[16px]">chevron_right</span>

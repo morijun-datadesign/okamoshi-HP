@@ -244,67 +244,58 @@
       </div>
 
       <!-- Drawer Navigation Links (Scrollable) -->
-      <div id="mobile-menu-scroll" class="flex-1 min-h-0 overflow-y-auto overscroll-contain px-4 pt-0 pb-32 space-y-2.5">
-                <!-- 模試のご案内 -->
-        <div class="rounded-lg border border-surface-container bg-surface-container-lowest overflow-hidden shadow-xs">
-          <div class="w-full px-4 py-3 flex items-center text-left font-bold text-base text-primary bg-surface-container-low/50 border-b border-surface-container">
-            <div class="flex items-center gap-2.5">
-              <span class="material-symbols-outlined text-xl text-primary">school</span>
-              <span>模試のご案内</span>
-            </div>
-          </div>
-          <div class="bg-surface-container-lowest divide-y divide-surface-container/60">
-            <a href="index.html#features" onclick="closeMobileMenu()" class="w-full flex items-center justify-between pl-8 pr-4 py-3 font-medium text-sm text-on-surface hover:bg-surface-container-low hover:text-primary transition-colors text-left">
+      <div id="mobile-menu-scroll" class="flex-1 min-h-0 overflow-y-auto overscroll-contain px-4 pt-1 pb-32">
+        <!-- 【グループ1】模試のご案内 -->
+        <div class="space-y-2 pb-4 mb-4 border-b border-surface-container/70">
+          <div class="px-1 text-sm font-bold text-on-surface-variant tracking-wider">模試のご案内</div>
+          <div class="space-y-2">
+            <!-- 初めての方へ -->
+            <a href="index.html#features" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-lg border border-surface-container bg-surface-container-lowest hover:bg-surface-container-low font-bold text-base text-on-surface shadow-xs transition-colors">
               <span>初めての方へ</span>
               <span class="material-symbols-outlined text-base text-on-surface-variant">arrow_forward</span>
             </a>
-            <a href="index.html#schedule-entry" onclick="closeMobileMenu()" class="w-full flex items-center justify-between pl-8 pr-4 py-3 font-medium text-sm text-on-surface hover:bg-surface-container-low hover:text-primary transition-colors text-left">
+
+            <!-- 模試のお申し込み -->
+            <a href="index.html#schedule-entry" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-lg border border-surface-container bg-surface-container-lowest hover:bg-surface-container-low font-bold text-base text-on-surface shadow-xs transition-colors">
               <span>模試のお申し込み</span>
               <span class="material-symbols-outlined text-base text-on-surface-variant">arrow_forward</span>
             </a>
           </div>
         </div>
 
-        <!-- お知らせ・受験情報 -->
-        <a href="news.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-lg border border-surface-container bg-surface-container-lowest hover:bg-surface-container-low font-bold text-base text-on-surface shadow-xs transition-colors">
-          <div class="flex items-center gap-2.5">
-            <span class="material-symbols-outlined text-xl text-primary">feed</span>
+        <!-- 【グループ2】お知らせ・参加塾一覧（独立メニュー） -->
+        <div class="space-y-2 mb-6">
+          <!-- お知らせ・受験情報 -->
+          <a href="news.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-lg border border-surface-container bg-surface-container-lowest hover:bg-surface-container-low font-bold text-base text-on-surface shadow-xs transition-colors">
             <span>お知らせ・受験情報</span>
-          </div>
-          <span class="material-symbols-outlined text-base text-on-surface-variant">arrow_forward</span>
-        </a>
+            <span class="material-symbols-outlined text-base text-on-surface-variant">arrow_forward</span>
+          </a>
 
-        <!-- 参加塾一覧 -->
-        <a href="schools_PC.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-lg border border-surface-container bg-surface-container-lowest hover:bg-surface-container-low font-bold text-base text-on-surface shadow-xs transition-colors">
-          <div class="flex items-center gap-2.5">
-            <span class="material-symbols-outlined text-xl text-primary">apartment</span>
+          <!-- 参加塾一覧 -->
+          <a href="schools_PC.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-lg border border-surface-container bg-surface-container-lowest hover:bg-surface-container-low font-bold text-base text-on-surface shadow-xs transition-colors">
             <span>参加塾一覧</span>
-          </div>
-          <span class="material-symbols-outlined text-base text-on-surface-variant">arrow_forward</span>
-        </a>
+            <span class="material-symbols-outlined text-base text-on-surface-variant">arrow_forward</span>
+          </a>
+        </div>
 
-                <!-- お問い合わせ -->
-        <div class="rounded-lg border border-surface-container bg-surface-container-lowest overflow-hidden shadow-xs">
-          <div class="w-full px-4 py-3 flex items-center text-left font-bold text-base text-primary bg-surface-container-low/50 border-b border-surface-container">
-            <div class="flex items-center gap-2.5">
-              <span class="material-symbols-outlined text-xl text-primary">mail</span>
-              <span>お問い合わせ</span>
-            </div>
-          </div>
-          <div class="bg-surface-container-lowest divide-y divide-surface-container/60">
-            <a href="contact/organization/index.html" onclick="closeMobileMenu()" class="w-full flex items-center justify-between pl-8 pr-4 py-3 font-medium text-sm text-on-surface hover:bg-surface-container-low hover:text-primary transition-colors text-left">
+        <!-- 【グループ3】お問い合わせ -->
+        <div class="space-y-2">
+          <div class="px-1 text-sm font-bold text-on-surface-variant tracking-wider">お問い合わせ</div>
+          <div class="space-y-2">
+            <!-- 塾・学校関係者様 -->
+            <a href="contact/organization/index.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-lg border border-surface-container bg-surface-container-lowest hover:bg-surface-container-low font-bold text-base text-on-surface shadow-xs transition-colors">
               <span>塾・学校関係者様</span>
               <span class="material-symbols-outlined text-base text-on-surface-variant">arrow_forward</span>
             </a>
-            <a href="contact/individual/index.html" onclick="closeMobileMenu()" class="w-full flex items-center justify-between pl-8 pr-4 py-3 font-medium text-sm text-on-surface hover:bg-surface-container-low hover:text-primary transition-colors text-left">
+
+            <!-- 個人申込の方 -->
+            <a href="contact/individual/index.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-lg border border-surface-container bg-surface-container-lowest hover:bg-surface-container-low font-bold text-base text-on-surface shadow-xs transition-colors">
               <span>個人申込の方</span>
               <span class="material-symbols-outlined text-base text-on-surface-variant">arrow_forward</span>
             </a>
           </div>
         </div>
-      </div>
-
-      <!-- Drawer Footer (Prominent CV Button) -->
+      </div><!-- Drawer Footer (Prominent CV Button) -->
       <div class="p-5 border-t border-surface-container bg-surface space-y-2 shrink-0">
         <a href="apply.html" onclick="closeMobileMenu()" class="w-full py-3.5 px-5 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-bold text-base shadow-md shadow-orange-500/25 hover:shadow-lg hover:shadow-orange-500/35 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
           <span class="material-symbols-outlined text-xl">edit_document</span>

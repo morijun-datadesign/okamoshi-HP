@@ -395,59 +395,54 @@
       </button>
     </div>
 
-    <div id="mobile-menu-scroll" class="flex-1 min-h-0 overflow-y-auto overscroll-contain px-4 pt-0 pb-32 space-y-2.5 text-xs sm:text-sm">
-      <!-- 模試のご案内 -->
-      <div class="rounded-lg border border-slate-200 overflow-hidden bg-white shadow-xs">
-        <div class="w-full px-4 py-3 flex items-center text-left font-bold text-base text-brand-green bg-slate-50 border-b border-slate-200">
-          <div class="flex items-center gap-2.5">
-            <span class="material-symbols-outlined text-brand-green text-xl">school</span>
-            <span>模試のご案内</span>
-          </div>
-        </div>
-        <div class="bg-white divide-y divide-slate-100">
-          <a href="#features" onclick="handleMobileNavExamGuideClick(event, 'features')" class="w-full flex items-center justify-between pl-8 pr-4 py-3 font-medium text-sm text-slate-700 hover:bg-brand-greenLight hover:text-brand-green transition-colors text-left">
+    <div id="mobile-menu-scroll" class="flex-1 min-h-0 overflow-y-auto overscroll-contain px-4 pt-1 pb-32 text-xs sm:text-sm">
+      <!-- 【グループ1】模試のご案内 -->
+      <div class="space-y-2 pb-4 mb-4 border-b border-slate-200/80">
+        <div class="px-1 text-sm font-bold text-slate-600 tracking-wider">模試のご案内</div>
+        <div class="space-y-2">
+          <!-- 初めての方へ -->
+          <a href="#features" onclick="handleMobileNavExamGuideClick(event, 'features')" class="flex items-center justify-between px-4 py-3.5 rounded-lg border border-slate-200 bg-white font-bold text-base text-slate-800 hover:bg-slate-50 shadow-xs transition-colors">
             <span>初めての方へ</span>
-            <span class="text-slate-300">→</span>
+            <span class="material-symbols-outlined text-base text-slate-400">arrow_forward</span>
           </a>
-          <a href="#schedule-entry" onclick="handleMobileNavExamGuideClick(event, 'schedule-entry')" class="w-full flex items-center justify-between pl-8 pr-4 py-3 font-medium text-sm text-slate-700 hover:bg-brand-greenLight hover:text-brand-green transition-colors text-left">
+
+          <!-- 模試のお申し込み -->
+          <a href="#schedule-entry" onclick="handleMobileNavExamGuideClick(event, 'schedule-entry')" class="flex items-center justify-between px-4 py-3.5 rounded-lg border border-slate-200 bg-white font-bold text-base text-slate-800 hover:bg-slate-50 shadow-xs transition-colors">
             <span>模試のお申し込み</span>
-            <span class="text-slate-300">→</span>
+            <span class="material-symbols-outlined text-base text-slate-400">arrow_forward</span>
           </a>
         </div>
       </div>
 
-      <a href="news.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-lg border border-slate-200 bg-white font-bold text-slate-800 hover:bg-slate-50 transition-colors">
-        <div class="flex items-center gap-2">
-          <span class="material-symbols-outlined text-brand-green text-lg">feed</span>
+      <!-- 【グループ2】お知らせ・参加塾一覧（独立メニュー） -->
+      <div class="space-y-2 mb-6">
+        <!-- お知らせ・受験情報 -->
+        <a href="news.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-lg border border-slate-200 bg-white font-bold text-base text-slate-800 hover:bg-slate-50 shadow-xs transition-colors">
           <span>お知らせ・受験情報</span>
-        </div>
-        <span class="text-slate-300">→</span>
-      </a>
+          <span class="material-symbols-outlined text-base text-slate-400">arrow_forward</span>
+        </a>
 
-      <a href="schools_PC.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-lg border border-slate-200 bg-white font-bold text-slate-800 hover:bg-slate-50 transition-colors">
-        <div class="flex items-center gap-2">
-          <span class="material-symbols-outlined text-brand-green text-lg">apartment</span>
+        <!-- 参加塾一覧 -->
+        <a href="schools_PC.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-lg border border-slate-200 bg-white font-bold text-base text-slate-800 hover:bg-slate-50 shadow-xs transition-colors">
           <span>参加塾一覧</span>
-        </div>
-        <span class="text-slate-300">→</span>
-      </a>
+          <span class="material-symbols-outlined text-base text-slate-400">arrow_forward</span>
+        </a>
+      </div>
 
-      <!-- お問い合わせ -->
-      <div class="rounded-lg border border-slate-200 overflow-hidden bg-white shadow-xs">
-        <div class="w-full px-4 py-3 flex items-center text-left font-bold text-base text-brand-green bg-slate-50 border-b border-slate-200">
-          <div class="flex items-center gap-2.5">
-            <span class="material-symbols-outlined text-brand-green text-xl">mail</span>
-            <span>お問い合わせ</span>
-          </div>
-        </div>
-        <div class="bg-white divide-y divide-slate-100">
-          <a href="contact/organization/index.html" onclick="closeMobileMenu()" class="w-full flex items-center justify-between pl-8 pr-4 py-3 font-medium text-sm text-slate-700 hover:bg-slate-50 transition-colors text-left">
+      <!-- 【グループ3】お問い合わせ -->
+      <div class="space-y-2">
+        <div class="px-1 text-sm font-bold text-slate-600 tracking-wider">お問い合わせ</div>
+        <div class="space-y-2">
+          <!-- 塾・学校関係者様 -->
+          <a href="contact/organization/index.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-lg border border-slate-200 bg-white font-bold text-base text-slate-800 hover:bg-slate-50 shadow-xs transition-colors">
             <span>塾・学校関係者様</span>
-            <span class="text-slate-300">→</span>
+            <span class="material-symbols-outlined text-base text-slate-400">arrow_forward</span>
           </a>
-          <a href="contact/individual/index.html" onclick="closeMobileMenu()" class="w-full flex items-center justify-between pl-8 pr-4 py-3 font-medium text-sm text-slate-700 hover:bg-slate-50 transition-colors text-left">
+
+          <!-- 個人申込の方 -->
+          <a href="contact/individual/index.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-lg border border-slate-200 bg-white font-bold text-base text-slate-800 hover:bg-slate-50 shadow-xs transition-colors">
             <span>個人申込の方</span>
-            <span class="text-slate-300">→</span>
+            <span class="material-symbols-outlined text-base text-slate-400">arrow_forward</span>
           </a>
         </div>
       </div>

@@ -536,7 +536,7 @@
 
     <!-- Main Application Form Container -->
     <div class="max-w-4xl mx-auto w-full px-0 pb-12 sm:pb-0">
-      <form class="flex flex-col gap-8" id="applicationForm" novalidate onsubmit="handleApplySubmit(event)">
+      <form class="flex flex-col gap-8" id="applicationForm" action="javascript:void(0);" novalidate onsubmit="event.preventDefault(); handleApplySubmit(event); return false;">
         
         <div class="flex flex-col gap-6">
 
@@ -2726,7 +2726,10 @@
     let isSubmitting = false;
 
     async function handleApplySubmit(e) {
-      e.preventDefault();
+      if (e) {
+        if (typeof e.preventDefault === 'function') e.preventDefault();
+        if (typeof e.stopPropagation === 'function') e.stopPropagation();
+      }
 
       // 二重送信の物理的防止
       if (isSubmitting) return;
@@ -3055,21 +3058,26 @@ if (!parentKanaLastName || !parentKanaFirstName) {
           throw new Error(`決済セッション作成に失敗しました (HTTP ${response.status})`);
         }
 
-        const data = await response.json();
-        console.log('【Checkout Webhook レスポンス】', data);
+        const result = await response.json();
+        console.log("n8n response:", result);
 
-        const checkoutUrl = data.checkout_url || data.url;
+        // n8nから直接オブジェクトまたは配列で返ってくるいずれのケースもサポート
+        const checkoutUrl = (result && result.checkout_url)
+          ? result.checkout_url
+          : (Array.isArray(result) && result[0]?.checkout_url ? result[0].checkout_url : null);
+
         if (checkoutUrl) {
-          // Stripe Hosted Checkout へ即座にリダイレクト
+          // Stripeの決済画面へリダイレクト
           window.location.href = checkoutUrl;
           return;
         } else {
-          throw new Error('決済URL（checkout_url）が返却されませんでした。');
+          alert("決済画面のURL取得に失敗しました。");
+          resetSubmitBtn();
         }
 
       } catch (err) {
         console.error('[申し込み・決済セッション作成エラー]:', err);
-        showFormError('決済画面への移動中にエラーが発生しました。お手数ですが、通信環境をご確認のうえ再度お試しいただくか、お問い合わせください。');
+        alert("決済画面への通信中にエラーが発生しました。通信環境をお確かめの上再度お試しください。");
         resetSubmitBtn();
       }
     }

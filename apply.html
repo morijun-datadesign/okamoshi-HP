@@ -1150,8 +1150,8 @@
       endpoint: 'exam-guides'
     };
 
-    // Stripe Checkout セッション生成エンドポイント
-    const STRIPE_CHECKOUT_ENDPOINT = '/api/create-checkout-session';
+    // n8n Stripe Checkout セッション生成 Webhook エンドポイント
+    const CHECKOUT_WEBHOOK_URL = 'https://n8n.data-design-lab.com/webhook/create-checkout-session';
 
     // ========================================================
     // 1. 模試フォールバック・マスターデータ（microCMS未取得時・欠損補完用）
@@ -2997,106 +2997,79 @@ if (!parentKanaLastName || !parentKanaFirstName) {
       // 全ての入力確認・バリデーションを通過：ローディング表示（二重防止）へ移行
       setSubmittingState();
 
-      // 6. Stripe Checkout Session 用 Payload の構築
+      // 6. n8n Stripe Checkout Webhook 用 Payload の構築
       const totalAmount = selectedExams.reduce((sum, item) => sum + item.price, 0);
       const gradeLabels = { 'sho6': '小学6年生', 'chu1': '中学1年生', 'chu2': '中学2年生', 'chu3': '中学3年生' };
-
+      const examNameStr = selectedExams.map(exam => exam.title).join(' / ');
       const fullAddressString = [addressLine1, addressLine2, addressLine3].filter(Boolean).join(' ');
       const extractedPref = addressLine1.match(/^(.+?[都道府県])/)?.[1] || prefecture || '岡山県';
 
-      const stripePayload = {
-        mode: 'payment',
-        payment_method_types: paymentMethod === 'convenience_store' ? ['konbini'] : ['card'],
-        customer_email: parentEmail,
-        client_reference_id: `OKM-${Date.now()}-${Math.floor(1000 + Math.random() * 9000)}`,
-        metadata: {
-          student_name: `${studentLastName} ${studentFirstName}`,
-          student_kana: `${studentKanaLastName} ${studentKanaFirstName}`,
-          student_gender: gender,
-          student_grade: currentSelectedGrade,
-          student_grade_label: gradeLabels[currentSelectedGrade] || currentSelectedGrade,
-          student_school: currentSchool,
-          parent_name: `${parentLastName} ${parentFirstName}`,
-          parent_kana: `${parentKanaLastName} ${parentKanaFirstName}`,
-          parent_phone: parentTel,
-          postal_code: postalCode,
-          prefecture: extractedPref,
-          address_line1: addressLine1,
-          address_line2: addressLine2,
-          address_line3: addressLine3,
-          address: fullAddressString
-        },
-        line_items: selectedExams.map(exam => ({
-          price_data: {
-            currency: 'jpy',
-            product_data: {
-              name: exam.title,
-              description: `実施日: ${exam.examDate} / 希望会場: ${exam.venueLabel}`,
-              metadata: {
-                exam_id: exam.id,
-                venue: exam.venue,
-                venue_name: exam.venueLabel,
-                exam_date: exam.examDate
-              }
-            },
-            unit_amount: exam.price
-          },
-          quantity: 1
-        })),
-        success_url: `${window.location.origin}/apply-complete.html?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: window.location.href
+      const checkoutPayload = {
+        // 【要件指定パラメータ】
+        student_name: `${studentLastName} ${studentFirstName}`,
+        parent_name: `${parentLastName} ${parentFirstName}`,
+        email: parentEmail,
+        phone: parentTel,
+        amount: totalAmount,
+        exam_name: examNameStr,
+
+        // 【詳細パラメータ（n8nおよびStripe/顧客管理用）】
+        student_kana: `${studentKanaLastName} ${studentKanaFirstName}`,
+        parent_kana: `${parentKanaLastName} ${parentKanaFirstName}`,
+        student_gender: gender,
+        student_grade: currentSelectedGrade,
+        student_grade_label: gradeLabels[currentSelectedGrade] || currentSelectedGrade,
+        student_school: currentSchool,
+        postal_code: postalCode,
+        prefecture: extractedPref,
+        address_line1: addressLine1,
+        address_line2: addressLine2,
+        address_line3: addressLine3,
+        address: fullAddressString,
+        payment_method: paymentMethod,
+        exams: selectedExams.map(exam => ({
+          id: exam.id,
+          title: exam.title,
+          price: exam.price,
+          venue: exam.venue,
+          venue_name: exam.venueLabel,
+          exam_date: exam.examDate
+        }))
       };
 
       console.log('==============================================');
-      console.log('【Stripe Checkout Payload 準備完了】');
-      console.log(JSON.stringify(stripePayload, null, 2));
+      console.log('【Checkout Webhook Payload 準備完了】');
+      console.log(JSON.stringify(checkoutPayload, null, 2));
       console.log('==============================================');
 
       try {
-        // Stripe エンドポイントへ POST 送信を試行
-        let response = null;
-        try {
-          response = await fetch(STRIPE_CHECKOUT_ENDPOINT, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(stripePayload)
-          });
-        } catch (fetchErr) {
-          console.warn('[Stripe API] エンドポイント未到達またはローカル実行中:', fetchErr);
+        const response = await fetch(CHECKOUT_WEBHOOK_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(checkoutPayload)
+        });
+
+        if (!response.ok) {
+          throw new Error(`決済セッション作成に失敗しました (HTTP ${response.status})`);
         }
 
-        if (response && response.ok) {
-          const session = await response.json();
-          if (session && session.url) {
-            // Stripe Hosted Checkout へリダイレクト
-            window.location.href = session.url;
-            return;
-          }
-        }
+        const data = await response.json();
+        console.log('【Checkout Webhook レスポンス】', data);
 
-        // バックエンド未連携時、またはモック動作時のシミュレーション表示
-        await new Promise(r => setTimeout(r, 600));
-
-        const modal = document.getElementById('successModal');
-        const modalReceipt = document.getElementById('modalReceiptNo');
-        const modalGrade = document.getElementById('modalGradeName');
-        const modalExamCount = document.getElementById('modalExamCount');
-        const modalTotal = document.getElementById('modalTotalAmount');
-
-        if (modalReceipt) modalReceipt.textContent = stripePayload.client_reference_id;
-        if (modalGrade) modalGrade.textContent = gradeLabels[currentSelectedGrade] || currentSelectedGrade;
-        if (modalExamCount) modalExamCount.textContent = `${selectedExams.length}模試`;
-        if (modalTotal) modalTotal.textContent = '¥' + totalAmount.toLocaleString() + '（税込）';
-
-        if (modal) {
-          modal.classList.remove('hidden');
+        const checkoutUrl = data.checkout_url || data.url;
+        if (checkoutUrl) {
+          // Stripe Hosted Checkout へ即座にリダイレクト
+          window.location.href = checkoutUrl;
+          return;
         } else {
-          window.location.href = 'index.html';
+          throw new Error('決済URL（checkout_url）が返却されませんでした。');
         }
 
       } catch (err) {
-        console.error('[申し込み処理エラー]:', err);
-        showFormError('処理中にエラーが発生しました。お手数ですが、再度お試しいただくかお電話にてお問い合わせください。');
+        console.error('[申し込み・決済セッション作成エラー]:', err);
+        showFormError('決済画面への移動中にエラーが発生しました。お手数ですが、通信環境をご確認のうえ再度お試しいただくか、お問い合わせください。');
         resetSubmitBtn();
       }
     }

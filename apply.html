@@ -863,11 +863,7 @@
 
             </div>
 
-            <!-- コンビニ決済 期限アナウンス注記（コンビニ決済選択時にすぐ下に表示） -->
-            <div id="convenienceNoticeUnderPayment" class="hidden p-3.5 sm:p-4 rounded-lg bg-amber-50 border border-amber-300 text-amber-950 text-xs sm:text-sm font-medium flex items-start gap-2.5 shadow-xs transition-all">
-              <span class="material-symbols-outlined text-amber-700 text-lg shrink-0 mt-0.5">info</span>
-              <p class="leading-relaxed font-bold">※ お申込み完了後、4日以内にお近くのコンビニでお支払いください。期限を過ぎますとお申込みは自動キャンセルとなります。</p>
-            </div>
+
 
             <!-- コンビニ決済 警告パネル（コンビニ選択時に動的表示） -->
             <div id="convenienceWarningPanel" class="hidden bg-amber-50 border-2 border-amber-400 p-4 rounded-lg transition-all duration-300 shadow-xs">
@@ -2119,7 +2115,6 @@
     // 決済方法ラジオボタン切り替え時のサマリー更新 & 警告連動表示
     function updatePaymentMethodSummary(method) {
       const elem = document.getElementById('summaryPaymentMethod');
-      const noticeUnderPayment = document.getElementById('convenienceNoticeUnderPayment');
       const warningPanel = document.getElementById('convenienceWarningPanel');
       const submitWarning = document.getElementById('convenienceSubmitWarning');
       const fullElem = document.getElementById('convenienceDeadlineFull');
@@ -2146,7 +2141,6 @@
             </div>
           `;
         }
-        if (noticeUnderPayment) noticeUnderPayment.classList.add('hidden');
         if (warningPanel) warningPanel.classList.add('hidden');
         if (submitWarning) submitWarning.classList.add('hidden');
         if (summaryNotice) summaryNotice.classList.add('hidden');
@@ -2164,7 +2158,6 @@
             </div>
           `;
         }
-        if (noticeUnderPayment) noticeUnderPayment.classList.remove('hidden');
         if (fullElem) fullElem.textContent = dl.fullText;
         if (dateElem) dateElem.textContent = dl.dateText;
         if (summaryNoticeDate) summaryNoticeDate.textContent = dl.dateText;
@@ -2181,7 +2174,6 @@
             <span class="text-xs sm:text-sm font-medium text-amber-700">お支払い方法を選択してください（未選択）</span>
           `;
         }
-        if (noticeUnderPayment) noticeUnderPayment.classList.add('hidden');
         if (warningPanel) warningPanel.classList.add('hidden');
         if (submitWarning) submitWarning.classList.add('hidden');
         if (summaryNotice) summaryNotice.classList.add('hidden');
@@ -2454,15 +2446,8 @@
       const normQuery = normalizeForSchoolSearch(query);
       if (!normQuery) return [];
 
-      const isSho6 = (gradeKey === 'sho6');
       const elemSchools = window.OKAYAMA_SCHOOLS_DATA.elementary || [];
       const jhsSchools = window.OKAYAMA_SCHOOLS_DATA.juniorHigh || [];
-
-      // 学年に応じた優先リスト（小6なら小学校優先、中1〜中3なら中学校優先）
-      const primaryList = isSho6 ? elemSchools : jhsSchools;
-      const secondaryList = isSho6 ? jhsSchools : elemSchools;
-      const primaryCategory = isSho6 ? '小学校' : '中学校';
-      const secondaryCategory = isSho6 ? '中学校' : '小学校';
 
       function matchSchool(s) {
         const normName = normalizeForSchoolSearch(s.name);
@@ -2471,10 +2456,17 @@
         return normName.includes(normQuery) || normKana.includes(normQuery) || normCity.includes(normQuery);
       }
 
-      const primaryMatches = primaryList.filter(matchSchool).map(s => ({ ...s, category: primaryCategory, isPrimary: true }));
-      const secondaryMatches = secondaryList.filter(matchSchool).map(s => ({ ...s, category: secondaryCategory, isPrimary: false }));
-
-      return [...primaryMatches, ...secondaryMatches].slice(0, 15);
+      // 小6選択時は小学校のみ、中1〜中3選択時は中学校のみをサジェスト表示
+      if (gradeKey === 'sho6') {
+        return elemSchools.filter(matchSchool).map(s => ({ ...s, category: '小学校' })).slice(0, 15);
+      } else if (gradeKey && (gradeKey.startsWith('chu') || ['chu1', 'chu2', 'chu3'].includes(gradeKey))) {
+        return jhsSchools.filter(matchSchool).map(s => ({ ...s, category: '中学校' })).slice(0, 15);
+      } else {
+        // 学年未選択時のフォールバック
+        const jhsMatches = jhsSchools.filter(matchSchool).map(s => ({ ...s, category: '中学校' }));
+        const elemMatches = elemSchools.filter(matchSchool).map(s => ({ ...s, category: '小学校' }));
+        return [...jhsMatches, ...elemMatches].slice(0, 15);
+      }
     }
 
     function renderSchoolSuggestions(suggestions, query) {
@@ -2548,13 +2540,24 @@
 
     function updateSchoolInputPlaceholder(gradeKey) {
       const input = document.getElementById('currentSchool');
+      const label = document.querySelector('label[for="currentSchool"]');
       if (!input) return;
       if (gradeKey === 'sho6') {
         input.placeholder = '例: 岡山市立岡山中央小学校（学校名を入力すると候補が表示されます）';
-      } else if (gradeKey) {
+        if (label) label.textContent = '在籍小学校名';
+      } else if (gradeKey && (gradeKey.startsWith('chu') || ['chu1', 'chu2', 'chu3'].includes(gradeKey))) {
         input.placeholder = '例: 岡山市立操南中学校（学校名を入力すると候補が表示されます）';
+        if (label) label.textContent = '在籍中学校名';
       } else {
         input.placeholder = '在籍校を入力（学校名を入力すると候補が表示されます）';
+        if (label) label.textContent = '在籍中学校・小学校名';
+      }
+
+      // ドロップダウンが開いている場合は、新しい学年に合わせた候補で再表示
+      const dropdown = document.getElementById('schoolSuggestDropdown');
+      if (dropdown && !dropdown.classList.contains('hidden') && input.value.trim().length > 0) {
+        const matches = getSchoolSuggestions(input.value.trim(), gradeKey);
+        renderSchoolSuggestions(matches, input.value.trim());
       }
     }
 

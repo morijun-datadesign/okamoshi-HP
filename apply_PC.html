@@ -628,6 +628,9 @@
                     <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="studentFirstName" name="student_first_name" placeholder="名（例: 太郎）" required type="text">
                   </div>
                 </div>
+                <p class="text-[11px] sm:text-xs text-on-surface-variant leading-relaxed">
+                  ※ 郵便物のお届けおよびシステム処理の都合上、旧字体・外字（髙、﨑など）は常用漢字（高、崎など）にて登録・印字させていただく場合がございます。
+                </p>
               </div>
 
               <!-- 生徒氏名フリガナ -->
@@ -705,10 +708,29 @@
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                   <div>
-                    <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="parentLastName" name="parent_last_name" placeholder="保護者 姓" required type="text">
+                    <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="parentLastName" name="parent_last_name" placeholder="保護者 姓（例: 岡山）" required type="text">
                   </div>
                   <div>
-                    <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="parentFirstName" name="parent_first_name" placeholder="保護者 名" required type="text">
+                    <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="parentFirstName" name="parent_first_name" placeholder="保護者 名（例: 花子）" required type="text">
+                  </div>
+                </div>
+                <p class="text-[11px] sm:text-xs text-on-surface-variant leading-relaxed">
+                  ※ 郵便物のお届けおよびシステム処理の都合上、旧字体・外字（髙、﨑など）は常用漢字（高、崎など）にて登録・印字させていただく場合がございます。
+                </p>
+              </div>
+
+              <!-- 保護者氏名（フリガナ） -->
+              <div class="flex flex-col gap-1.5 md:col-span-2">
+                <div class="flex items-center justify-between">
+                  <span class="font-label-md text-sm font-bold text-on-surface">保護者氏名（フリガナ）</span>
+                  <span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="parentKanaLastName" name="parent_kana_last_name" placeholder="セイ（例: オカヤマ）" required type="text">
+                  </div>
+                  <div>
+                    <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="parentKanaFirstName" name="parent_kana_first_name" placeholder="メイ（例: ハナコ）" required type="text">
                   </div>
                 </div>
               </div>
@@ -740,60 +762,54 @@
                   <label class="font-label-md text-sm font-bold text-on-surface" for="parentTel">電話番号（日中連絡先）</label>
                   <span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span>
                 </div>
-                <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="parentTel" name="parent_tel" placeholder="09012345678（ハイフンなし可）" required type="tel">
+                <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="parentTel" name="parent_tel" placeholder="09012345678（ハイフンなし可）" required type="tel" inputmode="numeric">
               </div>
 
               <!-- 郵便番号 + 自動入力ボタン -->
-              <div class="flex flex-col gap-1.5">
+              <div class="flex flex-col gap-1.5 md:col-span-2">
                 <div class="flex items-center justify-between">
                   <label class="font-label-md text-sm font-bold text-on-surface" for="postalCode">郵便番号</label>
                   <span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span>
                 </div>
                 <div class="flex items-center gap-2 w-full">
-                  <input class="w-[62%] sm:w-48 h-11 px-3.5 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40 shrink-0 font-mono" id="postalCode" name="postal_code" maxlength="8" placeholder="700-0822" required type="text" autocomplete="postal-code">
+                  <input class="w-[62%] sm:w-48 h-11 px-3.5 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40 shrink-0 font-mono" id="postalCode" name="postal_code" maxlength="8" placeholder="700-0822" required type="tel" inputmode="numeric" autocomplete="postal-code">
                   <button id="btnSearchAddress" class="w-[38%] sm:w-auto px-2.5 sm:px-4 h-11 py-2.5 bg-primary hover:bg-primary-container disabled:opacity-60 disabled:cursor-not-allowed text-on-primary font-bold text-xs sm:text-sm rounded-lg transition-colors shadow-sm shrink-0 flex items-center justify-center gap-1 sm:gap-1.5 cursor-pointer whitespace-nowrap active:scale-[0.98]" onclick="searchAddressByPostalCode(true)" type="button">
                     <span id="btnSearchAddressIcon" class="material-symbols-outlined text-[16px] shrink-0">location_searching</span>
                     <span id="btnSearchAddressText">住所自動入力</span>
                   </button>
                 </div>
                 <p id="postalMsg" class="text-xs font-medium hidden mt-0.5"></p>
+                <input type="hidden" id="prefecture" name="prefecture" value="岡山県">
               </div>
 
-              <!-- 都道府県 -->
-              <div class="flex flex-col gap-1.5">
-                <div class="flex items-center justify-between">
-                  <label class="font-label-md text-sm font-bold text-on-surface" for="prefecture">都道府県</label>
-                  <span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span>
-                </div>
-                <div class="relative">
-                  <select class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 appearance-none focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="prefecture" name="prefecture" required>
-                    <option selected value="岡山県">岡山県</option>
-                    <option value="広島県">広島県</option>
-                    <option value="香川県">香川県</option>
-                    <option value="兵庫県">兵庫県</option>
-                    <option value="鳥取県">鳥取県</option>
-                    <option value="その他">その他都道府県</option>
-                  </select>
-                  <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant">expand_more</span>
-                </div>
-              </div>
-
-              <!-- 市区町村・番地 -->
+              <!-- 1. 都道府県・市区町村・町名 -->
               <div class="flex flex-col gap-1.5 md:col-span-2">
                 <div class="flex items-center justify-between">
-                  <label class="font-label-md text-sm font-bold text-on-surface" for="addressLine1">市区町村・番地</label>
+                  <label class="font-label-md text-sm font-bold text-on-surface" for="addressLine1">都道府県・市区町村・町名</label>
                   <span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span>
                 </div>
-                <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="addressLine1" name="address_line1" placeholder="例: 岡山市北区表町1丁目5-1" required type="text">
+                <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="addressLine1" name="address_line1" placeholder="例: 岡山県岡山市北区表町" required type="text" autocomplete="address-level1 address-level2">
               </div>
 
-              <!-- 建物名・部屋番号 -->
+              <!-- 2. 丁目・番地・号 -->
               <div class="flex flex-col gap-1.5 md:col-span-2">
                 <div class="flex items-center justify-between">
-                  <label class="font-label-md text-sm font-bold text-on-surface" for="addressLine2">建物名・部屋番号</label>
+                  <div class="flex items-center gap-1.5 sm:gap-2">
+                    <label class="font-label-md text-sm font-bold text-on-surface" for="addressLine2">丁目・番地・号</label>
+                    <span class="text-rose-600 font-bold text-xs sm:text-[13px]">※必ずご入力ください</span>
+                  </div>
+                  <span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span>
+                </div>
+                <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="addressLine2" name="address_line2" placeholder="例: 1丁目5-1 または 1-5-1" required type="text" inputmode="numeric" autocomplete="address-line1">
+              </div>
+
+              <!-- 3. 建物名・部屋番号 -->
+              <div class="flex flex-col gap-1.5 md:col-span-2">
+                <div class="flex items-center justify-between">
+                  <label class="font-label-md text-sm font-bold text-on-surface" for="addressLine3">建物名・部屋番号</label>
                   <span class="bg-surface-container-high text-on-surface-variant font-label-sm text-[10px] px-2 py-0.5 rounded-full font-bold">任意</span>
                 </div>
-                <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="addressLine2" name="address_line2" placeholder="例: 岡山教育ビル 3F" type="text">
+                <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="addressLine3" name="address_line3" placeholder="例: 岡山教育ビル 3F" type="text" autocomplete="address-line2">
               </div>
 
             </div>
@@ -849,6 +865,12 @@
                 </div>
               </label>
 
+            </div>
+
+            <!-- コンビニ決済 期限アナウンス注記（コンビニ決済選択時にすぐ下に表示） -->
+            <div id="convenienceNoticeUnderPayment" class="hidden p-3.5 sm:p-4 rounded-lg bg-amber-50 border border-amber-300 text-amber-950 text-xs sm:text-sm font-medium flex items-start gap-2.5 shadow-xs transition-all">
+              <span class="material-symbols-outlined text-amber-700 text-lg shrink-0 mt-0.5">info</span>
+              <p class="leading-relaxed font-bold">※ お申込み完了後、4日以内にお近くのコンビニでお支払いください。期限を過ぎますとお申込みは自動キャンセルとなります。</p>
             </div>
 
             <!-- コンビニ決済 警告パネル（コンビニ選択時に動的表示） -->
@@ -2081,6 +2103,7 @@
     // 決済方法ラジオボタン切り替え時のサマリー更新 & 警告連動表示
     function updatePaymentMethodSummary(method) {
       const elem = document.getElementById('summaryPaymentMethod');
+      const noticeUnderPayment = document.getElementById('convenienceNoticeUnderPayment');
       const warningPanel = document.getElementById('convenienceWarningPanel');
       const submitWarning = document.getElementById('convenienceSubmitWarning');
       const fullElem = document.getElementById('convenienceDeadlineFull');
@@ -2107,6 +2130,7 @@
             </div>
           `;
         }
+        if (noticeUnderPayment) noticeUnderPayment.classList.add('hidden');
         if (warningPanel) warningPanel.classList.add('hidden');
         if (submitWarning) submitWarning.classList.add('hidden');
         if (summaryNotice) summaryNotice.classList.add('hidden');
@@ -2124,6 +2148,7 @@
             </div>
           `;
         }
+        if (noticeUnderPayment) noticeUnderPayment.classList.remove('hidden');
         if (fullElem) fullElem.textContent = dl.fullText;
         if (dateElem) dateElem.textContent = dl.dateText;
         if (summaryNoticeDate) summaryNoticeDate.textContent = dl.dateText;
@@ -2140,6 +2165,7 @@
             <span class="text-xs sm:text-sm font-medium text-amber-700">お支払い方法を選択してください（未選択）</span>
           `;
         }
+        if (noticeUnderPayment) noticeUnderPayment.classList.add('hidden');
         if (warningPanel) warningPanel.classList.add('hidden');
         if (submitWarning) submitWarning.classList.add('hidden');
         if (summaryNotice) summaryNotice.classList.add('hidden');
@@ -2149,6 +2175,86 @@
           convAgreeInput.checked = false;
         }
       }
+    }
+
+    // ========================================================
+    // 全角半角正規化 & 異体字（旧字体）常用漢字置換ユーティリティ
+    // ========================================================
+    // 全角数字・全角英字・全角スペース・各種全角ハイフン（ー、―、‐など）を半角へ変換
+    function normalizeToHalfWidth(str) {
+      if (!str) return '';
+      return String(str)
+        // 全角数字 (０-９) -> 半角 (0-9)
+        .replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0))
+        // 全角英字 (Ａ-Ｚ, ａ-ｚ) -> 半角 (A-Z, a-z)
+        .replace(/[Ａ-Ｚａ-ｚ]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0))
+        // 全角スペース -> 半角スペース
+        .replace(/[　]/g, ' ')
+        // 各種ダッシュ・長音記号・全角ハイフン・全角マイナス（ー、―、‐、－など） -> 半角ハイフン '-'
+        .replace(/[ー―‐‑‒–—ｰ−─━〜～－˗֊⁃⁻₋﹘﹣]/g, '-')
+        .trim();
+    }
+
+    // ひらがな -> 全角カタカナ自動変換
+    function normalizeToFullWidthKana(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/[ぁ-ゖ]/g, ch => String.fromCharCode(ch.charCodeAt(0) + 0x60))
+        .trim();
+    }
+
+    // 代表的な旧字体・異体字の常用漢字（新字体）マッピング辞書
+    const KANJI_VARIANT_MAP = {
+      '髙': '高',
+      '﨑': '崎',
+      '﨑': '崎',
+      '德': '徳',
+      '濵': '浜',
+      '濱': '浜',
+      '齊': '斉',
+      '齋': '斉',
+      '澁': '渋',
+      '廣': '広',
+      '瀨': '瀬',
+      '邊': '辺',
+      '邉': '辺',
+      '羽': '羽',
+      '塚': '塚',
+      '塚': '塚',
+      '黑': '黒',
+      '祥': '祥',
+      '福': '福',
+      '靖': '靖',
+      '淸': '清',
+      '益': '益',
+      '禮': '礼',
+      '神': '神',
+      '祐': '祐',
+      '礼': '礼',
+      '祉': '祉',
+      '祖': '祖',
+      '祝': '祝',
+      '眞': '真',
+      '槇': '槙',
+      '瑤': '瑶',
+      '榮': '栄',
+      '龍': '竜',
+      '藪': '薮',
+      '嶋': '島',
+      '峯': '峰',
+      '條': '条',
+      '莊': '荘',
+      '壽': '寿',
+      '亙': '亘',
+      '惠': '恵',
+      '恆': '恒',
+      '晋': '晋',
+      '裵': '裴'
+    };
+
+    function replaceKanjiVariants(str) {
+      if (!str) return '';
+      return String(str).split('').map(char => KANJI_VARIANT_MAP[char] || char).join('');
     }
 
     // ========================================================
@@ -2255,35 +2361,25 @@
           zipInput.value = `${cleanZip.slice(0, 3)}-${cleanZip.slice(3)}`;
           lastSearchedZip = cleanZip;
 
-          // 都道府県セレクトボックスの反映
-          let matched = false;
-          for (let i = 0; i < prefSelect.options.length; i++) {
-            if (prefSelect.options[i].value === address1) {
-              prefSelect.selectedIndex = i;
-              matched = true;
-              break;
-            }
-          }
-          if (!matched && address1) {
-            const newOpt = new Option(address1, address1, true, true);
-            const otherOpt = prefSelect.querySelector('option[value="その他"]');
-            if (otherOpt) {
-              prefSelect.insertBefore(newOpt, otherOpt);
-            } else {
-              prefSelect.add(newOpt);
-            }
-          }
-          prefSelect.dispatchEvent(new Event('change'));
-
-          // 市区町村・番地入力欄の自動補完
-          const fullAddress = address2 + address3;
+          // 1.「都道府県・市区町村・町名」入力欄の自動補完
+          const fullAddress = `${address1}${address2}${address3}`;
           addr1Input.value = fullAddress;
-          addr1Input.focus();
-          if (typeof addr1Input.setSelectionRange === 'function') {
-            addr1Input.setSelectionRange(fullAddress.length, fullAddress.length);
+
+          // 都道府県情報（hidden項目）の更新
+          if (prefSelect) {
+            prefSelect.value = address1 || '岡山県';
           }
 
-          showPostalMessage('✓ 住所を自動入力しました（番地・建物名をご入力ください）', false);
+          // 2. 自動的に「丁目・番地・号」の入力欄へフォーカス（カーソル）を移動
+          const addr2Input = document.getElementById('addressLine2');
+          if (addr2Input) {
+            addr2Input.focus();
+            if (typeof addr2Input.setSelectionRange === 'function' && addr2Input.value) {
+              addr2Input.setSelectionRange(addr2Input.value.length, addr2Input.value.length);
+            }
+          }
+
+          showPostalMessage('✓ 住所を自動入力しました。「丁目・番地・号」をご入力ください', false);
           setTimeout(() => {
             clearPostalMessage();
           }, 4500);
@@ -2608,14 +2704,50 @@
     // ========================================================
     // 6. フォームバリデーション & Stripe 決済接続ハンドラー
     // ========================================================
+    let isSubmitting = false;
+
     async function handleApplySubmit(e) {
       e.preventDefault();
+
+      // 二重送信の物理的防止
+      if (isSubmitting) return;
 
       const form = document.getElementById('applicationForm');
       if (!form) return;
 
+      const submitBtn = document.getElementById('submitApplyBtn');
+      const originalBtnHtml = submitBtn ? submitBtn.innerHTML : '';
+
+      function resetSubmitBtn() {
+        isSubmitting = false;
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.classList.remove('opacity-75', 'cursor-not-allowed', 'pointer-events-none');
+          submitBtn.innerHTML = originalBtnHtml || `
+            <span>入力内容を確認し、お支払いへ進む</span>
+            <span class="material-symbols-outlined text-xl">arrow_forward</span>
+          `;
+        }
+      }
+
+      function setSubmittingState() {
+        isSubmitting = true;
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.classList.add('opacity-75', 'cursor-not-allowed', 'pointer-events-none');
+          submitBtn.innerHTML = `
+            <svg class="animate-spin -ml-1 mr-2.5 h-5 w-5 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span>決済画面へ移動中...</span>
+          `;
+        }
+      }
+
       // 0. 学年の選択確認
       if (!currentSelectedGrade) {
+        resetSubmitBtn();
         const gradeGroup = document.getElementById('gradeButtonGroup');
         showFormError('学年をお選びください。', gradeGroup, gradeGroup);
         return;
@@ -2624,6 +2756,7 @@
       // 1. 模試の選択確認
       const selectedExams = Object.values(selectedExamsState);
       if (selectedExams.length === 0) {
+        resetSubmitBtn();
         const examGroup = document.getElementById('examOptionGroup');
         showFormError('受験を希望する模試を1つ以上選択してください。', examGroup, examGroup);
         return;
@@ -2632,6 +2765,7 @@
       // 1-2. 受験方法・希望会場の未選択チェック (選択必須バリデーション)
       for (const exam of selectedExams) {
         if (!exam.venue || exam.venue === '') {
+          resetSubmitBtn();
           const venueElem = document.getElementById(`venue-${exam.id}`);
           if (venueElem) updateVenueSelectStyle(venueElem);
           showFormError(`「${exam.issueName} ${exam.title}」の受験方法・希望会場を選択してください。`, venueElem, venueElem);
@@ -2639,7 +2773,64 @@
         }
       }
 
-      // 2. 必須項目の取得
+      // ======================================================
+      // 2. 送信前自動前処理：全角半角正規化 & 旧字体・異体字の常用漢字置換
+      // ======================================================
+      // (1) 郵便番号・電話番号・住所の半角自動正規化
+      const postalCodeElem = document.getElementById('postalCode');
+      if (postalCodeElem) {
+        let pVal = normalizeToHalfWidth(postalCodeElem.value).replace(/\s+/g, '');
+        const pDigits = pVal.replace(/[^\d]/g, '');
+        if (pDigits.length === 7 && !pVal.includes('-')) {
+          pVal = `${pDigits.slice(0, 3)}-${pDigits.slice(3)}`;
+        }
+        postalCodeElem.value = pVal;
+      }
+
+      const parentTelElem = document.getElementById('parentTel');
+      if (parentTelElem) {
+        parentTelElem.value = normalizeToHalfWidth(parentTelElem.value).replace(/\s+/g, '');
+      }
+
+      const addr2Elem = document.getElementById('addressLine2');
+      if (addr2Elem) {
+        addr2Elem.value = normalizeToHalfWidth(addr2Elem.value);
+      }
+
+      const addr3Elem = document.getElementById('addressLine3');
+      if (addr3Elem) {
+        addr3Elem.value = normalizeToHalfWidth(addr3Elem.value);
+      }
+
+      // (2) 生徒氏名・保護者氏名の旧字体・外字を常用漢字（新字体）へ自動置換
+      const studentLastElem = document.getElementById('studentLastName');
+      if (studentLastElem) {
+        studentLastElem.value = replaceKanjiVariants(studentLastElem.value.trim());
+      }
+      const studentFirstElem = document.getElementById('studentFirstName');
+      if (studentFirstElem) {
+        studentFirstElem.value = replaceKanjiVariants(studentFirstElem.value.trim());
+      }
+      const parentLastElem = document.getElementById('parentLastName');
+      if (parentLastElem) {
+        parentLastElem.value = replaceKanjiVariants(parentLastElem.value.trim());
+      }
+      const parentFirstElem = document.getElementById('parentFirstName');
+      if (parentFirstElem) {
+        parentFirstElem.value = replaceKanjiVariants(parentFirstElem.value.trim());
+      }
+
+      // (3) フリガナの全角カタカナ自動補正（ひらがな入力の自動変換）
+      const studentKanaLastElem = document.getElementById('studentKanaLastName');
+      if (studentKanaLastElem) studentKanaLastElem.value = normalizeToFullWidthKana(studentKanaLastElem.value);
+      const studentKanaFirstElem = document.getElementById('studentKanaFirstName');
+      if (studentKanaFirstElem) studentKanaFirstElem.value = normalizeToFullWidthKana(studentKanaFirstElem.value);
+      const parentKanaLastElem = document.getElementById('parentKanaLastName');
+      if (parentKanaLastElem) parentKanaLastElem.value = normalizeToFullWidthKana(parentKanaLastElem.value);
+      const parentKanaFirstElem = document.getElementById('parentKanaFirstName');
+      if (parentKanaFirstElem) parentKanaFirstElem.value = normalizeToFullWidthKana(parentKanaFirstElem.value);
+
+      // 3. 入力値の取得
       const studentLastName = document.getElementById('studentLastName')?.value.trim();
       const studentFirstName = document.getElementById('studentFirstName')?.value.trim();
       const studentKanaLastName = document.getElementById('studentKanaLastName')?.value.trim();
@@ -2649,6 +2840,8 @@
 
       const parentLastName = document.getElementById('parentLastName')?.value.trim();
       const parentFirstName = document.getElementById('parentFirstName')?.value.trim();
+      const parentKanaLastName = document.getElementById('parentKanaLastName')?.value.trim();
+      const parentKanaFirstName = document.getElementById('parentKanaFirstName')?.value.trim();
       const parentEmail = document.getElementById('parentEmail')?.value.trim();
       const parentEmailConfirm = document.getElementById('parentEmailConfirm')?.value.trim();
       const parentTel = document.getElementById('parentTel')?.value.trim();
@@ -2656,68 +2849,116 @@
       const prefecture = document.getElementById('prefecture')?.value;
       const addressLine1 = document.getElementById('addressLine1')?.value.trim();
       const addressLine2 = document.getElementById('addressLine2')?.value.trim();
+      const addressLine3 = document.getElementById('addressLine3')?.value.trim() || '';
       const paymentMethod = form.querySelector('input[name="payment_method"]:checked')?.value || null;
       const agreeTerms = document.getElementById('agreeTerms')?.checked;
 
-      // 3. バリデーションチェック
+      // 4. バリデーションチェック
       if (!studentLastName || !studentFirstName) {
+        resetSubmitBtn();
         const target = !studentLastName ? document.getElementById('studentLastName') : document.getElementById('studentFirstName');
         showFormError('生徒氏名（漢字）を入力してください。', target);
         return;
       }
       if (!studentKanaLastName || !studentKanaFirstName) {
+        resetSubmitBtn();
         const target = !studentKanaLastName ? document.getElementById('studentKanaLastName') : document.getElementById('studentKanaFirstName');
         showFormError('生徒氏名（フリガナ）を入力してください。', target);
         return;
       }
       if (!gender) {
+        resetSubmitBtn();
         const genderElem = form.querySelector('input[name="gender"]');
         const genderGroup = genderElem?.closest('.flex.flex-col') || genderElem;
         showFormError('性別を選択してください。', genderElem, genderGroup);
         return;
       }
       if (!currentSchool) {
+        resetSubmitBtn();
         const target = document.getElementById('currentSchool');
         showFormError('在籍中学校・小学校名を入力してください。', target);
         return;
       }
       if (!parentLastName || !parentFirstName) {
+        resetSubmitBtn();
         const target = !parentLastName ? document.getElementById('parentLastName') : document.getElementById('parentFirstName');
         showFormError('保護者氏名を入力してください。', target);
         return;
       }
+if (!parentKanaLastName || !parentKanaFirstName) {
+        resetSubmitBtn();
+        const target = !parentKanaLastName ? document.getElementById('parentKanaLastName') : document.getElementById('parentKanaFirstName');
+        showFormError('保護者氏名（フリガナ）を入力してください。', target);
+        return;
+      }
+      const isKanaRegex = /^[゠-ヿー\s]+$/;
+      if (!isKanaRegex.test(parentKanaLastName) || !isKanaRegex.test(parentKanaFirstName)) {
+        resetSubmitBtn();
+        const target = !isKanaRegex.test(parentKanaLastName) ? document.getElementById('parentKanaLastName') : document.getElementById('parentKanaFirstName');
+        showFormError('保護者氏名（フリガナ）は全角カタカナで入力してください。', target);
+        return;
+      }
       if (!parentEmail || !parentEmail.includes('@')) {
+        resetSubmitBtn();
         const target = document.getElementById('parentEmail');
         showFormError('有効なメールアドレスを入力してください。', target);
         return;
       }
       if (parentEmail !== parentEmailConfirm) {
+        resetSubmitBtn();
         const target = document.getElementById('parentEmailConfirm');
         showFormError('確認用メールアドレスが一致しません。もう一度お確かめください。', target);
         return;
       }
       if (!parentTel || parentTel.replace(/\D/g, '').length < 10) {
+        resetSubmitBtn();
         const target = document.getElementById('parentTel');
         showFormError('日中連絡可能な電話番号を正しく入力してください。', target);
         return;
       }
       if (!postalCode) {
+        resetSubmitBtn();
         const target = document.getElementById('postalCode');
         showFormError('郵便番号を入力してください。', target);
         return;
       }
       if (!addressLine1) {
+        resetSubmitBtn();
         const target = document.getElementById('addressLine1');
-        showFormError('市区町村・番地を入力してください。', target);
+        showFormError('「都道府県・市区町村・町名」を入力してください。', target);
         return;
       }
+
+      if (!addressLine2) {
+        resetSubmitBtn();
+        const target = document.getElementById('addressLine2');
+        showFormError('「丁目・番地・号」を入力してください。', target);
+        if (target) target.focus();
+        return;
+      }
+
+      // 【住所の番地チェック】数字（アラビア数字または漢数字）が含まれていない場合は確認ダイアログを表示
+      const hasNumberInAddress = /[0-9０-９〇零一二三四五六七八九十百千万壱弐参肆伍陸漆捌玖拾]/.test(addressLine2);
+      if (!hasNumberInAddress) {
+        const confirmMsg = '【ご確認】番地・号（数字）が入力されていません。無番地等の住所でない場合は、正確な番地をご入力ください。このまま送信してよろしいですか？';
+        const isConfirmed = window.confirm(confirmMsg);
+        if (!isConfirmed) {
+          resetSubmitBtn();
+          const target = document.getElementById('addressLine2');
+          if (target) target.focus();
+          return;
+        }
+      }
+
       if (!paymentMethod) {
+        resetSubmitBtn();
         const paymentElem = form.querySelector('input[name="payment_method"]');
         const paymentGroup = paymentElem?.closest('.flex.flex-col') || paymentElem;
         showFormError('お支払い方法（クレジットカード決済またはコンビニ決済）を選択してください。', paymentElem, paymentGroup);
         return;
       }
       if (!agreeTerms) {
+        resetSubmitBtn();
         const target = document.getElementById('agreeTerms');
         const container = target ? target.closest('label') : null;
         showFormError('「個人情報の取扱い」および「特定商取引法に基づく表記」への同意が必要です。', target, container);
@@ -2726,6 +2967,7 @@
       if (paymentMethod === 'convenience_store') {
         const agreeConvenience = document.getElementById('agreeConvenienceTerms')?.checked;
         if (!agreeConvenience) {
+          resetSubmitBtn();
           const convInput = document.getElementById('agreeConvenienceTerms');
           const container = convInput ? convInput.closest('label') : null;
           showFormError('コンビニ決済期限および自動キャンセルについての確認・同意が必要です。', convInput, container);
@@ -2733,9 +2975,15 @@
         }
       }
 
-      // 4. Stripe Checkout Session 用 Payload の構築
+      // 全ての入力確認・バリデーションを通過：ローディング表示（二重防止）へ移行
+      setSubmittingState();
+
+      // 6. Stripe Checkout Session 用 Payload の構築
       const totalAmount = selectedExams.reduce((sum, item) => sum + item.price, 0);
       const gradeLabels = { 'sho6': '小学6年生', 'chu1': '中学1年生', 'chu2': '中学2年生', 'chu3': '中学3年生' };
+
+      const fullAddressString = [addressLine1, addressLine2, addressLine3].filter(Boolean).join(' ');
+      const extractedPref = addressLine1.match(/^(.+?[都道府県])/)?.[1] || prefecture || '岡山県';
 
       const stripePayload = {
         mode: 'payment',
@@ -2750,10 +2998,14 @@
           student_grade_label: gradeLabels[currentSelectedGrade] || currentSelectedGrade,
           student_school: currentSchool,
           parent_name: `${parentLastName} ${parentFirstName}`,
+          parent_kana: `${parentKanaLastName} ${parentKanaFirstName}`,
           parent_phone: parentTel,
           postal_code: postalCode,
-          prefecture: prefecture,
-          address: `${prefecture} ${addressLine1} ${addressLine2}`.trim()
+          prefecture: extractedPref,
+          address_line1: addressLine1,
+          address_line2: addressLine2,
+          address_line3: addressLine3,
+          address: fullAddressString
         },
         line_items: selectedExams.map(exam => ({
           price_data: {
@@ -2781,17 +3033,6 @@
       console.log(JSON.stringify(stripePayload, null, 2));
       console.log('==============================================');
 
-      // 送信ボタンのローディング表示
-      const submitBtn = document.getElementById('submitApplyBtn');
-      const originalBtnText = submitBtn ? submitBtn.innerHTML : '';
-      if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = `
-          <span class="inline-block animate-spin mr-2">⟳</span>
-          <span>決済セッションを作成中...</span>
-        `;
-      }
-
       try {
         // Stripe エンドポイントへ POST 送信を試行
         let response = null;
@@ -2802,7 +3043,6 @@
             body: JSON.stringify(stripePayload)
           });
         } catch (fetchErr) {
-          // ローカル開発環境などでエンドポイント未起動の場合
           console.warn('[Stripe API] エンドポイント未到達またはローカル実行中:', fetchErr);
         }
 
@@ -2838,11 +3078,7 @@
       } catch (err) {
         console.error('[申し込み処理エラー]:', err);
         showFormError('処理中にエラーが発生しました。お手数ですが、再度お試しいただくかお電話にてお問い合わせください。');
-      } finally {
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          submitBtn.innerHTML = originalBtnText;
-        }
+        resetSubmitBtn();
       }
     }
 

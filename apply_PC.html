@@ -3083,25 +3083,72 @@ if (!parentKanaLastName || !parentKanaFirstName) {
       // 6. n8n Stripe Checkout Webhook 用 Payload の構築
       const totalAmount = selectedExams.reduce((sum, item) => sum + item.price, 0);
       const gradeLabels = { 'sho6': '小学6年生', 'chu1': '中学1年生', 'chu2': '中学2年生', 'chu3': '中学3年生' };
+      const gradeText = gradeLabels[currentSelectedGrade] || currentSelectedGrade;
       const examNameStr = selectedExams.map(exam => exam.title).join(' / ');
       const fullAddressString = [addressLine1, addressLine2, addressLine3].filter(Boolean).join(' ');
       const extractedPref = addressLine1.match(/^(.+?[都道府県])/)?.[1] || prefecture || '岡山県';
 
+      // 決済手段の動的切り替え（card / konbini）
+      const isKonbini = (paymentMethod === 'convenience_store');
+      const selectedPaymentMethod = isKonbini ? 'konbini' : 'card';
+      const paymentMethodTypes = [selectedPaymentMethod];
+
+      // コンビニ決済時の追加オプション設定（支払い期限日数：3日）
+      const KONBINI_EXPIRES_AFTER_DAYS = 3;
+      const paymentMethodOptions = isKonbini ? {
+        konbini: {
+          expires_after_days: KONBINI_EXPIRES_AFTER_DAYS
+        }
+      } : undefined;
+
+      // 業務管理用メタデータ（Stripe Session Metadata）
+      const stripeMetadata = {
+        student_name: `${studentLastName} ${studentFirstName}`,
+        student_kana: `${studentKanaLastName} ${studentKanaFirstName}`,
+        student_grade: gradeText,
+        student_school: currentSchool || '',
+        student_gender: gender || '',
+        parent_name: `${parentLastName} ${parentFirstName}`,
+        parent_kana: `${parentKanaLastName} ${parentKanaFirstName}`,
+        phone: parentTel,
+        postal_code: postalCode,
+        prefecture: extractedPref,
+        address: fullAddressString,
+        exam_name: examNameStr,
+        selected_payment_method: selectedPaymentMethod,
+        total_amount: String(totalAmount)
+      };
+
       const checkoutPayload = {
-        // 【要件指定パラメータ】
+        // ========================================================
+        // 【Stripe Checkout Session 連動パラメータ（Pre-fill & 最適化）】
+        // ========================================================
+        selected_payment_method: selectedPaymentMethod,               // "card" | "konbini"
+        payment_method_types: paymentMethodTypes,                     // ["card"] | ["konbini"]
+        customer_email: parentEmail,                                  // Stripe画面でメールアドレス事前入力
+        client_reference_id: `${studentLastName} ${studentFirstName}`, // 申込者識別（生徒氏名）
+        metadata: stripeMetadata,                                     // Stripe業務管理メタデータ
+        ...(paymentMethodOptions ? { payment_method_options: paymentMethodOptions } : {}),
+
+        // ========================================================
+        // 【既存n8nワークフロー・後方互換用パラメータ】
+        // ========================================================
         student_name: `${studentLastName} ${studentFirstName}`,
         parent_name: `${parentLastName} ${parentFirstName}`,
         email: parentEmail,
         phone: parentTel,
         amount: totalAmount,
         exam_name: examNameStr,
+        payment_method: paymentMethod, // 'credit_card' | 'convenience_store'
 
-        // 【詳細パラメータ（n8nおよびStripe/顧客管理用）】
+        // ========================================================
+        // 【詳細パラメータ（顧客管理・DB保存用）】
+        // ========================================================
         student_kana: `${studentKanaLastName} ${studentKanaFirstName}`,
         parent_kana: `${parentKanaLastName} ${parentKanaFirstName}`,
         student_gender: gender,
         student_grade: currentSelectedGrade,
-        student_grade_label: gradeLabels[currentSelectedGrade] || currentSelectedGrade,
+        student_grade_label: gradeText,
         student_school: currentSchool,
         postal_code: postalCode,
         prefecture: extractedPref,
@@ -3109,7 +3156,6 @@ if (!parentKanaLastName || !parentKanaFirstName) {
         address_line2: addressLine2,
         address_line3: addressLine3,
         address: fullAddressString,
-        payment_method: paymentMethod,
         exams: selectedExams.map(exam => ({
           id: exam.id,
           title: exam.title,

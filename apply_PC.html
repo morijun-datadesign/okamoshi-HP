@@ -3115,6 +3115,7 @@ if (!parentKanaLastName || !parentKanaFirstName) {
         prefecture: extractedPref,
         address: fullAddressString,
         exam_name: examNameStr,
+        payment_method: selectedPaymentMethod,
         selected_payment_method: selectedPaymentMethod,
         total_amount: String(totalAmount)
       };
@@ -3123,6 +3124,7 @@ if (!parentKanaLastName || !parentKanaFirstName) {
         // ========================================================
         // 【Stripe Checkout Session 連動パラメータ（Pre-fill & 最適化）】
         // ========================================================
+        payment_method: selectedPaymentMethod,                         // クレジットカード選択時: "card" / コンビニ決済選択時: "konbini"
         selected_payment_method: selectedPaymentMethod,               // "card" | "konbini"
         payment_method_types: paymentMethodTypes,                     // ["card"] | ["konbini"]
         customer_email: parentEmail,                                  // Stripe画面でメールアドレス事前入力
@@ -3139,7 +3141,7 @@ if (!parentKanaLastName || !parentKanaFirstName) {
         phone: parentTel,
         amount: totalAmount,
         exam_name: examNameStr,
-        payment_method: paymentMethod, // 'credit_card' | 'convenience_store'
+        raw_payment_method: paymentMethod, // 'credit_card' | 'convenience_store'
 
         // ========================================================
         // 【詳細パラメータ（顧客管理・DB保存用）】

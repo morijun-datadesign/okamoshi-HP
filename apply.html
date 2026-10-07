@@ -19,6 +19,7 @@
   <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://checkout.stripe.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
 
@@ -141,6 +142,26 @@
     html, body {
       max-width: 100%;
       overflow-x: hidden;
+    }
+    /* Linear / Twenty風 Stripe決済ローディングオーバーレイ */
+    @keyframes stripeProgressSlide {
+      0% { transform: translateX(-100%); width: 35%; }
+      50% { transform: translateX(80%); width: 55%; }
+      100% { transform: translateX(250%); width: 35%; }
+    }
+    .stripe-progress-indeterminate {
+      animation: stripeProgressSlide 1.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    }
+    .stripe-loading-card {
+      transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    #stripeLoadingOverlay:not(.opacity-0) .stripe-loading-card {
+      transform: scale(1) translateY(0);
+      opacity: 1;
+    }
+    #stripeLoadingOverlay.opacity-0 .stripe-loading-card {
+      transform: scale(0.96) translateY(8px);
+      opacity: 0;
     }
     /* フォームバリデーションエラー枠線スタイル */
     .apply-input-error {
@@ -1004,6 +1025,47 @@
       </form>
     </div>
   </div>
+
+    <!-- ======================================================== -->
+    <!-- STRIPE LOADING OVERLAY (Linear / Twenty Minimal UI)      -->
+    <!-- ======================================================== -->
+    <div id="stripeLoadingOverlay" class="hidden fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/40 backdrop-blur-md transition-opacity duration-200 opacity-0 pointer-events-none p-4" role="dialog" aria-modal="true" aria-labelledby="stripeLoadingTitle">
+      <div class="stripe-loading-card relative w-full max-w-[390px] bg-white rounded-2xl p-7 sm:p-8 shadow-2xl shadow-slate-900/20 border border-slate-100 text-center">
+        <!-- Spinner & Security Icon -->
+        <div class="relative w-14 h-14 mx-auto mb-4 flex items-center justify-center">
+          <!-- Subtle pulse halo -->
+          <span class="absolute inline-flex h-full w-full rounded-full bg-emerald-500/15 animate-ping opacity-60"></span>
+          <!-- Minimal subtle circle frame -->
+          <div class="relative w-12 h-12 rounded-full bg-slate-50 border border-slate-100/80 flex items-center justify-center shadow-xs">
+            <svg class="w-6 h-6 animate-spin text-emerald-700" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle class="opacity-15" cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2.5"></circle>
+              <path class="opacity-100" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" d="M12 3a9 9 0 0 1 9 9"></path>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Title -->
+        <h3 id="stripeLoadingTitle" class="text-base sm:text-lg font-bold text-slate-900 tracking-tight leading-snug">
+          決済画面へ安全に接続しています…
+        </h3>
+
+        <!-- Subtext -->
+        <p class="mt-2 text-xs sm:text-[13px] text-slate-500 font-medium leading-relaxed">
+          クレジットカード・コンビニ決済をご利用いただけます
+        </p>
+
+        <!-- Linear-style Indeterminate Progress Bar -->
+        <div class="mt-5 w-full bg-slate-100 rounded-full h-1 overflow-hidden relative" aria-hidden="true">
+          <div class="stripe-progress-indeterminate h-full bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-600 rounded-full"></div>
+        </div>
+
+        <!-- Security Reassurance -->
+        <div class="mt-4 pt-3.5 border-t border-slate-100 flex items-center justify-center gap-1.5 text-[11px] text-slate-400 font-medium">
+          <span class="material-symbols-outlined text-[15px] text-emerald-700">lock</span>
+          <span>Stripe公式の安全な決済システムへ遷移します</span>
+        </div>
+      </div>
+    </div>
 
     <!-- ========================================== -->
     <!-- SUCCESS / STRIPE MODAL                      -->
@@ -2724,6 +2786,32 @@
     // 6. フォームバリデーション & Stripe 決済接続ハンドラー
     // ========================================================
     let isSubmitting = false;
+    let _originalSubmitBtnHtml = '';
+
+    function showLoadingOverlay() {
+      const overlay = document.getElementById('stripeLoadingOverlay');
+      if (overlay) {
+        overlay.classList.remove('hidden');
+        void overlay.offsetWidth;
+        overlay.classList.remove('opacity-0', 'pointer-events-none');
+        overlay.classList.add('opacity-100', 'pointer-events-auto');
+      }
+      document.body.style.overflow = 'hidden';
+    }
+
+    function hideLoadingOverlay() {
+      const overlay = document.getElementById('stripeLoadingOverlay');
+      if (overlay) {
+        overlay.classList.add('opacity-0', 'pointer-events-none');
+        overlay.classList.remove('opacity-100', 'pointer-events-auto');
+        setTimeout(() => {
+          if (overlay.classList.contains('opacity-0')) {
+            overlay.classList.add('hidden');
+          }
+        }, 220);
+      }
+      document.body.style.overflow = '';
+    }
 
     async function handleApplySubmit(e) {
       if (e) {
@@ -2733,19 +2821,26 @@
 
       // 二重送信の物理的防止
       if (isSubmitting) return;
+      isSubmitting = true;
 
       const form = document.getElementById('applicationForm');
-      if (!form) return;
+      if (!form) {
+        isSubmitting = false;
+        return;
+      }
 
       const submitBtn = document.getElementById('submitApplyBtn');
-      const originalBtnHtml = submitBtn ? submitBtn.innerHTML : '';
+      if (submitBtn && !_originalSubmitBtnHtml) {
+        _originalSubmitBtnHtml = submitBtn.innerHTML;
+      }
 
       function resetSubmitBtn() {
         isSubmitting = false;
+        hideLoadingOverlay();
         if (submitBtn) {
           submitBtn.disabled = false;
           submitBtn.classList.remove('opacity-75', 'cursor-not-allowed', 'pointer-events-none');
-          submitBtn.innerHTML = originalBtnHtml || `
+          submitBtn.innerHTML = _originalSubmitBtnHtml || `
             <span>入力内容を確認し、お支払いへ進む</span>
             <span class="material-symbols-outlined text-xl">arrow_forward</span>
           `;
@@ -2762,9 +2857,10 @@
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
-            <span>決済画面へ移動中...</span>
+            <span>決済画面へ接続中...</span>
           `;
         }
+        showLoadingOverlay();
       }
 
       // 0. 学年の選択確認
@@ -3067,18 +3163,23 @@ if (!parentKanaLastName || !parentKanaFirstName) {
           : (Array.isArray(result) && result[0]?.checkout_url ? result[0].checkout_url : null);
 
         if (checkoutUrl) {
-          // Stripeの決済画面へリダイレクト
+          // Stripeの決済画面へリダイレクト（ローディングオーバーレイ維持でシームレスに遷移）
           window.location.href = checkoutUrl;
           return;
         } else {
-          alert("決済画面のURL取得に失敗しました。");
+          hideLoadingOverlay();
           resetSubmitBtn();
+          showFormError('決済画面のURL取得に失敗しました。恐れ入りますが、時間をおいて再度お試しいただくか、実行委員会までお問い合わせください。', submitBtn, document.getElementById('formErrorMessage'));
         }
 
       } catch (err) {
         console.error('[申し込み・決済セッション作成エラー]:', err);
-        alert("決済画面への通信中にエラーが発生しました。通信環境をお確かめの上再度お試しください。");
+        hideLoadingOverlay();
         resetSubmitBtn();
+        const errorMessage = (err && err.message && err.message.includes('HTTP'))
+          ? '決済サーバーとの通信に一時的な問題が発生しました。恐れ入りますが、少し時間をおいて再度お試しください。'
+          : '決済画面への接続中にエラーが発生しました。通信環境をお確かめの上、再度お試しください。';
+        showFormError(errorMessage, submitBtn, document.getElementById('formErrorMessage'));
       }
     }
 

@@ -4,25 +4,6 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ページが見つかりません | 岡山県統一模擬試験（おかもし）</title>
-  <script>
-    (function() {
-      var path = window.location.pathname || '';
-      // 1. ループ防止ガード：すでにルート、404、index.html、完了画面の場合はリダイレクトしない
-      if (path === '/' || path === '/index.html' || path === '/404.html' || path === '/404' || path.startsWith('/apply/success')) {
-        return;
-      }
-      // 2. /lp/lp/... など lp の連鎖、または /lp へのアクセスを検知した場合はトップへ安全に転送
-      if (path.includes('/lp') || path.startsWith('/lp')) {
-        window.location.replace('/index.html');
-        return;
-      }
-      // 3. /apply へのアクセスは /apply.html へ安全に転送
-      if (path === '/apply' || path === '/apply/') {
-        window.location.replace('/apply.html' + window.location.search + window.location.hash);
-        return;
-      }
-    })();
-  </script>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">

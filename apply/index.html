@@ -1,19 +1,3369 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" class="scroll-smooth">
 <head>
   <meta charset="utf-8">
-  <title>模試お申込みフォームへ移動中 | 岡山県統一模擬試験（おかもし）</title>
-  <script>
-    (function() {
-      var path = window.location.pathname || '';
-      if (path === '/apply.html') return;
-      var s = window.location.search || '';
-      var h = window.location.hash || '';
-      window.location.replace('/apply.html' + s + h);
-    })();
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>模試Webお申込みフォーム | 岡山県統一模擬試験（おかもし）</title>
+  <meta name="description" content="岡山県統一模擬試験（おかもし）の個人受験Webお申込みフォームです。中3・中2・中1・小6対象。希望模試、会場受験（岡山・倉敷・津山）または自宅受験を選択して簡単にお申し込みいただけます。">
+  <link rel="canonical" href="https://okamoshi.pages.dev/apply.html">
+  
+  <!-- OGP -->
+  <meta property="og:title" content="模試Webお申込みフォーム | 岡山県統一模擬試験（おかもし）">
+  <meta property="og:description" content="岡山県統一模擬試験（おかもし）の個人受験Webお申込みフォームです。中3・中2・中1・小6対象。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://okamoshi.pages.dev/apply.html">
+  <meta property="og:image" content="https://okamoshi.pages.dev/og-image.jpg">
+  <meta property="og:site_name" content="岡山県統一模擬試験（おかもし）">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://checkout.stripe.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "tertiary-container": "#6c4c00",
+            "outline-variant": "#E2E8F0",
+            "error": "#ba1a1a",
+            "on-error": "#ffffff",
+            "on-tertiary": "#ffffff",
+            "outline": "#717973",
+            "surface-dim": "#dcd9d9",
+            "on-surface": "#1b1c1c",
+            "on-secondary-fixed-variant": "#822801",
+            "surface-tint": "#3a6752",
+            "surface-container-high": "#E2E8F0",
+            "surface-container-low": "#F1F5F9",
+            "background": "#f8fafc",
+            "surface-container": "#E2E8F0",
+            "on-tertiary-container": "#f1bd5a",
+            "surface-variant": "#e4e2e1",
+            "on-primary-fixed-variant": "#224f3c",
+            "on-tertiary-fixed-variant": "#5e4200",
+            "tertiary": "#4f3600",
+            "surface-bright": "#FFFFFF",
+            "inverse-primary": "#a1d1b8",
+            "tertiary-fixed-dim": "#f2be5b",
+            "on-secondary": "#ffffff",
+            "on-surface-variant": "#414944",
+            "on-primary-fixed": "#002114",
+            "on-secondary-fixed": "#390c00",
+            "surface-container-lowest": "#ffffff",
+            "on-error-container": "#93000a",
+            "on-background": "#1b1c1c",
+            "error-container": "#ffdad6",
+            "primary-container": "#2d5a46",
+            "secondary-fixed-dim": "#ffb59c",
+            "primary-fixed-dim": "#a1d1b8",
+            "primary-fixed": "#bceed3",
+            "on-secondary-container": "#6f2000",
+            "surface": "#f8fafc",
+            "primary": "#134230",
+            "on-tertiary-fixed": "#271900",
+            "inverse-surface": "#303030",
+            "tertiary-fixed": "#ffdea7",
+            "secondary-container": "#fe8357",
+            "inverse-on-surface": "#f3f0ef",
+            "secondary": "#a23e18",
+            "on-primary": "#ffffff",
+            "secondary-fixed": "#ffdbcf",
+            "surface-container-highest": "#CBD5E1",
+            "on-primary-container": "#9fcfb6"
+          },
+          borderRadius: {
+          'none': '0px',
+          'sm': '4px',
+          'DEFAULT': '6px',
+          'md': '6px',
+          'lg': '8px',
+          'xl': '8px',
+          '2xl': '8px',
+          '3xl': '8px',
+          'full': '9999px',
+        },
+          spacing: {
+            "gutter-desktop": "1.5rem",
+            "space-3xl": "4.5rem",
+            "space-md": "1rem",
+            "container-max": "75rem",
+            "space-lg": "1.5rem",
+            "space-xs": "0.5rem",
+            "gutter-mobile": "1rem",
+            "space-4xl": "6rem",
+            "space-2xs": "0.25rem",
+            "space-xl": "2rem",
+            "space-2xl": "3rem",
+            "space-sm": "0.75rem"
+          },
+          fontFamily: {
+            "body-md": ["Noto Sans JP", "sans-serif"],
+            "headline-xl": ["Plus Jakarta Sans", "Noto Sans JP", "sans-serif"],
+            "headline-sm": ["Plus Jakarta Sans", "Noto Sans JP", "sans-serif"],
+            "body-lg": ["Noto Sans JP", "sans-serif"],
+            "headline-md": ["Plus Jakarta Sans", "Noto Sans JP", "sans-serif"],
+            "headline-lg-mobile": ["Plus Jakarta Sans", "Noto Sans JP", "sans-serif"],
+            "headline-xl-mobile": ["Plus Jakarta Sans", "Noto Sans JP", "sans-serif"],
+            "label-sm": ["Plus Jakarta Sans", "Noto Sans JP", "sans-serif"],
+            "label-md": ["Plus Jakarta Sans", "Noto Sans JP", "sans-serif"],
+            "body-sm": ["Noto Sans JP", "sans-serif"],
+            "headline-lg": ["Plus Jakarta Sans", "Noto Sans JP", "sans-serif"],
+            "label-lg": ["Plus Jakarta Sans", "Noto Sans JP", "sans-serif"]
+          }
+        }
+      }
+    };
   </script>
+
+  <!-- JSON-LD 構造化データ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "模試Webお申込みフォーム | 岡山県統一模擬試験",
+    "description": "岡山県統一模擬試験の個人受験Webお申込みフォームです。",
+    "url": "https://okamoshi.pages.dev/apply.html",
+    "publisher": {
+      "@type": "Organization",
+      "name": "岡山県統一模擬試験実行委員会",
+      "url": "https://okamoshi.pages.dev/"
+    }
+  }
+  </script>
+  <style>
+    html, body {
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+    /* Linear / Twenty風 Stripe決済ローディングオーバーレイ */
+    @keyframes stripeProgressSlide {
+      0% { transform: translateX(-100%); width: 35%; }
+      50% { transform: translateX(80%); width: 55%; }
+      100% { transform: translateX(250%); width: 35%; }
+    }
+    .stripe-progress-indeterminate {
+      animation: stripeProgressSlide 1.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    }
+    .stripe-loading-card {
+      transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    #stripeLoadingOverlay:not(.opacity-0) .stripe-loading-card {
+      transform: scale(1) translateY(0);
+      opacity: 1;
+    }
+    #stripeLoadingOverlay.opacity-0 .stripe-loading-card {
+      transform: scale(0.96) translateY(8px);
+      opacity: 0;
+    }
+    /* フォームバリデーションエラー枠線スタイル */
+    .apply-input-error {
+      border-color: #ef4444 !important;
+      background-color: #fef2f2 !important;
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2) !important;
+      outline: none !important;
+    }
+    /* iOS Safariで入力フィールド（input, select, textarea）タップ時の自動ズームを完全防止（16px以上確保） */
+    input[type="text"],
+    input[type="tel"],
+    input[type="email"],
+    input[type="number"],
+    input[type="password"],
+    input[type="search"],
+    input[type="url"],
+    select,
+    textarea {
+      font-size: 16px !important;
+    }
+    /* 全セクション大見出し・中見出しのテーマカラー濃いグリーン（最優先） */
+    .section-title,
+    .section-heading {
+      color: #064e3b !important;
+    }
+    body {
+      font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+      color: #1e293b;
+      background-color: #F1F5F9 !important;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    #nav-contact-container { position: relative; }
+    #nav-contact-container:hover #nav-contact-dropdown,
+    #nav-contact-container:focus-within #nav-contact-dropdown,
+    #nav-contact-container.is-open #nav-contact-dropdown {
+      display: block !important;
+    }
+    #nav-contact-container:hover #nav-contact-chevron,
+    #nav-contact-container.is-open #nav-contact-chevron {
+      transform: rotate(180deg) !important;
+    }
+    #nav-contact-dropdown::before {
+      content: "" !important;
+      position: absolute !important;
+      top: -14px !important;
+      left: 0 !important;
+      right: 0 !important;
+      height: 16px !important;
+      display: block !important;
+      background: transparent !important;
+    }
+  </style>
 </head>
-<body>
-  <p>模試お申込みフォームへ移動しています... <a href="/apply.html">自動的に移動しない場合はこちらをクリックしてください</a></p>
+<body class="bg-[#F1F5F9] font-body-md text-body-md text-on-surface antialiased min-h-screen flex flex-col justify-between selection:bg-primary/20 selection:text-primary pt-16 sm:pt-[4.5rem]">
+
+  <!-- ========================================== -->
+  <!-- HEADER (中3 PCページ index.html と完全同期) -->
+  <!-- ========================================== -->
+    <header class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+    <div class="h-16 sm:h-[4.5rem] max-w-[75rem] mx-auto px-4 sm:px-6 flex items-center justify-between gap-3 lg:gap-4 xl:gap-8">
+      <a href="/index.html" class="flex items-center gap-2.5 sm:gap-3 min-w-0 shrink-0">
+        <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-primary flex items-center justify-center text-on-primary font-headline-md font-bold shrink-0">
+          <span class="material-symbols-outlined text-xl sm:text-headline-sm">school</span>
+        </div>
+        <div class="flex items-center gap-1.5 sm:gap-2 min-w-0">
+          <span class="font-headline-sm text-base sm:text-lg xl:text-headline-sm text-primary tracking-tight font-bold truncate">岡山県統一模擬試験</span>
+          <span class="font-label-sm text-[11px] sm:text-xs px-2 py-0.5 bg-primary-fixed text-on-primary-fixed-variant rounded-full font-bold shrink-0">おかもし</span>
+        </div>
+      </a>
+      <nav class="hidden lg:flex items-center gap-5 xl:gap-8 text-base" data-active-classes="text-primary font-bold border-b-2 border-primary">
+        <div class="relative inline-block text-left" id="nav-next-exam-container">
+          <button type="button" id="nav-next-exam-btn" onclick="toggleNextExamDropdown(event)" aria-expanded="false" aria-haspopup="true" class="transition-colors py-1 text-primary font-bold border-b-2 border-primary whitespace-nowrap inline-flex items-center gap-1 cursor-pointer focus:outline-none text-base">
+            <span class="font-semibold">模試のご案内</span>
+            <span id="nav-next-exam-chevron" class="material-symbols-outlined text-lg transition-transform duration-200 transform">expand_more</span>
+          </button>
+          <div id="nav-next-exam-dropdown" class="hidden absolute left-0 top-full mt-2 w-52 rounded-lg bg-white border border-slate-100 shadow-lg p-2 z-50 transition-all duration-200">
+            <div class="space-y-1 text-sm font-bold">
+              <a href="/index.html#features" class="flex items-center justify-between px-3.5 py-2.5 rounded-lg text-slate-700 hover:bg-slate-50 hover:text-primary transition-colors cursor-pointer">
+                <span class="whitespace-nowrap">初めての方へ</span>
+                <span class="material-symbols-outlined text-base text-slate-400">chevron_right</span>
+              </a>
+              <a href="/index.html#schedule-entry" class="flex items-center justify-between px-3.5 py-2.5 rounded-lg text-slate-700 hover:bg-slate-50 hover:text-primary transition-colors cursor-pointer">
+                <span class="whitespace-nowrap">模試のお申し込み</span>
+                <span class="material-symbols-outlined text-base text-slate-400">chevron_right</span>
+              </a>
+            </div>
+          </div>
+        </div>
+        <a class="text-base font-semibold text-on-surface-variant hover:text-primary transition-colors py-1 whitespace-nowrap" data-path="news" href="/news.html">お知らせ・受験情報</a>
+        <a class="text-base font-semibold text-on-surface-variant hover:text-primary transition-colors py-1 whitespace-nowrap" data-path="partner-schools" href="/schools_PC.html">実施塾一覧</a>
+      </nav>
+      <div class="flex items-center shrink-0">
+        <div class="relative group inline-block text-left hidden lg:block mr-4 xl:mr-6 pl-3 xl:pl-5 border-l border-outline-variant/40" id="nav-contact-container">
+          <button type="button" id="nav-contact-btn" onclick="toggleContactDropdown(event)" aria-expanded="false" aria-haspopup="true" class="transition-colors py-1 text-on-surface-variant hover:text-primary font-semibold text-base whitespace-nowrap inline-flex items-center gap-1 cursor-pointer focus:outline-none">
+            <span>お問い合わせ</span>
+            <span id="nav-contact-chevron" class="material-symbols-outlined text-lg transition-transform duration-200 transform group-hover:rotate-180">expand_more</span>
+          </button>
+          <div id="nav-contact-dropdown" class="hidden group-hover:block absolute right-0 top-full mt-2 w-48 rounded-lg bg-surface-container-lowest border border-outline-variant/30 shadow-xl p-2 z-50 transition-all duration-200 before:content-[''] before:absolute before:-top-2 before:left-0 before:w-full before:h-2">
+            <div class="space-y-1">
+              <a href="/contact/organization/index.html" data-path="contact-partner" onclick="closeContactDropdown()" class="block px-3 py-2.5 rounded-lg hover:bg-surface-container-low transition-colors text-left group/item cursor-pointer">
+                <span class="text-base font-bold text-on-surface group-hover/item:text-primary transition-colors">塾・学校関係者様</span>
+              </a>
+              <a href="/contact/individual/index.html" data-path="contact" onclick="closeContactDropdown()" class="block px-3 py-2.5 rounded-lg hover:bg-surface-container-low transition-colors text-left group/item cursor-pointer">
+                <span class="text-base font-bold text-on-surface group-hover/item:text-primary transition-colors">個人申込の方</span>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="hidden lg:block">
+          <a class="inline-flex items-center justify-center px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-orange-500 hover:bg-orange-600 text-white font-bold text-sm sm:text-[15px] shadow-md shadow-orange-500/25 hover:shadow-lg hover:shadow-orange-500/35 hover:-translate-y-0.5 transition-all whitespace-nowrap tracking-wide" data-path="apply" href="/apply">
+            <span class="material-symbols-outlined mr-1 sm:mr-1.5 text-base sm:text-lg">edit_document</span>
+            <span class="hidden xs:inline sm:inline">お申し込みはこちら</span>
+            <span class="inline xs:hidden sm:hidden">お申込み</span>
+          </a>
+        </div>
+        <!-- Hamburger Button (Mobile Only) -->
+        <button type="button" id="mobile-menu-open-btn" onclick="openMobileMenu()" aria-label="メニューを開く" aria-expanded="false" class="lg:hidden flex items-center justify-center w-10 h-10 -mr-1 rounded-lg text-on-surface hover:bg-surface-container-high active:bg-surface-container-highest transition-colors cursor-pointer focus:outline-none">
+          <span class="material-symbols-outlined text-[28px] text-on-surface">menu</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer Backdrop -->
+    <div id="mobile-menu-backdrop" onclick="closeMobileMenu()" class="fixed inset-0 bg-black/50 backdrop-blur-xs z-[998] transition-opacity duration-300 opacity-0 pointer-events-none lg:hidden" aria-hidden="true"></div>
+
+    <!-- Mobile Drawer Panel -->
+    <div id="mobile-menu-drawer" class="fixed top-0 right-0 bottom-0 w-[84vw] max-w-[340px] bg-surface z-[999] shadow-2xl flex flex-col justify-between transition-transform duration-300 transform translate-x-full ease-in-out lg:hidden" role="dialog" aria-modal="true" aria-label="モバイルメニュー">
+      <!-- Drawer Header -->
+      <div class="h-10 px-3 flex items-center justify-end shrink-0 bg-surface">
+        <button type="button" onclick="closeMobileMenu()" aria-label="メニューを閉じる" class="w-9 h-9 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors cursor-pointer">
+          <span class="material-symbols-outlined text-2xl">close</span>
+        </button>
+      </div>
+
+      <!-- Drawer Navigation Links (Scrollable) -->
+      <div id="mobile-menu-scroll" class="flex-1 min-h-0 overflow-y-auto overscroll-contain px-4 pt-1 pb-32">
+        <!-- 【グループ1】模試のご案内 -->
+        <div class="space-y-2 pb-4 mb-4 border-b border-surface-container/70">
+          <div class="px-1 text-sm font-bold text-on-surface-variant tracking-wider">模試のご案内</div>
+          <div class="space-y-2">
+            <!-- 初めての方へ -->
+            <a href="/index.html#features" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-lg border border-surface-container bg-surface-container-lowest hover:bg-surface-container-low font-bold text-base text-on-surface shadow-xs transition-colors">
+              <span>初めての方へ</span>
+              <span class="material-symbols-outlined text-base text-on-surface-variant">arrow_forward</span>
+            </a>
+
+            <!-- 模試のお申し込み -->
+            <a href="/index.html#schedule-entry" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-lg border border-surface-container bg-surface-container-lowest hover:bg-surface-container-low font-bold text-base text-on-surface shadow-xs transition-colors">
+              <span>模試のお申し込み</span>
+              <span class="material-symbols-outlined text-base text-on-surface-variant">arrow_forward</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- 【グループ2】お知らせ・実施塾一覧（独立メニュー） -->
+        <div class="space-y-2 mb-6">
+          <!-- お知らせ・受験情報 -->
+          <a href="/news.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-lg border border-surface-container bg-surface-container-lowest hover:bg-surface-container-low font-bold text-base text-on-surface shadow-xs transition-colors">
+            <span>お知らせ・受験情報</span>
+            <span class="material-symbols-outlined text-base text-on-surface-variant">arrow_forward</span>
+          </a>
+
+          <!-- 実施塾一覧 -->
+          <a href="/schools_PC.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-lg border border-surface-container bg-surface-container-lowest hover:bg-surface-container-low font-bold text-base text-on-surface shadow-xs transition-colors">
+            <span>実施塾一覧</span>
+            <span class="material-symbols-outlined text-base text-on-surface-variant">arrow_forward</span>
+          </a>
+        </div>
+
+        <!-- 【グループ3】お問い合わせ -->
+        <div class="space-y-2">
+          <div class="px-1 text-sm font-bold text-on-surface-variant tracking-wider">お問い合わせ</div>
+          <div class="space-y-2">
+            <!-- 塾・学校関係者様 -->
+            <a href="/contact/organization/index.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-lg border border-surface-container bg-surface-container-lowest hover:bg-surface-container-low font-bold text-base text-on-surface shadow-xs transition-colors">
+              <span>塾・学校関係者様</span>
+              <span class="material-symbols-outlined text-base text-on-surface-variant">arrow_forward</span>
+            </a>
+
+            <!-- 個人申込の方 -->
+            <a href="/contact/individual/index.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-lg border border-surface-container bg-surface-container-lowest hover:bg-surface-container-low font-bold text-base text-on-surface shadow-xs transition-colors">
+              <span>個人申込の方</span>
+              <span class="material-symbols-outlined text-base text-on-surface-variant">arrow_forward</span>
+            </a>
+          </div>
+        </div>
+      </div><!-- Drawer Footer (Prominent CV Button) -->
+      <div class="p-5 border-t border-surface-container bg-surface space-y-2 shrink-0">
+        <a href="/apply" onclick="closeMobileMenu()" class="w-full py-3.5 px-5 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-bold text-base shadow-md shadow-orange-500/25 hover:shadow-lg hover:shadow-orange-500/35 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+          <span class="material-symbols-outlined text-xl">edit_document</span>
+          <span>お申し込みはこちら</span>
+        </a>
+        <p class="text-[11px] text-center text-on-surface-variant">ネットでかんたん24時間受付中</p>
+      </div>
+    </div>
+
+    <!-- Mobile Menu Script -->
+    <script>
+      function openMobileMenu() {
+        var drawer = document.getElementById("mobile-menu-drawer");
+        var backdrop = document.getElementById("mobile-menu-backdrop");
+        var btn = document.getElementById("mobile-menu-open-btn");
+        if (drawer && backdrop) {
+          drawer.classList.remove("translate-x-full");
+          drawer.classList.add("translate-x-0");
+          backdrop.classList.remove("opacity-0", "pointer-events-none");
+          backdrop.classList.add("opacity-100", "pointer-events-auto");
+          document.body.style.overflow = "hidden";
+          if (btn) btn.setAttribute("aria-expanded", "true");
+        }
+      }
+
+      function closeMobileMenu() {
+        var drawer = document.getElementById("mobile-menu-drawer");
+        var backdrop = document.getElementById("mobile-menu-backdrop");
+        var btn = document.getElementById("mobile-menu-open-btn");
+        if (drawer && backdrop) {
+          drawer.classList.remove("translate-x-0");
+          drawer.classList.add("translate-x-full");
+          backdrop.classList.remove("opacity-100", "pointer-events-auto");
+          backdrop.classList.add("opacity-0", "pointer-events-none");
+          document.body.style.overflow = "";
+          if (btn) btn.setAttribute("aria-expanded", "false");
+        }
+      }
+
+      function toggleMobileExamAccordion() {
+        var menu = document.getElementById("mobile-exam-menu");
+        var chevron = document.getElementById("mobile-exam-chevron");
+        var btn = document.getElementById("mobile-exam-accordion-btn");
+        if (!menu) return;
+        var isOpen = !menu.classList.contains("hidden");
+        if (isOpen) {
+          menu.classList.add("hidden");
+          if (chevron) chevron.style.transform = "rotate(0deg)";
+          if (btn) btn.setAttribute("aria-expanded", "false");
+        } else {
+          menu.classList.remove("hidden");
+          if (chevron) chevron.style.transform = "rotate(180deg)";
+          if (btn) btn.setAttribute("aria-expanded", "true");
+        }
+      }
+
+      // モバイルメニュー内のアコーディオン展開時、展開部分がドロワー下部の固定CTAに隠れないよう自動スクロール
+      function revealMobileMenuSection(target) {
+        if (!target) return;
+        var scroller = document.getElementById("mobile-menu-scroll") || target.closest(".overflow-y-auto");
+        if (!scroller) return;
+        requestAnimationFrame(function () {
+          var sRect = scroller.getBoundingClientRect();
+          var tRect = target.getBoundingClientRect();
+          var visibleBottom = sRect.bottom;
+          // ドロワー下部の固定CTA（お申し込みはこちら）がスクロール領域に重なる場合はその上端を表示下限とする
+          var footer = scroller.nextElementSibling;
+          if (footer) visibleBottom = Math.min(visibleBottom, footer.getBoundingClientRect().top);
+          var delta = tRect.bottom - (visibleBottom - 16);
+          if (delta <= 0) return;
+          // セクション見出しが上に見切れない範囲でスクロール
+          var maxDelta = tRect.top - sRect.top - 8;
+          if (maxDelta <= 0) return;
+          scroller.scrollTo({ top: scroller.scrollTop + Math.min(delta, maxDelta), behavior: "smooth" });
+        });
+      }
+
+      function toggleMobileContactAccordion() {
+        var menu = document.getElementById("mobile-contact-menu");
+        var chevron = document.getElementById("mobile-contact-chevron");
+        var btn = document.getElementById("mobile-contact-accordion-btn");
+        if (!menu) return;
+        var isOpen = !menu.classList.contains("hidden");
+        if (isOpen) {
+          menu.classList.add("hidden");
+          if (chevron) chevron.style.transform = "rotate(0deg)";
+          if (btn) btn.setAttribute("aria-expanded", "false");
+        } else {
+          menu.classList.remove("hidden");
+          if (chevron) chevron.style.transform = "rotate(180deg)";
+          if (btn) btn.setAttribute("aria-expanded", "true");
+          revealMobileMenuSection(menu.parentElement);
+        }
+      }
+
+      function selectMobileNavExamTab(tabKey) {
+        closeMobileMenu();
+        var targetElem = document.getElementById("next-exam");
+        if (typeof switchExamTab === "function" && targetElem) {
+          var effectiveKey = tabKey;
+          if ((tabKey === "chu1" || tabKey === "chu2") && !document.getElementById("tab-btn-" + tabKey) && document.getElementById("tab-btn-chu12")) {
+            effectiveKey = "chu12";
+          }
+          switchExamTab(effectiveKey);
+          try {
+            var newUrl = window.location.pathname + "?grade=" + tabKey + "#next-exam";
+            history.replaceState(null, "", newUrl);
+          } catch (e) {}
+          setTimeout(function() {
+            targetElem.scrollIntoView({ behavior: "smooth" });
+          }, 100);
+          return;
+        }
+        window.location.href = "/index.html?grade=" + tabKey + "#next-exam";
+      }
+
+      function updateStudentVoicesVisibility(tabKey) {
+        var studentVoices = document.getElementById("student-voices");
+        if (studentVoices) {
+          if (tabKey === "sho6") {
+            studentVoices.classList.add("hidden");
+          } else {
+            studentVoices.classList.remove("hidden");
+          }
+        }
+      }
+      window.updateStudentVoicesVisibility = updateStudentVoicesVisibility;
+
+      function initExamTabFromUrl() {
+        try {
+          var params = new URLSearchParams(window.location.search);
+          var grade = params.get("grade");
+          if (!grade && window.location.hash) {
+            var hashMatch = window.location.hash.match(/(?:grade[=-]|#)(chu[123]|sho6|chu12)/i);
+            if (hashMatch) {
+              grade = hashMatch[1].toLowerCase();
+            }
+          }
+          if (grade && ["chu3", "chu2", "chu1", "sho6", "chu12"].indexOf(grade) !== -1) {
+            var targetElem = document.getElementById("next-exam");
+            if (typeof switchExamTab === "function" && targetElem) {
+              var effectiveKey = grade;
+              if ((grade === "chu1" || grade === "chu2") && !document.getElementById("tab-btn-" + grade) && document.getElementById("tab-btn-chu12")) {
+                effectiveKey = "chu12";
+              }
+              switchExamTab(effectiveKey);
+              if (window.location.hash === "#next-exam") {
+                setTimeout(function() {
+                  targetElem.scrollIntoView({ behavior: "smooth" });
+                }, 150);
+              }
+            }
+          } else {
+            var activeBtn = document.querySelector('.tab-btn[aria-selected="true"]');
+            if (activeBtn && activeBtn.id) {
+              var keyMatch = activeBtn.id.replace('tab-btn-', '');
+              if (typeof window.updateStudentVoicesVisibility === 'function') {
+                window.updateStudentVoicesVisibility(keyMatch);
+              }
+            }
+          }
+        } catch (e) {}
+      }
+
+      window.addEventListener("DOMContentLoaded", initExamTabFromUrl);
+      window.addEventListener("load", initExamTabFromUrl);
+
+      window.addEventListener("resize", function() {
+        if (window.innerWidth >= 1024) {
+          closeMobileMenu();
+        }
+      });
+
+      document.addEventListener("keydown", function(e) {
+        if (e.key === "Escape") {
+          closeMobileMenu();
+        }
+      });
+    </script>
+
+  <!-- ========================================== -->
+  <!-- MAIN APPLICATION FORM CONTENT              -->
+  <!-- ========================================== -->
+  <main class="flex-1 w-full flex flex-col items-center relative">
+    <!-- カスタムトースト通知（画面上部） -->
+    <div id="formToastNotification" class="fixed top-5 left-1/2 -translate-x-1/2 z-[9999] max-w-md w-[92%] sm:w-auto bg-white/95 backdrop-blur-md border border-red-200 text-slate-800 shadow-xl rounded-xl p-3 sm:p-3.5 flex items-center gap-2.5 sm:gap-3 transition-all duration-300 opacity-0 pointer-events-none -translate-y-4" role="alert" aria-live="assertive">
+      <span class="material-symbols-outlined text-red-500 text-xl sm:text-2xl shrink-0">error</span>
+      <p id="formToastText" class="text-xs sm:text-sm font-bold flex-1 text-slate-800 leading-snug"></p>
+      <button type="button" onclick="hideFormToast()" class="p-1 text-slate-400 hover:text-slate-600 rounded-md transition-colors" aria-label="閉じる">
+        <span class="material-symbols-outlined text-lg">close</span>
+      </button>
+    </div>
+    <div class="w-full max-w-7xl bg-white flex-1 min-h-full px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-12 sm:pb-16 flex flex-col justify-between">
+    
+    <!-- Subheader & Breadcrumbs -->
+    <div class="w-full px-0 pb-4 mb-4 sm:pb-6 sm:mb-6 border-b border-gray-200/60 sm:border-slate-200/80">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+        <div class="flex flex-col gap-1">
+          <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-primary">お申込みフォーム</h1>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Main Application Form Container -->
+    <div class="max-w-4xl mx-auto w-full px-0 pb-12 sm:pb-0">
+      <form class="flex flex-col gap-8" id="applicationForm" action="javascript:void(0);" novalidate onsubmit="event.preventDefault(); handleApplySubmit(event); return false;">
+        
+        <div class="flex flex-col gap-6">
+
+          <!-- ========================================== -->
+          <!-- SECTION 1: 希望模試・受験形式の選択         -->
+          <!-- ========================================== -->
+          <div class="bg-transparent sm:bg-surface-container-lowest rounded-none sm:rounded-lg p-0 sm:p-7 border-0 sm:border border-outline-variant/30 shadow-none sm:shadow-sm flex flex-col gap-5 sm:gap-6 pb-8 sm:pb-7 border-b sm:border-b-0 border-slate-200/80">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2 pb-3 border-b border-surface-container">
+              <div class="flex items-center gap-2">
+                <span class="w-7 h-7 rounded-md bg-primary-container text-on-primary flex items-center justify-center font-label-md font-bold text-[13px] shrink-0">1</span>
+                <h2 class="font-headline-md text-base sm:text-lg md:text-[20px] font-bold text-primary whitespace-nowrap">模試・受験形式の選択</h2>
+              </div>
+              <span class="font-label-sm text-[11px] sm:text-[12px] text-on-surface-variant pl-9 sm:pl-0">複数模試の一括申込みが可能です</span>
+            </div>
+
+            <div class="flex flex-col gap-5">
+              
+              <!-- STEP 1-1: 学年選択 -->
+              <div class="flex flex-col gap-2.5">
+                <div class="flex items-center justify-between">
+                  <label class="font-label-md text-sm sm:text-base text-on-surface font-bold">学年をお選びください</label>
+                  <span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span>
+                </div>
+
+                <div class="grid grid-cols-4 gap-1.5 sm:gap-2" id="gradeButtonGroup" role="radiogroup" aria-label="学年選択">
+                  <button type="button" onclick="selectFormGrade('sho6')" id="grade-btn-sho6" class="grade-select-btn flex items-center justify-center py-2.5 sm:py-3 px-1 sm:px-2 rounded-lg bg-surface-container-low border border-outline-variant/30 cursor-pointer hover:bg-surface-container transition-all text-center">
+                    <span class="font-bold text-sm sm:text-base text-on-surface leading-none">小6</span>
+                  </button>
+                  <button type="button" onclick="selectFormGrade('chu1')" id="grade-btn-chu1" class="grade-select-btn flex items-center justify-center py-2.5 sm:py-3 px-1 sm:px-2 rounded-lg bg-surface-container-low border border-outline-variant/30 cursor-pointer hover:bg-surface-container transition-all text-center">
+                    <span class="font-bold text-sm sm:text-base text-on-surface leading-none">中1</span>
+                  </button>
+                  <button type="button" onclick="selectFormGrade('chu2')" id="grade-btn-chu2" class="grade-select-btn flex items-center justify-center py-2.5 sm:py-3 px-1 sm:px-2 rounded-lg bg-surface-container-low border border-outline-variant/30 cursor-pointer hover:bg-surface-container transition-all text-center">
+                    <span class="font-bold text-sm sm:text-base text-on-surface leading-none">中2</span>
+                  </button>
+                  <button type="button" onclick="selectFormGrade('chu3')" id="grade-btn-chu3" class="grade-select-btn flex items-center justify-center py-2.5 sm:py-3 px-1 sm:px-2 rounded-lg bg-surface-container-low border border-outline-variant/30 cursor-pointer hover:bg-surface-container transition-all text-center">
+                    <span class="font-bold text-sm sm:text-base text-on-surface leading-none">中3</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- STEP 1-2: 対象模試の選択（動的生成エリア） -->
+              <div class="flex flex-col gap-3 pt-3 border-t border-surface-container/60">
+                <div class="flex items-center justify-between">
+                  <label class="font-label-md text-sm sm:text-base text-on-surface font-bold">お申込み模試と受験会場の選択</label>
+                  <span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span>
+                </div>
+                <p class="text-xs text-on-surface-variant">※締切日時を過ぎた模試は自動的に受付終了となり表示されません。</p>
+
+                <!-- 動的レンダリング先コンテナ -->
+                <div class="flex flex-col gap-3.5" id="examOptionGroup">
+                  <!-- スクリプトによって動的に描画されます -->
+                </div>
+                <!-- 模試未選択エラー表示（インライン） -->
+                <div id="examSelectionInlineError" class="hidden text-xs sm:text-[13px] font-bold text-red-600 flex items-center gap-1.5 mt-1 p-3 rounded-lg bg-red-50 border border-red-200 transition-all">
+                  <span class="material-symbols-outlined text-base sm:text-lg text-red-600 shrink-0">error</span>
+                  <span>※ 受験を希望する模試を1つ以上選択してください。</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- ========================================== -->
+          <!-- SECTION 2: 受験生情報                       -->
+          <!-- ========================================== -->
+          <div class="bg-transparent sm:bg-surface-container-lowest rounded-none sm:rounded-lg p-0 sm:p-7 border-0 sm:border border-outline-variant/30 shadow-none sm:shadow-sm flex flex-col gap-5 sm:gap-6 pb-8 sm:pb-7 border-b sm:border-b-0 border-slate-200/80">
+            <div class="flex items-center gap-2 pb-3 border-b border-surface-container">
+              <span class="w-7 h-7 rounded-md bg-primary-container text-on-primary flex items-center justify-center font-label-md font-bold text-[13px]">2</span>
+              <h2 class="font-headline-md text-lg sm:text-[20px] font-bold text-primary">受験生情報</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+              
+              <!-- 生徒氏名 -->
+              <div class="flex flex-col gap-1.5 md:col-span-2">
+                <div class="flex items-center justify-between">
+                  <span class="font-label-md text-sm font-bold text-on-surface">生徒氏名（漢字）</span>
+                  <span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="studentLastName" name="student_last_name" placeholder="姓（例: 岡山）" required type="text">
+                  </div>
+                  <div>
+                    <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="studentFirstName" name="student_first_name" placeholder="名（例: 太郎）" required type="text">
+                  </div>
+                </div>
+                <p class="text-[11px] sm:text-xs text-on-surface-variant leading-relaxed">
+                  ※ 郵便物のお届けおよびシステム処理の都合上、旧字体・外字（髙、﨑など）は常用漢字（高、崎など）にて登録・印字させていただく場合がございます。
+                </p>
+              </div>
+
+              <!-- 生徒氏名フリガナ -->
+              <div class="flex flex-col gap-1.5 md:col-span-2">
+                <div class="flex items-center justify-between">
+                  <span class="font-label-md text-sm font-bold text-on-surface">生徒氏名（フリガナ）</span>
+                  <span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="studentKanaLastName" name="student_kana_last_name" placeholder="セイ（例: オカヤマ）" required type="text">
+                  </div>
+                  <div>
+                    <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="studentKanaFirstName" name="student_kana_first_name" placeholder="メイ（例: タロウ）" required type="text">
+                  </div>
+                </div>
+              </div>
+
+              <!-- 性別 -->
+              <div class="flex flex-col gap-1.5 md:col-span-2">
+                <div class="flex items-center justify-between">
+                  <span class="font-label-md text-sm font-bold text-on-surface">性別</span>
+                  <span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span>
+                </div>
+                <div class="grid grid-cols-3 gap-3">
+                  <label class="flex items-center justify-center gap-2 h-11 rounded-lg bg-surface-container-low border border-outline-variant/30 text-on-surface cursor-pointer has-[:checked]:bg-primary-fixed/40 has-[:checked]:border-primary-container transition-colors">
+                    <input class="w-4 h-4 text-primary-container accent-primary-container" name="gender" type="radio" value="male" required>
+                    <span class="font-label-md text-sm">男子</span>
+                  </label>
+                  <label class="flex items-center justify-center gap-2 h-11 rounded-lg bg-surface-container-low border border-outline-variant/30 text-on-surface cursor-pointer has-[:checked]:bg-primary-fixed/40 has-[:checked]:border-primary-container transition-colors">
+                    <input class="w-4 h-4 text-primary-container accent-primary-container" name="gender" type="radio" value="female" required>
+                    <span class="font-label-md text-sm">女子</span>
+                  </label>
+                  <label class="flex items-center justify-center gap-2 h-11 rounded-lg bg-surface-container-low border border-outline-variant/30 text-on-surface cursor-pointer has-[:checked]:bg-primary-fixed/40 has-[:checked]:border-primary-container transition-colors">
+                    <input class="w-4 h-4 text-primary-container accent-primary-container" name="gender" type="radio" value="no_answer" required>
+                    <span class="font-label-md text-xs sm:text-[13px]">回答しない</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- 在籍校名 -->
+              <div class="flex flex-col gap-1.5 md:col-span-2 relative">
+                <div class="flex items-center justify-between">
+                  <label class="font-label-md text-sm font-bold text-on-surface" for="currentSchool">在籍中学校・小学校名</label>
+                  <span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span>
+                </div>
+                <div class="relative w-full">
+                  <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="currentSchool" name="current_school" placeholder="例: 岡山市立操南中学校（学校名を入力すると候補が表示されます）" required type="text" autocomplete="off">
+                  <div id="schoolSuggestDropdown" class="absolute left-0 right-0 top-full mt-1.5 bg-white rounded-lg border border-slate-200 shadow-xl overflow-hidden z-50 max-h-64 overflow-y-auto divide-y divide-slate-100 hidden">
+                    <!-- サジェスト候補リストが動的に描画されます -->
+                  </div>
+                </div>
+                <p class="text-[11px] text-on-surface-variant">※文字を入力すると岡山県内の学校名（文部科学省コード準拠）が候補表示されます。候補にない学校名も直接ご入力いただけます。</p>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- ========================================== -->
+          <!-- SECTION 3: 保護者・ご連絡先情報             -->
+          <!-- ========================================== -->
+          <div class="bg-transparent sm:bg-surface-container-lowest rounded-none sm:rounded-lg p-0 sm:p-7 border-0 sm:border border-outline-variant/30 shadow-none sm:shadow-sm flex flex-col gap-5 sm:gap-6 pb-8 sm:pb-7 border-b sm:border-b-0 border-slate-200/80">
+            <div class="flex items-center gap-2 pb-3 border-b border-surface-container">
+              <span class="w-7 h-7 rounded-md bg-primary-container text-on-primary flex items-center justify-center font-label-md font-bold text-[13px]">3</span>
+              <h2 class="font-headline-md text-lg sm:text-[20px] font-bold text-primary">保護者・ご連絡先情報</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+              
+              <!-- 保護者氏名 -->
+              <div class="flex flex-col gap-1.5 md:col-span-2">
+                <div class="flex items-center justify-between">
+                  <span class="font-label-md text-sm font-bold text-on-surface">保護者氏名</span>
+                  <span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="parentLastName" name="parent_last_name" placeholder="保護者 姓（例: 岡山）" required type="text">
+                  </div>
+                  <div>
+                    <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="parentFirstName" name="parent_first_name" placeholder="保護者 名（例: 花子）" required type="text">
+                  </div>
+                </div>
+                <p class="text-[11px] sm:text-xs text-on-surface-variant leading-relaxed">
+                  ※ 郵便物のお届けおよびシステム処理の都合上、旧字体・外字（髙、﨑など）は常用漢字（高、崎など）にて登録・印字させていただく場合がございます。
+                </p>
+              </div>
+
+              <!-- 保護者氏名（フリガナ） -->
+              <div class="flex flex-col gap-1.5 md:col-span-2">
+                <div class="flex items-center justify-between">
+                  <span class="font-label-md text-sm font-bold text-on-surface">保護者氏名（フリガナ）</span>
+                  <span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="parentKanaLastName" name="parent_kana_last_name" placeholder="セイ（例: オカヤマ）" required type="text">
+                  </div>
+                  <div>
+                    <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="parentKanaFirstName" name="parent_kana_first_name" placeholder="メイ（例: ハナコ）" required type="text">
+                  </div>
+                </div>
+              </div>
+
+              <!-- メールアドレス -->
+              <div class="flex flex-col gap-1.5">
+                <div class="flex items-center justify-between">
+                  <label class="font-label-md text-sm font-bold text-on-surface" for="parentEmail">メールアドレス</label>
+                  <span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span>
+                </div>
+                <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="parentEmail" name="parent_email" placeholder="example@domain.com" required type="email">
+                <p class="font-body-sm text-[11px] text-on-surface-variant flex items-center gap-1">
+                  <span class="material-symbols-outlined text-[14px] text-primary-container">info</span>携帯キャリアメール（docomo, ezweb等）は迷惑メール設定にご注意ください
+                </p>
+              </div>
+
+              <!-- メールアドレス確認 -->
+              <div class="flex flex-col gap-1.5">
+                <div class="flex items-center justify-between">
+                  <label class="font-label-md text-sm font-bold text-on-surface" for="parentEmailConfirm">メールアドレス（確認用）</label>
+                  <span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span>
+                </div>
+                <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="parentEmailConfirm" name="parent_email_confirm" placeholder="もう一度ご入力ください" required type="email">
+              </div>
+
+              <!-- 電話番号 -->
+              <div class="flex flex-col gap-1.5 md:col-span-2">
+                <div class="flex items-center justify-between">
+                  <label class="font-label-md text-sm font-bold text-on-surface" for="parentTel">電話番号（日中連絡先）</label>
+                  <span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span>
+                </div>
+                <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="parentTel" name="parent_tel" placeholder="09012345678（ハイフンなし可）" required type="tel" inputmode="numeric">
+              </div>
+
+              <!-- 郵便番号 + 自動入力ボタン -->
+              <div class="flex flex-col gap-1.5 md:col-span-2">
+                <div class="flex items-center justify-between">
+                  <label class="font-label-md text-sm font-bold text-on-surface" for="postalCode">郵便番号</label>
+                  <span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span>
+                </div>
+                <div class="flex items-center gap-2 w-full">
+                  <input class="w-[62%] sm:w-48 h-11 px-3.5 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40 shrink-0 font-mono" id="postalCode" name="postal_code" maxlength="8" placeholder="700-0822" required type="tel" inputmode="numeric" autocomplete="postal-code">
+                  <button id="btnSearchAddress" class="w-[38%] sm:w-auto px-2.5 sm:px-4 h-11 py-2.5 bg-primary hover:bg-primary-container disabled:opacity-60 disabled:cursor-not-allowed text-on-primary font-bold text-xs sm:text-sm rounded-lg transition-colors shadow-sm shrink-0 flex items-center justify-center gap-1 sm:gap-1.5 cursor-pointer whitespace-nowrap active:scale-[0.98]" onclick="searchAddressByPostalCode(true)" type="button">
+                    <span id="btnSearchAddressIcon" class="material-symbols-outlined text-[16px] shrink-0">location_searching</span>
+                    <span id="btnSearchAddressText">住所自動入力</span>
+                  </button>
+                </div>
+                <p id="postalMsg" class="text-xs font-medium hidden mt-0.5"></p>
+                <input type="hidden" id="prefecture" name="prefecture" value="岡山県">
+              </div>
+
+              <!-- 1. 都道府県・市区町村・町名 -->
+              <div class="flex flex-col gap-1.5 md:col-span-2">
+                <div class="flex items-center justify-between">
+                  <label class="font-label-md text-sm font-bold text-on-surface" for="addressLine1">都道府県・市区町村・町名</label>
+                  <span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span>
+                </div>
+                <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="addressLine1" name="address_line1" placeholder="例: 岡山県岡山市北区表町" required type="text" autocomplete="address-level1 address-level2">
+              </div>
+
+              <!-- 2. 丁目・番地・号 -->
+              <div class="flex flex-col gap-1.5 md:col-span-2">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-1.5 sm:gap-2">
+                    <label class="font-label-md text-sm font-bold text-on-surface" for="addressLine2">丁目・番地・号</label>
+                    <span class="text-rose-600 font-bold text-xs sm:text-[13px]">※必ずご入力ください</span>
+                  </div>
+                  <span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span>
+                </div>
+                <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="addressLine2" name="address_line2" placeholder="例: 1丁目5-1 または 1-5-1" required type="text" inputmode="numeric" autocomplete="address-line1">
+              </div>
+
+              <!-- 3. 建物名・部屋番号 -->
+              <div class="flex flex-col gap-1.5 md:col-span-2">
+                <div class="flex items-center justify-between">
+                  <label class="font-label-md text-sm font-bold text-on-surface" for="addressLine3">建物名・部屋番号</label>
+                  <span class="bg-surface-container-high text-on-surface-variant font-label-sm text-[10px] px-2 py-0.5 rounded-full font-bold">任意</span>
+                </div>
+                <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="addressLine3" name="address_line3" placeholder="例: 岡山教育ビル 3F" type="text" autocomplete="address-line2">
+              </div>
+
+            </div>
+          </div>
+
+          <!-- ========================================== -->
+          <!-- SECTION 4: お支払い方法の選択               -->
+          <!-- ========================================== -->
+          <div class="bg-transparent sm:bg-surface-container-lowest rounded-none sm:rounded-lg p-0 sm:p-7 border-0 sm:border border-outline-variant/30 shadow-none sm:shadow-sm flex flex-col gap-5 sm:gap-6 pb-8 sm:pb-7 border-b sm:border-b-0 border-slate-200/80">
+            <div class="flex items-center gap-2 pb-3 border-b border-surface-container">
+              <span class="w-7 h-7 rounded-md bg-primary-container text-on-primary flex items-center justify-center font-label-md font-bold text-[13px]">4</span>
+              <h2 class="font-headline-md text-lg sm:text-[20px] font-bold text-primary">お支払い方法の選択</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              
+              <!-- クレジットカード決済 -->
+              <label class="p-4 rounded-lg bg-surface-container-low border border-outline-variant/30 cursor-pointer hover:bg-surface-container flex flex-col justify-between gap-3 transition-all has-[:checked]:bg-primary-fixed/40 has-[:checked]:border-primary-container has-[:checked]:ring-1 has-[:checked]:ring-primary-container">
+                <div class="flex items-start justify-between gap-3">
+                  <div class="flex items-start gap-2.5">
+                    <input class="w-4 h-4 mt-1 text-primary-container accent-primary-container shrink-0" name="payment_method" type="radio" value="credit_card" onchange="updatePaymentMethodSummary('credit_card')" required>
+                    <div class="flex flex-col gap-1">
+                      <span class="font-label-md font-bold text-on-surface text-[15px]">クレジットカード決済</span>
+                      <span class="font-body-sm text-[11px] text-primary-container font-bold">Stripe即時安全決済・手数料 0円</span>
+                      <div class="flex items-center gap-1.5 text-on-surface-variant font-label-sm text-[11px] pt-1 flex-wrap">
+                        <span class="px-2 py-0.5 bg-surface-container-lowest border border-outline-variant/30 rounded font-bold text-[10px]">VISA</span>
+                        <span class="px-2 py-0.5 bg-surface-container-lowest border border-outline-variant/30 rounded font-bold text-[10px]">Mastercard</span>
+                        <span class="px-2 py-0.5 bg-surface-container-lowest border border-outline-variant/30 rounded font-bold text-[10px]">JCB</span>
+                        <span class="px-2 py-0.5 bg-surface-container-lowest border border-outline-variant/30 rounded font-bold text-[10px]">AMEX</span>
+                      </div>
+                    </div>
+                  </div>
+                  <span class="material-symbols-outlined text-primary-container text-2xl shrink-0">credit_card</span>
+                </div>
+              </label>
+
+              <!-- コンビニ決済 -->
+              <label class="p-4 rounded-lg bg-surface-container-low border border-outline-variant/30 cursor-pointer hover:bg-surface-container flex flex-col justify-between gap-3 transition-all has-[:checked]:bg-primary-fixed/40 has-[:checked]:border-primary-container has-[:checked]:ring-1 has-[:checked]:ring-primary-container">
+                <div class="flex items-start justify-between gap-3">
+                  <div class="flex items-start gap-2.5">
+                    <input class="w-4 h-4 mt-1 text-primary-container accent-primary-container shrink-0" name="payment_method" type="radio" value="convenience_store" onchange="updatePaymentMethodSummary('convenience_store')" required>
+                    <div class="flex flex-col gap-1">
+                      <span class="font-label-md font-bold text-on-surface text-[15px]">コンビニ決済</span>
+                      <span class="font-body-sm text-[11px] text-on-surface-variant" id="convenience-deadline-text">お申込み完了後4日以内（10/4(日)まで）にお支払い</span>
+                      <div class="flex items-center gap-1.5 text-on-surface-variant font-label-sm text-[11px] pt-1 flex-wrap">
+                        <span class="px-2 py-0.5 bg-surface-container-lowest border border-outline-variant/30 rounded text-[10px]">セブンイレブン</span>
+                        <span class="px-2 py-0.5 bg-surface-container-lowest border border-outline-variant/30 rounded text-[10px]">ローソン</span>
+                        <span class="px-2 py-0.5 bg-surface-container-lowest border border-outline-variant/30 rounded text-[10px]">ファミマ</span>
+                      </div>
+                    </div>
+                  </div>
+                  <span class="material-symbols-outlined text-tertiary-container text-2xl shrink-0">storefront</span>
+                </div>
+              </label>
+
+            </div>
+
+
+
+            <!-- コンビニ決済 警告パネル（コンビニ選択時に動的表示） -->
+            <div id="convenienceWarningPanel" class="hidden bg-amber-50 border-2 border-amber-400 p-4 rounded-lg transition-all duration-300 shadow-xs">
+              <div class="flex items-start gap-3">
+                <span class="text-xl shrink-0 leading-tight">⚠️</span>
+                <div class="text-amber-950 text-xs sm:text-sm font-medium leading-relaxed">
+                  <span class="font-bold text-amber-900">ご確認ください：</span>本日お申し込みの場合の決済期限は【 <span id="convenienceDeadlineFull" class="font-bold text-red-600 underline decoration-red-400 decoration-2"></span> 】です。期日を過ぎますと、お申し込みは【<span class="font-bold text-red-600">自動キャンセル</span>】となりますのでご注意ください。
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ========================================== -->
+        <!-- SUMMARY CARD: お支払いサマリー（確認パネル）-->
+        <!-- ========================================== -->
+        <div class="flex flex-col gap-4">
+          <!-- 1つの統合サマリーカード（外枠グレーコンテナ） -->
+          <div class="bg-slate-100 rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-7 border border-slate-300/70 shadow-sm flex flex-col gap-4">
+            
+            <!-- ヘッダー：お申し込みサマリー ＆ 選択件数バッジ -->
+            <div class="flex items-center justify-between pb-3.5 border-b border-slate-200">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-slate-700 text-2xl">receipt_long</span>
+                <h3 class="font-headline-sm text-lg sm:text-xl font-bold text-emerald-950">お申し込みサマリー</h3>
+              </div>
+              <span id="summarySelectedCount" class="font-label-sm text-xs bg-slate-700 text-white px-3 py-1 rounded-full font-bold">1回分選択中</span>
+            </div>
+
+            <!-- 1. 受験模試の内訳（フラット配置） -->
+            <div class="flex flex-col gap-2.5" id="summarySelectedContainer">
+              <div class="flex items-center gap-2 text-slate-700 font-label-sm text-xs font-bold">
+                <span class="material-symbols-outlined text-base text-slate-500">inventory_2</span>
+                <span>受験模試の内訳</span>
+              </div>
+              
+              <div class="flex flex-col gap-2.5" id="summarySelectedList">
+                <!-- JSで動的に内訳行を生成 -->
+              </div>
+            </div>
+
+            <!-- 2. お支払い合計金額（薄い仕切り線でフラット区切り） -->
+            <div class="pt-3.5 border-t border-slate-200/80 flex items-center justify-between">
+              <span class="font-headline-md text-sm sm:text-base font-bold text-slate-800">お支払い合計金額</span>
+              <div class="flex items-baseline gap-1.5">
+                <span class="font-headline-lg text-2xl sm:text-3xl font-extrabold text-emerald-950 tracking-tight" id="summaryTotalAmount">¥0</span>
+                <span class="font-body-sm text-xs text-slate-500 font-bold">（税込）</span>
+              </div>
+            </div>
+
+            <!-- 3. お支払い方法（薄い仕切り線でフラット区切り） -->
+            <div class="pt-3.5 border-t border-slate-200/80 flex flex-col gap-2">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                <span class="font-bold text-slate-700 text-xs sm:text-[13px]">お支払い方法</span>
+                <div id="summaryPaymentMethod">
+                  <span class="text-xs sm:text-sm font-medium text-amber-700">お支払い方法を選択してください（未選択）</span>
+                </div>
+              </div>
+              <!-- コンビニ決済時の項目直下期限注記 -->
+              <div id="summaryConvenienceNotice" class="hidden text-right text-[11px] sm:text-xs font-bold text-red-600 pt-1">
+                ※ 決済期限：<span id="summaryConvenienceDeadlineDate">10月4日(日)</span>まで（未払時自動キャンセル）
+              </div>
+            </div>
+
+            <!-- 4. 同意チェック ＆ 送信アクションエリア（薄い仕切り線でシームレスに結合） -->
+            <div class="pt-3.5 border-t border-slate-200/80 flex flex-col gap-3">
+              <!-- 規約同意チェック（枠なしフラット配置） -->
+              <label class="flex items-start gap-2.5 cursor-pointer select-none text-xs sm:text-sm text-slate-800 leading-relaxed">
+                <input checked class="mt-0.5 w-5 h-5 text-emerald-800 accent-emerald-800 shrink-0 rounded cursor-pointer focus:ring-emerald-800" id="agreeTerms" required type="checkbox">
+                <span>
+                  <a class="text-emerald-800 font-bold underline hover:text-emerald-950" href="/privacy.html" target="_blank" rel="noopener noreferrer">「個人情報の取扱い」</a>および
+                  <a class="text-emerald-800 font-bold underline hover:text-emerald-950" href="/tokushoho.html" target="_blank" rel="noopener noreferrer">「特定商取引法に基づく表記」</a>に同意する
+                </span>
+              </label>
+
+              <!-- コンビニ決済期限 同意チェック（コンビニ決済選択時のみ動的表示） -->
+              <label id="convenienceAgreeContainer" class="hidden flex items-start gap-2.5 cursor-pointer select-none text-xs sm:text-sm text-slate-800 leading-relaxed pt-1">
+                <input class="mt-0.5 w-5 h-5 text-emerald-800 accent-emerald-800 shrink-0 rounded cursor-pointer focus:ring-emerald-800" id="agreeConvenienceTerms" type="checkbox">
+                <span class="font-medium text-slate-800">
+                  コンビニ決済期限（<strong id="agreeConvenienceDeadlineText" class="text-red-600 font-bold">10/4(日)まで</strong>）および自動キャンセルについて確認した
+                </span>
+              </label>
+
+              <!-- フォーム内インラインエラーメッセージ（送信ボタン直上） -->
+              <div id="formErrorMessage" class="hidden p-3.5 sm:p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs sm:text-sm font-bold flex items-start gap-2.5 shadow-xs transition-all duration-300" role="alert" aria-live="assertive">
+                <span class="material-symbols-outlined text-red-500 text-lg sm:text-xl shrink-0 mt-0.5">error</span>
+                <div class="flex-1">
+                  <p id="formErrorMessageText" class="leading-relaxed">※ 受験を希望する模試を1つ以上選択してください。</p>
+                </div>
+              </div>
+
+              <!-- 送信ボタン（カード内蔵・一体型） -->
+              <button id="submitApplyBtn" class="w-full py-4 mt-1 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-headline-sm text-base sm:text-lg font-extrabold tracking-wide shadow-md shadow-orange-500/25 hover:shadow-lg hover:shadow-orange-500/35 transition-all flex items-center justify-center gap-2 active:scale-[0.99] cursor-pointer" type="submit">
+                <span>入力内容を確認し、お支払いへ進む</span>
+                <span class="material-symbols-outlined text-xl">arrow_forward</span>
+              </button>
+              
+              <a class="w-full py-1 text-center text-slate-500 hover:text-emerald-900 font-label-sm text-xs transition-colors" href="/index.html">
+                ← お申込みをやり直す（トップへ戻る）
+              </a>
+            </div>
+          </div>
+
+          <!-- セキュリティ・決済保護のご案内 -->
+          <div class="bg-slate-50/60 border border-slate-200/60 rounded-xl p-3 sm:p-3.5">
+            <!-- 2項目（SSL暗号化 / Stripe決済）: スマホで縦並び、md以上で左右2列 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4 pb-2 border-b border-slate-200/60">
+              <!-- SSL 256bit 暗号化通信 -->
+              <div>
+                <div class="font-semibold text-slate-700 text-xs sm:text-[13px] flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-emerald-700/80 text-[17px] shrink-0">lock</span>
+                  <span>SSL 256bit 暗号化通信</span>
+                </div>
+                <p class="text-[11px] text-slate-500 mt-0.5 pl-[23px] leading-relaxed">ご入力情報は厳重に暗号化され、安全に保護されています。</p>
+              </div>
+
+              <!-- Stripe Secure Payment -->
+              <div>
+                <div class="font-semibold text-slate-700 text-xs sm:text-[13px] flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-emerald-700/80 text-[17px] shrink-0">credit_score</span>
+                  <span>Stripe Secure Payment</span>
+                </div>
+                <p class="text-[11px] text-slate-500 mt-0.5 pl-[23px] leading-relaxed">国際最高基準（PCI DSS Level 1）準拠の決済システムを採用。</p>
+              </div>
+            </div>
+
+            <!-- 補足文章（カード情報は当サイトに保存されない） -->
+            <div class="pt-2 flex items-start gap-1.5 text-[11px] text-slate-500">
+              <span class="material-symbols-outlined text-sm text-slate-400 shrink-0 mt-0.5">info</span>
+              <p class="leading-relaxed">
+                カード情報は当サイトに保存されず、世界基準の決済システム（Stripe）で直接保護・安全に処理されます。
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+    <!-- ======================================================== -->
+    <!-- STRIPE LOADING OVERLAY (Linear / Twenty Minimal UI)      -->
+    <!-- ======================================================== -->
+    <div id="stripeLoadingOverlay" class="hidden fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/40 backdrop-blur-md transition-opacity duration-200 opacity-0 pointer-events-none p-4" role="dialog" aria-modal="true" aria-labelledby="stripeLoadingTitle">
+      <div class="stripe-loading-card relative w-full max-w-[390px] bg-white rounded-2xl p-7 sm:p-8 shadow-2xl shadow-slate-900/20 border border-slate-100 text-center">
+        <!-- Spinner & Security Icon -->
+        <div class="relative w-14 h-14 mx-auto mb-4 flex items-center justify-center">
+          <!-- Subtle pulse halo -->
+          <span class="absolute inline-flex h-full w-full rounded-full bg-emerald-500/15 animate-ping opacity-60"></span>
+          <!-- Minimal subtle circle frame -->
+          <div class="relative w-12 h-12 rounded-full bg-slate-50 border border-slate-100/80 flex items-center justify-center shadow-xs">
+            <svg class="w-6 h-6 animate-spin text-emerald-700" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle class="opacity-15" cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2.5"></circle>
+              <path class="opacity-100" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" d="M12 3a9 9 0 0 1 9 9"></path>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Title -->
+        <h3 id="stripeLoadingTitle" class="text-base sm:text-lg font-bold text-slate-900 tracking-tight leading-snug">
+          決済画面へ安全に接続しています…
+        </h3>
+
+        <!-- Subtext -->
+        <p class="mt-2 text-xs sm:text-[13px] text-slate-500 font-medium leading-relaxed">
+          クレジットカード・コンビニ決済をご利用いただけます
+        </p>
+
+        <!-- Linear-style Indeterminate Progress Bar -->
+        <div class="mt-5 w-full bg-slate-100 rounded-full h-1 overflow-hidden relative" aria-hidden="true">
+          <div class="stripe-progress-indeterminate h-full bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-600 rounded-full"></div>
+        </div>
+
+        <!-- Security Reassurance -->
+        <div class="mt-4 pt-3.5 border-t border-slate-100 flex items-center justify-center gap-1.5 text-[11px] text-slate-400 font-medium">
+          <span class="material-symbols-outlined text-[15px] text-emerald-700">lock</span>
+          <span>Stripe公式の安全な決済システムへ遷移します</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- SUCCESS / STRIPE MODAL                      -->
+    <!-- ========================================== -->
+    <div id="successModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+      <div class="bg-surface-container-lowest rounded-lg p-6 sm:p-10 max-w-lg w-full shadow-2xl border border-outline-variant/30 text-center space-y-5 animate-in fade-in zoom-in-95 duration-200">
+        <div class="w-16 h-16 rounded-full bg-[#e8f5ee] text-[#134230] flex items-center justify-center mx-auto shadow-sm">
+          <span class="material-symbols-outlined text-4xl">check_circle</span>
+        </div>
+        <div class="space-y-2">
+          <h3 class="font-headline-md text-xl sm:text-2xl font-bold text-primary">お申し込みを受け付けました</h3>
+          <p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed">
+            ご入力いただいたメールアドレス宛に、お申し込み受付完了メールおよび決済案内を送信いたしました。
+          </p>
+        </div>
+        <div class="p-4 rounded-lg bg-surface-container-low text-left text-xs sm:text-sm text-on-surface-variant space-y-2 border border-outline-variant/20">
+          <div class="flex justify-between">
+            <span>受付番号:</span>
+            <strong class="text-on-surface font-mono" id="modalReceiptNo">OKM-2026-9812</strong>
+          </div>
+          <div class="flex justify-between">
+            <span>対象学年:</span>
+            <strong class="text-on-surface" id="modalGradeName">中3</strong>
+          </div>
+          <div class="flex justify-between">
+            <span>選択模試数:</span>
+            <strong class="text-on-surface" id="modalExamCount">1模試</strong>
+          </div>
+          <div class="flex justify-between border-t border-outline-variant/20 pt-1.5">
+            <span>お支払い合計:</span>
+            <strong class="text-primary font-bold text-base" id="modalTotalAmount">¥5,500（税込）</strong>
+          </div>
+        </div>
+        <div class="pt-2">
+          <a href="/index.html" class="inline-flex items-center justify-center w-full py-3.5 px-6 rounded-lg bg-primary text-on-primary font-bold text-sm shadow-md hover:bg-primary-container transition-all">
+            トップページへ戻る
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Unified Footer -->
+  <footer class="w-full bg-zinc-600 mt-0 border-t border-zinc-500/30 flex flex-col items-center">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 w-full">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-start">
+        
+        <!-- 左カラム: ロゴ・会社情報・公式SNS・お問い合わせ -->
+        <div class="md:col-span-5 space-y-3.5">
+          <!-- ブランドロゴ -->
+          <div class="flex items-center gap-2">
+            <span class="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+              <span class="material-symbols-outlined text-lg">history_edu</span>
+            </span>
+            <span class="text-base sm:text-lg font-bold text-white tracking-tight">岡山県統一模擬試験（おかもし）</span>
+          </div>
+
+          <!-- 会社情報 -->
+          <p class="text-xs sm:text-sm text-zinc-100 leading-relaxed">
+            主催 : 中央教育研究所株式会社<br>
+            岡山県統一模擬試験実行委員会<br>
+            住所 : 広島県広島市中区八丁堀15番6号<br>
+            広島ちゅうぎんビル3階<br>
+            TEL : 082-227-3999<br>
+            MAIL : okayamamoshi@chuoh-kyouiku.co.jp
+          </p>
+
+          <!-- 公式SNS -->
+          <div class="pt-0.5 flex items-center gap-2 text-xs sm:text-sm">
+            <span class="text-zinc-300 font-medium">公式SNS:</span>
+            <a class="inline-flex items-center gap-1 text-zinc-100 hover:text-white transition-colors font-medium" target="_blank" rel="noopener noreferrer" href="https://www.instagram.com/okamoshi01/">
+              <span class="material-symbols-outlined text-base">photo_camera</span>
+              <span>公式Instagram</span>
+            </a>
+          </div>
+
+          <!-- お問い合わせ -->
+          <div class="pt-3 space-y-2">
+            <div class="text-xs sm:text-sm font-bold text-white flex items-center gap-1">
+              <span class="material-symbols-outlined text-sm sm:text-base text-emerald-400">contact_support</span>
+              <span>お問い合わせ</span>
+            </div>
+            <div class="flex flex-wrap sm:flex-nowrap gap-2 min-w-0">
+              <a class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg font-bold text-xs transition-all text-center shadow-xs border border-zinc-500 bg-zinc-500/50 hover:bg-zinc-500 text-white hover:text-white whitespace-nowrap" href="/contact/organization/index.html">
+                <span class="material-symbols-outlined text-base text-emerald-400">corporate_fare</span>
+                <span>塾・学校関係者様</span>
+              </a>
+              <a class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg font-bold text-xs transition-all text-center shadow-xs border border-zinc-500 bg-zinc-500/50 hover:bg-zinc-500 text-white hover:text-white whitespace-nowrap" href="/contact/individual/index.html">
+                <span class="material-symbols-outlined text-base text-emerald-400">mail</span>
+                <span>個人申込の方</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 右カラム: ナビゲーションリンク（3カテゴリ） -->
+        <div class="md:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-6 sm:gap-8 pt-2 md:pt-0">
+          <!-- 模試情報 -->
+          <div class="space-y-2.5">
+            <div class="font-bold text-xs sm:text-sm text-white">模試情報</div>
+            <ul class="space-y-2 text-xs sm:text-sm">
+              <li><a class="text-zinc-100 hover:text-white transition-colors" href="/index.html#schedule-table">次回模試実施要項</a></li>
+              <li><a class="text-zinc-100 hover:text-white transition-colors" href="/index.html#schedule-table">年間スケジュール</a></li>
+              <li><a class="text-zinc-100 hover:text-white transition-colors" href="/index.html#schedule-selector">適性検査・高校模試詳細</a></li>
+            </ul>
+          </div>
+
+          <!-- ご案内・手続き -->
+          <div class="space-y-2.5 sm:col-span-2">
+            <div class="font-bold text-xs sm:text-sm text-white">ご案内・手続き</div>
+            <ul class="space-y-2 text-xs sm:text-sm">
+              <li><a class="text-zinc-100 hover:text-white transition-colors" href="/schools_PC.html">実施塾一覧</a></li>
+              <li><a class="text-zinc-100 hover:text-white transition-colors" href="/apply">個人受験のお申込み</a></li>
+            </ul>
+          </div>
+
+          <!-- 規約・運営 -->
+          <div class="space-y-2.5">
+            <div class="font-bold text-xs sm:text-sm text-white">規約・運営</div>
+            <ul class="space-y-2 text-xs sm:text-sm">
+              <li><a class="text-zinc-100 hover:text-white transition-colors" href="/privacy.html">プライバシーポリシー</a></li>
+              <li><a class="text-zinc-100 hover:text-white transition-colors" href="/tokushoho.html">特定商取引法に基づく表記</a></li>
+              <li><a class="text-zinc-100 hover:text-white transition-colors" href="/news.html">お知らせ・更新情報</a></li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================== -->
+  <!-- SCRIPT LOGIC                               -->
+  <!-- ========================================== -->
+  <script src="/js/schools_data.js"></script>
+  <script>
+    // ========================================================
+    // 0. microCMS & Stripe 設定
+    // ========================================================
+    const MICROCMS_CONFIG = {
+      serviceDomain: 'okamoshi-blog',
+      apiKey: '4qO3xGjs5W1r7zolbBgAX2KXP8VEUooOpMtc',
+      endpoint: 'exam-guides'
+    };
+
+    // n8n Stripe Checkout セッション生成 Webhook エンドポイント
+    const CHECKOUT_WEBHOOK_URL = 'https://n8n.data-design-lab.com/webhook/create-checkout-session';
+
+    // ========================================================
+    // 1. 模試フォールバック・マスターデータ（microCMS未取得時・欠損補完用）
+    // ========================================================
+    const EXAMS_DATABASE = [
+      // ---------------- 中学3年生 ----------------
+      {
+        id: 'chu3_10',
+        grade: 'chu3',
+        gradeLabel: '中3',
+        gradeName: '中3生',
+        issueName: '10月号',
+        title: '岡山県統一模擬試験（おかもし）',
+        badge: '中3対象・受付中',
+        examDate: '2026年11月1日(日)',
+        deadline: '2026-10-05T23:59:59+09:00', // 2026年10月5日(月) 23:59
+        deadlineDisplay: '10/5(月) 23:59',
+        price: 5500,
+        status: 'open',
+        isDefaultChecked: false,
+        venues: [
+          { value: 'venue_okayama', label: '岡山会場（山陽学園中学校・高等学校）' },
+          { value: 'venue_tsuyama', label: '津山会場（美作高等学校）' },
+          { value: 'home', label: '自宅受験（問題冊子郵送・期日内答案返送）' }
+        ]
+      },
+      {
+        id: 'chu3_12',
+        grade: 'chu3',
+        gradeLabel: '中3',
+        gradeName: '中3生',
+        issueName: '12月号',
+        title: '岡山県統一模擬試験（おかもし）',
+        badge: '中3対象・予約受付',
+        examDate: '2026年12月26日(土)・27日(日)',
+        deadline: '2026-12-14T23:59:59+09:00', // 2026年12月14日(月) 23:59
+        deadlineDisplay: '12/14(月) 23:59',
+        price: 5500,
+        status: 'open',
+        isDefaultChecked: false,
+        venues: [
+          { value: 'venue_okayama', label: '岡山会場（岡山市民会館）' },
+          { value: 'venue_kurashiki', label: '倉敷会場（倉敷市民センター）' },
+          { value: 'venue_tsuyama', label: '津山会場（津山商工会議所）' },
+          { value: 'home', label: '自宅受験（問題冊子郵送・期日内答案返送）' }
+        ]
+      },
+
+      // ---------------- 中学2年生 ----------------
+      {
+        id: 'chu2_12',
+        grade: 'chu2',
+        gradeLabel: '中2',
+        gradeName: '中2生',
+        issueName: '12月号',
+        title: '岡山県統一模擬試験（おかもし）',
+        badge: '中2対象・受付中',
+        examDate: '2026年12月14日(日)',
+        deadline: '2026-11-10T23:59:59+09:00',
+        deadlineDisplay: '11/10(火) 23:59',
+        price: 5500,
+        status: 'open',
+        isDefaultChecked: false,
+        venues: [
+          { value: 'venue_okayama', label: '岡山会場（山陽学園中学校・高等学校）' },
+          { value: 'venue_kurashiki', label: '倉敷会場（倉敷商工会議所）' },
+          { value: 'venue_tsuyama', label: '津山会場（美作大学）' },
+          { value: 'home', label: '自宅受験（問題冊子郵送・期日内答案返送）' }
+        ]
+      },
+      {
+        id: 'chu2_03',
+        grade: 'chu2',
+        gradeLabel: '中2',
+        gradeName: '中2生',
+        issueName: '3月号',
+        title: '岡山県統一模擬試験（おかもし）',
+        badge: '中2対象・予約受付',
+        examDate: '2027年3月14日(日)',
+        deadline: '2027-03-07T23:59:59+09:00',
+        deadlineDisplay: '2027/3/7(日) 23:59',
+        price: 5500,
+        status: 'open',
+        isDefaultChecked: false,
+        venues: [
+          { value: 'venue_okayama', label: '岡山会場（山陽学園中学校・高等学校）' },
+          { value: 'venue_kurashiki', label: '倉敷会場（倉敷商工会議所）' },
+          { value: 'venue_tsuyama', label: '津山会場（美作大学）' },
+          { value: 'home', label: '自宅受験（問題冊子郵送・期日内答案返送）' }
+        ]
+      },
+
+      // ---------------- 中学1年生 ----------------
+      {
+        id: 'chu1_12',
+        grade: 'chu1',
+        gradeLabel: '中1',
+        gradeName: '中1生',
+        issueName: '12月号',
+        title: '岡山県統一模擬試験（おかもし）',
+        badge: '中1対象・受付中',
+        examDate: '2026年12月14日(日)',
+        deadline: '2026-11-10T23:59:59+09:00',
+        deadlineDisplay: '11/10(火) 23:59',
+        price: 5500,
+        status: 'open',
+        isDefaultChecked: false,
+        venues: [
+          { value: 'venue_okayama', label: '岡山会場（山陽学園中学校・高等学校）' },
+          { value: 'venue_kurashiki', label: '倉敷会場（倉敷商工会議所）' },
+          { value: 'venue_tsuyama', label: '津山会場（美作大学）' },
+          { value: 'home', label: '自宅受験（問題冊子郵送・期日内答案返送）' }
+        ]
+      },
+      {
+        id: 'chu1_03',
+        grade: 'chu1',
+        gradeLabel: '中1',
+        gradeName: '中1生',
+        issueName: '3月号',
+        title: '岡山県統一模擬試験（おかもし）',
+        badge: '中1対象・予約受付',
+        examDate: '2027年3月14日(日)',
+        deadline: '2027-03-07T23:59:59+09:00',
+        deadlineDisplay: '2027/3/7(日) 23:59',
+        price: 5500,
+        status: 'open',
+        isDefaultChecked: false,
+        venues: [
+          { value: 'venue_okayama', label: '岡山会場（山陽学園中学校・高等学校）' },
+          { value: 'venue_kurashiki', label: '倉敷会場（倉敷商工会議所）' },
+          { value: 'venue_tsuyama', label: '津山会場（美作大学）' },
+          { value: 'home', label: '自宅受験（問題冊子郵送・期日内答案返送）' }
+        ]
+      },
+
+      // ---------------- 小学6年生 ----------------
+      {
+        id: 'sho6_10',
+        grade: 'sho6',
+        gradeLabel: '小6',
+        gradeName: '小6生',
+        issueName: '10月号',
+        title: '岡山県立中高一貫校 適性検査対策模試',
+        badge: '小6対象・受付中',
+        examDate: '2026年11月1日(日)',
+        deadline: '2026-10-13T23:59:59+09:00',
+        deadlineDisplay: '10/13(火) 23:59',
+        price: 5500,
+        status: 'open',
+        isDefaultChecked: false,
+        venues: [
+          { value: 'venue_okayama', label: '岡山会場（岡山操山中学校 受験対応）' },
+          { value: 'venue_kurashiki', label: '倉敷会場（倉敷天城中学校 受験対応）' },
+          { value: 'venue_tsuyama', label: '津山会場（津山中学校 受験対応）' },
+          { value: 'home', label: '自宅受験（問題冊子郵送・期日内答案返送）' }
+        ]
+      },
+      {
+        id: 'sho6_12',
+        grade: 'sho6',
+        gradeLabel: '小6',
+        gradeName: '小6生',
+        issueName: '12月号',
+        title: '岡山県立中高一貫校 適性検査対策模試',
+        badge: '小6対象・予約受付',
+        examDate: '2026年12月13日(日)',
+        deadline: '2026-12-06T23:59:59+09:00',
+        deadlineDisplay: '12/6(日) 23:59',
+        price: 5500,
+        status: 'open',
+        isDefaultChecked: false,
+        venues: [
+          { value: 'venue_okayama', label: '岡山会場（岡山操山中学校 受験対応）' },
+          { value: 'venue_kurashiki', label: '倉敷会場（倉敷天城中学校 受験対応）' },
+          { value: 'venue_tsuyama', label: '津山会場（津山中学校 受験対応）' },
+          { value: 'home', label: '自宅受験（問題冊子郵送・期日内答案返送）' }
+        ]
+      }
+    ];
+
+    // 現在の選択状態（デフォルトは未選択 null）
+    let currentSelectedGrade = null;
+    let initialTargetGrade = null; // URLパラメータで指定された初期学年
+    let initialTargetMonth = null; // URLパラメータで指定された初期月号（数値: 例 10）
+    let _examGuidesCache = null; // microCMS exam-guides キャッシュ
+    let selectedExamsState = {}; // { [examId]: { ...exam, venue, venueLabel } }
+
+    // ========================================================
+    // 2. 日時・パラメータパース & 整形ユーティリティ
+    // ========================================================
+    /**
+     * URLパラメータの学年指定を正規化 ('sho6' | 'chu1' | 'chu2' | 'chu3' | null)
+     * 日本語表記（中3, 中２, 中学3年, 小6等）および内部コード（chu3, c3, sho6, p6等）に柔軟対応
+     */
+    function normalizeGradeParam(param) {
+      if (!param) return null;
+      try {
+        const p = decodeURIComponent(String(param)).trim().toLowerCase();
+        if (['chu3', 'c3', '3', '中3', '中３', '中学3年', '中学3年生', '中三'].includes(p) || p.includes('中3') || p.includes('中３') || p.includes('中学3')) {
+          return 'chu3';
+        }
+        if (['chu2', 'c2', '2', '中2', '中２', '中学2年', '中学2年生', '中二'].includes(p) || p.includes('中2') || p.includes('中２') || p.includes('中学2')) {
+          return 'chu2';
+        }
+        if (['chu1', 'c1', '1', '中1', '中１', '中学1年', '中学1年生', '中一'].includes(p) || p.includes('中1') || p.includes('中１') || p.includes('中学1')) {
+          return 'chu1';
+        }
+        if (['sho6', 'p6', 'e6', 's6', '6', '小6', '小６', '小学6年', '小学6年生', '小六'].includes(p) || p.includes('小6') || p.includes('小６') || p.includes('小学6')) {
+          return 'sho6';
+        }
+      } catch (e) {}
+      return null;
+    }
+
+    /**
+     * URLパラメータや模試情報から月号数値をパース (例: "10", "10月号", "10月", 10 -> 10)
+     */
+    function parseMonthParam(param) {
+      if (param === null || param === undefined) return null;
+      try {
+        const p = decodeURIComponent(String(param)).trim();
+        const match = p.match(/(\d+)/);
+        if (match) {
+          return parseInt(match[1], 10);
+        }
+      } catch (e) {}
+      return null;
+    }
+    /**
+     * 申込締切日時をパースしてタイムスタンプ(ms)を返却
+     * ISO文字列、または日本語表記（例: "2026年10月5日(月)", "12月14日(月)", "10/25(日) 23:59"）に対応
+     */
+    function parseDeadline(deadlineRaw) {
+      if (!deadlineRaw || typeof deadlineRaw !== 'string') return null;
+      const str = deadlineRaw.trim();
+      if (!str) return null;
+
+      // 1. ISO 形式 (例: 2026-10-25T23:59:59+09:00, 2026-10-05T15:00:00.000Z)
+      if (/^\d{4}-\d{2}-\d{2}/.test(str)) {
+        const t = new Date(str).getTime();
+        if (!isNaN(t)) return t;
+      }
+
+      // 2. 日本語形式 (例: "2026年10月5日(月)", "12月14日(月)", "10/25(日) 23:59")
+      const currentYear = new Date().getFullYear();
+      let year = currentYear;
+      const yearMatch = str.match(/(\d{4})[年\/-]/);
+      if (yearMatch) {
+        year = parseInt(yearMatch[1], 10);
+      }
+
+      const monthMatch = str.match(/(\d{1,2})[月\/-]/);
+      const dayMatch = str.match(/[月\/-](\d{1,2})[日]?/);
+
+      if (monthMatch && dayMatch) {
+        const month = parseInt(monthMatch[1], 10);
+        const day = parseInt(dayMatch[1], 10);
+
+        // 年が省略され、現在が秋〜冬で月が1〜3月の場合は翌年とみなす
+        if (!yearMatch) {
+          const currentMonth = new Date().getMonth() + 1;
+          if (currentMonth >= 9 && month <= 3) {
+            year = currentYear + 1;
+          }
+        }
+
+        let hour = 23;
+        let minute = 59;
+        let second = 59;
+        const timeMatch = str.match(/(\d{1,2})[:：](\d{1,2})/);
+        if (timeMatch) {
+          hour = parseInt(timeMatch[1], 10);
+          minute = parseInt(timeMatch[2], 10);
+        }
+
+        const d = new Date(year, month - 1, day, hour, minute, second);
+        return d.getTime();
+      }
+
+      return null;
+    }
+
+    /**
+     * 申込締切表示テキストを整形（例: "10/25(日) 23:59"）
+     */
+    function formatDeadlineDisplay(deadlineRaw, parsedTime) {
+      const t = parsedTime || parseDeadline(deadlineRaw);
+      if (t) {
+        const d = new Date(t);
+        const days = ['日', '月', '火', '水', '木', '金', '土'];
+        const m = d.getMonth() + 1;
+        const dt = d.getDate();
+        const day = days[d.getDay()];
+        const hh = String(d.getHours()).padStart(2, '0');
+        const mm = String(d.getMinutes()).padStart(2, '0');
+        return `${m}/${dt}(${day}) ${hh}:${mm}`;
+      }
+      return deadlineRaw || '締切日時未定';
+    }
+
+    /**
+     * schedules から代表日または実施期間を整形表示
+     */
+    function formatExamDate(session, fallbackExamDate) {
+      if (session && Array.isArray(session.schedules) && session.schedules.length > 0) {
+        const days = ['日', '月', '火', '水', '木', '金', '土'];
+        // 会場受験のスケジュールを優先
+        const venueSch = session.schedules.find(sch => {
+          const types = Array.isArray(sch.venue_type) ? sch.venue_type : [sch.venue_type || ''];
+          return !types.some(t => t && t.includes('自宅')) && (sch.date_start || sch.date_text);
+        }) || session.schedules[0];
+
+        if (venueSch) {
+          if (venueSch.date_text) return venueSch.date_text;
+          if (venueSch.date_start) {
+            const d = new Date(venueSch.date_start);
+            if (!isNaN(d.getTime())) {
+              const y = d.getFullYear();
+              const m = d.getMonth() + 1;
+              const dt = d.getDate();
+              const day = days[d.getDay()];
+
+              // 複数日期間（date_end があり別日の場合）
+              if (venueSch.date_end) {
+                const dEnd = new Date(venueSch.date_end);
+                if (!isNaN(dEnd.getTime()) && (dEnd.getDate() !== dt || dEnd.getMonth() !== d.getMonth())) {
+                  const mEnd = dEnd.getMonth() + 1;
+                  const dtEnd = dEnd.getDate();
+                  const dayEnd = days[dEnd.getDay()];
+                  return `${y}年${m}/${dt}(${day})〜${mEnd}/${dtEnd}(${dayEnd})`;
+                }
+              }
+              return `${y}年${m}月${dt}日(${day})`;
+            }
+          }
+        }
+      }
+      return fallbackExamDate || '実施日未定';
+    }
+
+    /**
+     * schedules から会場名（venue_name）および「自宅受験」を動的選択肢として抽出
+     */
+    function extractVenuesFromSchedules(session, fallbackVenues) {
+      const venues = [];
+
+      if (session && Array.isArray(session.schedules) && session.schedules.length > 0) {
+        session.schedules.forEach((sch, sIdx) => {
+          const types = Array.isArray(sch.venue_type) ? sch.venue_type : [sch.venue_type || ''];
+          const isHome = types.some(t => t && (t.includes('自宅') || t.includes('自宅受験') || t.includes('自宅受検'))) ||
+                         (sch.venue_name && sch.venue_name.includes('自宅'));
+          if (!isHome) {
+            const typeName = types[0] || '会場';
+            let label = sch.venue_name ? `${typeName}（${sch.venue_name}）` : typeName;
+            if (sch.venue_name && sch.venue_name.includes(typeName)) {
+              label = sch.venue_name;
+            }
+            let valKey = 'venue_' + sIdx;
+            if (typeName.includes('岡山')) valKey = 'venue_okayama';
+            else if (typeName.includes('倉敷')) valKey = 'venue_kurashiki';
+            else if (typeName.includes('津山')) valKey = 'venue_tsuyama';
+
+            // 重複排除
+            if (!venues.some(v => v.label === label)) {
+              venues.push({
+                value: valKey,
+                label: label
+              });
+            }
+          }
+        });
+      }
+
+      // 「自宅受験」の選択肢を追加
+      venues.push({
+        value: 'home',
+        label: '自宅受験（問題冊子郵送・期日内答案返送）'
+      });
+
+      // スケジュールから会場が1つも抽出できなかった場合はフォールバック
+      if (venues.length === 1 && fallbackVenues && fallbackVenues.length > 0) {
+        return fallbackVenues;
+      }
+
+      return venues;
+    }
+
+    // ========================================================
+    // 3. 学年切り替えロジック
+    // ========================================================
+    function selectFormGrade(gradeKey, targetMonth = null) {
+      currentSelectedGrade = gradeKey || null;
+      const grades = ['sho6', 'chu1', 'chu2', 'chu3'];
+
+      grades.forEach(g => {
+        const btn = document.getElementById('grade-btn-' + g);
+        if (!btn) return;
+
+        const title = btn.querySelector('span');
+
+        if (gradeKey && g === gradeKey) {
+          btn.className = 'grade-select-btn flex items-center justify-center py-2.5 sm:py-3 px-1 sm:px-2 rounded-lg bg-primary-fixed/50 border-2 border-primary-container ring-2 ring-primary-container/20 cursor-pointer hover:bg-primary-fixed/60 transition-all text-center shadow-xs';
+          if (title) title.className = 'font-bold text-sm sm:text-base text-primary-container leading-none';
+        } else {
+          btn.className = 'grade-select-btn flex items-center justify-center py-2.5 sm:py-3 px-1 sm:px-2 rounded-lg bg-surface-container-low border border-outline-variant/30 cursor-pointer hover:bg-surface-container transition-all text-center';
+          if (title) title.className = 'font-bold text-sm sm:text-base text-on-surface leading-none';
+        }
+      });
+
+      renderExamCards(gradeKey, targetMonth);
+      if (typeof updateSchoolInputPlaceholder === 'function') {
+        updateSchoolInputPlaceholder(gradeKey);
+      }
+    }
+
+    // ========================================================
+    // 4. microCMSデータ連動 & 締切フィルタリング & 動的レンダリング
+    // ========================================================
+    /**
+     * 学年キーに応じた模試一覧を生成（microCMS優先 + フォールバック補完）
+     * 1) 選択学年の sessions を抽出
+     * 2) application_deadline と現在日時をリアルタイム比較（締切を過ぎた模試は自動除外）
+     * 3) active_issue と一致する模試は「〇〇対象・受付中」、より後の号は「〇〇対象・予約受付」
+     * 4) schedules から希望会場および自宅受験を動的生成
+     */
+    function getAvailableExamsForGrade(gradeKey) {
+      const now = Date.now();
+      const gradeLabels = { sho6: '小6', chu1: '中1', chu2: '中2', chu3: '中3' };
+      const gradeLabel = gradeLabels[gradeKey] || '中3';
+      const gradePrefix = `${gradeLabel}対象`;
+
+      // 学年コード・名称マッチング (c3: 中3, c2: 中2, c1: 中1, e6/s6: 小6)
+      const gradeCodeMap = { chu3: 'c3', chu2: 'c2', chu1: 'c1', sho6: 'e6' };
+      const targetCode = gradeCodeMap[gradeKey];
+
+      let targetGuide = null;
+      if (_examGuidesCache && Array.isArray(_examGuidesCache)) {
+        targetGuide = _examGuidesCache.find(g => {
+          if (targetCode && (g.grade_code === targetCode || (targetCode === 'e6' && (g.grade_code === 's6' || g.grade_code === 'e6')))) {
+            return true;
+          }
+          if (g.grade_name && g.grade_name.includes(gradeLabel)) {
+            return true;
+          }
+          return false;
+        });
+      }
+
+      // フォールバック模試リスト（microCMS未接続時または欠損補完用）
+      const fallbackList = EXAMS_DATABASE.filter(e => e.grade === gradeKey);
+
+      let rawSessions = [];
+      let activeIssueStr = '';
+
+      if (targetGuide) {
+        rawSessions = Array.isArray(targetGuide.sessions) ? targetGuide.sessions : [];
+        if (targetGuide.active_issue) {
+          activeIssueStr = Array.isArray(targetGuide.active_issue)
+            ? (targetGuide.active_issue[0] || '')
+            : String(targetGuide.active_issue);
+        }
+      }
+
+      let candidateExams = [];
+
+      // microCMS の sessions が存在する場合: microCMS のセッション情報のみを元に動的生成
+      if (rawSessions.length > 0) {
+        rawSessions.forEach((s, idx) => {
+          let issueName = (s.issue_name || s.session_label || '').trim();
+          // "12月" のような表記の場合 "12月号" に正規化
+          if (issueName && !issueName.endsWith('号') && /^\d+月$/.test(issueName)) {
+            issueName += '号';
+          }
+
+          // 対応するフォールバック情報（未設定項目の会場や締切等を補完）
+          const fallback = fallbackList.find(f => f.issueName && issueName && (f.issueName === issueName || f.issueName.includes(issueName) || issueName.includes(f.issueName)))
+            || fallbackList[idx]
+            || {};
+
+          // 申込締切日時（microCMSのdeadline / application_deadline / applicationDeadline 等）
+          const deadlineRaw = s.deadline || s.application_deadline || s.applicationDeadline || fallback.deadline || '';
+          const deadlineTime = parseDeadline(deadlineRaw);
+
+          // 【申込締切日によるフィルタリング（自動判定）】:
+          // 締切日時を過ぎている模試（現在日時より前）は自動的に除外・非表示
+          if (deadlineTime && deadlineTime <= now) {
+            return;
+          }
+
+          // 模試タイトル: microCMS の title を優先
+          const title = s.title || fallback.title || (gradeKey === 'sho6' ? '岡山県立中高一貫校 適性検査対策模試' : '岡山県統一模擬試験（おかもし）');
+
+          // 実施日
+          const examDate = formatExamDate(s, fallback.examDate);
+
+          // 申込締切表示
+          const deadlineDisplay = formatDeadlineDisplay(deadlineRaw, deadlineTime);
+
+          // 受験料
+          let price = fallback.price || 5500;
+          if (s.fee) {
+            const parsedFee = parseInt(String(s.fee).replace(/[^0-9]/g, ''), 10);
+            if (!isNaN(parsedFee) && parsedFee > 0) {
+              price = parsedFee;
+            }
+          }
+
+          // 会場リスト
+          const venues = extractVenuesFromSchedules(s, fallback.venues);
+
+          // 学年名（例: 中3生, 小6生）
+          const gradeName = (targetGuide && targetGuide.grade_name) ? targetGuide.grade_name : (fallback.gradeName || `${gradeLabel}生`);
+
+          candidateExams.push({
+            id: `${gradeKey}_${s.id || issueName || idx}`,
+            grade: gradeKey,
+            gradeLabel: gradeLabel,
+            gradeName: gradeName,
+            issueName: issueName || fallback.issueName || '',
+            title: title,
+            examDate: examDate,
+            deadline: deadlineRaw,
+            deadlineTime: deadlineTime,
+            deadlineDisplay: deadlineDisplay,
+            price: price,
+            status: 'open',
+            venues: venues,
+            originalIndex: idx
+          });
+        });
+
+        // ※ microCMS 取得時はダミー配列からの余分な補完（存在しない11月号など）は行いません
+
+      } else {
+        // microCMS 未取得時またはセッション未定義時はフォールバックリストを使用
+        fallbackList.forEach(fb => {
+          const fbDeadlineTime = parseDeadline(fb.deadline);
+          // 締切前のみ
+          if (fb.status !== 'closed' && (!fbDeadlineTime || fbDeadlineTime > now)) {
+            candidateExams.push({
+              ...fb,
+              gradeName: fb.gradeName || `${gradeLabel}生`,
+              deadlineTime: fbDeadlineTime
+            });
+          }
+        });
+      }
+
+      // 受付ステータスバッジの自動判定
+      let activeIndexInCandidates = -1;
+      if (activeIssueStr) {
+        activeIndexInCandidates = candidateExams.findIndex(e => e.issueName && (e.issueName === activeIssueStr || e.issueName.includes(activeIssueStr) || activeIssueStr.includes(e.issueName)));
+      }
+
+      candidateExams = candidateExams.map((exam, index) => {
+        let badge = '';
+        if (activeIndexInCandidates !== -1) {
+          if (index === activeIndexInCandidates || index < activeIndexInCandidates) {
+            badge = `${gradePrefix}・受付中`;
+          } else {
+            badge = `${gradePrefix}・予約受付`;
+          }
+        } else {
+          if (index === 0) {
+            badge = `${gradePrefix}・受付中`;
+          } else {
+            badge = `${gradePrefix}・予約受付`;
+          }
+        }
+
+        return {
+          ...exam,
+          badge: badge,
+          isDefaultChecked: false // 初期値はすべてチェックを外す
+        };
+      });
+
+      return candidateExams;
+    }
+
+    function renderExamCards(gradeKey, targetMonth = null) {
+      const container = document.getElementById('examOptionGroup');
+      if (!container) return;
+
+      selectedExamsState = {}; // 初期選択は未選択状態（空）にリセット
+
+      // 学年が未選択の場合の案内メッセージ
+      if (!gradeKey) {
+        container.innerHTML = `
+          <div class="p-6 sm:p-8 rounded-lg bg-surface-container-low border border-outline-variant/30 text-center space-y-2.5">
+            <span class="material-symbols-outlined text-3xl sm:text-4xl text-outline">school</span>
+            <p class="font-bold text-on-surface text-sm sm:text-base">まず上の学年（小6 / 中1〜中3）を選択してください</p>
+            <p class="text-xs sm:text-sm text-on-surface-variant">学年を選択すると、お申し込み可能な模試一覧が表示されます。</p>
+          </div>
+        `;
+        updateSummary();
+        return;
+      }
+
+      // 該当学年の受付中模試を抽出（締切前・自動非表示適用済み）
+      const availableExams = getAvailableExamsForGrade(gradeKey);
+
+      if (availableExams.length === 0) {
+        container.innerHTML = `
+          <div class="p-6 rounded-lg bg-surface-container-low border border-outline-variant/30 text-center space-y-2">
+            <span class="material-symbols-outlined text-3xl text-outline">event_busy</span>
+            <p class="font-bold text-on-surface text-sm sm:text-base">現在受付中のお申し込み可能な模試はございません</p>
+            <p class="text-xs text-on-surface-variant">次回の実施日程・要項発表まで今しばらくお待ちください。</p>
+          </div>
+        `;
+        updateSummary();
+        return;
+      }
+
+      // 対象月号の判定（引数、またはURLパラメータ初期値連動）
+      let effectiveTargetMonth = null;
+      if (targetMonth !== null && targetMonth !== undefined) {
+        effectiveTargetMonth = parseMonthParam(targetMonth);
+      } else if (typeof initialTargetMonth !== 'undefined' && initialTargetMonth !== null && gradeKey === initialTargetGrade) {
+        effectiveTargetMonth = initialTargetMonth;
+      }
+
+      // カード群を生成（URL等で指定された該当模試は初期状態でチェックON・活性化）
+      container.innerHTML = availableExams.map((exam) => {
+        let isChecked = false;
+        if (effectiveTargetMonth !== null) {
+          const mNum = parseMonthParam(exam.issueName) || (exam.id ? parseMonthParam(exam.id) : null);
+          if (mNum === effectiveTargetMonth) {
+            isChecked = true;
+          }
+        }
+
+        // 初期選択されている場合、状態マップに登録
+        if (isChecked) {
+          selectedExamsState[exam.id] = {
+            ...exam,
+            venue: '',
+            venueLabel: ''
+          };
+        }
+
+        // 会場選択肢（先頭に未選択の初期値を配置）
+        const venueOptionsHtml = [
+          `<option value="" selected disabled class="text-rose-500 font-normal">選択してください</option>`,
+          ...(exam.venues || []).map(v => `
+            <option value="${v.value}" class="text-slate-900 font-normal">${v.label}</option>
+          `)
+        ].join('');
+
+        const cardClasses = isChecked
+          ? 'relative flex flex-col p-4 sm:p-5 rounded-lg shadow-2xs sm:shadow-sm gap-3.5 transition-all duration-200 bg-primary-fixed/30 border-2 border-primary-container ring-1 ring-primary-container/20'
+          : 'relative flex flex-col p-4 sm:p-5 rounded-lg bg-white border border-slate-300 shadow-2xs sm:shadow-sm gap-3.5 transition-all duration-200';
+
+        const badgeGradeClass = isChecked
+          ? 'inline-flex items-center justify-center px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-md bg-white text-slate-800 border border-slate-200 font-bold text-base shrink-0 shadow-2xs leading-normal transition-colors'
+          : 'inline-flex items-center justify-center px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200/60 font-bold text-base shrink-0 shadow-2xs leading-normal transition-colors';
+
+        const badgeIssueClass = isChecked
+          ? 'inline-flex items-center justify-center px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-md bg-white text-slate-800 border border-slate-200 font-bold text-base shrink-0 shadow-2xs leading-normal transition-colors'
+          : 'inline-flex items-center justify-center px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200/60 font-bold text-base shrink-0 shadow-2xs leading-normal transition-colors';
+
+        const venueWrapperClass = isChecked
+          ? 'pt-3 border-t border-outline-variant/20 grid grid-cols-1 md:grid-cols-12 gap-2 items-center'
+          : 'pt-3 border-t border-outline-variant/20 grid grid-cols-1 md:grid-cols-12 gap-2 items-center opacity-50 pointer-events-none';
+
+        const venueDisabledAttr = isChecked ? '' : 'disabled';
+
+        const isVenueEmpty = !selectedExamsState[exam.id]?.venue;
+        const venueSelectClass = isChecked
+          ? (isVenueEmpty
+              ? 'absolute inset-0 w-full h-full pl-3 pr-9 rounded-lg font-body-sm text-base appearance-none border shadow-2xs cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-primary-container text-red-500 bg-red-50 border-red-300'
+              : 'absolute inset-0 w-full h-full pl-3 pr-9 rounded-lg font-body-sm text-base appearance-none border shadow-2xs cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-primary-container text-slate-900 font-medium bg-white border-slate-300')
+          : 'absolute inset-0 w-full h-full pl-3 pr-9 rounded-lg font-body-sm text-base appearance-none border shadow-2xs cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-primary-container text-gray-400 bg-gray-50 border-gray-200';
+
+        const venueArrowClass = isChecked
+          ? (isVenueEmpty ? 'text-red-400' : 'text-slate-400')
+          : 'text-gray-400';
+
+        // 選択テキスト表示用ラベルの文字色（select本体と同じステート配色）
+        const venueDisplayColorClass = isChecked
+          ? (isVenueEmpty ? 'text-red-500' : 'text-slate-900 font-medium')
+          : 'text-gray-400';
+
+        return `
+          <div class="${cardClasses}" id="card-${exam.id}">
+            <label class="flex items-start gap-3 cursor-pointer">
+              <input type="checkbox" id="check-${exam.id}" name="selected_exams" value="${exam.id}"
+                onchange="toggleExamSelection('${exam.id}')"
+                ${isChecked ? 'checked' : ''}
+                class="mt-1 w-5 h-5 text-primary-container accent-primary-container rounded cursor-pointer shrink-0">
+              <div class="flex flex-col gap-2 sm:gap-2.5 flex-1 min-w-0">
+                <!-- 上段：バッジと金額（右端1行化） -->
+                <div class="flex items-center justify-between gap-2">
+                  <div class="flex items-center gap-1.5 sm:gap-2 shrink-0" id="badge-group-${exam.id}">
+                    <span id="badge-grade-${exam.id}" class="${badgeGradeClass}">${exam.gradeName}</span>
+                    <span id="badge-issue-${exam.id}" class="${badgeIssueClass}">${exam.issueName}</span>
+                  </div>
+                  <!-- 金額（¥5,500 (税込) を1行化） -->
+                  <div class="flex items-baseline gap-1 shrink-0 whitespace-nowrap ml-auto">
+                    <span class="font-headline-sm text-lg sm:text-xl font-extrabold text-primary-container">¥${exam.price.toLocaleString()}</span>
+                    <span class="font-body-sm text-xs text-on-surface-variant font-bold">(税込)</span>
+                  </div>
+                </div>
+
+                <!-- 中段：模試タイトル（十分な横幅を確保して1行表示） -->
+                <div class="w-full min-w-0">
+                  <span class="font-headline-sm text-base sm:text-lg font-bold text-on-surface leading-snug tracking-tight block">${exam.title}</span>
+                </div>
+
+                <!-- 下段：申込締切のみ強調表示（タイトル同等サイズへ拡大） -->
+                <div class="text-base sm:text-lg font-body-sm">
+                  <span class="text-on-surface-variant font-medium">申込締切: <strong class="text-secondary font-bold text-base sm:text-lg">${exam.deadlineDisplay}</strong></span>
+                </div>
+              </div>
+            </label>
+
+            <!-- 会場・受験形式セレクトボックス（初期状態は無効化・チェックで活性化） -->
+            <div class="${venueWrapperClass}" id="venue-wrapper-${exam.id}">
+              <label class="md:col-span-4 font-label-md text-xs sm:text-sm font-bold text-primary flex items-center gap-1.5 pl-1" for="venue-${exam.id}">
+                <span class="material-symbols-outlined text-base">apartment</span>受験方法・希望会場
+                <span class="bg-secondary text-on-secondary font-label-sm text-[10px] px-1.5 py-0.2 rounded-full font-bold ml-1">必須</span>
+              </label>
+              <div class="md:col-span-8 relative">
+                <select id="venue-${exam.id}" ${venueDisabledAttr} required
+                  onchange="updateExamVenue('${exam.id}', this)"
+                  class="${venueSelectClass}" style="color: transparent;">
+                  ${venueOptionsHtml}
+                </select>
+                <!-- 選択中の会場名表示（ネイティブselectは改行不可・iOSで「...」省略されるため、折り返し可能なラベルで全文表示） -->
+                <!-- スマホ時は13px・左右余白を詰めて表示幅を確保（右側は矢印アイコン幅＋余白分のpr-8を確保し文字と被らないようにする） -->
+                <span id="venue-display-${exam.id}" aria-hidden="true" class="relative flex items-center min-h-10 sm:min-h-11 py-2 pl-2.5 pr-8 sm:pl-3 sm:pr-9 font-body-sm text-[13px] sm:text-base leading-snug tracking-tight sm:tracking-normal whitespace-normal break-words text-left pointer-events-none ${venueDisplayColorClass}">選択してください</span>
+                <span id="venue-arrow-${exam.id}" class="material-symbols-outlined absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 pointer-events-none ${venueArrowClass} text-base transition-colors">expand_more</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // エラーメッセージの自動消去（選択がある場合）
+      if (Object.keys(selectedExamsState).length > 0) {
+        const examInlineError = document.getElementById('examSelectionInlineError');
+        if (examInlineError) examInlineError.classList.add('hidden');
+      }
+
+      // 初期描画時（URLパラメータ自動選択等を含む）の全セレクトボックスのスタイル同期
+      availableExams.forEach((exam) => {
+        const sel = document.getElementById('venue-' + exam.id);
+        if (sel) updateVenueSelectStyle(sel);
+      });
+
+      updateSummary();
+    }
+
+    // 模試選択の切り替え（チェックボックス）
+    function toggleExamSelection(examId) {
+      const chk = document.getElementById('check-' + examId);
+      const card = document.getElementById('card-' + examId);
+      const venueSelect = document.getElementById('venue-' + examId);
+      const venueWrapper = document.getElementById('venue-wrapper-' + examId);
+      const exams = getAvailableExamsForGrade(currentSelectedGrade);
+      const examData = exams.find(e => e.id === examId);
+
+      if (!chk || !examData) return;
+
+      if (chk.checked) {
+        const venueVal = venueSelect ? venueSelect.value : '';
+        const venueOpt = (venueSelect && venueSelect.selectedIndex > 0) ? venueSelect.options[venueSelect.selectedIndex] : null;
+        const venueText = venueOpt ? venueOpt.text : '';
+
+        selectedExamsState[examId] = {
+          ...examData,
+          venue: venueVal,
+          venueLabel: venueText
+        };
+
+        if (card) {
+          card.classList.remove('bg-white', 'border-slate-300', 'border-slate-200/80', 'bg-surface-container-lowest', 'border-outline-variant/30');
+          card.classList.add('bg-primary-fixed/30', 'border-2', 'border-primary-container', 'ring-1', 'ring-primary-container/20');
+        }
+
+        // バッジ配色反転（選択時：白背景＋ダークスレート文字＋薄ボーダー）
+        const badgeGrade = document.getElementById('badge-grade-' + examId);
+        const badgeIssue = document.getElementById('badge-issue-' + examId);
+        if (badgeGrade) {
+          badgeGrade.className = 'inline-flex items-center justify-center px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-md bg-white text-slate-800 border border-slate-200 font-bold text-base shrink-0 shadow-2xs leading-normal transition-colors';
+        }
+        if (badgeIssue) {
+          badgeIssue.className = 'inline-flex items-center justify-center px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-md bg-white text-slate-800 border border-slate-200 font-bold text-base shrink-0 shadow-2xs leading-normal transition-colors';
+        }
+
+        if (venueWrapper) venueWrapper.classList.remove('opacity-50', 'pointer-events-none');
+        if (venueSelect) {
+          venueSelect.disabled = false;
+          updateVenueSelectStyle(venueSelect);
+        }
+
+        // 模試選択エラーの自動消去
+        const examInlineError = document.getElementById('examSelectionInlineError');
+        if (examInlineError) examInlineError.classList.add('hidden');
+        if (typeof clearFormError === 'function') clearFormError();
+      } else {
+        delete selectedExamsState[examId];
+
+        if (card) {
+          card.classList.remove('bg-primary-fixed/30', 'border-2', 'border-primary-container', 'ring-1', 'ring-primary-container/20');
+          card.classList.add('bg-white', 'border-slate-300');
+        }
+
+        // バッジ配色反転（未選択時：薄いグリーン背景＋エメラルド文字＋エメラルドボーダー）
+        const badgeGrade = document.getElementById('badge-grade-' + examId);
+        const badgeIssue = document.getElementById('badge-issue-' + examId);
+        if (badgeGrade) {
+          badgeGrade.className = 'inline-flex items-center justify-center px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200/60 font-bold text-base shrink-0 shadow-2xs leading-normal transition-colors';
+        }
+        if (badgeIssue) {
+          badgeIssue.className = 'inline-flex items-center justify-center px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200/60 font-bold text-base shrink-0 shadow-2xs leading-normal transition-colors';
+        }
+
+        if (venueWrapper) venueWrapper.classList.add('opacity-50', 'pointer-events-none');
+        if (venueSelect) {
+          venueSelect.disabled = true;
+          updateVenueSelectStyle(venueSelect);
+        }
+      }
+
+      updateSummary();
+    }
+
+    // 会場セレクトボックスの未選択/選択済ステートスタイル切り替え
+    function updateVenueSelectStyle(selectElem) {
+      if (!selectElem) return;
+      const examId = selectElem.id.replace('venue-', '');
+      const chk = document.getElementById('check-' + examId);
+      const isExamChecked = chk ? chk.checked : false;
+      const isVenueSelected = !!selectElem.value;
+      const arrow = selectElem.parentElement ? selectElem.parentElement.querySelector('.material-symbols-outlined') : null;
+
+      // クラスのリセット
+      selectElem.classList.remove(
+        'text-gray-400', 'bg-gray-50', 'border-gray-200',
+        'text-red-500', 'bg-red-50', 'border-red-300', 'border-red-400',
+        'text-rose-500', 'bg-rose-50/50', 'border-rose-200/80',
+        'text-slate-900', 'font-medium', 'bg-white', 'border-slate-200/80', 'border-slate-300'
+      );
+      if (arrow) {
+        arrow.classList.remove('text-gray-400', 'text-red-400', 'text-rose-400', 'text-slate-400', 'text-on-surface-variant');
+      }
+
+      // 選択テキスト表示用ラベル（省略せず折り返して全文表示）の同期
+      const display = document.getElementById('venue-display-' + examId);
+      if (display) {
+        const opt = selectElem.selectedIndex >= 0 ? selectElem.options[selectElem.selectedIndex] : null;
+        display.textContent = opt ? opt.text : '選択してください';
+        display.classList.remove('text-gray-400', 'text-red-500', 'text-slate-900', 'font-medium');
+        if (!isExamChecked) {
+          display.classList.add('text-gray-400');
+        } else if (!isVenueSelected) {
+          display.classList.add('text-red-500');
+        } else {
+          display.classList.add('text-slate-900', 'font-medium');
+        }
+      }
+
+      if (!isExamChecked) {
+        // 1. 模試未選択時（初期状態）：標準的な薄いグレー
+        selectElem.classList.add('text-gray-400', 'bg-gray-50', 'border-gray-200');
+        if (arrow) arrow.classList.add('text-gray-400');
+      } else if (!isVenueSelected) {
+        // 2. 模試選択中 かつ 会場未選択：警告表示（赤系ハイライト）
+        selectElem.classList.add('text-red-500', 'bg-red-50', 'border-red-300');
+        if (arrow) arrow.classList.add('text-red-400');
+      } else {
+        // 3. 模試選択中 かつ 会場選択済み：標準白背景・通常テキスト
+        selectElem.classList.add('text-slate-900', 'font-medium', 'bg-white', 'border-slate-300');
+        if (arrow) arrow.classList.add('text-slate-400');
+      }
+    }
+
+    // 会場選択の変更
+    function updateExamVenue(examId, selectElem) {
+      updateVenueSelectStyle(selectElem);
+      if (selectedExamsState[examId]) {
+        const val = selectElem.value;
+        const opt = selectElem.selectedIndex > 0 ? selectElem.options[selectElem.selectedIndex] : null;
+        selectedExamsState[examId].venue = val;
+        selectedExamsState[examId].venueLabel = opt ? opt.text : '';
+        if (val) {
+          selectElem.classList.remove('apply-input-error', '!border-red-500', '!ring-2', '!ring-red-200');
+          if (typeof clearFormError === 'function') clearFormError();
+        }
+        updateSummary();
+      }
+    }
+
+    // ========================================================
+    // 4. お申し込みサマリー（合計金額・内訳）のリアルタイム更新
+    // ========================================================
+    function updateSummary() {
+      const selectedList = Object.values(selectedExamsState);
+      const totalAmount = selectedList.reduce((sum, item) => sum + item.price, 0);
+
+      // 件数バッジ
+      const countElem = document.getElementById('summarySelectedCount');
+      if (countElem) {
+        countElem.textContent = `${selectedList.length}回分選択中`;
+      }
+
+      // 合計金額表示
+      const totalElem = document.getElementById('summaryTotalAmount');
+      if (totalElem) {
+        totalElem.textContent = '¥' + totalAmount.toLocaleString();
+      }
+
+      // 内訳リスト
+      const listContainer = document.getElementById('summarySelectedList');
+      if (listContainer) {
+        if (selectedList.length === 0) {
+          listContainer.innerHTML = `
+            <div class="py-2 text-center text-xs text-secondary font-bold">
+              受験する模試を選択してください（未選択）
+            </div>
+          `;
+        } else {
+          listContainer.innerHTML = selectedList.map((item, idx) => `
+            <div class="flex flex-col gap-1.5 ${idx > 0 ? 'pt-2.5 border-t border-slate-200/60' : ''}">
+              <div class="flex items-start justify-between gap-2">
+                <span class="font-bold text-emerald-950 text-xs sm:text-[14px] leading-snug">${item.title} (${item.issueName})</span>
+                <span class="font-headline-sm text-xs sm:text-[15px] font-bold text-emerald-950 shrink-0">¥${item.price.toLocaleString()}</span>
+              </div>
+              <div class="flex items-center gap-2 text-slate-600 font-body-sm text-[11px] sm:text-xs">
+                ${item.venueLabel ? `
+                  <span class="font-medium text-slate-700">形式: ${item.venueLabel}</span>
+                ` : `
+                  <span class="px-2 py-0.5 rounded bg-secondary/10 text-secondary font-bold">形式: 会場未選択（要選択）</span>
+                `}
+              </div>
+            </div>
+          `).join('');
+        }
+      }
+    }
+
+    // ========================================================
+    // 決済期限（当日含め4日間 = 本日＋3日後）の動的計算ロジック
+    // ========================================================
+    function getConvenienceDeadline() {
+      const now = new Date();
+      const deadline = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 3);
+      const m = deadline.getMonth() + 1;
+      const d = deadline.getDate();
+      const days = ['日', '月', '火', '水', '木', '金', '土'];
+      const w = days[deadline.getDay()];
+      return {
+        fullText: `${m}月${d}日(${w}) 23:59`,
+        dateText: `${m}月${d}日(${w})`,
+        shortText: `${m}/${d}(${w})`
+      };
+    }
+
+    // 決済方法ラジオボタン切り替え時のサマリー更新 & 警告連動表示
+    function updatePaymentMethodSummary(method) {
+      const elem = document.getElementById('summaryPaymentMethod');
+      const warningPanel = document.getElementById('convenienceWarningPanel');
+      const submitWarning = document.getElementById('convenienceSubmitWarning');
+      const fullElem = document.getElementById('convenienceDeadlineFull');
+      const dateElem = document.getElementById('convenienceDeadlineDate');
+      const deadlineBadge = document.getElementById('convenience-deadline-text');
+      const summaryNotice = document.getElementById('summaryConvenienceNotice');
+      const summaryNoticeDate = document.getElementById('summaryConvenienceDeadlineDate');
+      const convAgreeContainer = document.getElementById('convenienceAgreeContainer');
+      const convAgreeInput = document.getElementById('agreeConvenienceTerms');
+      const convAgreeDeadlineText = document.getElementById('agreeConvenienceDeadlineText');
+
+      const dl = getConvenienceDeadline();
+
+      if (deadlineBadge) {
+        deadlineBadge.textContent = `お申込み完了後4日以内（${dl.shortText}まで）にお支払い`;
+      }
+
+      if (method === 'credit_card') {
+        if (elem) {
+          elem.innerHTML = `
+            <div class="flex items-center gap-1.5 text-xs sm:text-sm font-bold text-slate-800">
+              <span class="material-symbols-outlined text-base text-slate-600">credit_card</span>
+              <span>クレジットカード決済（Stripe）</span>
+            </div>
+          `;
+        }
+        if (warningPanel) warningPanel.classList.add('hidden');
+        if (submitWarning) submitWarning.classList.add('hidden');
+        if (summaryNotice) summaryNotice.classList.add('hidden');
+        if (convAgreeContainer) convAgreeContainer.classList.add('hidden');
+        if (convAgreeInput) {
+          convAgreeInput.required = false;
+          convAgreeInput.checked = false;
+        }
+      } else if (method === 'convenience_store') {
+        if (elem) {
+          elem.innerHTML = `
+            <div class="flex items-center gap-1.5 text-xs sm:text-sm font-bold text-slate-800">
+              <span class="material-symbols-outlined text-base text-slate-600">storefront</span>
+              <span>コンビニ決済（決済番号発行）</span>
+            </div>
+          `;
+        }
+        if (fullElem) fullElem.textContent = dl.fullText;
+        if (dateElem) dateElem.textContent = dl.dateText;
+        if (summaryNoticeDate) summaryNoticeDate.textContent = dl.dateText;
+        if (warningPanel) warningPanel.classList.remove('hidden');
+        if (submitWarning) submitWarning.classList.remove('hidden');
+        if (summaryNotice) summaryNotice.classList.remove('hidden');
+        if (convAgreeContainer) convAgreeContainer.classList.remove('hidden');
+        if (convAgreeInput) convAgreeInput.required = true;
+        if (convAgreeDeadlineText) convAgreeDeadlineText.textContent = `${dl.shortText}まで`;
+      } else {
+        // 未選択初期状態
+        if (elem) {
+          elem.innerHTML = `
+            <span class="text-xs sm:text-sm font-medium text-amber-700">お支払い方法を選択してください（未選択）</span>
+          `;
+        }
+        if (warningPanel) warningPanel.classList.add('hidden');
+        if (submitWarning) submitWarning.classList.add('hidden');
+        if (summaryNotice) summaryNotice.classList.add('hidden');
+        if (convAgreeContainer) convAgreeContainer.classList.add('hidden');
+        if (convAgreeInput) {
+          convAgreeInput.required = false;
+          convAgreeInput.checked = false;
+        }
+      }
+    }
+
+    // ========================================================
+    // 全角半角正規化 & 異体字（旧字体）常用漢字置換ユーティリティ
+    // ========================================================
+    // 全角数字・全角英字・全角スペース・各種全角ハイフン（ー、―、‐など）を半角へ変換
+    function normalizeToHalfWidth(str) {
+      if (!str) return '';
+      return String(str)
+        // 全角数字 (０-９) -> 半角 (0-9)
+        .replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0))
+        // 全角英字 (Ａ-Ｚ, ａ-ｚ) -> 半角 (A-Z, a-z)
+        .replace(/[Ａ-Ｚａ-ｚ]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0))
+        // 全角スペース -> 半角スペース
+        .replace(/[　]/g, ' ')
+        // 各種ダッシュ・長音記号・全角ハイフン・全角マイナス（ー、―、‐、－など） -> 半角ハイフン '-'
+        .replace(/[ー―‐‑‒–—ｰ−─━〜～－˗֊⁃⁻₋﹘﹣]/g, '-')
+        .trim();
+    }
+
+    // ひらがな -> 全角カタカナ自動変換
+    function normalizeToFullWidthKana(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/[ぁ-ゖ]/g, ch => String.fromCharCode(ch.charCodeAt(0) + 0x60))
+        .trim();
+    }
+
+    // 代表的な旧字体・異体字の常用漢字（新字体）マッピング辞書
+    const KANJI_VARIANT_MAP = {
+      '髙': '高',
+      '﨑': '崎',
+      '﨑': '崎',
+      '德': '徳',
+      '濵': '浜',
+      '濱': '浜',
+      '齊': '斉',
+      '齋': '斉',
+      '澁': '渋',
+      '廣': '広',
+      '瀨': '瀬',
+      '邊': '辺',
+      '邉': '辺',
+      '羽': '羽',
+      '塚': '塚',
+      '塚': '塚',
+      '黑': '黒',
+      '祥': '祥',
+      '福': '福',
+      '靖': '靖',
+      '淸': '清',
+      '益': '益',
+      '禮': '礼',
+      '神': '神',
+      '祐': '祐',
+      '礼': '礼',
+      '祉': '祉',
+      '祖': '祖',
+      '祝': '祝',
+      '眞': '真',
+      '槇': '槙',
+      '瑤': '瑶',
+      '榮': '栄',
+      '龍': '竜',
+      '藪': '薮',
+      '嶋': '島',
+      '峯': '峰',
+      '條': '条',
+      '莊': '荘',
+      '壽': '寿',
+      '亙': '亘',
+      '惠': '恵',
+      '恆': '恒',
+      '晋': '晋',
+      '裵': '裴'
+    };
+
+    function replaceKanjiVariants(str) {
+      if (!str) return '';
+      return String(str).split('').map(char => KANJI_VARIANT_MAP[char] || char).join('');
+    }
+
+    // ========================================================
+    // 5. 郵便番号API連携・住所自動入力（zipcloud API）
+    // ========================================================
+    let isSearchingAddress = false;
+    let lastSearchedZip = '';
+
+    function normalizeZipCode(raw) {
+      if (!raw) return '';
+      return String(raw)
+        .replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0))
+        .replace(/[^\d]/g, '');
+    }
+
+    function showPostalMessage(text, isError = true) {
+      const msgElem = document.getElementById('postalMsg');
+      if (!msgElem) return;
+      msgElem.textContent = text;
+      msgElem.className = `text-xs font-medium mt-1.5 ${isError ? 'text-rose-600' : 'text-emerald-700'}`;
+      msgElem.classList.remove('hidden');
+    }
+
+    function clearPostalMessage() {
+      const msgElem = document.getElementById('postalMsg');
+      if (!msgElem) return;
+      msgElem.textContent = '';
+      msgElem.classList.add('hidden');
+    }
+
+    function setAddressButtonLoading(loading) {
+      const btn = document.getElementById('btnSearchAddress');
+      const icon = document.getElementById('btnSearchAddressIcon');
+      const text = document.getElementById('btnSearchAddressText');
+      if (!btn) return;
+
+      if (loading) {
+        btn.disabled = true;
+        if (icon) {
+          icon.textContent = 'sync';
+          icon.classList.add('animate-spin');
+        }
+        if (text) text.textContent = '検索中...';
+      } else {
+        btn.disabled = false;
+        if (icon) {
+          icon.textContent = 'location_searching';
+          icon.classList.remove('animate-spin');
+        }
+        if (text) text.textContent = '住所自動入力';
+      }
+    }
+
+    async function searchAddressByPostalCode(isManualTrigger = false) {
+      const zipInput = document.getElementById('postalCode');
+      const prefSelect = document.getElementById('prefecture');
+      const addr1Input = document.getElementById('addressLine1');
+      if (!zipInput || !prefSelect || !addr1Input) return;
+
+      const rawZip = zipInput.value;
+      const cleanZip = normalizeZipCode(rawZip);
+
+      // 入力桁数チェック
+      if (cleanZip.length < 7) {
+        if (isManualTrigger) {
+          showPostalMessage('郵便番号を7桁で入力してください（例: 700-0822）', true);
+          zipInput.focus();
+        }
+        return;
+      }
+
+      // 自動トリガーで、すでに同じ郵便番号で取得済みの場合は重複実行しない
+      if (!isManualTrigger && cleanZip === lastSearchedZip) {
+        return;
+      }
+
+      if (isSearchingAddress) return;
+      isSearchingAddress = true;
+      setAddressButtonLoading(true);
+      clearPostalMessage();
+
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 6000);
+
+        const response = await fetch(`https://zipcloud.ibsnet.co.jp/api/search?zipcode=${cleanZip}`, {
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+          throw new Error(`HTTP error: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (data && data.status === 200 && Array.isArray(data.results) && data.results.length > 0) {
+          const result = data.results[0];
+          const address1 = result.address1 || ''; // 都道府県
+          const address2 = result.address2 || ''; // 市区町村
+          const address3 = result.address3 || ''; // 町域名
+
+          // 郵便番号をハイフン付き（700-0822）に自動フォーマット
+          zipInput.value = `${cleanZip.slice(0, 3)}-${cleanZip.slice(3)}`;
+          lastSearchedZip = cleanZip;
+
+          // 1.「都道府県・市区町村・町名」入力欄の自動補完
+          const fullAddress = `${address1}${address2}${address3}`;
+          addr1Input.value = fullAddress;
+
+          // 都道府県情報（hidden項目）の更新
+          if (prefSelect) {
+            prefSelect.value = address1 || '岡山県';
+          }
+
+          // 2. 自動的に「丁目・番地・号」の入力欄へフォーカス（カーソル）を移動
+          const addr2Input = document.getElementById('addressLine2');
+          if (addr2Input) {
+            addr2Input.focus();
+            if (typeof addr2Input.setSelectionRange === 'function' && addr2Input.value) {
+              addr2Input.setSelectionRange(addr2Input.value.length, addr2Input.value.length);
+            }
+          }
+
+          showPostalMessage('✓ 住所を自動入力しました。「丁目・番地・号」をご入力ください', false);
+          setTimeout(() => {
+            clearPostalMessage();
+          }, 4500);
+        } else {
+          showPostalMessage('該当する住所が見つかりませんでした。郵便番号をご確認ください。', true);
+        }
+      } catch (err) {
+        console.error('Postal code search failed:', err);
+        showPostalMessage('住所の取得に失敗しました。お手数ですが直接ご入力ください。', true);
+      } finally {
+        isSearchingAddress = false;
+        setAddressButtonLoading(false);
+      }
+    }
+
+    function initPostalCodeAutoSearch() {
+      const zipInput = document.getElementById('postalCode');
+      if (!zipInput) return;
+
+      zipInput.addEventListener('input', function() {
+        clearPostalMessage();
+        const clean = normalizeZipCode(this.value);
+        if (clean.length === 7) {
+          searchAddressByPostalCode(false);
+        }
+      });
+
+      zipInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          searchAddressByPostalCode(true);
+        }
+      });
+    }
+
+    window.searchAddressByPostalCode = searchAddressByPostalCode;
+    window.fillMockAddress = () => searchAddressByPostalCode(true);
+
+    // ========================================================
+    // 5-2. 文部科学省学校コード準拠 在籍学校名サジェスト（オートコンプリート）
+    // ========================================================
+    let currentHighlightedIndex = -1;
+    let currentSuggestions = [];
+
+    function normalizeForSchoolSearch(str) {
+      if (!str) return '';
+      return String(str)
+        .toLowerCase()
+        .replace(/[\u30a1-\u30f6]/g, m => String.fromCharCode(m.charCodeAt(0) - 0x60)) // カタカナ→ひらがな
+        .replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0)) // 全角数字→半角
+        .replace(/[\s　・、。\-_]/g, '');
+    }
+
+    function getSchoolSuggestions(query, gradeKey) {
+      if (!query || !window.OKAYAMA_SCHOOLS_DATA) return [];
+      const normQuery = normalizeForSchoolSearch(query);
+      if (!normQuery) return [];
+
+      const elemSchools = window.OKAYAMA_SCHOOLS_DATA.elementary || [];
+      const jhsSchools = window.OKAYAMA_SCHOOLS_DATA.juniorHigh || [];
+
+      function matchSchool(s) {
+        const normName = normalizeForSchoolSearch(s.name);
+        const normKana = normalizeForSchoolSearch(s.kana);
+        const normCity = normalizeForSchoolSearch(s.city);
+        return normName.includes(normQuery) || normKana.includes(normQuery) || normCity.includes(normQuery);
+      }
+
+      // 小6選択時は小学校のみ、中1〜中3選択時は中学校のみをサジェスト表示
+      if (gradeKey === 'sho6') {
+        return elemSchools.filter(matchSchool).map(s => ({ ...s, category: '小学校' })).slice(0, 15);
+      } else if (gradeKey && (gradeKey.startsWith('chu') || ['chu1', 'chu2', 'chu3'].includes(gradeKey))) {
+        return jhsSchools.filter(matchSchool).map(s => ({ ...s, category: '中学校' })).slice(0, 15);
+      } else {
+        // 学年未選択時のフォールバック
+        const jhsMatches = jhsSchools.filter(matchSchool).map(s => ({ ...s, category: '中学校' }));
+        const elemMatches = elemSchools.filter(matchSchool).map(s => ({ ...s, category: '小学校' }));
+        return [...jhsMatches, ...elemMatches].slice(0, 15);
+      }
+    }
+
+    function renderSchoolSuggestions(suggestions, query) {
+      const dropdown = document.getElementById('schoolSuggestDropdown');
+      if (!dropdown) return;
+
+      currentSuggestions = suggestions;
+      currentHighlightedIndex = -1;
+
+      if (suggestions.length === 0) {
+        dropdown.innerHTML = `
+          <div class="p-3 text-xs text-slate-500 text-center">
+            <span>該当する学校名が見つかりませんでした</span><br>
+            <span class="text-[11px] text-slate-400">※候補にない学校名もそのままご入力いただけます</span>
+          </div>
+        `;
+        dropdown.classList.remove('hidden');
+        return;
+      }
+
+      const itemsHtml = suggestions.map((item, idx) => {
+        const isElem = item.category === '小学校';
+        const badgeColor = isElem 
+          ? 'bg-amber-100 text-amber-800 border-amber-200' 
+          : 'bg-emerald-100 text-emerald-800 border-emerald-200';
+        const typeBadge = item.type && item.type !== '公立' 
+          ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-600 border border-slate-200">${item.type}</span>` 
+          : '';
+
+        return `
+          <div class="school-suggest-item px-3.5 py-2.5 flex items-center justify-between gap-2.5 hover:bg-emerald-50/80 cursor-pointer transition-colors" data-index="${idx}" onmousedown="selectSchoolSuggestion(${idx})">
+            <div class="flex items-center gap-2 min-w-0 flex-1">
+              <span class="px-2 py-0.5 rounded text-[11px] font-bold border shrink-0 ${badgeColor}">${item.category}</span>
+              ${typeBadge}
+              <span class="text-xs sm:text-sm font-bold text-slate-800 truncate">${item.name}</span>
+            </div>
+            <span class="text-[11px] text-slate-400 shrink-0 font-medium">${item.city || ''}</span>
+          </div>
+        `;
+      }).join('');
+
+      dropdown.innerHTML = `
+        <div class="divide-y divide-slate-100">
+          ${itemsHtml}
+        </div>
+        <div class="px-3 py-1.5 bg-slate-50 border-t border-slate-100 text-[10px] text-slate-400 text-right">
+          文部科学省 学校コード準拠 / 候補外も直接入力可能
+        </div>
+      `;
+      dropdown.classList.remove('hidden');
+    }
+
+    function hideSchoolSuggestions() {
+      const dropdown = document.getElementById('schoolSuggestDropdown');
+      if (dropdown) dropdown.classList.add('hidden');
+      currentHighlightedIndex = -1;
+    }
+
+    function selectSchoolSuggestion(index) {
+      const item = currentSuggestions[index];
+      if (!item) return;
+
+      const input = document.getElementById('currentSchool');
+      if (input) {
+        input.value = item.name;
+        input.dispatchEvent(new Event('input'));
+        input.focus();
+      }
+      hideSchoolSuggestions();
+    }
+
+    function updateSchoolInputPlaceholder(gradeKey) {
+      const input = document.getElementById('currentSchool');
+      const label = document.querySelector('label[for="currentSchool"]');
+      if (!input) return;
+      if (gradeKey === 'sho6') {
+        input.placeholder = '例: 岡山市立岡山中央小学校（学校名を入力すると候補が表示されます）';
+        if (label) label.textContent = '在籍小学校名';
+      } else if (gradeKey && (gradeKey.startsWith('chu') || ['chu1', 'chu2', 'chu3'].includes(gradeKey))) {
+        input.placeholder = '例: 岡山市立操南中学校（学校名を入力すると候補が表示されます）';
+        if (label) label.textContent = '在籍中学校名';
+      } else {
+        input.placeholder = '在籍校を入力（学校名を入力すると候補が表示されます）';
+        if (label) label.textContent = '在籍中学校・小学校名';
+      }
+
+      // ドロップダウンが開いている場合は、新しい学年に合わせた候補で再表示
+      const dropdown = document.getElementById('schoolSuggestDropdown');
+      if (dropdown && !dropdown.classList.contains('hidden') && input.value.trim().length > 0) {
+        const matches = getSchoolSuggestions(input.value.trim(), gradeKey);
+        renderSchoolSuggestions(matches, input.value.trim());
+      }
+    }
+
+    function initSchoolAutoSuggest() {
+      const input = document.getElementById('currentSchool');
+      const dropdown = document.getElementById('schoolSuggestDropdown');
+      if (!input || !dropdown) return;
+
+      input.addEventListener('input', function() {
+        const val = this.value.trim();
+        if (val.length === 0) {
+          hideSchoolSuggestions();
+          return;
+        }
+        const matches = getSchoolSuggestions(val, currentSelectedGrade);
+        renderSchoolSuggestions(matches, val);
+      });
+
+      input.addEventListener('focus', function() {
+        const val = this.value.trim();
+        if (val.length > 0) {
+          const matches = getSchoolSuggestions(val, currentSelectedGrade);
+          renderSchoolSuggestions(matches, val);
+        }
+      });
+
+      input.addEventListener('keydown', function(e) {
+        const dropdownHidden = dropdown.classList.contains('hidden');
+        if (dropdownHidden || currentSuggestions.length === 0) return;
+
+        const items = dropdown.querySelectorAll('.school-suggest-item');
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          currentHighlightedIndex = (currentHighlightedIndex + 1) % currentSuggestions.length;
+          updateHighlightedItem(items);
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          currentHighlightedIndex = (currentHighlightedIndex - 1 + currentSuggestions.length) % currentSuggestions.length;
+          updateHighlightedItem(items);
+        } else if (e.key === 'Enter') {
+          if (currentHighlightedIndex >= 0 && currentHighlightedIndex < currentSuggestions.length) {
+            e.preventDefault();
+            selectSchoolSuggestion(currentHighlightedIndex);
+          }
+        } else if (e.key === 'Escape') {
+          hideSchoolSuggestions();
+        }
+      });
+
+      function updateHighlightedItem(items) {
+        items.forEach((el, i) => {
+          if (i === currentHighlightedIndex) {
+            el.classList.add('bg-emerald-100/90');
+            el.scrollIntoView({ block: 'nearest' });
+          } else {
+            el.classList.remove('bg-emerald-100/90');
+          }
+        });
+      }
+
+      // ドロップダウン外クリックで閉じる
+      document.addEventListener('click', function(e) {
+        if (!input.contains(e.target) && !dropdown.contains(e.target)) {
+          hideSchoolSuggestions();
+        }
+      });
+    }
+
+    window.selectSchoolSuggestion = selectSchoolSuggestion;
+    window.updateSchoolInputPlaceholder = updateSchoolInputPlaceholder;
+
+    // ========================================================
+    // 5.5 フォームエラー表示 & 通知ハンドラー（alert廃止・インライン化）
+    // ========================================================
+    let _formToastTimeout = null;
+
+    function showFormError(message, targetElem = null, scrollTarget = null) {
+      const cleanMsg = message.replace(/^※\s*/, '');
+      const formattedMsg = `※ ${cleanMsg}`;
+
+      // 1. 送信ボタン上のインラインエラーメッセージの更新・表示
+      const errorContainer = document.getElementById('formErrorMessage');
+      const errorText = document.getElementById('formErrorMessageText');
+      if (errorContainer && errorText) {
+        errorText.textContent = formattedMsg;
+        errorContainer.classList.remove('hidden');
+      }
+
+      // 2. 模試選択エリアのエラー（該当する場合）
+      const examGroup = document.getElementById('examOptionGroup');
+      const examInlineError = document.getElementById('examSelectionInlineError');
+      if (targetElem === examGroup || scrollTarget === examGroup) {
+        if (examInlineError) examInlineError.classList.remove('hidden');
+      } else {
+        if (examInlineError) examInlineError.classList.add('hidden');
+      }
+
+      // 3. 画面上部トースト通知の表示
+      const toast = document.getElementById('formToastNotification');
+      const toastText = document.getElementById('formToastText');
+      if (toast && toastText) {
+        toastText.textContent = cleanMsg;
+        toast.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-4');
+        toast.classList.add('opacity-100', 'pointer-events-auto', 'translate-y-0');
+
+        if (_formToastTimeout) clearTimeout(_formToastTimeout);
+        _formToastTimeout = setTimeout(() => {
+          hideFormToast();
+        }, 5000);
+      }
+
+      // 4. 既存のエラー枠線をすべて解除
+      document.querySelectorAll('.apply-input-error').forEach(el => {
+        el.classList.remove('apply-input-error', '!border-red-500', '!ring-2', '!ring-red-200');
+      });
+
+      // 5. 対象要素のハイライト & 入力変更時の自動解除
+      if (targetElem && targetElem !== examGroup) {
+        targetElem.classList.add('apply-input-error', '!border-red-500', '!ring-2', '!ring-red-200');
+
+        const clearHandler = () => {
+          targetElem.classList.remove('apply-input-error', '!border-red-500', '!ring-2', '!ring-red-200');
+          clearFormError();
+          targetElem.removeEventListener('input', clearHandler);
+          targetElem.removeEventListener('change', clearHandler);
+        };
+        targetElem.addEventListener('input', clearHandler);
+        targetElem.addEventListener('change', clearHandler);
+      }
+
+      // 6. スムーズスクロール & フォーカス
+      const elementToScroll = scrollTarget || targetElem || errorContainer;
+      if (elementToScroll) {
+        elementToScroll.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if (targetElem && typeof targetElem.focus === 'function' && targetElem !== examGroup) {
+          setTimeout(() => {
+            try {
+              targetElem.focus({ preventScroll: true });
+            } catch (e) {
+              targetElem.focus();
+            }
+          }, 350);
+        }
+      }
+    }
+
+    function hideFormToast() {
+      const toast = document.getElementById('formToastNotification');
+      if (toast) {
+        toast.classList.remove('opacity-100', 'pointer-events-auto', 'translate-y-0');
+        toast.classList.add('opacity-0', 'pointer-events-none', '-translate-y-4');
+      }
+    }
+
+    function clearFormError() {
+      const errorContainer = document.getElementById('formErrorMessage');
+      if (errorContainer) errorContainer.classList.add('hidden');
+      const examInlineError = document.getElementById('examSelectionInlineError');
+      if (examInlineError) examInlineError.classList.add('hidden');
+      hideFormToast();
+    }
+
+    // ========================================================
+    // 6. フォームバリデーション & Stripe 決済接続ハンドラー
+    // ========================================================
+    let isSubmitting = false;
+    let _originalSubmitBtnHtml = '';
+
+    function showLoadingOverlay() {
+      const overlay = document.getElementById('stripeLoadingOverlay');
+      if (overlay) {
+        overlay.classList.remove('hidden');
+        void overlay.offsetWidth;
+        overlay.classList.remove('opacity-0', 'pointer-events-none');
+        overlay.classList.add('opacity-100', 'pointer-events-auto');
+      }
+      document.body.style.overflow = 'hidden';
+    }
+
+    function hideLoadingOverlay() {
+      const overlay = document.getElementById('stripeLoadingOverlay');
+      if (overlay) {
+        overlay.classList.add('opacity-0', 'pointer-events-none');
+        overlay.classList.remove('opacity-100', 'pointer-events-auto');
+        setTimeout(() => {
+          if (overlay.classList.contains('opacity-0')) {
+            overlay.classList.add('hidden');
+          }
+        }, 220);
+      }
+      document.body.style.overflow = '';
+    }
+
+    async function handleApplySubmit(e) {
+      if (e) {
+        if (typeof e.preventDefault === 'function') e.preventDefault();
+        if (typeof e.stopPropagation === 'function') e.stopPropagation();
+      }
+
+      // 二重送信の物理的防止
+      if (isSubmitting) return;
+      isSubmitting = true;
+
+      const form = document.getElementById('applicationForm');
+      if (!form) {
+        isSubmitting = false;
+        return;
+      }
+
+      const submitBtn = document.getElementById('submitApplyBtn');
+      if (submitBtn && !_originalSubmitBtnHtml) {
+        _originalSubmitBtnHtml = submitBtn.innerHTML;
+      }
+
+      function resetSubmitBtn() {
+        isSubmitting = false;
+        hideLoadingOverlay();
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.classList.remove('opacity-75', 'cursor-not-allowed', 'pointer-events-none');
+          submitBtn.innerHTML = _originalSubmitBtnHtml || `
+            <span>入力内容を確認し、お支払いへ進む</span>
+            <span class="material-symbols-outlined text-xl">arrow_forward</span>
+          `;
+        }
+      }
+
+      function setSubmittingState() {
+        isSubmitting = true;
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.classList.add('opacity-75', 'cursor-not-allowed', 'pointer-events-none');
+          submitBtn.innerHTML = `
+            <svg class="animate-spin -ml-1 mr-2.5 h-5 w-5 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span>決済画面へ接続中...</span>
+          `;
+        }
+        showLoadingOverlay();
+      }
+
+      // 0. 学年の選択確認
+      if (!currentSelectedGrade) {
+        resetSubmitBtn();
+        const gradeGroup = document.getElementById('gradeButtonGroup');
+        showFormError('学年をお選びください。', gradeGroup, gradeGroup);
+        return;
+      }
+
+      // 1. 模試の選択確認
+      const selectedExams = Object.values(selectedExamsState);
+      if (selectedExams.length === 0) {
+        resetSubmitBtn();
+        const examGroup = document.getElementById('examOptionGroup');
+        showFormError('受験を希望する模試を1つ以上選択してください。', examGroup, examGroup);
+        return;
+      }
+
+      // 1-2. 受験方法・希望会場の未選択チェック (選択必須バリデーション)
+      for (const exam of selectedExams) {
+        if (!exam.venue || exam.venue === '') {
+          resetSubmitBtn();
+          const venueElem = document.getElementById(`venue-${exam.id}`);
+          if (venueElem) updateVenueSelectStyle(venueElem);
+          showFormError(`「${exam.issueName} ${exam.title}」の受験方法・希望会場を選択してください。`, venueElem, venueElem);
+          return;
+        }
+      }
+
+      // ======================================================
+      // 2. 送信前自動前処理：全角半角正規化 & 旧字体・異体字の常用漢字置換
+      // ======================================================
+      // (1) 郵便番号・電話番号・住所の半角自動正規化
+      const postalCodeElem = document.getElementById('postalCode');
+      if (postalCodeElem) {
+        let pVal = normalizeToHalfWidth(postalCodeElem.value).replace(/\s+/g, '');
+        const pDigits = pVal.replace(/[^\d]/g, '');
+        if (pDigits.length === 7 && !pVal.includes('-')) {
+          pVal = `${pDigits.slice(0, 3)}-${pDigits.slice(3)}`;
+        }
+        postalCodeElem.value = pVal;
+      }
+
+      const parentTelElem = document.getElementById('parentTel');
+      if (parentTelElem) {
+        parentTelElem.value = normalizeToHalfWidth(parentTelElem.value).replace(/\s+/g, '');
+      }
+
+      const addr2Elem = document.getElementById('addressLine2');
+      if (addr2Elem) {
+        addr2Elem.value = normalizeToHalfWidth(addr2Elem.value);
+      }
+
+      const addr3Elem = document.getElementById('addressLine3');
+      if (addr3Elem) {
+        addr3Elem.value = normalizeToHalfWidth(addr3Elem.value);
+      }
+
+      // (2) 生徒氏名・保護者氏名の旧字体・外字を常用漢字（新字体）へ自動置換
+      const studentLastElem = document.getElementById('studentLastName');
+      if (studentLastElem) {
+        studentLastElem.value = replaceKanjiVariants(studentLastElem.value.trim());
+      }
+      const studentFirstElem = document.getElementById('studentFirstName');
+      if (studentFirstElem) {
+        studentFirstElem.value = replaceKanjiVariants(studentFirstElem.value.trim());
+      }
+      const parentLastElem = document.getElementById('parentLastName');
+      if (parentLastElem) {
+        parentLastElem.value = replaceKanjiVariants(parentLastElem.value.trim());
+      }
+      const parentFirstElem = document.getElementById('parentFirstName');
+      if (parentFirstElem) {
+        parentFirstElem.value = replaceKanjiVariants(parentFirstElem.value.trim());
+      }
+
+      // (3) フリガナの全角カタカナ自動補正（ひらがな入力の自動変換）
+      const studentKanaLastElem = document.getElementById('studentKanaLastName');
+      if (studentKanaLastElem) studentKanaLastElem.value = normalizeToFullWidthKana(studentKanaLastElem.value);
+      const studentKanaFirstElem = document.getElementById('studentKanaFirstName');
+      if (studentKanaFirstElem) studentKanaFirstElem.value = normalizeToFullWidthKana(studentKanaFirstElem.value);
+      const parentKanaLastElem = document.getElementById('parentKanaLastName');
+      if (parentKanaLastElem) parentKanaLastElem.value = normalizeToFullWidthKana(parentKanaLastElem.value);
+      const parentKanaFirstElem = document.getElementById('parentKanaFirstName');
+      if (parentKanaFirstElem) parentKanaFirstElem.value = normalizeToFullWidthKana(parentKanaFirstElem.value);
+
+      // 3. 入力値の取得
+      const studentLastName = document.getElementById('studentLastName')?.value.trim();
+      const studentFirstName = document.getElementById('studentFirstName')?.value.trim();
+      const studentKanaLastName = document.getElementById('studentKanaLastName')?.value.trim();
+      const studentKanaFirstName = document.getElementById('studentKanaFirstName')?.value.trim();
+      const gender = form.querySelector('input[name="gender"]:checked')?.value || null;
+      const currentSchool = document.getElementById('currentSchool')?.value.trim();
+
+      const parentLastName = document.getElementById('parentLastName')?.value.trim();
+      const parentFirstName = document.getElementById('parentFirstName')?.value.trim();
+      const parentKanaLastName = document.getElementById('parentKanaLastName')?.value.trim();
+      const parentKanaFirstName = document.getElementById('parentKanaFirstName')?.value.trim();
+      const parentEmail = document.getElementById('parentEmail')?.value.trim();
+      const parentEmailConfirm = document.getElementById('parentEmailConfirm')?.value.trim();
+      const parentTel = document.getElementById('parentTel')?.value.trim();
+      const postalCode = document.getElementById('postalCode')?.value.trim();
+      const prefecture = document.getElementById('prefecture')?.value;
+      const addressLine1 = document.getElementById('addressLine1')?.value.trim();
+      const addressLine2 = document.getElementById('addressLine2')?.value.trim();
+      const addressLine3 = document.getElementById('addressLine3')?.value.trim() || '';
+      const paymentMethod = form.querySelector('input[name="payment_method"]:checked')?.value || null;
+      const agreeTerms = document.getElementById('agreeTerms')?.checked;
+
+      // 4. バリデーションチェック
+      if (!studentLastName || !studentFirstName) {
+        resetSubmitBtn();
+        const target = !studentLastName ? document.getElementById('studentLastName') : document.getElementById('studentFirstName');
+        showFormError('生徒氏名（漢字）を入力してください。', target);
+        return;
+      }
+      if (!studentKanaLastName || !studentKanaFirstName) {
+        resetSubmitBtn();
+        const target = !studentKanaLastName ? document.getElementById('studentKanaLastName') : document.getElementById('studentKanaFirstName');
+        showFormError('生徒氏名（フリガナ）を入力してください。', target);
+        return;
+      }
+      if (!gender) {
+        resetSubmitBtn();
+        const genderElem = form.querySelector('input[name="gender"]');
+        const genderGroup = genderElem?.closest('.flex.flex-col') || genderElem;
+        showFormError('性別を選択してください。', genderElem, genderGroup);
+        return;
+      }
+      if (!currentSchool) {
+        resetSubmitBtn();
+        const target = document.getElementById('currentSchool');
+        showFormError('在籍中学校・小学校名を入力してください。', target);
+        return;
+      }
+      if (!parentLastName || !parentFirstName) {
+        resetSubmitBtn();
+        const target = !parentLastName ? document.getElementById('parentLastName') : document.getElementById('parentFirstName');
+        showFormError('保護者氏名を入力してください。', target);
+        return;
+      }
+if (!parentKanaLastName || !parentKanaFirstName) {
+        resetSubmitBtn();
+        const target = !parentKanaLastName ? document.getElementById('parentKanaLastName') : document.getElementById('parentKanaFirstName');
+        showFormError('保護者氏名（フリガナ）を入力してください。', target);
+        return;
+      }
+      const isKanaRegex = /^[゠-ヿー\s]+$/;
+      if (!isKanaRegex.test(parentKanaLastName) || !isKanaRegex.test(parentKanaFirstName)) {
+        resetSubmitBtn();
+        const target = !isKanaRegex.test(parentKanaLastName) ? document.getElementById('parentKanaLastName') : document.getElementById('parentKanaFirstName');
+        showFormError('保護者氏名（フリガナ）は全角カタカナで入力してください。', target);
+        return;
+      }
+      if (!parentEmail || !parentEmail.includes('@')) {
+        resetSubmitBtn();
+        const target = document.getElementById('parentEmail');
+        showFormError('有効なメールアドレスを入力してください。', target);
+        return;
+      }
+      if (parentEmail !== parentEmailConfirm) {
+        resetSubmitBtn();
+        const target = document.getElementById('parentEmailConfirm');
+        showFormError('確認用メールアドレスが一致しません。もう一度お確かめください。', target);
+        return;
+      }
+      if (!parentTel || parentTel.replace(/\D/g, '').length < 10) {
+        resetSubmitBtn();
+        const target = document.getElementById('parentTel');
+        showFormError('日中連絡可能な電話番号を正しく入力してください。', target);
+        return;
+      }
+      if (!postalCode) {
+        resetSubmitBtn();
+        const target = document.getElementById('postalCode');
+        showFormError('郵便番号を入力してください。', target);
+        return;
+      }
+      if (!addressLine1) {
+        resetSubmitBtn();
+        const target = document.getElementById('addressLine1');
+        showFormError('「都道府県・市区町村・町名」を入力してください。', target);
+        return;
+      }
+
+      if (!addressLine2) {
+        resetSubmitBtn();
+        const target = document.getElementById('addressLine2');
+        showFormError('「丁目・番地・号」を入力してください。', target);
+        if (target) target.focus();
+        return;
+      }
+
+      // 【住所の番地チェック】数字（アラビア数字または漢数字）が含まれていない場合は確認ダイアログを表示
+      const hasNumberInAddress = /[0-9０-９〇零一二三四五六七八九十百千万壱弐参肆伍陸漆捌玖拾]/.test(addressLine2);
+      if (!hasNumberInAddress) {
+        const confirmMsg = '【ご確認】番地・号（数字）が入力されていません。無番地等の住所でない場合は、正確な番地をご入力ください。このまま送信してよろしいですか？';
+        const isConfirmed = window.confirm(confirmMsg);
+        if (!isConfirmed) {
+          resetSubmitBtn();
+          const target = document.getElementById('addressLine2');
+          if (target) target.focus();
+          return;
+        }
+      }
+
+      if (!paymentMethod) {
+        resetSubmitBtn();
+        const paymentElem = form.querySelector('input[name="payment_method"]');
+        const paymentGroup = paymentElem?.closest('.flex.flex-col') || paymentElem;
+        showFormError('お支払い方法（クレジットカード決済またはコンビニ決済）を選択してください。', paymentElem, paymentGroup);
+        return;
+      }
+      if (!agreeTerms) {
+        resetSubmitBtn();
+        const target = document.getElementById('agreeTerms');
+        const container = target ? target.closest('label') : null;
+        showFormError('「個人情報の取扱い」および「特定商取引法に基づく表記」への同意が必要です。', target, container);
+        return;
+      }
+      if (paymentMethod === 'convenience_store') {
+        const agreeConvenience = document.getElementById('agreeConvenienceTerms')?.checked;
+        if (!agreeConvenience) {
+          resetSubmitBtn();
+          const convInput = document.getElementById('agreeConvenienceTerms');
+          const container = convInput ? convInput.closest('label') : null;
+          showFormError('コンビニ決済期限および自動キャンセルについての確認・同意が必要です。', convInput, container);
+          return;
+        }
+      }
+
+      // 全ての入力確認・バリデーションを通過：ローディング表示（二重防止）へ移行
+      setSubmittingState();
+
+      // 6. n8n Stripe Checkout Webhook 用 Payload の構築
+      const totalAmount = selectedExams.reduce((sum, item) => sum + item.price, 0);
+      const gradeLabels = { 'sho6': '小学6年生', 'chu1': '中学1年生', 'chu2': '中学2年生', 'chu3': '中学3年生' };
+      const gradeText = gradeLabels[currentSelectedGrade] || currentSelectedGrade;
+      const examNameStr = selectedExams.map(exam => exam.title).join(' / ');
+      const fullAddressString = [addressLine1, addressLine2, addressLine3].filter(Boolean).join(' ');
+      const extractedPref = addressLine1.match(/^(.+?[都道府県])/)?.[1] || prefecture || '岡山県';
+
+      // 決済手段の動的切り替え（card / konbini）
+      const isKonbini = (paymentMethod === 'convenience_store');
+      const selectedPaymentMethod = isKonbini ? 'konbini' : 'card';
+      const paymentMethodTypes = [selectedPaymentMethod];
+
+      // コンビニ決済時の追加オプション設定（支払い期限日数：3日）
+      const KONBINI_EXPIRES_AFTER_DAYS = 3;
+      const paymentMethodOptions = isKonbini ? {
+        konbini: {
+          expires_after_days: KONBINI_EXPIRES_AFTER_DAYS
+        }
+      } : undefined;
+
+      // 業務管理用メタデータ（Stripe Session Metadata）
+      const stripeMetadata = {
+        student_name: `${studentLastName} ${studentFirstName}`,
+        student_kana: `${studentKanaLastName} ${studentKanaFirstName}`,
+        student_grade: gradeText,
+        student_school: currentSchool || '',
+        student_gender: gender || '',
+        parent_name: `${parentLastName} ${parentFirstName}`,
+        parent_kana: `${parentKanaLastName} ${parentKanaFirstName}`,
+        phone: parentTel,
+        postal_code: postalCode,
+        prefecture: extractedPref,
+        address: fullAddressString,
+        exam_name: examNameStr,
+        payment_method: selectedPaymentMethod,
+        selected_payment_method: selectedPaymentMethod,
+        total_amount: String(totalAmount)
+      };
+
+      const checkoutPayload = {
+        // ========================================================
+        // 【Stripe Checkout Session 連動パラメータ（Pre-fill & 最適化）】
+        // ========================================================
+        payment_method: selectedPaymentMethod,                         // クレジットカード選択時: "card" / コンビニ決済選択時: "konbini"
+        selected_payment_method: selectedPaymentMethod,               // "card" | "konbini"
+        payment_method_types: paymentMethodTypes,                     // ["card"] | ["konbini"]
+        customer_email: parentEmail,                                  // Stripe画面でメールアドレス事前入力
+        client_reference_id: `${studentLastName} ${studentFirstName}`, // 申込者識別（生徒氏名）
+        metadata: stripeMetadata,                                     // Stripe業務管理メタデータ
+        success_url: `${window.location.origin}/apply/success`,        // 決済完了時の絶対URL
+        cancel_url: `${window.location.origin}/apply`,           // 決済キャンセル時の絶対URL
+        ...(paymentMethodOptions ? { payment_method_options: paymentMethodOptions } : {}),
+
+        // ========================================================
+        // 【既存n8nワークフロー・後方互換用パラメータ】
+        // ========================================================
+        student_name: `${studentLastName} ${studentFirstName}`,
+        parent_name: `${parentLastName} ${parentFirstName}`,
+        email: parentEmail,
+        phone: parentTel,
+        amount: totalAmount,
+        exam_name: examNameStr,
+        raw_payment_method: paymentMethod, // 'credit_card' | 'convenience_store'
+
+        // ========================================================
+        // 【詳細パラメータ（顧客管理・DB保存用）】
+        // ========================================================
+        student_kana: `${studentKanaLastName} ${studentKanaFirstName}`,
+        parent_kana: `${parentKanaLastName} ${parentKanaFirstName}`,
+        student_gender: gender,
+        student_grade: currentSelectedGrade,
+        student_grade_label: gradeText,
+        student_school: currentSchool,
+        postal_code: postalCode,
+        prefecture: extractedPref,
+        address_line1: addressLine1,
+        address_line2: addressLine2,
+        address_line3: addressLine3,
+        address: fullAddressString,
+        exams: selectedExams.map(exam => ({
+          id: exam.id,
+          title: exam.title,
+          price: exam.price,
+          venue: exam.venue,
+          venue_name: exam.venueLabel,
+          exam_date: exam.examDate
+        }))
+      };
+
+      console.log('==============================================');
+      console.log('【Checkout Webhook Payload 準備完了】');
+      console.log(JSON.stringify(checkoutPayload, null, 2));
+      console.log('==============================================');
+
+      try {
+        const response = await fetch(CHECKOUT_WEBHOOK_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(checkoutPayload)
+        });
+
+        if (!response.ok) {
+          throw new Error(`決済セッション作成に失敗しました (HTTP ${response.status})`);
+        }
+
+        const result = await response.json();
+        console.log("n8n response:", result);
+
+        // n8nから直接オブジェクトまたは配列で返ってくるいずれのケースもサポート
+        const checkoutUrl = (result && result.checkout_url)
+          ? result.checkout_url
+          : (Array.isArray(result) && result[0]?.checkout_url ? result[0].checkout_url : null);
+
+        if (checkoutUrl) {
+          // Stripeの決済画面へリダイレクト（ローディングオーバーレイ維持でシームレスに遷移）
+          window.location.href = checkoutUrl;
+          return;
+        } else {
+          hideLoadingOverlay();
+          resetSubmitBtn();
+          showFormError('決済画面のURL取得に失敗しました。恐れ入りますが、時間をおいて再度お試しいただくか、実行委員会までお問い合わせください。', submitBtn, document.getElementById('formErrorMessage'));
+        }
+
+      } catch (err) {
+        console.error('[申し込み・決済セッション作成エラー]:', err);
+        hideLoadingOverlay();
+        resetSubmitBtn();
+        const errorMessage = (err && err.message && err.message.includes('HTTP'))
+          ? '決済サーバーとの通信に一時的な問題が発生しました。恐れ入りますが、少し時間をおいて再度お試しください。'
+          : '決済画面への接続中にエラーが発生しました。通信環境をお確かめの上、再度お試しください。';
+        showFormError(errorMessage, submitBtn, document.getElementById('formErrorMessage'));
+      }
+    }
+
+    // ========================================================
+    // 7. microCMS からの動的データ取得（exam-guides API）
+    // ========================================================
+    async function loadExamsFromMicroCMS() {
+      if (!MICROCMS_CONFIG.apiKey || MICROCMS_CONFIG.apiKey === 'YOUR_MICROCMS_API_KEY') {
+        console.info('[microCMS] APIキー未設定のため、内蔵の模試マスターデータを使用します。');
+        _examGuidesCache = null;
+        return;
+      }
+
+      try {
+        const url = `https://${MICROCMS_CONFIG.serviceDomain}.microcms.io/api/v1/${MICROCMS_CONFIG.endpoint}?limit=100&_t=${Date.now()}`;
+        const res = await fetch(url, {
+          cache: 'no-store',
+          headers: { 'X-MICROCMS-API-KEY': MICROCMS_CONFIG.apiKey }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.contents && data.contents.length > 0) {
+            _examGuidesCache = data.contents;
+            console.log('[microCMS] exam-guides データを正常に取得しました:', _examGuidesCache);
+          }
+        } else {
+          console.warn('[microCMS] HTTPレスポンスエラー:', res.status);
+        }
+      } catch (err) {
+        console.warn('[microCMS] exam-guides データの取得に失敗しました。フォールバックデータを使用します:', err);
+        _examGuidesCache = null;
+      }
+    }
+
+    // ========================================================
+    // 8. ナビゲーション・ドロップダウン用関数
+    // ========================================================
+    function toggleNextExamDropdown(event) {
+      if (event) event.stopPropagation();
+      const dropdown = document.getElementById('nav-next-exam-dropdown');
+      const chevron = document.getElementById('nav-next-exam-chevron');
+      if (!dropdown) return;
+      const isHidden = dropdown.classList.contains('hidden');
+      if (isHidden) {
+        dropdown.classList.remove('hidden');
+        if (chevron) chevron.classList.add('rotate-180');
+      } else {
+        dropdown.classList.add('hidden');
+        if (chevron) chevron.classList.remove('rotate-180');
+      }
+    }
+
+    function closeNextExamDropdown() {
+      const dropdown = document.getElementById('nav-next-exam-dropdown');
+      const chevron = document.getElementById('nav-next-exam-chevron');
+      if (dropdown) dropdown.classList.add('hidden');
+      if (chevron) chevron.classList.remove('rotate-180');
+    }
+
+    function toggleContactDropdown(event) {
+      if (event) event.stopPropagation();
+      closeNextExamDropdown();
+      const container = document.getElementById('nav-contact-container');
+      if (!container) return;
+      container.classList.toggle('is-open');
+    }
+
+    function closeContactDropdown() {
+      const container = document.getElementById('nav-contact-container');
+      if (container) container.classList.remove('is-open');
+    }
+
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      const icon = document.getElementById('mobile-menu-icon');
+      if (!menu) return;
+      const isHidden = menu.classList.contains('hidden');
+      if (isHidden) {
+        menu.classList.remove('hidden');
+        if (icon) icon.textContent = 'close';
+      } else {
+        menu.classList.add('hidden');
+        if (icon) icon.textContent = 'menu';
+      }
+    }
+
+    function selectNavExamTab(gradeKey) {
+      window.location.href = `/index.html#exam-tab-${gradeKey}`;
+    }
+
+    // 画面外クリックでドロップダウンを閉じる
+    document.addEventListener('click', function(e) {
+      const nextDropdown = document.getElementById('nav-next-exam-dropdown');
+      const nextBtn = document.getElementById('nav-next-exam-btn');
+      const chevron = document.getElementById('nav-next-exam-chevron');
+      if (nextDropdown && !nextDropdown.contains(e.target) && !nextBtn?.contains(e.target)) {
+        nextDropdown.classList.add('hidden');
+        if (chevron) chevron.classList.remove('rotate-180');
+      }
+      const contactContainer = document.getElementById('nav-contact-container');
+      if (contactContainer && !contactContainer.contains(e.target)) {
+        contactContainer.classList.remove('is-open');
+      }
+    });
+
+    // ========================================================
+    // 9. URLパラメータ連動 & 初期実行
+    // ========================================================
+    // 9. URLパラメータ連動 & 初期実行
+    // ========================================================
+    document.addEventListener('DOMContentLoaded', async function() {
+      // URLパラメータから学年（grade）および月号（month）の指定を取得
+      const urlParams = new URLSearchParams(window.location.search);
+      const rawGradeParam = urlParams.get('grade');
+      const normalizedGrade = normalizeGradeParam(rawGradeParam);
+      initialTargetGrade = normalizedGrade || null; // パラメータ未指定時は null（未選択）
+      initialTargetMonth = parseMonthParam(urlParams.get('month'));
+
+      // microCMSデータ取得（存在する場合）
+      await loadExamsFromMicroCMS();
+
+      // 初期学年および指定月号をフォームに反映（URL指定があれば選択、なければ未選択で待機）
+      selectFormGrade(initialTargetGrade, initialTargetMonth);
+
+      // お支払い方法の初期反映（未選択のまま初期化）
+      const checkedMethod = document.querySelector('input[name="payment_method"]:checked')?.value || null;
+      updatePaymentMethodSummary(checkedMethod);
+
+      // 郵便番号自動入力リスナーの初期化
+      initPostalCodeAutoSearch();
+
+      // 在籍学校名サジェストの初期化
+      initSchoolAutoSuggest();
+    });
+  </script>
 </body>
 </html>

@@ -464,7 +464,7 @@
           }, 100);
           return;
         }
-        window.location.href = "index.html?grade=" + tabKey + "#next-exam";
+        window.location.href = "/index.html?grade=" + tabKey + "#next-exam";
       }
 
       function updateStudentVoicesVisibility(tabKey) {
@@ -3146,6 +3146,8 @@ if (!parentKanaLastName || !parentKanaFirstName) {
         customer_email: parentEmail,                                  // Stripe画面でメールアドレス事前入力
         client_reference_id: `${studentLastName} ${studentFirstName}`, // 申込者識別（生徒氏名）
         metadata: stripeMetadata,                                     // Stripe業務管理メタデータ
+        success_url: `${window.location.origin}/apply/success`,        // 決済完了時の絶対URL
+        cancel_url: `${window.location.origin}/apply.html`,           // 決済キャンセル時の絶対URL
         ...(paymentMethodOptions ? { payment_method_options: paymentMethodOptions } : {}),
 
         // ========================================================
@@ -3315,7 +3317,7 @@ if (!parentKanaLastName || !parentKanaFirstName) {
     }
 
     function selectNavExamTab(gradeKey) {
-      window.location.href = `index.html#exam-tab-${gradeKey}`;
+      window.location.href = `/index.html#exam-tab-${gradeKey}`;
     }
 
     // 画面外クリックでドロップダウンを閉じる

@@ -2,12 +2,15 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="refresh" content="0; url=detail.html">
+  <meta http-equiv="refresh" content="0; url=/detail.html">
   <title>リダイレクト中...</title>
   <script>
-    // ?id= パラメータがあればそのまま detail.html に転送
-    var params = window.location.search;
-    window.location.replace('detail.html' + params);
+    // ?id= パラメータがあればそのまま /detail.html に転送
+    (function() {
+      if (window.location.pathname === '/detail.html') return;
+      var params = window.location.search || '';
+      window.location.replace('/detail.html' + params);
+    })();
   </script>
 <style>
     /* 全セクション大見出し・中見出しのテーマカラー濃いグリーン（最優先） */
@@ -25,6 +28,6 @@
 </style>
 </head>
 <body>
-  <p>ページを移動しています。自動的に移動しない場合は<a href="detail.html">こちら</a>をクリックしてください。</p>
+  <p>ページを移動しています。自動的に移動しない場合は<a href="/detail.html">こちら</a>をクリックしてください。</p>
 </body>
 </html>

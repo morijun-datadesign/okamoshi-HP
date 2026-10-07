@@ -525,7 +525,7 @@
           }, 100);
           return;
         }
-        window.location.href = "index.html?grade=" + tabKey + "#next-exam";
+        window.location.href = "/index.html?grade=" + tabKey + "#next-exam";
       }
 
       function updateStudentVoicesVisibility(tabKey) {
@@ -2918,7 +2918,7 @@
       };
 
       window.selectNavExamTab = function(grade) {
-        window.location.href = 'index.html#next-exam';
+        window.location.href = '/index.html#next-exam';
       };
 
       // 外側クリックでドロップダウンを閉じる
@@ -3011,7 +3011,7 @@
         targetElem.scrollIntoView({ behavior: 'smooth' });
       }
     } else {
-      window.location.href = 'index.html?tab=' + tabKey + '#next-exam';
+      window.location.href = '/index.html?tab=' + tabKey + '#next-exam';
     }
   }
 </script>

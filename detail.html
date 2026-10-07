@@ -1225,7 +1225,7 @@
           }, 100);
           return;
         }
-        window.location.href = "index.html?grade=" + tabKey + "#next-exam";
+        window.location.href = "/index.html?grade=" + tabKey + "#next-exam";
       }
 
       function updateStudentVoicesVisibility(tabKey) {
@@ -2329,7 +2329,7 @@
     }
 
     function selectNavExamTab(examId) {
-      window.location.href = `index.html#exam-tabs-section`;
+      window.location.href = `/index.html#exam-tabs-section`;
     }
 
     document.addEventListener('click', function(e) {
@@ -2769,7 +2769,7 @@
         targetElem.scrollIntoView({ behavior: 'smooth' });
       }
     } else {
-      window.location.href = 'index.html?tab=' + tabKey + '#next-exam';
+      window.location.href = '/index.html?tab=' + tabKey + '#next-exam';
     }
   }
 </script>

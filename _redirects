@@ -1,1 +1,8 @@
-/form /apply.html 302
+/form                  /apply.html               302
+/apply                 /apply.html               302
+/apply/                /apply.html               302
+/apply/success         /apply/success/index.html 200
+/apply/success/        /apply/success/index.html 200
+/apply/success/*       /apply/success/index.html 200
+/lp                    /index.html               302
+/lp/*                  /index.html               302

@@ -9,18 +9,65 @@ export async function POST(request: Request) {
       process.env.GAS_APPLY_URL ||
       "https://script.google.com/macros/s/AKfycbwYljLEwbfFCQWx-c6JneJUDINYbhYl0_M1-e9CwhBskBvRBEdIuwNotYceCg5i6M9z/exec";
 
-    // 1. Google Apps Script (GAS) 申込受付台帳へ直接 POST 送信
+    // 1. Google Apps Script (GAS) 申込受付台帳用の全19項目マッピング
+    const now = new Date();
+    const jstReceivedAt =
+      body.received_at ||
+      new Intl.DateTimeFormat("ja-JP", {
+        timeZone: "Asia/Tokyo",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false,
+      }).format(now).replace(/\//g, "-");
+
+    const venueName =
+      body.venue_name ||
+      (Array.isArray(body.exams) && body.exams[0]?.venue_name) ||
+      (Array.isArray(body.exams) && body.exams[0]?.venue) ||
+      (body.metadata && body.metadata.venue_name) ||
+      "未指定";
+
+    const gasPayload = {
+      // ユーザー指定必須19項目
+      received_at: jstReceivedAt,
+      session_id: body.session_id || body.stripe_session_id || "",
+      exam_name: body.exam_name || (Array.isArray(body.exams) && body.exams[0]?.title) || "岡山県統一模擬試験",
+      venue_name: venueName,
+      amount: Number(body.amount || (body.metadata && body.metadata.total_amount) || 0),
+      payment_status: body.payment_status || "paid",
+      payment_method: body.payment_method || body.selected_payment_method || (body.raw_payment_method === "convenience_store" ? "konbini" : "card"),
+      student_name: body.student_name || (body.metadata && body.metadata.student_name) || "",
+      student_kana: body.student_kana || (body.metadata && body.metadata.student_kana) || "",
+      grade: body.grade || body.student_grade_label || body.student_grade || (body.metadata && body.metadata.student_grade) || "",
+      school_name: body.school_name || body.student_school || (body.metadata && body.metadata.student_school) || "",
+      parent_name: body.parent_name || (body.metadata && body.metadata.parent_name) || "",
+      email: body.email || body.customer_email || "",
+      phone: body.phone || (body.metadata && body.metadata.phone) || "",
+      postal_code: body.postal_code || (body.metadata && body.metadata.postal_code) || "",
+      prefecture: body.prefecture || (body.metadata && body.metadata.prefecture) || "",
+      city: body.city || body.address_line1 || "",
+      address1: body.address1 || body.address_line2 || "",
+      address2: body.address2 || body.address_line3 || "",
+      // 既存パラメータとの互換性維持
+      ...body,
+    };
+
     let gasSuccess = false;
     let gasResponseData: any = null;
 
     try {
+      console.log("Sending normalized payload to GAS:", JSON.stringify(gasPayload));
       const gasRes = await fetch(gasUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "User-Agent": "Okamoshi-Apply/1.0",
         },
-        body: JSON.stringify(body),
+        body: JSON.stringify(gasPayload),
         redirect: "follow",
       });
 

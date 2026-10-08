@@ -2,4 +2,6 @@
 /form/                 /apply                    302
 /apply.html            /apply                    301
 /apply/success.html    /apply/success            301
+/complete.html          /apply/success            301
+/complete               /apply/success            302
 /lp.html               /lp                       301

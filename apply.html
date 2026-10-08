@@ -3141,42 +3141,60 @@ if (!parentKanaLastName || !parentKanaFirstName) {
         total_amount: String(totalAmount)
       };
 
+      const firstVenueName = selectedExams[0]?.venueLabel || selectedExams[0]?.venue || '会場未指定';
+
       const checkoutPayload = {
         // ========================================================
-        // 【申込・決済連動パラメータ】
+        // 【GAS 申込受付台帳・必須19項目】
         // ========================================================
-        payment_method: selectedPaymentMethod,                         // クレジットカード選択時: "card" / コンビニ決済選択時: "konbini"
-        selected_payment_method: selectedPaymentMethod,               // "card" | "konbini"
-        payment_method_types: paymentMethodTypes,                     // ["card"] | ["konbini"]
-        customer_email: parentEmail,                                  // メールアドレス
-        client_reference_id: `${studentLastName} ${studentFirstName}`, // 申込者識別（生徒氏名）
-        metadata: stripeMetadata,                                     // 業務管理メタデータ
-        success_url: `${window.location.origin}/apply/success?session_id={CHECKOUT_SESSION_ID}`, // 完了時の絶対URL（Stripeがsession_idを展開）
-        cancel_url: `${window.location.origin}/apply`,                // キャンセル時の絶対URL
-        ...(paymentMethodOptions ? { payment_method_options: paymentMethodOptions } : {}),
-
-        // ========================================================
-        // 【共通受付台帳・互換パラメータ】
-        // ========================================================
+        received_at: '', // 決済完了時にJST日時を付与
+        session_id: '',  // 決済完了時にStripeセッションIDを付与
+        exam_name: examNameStr,
+        venue_name: firstVenueName,
+        amount: totalAmount,
+        payment_status: 'paid',
+        payment_method: selectedPaymentMethod,
         student_name: `${studentLastName} ${studentFirstName}`,
+        student_kana: `${studentKanaLastName} ${studentKanaFirstName}`,
+        grade: gradeText,
+        school_name: currentSchool || '',
         parent_name: `${parentLastName} ${parentFirstName}`,
         email: parentEmail,
         phone: parentTel,
-        amount: totalAmount,
-        exam_name: examNameStr,
-        raw_payment_method: paymentMethod, // 'credit_card' | 'convenience_store'
+        postal_code: postalCode,
+        prefecture: extractedPref,
+        city: addressLine1,
+        address1: addressLine2,
+        address2: addressLine3,
+
+        // ========================================================
+        // 【Stripe 申込・決済連動パラメータ】
+        // ========================================================
+        selected_payment_method: selectedPaymentMethod,
+        payment_method_types: paymentMethodTypes,
+        customer_email: parentEmail,
+        client_reference_id: `${studentLastName} ${studentFirstName}`,
+        metadata: {
+          ...stripeMetadata,
+          venue_name: firstVenueName,
+          grade: gradeText,
+          school_name: currentSchool || '',
+          city: addressLine1,
+          address1: addressLine2,
+          address2: addressLine3
+        },
+        success_url: `${window.location.origin}/apply/success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${window.location.origin}/apply`,
+        ...(paymentMethodOptions ? { payment_method_options: paymentMethodOptions } : {}),
 
         // ========================================================
         // 【詳細パラメータ（顧客管理・DB保存用）】
         // ========================================================
-        student_kana: `${studentKanaLastName} ${studentKanaFirstName}`,
-        parent_kana: `${parentKanaLastName} ${parentKanaFirstName}`,
+        raw_payment_method: paymentMethod,
         student_gender: gender,
         student_grade: currentSelectedGrade,
         student_grade_label: gradeText,
         student_school: currentSchool,
-        postal_code: postalCode,
-        prefecture: extractedPref,
         address_line1: addressLine1,
         address_line2: addressLine2,
         address_line3: addressLine3,

@@ -232,83 +232,131 @@
     </div>
   </footer>
  
-   <script>
-     (async function processPostPaymentRegistration() {
-       const APPLY_API_URL = '/api/apply';
-       const GAS_APPLY_URL = 'https://script.google.com/macros/s/AKfycbwYljLEwbfFCQWx-c6JneJUDINYbhYl0_M1-e9CwhBskBvRBEdIuwNotYceCg5i6M9z/exec';
+  <script>
+    (async function processPostPaymentRegistration() {
+      const APPLY_API_URL = '/api/apply';
+      const GAS_APPLY_URL = 'https://script.google.com/macros/s/AKfycbwYljLEwbfFCQWx-c6JneJUDINYbhYl0_M1-e9CwhBskBvRBEdIuwNotYceCg5i6M9z/exec';
 
-       try {
-         const rawPending = sessionStorage.getItem('okamoshi_pending_apply') || localStorage.getItem('okamoshi_pending_apply');
-         const urlParams = new URLSearchParams(window.location.search);
-         const sessionId = urlParams.get('session_id') || '';
+      try {
+        const rawPending = sessionStorage.getItem('okamoshi_pending_apply') || localStorage.getItem('okamoshi_pending_apply');
+        const urlParams = new URLSearchParams(window.location.search);
+        const sessionId = urlParams.get('session_id') || urlParams.get('sessionId') || '';
 
-         if (!rawPending) {
-           console.info('[apply/success] No pending application payload found in storage.');
-           return;
-         }
+        let payload = null;
+        if (rawPending) {
+          try {
+            payload = JSON.parse(rawPending);
+          } catch (e) {
+            console.warn('Failed to parse pending payload:', e);
+          }
+        }
 
-         const payload = JSON.parse(rawPending);
+        // 決済方法に応じた案内ボックスの表示調整
+        if (payload) {
+          const isKonbini = (payload.payment_method === 'konbini' || payload.raw_payment_method === 'convenience_store');
+          const convBox = document.getElementById('convenienceStoreNotice');
+          if (convBox && !isKonbini) {
+            convBox.classList.add('hidden');
+          }
+        }
 
-         // 決済方法に応じた案内ボックスの表示調整（カード決済ならコンビニ案内を非表示に）
-         const isKonbini = (payload.payment_method === 'konbini' || payload.raw_payment_method === 'convenience_store');
-         const convBox = document.getElementById('convenienceStoreNotice');
-         if (convBox && !isKonbini) {
-           convBox.classList.add('hidden');
-         }
+        if (!payload && !sessionId) {
+          console.info('[apply/success] No pending application payload or session_id found.');
+          return;
+        }
 
-         // 二重書き込み防止（session_id または 申込識別情報）
-         const registrationKey = 'okamoshi_registered_' + (sessionId || (payload.email + '_' + payload.amount));
-         if (sessionStorage.getItem(registrationKey)) {
-           console.info('[apply/success] Application already registered to ledger:', registrationKey);
-           return;
-         }
-         // 即座にフラグを立てて二重実行を遮断
-         sessionStorage.setItem(registrationKey, 'true');
+        payload = payload || {};
 
-         if (sessionId) {
-           payload.stripe_session_id = sessionId;
-         }
-         payload.payment_status = 'completed';
+        // JST受付日時の生成
+        const now = new Date();
+        const jstReceivedAt = new Intl.DateTimeFormat('ja-JP', {
+          timeZone: 'Asia/Tokyo',
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: false
+        }).format(now).replace(/\//g, '-');
 
-         console.log('[apply/success] Registering completed payment application to GAS ledger:', payload);
+        const activeSessionId = sessionId || payload.session_id || payload.stripe_session_id || '';
+        const venueName = payload.venue_name || (Array.isArray(payload.exams) && payload.exams[0]?.venue_name) || (payload.metadata && payload.metadata.venue_name) || '会場未指定';
 
-         // 1. バックエンド API (/api/apply) へ送信 (GAS台帳登録 + Resendメール送信)
-         let success = false;
-         try {
-           const res = await fetch(APPLY_API_URL, {
-             method: 'POST',
-             headers: { 'Content-Type': 'application/json' },
-             body: JSON.stringify(payload)
-           });
-           if (res.ok) {
-             success = true;
-             console.log('[apply/success] Successfully recorded application via backend API');
-           }
-         } catch (apiErr) {
-           console.warn('[apply/success] Backend API call failed, falling back to direct GAS:', apiErr);
-         }
+        // GAS 申込受付台帳・指定必須19項目の正規化
+        const gasPayload = {
+          received_at: jstReceivedAt,
+          session_id: activeSessionId,
+          exam_name: payload.exam_name || (Array.isArray(payload.exams) && payload.exams[0]?.title) || '岡山県統一模擬試験',
+          venue_name: venueName,
+          amount: Number(payload.amount || (payload.metadata && payload.metadata.total_amount) || 0),
+          payment_status: 'paid',
+          payment_method: payload.payment_method || payload.selected_payment_method || (payload.raw_payment_method === 'convenience_store' ? 'konbini' : 'card'),
+          student_name: payload.student_name || (payload.metadata && payload.metadata.student_name) || '',
+          student_kana: payload.student_kana || (payload.metadata && payload.metadata.student_kana) || '',
+          grade: payload.grade || payload.student_grade_label || payload.student_grade || (payload.metadata && payload.metadata.student_grade) || '',
+          school_name: payload.school_name || payload.student_school || (payload.metadata && payload.metadata.student_school) || '',
+          parent_name: payload.parent_name || (payload.metadata && payload.metadata.parent_name) || '',
+          email: payload.email || payload.customer_email || '',
+          phone: payload.phone || (payload.metadata && payload.metadata.phone) || '',
+          postal_code: payload.postal_code || (payload.metadata && payload.metadata.postal_code) || '',
+          prefecture: payload.prefecture || (payload.metadata && payload.metadata.prefecture) || '',
+          city: payload.city || payload.address_line1 || '',
+          address1: payload.address1 || payload.address_line2 || '',
+          address2: payload.address2 || payload.address_line3 || '',
+          // 既存パラメータ維持
+          ...payload
+        };
 
-         // 2. フォールバック: 直接 GAS エンドポイントへ POST 送信 (redirect: follow)
-         if (!success) {
-           const gasRes = await fetch(GAS_APPLY_URL, {
-             method: 'POST',
-             headers: { 'Content-Type': 'application/json' },
-             body: JSON.stringify(payload),
-             redirect: 'follow'
-           });
-           if (gasRes.ok) {
-             console.log('[apply/success] Successfully recorded application directly to GAS');
-           }
-         }
+        // 二重書き込み防止
+        const registrationKey = 'okamoshi_registered_' + (activeSessionId || (gasPayload.email + '_' + gasPayload.amount));
+        if (sessionStorage.getItem(registrationKey)) {
+          console.info('[apply/success] Application already registered to ledger:', registrationKey);
+          return;
+        }
+        sessionStorage.setItem(registrationKey, 'true');
 
-         // 登録完了後に一時保存データをクリーンアップ
-         sessionStorage.removeItem('okamoshi_pending_apply');
-         localStorage.removeItem('okamoshi_pending_apply');
+        console.log('[apply/success] Registering application to GAS ledger with 19 fields:', gasPayload);
 
-       } catch (err) {
-         console.error('[apply/success] Error recording completed application:', err);
-       }
-     })();
-   </script>
- </body>
- </html>
+        // 1. バックエンド API (/api/apply) へ送信 (GAS台帳登録 + Resendメール通知)
+        try {
+          const res = await fetch(APPLY_API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(gasPayload)
+          });
+          if (res.ok) {
+            console.log('[apply/success] Successfully recorded via backend API');
+          } else {
+            console.warn('[apply/success] Backend API responded with status:', res.status);
+          }
+        } catch (apiErr) {
+          console.warn('[apply/success] Backend API call failed:', apiErr);
+        }
+
+        // 2. 直接 GAS エンドポイントへの送信（CORSを回避して確実に届ける mode: no-cors 送信）
+        try {
+          await fetch(GAS_APPLY_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {
+              'Content-Type': 'text/plain;charset=utf-8'
+            },
+            body: JSON.stringify(gasPayload)
+          });
+          console.log('[apply/success] Direct GAS dispatch executed (no-cors)');
+        } catch (gasErr) {
+          console.error('[apply/success] Direct GAS dispatch error:', gasErr);
+        }
+
+        // 一時保存データをクリーンアップ
+        sessionStorage.removeItem('okamoshi_pending_apply');
+        localStorage.removeItem('okamoshi_pending_apply');
+
+      } catch (err) {
+        console.error('[apply/success] Error recording completed application:', err);
+      }
+    })();
+  </script>
+</body>
+</html>

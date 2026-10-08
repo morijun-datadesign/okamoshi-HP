@@ -91,19 +91,19 @@
 
       const newBadgeHtml = isNew
         ? `<span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-[#c85a32] text-white shadow-sm shrink-0 tracking-tight leading-tight text-center">NEW</span>`
-        : `<span class="px-2 py-0.5 rounded-full text-[11px] font-bold text-transparent select-none pointer-events-none invisible shrink-0 tracking-tight leading-tight text-center" aria-hidden="true">NEW</span>`;
+        : '';
 
       return `
         <article class="border-b border-gray-200/80 last:border-b-0 transition-colors group">
           <a href="${detailUrl}" class="flex items-center justify-between py-3.5 sm:py-4 gap-2 sm:gap-4 cursor-pointer hover:bg-slate-50/50 sm:-mx-3 sm:px-3 rounded-lg transition-colors">
             <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 flex-1 min-w-0">
-              <!-- メタ領域: [NEW] [日付] [カテゴリバッジ] -->
+              <!-- メタ領域: [日付] [NEW(任意)] [カテゴリバッジ] -->
               <div class="flex items-center gap-2 shrink-0">
-                ${newBadgeHtml}
-                <span class="flex items-center gap-1 text-xs text-on-surface-variant font-medium">
+                <span class="flex items-center gap-1 text-xs text-on-surface-variant font-medium shrink-0">
                   <span class="material-symbols-outlined text-[14px] text-outline">calendar_today</span>
                   <span class="tabular-nums">${dateStr}</span>
                 </span>
+                ${newBadgeHtml}
                 <span class="px-2.5 py-0.5 rounded text-[11px] font-bold ${badgeClass} shrink-0">
                   ${catName}
                 </span>

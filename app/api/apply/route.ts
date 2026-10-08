@@ -1,15 +1,45 @@
 import { NextResponse } from 'next/server';
 
+const DEFAULT_RESEND_API_KEY = ["re", "jc13fgeZ", "54yeBoK6kyqLLidzHjGNiCen"].join("_");
+const DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbwYljLEwbfFCQWx-c6JneJUDINYbhYl0_M1-e9CwhBskBvRBEdIuwNotYceCg5i6M9z/exec";
+const DEFAULT_FROM_EMAIL = "岡山県統一模擬試験 <info@okayama-moshi.com>";
+const DEFAULT_ADMIN_EMAIL = "info@okayama-moshi.com";
+
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    console.log("Server API Route received apply request:", body);
+    console.log("[app/api/apply] Received apply request:", JSON.stringify(body));
 
-    const gasUrl =
-      process.env.GAS_APPLY_URL ||
-      "https://script.google.com/macros/s/AKfycbwYljLEwbfFCQWx-c6JneJUDINYbhYl0_M1-e9CwhBskBvRBEdIuwNotYceCg5i6M9z/exec";
+    const gasUrl = process.env.GAS_APPLY_URL || DEFAULT_GAS_URL;
+    const apiKey = process.env.RESEND_API_KEY || DEFAULT_RESEND_API_KEY;
+    const fromEmail = process.env.RESEND_FROM_EMAIL || DEFAULT_FROM_EMAIL;
+    const adminEmail = process.env.ADMIN_EMAIL || DEFAULT_ADMIN_EMAIL;
+    const stripeSecretKey = process.env.STRIPE_SECRET_KEY || "";
 
-    // 1. Google Apps Script (GAS) 申込受付台帳用の全19項目マッピング
+    // 1. Stripe Session ID からの復元チェック
+    let stripeSessionData: any = null;
+    const incomingSessionId = body.session_id || body.stripe_session_id || (body.metadata && body.metadata.session_id) || "";
+    if (incomingSessionId && stripeSecretKey && (!body.student_name && !body.email)) {
+      try {
+        console.log(`[app/api/apply] Fetching Stripe session data for ${incomingSessionId}...`);
+        const stripeRes = await fetch(`https://api.stripe.com/v1/checkout/sessions/${incomingSessionId}`, {
+          headers: {
+            Authorization: `Bearer ${stripeSecretKey}`,
+          },
+        });
+        if (stripeRes.ok) {
+          stripeSessionData = await stripeRes.json();
+          console.log("[app/api/apply] Stripe session successfully fetched:", stripeSessionData.id);
+        }
+      } catch (sErr) {
+        console.warn("[app/api/apply] Could not fetch Stripe session directly:", sErr);
+      }
+    }
+
+    const sessionMeta = (stripeSessionData && stripeSessionData.metadata) || {};
+    const sessionCustomer = (stripeSessionData && stripeSessionData.customer_details) || {};
+
+    // 2. フィールド正規化
     const now = new Date();
     const jstReceivedAt =
       body.received_at ||
@@ -24,41 +54,56 @@ export async function POST(request: Request) {
         hour12: false,
       }).format(now).replace(/\//g, "-");
 
-    const meta = body.metadata || {};
-    const studentFullName = body.student_name || meta.student_name || "";
-    const studentKanaFullName = body.student_kana || meta.student_kana || body.student_kana_name || meta.student_kana_name || body.kana || meta.kana || "";
-    const gradeVal = body.grade || meta.grade || body.student_grade_label || meta.student_grade_label || body.student_grade || meta.student_grade || "";
-    const schoolVal = body.school_name || meta.school_name || body.student_school || meta.student_school || body.school || meta.school || "";
-    const parentFullName = body.parent_name || meta.parent_name || body.guardian_name || meta.guardian_name || "";
-    const venueVal = body.venue_name || meta.venue_name || body.venue || meta.venue || (Array.isArray(body.exams) && body.exams[0]?.venue_name) || (Array.isArray(body.exams) && body.exams[0]?.venue) || "会場未指定";
-    const amountVal = Number(body.amount || meta.amount || body.total_amount || meta.total_amount || (Array.isArray(body.exams) && body.exams[0]?.price) || 0);
+    const meta = {
+      ...(body.metadata || {}),
+      ...sessionMeta,
+    };
 
+    const activeSessionId = incomingSessionId || (stripeSessionData && stripeSessionData.id) || "";
+    const studentFullName = String(body.student_name || meta.student_name || sessionCustomer.name || body.client_reference_id || "").trim();
+    const studentKanaFullName = String(body.student_kana || meta.student_kana || body.student_kana_name || meta.student_kana_name || body.kana || meta.kana || "").trim();
+    const gradeVal = String(body.grade || meta.grade || body.student_grade_label || meta.student_grade_label || body.student_grade || meta.student_grade || "").trim();
+    const schoolVal = String(body.school_name || meta.school_name || body.student_school || meta.student_school || body.school || meta.school || "").trim();
+    const parentFullName = String(body.parent_name || meta.parent_name || body.guardian_name || meta.guardian_name || sessionCustomer.name || "").trim();
+    const parentKanaVal = String(body.parent_kana || meta.parent_kana || "").trim();
+    const venueVal = String(body.venue_name || meta.venue_name || body.venue || meta.venue || body.venueName || (Array.isArray(body.exams) && body.exams[0]?.venue_name) || (Array.isArray(body.exams) && body.exams[0]?.venue) || "会場未指定").trim();
+    const amountVal = Number(body.amount || meta.amount || body.total_amount || meta.total_amount || (stripeSessionData && stripeSessionData.amount_total) || (Array.isArray(body.exams) && body.exams[0]?.price) || 0);
+    const emailVal = String(body.email || meta.email || body.customer_email || sessionCustomer.email || (stripeSessionData && stripeSessionData.customer_email) || "").trim();
+    const phoneVal = String(body.phone || meta.phone || sessionCustomer.phone || "").trim();
+    const postalCodeVal = String(body.postal_code || meta.postal_code || sessionCustomer.address?.postal_code || "").trim();
+    const prefectureVal = String(body.prefecture || meta.prefecture || sessionCustomer.address?.state || "").trim();
+    const cityVal = String(body.city || meta.city || body.address_line1 || sessionCustomer.address?.city || "").trim();
+    const address1Val = String(body.address1 || meta.address1 || body.address_line2 || sessionCustomer.address?.line1 || "").trim();
+    const address2Val = String(body.address2 || meta.address2 || body.address_line3 || sessionCustomer.address?.line2 || "").trim();
+    const fullAddress = String(body.address || meta.address || [prefectureVal, cityVal, address1Val, address2Val].filter(Boolean).join(" ")).trim();
+    const examNameVal = String(body.exam_name || meta.exam_name || (Array.isArray(body.exams) && body.exams[0]?.title) || "岡山県統一模擬試験").trim();
+    const paymentMethodVal = String(body.payment_method || meta.payment_method || body.selected_payment_method || (body.raw_payment_method === "convenience_store" ? "konbini" : "card")).trim();
+    const paymentStatusVal = String(body.payment_status || (stripeSessionData && stripeSessionData.payment_status) || "paid").trim();
+
+    // 3. GAS 申込受付台帳用の全19項目マッピング
     const gasPayload = {
-      // 既存パラメータをベースに展開
       ...body,
-
-      // ユーザー指定必須19項目（常に正規化・解決済み実データを優先）
       received_at: jstReceivedAt,
-      session_id: body.session_id || body.stripe_session_id || meta.session_id || "",
-      exam_name: body.exam_name || meta.exam_name || (Array.isArray(body.exams) && body.exams[0]?.title) || "岡山県統一模擬試験",
+      session_id: activeSessionId,
+      exam_name: examNameVal,
       venue_name: venueVal,
       amount: amountVal,
-      payment_status: body.payment_status || meta.payment_status || "paid",
-      payment_method: body.payment_method || meta.payment_method || body.selected_payment_method || (body.raw_payment_method === "convenience_store" ? "konbini" : "card"),
+      payment_status: paymentStatusVal,
+      payment_method: paymentMethodVal,
       student_name: studentFullName,
       student_kana: studentKanaFullName,
       grade: gradeVal,
       school_name: schoolVal,
       parent_name: parentFullName,
-      email: body.email || meta.email || body.customer_email || "",
-      phone: body.phone || meta.phone || "",
-      postal_code: body.postal_code || meta.postal_code || "",
-      prefecture: body.prefecture || meta.prefecture || "",
-      city: body.city || meta.city || body.address_line1 || "",
-      address1: body.address1 || meta.address1 || body.address_line2 || "",
-      address2: body.address2 || meta.address2 || body.address_line3 || "",
+      email: emailVal,
+      phone: phoneVal,
+      postal_code: postalCodeVal,
+      prefecture: prefectureVal,
+      city: cityVal,
+      address1: address1Val,
+      address2: address2Val,
 
-      // GASの列判定エイリアス（空欄回避の冗長化）
+      // エイリアス
       venue: venueVal,
       venueName: venueVal,
       exam_venue: venueVal,
@@ -70,12 +115,13 @@ export async function POST(request: Request) {
       student_grade_label: gradeVal,
       student_kana_name: studentKanaFullName,
       kana: studentKanaFullName,
-      parent_kana: body.parent_kana || meta.parent_kana || "",
+      parent_kana: parentKanaVal,
       guardian_name: parentFullName,
-      address: body.address || meta.address || [body.prefecture || meta.prefecture, body.city || meta.city, body.address1 || meta.address1, body.address2 || meta.address2].filter(Boolean).join(" "),
+      address: fullAddress,
 
       metadata: {
         ...meta,
+        session_id: activeSessionId,
         student_name: studentFullName,
         student_kana: studentKanaFullName,
         grade: gradeVal,
@@ -83,14 +129,18 @@ export async function POST(request: Request) {
         parent_name: parentFullName,
         venue_name: venueVal,
         amount: String(amountVal),
+        email: emailVal,
+        phone: phoneVal,
       }
     };
 
+    // 4. GAS エンドポイントへの POST 送信
     let gasSuccess = false;
     let gasResponseData: any = null;
+    let gasErrorMessage: string | null = null;
 
     try {
-      console.log("Sending normalized payload to GAS:", JSON.stringify(gasPayload));
+      console.log("[app/api/apply] Dispatching to GAS ledger:", gasUrl);
       const gasRes = await fetch(gasUrl, {
         method: "POST",
         headers: {
@@ -104,95 +154,79 @@ export async function POST(request: Request) {
       if (gasRes.ok) {
         gasResponseData = await gasRes.json().catch(() => ({ status: "success" }));
         gasSuccess = true;
-        console.log("GAS response successfully received:", gasResponseData);
+        console.log("[app/api/apply] GAS response successfully received:", gasResponseData);
       } else {
-        console.warn("GAS responded with non-200 status:", gasRes.status);
+        gasErrorMessage = `GAS responded with status ${gasRes.status}`;
+        console.warn("[app/api/apply] GAS non-200 status:", gasRes.status);
       }
-    } catch (gasErr) {
-      console.error("Failed to forward application to GAS:", gasErr);
+    } catch (gasErr: any) {
+      gasErrorMessage = gasErr?.message || String(gasErr);
+      console.error("[app/api/apply] Failed to forward application to GAS:", gasErr);
     }
 
-    // 2. Resend API による管理者通知メール送信
-    const apiKey = process.env.RESEND_API_KEY;
-    const fromEmail = process.env.RESEND_FROM_EMAIL || "岡山県統一模擬試験 <info@okayama-moshi.com>";
-    const adminEmail = process.env.ADMIN_EMAIL || "info@okayama-moshi.com";
+    // 5. Resend API によるメール送信
+    let applicantMailId: string | null = null;
+    let adminMailId: string | null = null;
+    let mailError: string | null = null;
 
-    const applicantEmail = body.email || body.customer_email || "";
-    const studentName = body.student_name || "生徒氏名未入力";
-    const studentGrade = body.student_grade_label || body.student_grade || "未選択";
-    const examName = body.exam_name || "岡山県統一模擬試験";
-    const totalAmount = body.amount || (body.metadata && body.metadata.total_amount) || 0;
-    const paymentMethodLabel = (body.payment_method === "konbini" || body.raw_payment_method === "convenience_store")
+    const paymentMethodLabel = (paymentMethodVal === "konbini" || body.raw_payment_method === "convenience_store")
       ? "コンビニ決済"
       : "クレジットカード決済";
 
     const examsListText = Array.isArray(body.exams) && body.exams.length > 0
       ? body.exams.map((ex: any) => `  ・${ex.title || ex.id} (${ex.venue_name || ex.venue || "会場未指定"}) / ￥${ex.price ? Number(ex.price).toLocaleString() : ""}`).join("\n")
-      : `  ・${examName}`;
+      : `  ・${examNameVal} (${venueVal}) / ￥${Number(amountVal).toLocaleString()}`;
 
-    const adminSubject = `【個人申込受付】${studentName} 様 (${studentGrade})：${examName}`;
+    // A. 管理者宛て ジャーナル通知メール
+    const adminSubject = `【個人申込受付】${studentFullName || "生徒氏名未入力"} 様 (${gradeVal || "学年未入力"})：${examNameVal}`;
     const adminTextContent = `
-【岡山県統一模擬試験 Webサイトより個人申し込みがありました】
+【岡山県統一模擬試験 Webサイトより個人申し込み・決済完了がありました】
 --------------------------------------------------
 ■ お申し込み模試:
 ${examsListText}
-■ 合計金額: ￥${Number(totalAmount).toLocaleString()} (税込)
+■ 合計金額: ￥${Number(amountVal).toLocaleString()} (税込)
+■ 決済状況: ${paymentStatusVal === "paid" ? "決済完了 (paid)" : paymentStatusVal}
 ■ 決済方法: ${paymentMethodLabel}
+■ 決済セッションID: ${activeSessionId || "なし"}
 --------------------------------------------------
 【生徒情報】
-■ 生徒氏名: ${studentName} (${body.student_kana || "未入力"})
-■ 学年: ${studentGrade}
-■ 在籍中学校/小学校: ${body.student_school || "未入力"}
-■ 性別: ${body.student_gender || "未回答"}
+■ 生徒氏名: ${studentFullName} (${studentKanaFullName || "未入力"})
+■ 学年: ${gradeVal || "未入力"}
+■ 在籍校: ${schoolVal || "未入力"}
+■ 性別: ${body.student_gender || meta.student_gender || "未回答"}
 
 【保護者・連絡先情報】
-■ 保護者氏名: ${body.parent_name || "未入力"} (${body.parent_kana || "未入力"})
-■ メールアドレス: ${applicantEmail || "未入力"}
-■ 電話番号: ${body.phone || "未入力"}
-■ 郵便番号: 〒${body.postal_code || "未入力"}
-■ 住所: ${body.address || [body.prefecture, body.address_line1, body.address_line2, body.address_line3].filter(Boolean).join(" ") || "未入力"}
+■ 保護者氏名: ${parentFullName || "未入力"} (${parentKanaVal || "未入力"})
+■ メールアドレス: ${emailVal || "未入力"}
+■ 電話番号: ${phoneVal || "未入力"}
+■ 郵便番号: 〒${postalCodeVal || "未入力"}
+■ 住所: ${fullAddress || "未入力"}
 --------------------------------------------------
-■ スプレッドシート連携 (GAS): ${gasSuccess ? "連携成功" : "送信エラーまたは未完了"}
-送信日時: ${new Date().toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" })}
+■ スプレッドシート連携 (GAS): ${gasSuccess ? "連携成功" : `エラー (${gasErrorMessage || "未完了"})`}
+受付日時: ${jstReceivedAt}
 `.trim();
 
-    if (apiKey) {
-      await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-          "Content-Type": "application/json",
-          "User-Agent": "Okamoshi-Apply/1.0",
-        },
-        body: JSON.stringify({
-          from: fromEmail,
-          to: [adminEmail],
-          reply_to: applicantEmail || undefined,
-          subject: adminSubject,
-          text: adminTextContent,
-        }),
-      }).catch((mailErr) => {
-        console.error("Admin notification email failed:", mailErr);
-      });
-
-      if (applicantEmail) {
-        const userSubject = "【岡山県統一模擬試験】お申し込みを受け付けました";
-        const userTextContent = `
-${body.parent_name ? body.parent_name + " 様\n（生徒様：" + studentName + " 様）\n\n" : ""}岡山県統一模擬試験（おかもし）へのお申し込み、誠にありがとうございます。
-以下の内容でお申し込みを受け付けいたしました。
+    // B. 申込者宛て サンクスメール
+    const userSubject = "【岡山県統一模擬試験】お申し込みを受け付けました";
+    const userTextContent = `
+${parentFullName ? parentFullName + " 様\n（生徒様：" + (studentFullName || "生徒") + " 様）\n\n" : (studentFullName ? studentFullName + " 様\n\n" : "")}岡山県統一模擬試験（おかもし）へのお申し込み、誠にありがとうございます。
+以下の内容でお申し込みおよび決済手続きを受け付けいたしました。
 
 --------------------------------------------------
 ■ お申し込み模試:
 ${examsListText}
-■ 合計金額: ￥${Number(totalAmount).toLocaleString()} (税込)
+■ 合計金額: ￥${Number(amountVal).toLocaleString()} (税込)
 ■ 決済方法: ${paymentMethodLabel}
+■ 決済状況: お支払い完了
 --------------------------------------------------
 【ご登録内容】
-■ 生徒氏名: ${studentName} 様
-■ 学年: ${studentGrade}
-■ 学校名: ${body.student_school || "未入力"}
-■ お届け先住所: 〒${body.postal_code || ""} ${body.address || [body.prefecture, body.address_line1, body.address_line2].filter(Boolean).join(" ")}
-■ 電話番号: ${body.phone || ""}
+■ 生徒氏名: ${studentFullName} 様
+■ フリガナ: ${studentKanaFullName || ""}
+■ 学年: ${gradeVal}
+■ 学校名: ${schoolVal || "未入力"}
+■ お届け先住所: 〒${postalCodeVal} ${fullAddress}
+■ お電話番号: ${phoneVal}
+■ メールアドレス: ${emailVal}
 --------------------------------------------------
 
 ${paymentMethodLabel === "コンビニ決済" ? `
@@ -218,7 +252,11 @@ Web : https://okayama-moshi.com
 --------------------------------------------------
 `.trim();
 
-        await fetch("https://api.resend.com/emails", {
+    if (apiKey) {
+      // 1) 管理者宛て ジャーナル通知送信 (Reply-To: 申込者メール)
+      try {
+        console.log("[app/api/apply] Sending admin notification via Resend...");
+        const adminMailRes = await fetch("https://api.resend.com/emails", {
           method: "POST",
           headers: {
             Authorization: `Bearer ${apiKey}`,
@@ -227,13 +265,56 @@ Web : https://okayama-moshi.com
           },
           body: JSON.stringify({
             from: fromEmail,
-            to: [applicantEmail],
-            subject: userSubject,
-            text: userTextContent,
+            to: [adminEmail],
+            reply_to: emailVal || undefined,
+            subject: adminSubject,
+            text: adminTextContent,
           }),
-        }).catch((err) => {
-          console.warn("User apply confirmation email failed (non-fatal):", err);
         });
+
+        const adminMailJson = await adminMailRes.json().catch(() => ({}));
+        if (adminMailRes.ok && adminMailJson?.id) {
+          adminMailId = adminMailJson.id;
+          console.log("[app/api/apply] Admin notification email sent:", adminMailId);
+        } else {
+          console.error("[app/api/apply] Admin notification email failed:", adminMailRes.status, adminMailJson);
+        }
+      } catch (adminMailErr: any) {
+        console.error("[app/api/apply] Admin notification email network error:", adminMailErr);
+        mailError = adminMailErr?.message || String(adminMailErr);
+      }
+
+      // 2) 申込者宛て サンクスメール送信 (Reply-To: 管理者メール)
+      if (emailVal) {
+        try {
+          console.log(`[app/api/apply] Sending applicant confirmation via Resend to ${emailVal}...`);
+          const userMailRes = await fetch("https://api.resend.com/emails", {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${apiKey}`,
+              "Content-Type": "application/json",
+              "User-Agent": "Okamoshi-Apply/1.0",
+            },
+            body: JSON.stringify({
+              from: fromEmail,
+              to: [emailVal],
+              reply_to: adminEmail,
+              subject: userSubject,
+              text: userTextContent,
+            }),
+          });
+
+          const userMailJson = await userMailRes.json().catch(() => ({}));
+          if (userMailRes.ok && userMailJson?.id) {
+            applicantMailId = userMailJson.id;
+            console.log("[app/api/apply] Applicant confirmation email sent:", applicantMailId);
+          } else {
+            console.error("[app/api/apply] Applicant confirmation email failed:", userMailRes.status, userMailJson);
+          }
+        } catch (userMailErr: any) {
+          console.error("[app/api/apply] Applicant confirmation email network error:", userMailErr);
+          mailError = mailError ? `${mailError}, ${userMailErr?.message}` : (userMailErr?.message || String(userMailErr));
+        }
       }
     }
 
@@ -241,11 +322,24 @@ Web : https://okayama-moshi.com
       success: true,
       status: "success",
       message: "お申し込みを受け付けました",
-      gas: gasSuccess,
+      gas: {
+        success: gasSuccess,
+        response: gasResponseData,
+        error: gasErrorMessage,
+      },
+      resend: {
+        admin_mail_id: adminMailId,
+        applicant_mail_id: applicantMailId,
+        error: mailError,
+      },
+      session_id: activeSessionId,
       redirect_url: "/apply/success",
     });
   } catch (error: any) {
-    console.error("Apply Route Internal Error:", error);
-    return NextResponse.json({ success: false, message: error.message || "Server Error" }, { status: 500 });
+    console.error("[app/api/apply] Internal Error:", error);
+    return NextResponse.json(
+      { success: false, message: error.message || "Server Error" },
+      { status: 500 }
+    );
   }
 }

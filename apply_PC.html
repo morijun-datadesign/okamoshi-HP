@@ -3235,6 +3235,7 @@ if (!parentKanaLastName || !parentKanaFirstName) {
           const payloadStr = JSON.stringify(checkoutPayload);
           sessionStorage.setItem('okamoshi_pending_apply', payloadStr);
           localStorage.setItem('okamoshi_pending_apply', payloadStr);
+          localStorage.setItem('okamoshi_latest_application', payloadStr);
           document.cookie = `okamoshi_pending_apply=${encodeURIComponent(payloadStr)}; path=/; max-age=7200; SameSite=Lax`;
         } catch (storageErr) {
           console.warn('Storage save failed:', storageErr);
@@ -3315,6 +3316,7 @@ if (!parentKanaLastName || !parentKanaFirstName) {
             const updatedPayloadStr = JSON.stringify(checkoutPayload);
             sessionStorage.setItem('okamoshi_apply_' + createdSessionId, updatedPayloadStr);
             localStorage.setItem('okamoshi_apply_' + createdSessionId, updatedPayloadStr);
+            localStorage.setItem('okamoshi_latest_application', updatedPayloadStr);
             document.cookie = `okamoshi_apply_${createdSessionId}=${encodeURIComponent(updatedPayloadStr)}; path=/; max-age=7200; SameSite=Lax`;
           } catch (e) {
             console.warn('Session ID keyed storage failed:', e);

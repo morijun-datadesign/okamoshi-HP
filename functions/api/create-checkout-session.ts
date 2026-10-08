@@ -2,35 +2,28 @@ interface Env {
   STRIPE_SECRET_KEY?: string;
 }
 
+const jsonResponse = (data: unknown, status = 200) =>
+  new Response(JSON.stringify(data), {
+    status,
+    headers: { "Content-Type": "application/json" },
+  });
+
 export const onRequestPost: PagesFunction<Env> = async (context) => {
   try {
-    const body = (await context.request.json()) as Record<string, any>;
-    console.log("[functions/api/create-checkout-session] Received request:", JSON.stringify(body));
-
-    const stripeSecretKey =
-      context.env.STRIPE_SECRET_KEY ||
-      (typeof process !== "undefined" && process.env?.STRIPE_SECRET_KEY) ||
-      "";
-
+    const stripeSecretKey = context.env.STRIPE_SECRET_KEY;
     if (!stripeSecretKey) {
-      console.error("[functions/api/create-checkout-session] STRIPE_SECRET_KEY is not configured.");
-      return new Response(
-        JSON.stringify({
-          success: false,
-          message: "Stripe APIキー（STRIPE_SECRET_KEY）が環境変数に設定されていません。Cloudflare Pages の設定をご確認ください。",
-        }),
-        { status: 500, headers: { "Content-Type": "application/json" } }
+      console.error("[functions/api/create-checkout-session] STRIPE_SECRET_KEY is not set.");
+      return jsonResponse(
+        { success: false, message: "Stripe APIキー（STRIPE_SECRET_KEY）が環境変数に設定されていません。" },
+        500
       );
     }
 
-    // 1. Origin と success_url / cancel_url の正確な生成
-    const reqUrl = new URL(context.request.url);
-    const origin =
-      context.request.headers.get("origin") ||
-      context.request.headers.get("x-forwarded-host") ? `https://${context.request.headers.get("x-forwarded-host")}` :
-      reqUrl.origin ||
-      "https://okamoshi.pages.dev";
+    const body = (await context.request.json()) as Record<string, any>;
+    console.log("[functions/api/create-checkout-session] Received request:", JSON.stringify(body));
 
+    // 1. success_url / cancel_url
+    const origin = new URL(context.request.url).origin;
     const successUrl = `${origin}/complete.html?session_id={CHECKOUT_SESSION_ID}`;
     const cancelUrl = `${origin}/apply.html`;
 
@@ -88,7 +81,6 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       total_amount: String(amountVal),
     };
 
-    // フォームから渡された existingMeta もマージ
     for (const [k, v] of Object.entries(existingMeta)) {
       if (v !== undefined && v !== null && typeof v !== "object" && !metadataRaw[k]) {
         metadataRaw[k] = String(v);
@@ -103,7 +95,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       }
     }
 
-    // 4. Stripe API (POST /v1/checkout/sessions) 用の URLSearchParams 作成
+    // 4. Stripe API（POST /v1/checkout/sessions）を直接呼び出す
     const params = new URLSearchParams();
     params.append("mode", "payment");
     params.append("success_url", successUrl);
@@ -116,88 +108,46 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       params.append("client_reference_id", studentName);
     }
 
-    // 決済方法
+    params.append("payment_method_types[0]", "card");
     if (paymentMethod === "konbini") {
-      params.append("payment_method_types[0]", "card");
       params.append("payment_method_types[1]", "konbini");
       params.append("payment_method_options[konbini][expires_after_days]", "3");
-    } else {
-      params.append("payment_method_types[0]", "card");
     }
 
-    // 商品・金額（JPYはゼロデシマル）
     params.append("line_items[0][price_data][currency]", "jpy");
     params.append("line_items[0][price_data][unit_amount]", String(amountVal));
     params.append("line_items[0][price_data][product_data][name]", examName);
     params.append("line_items[0][quantity]", "1");
 
-    // metadata
     for (const [key, value] of Object.entries(sanitizedMetadata)) {
       params.append(`metadata[${key}]`, value);
     }
 
-    console.log("[functions/api/create-checkout-session] Dispatching directly to Stripe API...");
-
-    // 5. Stripe API 直接呼び出し（n8n 完全撤廃）
     const stripeRes = await fetch("https://api.stripe.com/v1/checkout/sessions", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${stripeSecretKey}`,
         "Content-Type": "application/x-www-form-urlencoded",
-        "User-Agent": "Okamoshi-Cloudflare-Functions/1.0",
       },
       body: params.toString(),
     });
 
-    const stripeRawText = await stripeRes.text();
-    let stripeData: any = {};
-    try {
-      stripeData = JSON.parse(stripeRawText);
-    } catch (parseErr) {
-      console.error("[functions/api/create-checkout-session] Stripe response JSON parse error:", stripeRawText);
-    }
+    const session = (await stripeRes.json().catch(() => ({}))) as Record<string, any>;
 
-    if (!stripeRes.ok) {
-      console.error("[functions/api/create-checkout-session] Stripe API error:", stripeRes.status, stripeRawText);
-      const errorMsg = stripeData?.error?.message || `Stripe API Error (HTTP ${stripeRes.status})`;
-      return new Response(
-        JSON.stringify({ success: false, message: errorMsg }),
-        { status: stripeRes.status, headers: { "Content-Type": "application/json" } }
+    if (!stripeRes.ok || !session.url) {
+      console.error("[functions/api/create-checkout-session] Stripe API error:", stripeRes.status, JSON.stringify(session));
+      return jsonResponse(
+        { success: false, message: session?.error?.message || `Stripe API Error (HTTP ${stripeRes.status})` },
+        stripeRes.ok ? 502 : stripeRes.status
       );
     }
 
-    const sessionUrl = stripeData.url;
-    const sessionId = stripeData.id;
+    console.log("[functions/api/create-checkout-session] Checkout Session created:", session.id);
 
-    if (!sessionUrl) {
-      console.error("[functions/api/create-checkout-session] No url returned from Stripe:", stripeData);
-      return new Response(
-        JSON.stringify({ success: false, message: "Stripeから決済URLが返却されませんでした。" }),
-        { status: 502, headers: { "Content-Type": "application/json" } }
-      );
-    }
-
-    console.log("[functions/api/create-checkout-session] Stripe Checkout Session successfully created:", sessionId);
-
-    // 6. 要求形式通りのレスポンス返却
-    const responsePayload = {
-      url: sessionUrl,
-      checkout_url: sessionUrl,
-      session_id: sessionId,
-      sessionId: sessionId,
-      id: sessionId,
-      success: true,
-    };
-
-    return new Response(JSON.stringify(responsePayload), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
+    // 5. レスポンス返却
+    return jsonResponse({ success: true, url: session.url, session_id: session.id });
   } catch (error: any) {
     console.error("[functions/api/create-checkout-session] Internal Exception:", error);
-    return new Response(
-      JSON.stringify({ success: false, message: error.message || "Internal Server Error" }),
-      { status: 500, headers: { "Content-Type": "application/json" } }
-    );
+    return jsonResponse({ success: false, message: error?.message || "Internal Server Error" }, 500);
   }
 };

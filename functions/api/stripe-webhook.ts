@@ -33,19 +33,27 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       hour12: false,
     }).format(now).replace(/\//g, "-");
 
+    const studentKana = metadata.student_kana || metadata.kana || metadata.student_kana_name || "";
+    const grade = metadata.grade || metadata.student_grade_label || metadata.student_grade || "";
+    const schoolName = metadata.school_name || metadata.school || metadata.student_school || "";
+    const parentName = metadata.parent_name || metadata.guardian_name || customerDetails.name || "";
+    const venueName = metadata.venue_name || metadata.venue || metadata.venueName || "会場未指定";
+    const amountVal = Number(session.amount_total || metadata.amount || metadata.total_amount || 0);
+
     const gasPayload = {
+      ...metadata,
       received_at: jstReceivedAt,
       session_id: session.id || metadata.session_id || "",
       exam_name: metadata.exam_name || "岡山県統一模擬試験",
-      venue_name: metadata.venue_name || "会場未指定",
-      amount: Number(session.amount_total || metadata.total_amount || 0),
+      venue_name: venueName,
+      amount: amountVal,
       payment_status: session.payment_status || "paid",
       payment_method: session.payment_method_types?.[0] || metadata.payment_method || "card",
       student_name: metadata.student_name || customerDetails.name || "",
-      student_kana: metadata.student_kana || "",
-      grade: metadata.grade || metadata.student_grade_label || metadata.student_grade || "",
-      school_name: metadata.school_name || metadata.student_school || "",
-      parent_name: metadata.parent_name || customerDetails.name || "",
+      student_kana: studentKana,
+      grade: grade,
+      school_name: schoolName,
+      parent_name: parentName,
       email: customerDetails.email || session.customer_email || metadata.email || "",
       phone: customerDetails.phone || metadata.phone || "",
       postal_code: metadata.postal_code || customerDetails.address?.postal_code || "",
@@ -53,6 +61,19 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       city: metadata.city || customerDetails.address?.city || "",
       address1: metadata.address1 || customerDetails.address?.line1 || "",
       address2: metadata.address2 || customerDetails.address?.line2 || "",
+
+      // Aliases
+      venue: venueName,
+      venueName: venueName,
+      school: schoolName,
+      student_school: schoolName,
+      student_grade: grade,
+      student_grade_label: grade,
+      student_kana_name: studentKana,
+      kana: studentKana,
+      parent_kana: metadata.parent_kana || "",
+      guardian_name: parentName,
+      total_amount: amountVal,
       metadata: metadata,
     };
 

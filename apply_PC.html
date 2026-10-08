@@ -3106,23 +3106,38 @@ if (!parentKanaLastName || !parentKanaFirstName) {
         }
       } : undefined;
 
-      // 業務管理用メタデータ
+      // 業務管理用メタデータ（Stripe session.metadata に全項目を確実に保存）
       const stripeMetadata = {
         student_name: `${studentLastName} ${studentFirstName}`,
         student_kana: `${studentKanaLastName} ${studentKanaFirstName}`,
-        student_grade: gradeText,
-        student_school: currentSchool || '',
-        student_gender: gender || '',
+        grade: gradeText,
+        school_name: currentSchool || '',
         parent_name: `${parentLastName} ${parentFirstName}`,
-        parent_kana: `${parentKanaLastName} ${parentKanaFirstName}`,
-        phone: parentTel,
-        postal_code: postalCode,
-        prefecture: extractedPref,
-        address: fullAddressString,
+        venue_name: firstVenueName,
+        amount: String(totalAmount),
         exam_name: examNameStr,
         payment_method: selectedPaymentMethod,
-        selected_payment_method: selectedPaymentMethod,
-        total_amount: String(totalAmount)
+        phone: parentTel,
+        email: parentEmail,
+        postal_code: postalCode,
+        prefecture: extractedPref,
+        city: addressLine1,
+        address1: addressLine2,
+        address2: addressLine3,
+
+        // エイリアス・互換用
+        venue: firstVenueName,
+        school: currentSchool || '',
+        student_school: currentSchool || '',
+        student_grade: gradeText,
+        student_grade_label: gradeText,
+        student_kana_name: `${studentKanaLastName} ${studentKanaFirstName}`,
+        kana: `${studentKanaLastName} ${studentKanaFirstName}`,
+        parent_kana: `${parentKanaLastName} ${parentKanaFirstName}`,
+        student_gender: gender || '',
+        address: fullAddressString,
+        total_amount: String(totalAmount),
+        selected_payment_method: selectedPaymentMethod
       };
 
       const firstVenueName = selectedExams[0]?.venueLabel || selectedExams[0]?.venue || '会場未指定';
@@ -3151,6 +3166,17 @@ if (!parentKanaLastName || !parentKanaFirstName) {
         address1: addressLine2,
         address2: addressLine3,
 
+        // エイリアス（空欄防止用）
+        venue: firstVenueName,
+        school: currentSchool || '',
+        student_school: currentSchool || '',
+        student_grade: gradeText,
+        student_grade_label: gradeText,
+        student_kana_name: `${studentKanaLastName} ${studentKanaFirstName}`,
+        kana: `${studentKanaLastName} ${studentKanaFirstName}`,
+        parent_kana: `${parentKanaLastName} ${parentKanaFirstName}`,
+        total_amount: totalAmount,
+
         // ========================================================
         // 【Stripe 申込・決済連動パラメータ】
         // ========================================================
@@ -3158,15 +3184,7 @@ if (!parentKanaLastName || !parentKanaFirstName) {
         payment_method_types: paymentMethodTypes,
         customer_email: parentEmail,
         client_reference_id: `${studentLastName} ${studentFirstName}`,
-        metadata: {
-          ...stripeMetadata,
-          venue_name: firstVenueName,
-          grade: gradeText,
-          school_name: currentSchool || '',
-          city: addressLine1,
-          address1: addressLine2,
-          address2: addressLine3
-        },
+        metadata: stripeMetadata,
         success_url: `${window.location.origin}/apply/success?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${window.location.origin}/apply`,
         ...(paymentMethodOptions ? { payment_method_options: paymentMethodOptions } : {}),
@@ -3198,16 +3216,19 @@ if (!parentKanaLastName || !parentKanaFirstName) {
       console.log(JSON.stringify(checkoutPayload, null, 2));
       console.log('==============================================');
 
-      // 決済完了時（success遷移時）に台帳登録と通知を実行するため一時ストレージに保存
+      // 決済完了時（success遷移時）に台帳登録と通知を実行するため一時ストレージ＆Cookieに三重保存
       try {
-        sessionStorage.setItem('okamoshi_pending_apply', JSON.stringify(checkoutPayload));
-        localStorage.setItem('okamoshi_pending_apply', JSON.stringify(checkoutPayload));
+        const payloadStr = JSON.stringify(checkoutPayload);
+        sessionStorage.setItem('okamoshi_pending_apply', payloadStr);
+        localStorage.setItem('okamoshi_pending_apply', payloadStr);
+        document.cookie = `okamoshi_pending_apply=${encodeURIComponent(payloadStr)}; path=/; max-age=7200; SameSite=Lax`;
       } catch (storageErr) {
         console.warn('Storage save failed:', storageErr);
       }
 
       try {
         let checkoutUrl = null;
+        let createdSessionId = null;
 
         // 1. まずバックエンドAPI (/api/create-checkout-session) を呼び出し
         try {
@@ -3224,7 +3245,8 @@ if (!parentKanaLastName || !parentKanaFirstName) {
             checkoutUrl = (result && result.checkout_url)
               ? result.checkout_url
               : (result && result.url ? result.url : (Array.isArray(result) && result[0]?.checkout_url ? result[0].checkout_url : null));
-            console.log('[API] Stripe checkout session created:', checkoutUrl);
+            createdSessionId = (result && result.session_id) || (result && result.id) || (checkoutUrl ? checkoutUrl.match(/(cs_[a-zA-Z0-9_]+)/)?.[1] : null);
+            console.log('[API] Stripe checkout session created:', checkoutUrl, createdSessionId);
           }
         } catch (apiErr) {
           console.warn('/api/create-checkout-session call failed, trying fallback webhook:', apiErr);
@@ -3248,11 +3270,25 @@ if (!parentKanaLastName || !parentKanaFirstName) {
           checkoutUrl = (fallbackResult && fallbackResult.checkout_url)
             ? fallbackResult.checkout_url
             : (fallbackResult && fallbackResult.url ? fallbackResult.url : (Array.isArray(fallbackResult) && fallbackResult[0]?.checkout_url ? fallbackResult[0].checkout_url : null));
-          console.log('[Fallback Webhook] Stripe checkout session created:', checkoutUrl);
+          createdSessionId = (fallbackResult && fallbackResult.session_id) || (fallbackResult && fallbackResult.id) || (checkoutUrl ? checkoutUrl.match(/(cs_[a-zA-Z0-9_]+)/)?.[1] : null);
+          console.log('[Fallback Webhook] Stripe checkout session created:', checkoutUrl, createdSessionId);
         }
 
         if (!checkoutUrl) {
           throw new Error('決済画面のURLが取得できませんでした。');
+        }
+
+        // セッションIDに紐づけてストレージ＆Cookieに追加保存（復元精度100%）
+        if (createdSessionId) {
+          try {
+            checkoutPayload.session_id = createdSessionId;
+            const updatedPayloadStr = JSON.stringify(checkoutPayload);
+            sessionStorage.setItem('okamoshi_apply_' + createdSessionId, updatedPayloadStr);
+            localStorage.setItem('okamoshi_apply_' + createdSessionId, updatedPayloadStr);
+            document.cookie = `okamoshi_apply_${createdSessionId}=${encodeURIComponent(updatedPayloadStr)}; path=/; max-age=7200; SameSite=Lax`;
+          } catch (e) {
+            console.warn('Session ID keyed storage failed:', e);
+          }
         }
 
         // 3. Stripe 決済画面へリダイレクト

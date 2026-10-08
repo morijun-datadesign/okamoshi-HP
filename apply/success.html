@@ -237,19 +237,45 @@
       const APPLY_API_URL = '/api/apply';
       const GAS_APPLY_URL = 'https://script.google.com/macros/s/AKfycbwYljLEwbfFCQWx-c6JneJUDINYbhYl0_M1-e9CwhBskBvRBEdIuwNotYceCg5i6M9z/exec';
 
-      try {
-        const rawPending = sessionStorage.getItem('okamoshi_pending_apply') || localStorage.getItem('okamoshi_pending_apply');
-        const urlParams = new URLSearchParams(window.location.search);
-        const sessionId = urlParams.get('session_id') || urlParams.get('sessionId') || '';
+      function getCookie(name) {
+        const match = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + '=([^;]*)'));
+        return match ? decodeURIComponent(match[1]) : null;
+      }
 
-        let payload = null;
-        if (rawPending) {
-          try {
-            payload = JSON.parse(rawPending);
-          } catch (e) {
-            console.warn('Failed to parse pending payload:', e);
+      function restorePendingPayload(sessionId) {
+        const sources = [];
+        if (sessionId) {
+          sources.push(
+            sessionStorage.getItem('okamoshi_apply_' + sessionId),
+            localStorage.getItem('okamoshi_apply_' + sessionId),
+            getCookie('okamoshi_apply_' + sessionId)
+          );
+        }
+        sources.push(
+          sessionStorage.getItem('okamoshi_pending_apply'),
+          localStorage.getItem('okamoshi_pending_apply'),
+          getCookie('okamoshi_pending_apply')
+        );
+
+        for (const src of sources) {
+          if (src) {
+            try {
+              const parsed = JSON.parse(src);
+              if (parsed && typeof parsed === 'object') {
+                return parsed;
+              }
+            } catch (e) {
+              console.warn('JSON parse error on restored candidate:', e);
+            }
           }
         }
+        return null;
+      }
+
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const sessionId = urlParams.get('session_id') || urlParams.get('sessionId') || '';
+        let payload = restorePendingPayload(sessionId);
 
         // 決済方法に応じた案内ボックスの表示調整
         if (payload) {
@@ -266,6 +292,7 @@
         }
 
         payload = payload || {};
+        const meta = payload.metadata || {};
 
         // JST受付日時の生成
         const now = new Date();
@@ -280,32 +307,71 @@
           hour12: false
         }).format(now).replace(/\//g, '-');
 
-        const activeSessionId = sessionId || payload.session_id || payload.stripe_session_id || '';
-        const venueName = payload.venue_name || (Array.isArray(payload.exams) && payload.exams[0]?.venue_name) || (payload.metadata && payload.metadata.venue_name) || '会場未指定';
+        const activeSessionId = sessionId || payload.session_id || payload.stripe_session_id || meta.session_id || '';
+        const studentFullName = payload.student_name || meta.student_name || payload.client_reference_id || '';
+        const studentKanaFullName = payload.student_kana || meta.student_kana || payload.student_kana_name || meta.student_kana_name || payload.kana || meta.kana || '';
+        const gradeVal = payload.grade || meta.grade || payload.student_grade_label || meta.student_grade_label || payload.student_grade || meta.student_grade || '';
+        const schoolVal = payload.school_name || meta.school_name || payload.student_school || meta.student_school || payload.school || meta.school || '';
+        const parentFullName = payload.parent_name || meta.parent_name || payload.guardian_name || meta.guardian_name || '';
+        const venueVal = payload.venue_name || meta.venue_name || payload.venue || meta.venue || payload.venueName || (Array.isArray(payload.exams) && payload.exams[0]?.venue_name) || (Array.isArray(payload.exams) && payload.exams[0]?.venue) || '会場未指定';
+        const amountVal = Number(payload.amount || meta.amount || payload.total_amount || meta.total_amount || payload.price || (Array.isArray(payload.exams) && payload.exams[0]?.price) || 0);
+        const emailVal = payload.email || meta.email || payload.customer_email || '';
+        const phoneVal = payload.phone || meta.phone || '';
+        const paymentMethodVal = payload.payment_method || meta.payment_method || payload.selected_payment_method || (payload.raw_payment_method === 'convenience_store' ? 'konbini' : 'card');
+        const examNameVal = payload.exam_name || meta.exam_name || (Array.isArray(payload.exams) && payload.exams[0]?.title) || '岡山県統一模擬試験';
 
-        // GAS 申込受付台帳・指定必須19項目の正規化
+        // GAS 申込受付台帳・指定必須19項目およびエイリアス（空欄回避の冗長化）
         const gasPayload = {
+          // ベースペイロード展開
+          ...payload,
+
+          // ユーザー指定必須19項目（常に正規化・解決済み実データを優先）
           received_at: jstReceivedAt,
           session_id: activeSessionId,
-          exam_name: payload.exam_name || (Array.isArray(payload.exams) && payload.exams[0]?.title) || '岡山県統一模擬試験',
-          venue_name: venueName,
-          amount: Number(payload.amount || (payload.metadata && payload.metadata.total_amount) || 0),
+          exam_name: examNameVal,
+          venue_name: venueVal,
+          amount: amountVal,
           payment_status: 'paid',
-          payment_method: payload.payment_method || payload.selected_payment_method || (payload.raw_payment_method === 'convenience_store' ? 'konbini' : 'card'),
-          student_name: payload.student_name || (payload.metadata && payload.metadata.student_name) || '',
-          student_kana: payload.student_kana || (payload.metadata && payload.metadata.student_kana) || '',
-          grade: payload.grade || payload.student_grade_label || payload.student_grade || (payload.metadata && payload.metadata.student_grade) || '',
-          school_name: payload.school_name || payload.student_school || (payload.metadata && payload.metadata.student_school) || '',
-          parent_name: payload.parent_name || (payload.metadata && payload.metadata.parent_name) || '',
-          email: payload.email || payload.customer_email || '',
-          phone: payload.phone || (payload.metadata && payload.metadata.phone) || '',
-          postal_code: payload.postal_code || (payload.metadata && payload.metadata.postal_code) || '',
-          prefecture: payload.prefecture || (payload.metadata && payload.metadata.prefecture) || '',
-          city: payload.city || payload.address_line1 || '',
-          address1: payload.address1 || payload.address_line2 || '',
-          address2: payload.address2 || payload.address_line3 || '',
-          // 既存パラメータ維持
-          ...payload
+          payment_method: paymentMethodVal,
+          student_name: studentFullName,
+          student_kana: studentKanaFullName,
+          grade: gradeVal,
+          school_name: schoolVal,
+          parent_name: parentFullName,
+          email: emailVal,
+          phone: phoneVal,
+          postal_code: payload.postal_code || meta.postal_code || '',
+          prefecture: payload.prefecture || meta.prefecture || '',
+          city: payload.city || meta.city || payload.address_line1 || '',
+          address1: payload.address1 || meta.address1 || payload.address_line2 || '',
+          address2: payload.address2 || meta.address2 || payload.address_line3 || '',
+
+          // GASの列判定エイリアス（空欄回避の冗長化）
+          venue: venueVal,
+          venueName: venueVal,
+          exam_venue: venueVal,
+          total_amount: amountVal,
+          price: amountVal,
+          student_school: schoolVal,
+          school: schoolVal,
+          student_grade: gradeVal,
+          student_grade_label: gradeVal,
+          student_kana_name: studentKanaFullName,
+          kana: studentKanaFullName,
+          parent_kana: payload.parent_kana || meta.parent_kana || '',
+          guardian_name: parentFullName,
+          address: payload.address || meta.address || [payload.prefecture || meta.prefecture, payload.city || meta.city, payload.address1 || meta.address1, payload.address2 || meta.address2].filter(Boolean).join(' '),
+
+          metadata: {
+            ...meta,
+            student_name: studentFullName,
+            student_kana: studentKanaFullName,
+            grade: gradeVal,
+            school_name: schoolVal,
+            parent_name: parentFullName,
+            venue_name: venueVal,
+            amount: String(amountVal),
+          }
         };
 
         // 二重書き込み防止
@@ -349,9 +415,15 @@
           console.error('[apply/success] Direct GAS dispatch error:', gasErr);
         }
 
-        // 一時保存データをクリーンアップ
-        sessionStorage.removeItem('okamoshi_pending_apply');
-        localStorage.removeItem('okamoshi_pending_apply');
+        // 一時保存データをクリーンアップ（少し猶予を持たせてリロード時にも耐えられるようにする）
+        setTimeout(() => {
+          sessionStorage.removeItem('okamoshi_pending_apply');
+          localStorage.removeItem('okamoshi_pending_apply');
+          if (activeSessionId) {
+            sessionStorage.removeItem('okamoshi_apply_' + activeSessionId);
+            localStorage.removeItem('okamoshi_apply_' + activeSessionId);
+          }
+        }, 3000);
 
       } catch (err) {
         console.error('[apply/success] Error recording completed application:', err);

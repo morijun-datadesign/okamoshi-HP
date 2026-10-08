@@ -24,36 +24,66 @@ export async function POST(request: Request) {
         hour12: false,
       }).format(now).replace(/\//g, "-");
 
-    const venueName =
-      body.venue_name ||
-      (Array.isArray(body.exams) && body.exams[0]?.venue_name) ||
-      (Array.isArray(body.exams) && body.exams[0]?.venue) ||
-      (body.metadata && body.metadata.venue_name) ||
-      "未指定";
+    const meta = body.metadata || {};
+    const studentFullName = body.student_name || meta.student_name || "";
+    const studentKanaFullName = body.student_kana || meta.student_kana || body.student_kana_name || meta.student_kana_name || body.kana || meta.kana || "";
+    const gradeVal = body.grade || meta.grade || body.student_grade_label || meta.student_grade_label || body.student_grade || meta.student_grade || "";
+    const schoolVal = body.school_name || meta.school_name || body.student_school || meta.student_school || body.school || meta.school || "";
+    const parentFullName = body.parent_name || meta.parent_name || body.guardian_name || meta.guardian_name || "";
+    const venueVal = body.venue_name || meta.venue_name || body.venue || meta.venue || (Array.isArray(body.exams) && body.exams[0]?.venue_name) || (Array.isArray(body.exams) && body.exams[0]?.venue) || "会場未指定";
+    const amountVal = Number(body.amount || meta.amount || body.total_amount || meta.total_amount || (Array.isArray(body.exams) && body.exams[0]?.price) || 0);
 
     const gasPayload = {
-      // ユーザー指定必須19項目
-      received_at: jstReceivedAt,
-      session_id: body.session_id || body.stripe_session_id || "",
-      exam_name: body.exam_name || (Array.isArray(body.exams) && body.exams[0]?.title) || "岡山県統一模擬試験",
-      venue_name: venueName,
-      amount: Number(body.amount || (body.metadata && body.metadata.total_amount) || 0),
-      payment_status: body.payment_status || "paid",
-      payment_method: body.payment_method || body.selected_payment_method || (body.raw_payment_method === "convenience_store" ? "konbini" : "card"),
-      student_name: body.student_name || (body.metadata && body.metadata.student_name) || "",
-      student_kana: body.student_kana || (body.metadata && body.metadata.student_kana) || "",
-      grade: body.grade || body.student_grade_label || body.student_grade || (body.metadata && body.metadata.student_grade) || "",
-      school_name: body.school_name || body.student_school || (body.metadata && body.metadata.student_school) || "",
-      parent_name: body.parent_name || (body.metadata && body.metadata.parent_name) || "",
-      email: body.email || body.customer_email || "",
-      phone: body.phone || (body.metadata && body.metadata.phone) || "",
-      postal_code: body.postal_code || (body.metadata && body.metadata.postal_code) || "",
-      prefecture: body.prefecture || (body.metadata && body.metadata.prefecture) || "",
-      city: body.city || body.address_line1 || "",
-      address1: body.address1 || body.address_line2 || "",
-      address2: body.address2 || body.address_line3 || "",
-      // 既存パラメータとの互換性維持
+      // 既存パラメータをベースに展開
       ...body,
+
+      // ユーザー指定必須19項目（常に正規化・解決済み実データを優先）
+      received_at: jstReceivedAt,
+      session_id: body.session_id || body.stripe_session_id || meta.session_id || "",
+      exam_name: body.exam_name || meta.exam_name || (Array.isArray(body.exams) && body.exams[0]?.title) || "岡山県統一模擬試験",
+      venue_name: venueVal,
+      amount: amountVal,
+      payment_status: body.payment_status || meta.payment_status || "paid",
+      payment_method: body.payment_method || meta.payment_method || body.selected_payment_method || (body.raw_payment_method === "convenience_store" ? "konbini" : "card"),
+      student_name: studentFullName,
+      student_kana: studentKanaFullName,
+      grade: gradeVal,
+      school_name: schoolVal,
+      parent_name: parentFullName,
+      email: body.email || meta.email || body.customer_email || "",
+      phone: body.phone || meta.phone || "",
+      postal_code: body.postal_code || meta.postal_code || "",
+      prefecture: body.prefecture || meta.prefecture || "",
+      city: body.city || meta.city || body.address_line1 || "",
+      address1: body.address1 || meta.address1 || body.address_line2 || "",
+      address2: body.address2 || meta.address2 || body.address_line3 || "",
+
+      // GASの列判定エイリアス（空欄回避の冗長化）
+      venue: venueVal,
+      venueName: venueVal,
+      exam_venue: venueVal,
+      total_amount: amountVal,
+      price: amountVal,
+      student_school: schoolVal,
+      school: schoolVal,
+      student_grade: gradeVal,
+      student_grade_label: gradeVal,
+      student_kana_name: studentKanaFullName,
+      kana: studentKanaFullName,
+      parent_kana: body.parent_kana || meta.parent_kana || "",
+      guardian_name: parentFullName,
+      address: body.address || meta.address || [body.prefecture || meta.prefecture, body.city || meta.city, body.address1 || meta.address1, body.address2 || meta.address2].filter(Boolean).join(" "),
+
+      metadata: {
+        ...meta,
+        student_name: studentFullName,
+        student_kana: studentKanaFullName,
+        grade: gradeVal,
+        school_name: schoolVal,
+        parent_name: parentFullName,
+        venue_name: venueVal,
+        amount: String(amountVal),
+      }
     };
 
     let gasSuccess = false;

@@ -3240,27 +3240,43 @@ if (!parentKanaLastName || !parentKanaFirstName) {
         console.warn('Storage save failed:', storageErr);
       }
 
+      // 安全タイマー（通信遅延やハング時に自動的にローディング解除＆エラー表示）
+      let safetyTimer = setTimeout(() => {
+        console.warn('[Stripe Connect] Timeout waiting for checkout redirect.');
+        hideLoadingOverlay();
+        resetSubmitBtn();
+        showFormError('決済画面の接続に時間がかかっています。通信環境をご確認の上、再度お試しください。', submitBtn);
+      }, 14000);
+
       try {
         let checkoutUrl = null;
         let createdSessionId = null;
 
         // 1. まずバックエンドAPI (/api/create-checkout-session) を呼び出し
         try {
+          const controller = new AbortController();
+          const apiTimer = setTimeout(() => controller.abort(), 7000);
           const response = await fetch(CREATE_CHECKOUT_API_URL, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify(checkoutPayload)
+            body: JSON.stringify(checkoutPayload),
+            signal: controller.signal
           });
+          clearTimeout(apiTimer);
 
           if (response.ok) {
-            const result = await response.json();
-            checkoutUrl = (result && result.checkout_url)
-              ? result.checkout_url
-              : (result && result.url ? result.url : (Array.isArray(result) && result[0]?.checkout_url ? result[0].checkout_url : null));
-            createdSessionId = (result && result.session_id) || (result && result.id) || (checkoutUrl ? checkoutUrl.match(/(cs_[a-zA-Z0-9_]+)/)?.[1] : null);
-            console.log('[API] Stripe checkout session created:', checkoutUrl, createdSessionId);
+            const raw = await response.text();
+            let result = null;
+            try { result = JSON.parse(raw); } catch (e) {}
+            if (result) {
+              checkoutUrl = result.url || result.checkout_url || (Array.isArray(result) && (result[0]?.url || result[0]?.checkout_url)) || null;
+              createdSessionId = result.session_id || result.sessionId || result.id || (checkoutUrl ? checkoutUrl.match(/(cs_[a-zA-Z0-9_]+)/)?.[1] : null);
+              console.log('[API] Stripe checkout session created:', checkoutUrl, createdSessionId);
+            }
+          } else {
+            console.warn('/api/create-checkout-session returned status:', response.status);
           }
         } catch (apiErr) {
           console.warn('/api/create-checkout-session call failed, trying fallback webhook:', apiErr);
@@ -3268,27 +3284,36 @@ if (!parentKanaLastName || !parentKanaFirstName) {
 
         // 2. バックエンドが未接続・未応答の場合はフォールバックWebhookへ直接リクエスト
         if (!checkoutUrl) {
+          console.log('[Fallback Webhook] Calling webhook directly...');
+          const controller = new AbortController();
+          const fallbackTimer = setTimeout(() => controller.abort(), 8000);
           const fallbackRes = await fetch(CREATE_CHECKOUT_FALLBACK_URL, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify(checkoutPayload)
+            body: JSON.stringify(checkoutPayload),
+            signal: controller.signal
           });
+          clearTimeout(fallbackTimer);
 
           if (!fallbackRes.ok) {
             throw new Error(`決済セッションの作成に失敗しました (HTTP ${fallbackRes.status})`);
           }
 
-          const fallbackResult = await fallbackRes.json();
-          checkoutUrl = (fallbackResult && fallbackResult.checkout_url)
-            ? fallbackResult.checkout_url
-            : (fallbackResult && fallbackResult.url ? fallbackResult.url : (Array.isArray(fallbackResult) && fallbackResult[0]?.checkout_url ? fallbackResult[0].checkout_url : null));
-          createdSessionId = (fallbackResult && fallbackResult.session_id) || (fallbackResult && fallbackResult.id) || (checkoutUrl ? checkoutUrl.match(/(cs_[a-zA-Z0-9_]+)/)?.[1] : null);
+          const fallbackRaw = await fallbackRes.text();
+          let fallbackResult = null;
+          try { fallbackResult = JSON.parse(fallbackRaw); } catch (e) {}
+          if (!fallbackResult) {
+            throw new Error('決済サーバーからの応答データ解析に失敗しました。');
+          }
+
+          checkoutUrl = fallbackResult.url || fallbackResult.checkout_url || (Array.isArray(fallbackResult) && (fallbackResult[0]?.url || fallbackResult[0]?.checkout_url)) || null;
+          createdSessionId = fallbackResult.session_id || fallbackResult.sessionId || fallbackResult.id || (checkoutUrl ? checkoutUrl.match(/(cs_[a-zA-Z0-9_]+)/)?.[1] : null);
           console.log('[Fallback Webhook] Stripe checkout session created:', checkoutUrl, createdSessionId);
         }
 
-        if (!checkoutUrl) {
+        if (!checkoutUrl || typeof checkoutUrl !== 'string' || !checkoutUrl.startsWith('http')) {
           throw new Error('決済画面のURLが取得できませんでした。');
         }
 
@@ -3305,16 +3330,19 @@ if (!parentKanaLastName || !parentKanaFirstName) {
           }
         }
 
-        // 3. Stripe 決済画面へリダイレクト
+        // タイマークリア＆Stripe決済画面へリダイレクト
+        clearTimeout(safetyTimer);
+        console.log('[Redirect] Navigating to Stripe Checkout:', checkoutUrl);
         window.location.href = checkoutUrl;
 
       } catch (err) {
+        clearTimeout(safetyTimer);
         console.error('[決済セッション作成エラー]:', err);
         hideLoadingOverlay();
         resetSubmitBtn();
         const errorMessage = (err && err.message && err.message.includes('HTTP'))
           ? '決済サーバーとの通信に一時的な問題が発生しました。恐れ入りますが、少し時間をおいて再度お試しください。'
-          : '決済画面への接続中にエラーが発生しました。通信環境をお確かめの上、再度お試しいただくか、実行委員会までお問い合わせください。';
+          : (err && err.message) || '決済画面の初期化に失敗しました。通信環境をお確かめの上、再度お試しいただくか、実行委員会までお問い合わせください。';
         showFormError(errorMessage, submitBtn, document.getElementById('formErrorMessage'));
       }
     }

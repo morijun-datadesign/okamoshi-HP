@@ -62,7 +62,18 @@ export async function POST(request: Request) {
       selected_payment_method: paymentMethod
     };
 
-    body.metadata = enrichedMetadata;
+    // Stripe metadata の完全サニタイズ（全値文字列・最大500文字・オブジェクト除外）
+    const sanitizedMetadata: Record<string, string> = {};
+    for (const [key, value] of Object.entries(enrichedMetadata)) {
+      if (value === undefined || value === null) continue;
+      if (typeof value === "object") continue; // Stripe制限：オブジェクトや配列は禁止
+      const strVal = String(value).trim();
+      if (strVal.length > 0) {
+        sanitizedMetadata[String(key).slice(0, 40)] = strVal.slice(0, 500);
+      }
+    }
+
+    body.metadata = sanitizedMetadata;
     body.student_name = studentName;
     body.student_kana = studentKana;
     body.grade = grade;
@@ -71,27 +82,57 @@ export async function POST(request: Request) {
     body.venue_name = venueName;
     body.amount = Number(amountStr) || body.amount || 0;
     body.total_amount = body.amount;
+    body.email = email;
+    body.customer_email = email;
 
     const res = await fetch(webhookUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "User-Agent": "Okamoshi-Apply/1.0",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
       },
       body: JSON.stringify(body),
     });
 
+    const rawText = await res.text().catch(() => "");
     if (!res.ok) {
-      const errText = await res.text().catch(() => "");
-      console.error("Checkout session generator error:", res.status, errText);
+      console.error("Checkout session generator error:", res.status, rawText);
       return NextResponse.json(
         { success: false, message: `Checkout generation error: ${res.status}` },
         { status: res.status }
       );
     }
 
-    const data = await res.json();
-    return NextResponse.json(data);
+    let data: any = {};
+    if (rawText) {
+      try {
+        data = JSON.parse(rawText);
+      } catch (e) {
+        console.warn("Failed to parse JSON response from checkout webhook:", rawText);
+      }
+    }
+
+    const checkoutUrl = (data && (data.checkout_url || data.url)) || (Array.isArray(data) && (data[0]?.checkout_url || data[0]?.url)) || "";
+    const sessionId = (data && (data.session_id || data.sessionId || data.id)) || (checkoutUrl ? checkoutUrl.match(/(cs_[a-zA-Z0-9_]+)/)?.[1] : "") || "";
+
+    if (!checkoutUrl) {
+      console.error("No checkout_url returned from webhook:", rawText);
+      return NextResponse.json(
+        { success: false, message: "決済URLの発行に失敗しました。" },
+        { status: 502 }
+      );
+    }
+
+    const responsePayload = {
+      url: checkoutUrl,
+      checkout_url: checkoutUrl,
+      session_id: sessionId,
+      sessionId: sessionId,
+      id: sessionId,
+      success: true
+    };
+
+    return NextResponse.json(responsePayload);
   } catch (error: any) {
     console.error("create-checkout-session error:", error);
     return NextResponse.json({ success: false, message: error.message || "Server Error" }, { status: 500 });

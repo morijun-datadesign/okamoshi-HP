@@ -1212,8 +1212,9 @@
       endpoint: 'exam-guides'
     };
 
-    // n8n Stripe Checkout セッション生成 Webhook エンドポイント
-    const CHECKOUT_WEBHOOK_URL = 'https://n8n.data-design-lab.com/webhook/create-checkout-session';
+    // Google Apps Script (GAS) 申込受付台帳連携エンドポイント & バックエンドAPI
+    const APPLY_API_URL = '/api/apply';
+    const GAS_APPLY_URL = 'https://script.google.com/macros/s/AKfycbwYljLEwbfFCQWx-c6JneJUDINYbhYl0_M1-e9CwhBskBvRBEdIuwNotYceCg5i6M9z/exec';
 
     // ========================================================
     // 1. 模試フォールバック・マスターデータ（microCMS未取得時・欠損補完用）
@@ -3096,7 +3097,7 @@ if (!parentKanaLastName || !parentKanaFirstName) {
       // 全ての入力確認・バリデーションを通過：ローディング表示（二重防止）へ移行
       setSubmittingState();
 
-      // 6. n8n Stripe Checkout Webhook 用 Payload の構築
+      // 6. 申込受付台帳（GAS / バックエンド）用 Payload の構築
       const totalAmount = selectedExams.reduce((sum, item) => sum + item.price, 0);
       const gradeLabels = { 'sho6': '小学6年生', 'chu1': '中学1年生', 'chu2': '中学2年生', 'chu3': '中学3年生' };
       const gradeText = gradeLabels[currentSelectedGrade] || currentSelectedGrade;
@@ -3117,7 +3118,7 @@ if (!parentKanaLastName || !parentKanaFirstName) {
         }
       } : undefined;
 
-      // 業務管理用メタデータ（Stripe Session Metadata）
+      // 業務管理用メタデータ
       const stripeMetadata = {
         student_name: `${studentLastName} ${studentFirstName}`,
         student_kana: `${studentKanaLastName} ${studentKanaFirstName}`,
@@ -3138,20 +3139,20 @@ if (!parentKanaLastName || !parentKanaFirstName) {
 
       const checkoutPayload = {
         // ========================================================
-        // 【Stripe Checkout Session 連動パラメータ（Pre-fill & 最適化）】
+        // 【申込・決済連動パラメータ】
         // ========================================================
         payment_method: selectedPaymentMethod,                         // クレジットカード選択時: "card" / コンビニ決済選択時: "konbini"
         selected_payment_method: selectedPaymentMethod,               // "card" | "konbini"
         payment_method_types: paymentMethodTypes,                     // ["card"] | ["konbini"]
-        customer_email: parentEmail,                                  // Stripe画面でメールアドレス事前入力
+        customer_email: parentEmail,                                  // メールアドレス
         client_reference_id: `${studentLastName} ${studentFirstName}`, // 申込者識別（生徒氏名）
-        metadata: stripeMetadata,                                     // Stripe業務管理メタデータ
-        success_url: `${window.location.origin}/apply/success`,        // 決済完了時の絶対URL
-        cancel_url: `${window.location.origin}/apply`,           // 決済キャンセル時の絶対URL
+        metadata: stripeMetadata,                                     // 業務管理メタデータ
+        success_url: `${window.location.origin}/apply/success`,        // 完了時の絶対URL
+        cancel_url: `${window.location.origin}/apply`,                // キャンセル時の絶対URL
         ...(paymentMethodOptions ? { payment_method_options: paymentMethodOptions } : {}),
 
         // ========================================================
-        // 【既存n8nワークフロー・後方互換用パラメータ】
+        // 【共通受付台帳・互換パラメータ】
         // ========================================================
         student_name: `${studentLastName} ${studentFirstName}`,
         parent_name: `${parentLastName} ${parentFirstName}`,
@@ -3187,48 +3188,71 @@ if (!parentKanaLastName || !parentKanaFirstName) {
       };
 
       console.log('==============================================');
-      console.log('【Checkout Webhook Payload 準備完了】');
+      console.log('【申込受付 Payload 準備完了】');
       console.log(JSON.stringify(checkoutPayload, null, 2));
       console.log('==============================================');
 
       try {
-        const response = await fetch(CHECKOUT_WEBHOOK_URL, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(checkoutPayload)
-        });
+        let response = null;
+        let result = null;
 
-        if (!response.ok) {
-          throw new Error(`決済セッション作成に失敗しました (HTTP ${response.status})`);
+        try {
+          // 1. まずバックエンドAPI (/api/apply) へ送信（GAS台帳登録 ＋ Resend管理者通知・自動返信）
+          response = await fetch(APPLY_API_URL, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(checkoutPayload)
+          });
+
+          if (response.ok) {
+            result = await response.json();
+          }
+        } catch (apiErr) {
+          console.warn('/api/apply call failed, falling back to direct GAS submission:', apiErr);
         }
 
-        const result = await response.json();
-        console.log("n8n response:", result);
+        // バックエンドが未接続・未設定の場合は直接 GAS エンドポイントへ POST 送信（フォールバック）
+        if (!result) {
+          response = await fetch(GAS_APPLY_URL, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(checkoutPayload),
+            redirect: 'follow'
+          });
 
-        // n8nから直接オブジェクトまたは配列で返ってくるいずれのケースもサポート
+          if (!response.ok) {
+            throw new Error(`申込受付サーバーへの送信に失敗しました (HTTP ${response.status})`);
+          }
+          result = await response.json().catch(() => ({ status: 'success' }));
+        }
+
+        console.log("申込受付レスポンス:", result);
+
+        // checkout_url（Stripe）がある場合はそちらへ、それ以外は完了画面へ遷移
         const checkoutUrl = (result && result.checkout_url)
           ? result.checkout_url
           : (Array.isArray(result) && result[0]?.checkout_url ? result[0].checkout_url : null);
 
         if (checkoutUrl) {
-          // Stripeの決済画面へリダイレクト（ローディングオーバーレイ維持でシームレスに遷移）
           window.location.href = checkoutUrl;
           return;
         } else {
-          hideLoadingOverlay();
-          resetSubmitBtn();
-          showFormError('決済画面のURL取得に失敗しました。恐れ入りますが、時間をおいて再度お試しいただくか、実行委員会までお問い合わせください。', submitBtn, document.getElementById('formErrorMessage'));
+          // 申し込み・決済完了画面へ遷移
+          window.location.href = `${window.location.origin}/apply/success`;
+          return;
         }
 
       } catch (err) {
-        console.error('[申し込み・決済セッション作成エラー]:', err);
+        console.error('[申し込み送信エラー]:', err);
         hideLoadingOverlay();
         resetSubmitBtn();
         const errorMessage = (err && err.message && err.message.includes('HTTP'))
-          ? '決済サーバーとの通信に一時的な問題が発生しました。恐れ入りますが、少し時間をおいて再度お試しください。'
-          : '決済画面への接続中にエラーが発生しました。通信環境をお確かめの上、再度お試しください。';
+          ? '申込受付サーバーとの通信に一時的な問題が発生しました。恐れ入りますが、少し時間をおいて再度お試しください。'
+          : '送信中にエラーが発生しました。通信環境をお確かめの上、再度お試しいただくか、実行委員会までお問い合わせください。';
         showFormError(errorMessage, submitBtn, document.getElementById('formErrorMessage'));
       }
     }

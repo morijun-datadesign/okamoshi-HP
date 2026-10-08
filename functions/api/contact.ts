@@ -2,7 +2,9 @@ interface Env {
   RESEND_API_KEY?: string;
   RESEND_FROM_EMAIL?: string;
   ADMIN_EMAIL?: string;
-  NEXT_PUBLIC_N8N_WEBHOOK_URL?: string;
+  ORG_ADMIN_EMAIL?: string;
+  ADMIN_EMAIL_ORG?: string;
+  CHUO_KYOIKU_EMAIL?: string;
 }
 
 export const onRequestPost: PagesFunction<Env> = async (context) => {
@@ -15,10 +17,20 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       context.env.RESEND_FROM_EMAIL ||
       (typeof process !== "undefined" && process.env?.RESEND_FROM_EMAIL) ||
       "岡山県統一模擬試験 <info@okayama-moshi.com>";
-    const adminEmail =
+    
+    // 個人問い合わせ向け管理者通知先: info@okayama-moshi.com
+    const individualAdminEmail =
       context.env.ADMIN_EMAIL ||
       (typeof process !== "undefined" && process.env?.ADMIN_EMAIL) ||
       "info@okayama-moshi.com";
+
+    // 塾・学校関係者フォーム向け管理者通知先: 中央教育研究所の指定アドレス（環境変数で切り替え可能）
+    const orgAdminEmail =
+      context.env.ORG_ADMIN_EMAIL ||
+      context.env.ADMIN_EMAIL_ORG ||
+      context.env.CHUO_KYOIKU_EMAIL ||
+      (typeof process !== "undefined" && (process.env?.ORG_ADMIN_EMAIL || process.env?.ADMIN_EMAIL_ORG || process.env?.CHUO_KYOIKU_EMAIL)) ||
+      "okayamamoshi@chuoh-kyouiku.co.jp";
 
     if (!apiKey) {
       console.error("RESEND_API_KEY is not configured.");
@@ -58,7 +70,9 @@ ${body.message || "なし"}
 送信日時: ${new Date().toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" })}
 `.trim();
 
-    // 1. 管理者宛通知メール送信
+    // 1. 管理者宛通知メール送信（塾・学校関係者様は中央教育研究所、個人はokayama-moshi）
+    const targetAdminEmail = isOrg ? orgAdminEmail : individualAdminEmail;
+
     const adminEmailRes = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -68,7 +82,7 @@ ${body.message || "なし"}
       },
       body: JSON.stringify({
         from: fromEmail,
-        to: [adminEmail],
+        to: [targetAdminEmail],
         reply_to: body.email || undefined,
         subject: subject,
         text: textContent,

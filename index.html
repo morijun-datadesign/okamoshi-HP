@@ -909,42 +909,42 @@
               岡山県統一模擬試験
             </h4>
             <div class="inline-flex items-center gap-1.5 shrink-0">
-              <span id="badge-grade" class="inline-flex items-center px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md text-xs sm:text-sm font-bold bg-emerald-50 text-emerald-800 border border-emerald-200/80">
+              <span id="badge-grade" class="inline-flex items-center px-2 py-0.5 sm:px-2.5 sm:py-0.5 rounded-md text-xs sm:text-sm font-bold bg-[#f1f5f9] text-[#475569] border border-slate-200">
                 中3
               </span>
-              <span id="badge-month" class="inline-flex items-center px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md text-xs sm:text-sm font-bold bg-slate-100 text-slate-800 border border-slate-300/80">
+              <span id="badge-month" class="inline-flex items-center px-2 py-0.5 sm:px-2.5 sm:py-0.5 rounded-md text-xs sm:text-sm font-bold bg-[#f1f5f9] text-[#475569] border border-slate-200">
                 10月号
               </span>
             </div>
           </div>
 
           <!-- ③ 基本情報バー/ブロック（受験料 ＋ お申し込み締切） -->
-          <div class="bg-slate-50 border border-slate-200/90 rounded-xl p-3 sm:p-4 mb-6 shadow-2xs">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-6 divide-y sm:divide-y-0 sm:divide-x divide-slate-200/80">
-              <!-- 受験料 -->
-              <div class="flex items-baseline justify-between sm:justify-start gap-2 sm:gap-3 flex-1">
-                <span class="text-xs sm:text-sm font-bold text-slate-500 whitespace-nowrap shrink-0">受験料 (税込)</span>
-                <div class="flex items-baseline gap-1">
-                  <span id="card-price" class="text-xl sm:text-2xl lg:text-3xl font-bold text-brand-green tracking-tight leading-none">5,500円</span>
-                  <span class="text-xs text-slate-500 font-medium">（会場・自宅共通）</span>
-                </div>
+          <div class="bg-slate-50 border border-slate-200/90 rounded-xl p-3.5 sm:p-4 mb-6 shadow-2xs space-y-2.5 sm:space-y-2">
+            <!-- 受験料 -->
+            <div class="flex items-baseline gap-3 sm:gap-4">
+              <span class="w-24 sm:w-28 text-xs sm:text-sm font-bold text-slate-500 whitespace-nowrap shrink-0">受験料（税込）</span>
+              <div class="flex items-baseline gap-1.5 flex-1 min-w-0 flex-wrap">
+                <span id="card-price" class="text-xl sm:text-2xl font-bold text-brand-green tracking-tight leading-none">5,500円</span>
+                <span class="text-xs text-slate-500 font-medium">（会場・自宅共通）</span>
               </div>
-              <!-- お申し込み締切 -->
-              <div class="pt-2 sm:pt-0 sm:pl-6 flex items-baseline justify-between sm:justify-start gap-2 sm:gap-3 flex-1 min-w-0">
-                <span class="text-xs sm:text-sm font-bold text-slate-500 whitespace-nowrap shrink-0">お申し込み締切</span>
-                <span id="card-deadline" class="text-xs sm:text-base lg:text-lg font-bold text-slate-900 tracking-tight whitespace-nowrap overflow-hidden text-ellipsis">2026年10月5日(月) 23:59まで</span>
+            </div>
+            <!-- お申し込み締切 -->
+            <div class="flex items-baseline gap-3 sm:gap-4 pt-2.5 sm:pt-2 border-t border-slate-200/80">
+              <span class="w-24 sm:w-28 text-xs sm:text-sm font-bold text-slate-500 whitespace-nowrap shrink-0">お申し込み締切</span>
+              <div class="flex-1 min-w-0">
+                <span id="card-deadline" class="text-xs sm:text-base font-bold text-slate-900 tracking-tight whitespace-nowrap overflow-hidden text-ellipsis block">2026年10月5日(月) 23:59まで</span>
               </div>
             </div>
           </div>
 
-          <!-- PC: 2カラムグリッド配置（左側: 日程＆アコーディオン＆申込ボタン / 右側: 個人受験について） -->
+          <!-- PC: 2カラムグリッド配置（左側: 日程＆アコーディオン / 右側: 個人受験について＆申込ボタン） -->
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             
-            <!-- 左カラム: 日程・会場 → 出題範囲 → 実施詳細 → 申込ボタン -->
-            <div class="lg:col-span-7 space-y-6">
+            <!-- 左カラム: 日程・会場 → アコーディオン（出題範囲・実施詳細） -->
+            <div class="contents lg:block lg:col-span-7 lg:space-y-6">
               
               <!-- ④ 実施日程・会場（岡山会場 / 津山会場 / 自宅受験 のリスト） -->
-              <div>
+              <div class="order-1 lg:order-none">
                 <div class="flex items-center gap-2.5 mb-3.5 sm:mb-4">
                   <span class="w-1.5 h-5 bg-brand-green rounded-full inline-block shrink-0"></span>
                   <h5 class="section-title text-base sm:text-lg font-bold text-emerald-950 tracking-tight" style="color: #064e3b !important;">実施日程・会場</h5>
@@ -953,7 +953,7 @@
               </div>
 
               <!-- アコーディオン（出題範囲 ＆ 実施詳細） -->
-              <div class="space-y-3">
+              <div class="order-2 lg:order-none space-y-3">
                 
                 <!-- ⑤ 出題範囲アコーディオン -->
                 <details class="group bg-white rounded-lg border border-slate-200/90 hover:border-slate-300 overflow-hidden shadow-2xs transition-all">
@@ -1004,26 +1004,13 @@
 
               </div>
 
-              <!-- ⑦ 申込エリア（「〇月号をWEBで申し込む >」ボタン ＋ 注釈） -->
-              <div class="bg-slate-50 p-4 sm:p-6 rounded-xl border border-slate-200/90 shadow-2xs">
-                <div id="cta-container" class="space-y-2">
-                  <!-- お申し込みボタン（JSで動的生成） -->
-                  <a href="/apply?grade=%E4%B8%AD3&month=10" id="card-cta-btn" class="w-full py-4 px-6 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-bold text-base sm:text-lg flex items-center justify-center gap-2 shadow-lg shadow-orange-500/25 active:scale-[0.98] transition-all hover:shadow-xl hover:shadow-orange-500/35 hover:-translate-y-0.5">
-                    <span>10月号をWEBで申し込む</span>
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
-                  </a>
-                  <!-- 補足テキスト -->
-                  <p class="text-[11px] sm:text-xs text-slate-500 text-center font-medium mt-2">
-                    ※お申込みフォーム内で今後の回をまとめて選択可能です
-                  </p>
-                </div>
-              </div>
-
             </div>
 
-            <!-- 右カラム: ⑧ 個人受験のお申し込みについて -->
-            <div class="lg:col-span-5 space-y-4 lg:sticky lg:top-28">
-              <div class="bg-white rounded-xl border border-slate-200/80 shadow-2xs p-5 sm:p-6 space-y-3">
+            <!-- 右カラム: ⑧ 個人受験のお申し込みについて ＆ ⑦ 申込ボタン -->
+            <div class="contents lg:flex lg:flex-col lg:col-span-5 lg:gap-4 lg:sticky lg:top-28">
+              
+              <!-- 個人受験のお申し込みについて -->
+              <div class="order-4 lg:order-1 bg-white rounded-xl border border-slate-200/80 shadow-2xs p-5 sm:p-6 space-y-3">
                 <h6 class="font-bold text-sm sm:text-base text-slate-900 tracking-tight">
                   個人受験のお申し込みについて
                 </h6>
@@ -1042,6 +1029,22 @@
                   </li>
                 </ul>
               </div>
+
+              <!-- ⑦ 申込エリア（「〇月号をWEBで申し込む >」ボタン ＋ 注釈） -->
+              <div class="order-3 lg:order-2 bg-slate-50 p-4 sm:p-5 rounded-xl border border-slate-200/90 shadow-2xs">
+                <div id="cta-container" class="space-y-2">
+                  <!-- お申し込みボタン（JSで動的生成） -->
+                  <a href="/apply?grade=%E4%B8%AD3&month=10" id="card-cta-btn" class="w-full py-4 px-6 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-bold text-base sm:text-lg flex items-center justify-center gap-2 shadow-lg shadow-orange-500/25 active:scale-[0.98] transition-all hover:shadow-xl hover:shadow-orange-500/35 hover:-translate-y-0.5">
+                    <span>10月号をWEBで申し込む</span>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+                  </a>
+                  <!-- 補足テキスト -->
+                  <p class="text-[11px] sm:text-xs text-slate-500 text-center font-medium mt-2">
+                    ※お申込みフォーム内で今後の回をまとめて選択可能です
+                  </p>
+                </div>
+              </div>
+
             </div>
 
           </div>
@@ -1829,7 +1832,7 @@
             venuesList: [
               { badge: "岡山会場", school: "山陽学園中学校・高等学校", date: "2026年4月19日(日)" },
               { badge: "津山会場", school: "美作高等学校", date: "2026年4月19日(日)" },
-              { badge: "自宅受験", school: "", date: "4/4(土)〜4/19(日)" }
+              { badge: "自宅受験", school: "", date: "2026年4月4日(土)〜4月19日(日)" }
             ]
           },
           { 
@@ -1847,7 +1850,7 @@
             ],
             venuesList: [
               { badge: "岡山会場", school: "山陽学園中学校・高等学校", date: "2026年7月5日(日)" },
-              { badge: "自宅受験", school: "", date: "6/20(土)〜7/5(日)" }
+              { badge: "自宅受験", school: "", date: "2026年6月20日(土)〜7月5日(日)" }
             ]
           },
           { 
@@ -1865,7 +1868,7 @@
             ],
             venuesList: [
               { badge: "岡山会場", school: "山陽学園中学校・高等学校", date: "2026年8月23日(日)" },
-              { badge: "自宅受験", school: "", date: "8/8(土)〜8/23(日)" }
+              { badge: "自宅受験", school: "", date: "2026年8月8日(土)〜8月23日(日)" }
             ]
           },
           { 
@@ -1884,7 +1887,7 @@
             venuesList: [
               { badge: "岡山会場", school: "山陽学園中学校・高等学校", date: "2026年11月1日(日)" },
               { badge: "津山会場", school: "美作高等学校", date: "2026年10月25日(日)" },
-              { badge: "自宅受験", school: "全国どこからでも", date: "10/17(土)〜11/1(日)" }
+              { badge: "自宅受験", school: "全国どこからでも", date: "2026年10月17日(土)〜11月1日(日)" }
             ],
             venueDetails: [
               {
@@ -1927,7 +1930,7 @@
                 id: "home",
                 name: "🏠 自宅受験",
                 place: "全国どこからでも",
-                examDate: "10/17(土)〜11/1(日) 答案返送締切",
+                examDate: "2026年10月17日(土)〜11月1日(日) 答案返送締切",
                 ticketDispatch: "10月13日(火)頃に問題一式をご自宅へお届け",
                 reportDispatch: "答案受領後、約10日〜2週間で返送",
                 schedule: [
@@ -1953,7 +1956,7 @@
             venuesList: [
               { badge: "岡山会場", school: "山陽学園中学校・高等学校", date: "2026年12月13日(日)" },
               { badge: "津山会場", school: "美作高等学校", date: "2026年12月6日(日)" },
-              { badge: "自宅受験", school: "全国どこからでも", date: "11/28(土)〜12/13(日)" }
+              { badge: "自宅受験", school: "全国どこからでも", date: "2026年11月28日(土)〜12月13日(日)" }
             ]
           }
         ]
@@ -1978,7 +1981,7 @@
             ],
             venuesList: [
               { badge: "岡山会場", school: "山陽学園中学校・高等学校", date: "2026年4月19日(日)" },
-              { badge: "自宅受験", school: "", date: "4/4(土)〜4/19(日)" }
+              { badge: "自宅受験", school: "", date: "2026年4月4日(土)〜4月19日(日)" }
             ]
           },
           { 
@@ -1996,7 +1999,7 @@
             ],
             venuesList: [
               { badge: "岡山会場", school: "山陽学園中学校・高等学校", date: "2026年8月23日(日)" },
-              { badge: "自宅受験", school: "", date: "8/8(土)〜8/23(日)" }
+              { badge: "自宅受験", school: "", date: "2026年8月8日(土)〜8月23日(日)" }
             ]
           },
           { 
@@ -2014,7 +2017,7 @@
             ],
             venuesList: [
               { badge: "岡山会場", school: "山陽学園中学校・高等学校", date: "2026年12月14日(日)" },
-              { badge: "自宅受験", school: "全国どこからでも", date: "12/6(土)〜12/14(日)" }
+              { badge: "自宅受験", school: "全国どこからでも", date: "2026年12月6日(土)〜12月14日(日)" }
             ],
             venueDetails: [
               {
@@ -2039,7 +2042,7 @@
                 id: "home",
                 name: "🏠 自宅受験",
                 place: "全国どこからでも",
-                examDate: "12/6(土)〜12/14(日) 答案返送締切",
+                examDate: "2026年12月6日(土)〜12月14日(日) 答案返送締切",
                 ticketDispatch: "11月28日(土)頃に問題一式をご自宅へお届け",
                 reportDispatch: "答案受領後、約10日〜2週間で返送",
                 schedule: [
@@ -2071,7 +2074,7 @@
             ],
             venuesList: [
               { badge: "岡山会場", school: "山陽学園中学校・高等学校", date: "2026年4月19日(日)" },
-              { badge: "自宅受験", school: "", date: "4/4(土)〜4/19(日)" }
+              { badge: "自宅受験", school: "", date: "2026年4月4日(土)〜4月19日(日)" }
             ]
           },
           { 
@@ -2089,7 +2092,7 @@
             ],
             venuesList: [
               { badge: "岡山会場", school: "山陽学園中学校・高等学校", date: "2026年8月23日(日)" },
-              { badge: "自宅受験", school: "", date: "8/8(土)〜8/23(日)" }
+              { badge: "自宅受験", school: "", date: "2026年8月8日(土)〜8月23日(日)" }
             ]
           },
           { 
@@ -2107,7 +2110,7 @@
             ],
             venuesList: [
               { badge: "岡山会場", school: "山陽学園中学校・高等学校", date: "2026年12月14日(日)" },
-              { badge: "自宅受験", school: "全国どこからでも", date: "12/6(土)〜12/14(日)" }
+              { badge: "自宅受験", school: "全国どこからでも", date: "2026年12月6日(土)〜12月14日(日)" }
             ],
             venueDetails: [
               {
@@ -2132,7 +2135,7 @@
                 id: "home",
                 name: "🏠 自宅受験",
                 place: "全国どこからでも",
-                examDate: "12/6(土)〜12/14(日) 答案返送締切",
+                examDate: "2026年12月6日(土)〜12月14日(日) 答案返送締切",
                 ticketDispatch: "11月28日(土)頃に問題一式をご自宅へお届け",
                 reportDispatch: "答案受領後、約10日〜2週間で返送",
                 schedule: [
@@ -2161,7 +2164,7 @@
             ],
             venuesList: [
               { badge: "岡山会場", school: "山陽学園中学校・高等学校", date: "2026年6月14日(日)" },
-              { badge: "自宅受験", school: "", date: "5/30(土)〜6/14(日)" }
+              { badge: "自宅受験", school: "", date: "2026年5月30日(土)〜6月14日(日)" }
             ]
           },
           { 
@@ -2176,7 +2179,7 @@
             ],
             venuesList: [
               { badge: "岡山会場", school: "山陽学園中学校・高等学校", date: "2026年10月4日(日)" },
-              { badge: "自宅受験", school: "", date: "9/19(土)〜10/4(日)" }
+              { badge: "自宅受験", school: "", date: "2026年9月19日(土)〜10月4日(日)" }
             ]
           },
           { 
@@ -2192,7 +2195,7 @@
             venuesList: [
               { badge: "岡山会場", school: "山陽学園中学校・高等学校", date: "2026年11月1日(日)" },
               { badge: "倉敷会場", school: "倉敷商工会議所", date: "2026年11月1日(日)" },
-              { badge: "自宅受験", school: "全国どこからでも", date: "10/24(土)〜11/1(日)" }
+              { badge: "自宅受験", school: "全国どこからでも", date: "2026年10月24日(土)〜11月1日(日)" }
             ],
             venueDetails: [
               {
@@ -2229,7 +2232,7 @@
                 id: "home",
                 name: "🏠 自宅受験",
                 place: "全国どこからでも",
-                examDate: "10/24(土)〜11/1(日) 答案返送締切",
+                examDate: "2026年10月24日(土)〜11月1日(日) 答案返送締切",
                 ticketDispatch: "10月20日(火)頃に問題一式をご自宅へお届け",
                 reportDispatch: "答案受領後、約10日〜2週間で返送",
                 schedule: [
@@ -2268,7 +2271,7 @@
       if (includeYear) {
         return `${y}年${m}月${day}日(${w})`;
       } else {
-        return `${m}/${day}(${w})`;
+        return `${m}月${day}日(${w})`;
       }
     }
 
@@ -2316,7 +2319,7 @@
           const isHome = badge.includes('自宅');
           let dateText = '';
           if (isHome && sc.date_start && sc.date_end) {
-            dateText = `${formatJstDate(sc.date_start, false)}〜${formatJstDate(sc.date_end, false)}`;
+            dateText = `${formatJstDate(sc.date_start, true)}〜${formatJstDate(sc.date_end, false)}`;
           } else if (sc.date_start) {
             dateText = formatJstDate(sc.date_start, true);
           }
@@ -2335,7 +2338,7 @@
           
           let examDateText = '';
           if (isHome && sc.date_start && sc.date_end) {
-            examDateText = `${formatJstDate(sc.date_start, false)}〜${formatJstDate(sc.date_end, false)} 答案返送締切`;
+            examDateText = `${formatJstDate(sc.date_start, true)}〜${formatJstDate(sc.date_end, false)} 答案返送締切`;
           } else if (sc.date_start) {
             examDateText = formatJstDate(sc.date_start, true);
           }
@@ -2663,22 +2666,20 @@
 
       container.innerHTML = venuesList.map((item, idx) => {
         const isHome = item.badge.includes('自宅');
-        const badgeClass = 'bg-slate-200 text-slate-800 border border-slate-300/60 font-medium';
         const placeText = isHome ? (item.school && item.school !== 'ご自宅' ? item.school : '全国どこからでも') : (item.school || '');
 
         return `
-          <div class="flex items-start sm:items-center gap-3 sm:gap-4 ${idx !== 0 ? 'pt-3.5 border-t border-slate-100' : ''}">
-            <div class="shrink-0">
-              <span class="inline-block px-2.5 py-1 rounded-lg text-sm font-semibold tracking-wide ${badgeClass} shadow-2xs">
-                ${item.badge}
-              </span>
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-4 ${idx !== 0 ? 'pt-3 sm:pt-3.5 border-t border-slate-100' : ''}">
+            <div class="flex items-center gap-2 sm:gap-2.5 min-w-0 flex-1">
+              <span class="font-bold text-sm sm:text-base text-slate-900 shrink-0 tracking-tight">${item.badge}</span>
+              ${placeText ? `
+                <span class="text-slate-300 font-light select-none text-xs sm:text-sm shrink-0">｜</span>
+                <span class="text-sm sm:text-base text-slate-700 font-medium truncate">${placeText}</span>
+              ` : ''}
             </div>
             
-            <div class="flex-1 min-w-0 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-4">
-              ${placeText ? `<div class="text-base sm:text-lg font-bold text-slate-900 leading-snug">${placeText}</div>` : ''}
-              <div class="text-base sm:text-lg font-bold text-[#8B3A18] tracking-tight shrink-0 sm:text-right">
-                ${item.date}
-              </div>
+            <div class="text-sm sm:text-base font-bold text-[#8B3A18] tracking-tight shrink-0 sm:text-right">
+              ${item.date}
             </div>
           </div>
         `;

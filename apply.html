@@ -1212,6 +1212,10 @@
       endpoint: 'exam-guides'
     };
 
+    // Stripe Checkout セッション生成エンドポイント & フォールバック用 Webhook
+    const CREATE_CHECKOUT_API_URL = '/api/create-checkout-session';
+    const CREATE_CHECKOUT_FALLBACK_URL = 'https://n8n.data-design-lab.com/webhook/create-checkout-session';
+
     // Google Apps Script (GAS) 申込受付台帳連携エンドポイント & バックエンドAPI
     const APPLY_API_URL = '/api/apply';
     const GAS_APPLY_URL = 'https://script.google.com/macros/s/AKfycbwYljLEwbfFCQWx-c6JneJUDINYbhYl0_M1-e9CwhBskBvRBEdIuwNotYceCg5i6M9z/exec';
@@ -3147,7 +3151,7 @@ if (!parentKanaLastName || !parentKanaFirstName) {
         customer_email: parentEmail,                                  // メールアドレス
         client_reference_id: `${studentLastName} ${studentFirstName}`, // 申込者識別（生徒氏名）
         metadata: stripeMetadata,                                     // 業務管理メタデータ
-        success_url: `${window.location.origin}/apply/success`,        // 完了時の絶対URL
+        success_url: `${window.location.origin}/apply/success?session_id={CHECKOUT_SESSION_ID}`, // 完了時の絶対URL（Stripeがsession_idを展開）
         cancel_url: `${window.location.origin}/apply`,                // キャンセル時の絶対URL
         ...(paymentMethodOptions ? { payment_method_options: paymentMethodOptions } : {}),
 
@@ -3188,17 +3192,24 @@ if (!parentKanaLastName || !parentKanaFirstName) {
       };
 
       console.log('==============================================');
-      console.log('【申込受付 Payload 準備完了】');
+      console.log('【申込・決済セッション作成 Payload 準備完了】');
       console.log(JSON.stringify(checkoutPayload, null, 2));
       console.log('==============================================');
 
+      // 決済完了時（success遷移時）に台帳登録と通知を実行するため一時ストレージに保存
       try {
-        let response = null;
-        let result = null;
+        sessionStorage.setItem('okamoshi_pending_apply', JSON.stringify(checkoutPayload));
+        localStorage.setItem('okamoshi_pending_apply', JSON.stringify(checkoutPayload));
+      } catch (storageErr) {
+        console.warn('Storage save failed:', storageErr);
+      }
 
+      try {
+        let checkoutUrl = null;
+
+        // 1. まずバックエンドAPI (/api/create-checkout-session) を呼び出し
         try {
-          // 1. まずバックエンドAPI (/api/apply) へ送信（GAS台帳登録 ＋ Resend管理者通知・自動返信）
-          response = await fetch(APPLY_API_URL, {
+          const response = await fetch(CREATE_CHECKOUT_API_URL, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -3207,52 +3218,51 @@ if (!parentKanaLastName || !parentKanaFirstName) {
           });
 
           if (response.ok) {
-            result = await response.json();
+            const result = await response.json();
+            checkoutUrl = (result && result.checkout_url)
+              ? result.checkout_url
+              : (result && result.url ? result.url : (Array.isArray(result) && result[0]?.checkout_url ? result[0].checkout_url : null));
+            console.log('[API] Stripe checkout session created:', checkoutUrl);
           }
         } catch (apiErr) {
-          console.warn('/api/apply call failed, falling back to direct GAS submission:', apiErr);
+          console.warn('/api/create-checkout-session call failed, trying fallback webhook:', apiErr);
         }
 
-        // バックエンドが未接続・未設定の場合は直接 GAS エンドポイントへ POST 送信（フォールバック）
-        if (!result) {
-          response = await fetch(GAS_APPLY_URL, {
+        // 2. バックエンドが未接続・未応答の場合はフォールバックWebhookへ直接リクエスト
+        if (!checkoutUrl) {
+          const fallbackRes = await fetch(CREATE_CHECKOUT_FALLBACK_URL, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify(checkoutPayload),
-            redirect: 'follow'
+            body: JSON.stringify(checkoutPayload)
           });
 
-          if (!response.ok) {
-            throw new Error(`申込受付サーバーへの送信に失敗しました (HTTP ${response.status})`);
+          if (!fallbackRes.ok) {
+            throw new Error(`決済セッションの作成に失敗しました (HTTP ${fallbackRes.status})`);
           }
-          result = await response.json().catch(() => ({ status: 'success' }));
+
+          const fallbackResult = await fallbackRes.json();
+          checkoutUrl = (fallbackResult && fallbackResult.checkout_url)
+            ? fallbackResult.checkout_url
+            : (fallbackResult && fallbackResult.url ? fallbackResult.url : (Array.isArray(fallbackResult) && fallbackResult[0]?.checkout_url ? fallbackResult[0].checkout_url : null));
+          console.log('[Fallback Webhook] Stripe checkout session created:', checkoutUrl);
         }
 
-        console.log("申込受付レスポンス:", result);
-
-        // checkout_url（Stripe）がある場合はそちらへ、それ以外は完了画面へ遷移
-        const checkoutUrl = (result && result.checkout_url)
-          ? result.checkout_url
-          : (Array.isArray(result) && result[0]?.checkout_url ? result[0].checkout_url : null);
-
-        if (checkoutUrl) {
-          window.location.href = checkoutUrl;
-          return;
-        } else {
-          // 申し込み・決済完了画面へ遷移
-          window.location.href = `${window.location.origin}/apply/success`;
-          return;
+        if (!checkoutUrl) {
+          throw new Error('決済画面のURLが取得できませんでした。');
         }
+
+        // 3. Stripe 決済画面へリダイレクト
+        window.location.href = checkoutUrl;
 
       } catch (err) {
-        console.error('[申し込み送信エラー]:', err);
+        console.error('[決済セッション作成エラー]:', err);
         hideLoadingOverlay();
         resetSubmitBtn();
         const errorMessage = (err && err.message && err.message.includes('HTTP'))
-          ? '申込受付サーバーとの通信に一時的な問題が発生しました。恐れ入りますが、少し時間をおいて再度お試しください。'
-          : '送信中にエラーが発生しました。通信環境をお確かめの上、再度お試しいただくか、実行委員会までお問い合わせください。';
+          ? '決済サーバーとの通信に一時的な問題が発生しました。恐れ入りますが、少し時間をおいて再度お試しください。'
+          : '決済画面への接続中にエラーが発生しました。通信環境をお確かめの上、再度お試しいただくか、実行委員会までお問い合わせください。';
         showFormError(errorMessage, submitBtn, document.getElementById('formErrorMessage'));
       }
     }

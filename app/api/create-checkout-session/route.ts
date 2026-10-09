@@ -199,16 +199,52 @@ export async function POST(request: Request) {
     params.append("success_url", successUrl);
     params.append("cancel_url", cancelUrl);
 
-    if (email) {
+    // 4-1. Checkout の「名前」欄へ氏名を事前入力するため、Stripe Customer を作成して紐付ける
+    //      （customer_email だけでは氏名はプリフィルされない。customer と customer_email は併用不可）
+    const billingName = parentName || studentName;
+    let customerId = "";
+    if (billingName || email || phone) {
+      const customerParams = new URLSearchParams();
+      if (billingName) customerParams.append("name", billingName.slice(0, 256));
+      if (email) customerParams.append("email", email);
+      if (phone) customerParams.append("phone", phone);
+      customerParams.append("preferred_locales[0]", "ja");
+      if (studentName) customerParams.append("metadata[student_name]", studentName.slice(0, 500));
+      if (parentName) customerParams.append("metadata[parent_name]", parentName.slice(0, 500));
+
+      try {
+        const customerRes = await fetch("https://api.stripe.com/v1/customers", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${stripeSecretKey}`,
+            "Content-Type": "application/x-www-form-urlencoded",
+            "User-Agent": "Okamoshi-Server-Route/1.0",
+          },
+          body: customerParams.toString(),
+        });
+        const customer: any = await customerRes.json().catch(() => ({}));
+        if (customerRes.ok && customer.id) {
+          customerId = String(customer.id);
+        } else {
+          console.warn("[app/api/create-checkout-session] Customer creation failed; falling back to customer_email:", customerRes.status, JSON.stringify(customer));
+        }
+      } catch (e) {
+        console.warn("[app/api/create-checkout-session] Customer creation exception; falling back to customer_email:", e);
+      }
+    }
+
+    if (customerId) {
+      params.append("customer", customerId);
+    } else if (email) {
       params.append("customer_email", email);
     }
     if (studentName) {
       params.append("client_reference_id", studentName);
     }
 
+    // 4-2. 決済手段の限定：コンビニ選択時は konbini のみ、それ以外は card のみ
     if (paymentMethod === "konbini") {
-      params.append("payment_method_types[0]", "card");
-      params.append("payment_method_types[1]", "konbini");
+      params.append("payment_method_types[0]", "konbini");
       params.append("payment_method_options[konbini][expires_after_days]", "3");
     } else {
       params.append("payment_method_types[0]", "card");

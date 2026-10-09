@@ -8,6 +8,46 @@ const jsonResponse = (data: unknown, status = 200) =>
     headers: { "Content-Type": "application/json" },
   });
 
+interface CheckoutLineItem {
+  name: string;
+  description: string;
+  unitAmount: number;
+  productMetadata: Record<string, string>;
+}
+
+/**
+ * フロントから送られた exams 配列を、Stripe の line_items 用に1件ずつ正規化する。
+ * 価格が不正（0以下・非数値）の要素は除外する。
+ */
+const buildExamLineItems = (exams: unknown): CheckoutLineItem[] => {
+  if (!Array.isArray(exams)) return [];
+  const items: CheckoutLineItem[] = [];
+  for (const exam of exams) {
+    if (!exam || typeof exam !== "object") continue;
+    const e = exam as Record<string, any>;
+    const unitAmount = Math.round(Number(e.price));
+    if (!Number.isFinite(unitAmount) || unitAmount <= 0) continue;
+
+    const title = String(e.title || e.exam_name || "岡山県統一模擬試験").trim();
+    const venue = String(e.venue_name || e.venueLabel || e.venue || "").trim();
+    const examDate = String(e.exam_date || e.examDate || "").trim();
+
+    const name = (venue ? `${title}（${venue}）` : title).slice(0, 250);
+    const description = [examDate ? `試験日: ${examDate}` : "", venue ? `会場: ${venue}` : ""]
+      .filter(Boolean)
+      .join(" / ");
+
+    const productMetadata: Record<string, string> = {};
+    if (e.id !== undefined && e.id !== null) productMetadata.exam_id = String(e.id).slice(0, 500);
+    productMetadata.exam_title = title.slice(0, 500);
+    if (venue) productMetadata.venue_name = venue.slice(0, 500);
+    if (examDate) productMetadata.exam_date = examDate.slice(0, 500);
+
+    items.push({ name, description, unitAmount, productMetadata });
+  }
+  return items;
+};
+
 export const onRequestPost: PagesFunction<Env> = async (context) => {
   try {
     const stripeSecretKey = context.env.STRIPE_SECRET_KEY;
@@ -36,7 +76,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const parentName = String(body.parent_name || body.guardian_name || existingMeta.parent_name || "").trim();
     const parentKana = String(body.parent_kana || existingMeta.parent_kana || "").trim();
     const venueName = String(body.venue_name || body.venue || body.venueName || (Array.isArray(body.exams) && body.exams[0]?.venue_name) || (Array.isArray(body.exams) && body.exams[0]?.venue) || existingMeta.venue_name || existingMeta.venue || "会場未指定").trim();
-    const amountVal = Math.round(Number(body.amount || body.total_amount || body.price || existingMeta.amount || existingMeta.total_amount || (Array.isArray(body.exams) && body.exams[0]?.price) || 0)) || 4400;
+    const declaredAmount = Math.round(Number(body.amount || body.total_amount || body.price || existingMeta.amount || existingMeta.total_amount || (Array.isArray(body.exams) && body.exams[0]?.price) || 0)) || 4400;
     const phone = String(body.phone || existingMeta.phone || "").trim();
     const email = String(body.email || body.customer_email || existingMeta.email || "").trim();
     const postalCode = String(body.postal_code || existingMeta.postal_code || "").trim();
@@ -47,6 +87,20 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const address = String(body.address || existingMeta.address || [prefecture, city, address1, address2].filter(Boolean).join(" ")).trim();
     const examName = String(body.exam_name || (Array.isArray(body.exams) && body.exams[0]?.title) || existingMeta.exam_name || "岡山県統一模擬試験").trim();
     const paymentMethod = String(body.payment_method || body.selected_payment_method || (body.raw_payment_method === "convenience_store" ? "konbini" : "card")).trim();
+
+    // 2-1. 選択された模試ごとに line_items を分割（レシートのように内訳を表示）
+    const examLineItems = buildExamLineItems(body.exams);
+    const itemizedTotal = examLineItems.reduce((sum, item) => sum + item.unitAmount, 0);
+    if (examLineItems.length > 0 && itemizedTotal !== declaredAmount) {
+      console.warn(
+        `[functions/api/create-checkout-session] Amount mismatch: declared=${declaredAmount}, itemized=${itemizedTotal}. Using itemized total.`
+      );
+    }
+    // 実際に請求される金額（内訳合計）を正とする
+    const amountVal = examLineItems.length > 0 ? itemizedTotal : declaredAmount;
+    const examsDetail = examLineItems
+      .map((item) => `${item.name}${item.productMetadata.exam_date ? ` [${item.productMetadata.exam_date}]` : ""} ¥${item.unitAmount}`)
+      .join(" / ");
 
     // 3. metadata の構築とサニタイズ（全値文字列・最大500文字・キー長最大40文字）
     const metadataRaw: Record<string, string> = {
@@ -68,6 +122,8 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       exam_name: examName,
       payment_method: paymentMethod,
       amount: String(amountVal),
+      exam_count: String(examLineItems.length || 1),
+      exams_detail: examsDetail,
 
       // エイリアス（GAS連携用互換）
       venue: venueName,
@@ -114,10 +170,26 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       params.append("payment_method_options[konbini][expires_after_days]", "3");
     }
 
-    params.append("line_items[0][price_data][currency]", "jpy");
-    params.append("line_items[0][price_data][unit_amount]", String(amountVal));
-    params.append("line_items[0][price_data][product_data][name]", examName);
-    params.append("line_items[0][quantity]", "1");
+    if (examLineItems.length > 0) {
+      examLineItems.forEach((item, i) => {
+        params.append(`line_items[${i}][price_data][currency]`, "jpy");
+        params.append(`line_items[${i}][price_data][unit_amount]`, String(item.unitAmount));
+        params.append(`line_items[${i}][price_data][product_data][name]`, item.name);
+        if (item.description) {
+          params.append(`line_items[${i}][price_data][product_data][description]`, item.description);
+        }
+        for (const [mk, mv] of Object.entries(item.productMetadata)) {
+          params.append(`line_items[${i}][price_data][product_data][metadata][${mk}]`, mv);
+        }
+        params.append(`line_items[${i}][quantity]`, "1");
+      });
+    } else {
+      // exams 配列が無い場合のフォールバック（従来通り1行）
+      params.append("line_items[0][price_data][currency]", "jpy");
+      params.append("line_items[0][price_data][unit_amount]", String(amountVal));
+      params.append("line_items[0][price_data][product_data][name]", examName);
+      params.append("line_items[0][quantity]", "1");
+    }
 
     for (const [key, value] of Object.entries(sanitizedMetadata)) {
       params.append(`metadata[${key}]`, value);

@@ -8,6 +8,17 @@ const jsonResponse = (data: unknown, status = 200) =>
     headers: { "Content-Type": "application/json" },
   });
 
+/** 国内電話番号（例: 090-1234-5678）を E.164 形式（+819012345678）へ変換する。変換できない場合は空文字。 */
+const toE164JP = (raw: string): string => {
+  const s = String(raw || "").normalize("NFKC").trim();
+  if (!s) return "";
+  const digits = s.replace(/[^\d]/g, "");
+  if (s.startsWith("+")) return digits.length >= 8 && digits.length <= 15 ? `+${digits}` : "";
+  if (digits.startsWith("0") && (digits.length === 10 || digits.length === 11)) return `+81${digits.slice(1)}`;
+  if (digits.startsWith("81") && (digits.length === 11 || digits.length === 12)) return `+${digits}`;
+  return "";
+};
+
 interface CheckoutLineItem {
   name: string;
   description: string;
@@ -201,15 +212,18 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     params.append("success_url", successUrl);
     params.append("cancel_url", cancelUrl);
 
-    // 4-1. Checkout の「名前」欄へ氏名を事前入力するため、Stripe Customer を作成して紐付ける
-    //      （customer_email だけでは氏名はプリフィルされない。customer と customer_email は併用不可）
+    // 4-1. Checkout へ連絡先を事前入力するため、Stripe Customer を作成して紐付ける
+    //      （customer と customer_email は併用不可）
+    //      - email: Customer.email があれば Checkout で事前入力される
+    //      - phone: phone_number_collection 有効時、Customer.phone（E.164）が事前入力される
     const billingName = parentName || studentName;
+    const phoneE164 = toE164JP(phone);
     let customerId = "";
-    if (billingName || email || phone) {
+    if (billingName || email || phoneE164) {
       const customerParams = new URLSearchParams();
       if (billingName) customerParams.append("name", billingName.slice(0, 256));
       if (email) customerParams.append("email", email);
-      if (phone) customerParams.append("phone", phone);
+      if (phoneE164) customerParams.append("phone", phoneE164);
       customerParams.append("preferred_locales[0]", "ja");
       if (studentName) customerParams.append("metadata[student_name]", studentName.slice(0, 500));
       if (parentName) customerParams.append("metadata[parent_name]", parentName.slice(0, 500));
@@ -247,6 +261,10 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     if (paymentMethod === "konbini") {
       params.append("payment_method_types[0]", "konbini");
       params.append("payment_method_options[konbini][expires_after_days]", "3");
+      // 電話番号欄を Customer.phone で事前入力させる（Stripe 仕様：既存 Customer の phone がプリフィルされる）
+      if (customerId && phoneE164) {
+        params.append("phone_number_collection[enabled]", "true");
+      }
     } else {
       params.append("payment_method_types[0]", "card");
     }

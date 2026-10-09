@@ -179,126 +179,17 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const paymentMethodVal = String(body.payment_method || meta.payment_method || body.selected_payment_method || (body.raw_payment_method === "convenience_store" ? "konbini" : "card")).trim();
     const paymentStatusVal = String(body.payment_status || (stripeSessionData && stripeSessionData.payment_status) || "paid").trim();
 
-    // 3. GAS 申込受付台帳用の全19項目マッピング
-    const gasPayload = {
-      ...body,
-      received_at: jstReceivedAt,
-      session_id: activeSessionId,
-      exam_name: examNameVal,
-      venue_name: venueVal,
-      amount: amountVal,
-      payment_status: paymentStatusVal,
-      payment_method: paymentMethodVal,
-      student_name: studentFullName,
-      student_kana: studentKanaFullName,
-      grade: gradeVal,
-      school_name: schoolVal,
-      parent_name: parentFullName,
-      email: emailVal,
-      phone: phoneVal,
-      postal_code: postalCodeVal,
-      prefecture: prefectureVal,
-      city: cityVal,
-      address1: address1Val,
-      address2: address2Val,
-
-      // エイリアス冗長化（GAS側スクリプトのカラム名揺れに対応）
-      venue: venueVal,
-      venueName: venueVal,
-      exam_venue: venueVal,
-      total_amount: amountVal,
-      price: amountVal,
-      student_school: schoolVal,
-      school: schoolVal,
-      student_grade: gradeVal,
-      student_grade_label: gradeVal,
-      student_kana_name: studentKanaFullName,
-      kana: studentKanaFullName,
-      parent_kana: parentKanaVal,
-      guardian_name: parentFullName,
-      address: fullAddress,
-
-      metadata: {
-        ...meta,
-        session_id: activeSessionId,
-        student_name: studentFullName,
-        student_kana: studentKanaFullName,
-        grade: gradeVal,
-        school_name: schoolVal,
-        parent_name: parentFullName,
-        venue_name: venueVal,
-        amount: String(amountVal),
-        email: emailVal,
-        phone: phoneVal,
-      }
-    };
-
-    // 4. GAS エンドポイントへの POST 送信（1模試＝1レコード、redirect: 'follow' 必須）
+    // 3. 台帳（GAS）への書き込みは Stripe Webhook（functions/api/stripe-webhook.ts）に一本化。
+    //    ここではメール本文用に模試の内訳だけを組み立てる（二重登録・未入金レコードの誤登録を防ぐため）。
     let examRecords = recordsFromExams(body.exams);
     if (examRecords.length === 0) examRecords = recordsFromMetadata(meta);
-    const hasItemizedRecords = examRecords.length > 0;
-    if (!hasItemizedRecords) {
-      console.warn("[functions/api/apply] No per-exam data found; writing a single combined record.");
+    if (examRecords.length === 0) {
       examRecords = [{ id: "", label: examNameVal, issue: "", title: examNameVal, venue: venueVal, price: amountVal, date: "" }];
     }
-    const totalAmountVal = hasItemizedRecords
-      ? examRecords.reduce((sum, r) => sum + r.price, 0)
-      : amountVal;
 
-    let gasSuccessCount = 0;
-    const gasResponses: any[] = [];
-    const gasErrors: string[] = [];
-
-    for (let i = 0; i < examRecords.length; i++) {
-      const rec = examRecords[i];
-      const recordPayload = {
-        ...gasPayload,
-        exam_name: rec.label,          // C列：対象模試（月号付き）
-        venue_name: rec.venue,         // D列：受験会場
-        amount: rec.price,             // E列：単価
-        price: rec.price,
-        unit_price: rec.price,
-        total_amount: totalAmountVal,
-        exam_id: rec.id,
-        issue_name: rec.issue,
-        exam_title: rec.title,
-        exam_date: rec.date,
-        item_index: i + 1,
-        item_count: examRecords.length,
-        record_key: `${activeSessionId}#${rec.id || i + 1}`,
-        venue: rec.venue,
-        venueName: rec.venue,
-        exam_venue: rec.venue,
-      };
-
-      try {
-        console.log(`[functions/api/apply] Dispatching record ${i + 1}/${examRecords.length} to GAS:`, rec.label, rec.venue, rec.price);
-        const gasRes = await fetch(gasUrl, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "User-Agent": "Okamoshi-Apply/1.0",
-          },
-          body: JSON.stringify(recordPayload),
-          redirect: "follow",
-        });
-
-        if (gasRes.ok) {
-          gasResponses.push(await gasRes.json().catch(() => ({ status: "success" })));
-          gasSuccessCount++;
-        } else {
-          gasErrors.push(`record ${i + 1}: GAS responded with status ${gasRes.status}`);
-          console.warn("[functions/api/apply] GAS non-200 status:", gasRes.status);
-        }
-      } catch (gasErr: any) {
-        gasErrors.push(`record ${i + 1}: ${gasErr?.message || String(gasErr)}`);
-        console.error("[functions/api/apply] Failed to forward application to GAS:", gasErr);
-      }
-    }
-
-    const gasSuccess = gasSuccessCount === examRecords.length;
-    const gasResponseData = { records: examRecords.length, succeeded: gasSuccessCount, results: gasResponses };
-    const gasErrorMessage: string | null = gasErrors.length > 0 ? gasErrors.join("; ") : null;
+    const gasSuccess = true;
+    const gasResponseData = { delegated_to: "stripe-webhook", records: examRecords.length };
+    const gasErrorMessage: string | null = null;
 
     // 5. Resend API によるメール送信
     let applicantMailId: string | null = null;
@@ -321,7 +212,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 ■ お申し込み模試:
 ${examsListText}
 ■ 合計金額: ￥${Number(amountVal).toLocaleString()} (税込)
-■ 決済状況: ${paymentStatusVal === "paid" ? "決済完了 (paid)" : paymentStatusVal}
+■ 決済状況: ${paymentMethodLabel === "コンビニ決済" ? "未入金（コンビニでのお支払い待ち）" : (paymentStatusVal === "paid" ? "決済完了 (paid)" : paymentStatusVal)}
 ■ 決済方法: ${paymentMethodLabel}
 ■ 決済セッションID: ${activeSessionId || "なし"}
 --------------------------------------------------
@@ -338,7 +229,7 @@ ${examsListText}
 ■ 郵便番号: 〒${postalCodeVal || "未入力"}
 ■ 住所: ${fullAddress || "未入力"}
 --------------------------------------------------
-■ スプレッドシート連携 (GAS): ${gasSuccess ? "連携成功" : `エラー (${gasErrorMessage || "未完了"})`}
+■ スプレッドシート連携 (GAS): Stripe Webhook から登録（このメールからは書き込みません）
 受付日時: ${jstReceivedAt}
 `.trim();
 
@@ -353,7 +244,7 @@ ${parentFullName ? parentFullName + " 様\n（生徒様：" + (studentFullName |
 ${examsListText}
 ■ 合計金額: ￥${Number(amountVal).toLocaleString()} (税込)
 ■ 決済方法: ${paymentMethodLabel}
-■ 決済状況: お支払い完了
+■ 決済状況: ${paymentMethodLabel === "コンビニ決済" ? "お支払い待ち（コンビニでのお支払い後に確定）" : "お支払い完了"}
 --------------------------------------------------
 【ご登録内容】
 ■ 生徒氏名: ${studentFullName} 様
@@ -368,7 +259,7 @@ ${examsListText}
 ${paymentMethodLabel === "コンビニ決済" ? `
 【コンビニ決済をご選択された方へ】
 決済代行システムより、お支払い番号・払込手順を記載した案内メールが別途届きます。
-記載されたお支払い期限（受付日より3日以内）にお近くのコンビニエンスストアにてお支払いをお願いいたします。
+記載されたお支払い期限（払込票に記載の期限）までにお近くのコンビニエンスストアにてお支払いをお願いいたします。
 期限を過ぎますとお申し込みは自動キャンセルとなりますのでご注意ください。
 --------------------------------------------------
 ` : ""}

@@ -128,6 +128,9 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const address = String(body.address || existingMeta.address || [prefecture, city, address1, address2].filter(Boolean).join(" ")).trim();
     const examName = String(body.exam_name || (Array.isArray(body.exams) && body.exams[0]?.title) || existingMeta.exam_name || "岡山県統一模擬試験").trim();
     const paymentMethod = String(body.payment_method || body.selected_payment_method || (body.raw_payment_method === "convenience_store" ? "konbini" : "card")).trim();
+    // コンビニ支払期限（日数）。フォームが申込締切を考慮して算出した値を 1〜3 日に丸める（Stripe の最小値は 1）
+    const requestedKonbiniDays = Math.round(Number(body.konbini_expires_after_days ?? body.payment_method_options?.konbini?.expires_after_days ?? 3));
+    const konbiniExpiresAfterDays = Number.isFinite(requestedKonbiniDays) ? Math.min(3, Math.max(1, requestedKonbiniDays)) : 3;
 
     // 2-1. 選択された模試ごとに line_items を分割（レシートのように内訳を表示）
     const examLineItems = buildExamLineItems(body.exams);
@@ -260,7 +263,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     // 4-2. 決済手段の限定：コンビニ選択時は konbini のみ、それ以外は card のみ
     if (paymentMethod === "konbini") {
       params.append("payment_method_types[0]", "konbini");
-      params.append("payment_method_options[konbini][expires_after_days]", "3");
+      params.append("payment_method_options[konbini][expires_after_days]", String(konbiniExpiresAfterDays));
       // 電話番号欄を Customer.phone で事前入力させる（Stripe 仕様：既存 Customer の phone がプリフィルされる）
       if (customerId && phoneE164) {
         params.append("phone_number_collection[enabled]", "true");

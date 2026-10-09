@@ -893,6 +893,10 @@
                 <span class="text-xl shrink-0 leading-tight">⚠️</span>
                 <div class="text-amber-950 text-xs sm:text-sm font-medium leading-relaxed">
                   <span class="font-bold text-amber-900">ご確認ください：</span>本日お申し込みの場合の決済期限は【 <span id="convenienceDeadlineFull" class="font-bold text-red-600 underline decoration-red-400 decoration-2"></span> 】です。期日を過ぎますと、お申し込みは【<span class="font-bold text-red-600">自動キャンセル</span>】となりますのでご注意ください。
+                  <!-- 申込締切日当日にコンビニ決済を選んだ場合のみ表示 -->
+                  <p id="convenienceDeadlineDayNotice" class="hidden mt-2 p-2 rounded-md bg-red-50 border border-red-300 text-red-700 font-bold">
+                    本日はお申し込みの模試の申込締切日です。本日中にコンビニでのお支払いが必要です。
+                  </p>
                 </div>
               </div>
             </div>
@@ -2125,6 +2129,8 @@
     // 4. お申し込みサマリー（合計金額・内訳）のリアルタイム更新
     // ========================================================
     function updateSummary() {
+      // 選択模試の締切に応じてコンビニ支払期限の表示を更新
+      refreshConvenienceDeadline();
       const selectedList = Object.values(selectedExamsState);
       const totalAmount = selectedList.reduce((sum, item) => sum + item.price, 0);
 
@@ -2170,20 +2176,64 @@
     }
 
     // ========================================================
-    // 決済期限（当日含め4日間 = 本日＋3日後）の動的計算ロジック
+    // 決済期限の動的計算ロジック
+    //  - 通常：当日含め 4 日間（本日＋3日後 23:59、Stripe expires_after_days = 3）
+    //  - 選択模試の申込締切がそれより早い場合は締切日までに短縮
+    //  - 締切日当日：「本日中」の支払いを案内。Stripe の仕様上 expires_after_days の最小値は 1（翌日 23:59 失効）
     // ========================================================
     function getConvenienceDeadline() {
+      const KONBINI_DEFAULT_EXPIRES_AFTER_DAYS = 3;
       const now = new Date();
-      const deadline = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 3);
-      const m = deadline.getMonth() + 1;
-      const d = deadline.getDate();
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      let expiresAfterDays = KONBINI_DEFAULT_EXPIRES_AFTER_DAYS;
+      let isDeadlineDay = false;
+
+      const deadlines = Object.values(selectedExamsState || {})
+        .map(exam => exam && exam.deadlineTime)
+        .filter(t => typeof t === 'number' && Number.isFinite(t) && t > now.getTime());
+      if (deadlines.length > 0) {
+        const earliest = new Date(Math.min(...deadlines));
+        const deadlineDay = new Date(earliest.getFullYear(), earliest.getMonth(), earliest.getDate());
+        const diffDays = Math.round((deadlineDay.getTime() - today.getTime()) / 86400000);
+        if (diffDays <= 0) isDeadlineDay = true;
+        expiresAfterDays = Math.max(1, Math.min(KONBINI_DEFAULT_EXPIRES_AFTER_DAYS, diffDays));
+      }
+
+      const payBy = isDeadlineDay
+        ? today
+        : new Date(today.getFullYear(), today.getMonth(), today.getDate() + expiresAfterDays);
+      const m = payBy.getMonth() + 1;
+      const d = payBy.getDate();
       const days = ['日', '月', '火', '水', '木', '金', '土'];
-      const w = days[deadline.getDay()];
+      const w = days[payBy.getDay()];
       return {
         fullText: `${m}月${d}日(${w}) 23:59`,
         dateText: `${m}月${d}日(${w})`,
-        shortText: `${m}/${d}(${w})`
+        shortText: `${m}/${d}(${w})`,
+        expiresAfterDays,
+        isDeadlineDay,
+        totalDays: isDeadlineDay ? 1 : expiresAfterDays + 1
       };
+    }
+
+    // コンビニ支払期限の表示テキストを更新（模試選択の変更時にも呼ばれる）
+    function refreshConvenienceDeadline() {
+      const dl = getConvenienceDeadline();
+      const badge = document.getElementById('convenience-deadline-text');
+      if (badge) {
+        badge.textContent = dl.isDeadlineDay
+          ? `本日（${dl.shortText}）中にお支払いが必要です`
+          : `お申込み完了後${dl.totalDays}日以内（${dl.shortText}まで）にお支払い`;
+      }
+      const fullElem = document.getElementById('convenienceDeadlineFull');
+      if (fullElem) fullElem.textContent = dl.isDeadlineDay ? `本日 ${dl.fullText}` : dl.fullText;
+      const summaryNoticeDate = document.getElementById('summaryConvenienceDeadlineDate');
+      if (summaryNoticeDate) summaryNoticeDate.textContent = dl.isDeadlineDay ? `本日 ${dl.dateText}` : dl.dateText;
+      const agreeText = document.getElementById('agreeConvenienceDeadlineText');
+      if (agreeText) agreeText.textContent = dl.isDeadlineDay ? `本日 ${dl.shortText} 中` : `${dl.shortText}まで`;
+      const dayNotice = document.getElementById('convenienceDeadlineDayNotice');
+      if (dayNotice) dayNotice.classList.toggle('hidden', !dl.isDeadlineDay);
+      return dl;
     }
 
     // 決済方法ラジオボタン切り替え時のサマリー更新 & 警告連動表示
@@ -2200,11 +2250,7 @@
       const convAgreeInput = document.getElementById('agreeConvenienceTerms');
       const convAgreeDeadlineText = document.getElementById('agreeConvenienceDeadlineText');
 
-      const dl = getConvenienceDeadline();
-
-      if (deadlineBadge) {
-        deadlineBadge.textContent = `お申込み完了後4日以内（${dl.shortText}まで）にお支払い`;
-      }
+      const dl = refreshConvenienceDeadline();
 
       if (method === 'credit_card') {
         if (elem) {
@@ -2232,15 +2278,13 @@
             </div>
           `;
         }
-        if (fullElem) fullElem.textContent = dl.fullText;
+        // 期限テキストは refreshConvenienceDeadline() で更新済み
         if (dateElem) dateElem.textContent = dl.dateText;
-        if (summaryNoticeDate) summaryNoticeDate.textContent = dl.dateText;
         if (warningPanel) warningPanel.classList.remove('hidden');
         if (submitWarning) submitWarning.classList.remove('hidden');
         if (summaryNotice) summaryNotice.classList.remove('hidden');
         if (convAgreeContainer) convAgreeContainer.classList.remove('hidden');
         if (convAgreeInput) convAgreeInput.required = true;
-        if (convAgreeDeadlineText) convAgreeDeadlineText.textContent = `${dl.shortText}まで`;
       } else {
         // 未選択初期状態
         if (elem) {
@@ -3253,8 +3297,9 @@ if (!parentKanaLastName || !parentKanaFirstName) {
         const selectedPaymentMethod = isKonbini ? 'konbini' : 'card';
         const paymentMethodTypes = [selectedPaymentMethod];
 
-        // コンビニ決済時の追加オプション設定（支払い期限日数：3日）
-        const KONBINI_EXPIRES_AFTER_DAYS = 3;
+        // コンビニ決済時の支払期限日数（通常3日。選択模試の申込締切が近い場合は短縮、最小1日）
+        const konbiniDeadline = getConvenienceDeadline();
+        const KONBINI_EXPIRES_AFTER_DAYS = konbiniDeadline.expiresAfterDays;
         const paymentMethodOptions = isKonbini ? {
           konbini: {
             expires_after_days: KONBINI_EXPIRES_AFTER_DAYS
@@ -3304,7 +3349,7 @@ if (!parentKanaLastName || !parentKanaFirstName) {
           exam_name: examNameStr,
           venue_name: firstVenueName,
           amount: totalAmount,
-          payment_status: 'paid',
+          payment_status: isKonbini ? 'unpaid' : 'paid',
           payment_method: selectedPaymentMethod,
           student_name: `${studentLastName} ${studentFirstName}`,
           student_kana: `${studentKanaLastName} ${studentKanaFirstName}`,
@@ -3341,6 +3386,7 @@ if (!parentKanaLastName || !parentKanaFirstName) {
           success_url: `${window.location.origin}/apply/success?session_id={CHECKOUT_SESSION_ID}`,
           cancel_url: `${window.location.origin}/apply`,
           ...(paymentMethodOptions ? { payment_method_options: paymentMethodOptions } : {}),
+          ...(isKonbini ? { konbini_expires_after_days: KONBINI_EXPIRES_AFTER_DAYS } : {}),
 
           // ========================================================
           // 【詳細パラメータ（顧客管理・DB保存用）】

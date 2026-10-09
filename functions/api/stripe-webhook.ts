@@ -10,6 +10,46 @@ const DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbwYljLEwbfFCQWx
 const DEFAULT_FROM_EMAIL = "岡山県統一模擬試験 <info@okayama-moshi.com>";
 const DEFAULT_ADMIN_EMAIL = "info@okayama-moshi.com";
 
+interface ExamRecord {
+  id: string;
+  label: string;
+  issue: string;
+  title: string;
+  venue: string;
+  price: number;
+  date: string;
+}
+
+/**
+ * create-checkout-session が session.metadata に保存した exam_1, exam_2, ... を復元する。
+ * （1模試＝1レコードでスプレッドシートへ書き込むため）
+ */
+const parseExamRecords = (metadata: Record<string, any>): ExamRecord[] => {
+  const keys = Object.keys(metadata)
+    .filter((k) => /^exam_\d+$/.test(k))
+    .sort((a, b) => Number(a.slice(5)) - Number(b.slice(5)));
+  const records: ExamRecord[] = [];
+  for (const key of keys) {
+    try {
+      const r = JSON.parse(String(metadata[key]));
+      const price = Math.round(Number(r?.price));
+      if (!r || !Number.isFinite(price) || price <= 0) continue;
+      records.push({
+        id: String(r.id || ""),
+        label: String(r.label || r.title || "").trim() || "月号不明（岡山県統一模擬試験）",
+        issue: String(r.issue || ""),
+        title: String(r.title || ""),
+        venue: String(r.venue || "").trim() || "会場未指定",
+        price,
+        date: String(r.date || ""),
+      });
+    } catch (e) {
+      console.warn(`[functions/api/stripe-webhook] Failed to parse metadata ${key}:`, metadata[key]);
+    }
+  }
+  return records;
+};
+
 export const onRequestPost: PagesFunction<Env> = async (context) => {
   try {
     const event = (await context.request.json()) as Record<string, any>;
@@ -75,14 +115,21 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const examNameVal = String(metadata.exam_name || "岡山県統一模擬試験").trim();
     const paymentMethodVal = String(session.payment_method_types?.[0] || metadata.payment_method || "card").trim();
     const paymentStatusVal = String(session.payment_status || "paid").trim();
+    const sessionId = String(session.id || metadata.session_id || "");
 
-    const gasPayload = {
+    // 1模試＝1レコード。exam_N が無い旧セッションは従来通り1行にまとめて書き込む
+    const parsedRecords = parseExamRecords(metadata);
+    const examRecords: ExamRecord[] = parsedRecords.length > 0
+      ? parsedRecords
+      : [{ id: "", label: examNameVal, issue: "", title: examNameVal, venue: venueName, price: amountVal, date: "" }];
+    if (parsedRecords.length === 0) {
+      console.warn("[functions/api/stripe-webhook] No exam_N metadata found; writing a single combined record.");
+    }
+
+    const basePayload = {
       ...metadata,
       received_at: jstReceivedAt,
-      session_id: session.id || metadata.session_id || "",
-      exam_name: examNameVal,
-      venue_name: venueName,
-      amount: amountVal,
+      session_id: sessionId,
       payment_status: paymentStatusVal,
       payment_method: paymentMethodVal,
       student_name: studentFullName,
@@ -99,10 +146,6 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       address2: address2Val,
 
       // Aliases
-      venue: venueName,
-      venueName: venueName,
-      exam_venue: venueName,
-      total_amount: amountVal,
       student_school: schoolName,
       school: schoolName,
       student_grade: grade,
@@ -115,27 +158,59 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       metadata: metadata,
     };
 
-    console.log("[functions/api/stripe-webhook] Forwarding to GAS:", gasPayload);
+    const gasResults: any[] = [];
+    let gasSuccessCount = 0;
+    // 同一セッションの行順を保つため順番に送信する
+    for (let i = 0; i < examRecords.length; i++) {
+      const rec = examRecords[i];
+      const gasPayload = {
+        ...basePayload,
+        exam_name: rec.label,          // C列：対象模試（例: 10月号（岡山県統一模擬試験））
+        venue_name: rec.venue,         // D列：受験会場（その模試の会場）
+        amount: rec.price,             // E列：単価（数値）
+        price: rec.price,
+        unit_price: rec.price,
+        total_amount: amountVal,       // 決済合計（参考値）
+        exam_id: rec.id,
+        issue_name: rec.issue,
+        exam_title: rec.title,
+        exam_date: rec.date,
+        item_index: i + 1,
+        item_count: examRecords.length,
+        record_key: `${sessionId}#${rec.id || i + 1}`,
+        venue: rec.venue,
+        venueName: rec.venue,
+        exam_venue: rec.venue,
+      };
 
-    let gasSuccess = false;
-    let gasResult: any = null;
-    try {
-      const gasRes = await fetch(gasUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "User-Agent": "Okamoshi-StripeWebhook/1.0",
-        },
-        body: JSON.stringify(gasPayload),
-        redirect: "follow",
-      });
-      if (gasRes.ok) {
-        gasResult = await gasRes.json().catch(() => ({ status: "success" }));
-        gasSuccess = true;
+      console.log(`[functions/api/stripe-webhook] Forwarding record ${i + 1}/${examRecords.length} to GAS:`, gasPayload.exam_name, gasPayload.venue_name, gasPayload.amount);
+      try {
+        const gasRes = await fetch(gasUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "User-Agent": "Okamoshi-StripeWebhook/1.0",
+          },
+          body: JSON.stringify(gasPayload),
+          redirect: "follow",
+        });
+        if (gasRes.ok) {
+          gasResults.push(await gasRes.json().catch(() => ({ status: "success" })));
+          gasSuccessCount++;
+        } else {
+          gasResults.push({ status: "error", http_status: gasRes.status });
+          console.error(`[functions/api/stripe-webhook] GAS non-200 for record ${i + 1}:`, gasRes.status);
+        }
+      } catch (gErr) {
+        gasResults.push({ status: "error", message: String(gErr) });
+        console.error(`[functions/api/stripe-webhook] GAS error for record ${i + 1}:`, gErr);
       }
-    } catch (gErr) {
-      console.error("[functions/api/stripe-webhook] GAS error:", gErr);
     }
+    const gasSuccess = gasSuccessCount === examRecords.length;
+    const gasResult = { records: examRecords.length, succeeded: gasSuccessCount, results: gasResults };
+    const examsListText = examRecords
+      .map((r) => `  ・${r.label}（${r.venue}） ￥${r.price.toLocaleString()}${r.date ? ` / 試験日: ${r.date}` : ""}`)
+      .join("\n");
 
     // Resend メール送信
     let applicantMailId = null;
@@ -147,7 +222,8 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       const adminText = `
 【岡山県統一模擬試験 Webhookより決済完了が検知されました】
 --------------------------------------------------
-■ お申し込み模試: ${examNameVal} (${venueName})
+■ お申し込み模試:
+${examsListText}
 ■ 合計金額: ￥${Number(amountVal).toLocaleString()} (税込)
 ■ 決済状況: ${paymentStatusVal}
 ■ 決済方法: ${paymentMethodLabel}
@@ -164,7 +240,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 ■ 電話番号: ${phoneVal || "未入力"}
 ■ 住所: 〒${postalCodeVal} ${fullAddress}
 --------------------------------------------------
-■ スプレッドシート連携 (GAS): ${gasSuccess ? "連携成功" : "エラー"}
+■ スプレッドシート連携 (GAS): ${gasSuccess ? `連携成功（${gasSuccessCount}件）` : `エラー（${gasSuccessCount}/${examRecords.length}件成功）`}
 受付日時: ${jstReceivedAt}
 `.trim();
 
@@ -174,7 +250,8 @@ ${parentName ? parentName + " 様\n\n" : ""}岡山県統一模擬試験（おか
 以下の内容でお申し込みおよび決済手続きを受け付けいたしました。
 
 --------------------------------------------------
-■ お申し込み模試: ${examNameVal} (${venueName})
+■ お申し込み模試:
+${examsListText}
 ■ 合計金額: ￥${Number(amountVal).toLocaleString()} (税込)
 ■ 決済方法: ${paymentMethodLabel}
 ■ 決済状況: お支払い完了

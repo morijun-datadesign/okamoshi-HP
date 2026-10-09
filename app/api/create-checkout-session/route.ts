@@ -5,7 +5,21 @@ interface CheckoutLineItem {
   description: string;
   unitAmount: number;
   productMetadata: Record<string, string>;
+  /** Webhook / スプレッドシート用の1模試＝1レコード情報（session.metadata[exam_N] に JSON で保存） */
+  record: { id: string; label: string; issue: string; title: string; venue: string; price: number; date: string };
 }
+
+/** 月号ラベルを生成する（例: 「10月号（岡山県統一模擬試験）」）。月号が取れない場合は「月号不明」を明示する。 */
+const formatExamLabel = (issueRaw: string, title: string, id: string): { issue: string; label: string } => {
+  let issue = String(issueRaw || "").trim();
+  if (issue && /^\d{1,2}月$/.test(issue)) issue += "号";
+  if (!issue) {
+    const m = String(id || "").match(/_(\d{1,2})$/);
+    if (m) issue = `${Number(m[1])}月号`;
+  }
+  const baseTitle = title.replace(/[（(][^（）()]*[）)]\s*$/, "").trim() || title;
+  return { issue, label: issue ? `${issue}（${baseTitle}）` : `月号不明（${baseTitle}）` };
+};
 
 /**
  * フロントから送られた exams 配列を、Stripe の line_items 用に1件ずつ正規化する。
@@ -23,19 +37,33 @@ const buildExamLineItems = (exams: unknown): CheckoutLineItem[] => {
     const title = String(e.title || e.exam_name || "岡山県統一模擬試験").trim();
     const venue = String(e.venue_name || e.venueLabel || e.venue || "").trim();
     const examDate = String(e.exam_date || e.examDate || "").trim();
+    const examId = e.id !== undefined && e.id !== null ? String(e.id) : "";
+    const { issue, label } = formatExamLabel(e.issue_name || e.issueName || "", title, examId);
 
-    const name = (venue ? `${title}（${venue}）` : title).slice(0, 250);
-    const description = [examDate ? `試験日: ${examDate}` : "", venue ? `会場: ${venue}` : ""]
+    const name = label.slice(0, 250);
+    const description = [venue ? `会場: ${venue}` : "", examDate ? `試験日: ${examDate}` : ""]
       .filter(Boolean)
       .join(" / ");
 
     const productMetadata: Record<string, string> = {};
-    if (e.id !== undefined && e.id !== null) productMetadata.exam_id = String(e.id).slice(0, 500);
+    if (examId) productMetadata.exam_id = examId.slice(0, 500);
     productMetadata.exam_title = title.slice(0, 500);
+    productMetadata.exam_label = label.slice(0, 500);
+    if (issue) productMetadata.issue_name = issue.slice(0, 500);
     if (venue) productMetadata.venue_name = venue.slice(0, 500);
     if (examDate) productMetadata.exam_date = examDate.slice(0, 500);
 
-    items.push({ name, description, unitAmount, productMetadata });
+    const record = {
+      id: examId.slice(0, 60),
+      label: label.slice(0, 80),
+      issue: issue.slice(0, 20),
+      title: title.slice(0, 60),
+      venue: venue.slice(0, 120),
+      price: unitAmount,
+      date: examDate.slice(0, 60),
+    };
+
+    items.push({ name, description, unitAmount, productMetadata, record });
   }
   return items;
 };
@@ -101,8 +129,11 @@ export async function POST(request: Request) {
     // 実際に請求される金額（内訳合計）を正とする
     const amountVal = examLineItems.length > 0 ? itemizedTotal : declaredAmount;
     const examsDetail = examLineItems
-      .map((item) => `${item.name}${item.productMetadata.exam_date ? ` [${item.productMetadata.exam_date}]` : ""} ¥${item.unitAmount}`)
+      .map((item) => `${item.record.label}${item.record.venue ? `（${item.record.venue}）` : ""} ¥${item.unitAmount}`)
       .join(" / ");
+    const examNameWithIssue = examLineItems.length > 0
+      ? examLineItems.map((item) => item.record.label).join(" / ")
+      : examName;
 
     // 3. metadata の構築とサニタイズ
     const metadataRaw: Record<string, string> = {
@@ -121,7 +152,7 @@ export async function POST(request: Request) {
       address2: address2,
       address: address,
       venue_name: venueName,
-      exam_name: examName,
+      exam_name: examNameWithIssue,
       payment_method: paymentMethod,
       amount: String(amountVal),
       exam_count: String(examLineItems.length || 1),
@@ -138,16 +169,26 @@ export async function POST(request: Request) {
       total_amount: String(amountVal),
     };
 
+    // 1模試＝1レコード（Webhook → スプレッドシート用）。existingMeta より優先して確保する
+    examLineItems.forEach((item, i) => {
+      metadataRaw[`exam_${i + 1}`] = JSON.stringify(item.record);
+    });
+
     for (const [k, v] of Object.entries(existingMeta)) {
       if (v !== undefined && v !== null && typeof v !== "object" && !metadataRaw[k]) {
         metadataRaw[k] = String(v);
       }
     }
 
+    // Stripe metadata の上限：最大50キー・値500文字・キー40文字
     const sanitizedMetadata: Record<string, string> = {};
     for (const [k, v] of Object.entries(metadataRaw)) {
       const cleanVal = String(v).trim();
       if (cleanVal.length > 0) {
+        if (Object.keys(sanitizedMetadata).length >= 50) {
+          console.warn(`[app/api/create-checkout-session] metadata key limit reached; dropped key: ${k}`);
+          continue;
+        }
         sanitizedMetadata[String(k).slice(0, 40)] = cleanVal.slice(0, 500);
       }
     }

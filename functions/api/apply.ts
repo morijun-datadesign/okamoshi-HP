@@ -11,6 +11,80 @@ const DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbwYljLEwbfFCQWx
 const DEFAULT_FROM_EMAIL = "岡山県統一模擬試験 <info@okayama-moshi.com>";
 const DEFAULT_ADMIN_EMAIL = "info@okayama-moshi.com";
 
+interface ExamRecord {
+  id: string;
+  label: string;
+  issue: string;
+  title: string;
+  venue: string;
+  price: number;
+  date: string;
+}
+
+/** 月号ラベルを生成する（例: 「10月号（岡山県統一模擬試験）」）。create-checkout-session と同じ規則。 */
+const formatExamLabel = (issueRaw: string, title: string, id: string): { issue: string; label: string } => {
+  let issue = String(issueRaw || "").trim();
+  if (issue && /^\d{1,2}月$/.test(issue)) issue += "号";
+  if (!issue) {
+    const m = String(id || "").match(/_(\d{1,2})$/);
+    if (m) issue = `${Number(m[1])}月号`;
+  }
+  const baseTitle = title.replace(/[（(][^（）()]*[）)]\s*$/, "").trim() || title;
+  return { issue, label: issue ? `${issue}（${baseTitle}）` : `月号不明（${baseTitle}）` };
+};
+
+/** フロントの exams 配列 → 1模試＝1レコード */
+const recordsFromExams = (exams: unknown): ExamRecord[] => {
+  if (!Array.isArray(exams)) return [];
+  const records: ExamRecord[] = [];
+  for (const ex of exams) {
+    if (!ex || typeof ex !== "object") continue;
+    const e = ex as Record<string, any>;
+    const price = Math.round(Number(e.price));
+    if (!Number.isFinite(price) || price <= 0) continue;
+    const title = String(e.title || e.exam_name || "岡山県統一模擬試験").trim();
+    const id = e.id !== undefined && e.id !== null ? String(e.id) : "";
+    const { issue, label } = formatExamLabel(e.issue_name || e.issueName || "", title, id);
+    records.push({
+      id,
+      label,
+      issue,
+      title,
+      venue: String(e.venue_name || e.venueLabel || e.venue || "").trim() || "会場未指定",
+      price,
+      date: String(e.exam_date || e.examDate || "").trim(),
+    });
+  }
+  return records;
+};
+
+/** Stripe session.metadata の exam_1, exam_2, ... → 1模試＝1レコード */
+const recordsFromMetadata = (metadata: Record<string, any>): ExamRecord[] => {
+  const keys = Object.keys(metadata || {})
+    .filter((k) => /^exam_\d+$/.test(k))
+    .sort((a, b) => Number(a.slice(5)) - Number(b.slice(5)));
+  const records: ExamRecord[] = [];
+  for (const key of keys) {
+    try {
+      const r = JSON.parse(String(metadata[key]));
+      const price = Math.round(Number(r?.price));
+      if (!r || !Number.isFinite(price) || price <= 0) continue;
+      records.push({
+        id: String(r.id || ""),
+        label: String(r.label || r.title || "").trim() || "月号不明（岡山県統一模擬試験）",
+        issue: String(r.issue || ""),
+        title: String(r.title || ""),
+        venue: String(r.venue || "").trim() || "会場未指定",
+        price,
+        date: String(r.date || ""),
+      });
+    } catch {
+      console.warn(`[functions/api/apply] Failed to parse metadata ${key}`);
+    }
+  }
+  return records;
+};
+
 export const onRequestPost: PagesFunction<Env> = async (context) => {
   try {
     const body = (await context.request.json()) as Record<string, any>;
@@ -159,35 +233,72 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       }
     };
 
-    // 4. GAS エンドポイントへの POST 送信（redirect: 'follow' 必須）
-    let gasSuccess = false;
-    let gasResponseData: any = null;
-    let gasErrorMessage: string | null = null;
-
-    try {
-      console.log("[functions/api/apply] Dispatching to GAS ledger:", gasUrl);
-      const gasRes = await fetch(gasUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "User-Agent": "Okamoshi-Apply/1.0",
-        },
-        body: JSON.stringify(gasPayload),
-        redirect: "follow",
-      });
-
-      if (gasRes.ok) {
-        gasResponseData = await gasRes.json().catch(() => ({ status: "success" }));
-        gasSuccess = true;
-        console.log("[functions/api/apply] GAS response successfully received:", gasResponseData);
-      } else {
-        gasErrorMessage = `GAS responded with status ${gasRes.status}`;
-        console.warn("[functions/api/apply] GAS non-200 status:", gasRes.status);
-      }
-    } catch (gasErr: any) {
-      gasErrorMessage = gasErr?.message || String(gasErr);
-      console.error("[functions/api/apply] Failed to forward application to GAS:", gasErr);
+    // 4. GAS エンドポイントへの POST 送信（1模試＝1レコード、redirect: 'follow' 必須）
+    let examRecords = recordsFromExams(body.exams);
+    if (examRecords.length === 0) examRecords = recordsFromMetadata(meta);
+    const hasItemizedRecords = examRecords.length > 0;
+    if (!hasItemizedRecords) {
+      console.warn("[functions/api/apply] No per-exam data found; writing a single combined record.");
+      examRecords = [{ id: "", label: examNameVal, issue: "", title: examNameVal, venue: venueVal, price: amountVal, date: "" }];
     }
+    const totalAmountVal = hasItemizedRecords
+      ? examRecords.reduce((sum, r) => sum + r.price, 0)
+      : amountVal;
+
+    let gasSuccessCount = 0;
+    const gasResponses: any[] = [];
+    const gasErrors: string[] = [];
+
+    for (let i = 0; i < examRecords.length; i++) {
+      const rec = examRecords[i];
+      const recordPayload = {
+        ...gasPayload,
+        exam_name: rec.label,          // C列：対象模試（月号付き）
+        venue_name: rec.venue,         // D列：受験会場
+        amount: rec.price,             // E列：単価
+        price: rec.price,
+        unit_price: rec.price,
+        total_amount: totalAmountVal,
+        exam_id: rec.id,
+        issue_name: rec.issue,
+        exam_title: rec.title,
+        exam_date: rec.date,
+        item_index: i + 1,
+        item_count: examRecords.length,
+        record_key: `${activeSessionId}#${rec.id || i + 1}`,
+        venue: rec.venue,
+        venueName: rec.venue,
+        exam_venue: rec.venue,
+      };
+
+      try {
+        console.log(`[functions/api/apply] Dispatching record ${i + 1}/${examRecords.length} to GAS:`, rec.label, rec.venue, rec.price);
+        const gasRes = await fetch(gasUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "User-Agent": "Okamoshi-Apply/1.0",
+          },
+          body: JSON.stringify(recordPayload),
+          redirect: "follow",
+        });
+
+        if (gasRes.ok) {
+          gasResponses.push(await gasRes.json().catch(() => ({ status: "success" })));
+          gasSuccessCount++;
+        } else {
+          gasErrors.push(`record ${i + 1}: GAS responded with status ${gasRes.status}`);
+          console.warn("[functions/api/apply] GAS non-200 status:", gasRes.status);
+        }
+      } catch (gasErr: any) {
+        gasErrors.push(`record ${i + 1}: ${gasErr?.message || String(gasErr)}`);
+        console.error("[functions/api/apply] Failed to forward application to GAS:", gasErr);
+      }
+    }
+
+    const gasSuccess = gasSuccessCount === examRecords.length;
+    const gasResponseData = { records: examRecords.length, succeeded: gasSuccessCount, results: gasResponses };
+    const gasErrorMessage: string | null = gasErrors.length > 0 ? gasErrors.join("; ") : null;
 
     // 5. Resend API によるメール送信
     let applicantMailId: string | null = null;
@@ -198,9 +309,9 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       ? "コンビニ決済"
       : "クレジットカード決済";
 
-    const examsListText = Array.isArray(body.exams) && body.exams.length > 0
-      ? body.exams.map((ex: any) => `  ・${ex.title || ex.id} (${ex.venue_name || ex.venue || "会場未指定"}) / ￥${ex.price ? Number(ex.price).toLocaleString() : ""}`).join("\n")
-      : `  ・${examNameVal} (${venueVal}) / ￥${Number(amountVal).toLocaleString()}`;
+    const examsListText = examRecords
+      .map((r) => `  ・${r.label}（${r.venue}） / ￥${r.price.toLocaleString()}${r.date ? ` / 試験日: ${r.date}` : ""}`)
+      .join("\n");
 
     // A. 管理者宛て ジャーナル通知メール
     const adminSubject = `【個人申込受付】${studentFullName || "生徒氏名未入力"} 様 (${gradeVal || "学年未入力"})：${examNameVal}`;

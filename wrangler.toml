@@ -18,5 +18,5 @@ compatibility_date = "2025-01-01"
 [[d1_databases]]
 binding = "DB"
 database_name = "okamoshi-master"
-database_id = "REPLACE_WITH_D1_DATABASE_ID"  # `wrangler d1 create` の出力値に置き換える
+database_id = "a9553a56-1e98-4986-9062-5b2b529f4273"
 migrations_dir = "migrations"

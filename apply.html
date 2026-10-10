@@ -729,9 +729,21 @@
 
               <!-- 在籍校名 -->
               <div class="flex flex-col gap-1.5 md:col-span-2 relative">
-                <div class="flex items-center justify-between">
-                  <label class="font-label-md text-sm font-bold text-on-surface" for="currentSchool">在籍中学校・小学校名</label>
-                  <span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span>
+                <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-1.5">
+                  <div class="flex items-center gap-2">
+                    <label class="font-label-md text-sm font-bold text-on-surface" for="currentSchool">在籍中学校・小学校名</label>
+                    <span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold shrink-0">必須</span>
+                  </div>
+                  <!-- 県内 / 県外・全国 切り替えセグメント -->
+                  <div class="inline-flex items-center p-0.5 bg-slate-200/70 rounded-lg border border-slate-200 text-xs font-bold shrink-0" role="tablist" aria-label="学校検索範囲">
+                    <button type="button" id="schoolScopePrefBtn" onclick="setSchoolSearchScope(false)" class="px-3 py-1 rounded-md transition-all flex items-center gap-1.5 cursor-pointer bg-white text-emerald-800 shadow-2xs font-bold text-xs" role="tab" aria-selected="true">
+                      <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+                      <span>岡山県内</span>
+                    </button>
+                    <button type="button" id="schoolScopeAllBtn" onclick="setSchoolSearchScope(true)" class="px-3 py-1 rounded-md transition-all flex items-center gap-1.5 cursor-pointer text-slate-600 hover:text-slate-900 font-medium text-xs" role="tab" aria-selected="false">
+                      <span>県外・全国</span>
+                    </button>
+                  </div>
                 </div>
                 <div class="relative w-full">
                   <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="currentSchool" name="current_school" placeholder="例: 岡山市立操南中学校（学校名を入力すると候補が表示されます）" required type="text" autocomplete="off">
@@ -739,7 +751,7 @@
                     <!-- サジェスト候補リストが動的に描画されます -->
                   </div>
                 </div>
-                <p class="text-[11px] text-on-surface-variant">※文字を入力すると岡山県内の学校名（文部科学省コード準拠）が候補表示されます。県外の学校もサジェスト内から検索可能です（直接入力も可）。</p>
+                <p class="text-[11px] text-on-surface-variant">※文字を入力すると学校名（文部科学省コード準拠）が候補表示されます。県外の学校をお探しの場合は上の「県外・全国」をお選びください（候補外も直接入力可）。</p>
               </div>
 
             </div>
@@ -2769,8 +2781,7 @@
 
     // ========================================================
     // 5-2. 在籍学校名サジェスト（自社エッジAPI /api/schools・文科省学校コード準拠）
-    //      既定では岡山県内のみを検索・表示。
-    //      「岡山県外の学校を探す」から全国対象に切り替え可能。
+    //      「岡山県内」/「県外・全国」セグメントタブによる検索範囲切り替え対応
     // ========================================================
     const SCHOOL_SUGGEST_DEBOUNCE_MS = 80;
     const schoolSuggestCache = new Map();
@@ -2778,7 +2789,7 @@
     let schoolSuggestTimer = null;
     let currentHighlightedIndex = -1;
     let currentSuggestions = [];
-    let isNationalSchoolSearch = false; // デフォルトは岡山県内限定
+    let isNationalSchoolSearch = false; // 初期選択: 岡山県内
 
     function escapeSuggestHtml(str) {
       return String(str ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -2788,6 +2799,45 @@
       if (gradeKey === 'sho6') return 'elementary';
       if (gradeKey && gradeKey.startsWith('chu')) return 'junior';
       return '';
+    }
+
+    function updateSchoolScopeButtonsUI(isNational) {
+      const prefBtn = document.getElementById('schoolScopePrefBtn');
+      const allBtn = document.getElementById('schoolScopeAllBtn');
+      if (!prefBtn || !allBtn) return;
+
+      if (!isNational) {
+        prefBtn.className = 'px-3 py-1 rounded-md transition-all flex items-center gap-1.5 cursor-pointer bg-white text-emerald-800 shadow-2xs font-bold text-xs';
+        prefBtn.setAttribute('aria-selected', 'true');
+        prefBtn.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span><span>岡山県内</span>';
+
+        allBtn.className = 'px-3 py-1 rounded-md transition-all flex items-center gap-1.5 cursor-pointer text-slate-600 hover:text-slate-900 font-medium text-xs';
+        allBtn.setAttribute('aria-selected', 'false');
+        allBtn.innerHTML = '<span>県外・全国</span>';
+      } else {
+        prefBtn.className = 'px-3 py-1 rounded-md transition-all flex items-center gap-1.5 cursor-pointer text-slate-600 hover:text-slate-900 font-medium text-xs';
+        prefBtn.setAttribute('aria-selected', 'false');
+        prefBtn.innerHTML = '<span>岡山県内</span>';
+
+        allBtn.className = 'px-3 py-1 rounded-md transition-all flex items-center gap-1.5 cursor-pointer bg-white text-emerald-800 shadow-2xs font-bold text-xs';
+        allBtn.setAttribute('aria-selected', 'true');
+        allBtn.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span><span>県外・全国</span>';
+      }
+    }
+
+    function setSchoolSearchScope(isNational) {
+      if (isNationalSchoolSearch === isNational) return;
+      isNationalSchoolSearch = isNational;
+      updateSchoolScopeButtonsUI(isNational);
+
+      const input = document.getElementById('currentSchool');
+      if (!input) return;
+      const val = input.value.trim();
+      if (val.length > 0) {
+        // すでに入力された文字のまま即座に該当の検索結果を再取得・反映
+        requestSchoolSuggestions(val, currentSelectedGrade, true, isNational);
+        input.focus();
+      }
     }
 
     async function fetchSchoolSuggestions(query, gradeKey, isNational = false) {
@@ -2823,6 +2873,7 @@
       clearTimeout(schoolSuggestTimer);
       if (typeof forceNational === 'boolean') {
         isNationalSchoolSearch = forceNational;
+        updateSchoolScopeButtonsUI(forceNational);
       }
       const isNational = isNationalSchoolSearch;
 
@@ -2846,36 +2897,6 @@
       else schoolSuggestTimer = setTimeout(run, SCHOOL_SUGGEST_DEBOUNCE_MS);
     }
 
-    function triggerNationalSchoolSearch(e) {
-      if (e) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-      isNationalSchoolSearch = true;
-      const input = document.getElementById('currentSchool');
-      if (!input) return;
-      const val = input.value.trim();
-      if (val.length > 0) {
-        requestSchoolSuggestions(val, currentSelectedGrade, true, true);
-      }
-      input.focus();
-    }
-
-    function resetToPrefSchoolSearch(e) {
-      if (e) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-      isNationalSchoolSearch = false;
-      const input = document.getElementById('currentSchool');
-      if (!input) return;
-      const val = input.value.trim();
-      if (val.length > 0) {
-        requestSchoolSuggestions(val, currentSelectedGrade, true, false);
-      }
-      input.focus();
-    }
-
     function renderSchoolSuggestions(suggestions, query, isNational, gradeKey) {
       const dropdown = document.getElementById('schoolSuggestDropdown');
       if (!dropdown) return;
@@ -2883,42 +2904,16 @@
       currentSuggestions = suggestions;
       currentHighlightedIndex = -1;
 
-      const schoolTypeNoun = gradeKey === 'sho6' ? '小学校' : '中学校';
-      const targetLabel = gradeKey === 'sho6' ? '岡山県外の小学校' : '岡山県外の中学校';
-
       if (suggestions.length === 0) {
-        if (!isNational) {
-          // 岡山県内限定で0件の場合: 県外（全国）検索への誘導ボタンを表示
-          dropdown.innerHTML = `
-            <div class="p-4 text-xs text-slate-600 text-center space-y-2.5">
-              <div>
-                <span class="font-bold text-slate-800">岡山県内に該当する${schoolTypeNoun}が見つかりませんでした</span><br>
-                <span class="text-[11px] text-slate-400">※候補にない学校名もそのまま直接ご入力いただけます</span>
-              </div>
-              <div class="pt-0.5">
-                <button type="button" onmousedown="triggerNationalSchoolSearch(event)" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold border border-emerald-300 transition-colors shadow-2xs active:scale-95 cursor-pointer">
-                  <span class="material-symbols-outlined text-[15px] text-emerald-600">travel_explore</span>
-                  <span>${targetLabel}を探す（全国検索）</span>
-                </button>
-              </div>
-            </div>
-          `;
-        } else {
-          // 全国検索でも0件の場合
-          dropdown.innerHTML = `
-            <div class="p-4 text-xs text-slate-600 text-center space-y-2">
-              <div>
-                <span class="font-bold text-slate-800">該当する学校名が見つかりませんでした</span><br>
-                <span class="text-[11px] text-slate-400">※候補にない学校名もそのまま直接ご入力いただけます</span>
-              </div>
-              <div class="pt-1">
-                <button type="button" onmousedown="resetToPrefSchoolSearch(event)" class="text-[11px] text-slate-500 hover:text-slate-800 underline cursor-pointer">
-                  ← 岡山県内限定に戻す
-                </button>
-              </div>
-            </div>
-          `;
-        }
+        const scopeHint = !isNational 
+          ? '岡山県内に該当する学校が見つかりませんでした。<br><span class="text-emerald-700 font-medium">※県外の学校をお探しの場合は上の「県外・全国」をお選びください。</span>'
+          : '該当する学校名が見つかりませんでした。';
+        dropdown.innerHTML = `
+          <div class="p-4 text-xs text-slate-600 text-center space-y-1.5">
+            <div>${scopeHint}</div>
+            <div class="text-[11px] text-slate-400">※候補にない学校名もそのまま直接ご入力いただけます</div>
+          </div>
+        `;
         dropdown.classList.remove('hidden');
         return;
       }
@@ -2938,37 +2933,15 @@
         `;
       }).join('');
 
-      let footerHtml = '';
-      if (!isNational) {
-        // 岡山県内限定時のフッター
-        footerHtml = `
-          <div class="px-3.5 py-2 bg-slate-50 border-t border-slate-100 flex items-center justify-between gap-2 text-xs">
-            <span class="text-[11px] text-slate-400 font-medium">岡山県内のみ表示中</span>
-            <button type="button" onmousedown="triggerNationalSchoolSearch(event)" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-white hover:bg-emerald-50 text-emerald-700 hover:text-emerald-800 font-bold text-[11px] border border-slate-200 hover:border-emerald-300 transition-colors shadow-2xs active:scale-95 cursor-pointer">
-              <span class="material-symbols-outlined text-[14px] text-emerald-600">travel_explore</span>
-              <span>${targetLabel}を探す</span>
-            </button>
-          </div>
-        `;
-      } else {
-        // 全国検索時のフッター
-        footerHtml = `
-          <div class="px-3.5 py-2 bg-emerald-50/60 border-t border-emerald-100 flex items-center justify-between gap-2 text-xs">
-            <span class="text-[11px] text-emerald-900 font-bold flex items-center gap-1">
-              <span class="material-symbols-outlined text-[14px] text-emerald-700">public</span>全国から検索中（岡山県優先）
-            </span>
-            <button type="button" onmousedown="resetToPrefSchoolSearch(event)" class="text-[11px] text-emerald-700 hover:text-emerald-900 underline cursor-pointer">
-              岡山県内限定に戻す
-            </button>
-          </div>
-        `;
-      }
-
+      const scopeBadge = !isNational ? '岡山県内のみ表示中' : '全国から表示中（岡山県優先）';
       dropdown.innerHTML = `
         <div class="divide-y divide-slate-100 max-h-60 overflow-y-auto">
           ${itemsHtml}
         </div>
-        ${footerHtml}
+        <div class="px-3.5 py-2 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
+          <span>文部科学省 学校コード準拠</span>
+          <span class="font-medium ${isNational ? 'text-emerald-700' : 'text-slate-500'}">${scopeBadge}</span>
+        </div>
       `;
       dropdown.classList.remove('hidden');
     }
@@ -2996,7 +2969,6 @@
     function updateSchoolInputPlaceholder(gradeKey) {
       const input = document.getElementById('currentSchool');
       const label = document.querySelector('label[for="currentSchool"]');
-      isNationalSchoolSearch = false; // 学年変更時は岡山県内限定にリセット
       if (!input) return;
       if (gradeKey === 'sho6') {
         input.placeholder = '例: 岡山市立岡山中央小学校（学校名を入力すると候補が表示されます）';
@@ -3024,7 +2996,6 @@
       input.addEventListener('input', function() {
         const val = this.value.trim();
         if (val.length === 0) {
-          isNationalSchoolSearch = false; // 入力がクリアされたら岡山県内限定に戻す
           clearTimeout(schoolSuggestTimer);
           if (schoolSuggestAbortController) schoolSuggestAbortController.abort();
           hideSchoolSuggestions();
@@ -3090,8 +3061,7 @@
 
     window.selectSchoolSuggestion = selectSchoolSuggestion;
     window.updateSchoolInputPlaceholder = updateSchoolInputPlaceholder;
-    window.triggerNationalSchoolSearch = triggerNationalSchoolSearch;
-    window.resetToPrefSchoolSearch = resetToPrefSchoolSearch;
+    window.setSchoolSearchScope = setSchoolSearchScope;
 
     // ========================================================
     // 5.5 フォームエラー表示 & 通知ハンドラー（alert廃止・インライン化）

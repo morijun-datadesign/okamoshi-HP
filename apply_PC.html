@@ -704,7 +704,7 @@
                     <!-- サジェスト候補リストが動的に描画されます -->
                   </div>
                 </div>
-                <p class="text-[11px] text-on-surface-variant">※文字を入力すると岡山県内の学校名（文部科学省コード準拠）が候補表示されます。候補にない学校名も直接ご入力いただけます。</p>
+                <p class="text-[11px] text-on-surface-variant">※文字を入力すると全国の学校名（文部科学省コード準拠・岡山県の学校を優先表示）が候補表示されます。候補にない学校名も直接ご入力いただけます。</p>
               </div>
 
             </div>
@@ -1215,7 +1215,6 @@
   <!-- ========================================== -->
   <!-- SCRIPT LOGIC                               -->
   <!-- ========================================== -->
-  <script src="/js/schools_data.js"></script>
   <script>
     // ========================================================
     // 0. microCMS & Stripe 設定
@@ -2440,9 +2439,13 @@
     }
 
     // ========================================================
-    // 5. 郵便番号API連携・住所自動入力（zipcloud API）
+    // 5. 郵便番号 → 住所自動入力（自社エッジAPI /api/address・Cloudflare D1）
+    //    7桁そろった瞬間に即時リクエスト（ディバウンスなし）。
+    //    同一番号は端末内キャッシュで再通信ゼロ。入力し直し時は前のリクエストを中断。
     // ========================================================
-    let isSearchingAddress = false;
+    const ADDRESS_API_TIMEOUT_MS = 4000;
+    const addressCache = new Map();
+    let addressAbortController = null;
     let lastSearchedZip = '';
 
     function normalizeZipCode(raw) {
@@ -2490,17 +2493,59 @@
       }
     }
 
+    async function fetchAddress(zip7, signal) {
+      if (addressCache.has(zip7)) return addressCache.get(zip7);
+      const res = await fetch(`/api/address?zip=${zip7}`, { signal, headers: { Accept: 'application/json' } });
+      if (res.status === 404 || res.status === 400) {
+        addressCache.set(zip7, null);
+        return null;
+      }
+      if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
+      const data = await res.json();
+      addressCache.set(zip7, data);
+      return data;
+    }
+
+    function applyAddressResult(zipInput, cleanZip, data) {
+      const prefSelect = document.getElementById('prefecture');
+      const addr1Input = document.getElementById('addressLine1');
+
+      // 郵便番号をハイフン付き（700-0822）に自動フォーマット
+      zipInput.value = `${cleanZip.slice(0, 3)}-${cleanZip.slice(3)}`;
+      lastSearchedZip = cleanZip;
+
+      // 1.「都道府県・市区町村・町名」入力欄の自動補完（全国対応）
+      addr1Input.value = `${data.prefecture || ''}${data.city || ''}${data.town || ''}`;
+      addr1Input.dispatchEvent(new Event('input', { bubbles: true }));
+
+      // 都道府県情報（hidden項目）の更新
+      if (prefSelect) prefSelect.value = data.prefecture || '';
+
+      // 2. 自動的に「丁目・番地・号」の入力欄へフォーカス（カーソル）を移動
+      const addr2Input = document.getElementById('addressLine2');
+      if (addr2Input) {
+        addr2Input.focus();
+        if (typeof addr2Input.setSelectionRange === 'function' && addr2Input.value) {
+          addr2Input.setSelectionRange(addr2Input.value.length, addr2Input.value.length);
+        }
+      }
+
+      showPostalMessage('✓ 住所を自動入力しました。「丁目・番地・号」をご入力ください', false);
+      setTimeout(() => {
+        clearPostalMessage();
+      }, 4500);
+    }
+
     async function searchAddressByPostalCode(isManualTrigger = false) {
       const zipInput = document.getElementById('postalCode');
       const prefSelect = document.getElementById('prefecture');
       const addr1Input = document.getElementById('addressLine1');
       if (!zipInput || !prefSelect || !addr1Input) return;
 
-      const rawZip = zipInput.value;
-      const cleanZip = normalizeZipCode(rawZip);
+      const cleanZip = normalizeZipCode(zipInput.value);
 
       // 入力桁数チェック
-      if (cleanZip.length < 7) {
+      if (cleanZip.length !== 7) {
         if (isManualTrigger) {
           showPostalMessage('郵便番号を7桁で入力してください（例: 700-0822）', true);
           zipInput.focus();
@@ -2509,71 +2554,47 @@
       }
 
       // 自動トリガーで、すでに同じ郵便番号で取得済みの場合は重複実行しない
-      if (!isManualTrigger && cleanZip === lastSearchedZip) {
+      if (!isManualTrigger && cleanZip === lastSearchedZip) return;
+
+      // 端末内キャッシュにあれば通信せず即時反映
+      if (addressCache.has(cleanZip)) {
+        const cached = addressCache.get(cleanZip);
+        if (cached) applyAddressResult(zipInput, cleanZip, cached);
+        else showPostalMessage('該当する住所が見つかりませんでした。郵便番号をご確認ください。', true);
         return;
       }
 
-      if (isSearchingAddress) return;
-      isSearchingAddress = true;
-      setAddressButtonLoading(true);
+      // 直前のリクエストが残っていれば中断（打ち直しに追従）
+      if (addressAbortController) addressAbortController.abort();
+      const controller = new AbortController();
+      addressAbortController = controller;
+      const timeoutId = setTimeout(() => controller.abort(), ADDRESS_API_TIMEOUT_MS);
+
+      // 通常は数十msで完了するため、スピナーは遅延表示してチラつきを防ぐ
+      const spinnerTimer = setTimeout(() => setAddressButtonLoading(true), 150);
       clearPostalMessage();
 
       try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 6000);
+        const data = await fetchAddress(cleanZip, controller.signal);
+        // 応答待ちの間に別の番号へ打ち直された場合は破棄
+        if (normalizeZipCode(zipInput.value) !== cleanZip) return;
 
-        const response = await fetch(`https://zipcloud.ibsnet.co.jp/api/search?zipcode=${cleanZip}`, {
-          signal: controller.signal
-        });
-        clearTimeout(timeoutId);
-
-        if (!response.ok) {
-          throw new Error(`HTTP error: ${response.status}`);
-        }
-
-        const data = await response.json();
-
-        if (data && data.status === 200 && Array.isArray(data.results) && data.results.length > 0) {
-          const result = data.results[0];
-          const address1 = result.address1 || ''; // 都道府県
-          const address2 = result.address2 || ''; // 市区町村
-          const address3 = result.address3 || ''; // 町域名
-
-          // 郵便番号をハイフン付き（700-0822）に自動フォーマット
-          zipInput.value = `${cleanZip.slice(0, 3)}-${cleanZip.slice(3)}`;
-          lastSearchedZip = cleanZip;
-
-          // 1.「都道府県・市区町村・町名」入力欄の自動補完
-          const fullAddress = `${address1}${address2}${address3}`;
-          addr1Input.value = fullAddress;
-
-          // 都道府県情報（hidden項目）の更新
-          if (prefSelect) {
-            prefSelect.value = address1 || '岡山県';
-          }
-
-          // 2. 自動的に「丁目・番地・号」の入力欄へフォーカス（カーソル）を移動
-          const addr2Input = document.getElementById('addressLine2');
-          if (addr2Input) {
-            addr2Input.focus();
-            if (typeof addr2Input.setSelectionRange === 'function' && addr2Input.value) {
-              addr2Input.setSelectionRange(addr2Input.value.length, addr2Input.value.length);
-            }
-          }
-
-          showPostalMessage('✓ 住所を自動入力しました。「丁目・番地・号」をご入力ください', false);
-          setTimeout(() => {
-            clearPostalMessage();
-          }, 4500);
+        if (data && (data.prefecture || data.city)) {
+          applyAddressResult(zipInput, cleanZip, data);
         } else {
           showPostalMessage('該当する住所が見つかりませんでした。郵便番号をご確認ください。', true);
         }
       } catch (err) {
+        if (addressAbortController !== controller) return; // 新しいリクエストに置き換わった
         console.error('Postal code search failed:', err);
         showPostalMessage('住所の取得に失敗しました。お手数ですが直接ご入力ください。', true);
       } finally {
-        isSearchingAddress = false;
-        setAddressButtonLoading(false);
+        clearTimeout(timeoutId);
+        clearTimeout(spinnerTimer);
+        if (addressAbortController === controller) {
+          addressAbortController = null;
+          setAddressButtonLoading(false);
+        }
       }
     }
 
@@ -2586,6 +2607,8 @@
         const clean = normalizeZipCode(this.value);
         if (clean.length === 7) {
           searchAddressByPostalCode(false);
+        } else if (addressAbortController) {
+          addressAbortController.abort();
         }
       });
 
@@ -2601,46 +2624,66 @@
     window.fillMockAddress = () => searchAddressByPostalCode(true);
 
     // ========================================================
-    // 5-2. 文部科学省学校コード準拠 在籍学校名サジェスト（オートコンプリート）
+    // 5-2. 在籍学校名サジェスト（自社エッジAPI /api/schools・文科省学校コード準拠・全国対応）
+    //      岡山県の学校が常に最上位に表示される（サーバー側でソート）。
     // ========================================================
+    const SCHOOL_SUGGEST_DEBOUNCE_MS = 80;
+    const schoolSuggestCache = new Map();
+    let schoolSuggestAbortController = null;
+    let schoolSuggestTimer = null;
     let currentHighlightedIndex = -1;
     let currentSuggestions = [];
 
-    function normalizeForSchoolSearch(str) {
-      if (!str) return '';
-      return String(str)
-        .toLowerCase()
-        .replace(/[\u30a1-\u30f6]/g, m => String.fromCharCode(m.charCodeAt(0) - 0x60)) // カタカナ→ひらがな
-        .replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0)) // 全角数字→半角
-        .replace(/[\s　・、。\-_]/g, '');
+    function escapeSuggestHtml(str) {
+      return String(str ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     }
 
-    function getSchoolSuggestions(query, gradeKey) {
-      if (!query || !window.OKAYAMA_SCHOOLS_DATA) return [];
-      const normQuery = normalizeForSchoolSearch(query);
-      if (!normQuery) return [];
+    function getSchoolTypeParam(gradeKey) {
+      if (gradeKey === 'sho6') return 'elementary';
+      if (gradeKey && gradeKey.startsWith('chu')) return 'junior';
+      return '';
+    }
 
-      const elemSchools = window.OKAYAMA_SCHOOLS_DATA.elementary || [];
-      const jhsSchools = window.OKAYAMA_SCHOOLS_DATA.juniorHigh || [];
+    async function fetchSchoolSuggestions(query, gradeKey) {
+      const type = getSchoolTypeParam(gradeKey);
+      const key = `${type}|${query}`;
+      if (schoolSuggestCache.has(key)) return schoolSuggestCache.get(key);
 
-      function matchSchool(s) {
-        const normName = normalizeForSchoolSearch(s.name);
-        const normKana = normalizeForSchoolSearch(s.kana);
-        const normCity = normalizeForSchoolSearch(s.city);
-        return normName.includes(normQuery) || normKana.includes(normQuery) || normCity.includes(normQuery);
-      }
+      if (schoolSuggestAbortController) schoolSuggestAbortController.abort();
+      const controller = new AbortController();
+      schoolSuggestAbortController = controller;
 
-      // 小6選択時は小学校のみ、中1〜中3選択時は中学校のみをサジェスト表示
-      if (gradeKey === 'sho6') {
-        return elemSchools.filter(matchSchool).map(s => ({ ...s, category: '小学校' })).slice(0, 15);
-      } else if (gradeKey && (gradeKey.startsWith('chu') || ['chu1', 'chu2', 'chu3'].includes(gradeKey))) {
-        return jhsSchools.filter(matchSchool).map(s => ({ ...s, category: '中学校' })).slice(0, 15);
-      } else {
-        // 学年未選択時のフォールバック
-        const jhsMatches = jhsSchools.filter(matchSchool).map(s => ({ ...s, category: '中学校' }));
-        const elemMatches = elemSchools.filter(matchSchool).map(s => ({ ...s, category: '小学校' }));
-        return [...jhsMatches, ...elemMatches].slice(0, 15);
-      }
+      const params = new URLSearchParams({ q: query });
+      if (type) params.set('type', type);
+      const res = await fetch(`/api/schools?${params.toString()}`, {
+        signal: controller.signal,
+        headers: { Accept: 'application/json' }
+      });
+      if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
+      const data = await res.json();
+      const results = Array.isArray(data.results) ? data.results : [];
+      schoolSuggestCache.set(key, results);
+      return results;
+    }
+
+    function requestSchoolSuggestions(query, gradeKey, immediate = false) {
+      clearTimeout(schoolSuggestTimer);
+      const run = async () => {
+        try {
+          const results = await fetchSchoolSuggestions(query, gradeKey);
+          const input = document.getElementById('currentSchool');
+          // 応答待ちの間に入力が変わっていれば破棄
+          if (!input || input.value.trim() !== query) return;
+          renderSchoolSuggestions(results, query);
+        } catch (err) {
+          if (err && err.name === 'AbortError') return;
+          console.error('School suggest failed:', err);
+          hideSchoolSuggestions();
+        }
+      };
+      const type = getSchoolTypeParam(gradeKey);
+      if (immediate || schoolSuggestCache.has(`${type}|${query}`)) run();
+      else schoolSuggestTimer = setTimeout(run, SCHOOL_SUGGEST_DEBOUNCE_MS);
     }
 
     function renderSchoolSuggestions(suggestions, query) {
@@ -2662,22 +2705,16 @@
       }
 
       const itemsHtml = suggestions.map((item, idx) => {
-        const isElem = item.category === '小学校';
-        const badgeColor = isElem 
-          ? 'bg-amber-100 text-amber-800 border-amber-200' 
+        const isElem = item.type === '小学校';
+        const badgeColor = isElem
+          ? 'bg-amber-100 text-amber-800 border-amber-200'
           : 'bg-emerald-100 text-emerald-800 border-emerald-200';
-        const typeBadge = item.type && item.type !== '公立' 
-          ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-600 border border-slate-200">${item.type}</span>` 
-          : '';
+        const label = item.label || `${item.name} (${item.prefecture})`;
 
         return `
-          <div class="school-suggest-item px-3.5 py-2.5 flex items-center justify-between gap-2.5 hover:bg-emerald-50/80 cursor-pointer transition-colors" data-index="${idx}" onmousedown="selectSchoolSuggestion(${idx})">
-            <div class="flex items-center gap-2 min-w-0 flex-1">
-              <span class="px-2 py-0.5 rounded text-[11px] font-bold border shrink-0 ${badgeColor}">${item.category}</span>
-              ${typeBadge}
-              <span class="text-xs sm:text-sm font-bold text-slate-800 truncate">${item.name}</span>
-            </div>
-            <span class="text-[11px] text-slate-400 shrink-0 font-medium">${item.city || ''}</span>
+          <div class="school-suggest-item px-3.5 py-2.5 flex items-center gap-2.5 hover:bg-emerald-50/80 cursor-pointer transition-colors" data-index="${idx}" onmousedown="selectSchoolSuggestion(${idx})">
+            <span class="px-2 py-0.5 rounded text-[11px] font-bold border shrink-0 ${badgeColor}">${escapeSuggestHtml(item.type)}</span>
+            <span class="text-xs sm:text-sm font-bold text-slate-800 truncate min-w-0 flex-1">${escapeSuggestHtml(label)}</span>
           </div>
         `;
       }).join('');
@@ -2687,7 +2724,7 @@
           ${itemsHtml}
         </div>
         <div class="px-3 py-1.5 bg-slate-50 border-t border-slate-100 text-[10px] text-slate-400 text-right">
-          文部科学省 学校コード準拠 / 候補外も直接入力可能
+          文部科学省 学校コード準拠（全国） / 候補外も直接入力可能
         </div>
       `;
       dropdown.classList.remove('hidden');
@@ -2706,6 +2743,7 @@
       const input = document.getElementById('currentSchool');
       if (input) {
         input.value = item.name;
+        input.dataset.selectedSchool = item.name;
         input.dispatchEvent(new Event('input'));
         input.focus();
       }
@@ -2730,8 +2768,7 @@
       // ドロップダウンが開いている場合は、新しい学年に合わせた候補で再表示
       const dropdown = document.getElementById('schoolSuggestDropdown');
       if (dropdown && !dropdown.classList.contains('hidden') && input.value.trim().length > 0) {
-        const matches = getSchoolSuggestions(input.value.trim(), gradeKey);
-        renderSchoolSuggestions(matches, input.value.trim());
+        requestSchoolSuggestions(input.value.trim(), gradeKey, true);
       }
     }
 
@@ -2743,24 +2780,30 @@
       input.addEventListener('input', function() {
         const val = this.value.trim();
         if (val.length === 0) {
+          clearTimeout(schoolSuggestTimer);
+          if (schoolSuggestAbortController) schoolSuggestAbortController.abort();
           hideSchoolSuggestions();
           return;
         }
-        const matches = getSchoolSuggestions(val, currentSelectedGrade);
-        renderSchoolSuggestions(matches, val);
+        // 候補選択直後の input イベントでは再検索しない
+        if (this.dataset.selectedSchool === val) {
+          delete this.dataset.selectedSchool;
+          return;
+        }
+        requestSchoolSuggestions(val, currentSelectedGrade);
       });
 
       input.addEventListener('focus', function() {
         const val = this.value.trim();
         if (val.length > 0) {
-          const matches = getSchoolSuggestions(val, currentSelectedGrade);
-          renderSchoolSuggestions(matches, val);
+          requestSchoolSuggestions(val, currentSelectedGrade, true);
         }
       });
 
       input.addEventListener('keydown', function(e) {
         const dropdownHidden = dropdown.classList.contains('hidden');
         if (dropdownHidden || currentSuggestions.length === 0) return;
+        if (e.isComposing) return; // IME変換中の Enter / 矢印は候補操作に使わない
 
         const items = dropdown.querySelectorAll('.school-suggest-item');
         if (e.key === 'ArrowDown') {

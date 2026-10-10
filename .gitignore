@@ -3,3 +3,7 @@
 .env.*.local
 node_modules
 .DS_Store
+
+# Cloudflare local state / generated D1 seed SQL
+.wrangler
+db/seed/

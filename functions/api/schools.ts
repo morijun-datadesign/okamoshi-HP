@@ -66,6 +66,16 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     return json({ error: "db_not_bound" }, 503, "no-store");
   }
 
+  const isAll =
+    url.searchParams.get("all") === "true" ||
+    url.searchParams.get("all") === "1" ||
+    url.searchParams.get("pref") === "all" ||
+    url.searchParams.get("scope") === "all";
+
+  const prefParam = url.searchParams.get("pref");
+  // all 指定がなければ、指定された都道府県（デフォルトは「岡山県」）で絞り込み
+  const targetPref = isAll ? null : (prefParam && prefParam !== "all" ? prefParam : "岡山県");
+
   const typeFilter = TYPE_FILTERS[url.searchParams.get("type") || ""] || null;
 
   const where: string[] = [];
@@ -81,6 +91,10 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     });
     where.push(`school_type IN (${placeholders.join(", ")})`);
   }
+  if (targetPref) {
+    binds.push(targetPref);
+    where.push(`prefecture = ?${binds.length}`);
+  }
 
   const sql = `
     SELECT school_code, school_name, school_type, prefecture
@@ -93,6 +107,8 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     const { results } = await env.DB.prepare(sql).bind(...binds).all<SchoolRow>();
     return json(
       {
+        scope: targetPref ? "pref" : "all",
+        pref: targetPref || "all",
         results: (results || []).map((r) => ({
           code: r.school_code,
           name: r.school_name,

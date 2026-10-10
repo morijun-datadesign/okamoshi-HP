@@ -2828,7 +2828,7 @@
       }
     }
 
-    function setSchoolSearchScope(isNational) {
+    async function setSchoolSearchScope(isNational) {
       isNationalSchoolSearch = isNational;
       updateSchoolScopeButtonsUI(isNational);
 
@@ -2839,66 +2839,74 @@
 
       const val = input.value.trim();
       if (val.length > 0) {
-        // すでに入力された文字のまま即座に該当の検索結果を再取得・反映
-        requestSchoolSuggestions(val, currentSelectedGrade, true, isNational);
+        // ボタン切り替えイベントで即座に新しいモードのパラメータを付与して /api/schools を強制再取得
+        await executeSchoolSearch(val, currentSelectedGrade, isNational, true);
       }
     }
 
-    async function fetchSchoolSuggestions(query, gradeKey, isNational = false) {
+    async function executeSchoolSearch(query, gradeKey, isNational, forceRefresh = false) {
+      clearTimeout(schoolSuggestTimer);
+
       const type = getSchoolTypeParam(gradeKey);
       const scopeKey = isNational ? 'all' : 'okayama';
-      const key = `${type}|${scopeKey}|${query}`;
-      if (schoolSuggestCache.has(key)) return schoolSuggestCache.get(key);
+      const cacheKey = `${type}|${scopeKey}|${query}`;
 
-      if (schoolSuggestAbortController) schoolSuggestAbortController.abort();
+      // 強制再取得でなく、かつキャッシュが存在する場合はキャッシュを描画
+      if (!forceRefresh && schoolSuggestCache.has(cacheKey)) {
+        const cached = schoolSuggestCache.get(cacheKey);
+        renderSchoolSuggestions(cached, query, isNational, gradeKey);
+        return;
+      }
+
+      if (schoolSuggestAbortController) {
+        try { schoolSuggestAbortController.abort(); } catch (_) {}
+      }
       const controller = new AbortController();
       schoolSuggestAbortController = controller;
 
-      const params = new URLSearchParams({ q: query });
-      if (type) params.set('type', type);
-      if (isNational) {
-        params.set('all', 'true');
-      } else {
-        params.set('pref', '岡山県');
-      }
+      try {
+        const params = new URLSearchParams({ q: query });
+        if (type) params.set('type', type);
+        if (isNational) {
+          params.set('all', 'true');
+        } else {
+          params.set('pref', '岡山県');
+        }
+        if (forceRefresh) {
+          params.set('_t', Date.now().toString());
+        }
 
-      const res = await fetch(`/api/schools?${params.toString()}`, {
-        signal: controller.signal,
-        headers: { Accept: 'application/json' }
-      });
-      if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
-      const data = await res.json();
-      const results = Array.isArray(data.results) ? data.results : [];
-      schoolSuggestCache.set(key, results);
-      return results;
+        const res = await fetch(`/api/schools?${params.toString()}`, {
+          signal: controller.signal,
+          headers: { Accept: 'application/json' },
+          cache: forceRefresh ? 'no-store' : 'default'
+        });
+        if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
+        const data = await res.json();
+        const results = Array.isArray(data.results) ? data.results : [];
+
+        schoolSuggestCache.set(cacheKey, results);
+
+        const input = document.getElementById('currentSchool');
+        if (input && input.value.trim() === query) {
+          renderSchoolSuggestions(results, query, isNational, gradeKey);
+        }
+      } catch (err) {
+        if (err && err.name === 'AbortError') return;
+        console.error('School search failed:', err);
+      }
     }
 
-    function requestSchoolSuggestions(query, gradeKey, immediate = false, forceNational = null) {
+    function requestSchoolSuggestions(query, gradeKey, immediate = false) {
       clearTimeout(schoolSuggestTimer);
-      if (typeof forceNational === 'boolean') {
-        isNationalSchoolSearch = forceNational;
-        updateSchoolScopeButtonsUI(forceNational);
-      }
       const isNational = isNationalSchoolSearch;
-
-      const run = async () => {
-        try {
-          const results = await fetchSchoolSuggestions(query, gradeKey, isNational);
-          const input = document.getElementById('currentSchool');
-          // 応答待ちの間に入力が変わっていれば破棄
-          if (!input || input.value.trim() !== query) return;
-          renderSchoolSuggestions(results, query, isNational, gradeKey);
-        } catch (err) {
-          if (err && err.name === 'AbortError') return;
-          console.error('School suggest failed:', err);
-          hideSchoolSuggestions();
-        }
-      };
-
-      const type = getSchoolTypeParam(gradeKey);
-      const scopeKey = isNational ? 'all' : 'okayama';
-      if (immediate || schoolSuggestCache.has(`${type}|${scopeKey}|${query}`)) run();
-      else schoolSuggestTimer = setTimeout(run, SCHOOL_SUGGEST_DEBOUNCE_MS);
+      if (immediate) {
+        executeSchoolSearch(query, gradeKey, isNational, false);
+      } else {
+        schoolSuggestTimer = setTimeout(() => {
+          executeSchoolSearch(query, gradeKey, isNational, false);
+        }, SCHOOL_SUGGEST_DEBOUNCE_MS);
+      }
     }
 
     function renderSchoolSuggestions(suggestions, query, isNational, gradeKey) {
@@ -2937,7 +2945,7 @@
         `;
       }).join('');
 
-      const scopeBadge = !isNational ? '岡山県内のみ表示中' : '全国から表示中（岡山県優先）';
+      const scopeBadge = !isNational ? '岡山県内のみ表示中' : '全国から表示中（県外優先）';
       dropdown.innerHTML = `
         <div class="divide-y divide-slate-100 max-h-60 overflow-y-auto">
           ${itemsHtml}
@@ -2988,7 +2996,7 @@
       // ドロップダウンが開いている場合は、新しい学年に合わせた候補で再表示
       const dropdown = document.getElementById('schoolSuggestDropdown');
       if (dropdown && !dropdown.classList.contains('hidden') && input.value.trim().length > 0) {
-        requestSchoolSuggestions(input.value.trim(), gradeKey, true);
+        executeSchoolSearch(input.value.trim(), gradeKey, isNationalSchoolSearch, true);
       }
     }
 

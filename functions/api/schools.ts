@@ -96,11 +96,18 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     where.push(`prefecture = ?${binds.length}`);
   }
 
+  // 【ソート順】
+  // isAll (県外・全国モード): 他県の学校を探すニーズが主であるため、他県を優先して表示 (岡山県外=0, 岡山県=1)。
+  // targetPref (都道府県絞り込みモード): 当該都道府県内の学校名昇順。
+  const orderBy = isAll
+    ? "CASE WHEN prefecture = '岡山県' THEN 1 ELSE 0 END, school_name ASC"
+    : "school_name ASC";
+
   const sql = `
     SELECT school_code, school_name, school_type, prefecture
     FROM schools
     WHERE ${where.join(" AND ")}
-    ORDER BY CASE WHEN prefecture = '岡山県' THEN 0 ELSE 1 END, school_name ASC
+    ORDER BY ${orderBy}
     LIMIT ${MAX_RESULTS}`;
 
   try {
@@ -118,7 +125,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
         })),
       },
       200,
-      "public, max-age=3600, s-maxage=86400",
+      "no-cache, no-store, must-revalidate",
     );
   } catch (err) {
     console.error("[api/schools] D1 query failed:", err);

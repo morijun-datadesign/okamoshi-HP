@@ -463,7 +463,7 @@
        メインコンテンツ（1280px純白キャンバス中央配置 × 左右淡灰 #F1F5F9）
        ========================================================================= -->
   <main class="flex-1 w-full flex flex-col items-center pt-16 sm:pt-[4.5rem]">
-    <div class="w-full max-w-7xl bg-[#FAFAFA] flex-1 min-h-full flex flex-col">
+    <div class="w-full max-w-7xl bg-white flex-1 min-h-full flex flex-col">
     
     <!-- =======================================================================
          ヒーローセクション（FV）: PC表示時1280px大判バナー ＆ スマホB案コンパクト
@@ -484,12 +484,12 @@
           onerror="this.onerror=null; this.src='hero-banner.jpg';"
         />
         <!-- 繊細なグラデーションスクリム（右側白パネルの可読性確保） -->
-        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-transparent via-50% to-white/90 lg:to-white/95 pointer-events-none"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-transparent via-50% to-white pointer-events-none"></div>
       </div>
 
       <!-- 白いパネルコンテナ（右側配置・テキスト＋2大導線ボタン一体化） -->
       <div class="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-16 lg:py-24 flex flex-col justify-center items-end min-h-[540px] lg:min-h-[600px]">
-        <div class="w-full max-w-xl lg:max-w-2xl flex flex-col items-start gap-4 ml-auto bg-white/95 backdrop-blur-md p-6 sm:p-8 rounded-lg shadow-sm border border-slate-200/80">
+        <div class="w-full max-w-xl lg:max-w-2xl flex flex-col items-start gap-4 ml-auto bg-white backdrop-blur-md p-6 sm:p-8 rounded-lg shadow-sm border border-slate-200/80">
           <div class="space-y-3 w-full">
             <p class="text-sm sm:text-lg lg:text-xl font-bold text-[#9E3A14] tracking-normal sm:tracking-wide">志望校合格への確かな現在地を知る</p>
             <h1 class="tracking-tight leading-snug flex flex-col gap-2 sm:gap-2.5">
@@ -540,24 +540,22 @@
     <!-- 【スマホ表示: md未満】全幅背景＋重ねテキスト＆2大ボタン統合カード -->
     <section class="block md:hidden relative w-full overflow-hidden bg-white pb-6 border-b border-slate-200/60">
       <!-- 全幅背景写真エリア（ヘッダー直下・左右横幅いっぱい・青空グラデーション＋左側人物） -->
-      <div class="w-full h-64 sm:h-72 relative overflow-hidden bg-sky-100">
+      <div class="w-full h-[270px] sm:h-[300px] relative overflow-hidden bg-white">
         <img 
           src="/images/hero-main.webp" 
           alt="岡山県統一模擬試験に挑む澄み渡る青空を見上げる女子生徒" 
-          class="w-full h-full object-cover object-[18%_25%]" 
+          class="w-full h-full object-cover object-[18%_0%]" 
           width="2560" 
           height="1296" 
           fetchpriority="high" 
           decoding="async"
           onerror="this.onerror=null; this.src='hero-banner.jpg';"
         />
-        <!-- 繊細なグラデーションスクリム（下部カードへの自然な接続） -->
-        <div class="absolute inset-0 bg-gradient-to-t from-black/15 via-transparent to-transparent pointer-events-none"></div>
       </div>
 
       <!-- 重ねテキスト＆2大ボタン統合カード（全幅ビジュアル下部に被さる白い角丸カード） -->
-      <div class="px-4 -mt-14 relative z-10">
-        <div class="bg-white rounded-lg px-4 py-5 sm:p-6 shadow-sm border border-slate-200/80 space-y-4">
+      <div class="px-4 -mt-20 sm:-mt-24 relative z-10">
+        <div class="bg-white rounded-xl px-4 py-5 sm:p-6 shadow-lg shadow-slate-900/5 border border-slate-200/80 space-y-4">
           <!-- 上段：キャッチコピー ＋ 学年バッジ ＋ 模試タイトル -->
           <div class="space-y-2.5">
             <p class="text-sm sm:text-base font-bold text-[#9E3A14] tracking-wide">志望校合格への確かな現在地を知る</p>
@@ -905,66 +903,59 @@
 
         </div>
           
-          <!-- 上段: 学年バッジ ＆ 実施回バッジ ＋ 受験料表示（模試名称の上へ移動） -->
-          <div class="flex items-center justify-between gap-2 flex-wrap mb-2 sm:mb-2.5">
-            <!-- 左側: バッジグループ -->
-            <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap">
-              <span id="badge-grade" class="inline-flex items-center px-2.5 sm:px-3 py-1 rounded-md text-xs sm:text-sm font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 shadow-2xs">
-                中学3年生
-              </span>
-              <span id="badge-status" class="inline-flex items-center px-2.5 sm:px-3 py-1 rounded-md text-xs sm:text-sm font-bold bg-emerald-100 text-emerald-900 border border-emerald-300 shadow-2xs">
-                10月号 受付中
-              </span>
-            </div>
-
-            <!-- 右側: 受験料エリア（ベースライン揃え・バッジ行に配置） -->
-            <div class="flex items-baseline gap-1 sm:gap-1.5 whitespace-nowrap">
-              <span class="text-xs sm:text-sm text-slate-500 font-bold leading-none">受験料 (税込)</span>
-              <span id="card-price" class="text-lg sm:text-2xl lg:text-3xl font-bold text-brand-green tracking-tight leading-none">5,500円</span>
-            </div>
-          </div>
-
-          <!-- タイトルエリア（カード横幅100%をフルに使用してゆとりある配置） -->
-          <div class="border-b border-slate-200 pb-3.5 sm:pb-5 mb-5 sm:mb-6 min-h-[36px] sm:min-h-[44px] flex items-center">
-            <h4 id="card-title" class="section-title text-xl sm:text-2xl lg:text-3xl font-bold text-emerald-950 tracking-tight whitespace-nowrap leading-none" style="color: #064e3b !important;">
+          <!-- ② 模試名エリア（学年 ＋ 模試名称 ＋ 月号バッジ） -->
+          <div class="flex items-center gap-2 sm:gap-2.5 flex-wrap mb-3.5 sm:mb-4">
+            <h4 id="card-title" class="section-title text-xl sm:text-2xl lg:text-3xl font-bold text-emerald-950 tracking-tight leading-tight" style="color: #064e3b !important;">
               岡山県統一模擬試験
             </h4>
+            <div class="inline-flex items-center gap-1.5 shrink-0">
+              <span id="badge-grade" class="inline-flex items-center px-2 py-0.5 sm:px-2.5 sm:py-0.5 rounded-md text-xs sm:text-sm font-bold bg-[#f1f5f9] text-[#475569] border border-slate-200">
+                中3
+              </span>
+              <span id="badge-month" class="inline-flex items-center px-2 py-0.5 sm:px-2.5 sm:py-0.5 rounded-md text-xs sm:text-sm font-bold bg-[#f1f5f9] text-[#475569] border border-slate-200">
+                10月号
+              </span>
+            </div>
           </div>
 
-          <!-- PC: 2カラムグリッド配置（左側: 日程＆範囲 / 右側: 締切＆CTA） -->
+          <!-- ③ 基本情報バー/ブロック（受験料 ＋ お申し込み締切） -->
+          <div class="bg-slate-50 border border-slate-200/90 rounded-xl p-3.5 sm:p-4 mb-6 shadow-2xs space-y-2.5 sm:space-y-2">
+            <!-- 受験料 -->
+            <div class="flex items-baseline gap-3 sm:gap-4">
+              <span class="w-24 sm:w-28 text-xs sm:text-sm font-bold text-slate-500 whitespace-nowrap shrink-0">受験料（税込）</span>
+              <div class="flex items-baseline gap-1.5 flex-1 min-w-0 flex-wrap">
+                <span id="card-price" class="text-xl sm:text-2xl font-bold text-brand-green tracking-tight leading-none">5,500円</span>
+                <span class="text-xs text-slate-500 font-medium">（会場・自宅共通）</span>
+              </div>
+            </div>
+            <!-- お申し込み締切 -->
+            <div class="flex items-baseline gap-3 sm:gap-4 pt-2.5 sm:pt-2 border-t border-slate-200/80">
+              <span class="w-24 sm:w-28 text-xs sm:text-sm font-bold text-slate-500 whitespace-nowrap shrink-0">お申し込み締切</span>
+              <div class="flex-1 min-w-0">
+                <span id="card-deadline" class="text-xs sm:text-base font-bold text-slate-900 tracking-tight whitespace-nowrap overflow-hidden text-ellipsis block">2026年10月5日(月) 23:59まで</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- PC: 2カラムグリッド配置（左側: 日程＆アコーディオン / 右側: 個人受験について＆申込ボタン） -->
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             
-            <!-- 左カラム（日程リスト ＆ 各種アコーディオン） -->
-            <div class="lg:col-span-7 space-y-4">
+            <!-- 左カラム: 日程・会場 → アコーディオン（出題範囲・実施詳細） -->
+            <div class="contents lg:block lg:col-span-7 lg:space-y-6">
               
-              <!-- 実施日程・会場セクション（パネル外枠を撤去しフラットに配置） -->
-              <div class="mb-6 sm:mb-7 flex flex-col justify-between">
-                <div>
-                  <div class="flex items-center gap-2.5 mb-3.5 sm:mb-4">
-                    <span class="w-1.5 h-5 bg-brand-green rounded-full inline-block shrink-0"></span>
-                    <h5 class="section-title text-base sm:text-lg font-bold text-emerald-950 tracking-tight" style="color: #064e3b !important;">実施日程・会場</h5>
-                  </div>
-                  <div id="schedule-list" class="space-y-3.5"></div>
+              <!-- ④ 実施日程・会場（岡山会場 / 津山会場 / 自宅受験 のリスト） -->
+              <div class="order-1 lg:order-none">
+                <div class="flex items-center gap-2.5 mb-3.5 sm:mb-4">
+                  <span class="w-1.5 h-5 bg-brand-green rounded-full inline-block shrink-0"></span>
+                  <h5 class="section-title text-base sm:text-lg font-bold text-emerald-950 tracking-tight" style="color: #064e3b !important;">実施日程・会場</h5>
                 </div>
-
-                <!-- 実施日程・会場最下部の締切情報エリア（区切り線＋横並び締切＋バッジ） -->
-                <div id="schedule-deadline-container" class="mt-4 pt-3.5 border-t border-slate-200/80">
-                  <div class="flex items-center justify-between gap-2 mb-1 sm:mb-1.5">
-                    <div class="text-xs sm:text-sm font-bold text-slate-600 tracking-wide">お申し込み締切</div>
-                    <span class="text-[11px] sm:text-xs font-semibold text-emerald-700 bg-emerald-50 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md border border-emerald-200/60 shrink-0">
-                      WEB受付中
-                    </span>
-                  </div>
-                  <div class="text-base sm:text-lg font-bold text-slate-900 tracking-tight leading-tight">
-                    2026年10月5日(月) 23:59まで
-                  </div>
-                </div>
+                <div id="schedule-list" class="space-y-3.5"></div>
               </div>
 
               <!-- アコーディオン（出題範囲 ＆ 実施詳細） -->
-              <div class="space-y-3">
+              <div class="order-2 lg:order-none space-y-3">
                 
-                <!-- 出題範囲アコーディオン -->
+                <!-- ⑤ 出題範囲アコーディオン -->
                 <details class="group bg-white rounded-lg border border-slate-200/90 hover:border-slate-300 overflow-hidden shadow-2xs transition-all">
                   <summary class="flex justify-between items-center p-3.5 sm:p-4 font-bold text-slate-800 cursor-pointer list-none select-none bg-white hover:bg-slate-50 transition-colors">
                     <span class="text-sm sm:text-base font-bold text-slate-800 group-hover:text-emerald-950 transition-colors">今回の出題範囲を確認する</span>
@@ -985,7 +976,7 @@
                   </div>
                 </details>
 
-                <!-- 実施詳細・受験の流れアコーディオン -->
+                <!-- ⑥ 実施詳細・受験の流れアコーディオン -->
                 <details class="group bg-white rounded-lg border border-slate-200/90 hover:border-slate-300 overflow-hidden shadow-2xs transition-all" id="details-accordion">
                   <summary class="flex justify-between items-center p-3.5 sm:p-4 font-bold text-slate-800 cursor-pointer list-none select-none bg-white hover:bg-slate-50 transition-colors">
                     <span class="text-sm sm:text-base font-bold text-slate-800 group-hover:text-emerald-950 transition-colors">実施詳細・受験の流れ（会場別・自宅）</span>
@@ -1012,42 +1003,14 @@
                 </details>
 
               </div>
+
             </div>
 
-            <!-- 右カラム（2. 申込ボタン ＆ 3. 申込締切 ＆ 4. 個人受験について） -->
-            <div class="lg:col-span-5 space-y-4 sm:space-y-5 flex flex-col justify-start">
+            <!-- 右カラム: ⑧ 個人受験のお申し込みについて ＆ ⑦ 申込ボタン -->
+            <div class="contents lg:flex lg:flex-col lg:col-span-5 lg:gap-4 lg:sticky lg:top-28">
               
-              <!-- 2. 申し込みボタン（注記＋WEB申込ボタン） -->
-              <div id="cta-container" class="space-y-2">
-                <!-- 補足テキスト（枠なしダイレクト配置） -->
-                <p class="text-xs text-gray-600 text-center font-medium">
-                  お申込みフォーム内で今後の回をまとめて選択可能です
-                </p>
-
-                <!-- お申し込みボタン -->
-                <a href="/apply?grade=%E4%B8%AD3&month=10" id="card-cta-btn" class="w-full py-4 px-6 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-bold text-base sm:text-lg flex items-center justify-center gap-2 shadow-lg shadow-orange-500/25 active:scale-[0.98] transition-all hover:shadow-xl hover:shadow-orange-500/35 hover:-translate-y-0.5">
-                  <span>10月号をWEBで申し込む</span>
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
-                </a>
-              </div>
-
-              <!-- 3. お申し込み締切エリア（独立したカードブロック） -->
-              <div id="deadline-container" class="p-4 sm:p-5 bg-slate-50/70 rounded-lg border border-slate-200/80 shadow-2xs">
-                <!-- 上段: 見出し「お申し込み締切」 ＆ バッジ「WEB受付中」 -->
-                <div class="flex items-center justify-between gap-2 mb-1.5 sm:mb-2">
-                  <div class="text-xs sm:text-sm font-bold text-slate-600 tracking-wide">お申し込み締切</div>
-                  <span class="text-[11px] sm:text-xs font-semibold text-emerald-700 bg-emerald-50 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md border border-emerald-200/60 shrink-0">
-                    WEB受付中
-                  </span>
-                </div>
-                <!-- 下段: 日時（カード横幅100%フル使用、1行厳格維持） -->
-                <div id="card-deadline" class="text-[clamp(0.95rem,4.1vw,1.125rem)] sm:text-lg font-bold text-slate-900 tracking-tight whitespace-nowrap leading-tight">
-                  2026年10月5日(月) 23:59まで
-                </div>
-              </div>
-
-              <!-- 4. 個人受験のお申し込みについて（独立したカード枠） -->
-              <div class="bg-white rounded-lg border border-slate-200/80 shadow-2xs p-5 sm:p-6 space-y-3">
+              <!-- 個人受験のお申し込みについて -->
+              <div class="order-4 lg:order-1 bg-white rounded-xl border border-slate-200/80 shadow-2xs p-5 sm:p-6 space-y-3">
                 <h6 class="font-bold text-sm sm:text-base text-slate-900 tracking-tight">
                   個人受験のお申し込みについて
                 </h6>
@@ -1065,6 +1028,21 @@
                     <span>ご自宅受験は、試験前にご自宅宛てに問題郵送。</span>
                   </li>
                 </ul>
+              </div>
+
+              <!-- ⑦ 申込エリア（「〇月号をWEBで申し込む >」ボタン ＋ 注釈） -->
+              <div class="order-3 lg:order-2 bg-slate-50 p-4 sm:p-5 rounded-xl border border-slate-200/90 shadow-2xs">
+                <div id="cta-container" class="space-y-2">
+                  <!-- お申し込みボタン（JSで動的生成） -->
+                  <a href="/apply?grade=%E4%B8%AD3&month=10" id="card-cta-btn" class="w-full py-4 px-6 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-bold text-base sm:text-lg flex items-center justify-center gap-2 shadow-lg shadow-orange-500/25 active:scale-[0.98] transition-all hover:shadow-xl hover:shadow-orange-500/35 hover:-translate-y-0.5">
+                    <span>10月号をWEBで申し込む</span>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+                  </a>
+                  <!-- 補足テキスト -->
+                  <p class="text-[11px] sm:text-xs text-slate-500 text-center font-medium mt-2">
+                    ※お申込みフォーム内で今後の回をまとめて選択可能です
+                  </p>
+                </div>
               </div>
 
             </div>
@@ -1236,11 +1214,11 @@
             <a href="detail.html?id=leoodvgmoet" class="flex items-center justify-between p-4 sm:p-5 gap-3 sm:gap-4 w-full">
               <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 flex-1 min-w-0">
                 <div class="flex items-center gap-2.5 shrink-0">
-                  <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#c85a32] text-white shadow-xs shrink-0 tracking-tight leading-none">NEW</span>
-                  <span class="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
+                  <span class="flex items-center gap-1.5 text-xs text-slate-500 font-medium shrink-0">
                     <span class="material-symbols-outlined text-[15px] text-slate-400">calendar_today</span>
-                    <span>2026.09.28</span>
+                    <span class="tabular-nums">2026.09.28</span>
                   </span>
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#c85a32] text-white shadow-xs shrink-0 tracking-tight leading-none">NEW</span>
                   <span class="px-2.5 py-0.5 rounded-md text-[11px] font-bold bg-[#fef3c7] text-[#92400e] border border-[#fde68a] shrink-0 shadow-2xs">
                     模試活用法
                   </span>
@@ -1265,10 +1243,9 @@
             <a href="detail.html?id=b055d-p_k7" class="flex items-center justify-between p-4 sm:p-5 gap-3 sm:gap-4 w-full">
               <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 flex-1 min-w-0">
                 <div class="flex items-center gap-2.5 shrink-0">
-                  <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#c85a32] text-white shadow-xs shrink-0 tracking-tight leading-none">NEW</span>
-                  <span class="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
+                  <span class="flex items-center gap-1.5 text-xs text-slate-500 font-medium shrink-0">
                     <span class="material-symbols-outlined text-[15px] text-slate-400">calendar_today</span>
-                    <span>2026.09.23</span>
+                    <span class="tabular-nums">2026.09.23</span>
                   </span>
                   <span class="px-2.5 py-0.5 rounded-md text-[11px] font-bold bg-[#fef3c7] text-[#92400e] border border-[#fde68a] shrink-0 shadow-2xs">
                     模試活用法
@@ -1294,10 +1271,9 @@
             <a href="detail.html?id=20p7a-hecrv" class="flex items-center justify-between p-4 sm:p-5 gap-3 sm:gap-4 w-full">
               <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 flex-1 min-w-0">
                 <div class="flex items-center gap-2.5 shrink-0">
-                  <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#c85a32] text-white shadow-xs shrink-0 tracking-tight leading-none">NEW</span>
-                  <span class="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
+                  <span class="flex items-center gap-1.5 text-xs text-slate-500 font-medium shrink-0">
                     <span class="material-symbols-outlined text-[15px] text-slate-400">calendar_today</span>
-                    <span>2026.09.23</span>
+                    <span class="tabular-nums">2026.09.23</span>
                   </span>
                   <span class="px-2.5 py-0.5 rounded-md text-[11px] font-bold bg-[#fef3c7] text-[#92400e] border border-[#fde68a] shrink-0 shadow-2xs">
                     模試活用法
@@ -1856,7 +1832,7 @@
             venuesList: [
               { badge: "岡山会場", school: "山陽学園中学校・高等学校", date: "2026年4月19日(日)" },
               { badge: "津山会場", school: "美作高等学校", date: "2026年4月19日(日)" },
-              { badge: "自宅受験", school: "", date: "4/4(土)〜4/19(日)" }
+              { badge: "自宅受験", school: "", date: "2026年4月4日(土)〜4月19日(日)" }
             ]
           },
           { 
@@ -1874,7 +1850,7 @@
             ],
             venuesList: [
               { badge: "岡山会場", school: "山陽学園中学校・高等学校", date: "2026年7月5日(日)" },
-              { badge: "自宅受験", school: "", date: "6/20(土)〜7/5(日)" }
+              { badge: "自宅受験", school: "", date: "2026年6月20日(土)〜7月5日(日)" }
             ]
           },
           { 
@@ -1892,7 +1868,7 @@
             ],
             venuesList: [
               { badge: "岡山会場", school: "山陽学園中学校・高等学校", date: "2026年8月23日(日)" },
-              { badge: "自宅受験", school: "", date: "8/8(土)〜8/23(日)" }
+              { badge: "自宅受験", school: "", date: "2026年8月8日(土)〜8月23日(日)" }
             ]
           },
           { 
@@ -1911,7 +1887,7 @@
             venuesList: [
               { badge: "岡山会場", school: "山陽学園中学校・高等学校", date: "2026年11月1日(日)" },
               { badge: "津山会場", school: "美作高等学校", date: "2026年10月25日(日)" },
-              { badge: "自宅受験", school: "全国どこからでも", date: "10/17(土)〜11/1(日)" }
+              { badge: "自宅受験", school: "全国どこからでも", date: "2026年10月17日(土)〜11月1日(日)" }
             ],
             venueDetails: [
               {
@@ -1954,7 +1930,7 @@
                 id: "home",
                 name: "🏠 自宅受験",
                 place: "全国どこからでも",
-                examDate: "10/17(土)〜11/1(日) 答案返送締切",
+                examDate: "2026年10月17日(土)〜11月1日(日) 答案返送締切",
                 ticketDispatch: "10月13日(火)頃に問題一式をご自宅へお届け",
                 reportDispatch: "答案受領後、約10日〜2週間で返送",
                 schedule: [
@@ -1980,7 +1956,7 @@
             venuesList: [
               { badge: "岡山会場", school: "山陽学園中学校・高等学校", date: "2026年12月13日(日)" },
               { badge: "津山会場", school: "美作高等学校", date: "2026年12月6日(日)" },
-              { badge: "自宅受験", school: "全国どこからでも", date: "11/28(土)〜12/13(日)" }
+              { badge: "自宅受験", school: "全国どこからでも", date: "2026年11月28日(土)〜12月13日(日)" }
             ]
           }
         ]
@@ -2005,7 +1981,7 @@
             ],
             venuesList: [
               { badge: "岡山会場", school: "山陽学園中学校・高等学校", date: "2026年4月19日(日)" },
-              { badge: "自宅受験", school: "", date: "4/4(土)〜4/19(日)" }
+              { badge: "自宅受験", school: "", date: "2026年4月4日(土)〜4月19日(日)" }
             ]
           },
           { 
@@ -2023,7 +1999,7 @@
             ],
             venuesList: [
               { badge: "岡山会場", school: "山陽学園中学校・高等学校", date: "2026年8月23日(日)" },
-              { badge: "自宅受験", school: "", date: "8/8(土)〜8/23(日)" }
+              { badge: "自宅受験", school: "", date: "2026年8月8日(土)〜8月23日(日)" }
             ]
           },
           { 
@@ -2041,7 +2017,7 @@
             ],
             venuesList: [
               { badge: "岡山会場", school: "山陽学園中学校・高等学校", date: "2026年12月14日(日)" },
-              { badge: "自宅受験", school: "全国どこからでも", date: "12/6(土)〜12/14(日)" }
+              { badge: "自宅受験", school: "全国どこからでも", date: "2026年12月6日(土)〜12月14日(日)" }
             ],
             venueDetails: [
               {
@@ -2066,7 +2042,7 @@
                 id: "home",
                 name: "🏠 自宅受験",
                 place: "全国どこからでも",
-                examDate: "12/6(土)〜12/14(日) 答案返送締切",
+                examDate: "2026年12月6日(土)〜12月14日(日) 答案返送締切",
                 ticketDispatch: "11月28日(土)頃に問題一式をご自宅へお届け",
                 reportDispatch: "答案受領後、約10日〜2週間で返送",
                 schedule: [
@@ -2098,7 +2074,7 @@
             ],
             venuesList: [
               { badge: "岡山会場", school: "山陽学園中学校・高等学校", date: "2026年4月19日(日)" },
-              { badge: "自宅受験", school: "", date: "4/4(土)〜4/19(日)" }
+              { badge: "自宅受験", school: "", date: "2026年4月4日(土)〜4月19日(日)" }
             ]
           },
           { 
@@ -2116,7 +2092,7 @@
             ],
             venuesList: [
               { badge: "岡山会場", school: "山陽学園中学校・高等学校", date: "2026年8月23日(日)" },
-              { badge: "自宅受験", school: "", date: "8/8(土)〜8/23(日)" }
+              { badge: "自宅受験", school: "", date: "2026年8月8日(土)〜8月23日(日)" }
             ]
           },
           { 
@@ -2134,7 +2110,7 @@
             ],
             venuesList: [
               { badge: "岡山会場", school: "山陽学園中学校・高等学校", date: "2026年12月14日(日)" },
-              { badge: "自宅受験", school: "全国どこからでも", date: "12/6(土)〜12/14(日)" }
+              { badge: "自宅受験", school: "全国どこからでも", date: "2026年12月6日(土)〜12月14日(日)" }
             ],
             venueDetails: [
               {
@@ -2159,7 +2135,7 @@
                 id: "home",
                 name: "🏠 自宅受験",
                 place: "全国どこからでも",
-                examDate: "12/6(土)〜12/14(日) 答案返送締切",
+                examDate: "2026年12月6日(土)〜12月14日(日) 答案返送締切",
                 ticketDispatch: "11月28日(土)頃に問題一式をご自宅へお届け",
                 reportDispatch: "答案受領後、約10日〜2週間で返送",
                 schedule: [
@@ -2188,7 +2164,7 @@
             ],
             venuesList: [
               { badge: "岡山会場", school: "山陽学園中学校・高等学校", date: "2026年6月14日(日)" },
-              { badge: "自宅受験", school: "", date: "5/30(土)〜6/14(日)" }
+              { badge: "自宅受験", school: "", date: "2026年5月30日(土)〜6月14日(日)" }
             ]
           },
           { 
@@ -2203,7 +2179,7 @@
             ],
             venuesList: [
               { badge: "岡山会場", school: "山陽学園中学校・高等学校", date: "2026年10月4日(日)" },
-              { badge: "自宅受験", school: "", date: "9/19(土)〜10/4(日)" }
+              { badge: "自宅受験", school: "", date: "2026年9月19日(土)〜10月4日(日)" }
             ]
           },
           { 
@@ -2219,7 +2195,7 @@
             venuesList: [
               { badge: "岡山会場", school: "山陽学園中学校・高等学校", date: "2026年11月1日(日)" },
               { badge: "倉敷会場", school: "倉敷商工会議所", date: "2026年11月1日(日)" },
-              { badge: "自宅受験", school: "全国どこからでも", date: "10/24(土)〜11/1(日)" }
+              { badge: "自宅受験", school: "全国どこからでも", date: "2026年10月24日(土)〜11月1日(日)" }
             ],
             venueDetails: [
               {
@@ -2256,7 +2232,7 @@
                 id: "home",
                 name: "🏠 自宅受験",
                 place: "全国どこからでも",
-                examDate: "10/24(土)〜11/1(日) 答案返送締切",
+                examDate: "2026年10月24日(土)〜11月1日(日) 答案返送締切",
                 ticketDispatch: "10月20日(火)頃に問題一式をご自宅へお届け",
                 reportDispatch: "答案受領後、約10日〜2週間で返送",
                 schedule: [
@@ -2295,7 +2271,7 @@
       if (includeYear) {
         return `${y}年${m}月${day}日(${w})`;
       } else {
-        return `${m}/${day}(${w})`;
+        return `${m}月${day}日(${w})`;
       }
     }
 
@@ -2343,7 +2319,7 @@
           const isHome = badge.includes('自宅');
           let dateText = '';
           if (isHome && sc.date_start && sc.date_end) {
-            dateText = `${formatJstDate(sc.date_start, false)}〜${formatJstDate(sc.date_end, false)}`;
+            dateText = `${formatJstDate(sc.date_start, true)}〜${formatJstDate(sc.date_end, false)}`;
           } else if (sc.date_start) {
             dateText = formatJstDate(sc.date_start, true);
           }
@@ -2362,7 +2338,7 @@
           
           let examDateText = '';
           if (isHome && sc.date_start && sc.date_end) {
-            examDateText = `${formatJstDate(sc.date_start, false)}〜${formatJstDate(sc.date_end, false)} 答案返送締切`;
+            examDateText = `${formatJstDate(sc.date_start, true)}〜${formatJstDate(sc.date_end, false)} 答案返送締切`;
           } else if (sc.date_start) {
             examDateText = formatJstDate(sc.date_start, true);
           }
@@ -2557,6 +2533,11 @@
     }
     window.handleSpRoundSelect = handleSpRoundSelect;
 
+    function handleActionRoundSelect(indexStr) {
+      handleSpRoundSelect(indexStr);
+    }
+    window.handleActionRoundSelect = handleActionRoundSelect;
+
     // 実施回（○月号）タブの動的レンダリング
     function renderRoundTabs() {
       const data = examData[currentGrade];
@@ -2574,6 +2555,20 @@
           return `<option value="${idx}" ${idx === currentRoundIndex ? 'selected' : ''}>${r.monthName} ${statusText}</option>`;
         }).join('');
         spRoundSelect.value = currentRoundIndex;
+      }
+
+      // アクションエリア内月号セレクトボックスの動的更新
+      const actionRoundSelect = document.getElementById('action-round-select');
+      if (actionRoundSelect) {
+        actionRoundSelect.innerHTML = rounds.map((r, idx) => {
+          let statusText = '';
+          if (r.status === 'active') statusText = '【受付中】';
+          else if (r.status === 'open') statusText = '【申込可】';
+          else if (r.status === 'pending') statusText = '【準備中】';
+          else statusText = '【終了】';
+          return `<option value="${idx}" ${idx === currentRoundIndex ? 'selected' : ''}>${r.monthName} ${statusText}</option>`;
+        }).join('');
+        actionRoundSelect.value = currentRoundIndex;
       }
 
       // スマホ版カスタム表示UI（テキスト＋バッジ）の動的更新
@@ -2671,22 +2666,20 @@
 
       container.innerHTML = venuesList.map((item, idx) => {
         const isHome = item.badge.includes('自宅');
-        const badgeClass = 'bg-slate-200 text-slate-800 border border-slate-300/60 font-medium';
         const placeText = isHome ? (item.school && item.school !== 'ご自宅' ? item.school : '全国どこからでも') : (item.school || '');
 
         return `
-          <div class="flex items-start sm:items-center gap-3 sm:gap-4 ${idx !== 0 ? 'pt-3.5 border-t border-slate-100' : ''}">
-            <div class="shrink-0">
-              <span class="inline-block px-2.5 py-1 rounded-lg text-sm font-semibold tracking-wide ${badgeClass} shadow-2xs">
-                ${item.badge}
-              </span>
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-4 ${idx !== 0 ? 'pt-3 sm:pt-3.5 border-t border-slate-100' : ''}">
+            <div class="flex items-center gap-2 sm:gap-2.5 min-w-0 flex-1">
+              <span class="font-bold text-sm sm:text-base text-slate-900 shrink-0 tracking-tight">${item.badge}</span>
+              ${placeText ? `
+                <span class="text-slate-300 font-light select-none text-xs sm:text-sm shrink-0">｜</span>
+                <span class="text-sm sm:text-base text-slate-700 font-medium truncate">${placeText}</span>
+              ` : ''}
             </div>
             
-            <div class="flex-1 min-w-0 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-4">
-              ${placeText ? `<div class="text-base sm:text-lg font-bold text-slate-900 leading-snug">${placeText}</div>` : ''}
-              <div class="text-base sm:text-lg font-bold text-[#8B3A18] tracking-tight shrink-0 sm:text-right">
-                ${item.date}
-              </div>
+            <div class="text-sm sm:text-base font-bold text-[#8B3A18] tracking-tight shrink-0 sm:text-right">
+              ${item.date}
             </div>
           </div>
         `;
@@ -2854,9 +2847,21 @@
       const cardPrice = document.getElementById('card-price');
       const cardDeadline = document.getElementById('card-deadline');
       const badgeGrade = document.getElementById('badge-grade');
+      const badgeMonth = document.getElementById('badge-month');
       const badge = document.getElementById('badge-status');
 
-      if (badgeGrade) badgeGrade.textContent = data.gradeName;
+      const gradeShortNames = {
+        c3: '中3',
+        c2: '中2',
+        c1: '中1',
+        p6: '小6',
+        chu3: '中3',
+        chu2: '中2',
+        chu1: '中1',
+        sho6: '小6'
+      };
+      if (badgeGrade) badgeGrade.textContent = gradeShortNames[currentGrade] || data.gradeName || '中3';
+      if (badgeMonth) badgeMonth.textContent = r.monthName || '';
 
       let examTitle = data.examName;
       if (currentGrade === 'p6' || currentGrade === 'sho6' || currentGrade === 's6') {
@@ -2885,8 +2890,6 @@
       renderVenueDetails(r);
 
       const ctaContainer = document.getElementById('cta-container');
-      const deadlineContainer = document.getElementById('deadline-container');
-      const scheduleDeadlineContainer = document.getElementById('schedule-deadline-container');
 
       // 下部固定バー連動（全学年・月号共通の汎用表記を維持）
       const floatBadge = document.getElementById('floating-status-badge');
@@ -2897,90 +2900,54 @@
         floatDesc.textContent = '岡山県統一模擬試験（おかもし）';
       }
 
-      if (badge && deadlineContainer && ctaContainer) {
+      if (ctaContainer) {
         if (r.status === 'finished') {
-          badge.className = "inline-flex items-center px-2.5 sm:px-3 py-1 rounded-md text-xs sm:text-sm font-bold bg-slate-100 text-slate-500 border border-slate-200";
-          badge.textContent = `${r.monthName} 受付終了`;
-          
-          const finishedHtml = `
-            <div class="flex items-center justify-between gap-2 mb-1.5 sm:mb-2">
-              <div class="text-xs sm:text-sm font-bold text-slate-600 tracking-wide">お申し込み締切</div>
-              <span class="text-[11px] sm:text-xs font-semibold text-slate-600 bg-slate-100 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md border border-slate-200 shrink-0">
-                受付終了
-              </span>
-            </div>
-            <div class="text-base sm:text-lg font-bold text-slate-500 tracking-tight leading-tight">
-              ${r.deadline || '受付期間終了'}
-            </div>
-          `;
-          deadlineContainer.innerHTML = finishedHtml;
-          if (scheduleDeadlineContainer) {
-            scheduleDeadlineContainer.innerHTML = finishedHtml;
+          if (badge) {
+            badge.className = "inline-flex items-center px-2.5 py-0.5 sm:py-1 rounded-md text-xs sm:text-sm font-bold bg-slate-100 text-slate-500 border border-slate-200";
+            badge.textContent = "受付終了";
+          }
+          if (cardDeadline) {
+            cardDeadline.textContent = r.deadline || '受付期間終了';
+            cardDeadline.classList.add('text-slate-400');
+            cardDeadline.classList.remove('text-slate-900');
           }
 
           ctaContainer.innerHTML = `
-            <p class="text-xs text-gray-600 text-center font-medium">お申込みフォーム内で今後の回をまとめて選択可能です</p>
             <button disabled class="w-full py-4 px-6 rounded-lg bg-slate-200 text-slate-400 font-bold text-sm sm:text-base cursor-not-allowed">
               ${r.monthName}の受付は終了しました
             </button>
+            <p class="text-[11px] sm:text-xs text-slate-500 text-center font-medium mt-2">
+              ※お申込みフォーム内で今後の回をまとめて選択可能です
+            </p>
           `;
         } else if (r.status === 'pending') {
-          badge.className = "inline-flex items-center px-2.5 sm:px-3 py-1 rounded-md text-xs sm:text-sm font-bold bg-slate-100 text-slate-600 border border-slate-300 shadow-2xs";
-          badge.textContent = `${r.monthName} 準備中`;
-          
-          const pendingHtml = `
-            <div class="flex items-center justify-between gap-2 mb-1.5 sm:mb-2">
-              <div class="text-xs sm:text-sm font-bold text-slate-600 tracking-wide">お申し込み締切</div>
-              <span class="text-[11px] sm:text-xs font-semibold text-slate-600 bg-slate-100 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md border border-slate-200 shrink-0">
-                準備中
-              </span>
-            </div>
-            <div class="text-base sm:text-lg font-bold text-slate-500 tracking-tight leading-tight">
-              準備中（受付開始まで今しばらくお待ちください）
-            </div>
-          `;
-          deadlineContainer.innerHTML = pendingHtml;
-          if (scheduleDeadlineContainer) {
-            scheduleDeadlineContainer.innerHTML = pendingHtml;
+          if (badge) {
+            badge.className = "inline-flex items-center px-2.5 py-0.5 sm:py-1 rounded-md text-xs sm:text-sm font-bold bg-slate-100 text-slate-600 border border-slate-300";
+            badge.textContent = "準備中";
+          }
+          if (cardDeadline) {
+            cardDeadline.textContent = '準備中（受付開始まで今しばらくお待ちください）';
+            cardDeadline.classList.add('text-slate-400');
+            cardDeadline.classList.remove('text-slate-900');
           }
 
           ctaContainer.innerHTML = `
-            <p class="text-xs text-gray-600 text-center font-medium">お申込みフォーム内で今後の回をまとめて選択可能です</p>
             <button disabled class="w-full py-4 px-6 rounded-lg bg-slate-100 text-slate-400 border border-slate-200 font-bold text-sm sm:text-base cursor-not-allowed">
               ${r.monthName}は現在準備中です
             </button>
+            <p class="text-[11px] sm:text-xs text-slate-500 text-center font-medium mt-2">
+              ※お申込みフォーム内で今後の回をまとめて選択可能です
+            </p>
           `;
         } else {
-          badge.className = "inline-flex items-center px-2.5 sm:px-3 py-1 rounded-md text-xs sm:text-sm font-bold bg-emerald-100 text-emerald-900 border border-emerald-300 shadow-2xs";
-          badge.textContent = r.status === 'active' ? `${r.monthName} 受付中` : `${r.monthName} 申込可`;
-          
-          const activeHtml = `
-            <!-- 上段: 見出し「お申し込み締切」 ＆ バッジ「WEB受付中」 -->
-            <div class="flex items-center justify-between gap-2 mb-1.5 sm:mb-2">
-              <div class="text-xs sm:text-sm font-bold text-slate-600 tracking-wide">お申し込み締切</div>
-              <span class="text-[11px] sm:text-xs font-semibold text-emerald-700 bg-emerald-50 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md border border-emerald-200/60 shrink-0">
-                WEB受付中
-              </span>
-            </div>
-            <!-- 下段: 日時（カード横幅100%フル使用、1行厳格維持） -->
-            <div id="card-deadline" class="text-[clamp(0.95rem,4.1vw,1.125rem)] sm:text-lg font-bold text-slate-900 tracking-tight whitespace-nowrap leading-tight">
-              ${r.deadline}
-            </div>
-          `;
-          deadlineContainer.innerHTML = activeHtml;
-
-          if (scheduleDeadlineContainer) {
-            scheduleDeadlineContainer.innerHTML = `
-              <div class="flex items-center justify-between gap-2 mb-1 sm:mb-1.5">
-                <div class="text-xs sm:text-sm font-bold text-slate-600 tracking-wide">お申し込み締切</div>
-                <span class="text-[11px] sm:text-xs font-semibold text-emerald-700 bg-emerald-50 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md border border-emerald-200/60 shrink-0">
-                  WEB受付中
-                </span>
-              </div>
-              <div class="text-base sm:text-lg font-bold text-slate-900 tracking-tight leading-tight">
-                ${r.deadline}
-              </div>
-            `;
+          if (badge) {
+            badge.className = "inline-flex items-center px-2.5 py-0.5 sm:py-1 rounded-md text-xs sm:text-sm font-bold bg-emerald-100 text-emerald-900 border border-emerald-300";
+            badge.textContent = r.status === 'active' ? '受付中' : '申込可';
+          }
+          if (cardDeadline) {
+            cardDeadline.textContent = r.deadline || '近日公開予定';
+            cardDeadline.classList.remove('text-slate-400');
+            cardDeadline.classList.add('text-slate-900');
           }
 
           const gradeParamMap = {
@@ -2996,11 +2963,13 @@
           const gradeParamVal = gradeParamMap[currentGrade] || '中3';
 
           ctaContainer.innerHTML = `
-            <p class="text-xs text-gray-600 text-center font-medium">お申込みフォーム内で今後の回をまとめて選択可能です</p>
             <a href="/apply?grade=${encodeURIComponent(gradeParamVal)}&month=${r.monthNum}" id="card-cta-btn" class="w-full py-4 px-6 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-bold text-base sm:text-lg flex items-center justify-center gap-2 shadow-lg shadow-orange-500/25 hover:shadow-orange-500/35 active:scale-[0.98] transition-all hover:-translate-y-0.5">
               <span>${r.monthName}をWEBで申し込む</span>
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
             </a>
+            <p class="text-[11px] sm:text-xs text-slate-500 text-center font-medium mt-2">
+              ※お申込みフォーム内で今後の回をまとめて選択可能です
+            </p>
           `;
         }
       }
@@ -4344,20 +4313,20 @@
         const isNew = isNewNewsArticle(rawDate);
         const newBadgeHtml = isNew
           ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#c85a32] text-white shadow-xs shrink-0 tracking-tight leading-none text-center">NEW</span>`
-          : `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold text-transparent select-none pointer-events-none invisible shrink-0 tracking-tight leading-none text-center" aria-hidden="true">NEW</span>`;
+          : '';
         const detailUrl = `detail.html?id=${encodeURIComponent(post.id)}`;
 
         return `
           <article class="bg-slate-50 rounded-lg border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all mb-3 overflow-hidden cursor-pointer group block">
             <a href="${detailUrl}" class="flex items-center justify-between p-4 sm:p-5 gap-3 sm:gap-4 w-full">
               <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 flex-1 min-w-0">
-                <!-- メタ領域: [NEW] [日付] [カテゴリバッジ] -->
+                <!-- メタ領域: [日付] [NEW(任意)] [カテゴリバッジ] -->
                 <div class="flex items-center gap-2.5 shrink-0">
-                  ${newBadgeHtml}
-                  <span class="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
+                  <span class="flex items-center gap-1.5 text-xs text-slate-500 font-medium shrink-0">
                     <span class="material-symbols-outlined text-[15px] text-slate-400">calendar_today</span>
                     <span class="tabular-nums">${pubDate}</span>
                   </span>
+                  ${newBadgeHtml}
                   <span class="px-2.5 py-0.5 rounded-md text-[11px] font-bold ${badgeClass} shrink-0 shadow-2xs">
                     ${catName}
                   </span>

@@ -235,6 +235,7 @@
   <script>
     (async function processPostPaymentRegistration() {
       const APPLY_API_URL = '/api/apply';
+      const GAS_APPLY_URL = 'https://script.google.com/macros/s/AKfycbwYljLEwbfFCQWx-c6JneJUDINYbhYl0_M1-e9CwhBskBvRBEdIuwNotYceCg5i6M9z/exec';
 
       function getCookie(name) {
         const match = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + '=([^;]*)'));
@@ -405,10 +406,22 @@
           console.warn('[apply/success] Backend API call failed:', apiErr);
         }
 
-        // 2. 台帳（スプレッドシート）への登録は Stripe Webhook が行うため、ここから GAS へは直接送信しない
-        //    （二重登録や、コンビニ未入金の申込が「paid」で登録されるのを防ぐ）
+        // 2. バックエンドAPIが未到達（静的プレビュー環境等）だった場合の安全策として、GASへ直接送信
         if (!backendSuccess) {
-          console.warn('[apply/success] Notification API was not reachable. Ledger registration is handled by the Stripe webhook.');
+          try {
+            await fetch(GAS_APPLY_URL, {
+              method: 'POST',
+              mode: 'no-cors',
+              headers: {
+                'Content-Type': 'text/plain;charset=utf-8'
+              },
+              body: JSON.stringify(gasPayload)
+            });
+            console.log('[apply/success] Direct GAS dispatch executed (no-cors fallback)');
+            sessionStorage.setItem(registrationKey, 'true');
+          } catch (gasErr) {
+            console.error('[apply/success] Direct GAS dispatch error:', gasErr);
+          }
         }
 
       } catch (err) {

@@ -7,7 +7,15 @@ export async function POST(request: Request) {
 
     const apiKey = process.env.RESEND_API_KEY;
     const fromEmail = process.env.RESEND_FROM_EMAIL || "岡山県統一模擬試験 <info@okayama-moshi.com>";
-    const adminEmail = process.env.ADMIN_EMAIL || "info@okayama-moshi.com";
+    
+    // 個人問い合わせ向け管理者通知先: info@okayama-moshi.com
+    const individualAdminEmail = process.env.ADMIN_EMAIL || "info@okayama-moshi.com";
+    // 塾・学校関係者フォーム向け管理者通知先: 中央教育研究所の指定アドレス（環境変数で切り替え可能）
+    const orgAdminEmail =
+      process.env.ORG_ADMIN_EMAIL ||
+      process.env.ADMIN_EMAIL_ORG ||
+      process.env.CHUO_KYOIKU_EMAIL ||
+      "okayamamoshi@chuoh-kyouiku.co.jp";
 
     if (!apiKey) {
       console.error("RESEND_API_KEY is not configured.");
@@ -20,6 +28,7 @@ export async function POST(request: Request) {
     const isOrg = body.type === "organization";
     const typeLabel = isOrg ? "塾・学校関係者様" : "個人・一般生";
     const subject = `【お問い合わせ】${typeLabel}：${body.name || "お名前なし"} 様`;
+    const targetAdminEmail = isOrg ? orgAdminEmail : individualAdminEmail;
 
     // 本文の生成（管理者通知用）
     const textContent = `
@@ -54,7 +63,7 @@ ${body.message || "なし"}
       },
       body: JSON.stringify({
         from: fromEmail,
-        to: [adminEmail],
+        to: [targetAdminEmail],
         reply_to: body.email || undefined,
         subject: subject,
         text: textContent,

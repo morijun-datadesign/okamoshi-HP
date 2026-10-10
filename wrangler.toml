@@ -1,0 +1,22 @@
+# ============================================================
+# Cloudflare Pages 設定（okamoshi）
+#   ※ このファイルが存在すると、Pages はバインディング / 非シークレット環境変数を
+#     ダッシュボードではなく本ファイルから読み込みます（シークレットはダッシュボードのまま有効）。
+# ============================================================
+name = "okamoshi"
+pages_build_output_dir = "."
+compatibility_date = "2025-01-01"
+
+# ------------------------------------------------------------
+# D1: 申込フォーム用マスターデータ（郵便番号 / 全国学校コード）
+#   作成:     npx wrangler d1 create okamoshi-master
+#   スキーマ: npx wrangler d1 migrations apply okamoshi-master --remote
+#   シード:   python3 scripts/build_master_seed.py
+#             npx wrangler d1 execute okamoshi-master --remote --file=db/seed/zip_codes.sql
+#             npx wrangler d1 execute okamoshi-master --remote --file=db/seed/schools.sql
+# ------------------------------------------------------------
+[[d1_databases]]
+binding = "DB"
+database_name = "okamoshi-master"
+database_id = "a9553a56-1e98-4986-9062-5b2b529f4273"
+migrations_dir = "migrations"

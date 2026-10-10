@@ -163,6 +163,45 @@
       transform: scale(0.96) translateY(8px);
       opacity: 0;
     }
+    /* 住所自動入力時の「入りました」やさしい成功色フラッシュ & 約2秒のフェードアウト */
+    @keyframes addressAutoFilledPulse {
+      0% {
+        background-color: #d1fae5; /* emerald-100 */
+        border-color: #10b981;     /* emerald-500 */
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.28);
+      }
+      20% {
+        background-color: #ecfdf5; /* emerald-50 */
+        border-color: #34d399;     /* emerald-400 */
+        box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.16);
+      }
+      100% {
+        background-color: #f1f5f9; /* 元の surface-container-low */
+        border-color: rgba(203, 213, 225, 0.3);
+        box-shadow: none;
+      }
+    }
+    .animate-address-filled {
+      animation: addressAutoFilledPulse 2.2s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+    }
+
+    /* 続き（丁目・番地・号）の入力を待っていることを直感的に示すガイド演出 */
+    @keyframes addressNextFocusGlow {
+      0% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+      }
+      35% {
+        border-color: #10b981;
+        box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.32);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+      }
+    }
+    .animate-address-next {
+      animation: addressNextFocusGlow 1.6s ease-out 1;
+    }
+
     /* フォームバリデーションエラー枠線スタイル */
     .apply-input-error {
       border-color: #ef4444 !important;
@@ -2506,9 +2545,33 @@
       return data;
     }
 
+    function smoothScrollToPostalSection() {
+      const zipInput = document.getElementById('postalCode');
+      if (!zipInput) return;
+
+      // 郵便番号コンテナ（ラベルを含むブロック）
+      const container = zipInput.closest('.flex.flex-col') || zipInput;
+      const header = document.querySelector('header');
+      const headerHeight = header ? header.offsetHeight : (window.innerWidth < 640 ? 64 : 72);
+      const topPadding = 14; // ヘッダー下の適度な余白
+
+      const rect = container.getBoundingClientRect();
+      const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const targetScrollTop = Math.max(0, currentScrollTop + rect.top - headerHeight - topPadding);
+
+      // すでに画面上部付近にある場合は大きなジャンピングを避ける
+      if (Math.abs(currentScrollTop - targetScrollTop) > 15) {
+        window.scrollTo({
+          top: targetScrollTop,
+          behavior: 'smooth'
+        });
+      }
+    }
+
     function applyAddressResult(zipInput, cleanZip, data) {
       const prefSelect = document.getElementById('prefecture');
       const addr1Input = document.getElementById('addressLine1');
+      const addr2Input = document.getElementById('addressLine2');
 
       // 郵便番号をハイフン付き（700-0822）に自動フォーマット
       zipInput.value = `${cleanZip.slice(0, 3)}-${cleanZip.slice(3)}`;
@@ -2521,19 +2584,32 @@
       // 都道府県情報（hidden項目）の更新
       if (prefSelect) prefSelect.value = data.prefecture || '';
 
-      // 2. 自動的に「丁目・番地・号」の入力欄へフォーカス（カーソル）を移動
-      const addr2Input = document.getElementById('addressLine2');
+      // ★ 視覚フィードバック: 補完された住所入力欄（#addressLine1）を薄いグリーンにフワッと変化させ、約2秒かけて自然に元の背景色へフェードアウト
+      addr1Input.classList.remove('animate-address-filled');
+      void addr1Input.offsetWidth; // Reflowをトリガーしてアニメーションをリセット
+      addr1Input.classList.add('animate-address-filled');
+      setTimeout(() => {
+        addr1Input.classList.remove('animate-address-filled');
+      }, 2300);
+
+      // 2. 自動的に「丁目・番地・号」の入力欄へフォーカス（カーソル）を移動し、続きの入力を促す
       if (addr2Input) {
         addr2Input.focus();
         if (typeof addr2Input.setSelectionRange === 'function' && addr2Input.value) {
           addr2Input.setSelectionRange(addr2Input.value.length, addr2Input.value.length);
         }
+        addr2Input.classList.remove('animate-address-next');
+        void addr2Input.offsetWidth;
+        addr2Input.classList.add('animate-address-next');
+        setTimeout(() => {
+          addr2Input.classList.remove('animate-address-next');
+        }, 1800);
       }
 
-      showPostalMessage('✓ 住所を自動入力しました。「丁目・番地・号」をご入力ください', false);
+      showPostalMessage('✓ 住所を自動入力しました。続けて「丁目・番地・号」をご入力ください', false);
       setTimeout(() => {
         clearPostalMessage();
-      }, 4500);
+      }, 5000);
     }
 
     async function searchAddressByPostalCode(isManualTrigger = false) {
@@ -2601,6 +2677,14 @@
     function initPostalCodeAutoSearch() {
       const zipInput = document.getElementById('postalCode');
       if (!zipInput) return;
+
+      // スマホ等でキーボード表示時に市区町村・番地入力欄までしっかり画面内に収めるためのスクロール調整
+      zipInput.addEventListener('focus', function() {
+        clearPostalMessage();
+        // フォーカス直後と仮想キーボード展開完了時（約260ms）の2段階で上部位置へスムーズスクロール
+        setTimeout(smoothScrollToPostalSection, 50);
+        setTimeout(smoothScrollToPostalSection, 260);
+      });
 
       zipInput.addEventListener('input', function() {
         clearPostalMessage();

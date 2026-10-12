@@ -25,6 +25,8 @@
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Cloudflare Turnstile -->
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   <script id="tailwind-config">
     tailwind.config = {
       darkMode: "class",
@@ -1033,6 +1035,11 @@
                 <div class="flex-1">
                   <p id="formErrorMessageText" class="leading-relaxed">※ 受験を希望する模試を1つ以上選択してください。</p>
                 </div>
+              </div>
+
+              <!-- Cloudflare Turnstile -->
+              <div class="flex justify-center my-3">
+                <div class="cf-turnstile" data-sitekey="0x4AAAAAAFUVxr1HR8KQNRY0" data-theme="light"></div>
               </div>
 
               <!-- 送信ボタン -->
@@ -3428,6 +3435,16 @@ if (!parentKanaLastName || !parentKanaFirstName) {
         }
       }
 
+      // 5-3. Turnstile セキュリティ認証の確認
+      const turnstileInput = form.querySelector('input[name="cf-turnstile-response"]');
+      const turnstileToken = (turnstileInput ? turnstileInput.value : '') || (typeof turnstile !== 'undefined' ? turnstile.getResponse() : '');
+      if (!turnstileToken) {
+        resetSubmitBtn();
+        const turnstileElem = form.querySelector('.cf-turnstile') || submitBtn;
+        showFormError('セキュリティ認証（Turnstile）の確認を完了してください。', turnstileElem, turnstileElem);
+        return;
+      }
+
       // 全ての入力確認・バリデーションを通過：ローディング表示（二重防止）へ移行
       setSubmittingState();
 
@@ -3555,6 +3572,7 @@ if (!parentKanaLastName || !parentKanaFirstName) {
           address_line2: addressLine2,
           address_line3: addressLine3,
           address: fullAddressString,
+          'cf-turnstile-response': turnstileToken,
           exams: selectedExams.map(exam => ({
             id: exam.id,
             title: exam.title,
@@ -3640,6 +3658,9 @@ if (!parentKanaLastName || !parentKanaFirstName) {
         console.error('[決済セッション作成エラー]:', err);
         hideLoadingOverlay();
         resetSubmitBtn();
+        if (typeof turnstile !== 'undefined' && typeof turnstile.reset === 'function') {
+          try { turnstile.reset(); } catch (tErr) {}
+        }
         const errorMessage = (err && err.message && err.message.includes('HTTP'))
           ? '決済サーバーとの通信に一時的な問題が発生しました。恐れ入りますが、少し時間をおいて再度お試しください。'
           : (err && err.message) || '決済画面の初期化に失敗しました。通信環境をお確かめの上、再度お試しいただくか、実行委員会までお問い合わせください。';

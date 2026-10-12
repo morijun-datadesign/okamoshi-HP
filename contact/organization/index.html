@@ -22,6 +22,8 @@
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Cloudflare Turnstile -->
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   <script id="tailwind-config">
     tailwind.config = {
       darkMode: "class",
@@ -406,6 +408,11 @@
           </label>
         </div>
 
+        <!-- Cloudflare Turnstile -->
+        <div class="flex justify-center pt-2">
+          <div class="cf-turnstile" data-sitekey="0x4AAAAAAFUVxr1HR8KQNRY0" data-theme="light"></div>
+        </div>
+
         <!-- 送信ボタン -->
         <div class="pt-2 text-center">
           <button type="submit" id="submit-btn" class="w-full sm:w-auto min-w-[260px] inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-primary hover:bg-primary-container text-white font-bold text-base shadow-md hover:shadow-lg transition-all active:scale-[0.99] cursor-pointer">
@@ -567,6 +574,12 @@
         return;
       }
 
+      var turnstileToken = (form.querySelector('input[name="cf-turnstile-response"]') ? form.querySelector('input[name="cf-turnstile-response"]').value : '') || (typeof turnstile !== 'undefined' ? turnstile.getResponse() : '');
+      if (!turnstileToken) {
+        alert("セキュリティ認証（Turnstile）の確認を完了してください。");
+        return;
+      }
+
       // 送信中UI更新（ボタンをdisable）
       var originalBtnContent = btn.innerHTML;
       btn.disabled = true;
@@ -593,6 +606,7 @@
           },
           body: JSON.stringify({
             type: "organization",
+            'cf-turnstile-response': turnstileToken,
             ...formData
           }),
         });
@@ -609,12 +623,18 @@
           alert("送信エラー: " + errorMsg);
           btn.disabled = false;
           btn.innerHTML = originalBtnContent;
+          if (typeof turnstile !== 'undefined' && typeof turnstile.reset === 'function') {
+            try { turnstile.reset(); } catch (e) {}
+          }
         }
       } catch (error) {
         console.error("通信エラー:", error);
         alert("通信エラーが発生しました: " + (error.message || ""));
         btn.disabled = false;
         btn.innerHTML = originalBtnContent;
+        if (typeof turnstile !== 'undefined' && typeof turnstile.reset === 'function') {
+          try { turnstile.reset(); } catch (e) {}
+        }
       }
     }
 

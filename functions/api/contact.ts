@@ -5,12 +5,59 @@ interface Env {
   ORG_ADMIN_EMAIL?: string;
   ADMIN_EMAIL_ORG?: string;
   CHUO_KYOIKU_EMAIL?: string;
+  TURNSTILE_SECRET_KEY?: string;
 }
 
 export const onRequestPost: PagesFunction<Env> = async (context) => {
   try {
     const body = (await context.request.json()) as Record<string, any>;
     console.log("Cloudflare Function received contact request:", body);
+
+    // Turnstile トークンの検証
+    const turnstileSecret =
+      context.env.TURNSTILE_SECRET_KEY ||
+      (typeof process !== "undefined" && process.env?.TURNSTILE_SECRET_KEY) ||
+      "";
+    const turnstileResponse =
+      body["cf-turnstile-response"] ||
+      body.turnstileToken ||
+      body.turnstile_token ||
+      "";
+    const remoteIp = context.request.headers.get("CF-Connecting-IP") || "";
+
+    const verifyFormData = new URLSearchParams();
+    verifyFormData.append("secret", turnstileSecret);
+    verifyFormData.append("response", String(turnstileResponse || ""));
+    if (remoteIp) {
+      verifyFormData.append("remoteip", remoteIp);
+    }
+
+    try {
+      const verifyRes = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+        method: "POST",
+        body: verifyFormData,
+      });
+      const verifyResult = (await verifyRes.json()) as { success: boolean; "error-codes"?: string[] };
+      if (!verifyResult.success) {
+        console.error("[functions/api/contact] Turnstile verification failed:", verifyResult);
+        return new Response(
+          JSON.stringify({
+            success: false,
+            message: "セキュリティ認証に失敗しました。もう一度お試しください。",
+          }),
+          { status: 403, headers: { "Content-Type": "application/json" } }
+        );
+      }
+    } catch (verifyErr) {
+      console.error("[functions/api/contact] Turnstile verification error:", verifyErr);
+      return new Response(
+        JSON.stringify({
+          success: false,
+          message: "セキュリティ認証処理中にエラーが発生しました。もう一度お試しください。",
+        }),
+        { status: 403, headers: { "Content-Type": "application/json" } }
+      );
+    }
 
     const apiKey = context.env.RESEND_API_KEY || (typeof process !== "undefined" && process.env?.RESEND_API_KEY);
     const fromEmail =

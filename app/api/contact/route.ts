@@ -5,6 +5,49 @@ export async function POST(request: Request) {
     const body = await request.json();
     console.log("Server API Route received contact request:", body);
 
+    // Turnstile トークンの検証
+    const turnstileSecret = process.env.TURNSTILE_SECRET_KEY || "";
+    const turnstileResponse =
+      body["cf-turnstile-response"] ||
+      body.turnstileToken ||
+      body.turnstile_token ||
+      "";
+    const remoteIp = request.headers.get("CF-Connecting-IP") || "";
+
+    const verifyFormData = new URLSearchParams();
+    verifyFormData.append("secret", turnstileSecret);
+    verifyFormData.append("response", String(turnstileResponse || ""));
+    if (remoteIp) {
+      verifyFormData.append("remoteip", remoteIp);
+    }
+
+    try {
+      const verifyRes = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+        method: "POST",
+        body: verifyFormData,
+      });
+      const verifyResult = (await verifyRes.json()) as { success: boolean; "error-codes"?: string[] };
+      if (!verifyResult.success) {
+        console.error("[app/api/contact] Turnstile verification failed:", verifyResult);
+        return NextResponse.json(
+          {
+            success: false,
+            message: "セキュリティ認証に失敗しました。もう一度お試しください。",
+          },
+          { status: 403 }
+        );
+      }
+    } catch (verifyErr) {
+      console.error("[app/api/contact] Turnstile verification error:", verifyErr);
+      return NextResponse.json(
+        {
+          success: false,
+          message: "セキュリティ認証処理中にエラーが発生しました。もう一度お試しください。",
+        },
+        { status: 403 }
+      );
+    }
+
     const apiKey = process.env.RESEND_API_KEY;
     const fromEmail = process.env.RESEND_FROM_EMAIL || "岡山県統一模擬試験 <info@okayama-moshi.com>";
     

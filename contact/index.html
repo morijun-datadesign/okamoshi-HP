@@ -24,6 +24,8 @@
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Cloudflare Turnstile -->
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   <script id="tailwind-config">
     tailwind.config = {
       theme: {
@@ -304,6 +306,11 @@
           </label>
         </div>
 
+        <!-- Cloudflare Turnstile -->
+        <div class="flex justify-center pt-2">
+          <div class="cf-turnstile" data-sitekey="0x4AAAAAAFUVxr1HR8KQNRY0" data-theme="light"></div>
+        </div>
+
         <!-- 送信ボタン -->
         <div class="pt-2 text-center">
           <button type="submit" id="submit-btn-org" class="w-full sm:w-auto min-w-[260px] inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-primary hover:bg-primary-container text-white font-bold text-base shadow-md hover:shadow-lg transition-all active:scale-[0.99] cursor-pointer">
@@ -419,6 +426,11 @@
           <label for="privacy-agree" class="text-xs text-on-surface-variant leading-relaxed cursor-pointer select-none">
             当委員会の <a href="/privacy.html" target="_blank" rel="noopener noreferrer" class="text-primary font-bold underline hover:text-primary-container">プライバシーポリシー</a> に同意の上、送信します。ご入力いただいた情報は、お問い合わせへの回答および模試運営のご案内にのみ利用いたします。
           </label>
+        </div>
+
+        <!-- Cloudflare Turnstile -->
+        <div class="flex justify-center pt-2">
+          <div class="cf-turnstile" data-sitekey="0x4AAAAAAFUVxr1HR8KQNRY0" data-theme="light"></div>
         </div>
 
         <!-- 送信ボタン -->
@@ -644,6 +656,12 @@
           return;
         }
 
+        var turnstileToken = (orgForm.querySelector('input[name="cf-turnstile-response"]') ? orgForm.querySelector('input[name="cf-turnstile-response"]').value : '') || (typeof turnstile !== 'undefined' ? turnstile.getResponse() : '');
+        if (!turnstileToken) {
+          alert('セキュリティ認証（Turnstile）の確認を完了してください。');
+          return;
+        }
+
         var origHtml = btn.innerHTML;
         btn.disabled = true;
         btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-xl">progress_activity</span><span>送信中...</span>';
@@ -663,7 +681,7 @@
           var res = await fetch('/api/contact', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ type: 'organization', ...formData })
+            body: JSON.stringify({ type: 'organization', 'cf-turnstile-response': turnstileToken, ...formData })
           });
           if (res.ok) {
             orgForm.classList.add('hidden');
@@ -674,11 +692,17 @@
             alert('送信エラー: ' + (errData.message || ('ステータス ' + res.status)));
             btn.disabled = false;
             btn.innerHTML = origHtml;
+            if (typeof turnstile !== 'undefined' && typeof turnstile.reset === 'function') {
+              try { turnstile.reset(); } catch (tErr) {}
+            }
           }
         } catch (err) {
           alert('通信エラーが発生しました: ' + (err.message || ''));
           btn.disabled = false;
           btn.innerHTML = origHtml;
+          if (typeof turnstile !== 'undefined' && typeof turnstile.reset === 'function') {
+            try { turnstile.reset(); } catch (tErr) {}
+          }
         }
       });
     }
@@ -692,6 +716,12 @@
         var completeMsg = document.getElementById('complete-msg-indiv');
         if (!indivForm.checkValidity()) {
           indivForm.reportValidity();
+          return;
+        }
+
+        var turnstileToken = (indivForm.querySelector('input[name="cf-turnstile-response"]') ? indivForm.querySelector('input[name="cf-turnstile-response"]').value : '') || (typeof turnstile !== 'undefined' ? turnstile.getResponse() : '');
+        if (!turnstileToken) {
+          alert('セキュリティ認証（Turnstile）の確認を完了してください。');
           return;
         }
 
@@ -716,7 +746,7 @@
           var res = await fetch('/api/contact', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ type: 'individual', ...formData })
+            body: JSON.stringify({ type: 'individual', 'cf-turnstile-response': turnstileToken, ...formData })
           });
           if (res.ok) {
             indivForm.classList.add('hidden');
@@ -727,11 +757,17 @@
             alert('送信エラー: ' + (errData.message || ('ステータス ' + res.status)));
             btn.disabled = false;
             btn.innerHTML = origHtml;
+            if (typeof turnstile !== 'undefined' && typeof turnstile.reset === 'function') {
+              try { turnstile.reset(); } catch (tErr) {}
+            }
           }
         } catch (err) {
           alert('通信エラーが発生しました: ' + (err.message || ''));
           btn.disabled = false;
           btn.innerHTML = origHtml;
+          if (typeof turnstile !== 'undefined' && typeof turnstile.reset === 'function') {
+            try { turnstile.reset(); } catch (tErr) {}
+          }
         }
       });
     }

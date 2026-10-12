@@ -1,5 +1,6 @@
 interface Env {
   STRIPE_SECRET_KEY?: string;
+  TURNSTILE_SECRET_KEY?: string;
 }
 
 const jsonResponse = (data: unknown, status = 200) =>
@@ -102,6 +103,52 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
     const body = (await context.request.json()) as Record<string, any>;
     console.log("[functions/api/create-checkout-session] Received request:", JSON.stringify(body));
+
+    // Turnstile トークンの検証
+    const turnstileSecret =
+      context.env.TURNSTILE_SECRET_KEY ||
+      (typeof process !== "undefined" && process.env?.TURNSTILE_SECRET_KEY) ||
+      "";
+    const turnstileResponse =
+      body["cf-turnstile-response"] ||
+      body.turnstileToken ||
+      body.turnstile_token ||
+      "";
+    const remoteIp = context.request.headers.get("CF-Connecting-IP") || "";
+
+    const verifyFormData = new URLSearchParams();
+    verifyFormData.append("secret", turnstileSecret);
+    verifyFormData.append("response", String(turnstileResponse || ""));
+    if (remoteIp) {
+      verifyFormData.append("remoteip", remoteIp);
+    }
+
+    try {
+      const verifyRes = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+        method: "POST",
+        body: verifyFormData,
+      });
+      const verifyResult = (await verifyRes.json()) as { success: boolean; "error-codes"?: string[] };
+      if (!verifyResult.success) {
+        console.error("[functions/api/create-checkout-session] Turnstile verification failed:", verifyResult);
+        return jsonResponse(
+          {
+            success: false,
+            message: "セキュリティ認証に失敗しました。もう一度お試しください。",
+          },
+          403
+        );
+      }
+    } catch (verifyErr) {
+      console.error("[functions/api/create-checkout-session] Turnstile verification error:", verifyErr);
+      return jsonResponse(
+        {
+          success: false,
+          message: "セキュリティ認証処理中にエラーが発生しました。もう一度お試しください。",
+        },
+        403
+      );
+    }
 
     // 1. success_url / cancel_url
     const origin = new URL(context.request.url).origin;

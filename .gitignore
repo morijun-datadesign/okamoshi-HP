@@ -7,3 +7,5 @@ node_modules
 # Cloudflare local state / generated D1 seed SQL
 .wrangler
 db/seed/
+bin/
+

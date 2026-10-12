@@ -2,17 +2,18 @@
 <html lang="ja" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>岡山県統一模擬試験・適性検査対策模試【おかもし】公式</title>
   <meta name="description" content="岡山県内の高校受験・中高一貫校受験なら「岡山県統一模擬試験（おかもし）」。県内最大級の母集団データと精緻な合否判定で、志望校合格への確かな現在地を弾き出します。日程確認やオンラインお申し込みはこちら。">
-  <link rel="canonical" href="https://okamoshi.pages.dev/">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://okayama-moshi.com/">
 
   <!-- OGP -->
   <meta property="og:title" content="岡山県統一模擬試験・適性検査対策模試【おかもし】公式">
   <meta property="og:description" content="岡山県内最大級の母集団データと公立高校入試特化の出題。志望校合格への距離がわかる精密な学力診断シート。">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://okamoshi.pages.dev/">
-  <meta property="og:image" content="https://okamoshi.pages.dev/og-image.jpg">
+  <meta property="og:url" content="https://okayama-moshi.com/">
+  <meta property="og:image" content="https://okayama-moshi.com/og-image.jpg">
   <meta property="og:site_name" content="岡山県統一模擬試験（おかもし）">
   <meta name="twitter:card" content="summary_large_image">
 
@@ -113,7 +114,7 @@
         </a>
 
         <!-- モバイルメニュー開閉ボタン -->
-        <button type="button" id="mobile-menu-open-btn" onclick="openMobileMenu()" aria-label="メニューを開く" aria-expanded="false" class="lg:hidden flex items-center justify-center w-10 h-10 -mr-1 rounded-lg text-slate-700 hover:bg-slate-100 active:bg-slate-200 transition-colors cursor-pointer">
+        <button type="button" id="mobile-menu-open-btn" onclick="openMobileMenu()" aria-label="メニューを開く" aria-expanded="false" class="lg:hidden flex items-center justify-center w-11 h-11 min-w-[44px] min-h-[44px] -mr-1 rounded-lg text-slate-700 hover:bg-slate-100 active:bg-slate-200 transition-colors cursor-pointer">
           <span class="material-symbols-outlined text-[28px]">menu</span>
         </button>
       </div>
@@ -126,8 +127,8 @@
 
   <!-- モバイルメニュードロワー -->
   <div id="mobile-menu-drawer" class="fixed top-0 right-0 bottom-0 w-[84vw] max-w-[340px] bg-white z-[999] shadow-2xl flex flex-col justify-between transition-transform duration-300 transform translate-x-full ease-in-out lg:hidden" role="dialog" aria-modal="true" aria-label="モバイルメニュー">
-    <div class="h-10 px-3 flex items-center justify-end shrink-0">
-      <button type="button" onclick="closeMobileMenu()" aria-label="メニューを閉じる" class="w-9 h-9 rounded-lg flex items-center justify-center text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors">
+    <div class="h-12 px-3 flex items-center justify-end shrink-0">
+      <button type="button" onclick="closeMobileMenu()" aria-label="メニューを閉じる" class="w-11 h-11 min-w-[44px] min-h-[44px] rounded-lg flex items-center justify-center text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
         ✕
       </button>
     </div>
@@ -190,7 +191,7 @@
         <span class="material-symbols-outlined text-lg">edit_document</span>
         <span>お申し込みはこちら</span>
       </a>
-      <p class="text-[11px] text-center text-zinc-300 font-medium">ネットでかんたん24時間受付中</p>
+      <p class="text-[11px] text-center text-slate-600 font-medium">ネットでかんたん24時間受付中</p>
     </div>
   </div>
 
@@ -352,26 +353,26 @@
       <!-- セクションヘッダー ＆ 学年一括切り替えボタン ＆ PC用 左右ナビゲーション矢印ボタン -->
       <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6 md:mb-8">
         <div>
-          <h3 class="section-title text-2xl md:text-3xl font-bold text-emerald-950 leading-tight" style="color: #064e3b !important;">岡山県統一模擬試験（おかもし）が選ばれる3つの理由</h3>
+          <h2 class="section-title text-2xl md:text-3xl font-bold text-emerald-950 leading-tight" style="color: #064e3b !important;">岡山県統一模擬試験（おかもし）が選ばれる3つの理由</h2>
           <p class="text-base md:text-lg text-slate-700 font-medium mt-2.5 leading-relaxed">ただ点数を出すだけでなく、本番で合格を勝ち取るための確かな理由があります。</p>
         </div>
 
         <!-- ヘッダー右側：学年一括切り替えボタン ＋ PC用ナビゲーション矢印ボタン -->
         <div class="flex items-center justify-between md:justify-end gap-3 shrink-0 w-full md:w-auto">
           <!-- 3パネル一括学年切り替えスイッチ（中3 / 中2 / 中1 / 小6 の4学年完全統一） -->
-          <div class="flex items-center gap-1.5 bg-slate-100 p-1.5 rounded-xl border border-slate-200/80 shadow-2xs" role="tablist" aria-label="選ばれる理由 学年一括切り替え">
-            <button type="button" onclick="selectGrade('c3')" id="feature-pill-c3" class="px-3.5 sm:px-5 py-2.5 text-sm sm:text-base font-bold rounded-lg transition-all bg-emerald-800 text-white shadow-xs cursor-pointer">中3</button>
-            <button type="button" onclick="selectGrade('c2')" id="feature-pill-c2" class="px-3.5 sm:px-5 py-2.5 text-sm sm:text-base font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900 cursor-pointer">中2</button>
-            <button type="button" onclick="selectGrade('c1')" id="feature-pill-c1" class="px-3.5 sm:px-5 py-2.5 text-sm sm:text-base font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900 cursor-pointer">中1</button>
-            <button type="button" onclick="selectGrade('p6')" id="feature-pill-p6" class="px-3.5 sm:px-5 py-2.5 text-sm sm:text-base font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900 cursor-pointer">小6</button>
+          <div class="flex items-center gap-1.5 bg-slate-100 p-1.5 rounded-xl border border-slate-200/80 shadow-2xs" aria-label="選ばれる理由 学年一括切り替え">
+            <button type="button" onclick="selectGrade('c3')" id="feature-pill-c3" class="min-h-[44px] px-3.5 sm:px-5 py-2.5 text-sm sm:text-base font-bold rounded-lg transition-all bg-emerald-800 text-white shadow-xs cursor-pointer">中3</button>
+            <button type="button" onclick="selectGrade('c2')" id="feature-pill-c2" class="min-h-[44px] px-3.5 sm:px-5 py-2.5 text-sm sm:text-base font-bold rounded-lg transition-all text-slate-700 hover:text-slate-900 cursor-pointer">中2</button>
+            <button type="button" onclick="selectGrade('c1')" id="feature-pill-c1" class="min-h-[44px] px-3.5 sm:px-5 py-2.5 text-sm sm:text-base font-bold rounded-lg transition-all text-slate-700 hover:text-slate-900 cursor-pointer">中1</button>
+            <button type="button" onclick="selectGrade('p6')" id="feature-pill-p6" class="min-h-[44px] px-3.5 sm:px-5 py-2.5 text-sm sm:text-base font-bold rounded-lg transition-all text-slate-700 hover:text-slate-900 cursor-pointer">小6</button>
           </div>
 
           <!-- PC用 左右ナビゲーション矢印ボタン（＜ ＞） -->
           <div class="hidden md:flex items-center gap-2">
-            <button type="button" id="features-prev-btn" onclick="scrollFeaturesCarousel(-1)" aria-label="前のカードへ" class="w-10 h-10 rounded-full border border-slate-300 bg-white hover:bg-slate-50 active:bg-slate-100 flex items-center justify-center text-slate-700 shadow-xs transition-all cursor-pointer">
+            <button type="button" id="features-prev-btn" onclick="scrollFeaturesCarousel(-1)" aria-label="前のカードへ" class="w-11 h-11 min-w-[44px] min-h-[44px] rounded-full border border-slate-300 bg-white hover:bg-slate-50 active:bg-slate-100 flex items-center justify-center text-slate-700 shadow-xs transition-all cursor-pointer">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
             </button>
-            <button type="button" id="features-next-btn" onclick="scrollFeaturesCarousel(1)" aria-label="次のカードへ" class="w-10 h-10 rounded-full border border-slate-300 bg-white hover:bg-slate-50 active:bg-slate-100 flex items-center justify-center text-slate-700 shadow-xs transition-all cursor-pointer">
+            <button type="button" id="features-next-btn" onclick="scrollFeaturesCarousel(1)" aria-label="次のカードへ" class="w-11 h-11 min-w-[44px] min-h-[44px] rounded-full border border-slate-300 bg-white hover:bg-slate-50 active:bg-slate-100 flex items-center justify-center text-slate-700 shadow-xs transition-all cursor-pointer">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
             </button>
           </div>
@@ -398,10 +399,10 @@
               <span id="card1-point-label" class="hidden"></span>
 
               <!-- 【見出し】POINT 02と完全に統一した見出しフォントサイズ -->
-              <h4 id="card1-title" class="section-title text-lg sm:text-xl md:text-2xl font-bold text-emerald-950 leading-snug" style="color: #064e3b !important;">
+              <h3 id="card1-title" class="section-title text-lg sm:text-xl md:text-2xl font-bold text-emerald-950 leading-snug" style="color: #064e3b !important;">
                 <span id="card1-title-text">岡山県公立高校入試の出題傾向を完全再現</span>
                 <span id="card1-subtitle" class="hidden"></span>
-              </h4>
+              </h3>
 
               <!-- 【本文】ゆったりと読みやすい本文2文 -->
               <p id="card1-desc" class="text-xs sm:text-sm md:text-base text-slate-700 font-medium leading-relaxed">
@@ -455,10 +456,10 @@
               <span id="card2-point-label" class="hidden"></span>
 
               <!-- 【見出し】POINT 01と完全に統一した見出しフォントサイズ -->
-              <h4 id="card2-title" class="section-title text-lg sm:text-xl md:text-2xl font-bold text-emerald-950 leading-snug" style="color: #064e3b !important;">
+              <h3 id="card2-title" class="section-title text-lg sm:text-xl md:text-2xl font-bold text-emerald-950 leading-snug" style="color: #064e3b !important;">
                 <span id="card2-title-text">合否可能性と弱点がわかる精密な学力診断シート</span>
                 <span id="card2-subtitle" class="hidden"></span>
-              </h4>
+              </h3>
 
               <!-- 【本文】指定の本文文章 -->
               <p id="card2-desc" class="text-xs sm:text-sm md:text-base text-slate-700 font-medium leading-relaxed">
@@ -508,10 +509,10 @@
               <span id="card3-point-label" class="hidden"></span>
 
               <!-- 【見出し】POINT 01・02と完全に統一した見出しフォントサイズ -->
-              <h4 id="card3-title" class="section-title text-lg sm:text-xl md:text-2xl font-bold text-emerald-950 leading-snug" style="color: #064e3b !important;">
+              <h3 id="card3-title" class="section-title text-lg sm:text-xl md:text-2xl font-bold text-emerald-950 leading-snug" style="color: #064e3b !important;">
                 <span id="card3-title-text"><span class="inline-block">解き直しに疑問を残さない、</span><span class="inline-block">詳細な解答解説集</span></span>
                 <span id="card3-subtitle" class="hidden"></span>
-              </h4>
+              </h3>
 
               <!-- 【本文】指定の本文文章 -->
               <p id="card3-desc" class="text-xs sm:text-sm md:text-base text-slate-700 font-medium leading-relaxed">
@@ -579,7 +580,7 @@
     <section id="schedule-selector" class="py-16 md:py-20 px-4 sm:px-6 md:px-8 w-full relative scroll-mt-16 sm:scroll-mt-[4.5rem] bg-white border-b border-slate-200/80">
       
       <div class="text-center mb-6 md:mb-8">
-        <h3 class="section-title text-2xl md:text-3xl font-bold text-emerald-950 tracking-tight" style="color: #064e3b !important;">模試日程・出題範囲・申込</h3>
+        <h2 class="section-title text-2xl md:text-3xl font-bold text-emerald-950 tracking-tight" style="color: #064e3b !important;">模試日程・出題範囲・申込</h2>
         <p class="text-xs sm:text-sm text-slate-700 font-medium mt-2">学年と実施回を選ぶと、詳細が瞬時に切り替わります</p>
       </div>
 
@@ -589,11 +590,11 @@
         <!-- 上部：学年＆実施回タブ選択エリア（画面上部固定追従 Sticky バー） -->
         <div class="sticky top-16 sm:top-[4.5rem] z-20 bg-white -mx-4 md:-mx-10 px-4 md:px-10 py-2.5 sm:py-3 md:pt-6 md:pb-4 mb-4 md:mb-6 border-b border-slate-200 shadow-sm transition-all md:rounded-t-lg">
           
-          <!-- 【SP表示（md:hidden）】高さと余白を極限まで抑えた1行コンパクトバー（40px〜48px設計） -->
+          <!-- 【SP表示（md:hidden）】高さと余白を極限まで抑えた1行コンパクトバー（44px基準） -->
           <div class="md:hidden flex items-center gap-2 w-full">
             <!-- 学年選択セレクト（アイコン付き） -->
             <div class="relative w-1/3">
-              <select id="sp-grade-select" onchange="selectGrade(this.value)" class="w-full h-10 pl-8 pr-7 bg-slate-100 hover:bg-slate-200/80 text-slate-800 font-bold text-sm sm:text-base rounded-lg border border-slate-300/80 appearance-none focus:outline-none focus:ring-2 focus:ring-emerald-600/30 transition-all cursor-pointer">
+              <select id="sp-grade-select" onchange="selectGrade(this.value)" class="w-full h-11 min-h-[44px] pl-8 pr-7 bg-slate-100 hover:bg-slate-200/80 text-slate-800 font-bold text-sm sm:text-base rounded-lg border border-slate-300/80 appearance-none focus:outline-none focus:ring-2 focus:ring-emerald-600/30 transition-all cursor-pointer">
                 <option value="c3" selected>中3</option>
                 <option value="c2">中2</option>
                 <option value="c1">中1</option>
@@ -610,7 +611,7 @@
               </select>
 
               <!-- 見た目のUIコンテナ -->
-              <div id="sp-round-display" class="w-full h-10 px-2.5 sm:px-3 bg-slate-100 hover:bg-slate-200/80 rounded-lg border border-slate-300/80 flex items-center justify-between gap-1.5 transition-all pointer-events-none peer-focus:ring-2 peer-focus:ring-emerald-600/30 peer-focus:border-emerald-600">
+              <div id="sp-round-display" class="w-full h-11 min-h-[44px] px-2.5 sm:px-3 bg-slate-100 hover:bg-slate-200/80 rounded-lg border border-slate-300/80 flex items-center justify-between gap-1.5 transition-all pointer-events-none peer-focus:ring-2 peer-focus:ring-emerald-600/30 peer-focus:border-emerald-600">
                 <div class="flex items-center gap-1.5 min-w-0">
                   <span class="material-symbols-outlined text-[16px] text-emerald-800 shrink-0">calendar_month</span>
                   <span id="sp-round-month-text" class="text-slate-800 font-bold text-sm truncate">10月号</span>
@@ -649,9 +650,9 @@
           
           <!-- ② 模試名エリア（学年 ＋ 模試名称 ＋ 月号バッジ） -->
           <div class="flex items-center gap-2 sm:gap-2.5 flex-wrap mb-3.5 sm:mb-4">
-            <h4 id="card-title" class="section-title text-xl sm:text-2xl lg:text-3xl font-bold text-emerald-950 tracking-tight leading-tight" style="color: #064e3b !important;">
+            <h3 id="card-title" class="section-title text-xl sm:text-2xl lg:text-3xl font-bold text-emerald-950 tracking-tight leading-tight" style="color: #064e3b !important;">
               岡山県統一模擬試験
-            </h4>
+            </h3>
             <div class="inline-flex items-center gap-1.5 shrink-0">
               <span id="badge-grade" class="inline-flex items-center px-2 py-0.5 sm:px-2.5 sm:py-0.5 rounded-md text-xs sm:text-sm font-bold bg-[#f1f5f9] text-[#475569] border border-slate-200">
                 中3
@@ -691,7 +692,7 @@
               <div class="order-1 lg:order-none">
                 <div class="flex items-center gap-2.5 mb-3.5 sm:mb-4">
                   <span class="w-1.5 h-5 bg-brand-green rounded-full inline-block shrink-0"></span>
-                  <h5 class="section-title text-base sm:text-lg font-bold text-emerald-950 tracking-tight" style="color: #064e3b !important;">実施日程・会場</h5>
+                  <h4 class="section-title text-base sm:text-lg font-bold text-emerald-950 tracking-tight" style="color: #064e3b !important;">実施日程・会場</h4>
                 </div>
                 <div id="schedule-list" class="space-y-3.5"></div>
               </div>
@@ -710,7 +711,7 @@
                   
                   <div class="p-4 bg-slate-50/70 border-t border-slate-200">
                     <div class="flex items-center justify-between mb-2.5">
-                      <span class="text-xs font-bold text-slate-400">科目別出題単元</span>
+                      <span class="text-xs font-bold text-slate-600">科目別出題単元</span>
                       <span class="text-[11px] text-brand-green font-medium flex items-center gap-1">
                         <span>↔</span> 横にスクロールできます
                       </span>
@@ -755,20 +756,20 @@
               
               <!-- 個人受験のお申し込みについて -->
               <div class="order-4 lg:order-1 bg-white rounded-xl border border-slate-200/80 shadow-2xs p-5 sm:p-6 space-y-3">
-                <h6 class="font-bold text-sm sm:text-base text-slate-900 tracking-tight">
+                <h4 class="font-bold text-sm sm:text-base text-slate-900 tracking-tight">
                   個人受験のお申し込みについて
-                </h6>
+                </h4>
                 <ul class="space-y-2.5 text-slate-700 leading-relaxed text-xs sm:text-sm">
                   <li class="flex items-start gap-2">
-                    <span class="text-slate-400 font-bold shrink-0 mt-0.5">•</span>
+                    <span class="text-slate-500 font-bold shrink-0 mt-0.5">•</span>
                     <span>1回から個人でお申し込みできます。</span>
                   </li>
                   <li class="flex items-start gap-2">
-                    <span class="text-slate-400 font-bold shrink-0 mt-0.5">•</span>
+                    <span class="text-slate-500 font-bold shrink-0 mt-0.5">•</span>
                     <span>クレジットカード決済・コンビニ払いに対応。</span>
                   </li>
                   <li class="flex items-start gap-2">
-                    <span class="text-slate-400 font-bold shrink-0 mt-0.5">•</span>
+                    <span class="text-slate-500 font-bold shrink-0 mt-0.5">•</span>
                     <span>ご自宅受験は、試験前にご自宅宛てに問題郵送。</span>
                   </li>
                 </ul>
@@ -801,7 +802,7 @@
          ======================================================================= -->
     <section id="student-voices" class="py-16 md:py-20 px-4 sm:px-6 md:px-8 w-full bg-slate-50 border-b border-slate-200/80">
       <div class="text-center mb-6 md:mb-10">
-        <h3 class="section-title text-2xl md:text-3xl font-bold text-emerald-950 tracking-tight" style="color: #064e3b !important;">おかもしを受験された生徒さんからの声</h3>
+        <h2 class="section-title text-2xl md:text-3xl font-bold text-emerald-950 tracking-tight" style="color: #064e3b !important;">おかもしを受験された生徒さんからの声</h2>
         <p class="text-base md:text-lg text-slate-700 font-medium mt-2.5 sm:mt-3 leading-relaxed max-w-2xl mx-auto">
           志望校合格を掴み取ったリアルな体験談。<br>
           岡山県統一模擬試験を活用して合格を勝ち取った先輩たちの声をご紹介します。
@@ -815,7 +816,7 @@
           <div class="space-y-4">
             <div class="flex items-center gap-3 pb-2 border-b border-slate-200/60">
               <span class="w-8 h-8 rounded-lg bg-brand-green text-white font-bold text-sm flex items-center justify-center shrink-0 shadow-xs">01</span>
-              <h4 class="font-bold text-base sm:text-lg text-brand-green leading-snug">自分の「県内での立ち位置・レベル」がわかった！</h4>
+              <h3 class="font-bold text-base sm:text-lg text-brand-green leading-snug">自分の「県内での立ち位置・レベル」がわかった！</h3>
             </div>
             
             <div class="space-y-3 sm:space-y-3">
@@ -847,7 +848,7 @@
           <div class="space-y-4">
             <div class="flex items-center gap-3 pb-2 border-b border-slate-200/60">
               <span class="w-8 h-8 rounded-lg bg-[#8B3A18] text-white font-bold text-sm flex items-center justify-center shrink-0 shadow-xs">02</span>
-              <h4 class="font-bold text-base sm:text-lg text-[#8B3A18] leading-snug">本番さながらの「緊張感・会場の雰囲気」に慣れることができた！</h4>
+              <h3 class="font-bold text-base sm:text-lg text-[#8B3A18] leading-snug">本番さながらの「緊張感・会場の雰囲気」に慣れることができた！</h3>
             </div>
             
             <div class="space-y-3 sm:space-y-3">
@@ -879,7 +880,7 @@
           <div class="space-y-4">
             <div class="flex items-center gap-3 pb-2 border-b border-slate-200/60">
               <span class="w-8 h-8 rounded-lg bg-[#7A5B18] text-white font-bold text-sm flex items-center justify-center shrink-0 shadow-xs">03</span>
-              <h4 class="font-bold text-base sm:text-lg text-[#7A5B18] leading-snug">「得意・苦手」や「出題傾向」が明確になり、直前対策に役立った！</h4>
+              <h3 class="font-bold text-base sm:text-lg text-[#7A5B18] leading-snug">「得意・苦手」や「出題傾向」が明確になり、直前対策に役立った！</h3>
             </div>
             
             <div class="space-y-3 sm:space-y-3">
@@ -911,7 +912,7 @@
           <div class="space-y-4">
             <div class="flex items-center gap-3 pb-2 border-b border-slate-200/60">
               <span class="w-8 h-8 rounded-lg bg-[#1F6B51] text-white font-bold text-sm flex items-center justify-center shrink-0 shadow-xs">04</span>
-              <h4 class="font-bold text-base sm:text-lg text-[#1F6B51] leading-snug">信頼できる「判定データ」で志望校選びの基準になった！</h4>
+              <h3 class="font-bold text-base sm:text-lg text-[#1F6B51] leading-snug">信頼できる「判定データ」で志望校選びの基準になった！</h3>
             </div>
             
             <div class="space-y-3 sm:space-y-3">
@@ -947,7 +948,7 @@
     <section class="py-16 md:py-20 px-4 sm:px-6 md:px-8 w-full bg-white border-b border-slate-200/80">
       <div class="w-full max-w-4xl mx-auto">
         <div class="text-center mb-6 md:mb-8">
-          <h3 class="section-title text-2xl md:text-3xl font-bold text-emerald-950 tracking-tight" style="color: #064e3b !important;">最新のお知らせ</h3>
+          <h2 class="section-title text-2xl md:text-3xl font-bold text-emerald-950 tracking-tight" style="color: #064e3b !important;">最新のお知らせ</h2>
           <p class="text-xs sm:text-sm text-slate-600 font-medium mt-2">実施要項や受験に役立つ最新情報をお届けします</p>
         </div>
 
@@ -967,9 +968,9 @@
                     模試活用法
                   </span>
                 </div>
-                <h4 class="font-bold text-[15px] sm:text-base text-slate-900 group-hover:text-brand-green transition-colors flex-1 leading-snug break-words">
+                <h3 class="font-bold text-[15px] sm:text-base text-slate-900 group-hover:text-brand-green transition-colors flex-1 leading-snug break-words">
                   【8月号結果】岡山5校を志望校とした受験生が計1100名を超えました！
-                </h4>
+                </h3>
               </div>
               <div class="flex items-center gap-2 shrink-0">
                 <span class="text-xs font-bold text-slate-500 group-hover:text-brand-green transition-colors hidden md:inline">詳細を読む</span>
@@ -995,9 +996,9 @@
                     模試活用法
                   </span>
                 </div>
-                <h4 class="font-bold text-[15px] sm:text-base text-slate-900 group-hover:text-brand-green transition-colors flex-1 leading-snug break-words">
+                <h3 class="font-bold text-[15px] sm:text-base text-slate-900 group-hover:text-brand-green transition-colors flex-1 leading-snug break-words">
                   【岡山県の高校受験】合格への近道はここにある！「おかもし」が受験生から支持される理由
-                </h4>
+                </h3>
               </div>
               <div class="flex items-center gap-2 shrink-0">
                 <span class="text-xs font-bold text-slate-500 group-hover:text-brand-green transition-colors hidden md:inline">詳細を読む</span>
@@ -1023,9 +1024,9 @@
                     模試活用法
                   </span>
                 </div>
-                <h4 class="font-bold text-[15px] sm:text-base text-slate-900 group-hover:text-brand-green transition-colors flex-1 leading-snug break-words">
+                <h3 class="font-bold text-[15px] sm:text-base text-slate-900 group-hover:text-brand-green transition-colors flex-1 leading-snug break-words">
                   おかもし　決済用リンク
-                </h4>
+                </h3>
               </div>
               <div class="flex items-center gap-2 shrink-0">
                 <span class="text-xs font-bold text-slate-500 group-hover:text-brand-green transition-colors hidden md:inline">詳細を読む</span>
@@ -1055,7 +1056,7 @@
          ======================================================================= -->
     <section id="faq" class="py-16 md:py-20 px-4 sm:px-6 md:px-8 w-full scroll-mt-16 sm:scroll-mt-[4.5rem] bg-slate-50 border-b border-slate-200/80">
       <div class="text-center mb-6 md:mb-8">
-        <h3 class="section-title text-2xl md:text-3xl font-bold text-emerald-950 tracking-tight" style="color: #064e3b !important;">よくあるご質問</h3>
+        <h2 class="section-title text-2xl md:text-3xl font-bold text-emerald-950 tracking-tight" style="color: #064e3b !important;">よくあるご質問</h2>
         <p class="text-xs sm:text-sm text-slate-600 font-medium mt-2">受験に関するご不明な点はお気軽にご確認ください</p>
       </div>
 
@@ -1305,9 +1306,9 @@
     <section class="pt-12 md:pt-14 pb-10 md:pb-12 px-4 sm:px-6 md:px-8 w-full bg-white">
       <div class="w-full max-w-5xl mx-auto">
         <div class="text-center pb-8 sm:pb-10">
-          <h3 class="section-title text-2xl md:text-3xl font-bold text-emerald-950 tracking-tight" style="color: #064e3b !important;">
+          <h2 class="section-title text-2xl md:text-3xl font-bold text-emerald-950 tracking-tight" style="color: #064e3b !important;">
             おすすめ・関連ナビゲーション
-          </h3>
+          </h2>
           <p class="text-xs sm:text-sm text-slate-600 font-medium mt-2">受験準備やお近くの実施塾のご確認はこちらから</p>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
@@ -1318,9 +1319,9 @@
                 <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-emerald-100 text-brand-green flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                   <span class="material-symbols-outlined text-2xl">how_to_reg</span>
                 </div>
-                <h4 class="text-base sm:text-lg font-bold text-slate-900 group-hover:text-brand-green transition-colors leading-snug">
+                <h3 class="text-base sm:text-lg font-bold text-slate-900 group-hover:text-brand-green transition-colors leading-snug">
                   次回模試のお申込みはこちら
-                </h4>
+                </h3>
               </div>
               <p class="text-sm text-slate-700 mt-2.5 leading-relaxed">
                 24時間オンラインでお申込み完了。クレジットカード・コンビニ決済対応。会場受験・自宅受験を選択いただけます。
@@ -1341,9 +1342,9 @@
                 <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-emerald-100 text-brand-green flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                   <span class="material-symbols-outlined text-2xl">location_city</span>
                 </div>
-                <h4 class="text-base sm:text-lg font-bold text-slate-900 group-hover:text-brand-green transition-colors leading-snug">
+                <h3 class="text-base sm:text-lg font-bold text-slate-900 group-hover:text-brand-green transition-colors leading-snug">
                   岡山県内実施塾一覧を見る
-                </h4>
+                </h3>
               </div>
               <p class="text-sm text-slate-700 mt-2.5 leading-relaxed">
                 岡山市・倉敷市・津山市など県内各地の実施塾会場をエリア別で検索。通塾中の方は塾経由のお申込みも可能です。
@@ -1364,9 +1365,9 @@
                 <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-emerald-100 text-brand-green flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                   <span class="material-symbols-outlined text-2xl">photo_camera</span>
                 </div>
-                <h4 class="text-base sm:text-lg font-bold text-slate-900 group-hover:text-brand-green transition-colors leading-snug">
+                <h3 class="text-base sm:text-lg font-bold text-slate-900 group-hover:text-brand-green transition-colors leading-snug">
                   公式Instagram @okamoshi
-                </h4>
+                </h3>
               </div>
               <p class="text-sm text-slate-700 mt-2.5 leading-relaxed">
                 入試ワンポイント解説、英単語ミニクイズ、願書提出締切リマインドなど受験生・保護者向け情報をリアルタイム発信中。
@@ -1406,9 +1407,9 @@
     <div class="w-full max-w-5xl flex items-center justify-between py-1.5 px-2 text-white shrink-0">
       <div class="flex items-center gap-2 min-w-0 pr-2">
         <span class="w-2.5 h-2.5 rounded-full bg-brand-green shrink-0"></span>
-        <h4 id="modal-report-title" class="text-xs sm:text-base font-bold text-white tracking-wide truncate">
+        <h3 id="modal-report-title" class="text-xs sm:text-base font-bold text-white tracking-wide truncate">
           学力診断シート（個人成績表・2面構成）見本
-        </h4>
+        </h3>
         <span class="hidden md:inline text-xs text-slate-300 shrink-0">（当日点＋内申点の総合評価・弱点分析）</span>
       </div>
 
@@ -1503,11 +1504,11 @@
               <span>お問い合わせ</span>
             </div>
             <div class="flex flex-wrap sm:flex-nowrap gap-2 min-w-0">
-              <a class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg font-bold text-xs transition-all text-center shadow-xs border border-zinc-500 bg-zinc-500/50 hover:bg-zinc-500 text-white hover:text-white whitespace-nowrap" href="/contact/organization/index.html">
+              <a class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 min-h-[44px] rounded-lg font-bold text-xs transition-all text-center shadow-xs border border-zinc-500 bg-zinc-500/50 hover:bg-zinc-500 text-white hover:text-white whitespace-nowrap" href="/contact/organization/index.html">
                 <span class="material-symbols-outlined text-base text-emerald-400">corporate_fare</span>
                 <span>塾・学校関係者様</span>
               </a>
-              <a class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg font-bold text-xs transition-all text-center shadow-xs border border-zinc-500 bg-zinc-500/50 hover:bg-zinc-500 text-white hover:text-white whitespace-nowrap" href="/contact/individual/index.html">
+              <a class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 min-h-[44px] rounded-lg font-bold text-xs transition-all text-center shadow-xs border border-zinc-500 bg-zinc-500/50 hover:bg-zinc-500 text-white hover:text-white whitespace-nowrap" href="/contact/individual/index.html">
                 <span class="material-symbols-outlined text-base text-emerald-400">mail</span>
                 <span>個人申込の方</span>
               </a>
@@ -1520,29 +1521,29 @@
           <!-- 模試情報 -->
           <div class="space-y-2.5">
             <div class="font-bold text-xs sm:text-sm text-white">模試情報</div>
-            <ul class="space-y-2 text-xs sm:text-sm">
-              <li><a class="text-zinc-100 hover:text-white transition-colors" href="#schedule-table">次回模試実施要項</a></li>
-              <li><a class="text-zinc-100 hover:text-white transition-colors" href="#schedule-table">年間スケジュール</a></li>
-              <li><a class="text-zinc-100 hover:text-white transition-colors" href="#schedule-selector">適性検査・高校模試詳細</a></li>
+            <ul class="space-y-1 text-xs sm:text-sm">
+              <li><a class="text-zinc-100 hover:text-white transition-colors py-1.5 inline-block" href="#schedule-table">次回模試実施要項</a></li>
+              <li><a class="text-zinc-100 hover:text-white transition-colors py-1.5 inline-block" href="#schedule-table">年間スケジュール</a></li>
+              <li><a class="text-zinc-100 hover:text-white transition-colors py-1.5 inline-block" href="#schedule-selector">適性検査・高校模試詳細</a></li>
             </ul>
           </div>
 
           <!-- ご案内・手続き -->
           <div class="space-y-2.5 sm:col-span-2">
             <div class="font-bold text-xs sm:text-sm text-white">ご案内・手続き</div>
-            <ul class="space-y-2 text-xs sm:text-sm">
-              <li><a class="text-zinc-100 hover:text-white transition-colors" href="/schools_PC.html">実施塾一覧</a></li>
-              <li><a class="text-zinc-100 hover:text-white transition-colors" href="/apply">個人受験のお申込み</a></li>
+            <ul class="space-y-1 text-xs sm:text-sm">
+              <li><a class="text-zinc-100 hover:text-white transition-colors py-1.5 inline-block" href="/schools_PC.html">実施塾一覧</a></li>
+              <li><a class="text-zinc-100 hover:text-white transition-colors py-1.5 inline-block" href="/apply">個人受験のお申込み</a></li>
             </ul>
           </div>
 
           <!-- 規約・運営 -->
           <div class="space-y-2.5">
             <div class="font-bold text-xs sm:text-sm text-white">規約・運営</div>
-            <ul class="space-y-2 text-xs sm:text-sm">
-              <li><a class="text-zinc-100 hover:text-white transition-colors" href="/privacy.html">プライバシーポリシー</a></li>
-              <li><a class="text-zinc-100 hover:text-white transition-colors" href="/tokushoho.html">特定商取引法に基づく表記</a></li>
-              <li><a class="text-zinc-100 hover:text-white transition-colors" href="/news.html">お知らせ・更新情報</a></li>
+            <ul class="space-y-1 text-xs sm:text-sm">
+              <li><a class="text-zinc-100 hover:text-white transition-colors py-1.5 inline-block" href="/privacy.html">プライバシーポリシー</a></li>
+              <li><a class="text-zinc-100 hover:text-white transition-colors py-1.5 inline-block" href="/tokushoho.html">特定商取引法に基づく表記</a></li>
+              <li><a class="text-zinc-100 hover:text-white transition-colors py-1.5 inline-block" href="/news.html">お知らせ・更新情報</a></li>
             </ul>
           </div>
         </div>
@@ -4071,7 +4072,7 @@
                 <!-- メタ領域: [日付] [NEW(任意)] [カテゴリバッジ] -->
                 <div class="flex items-center gap-2.5 shrink-0">
                   <span class="flex items-center gap-1.5 text-xs text-slate-500 font-medium shrink-0">
-                    <span class="material-symbols-outlined text-[15px] text-slate-400">calendar_today</span>
+                    <span class="material-symbols-outlined text-[15px] text-slate-500">calendar_today</span>
                     <span class="tabular-nums">${pubDate}</span>
                   </span>
                   ${newBadgeHtml}
@@ -4081,9 +4082,9 @@
                 </div>
 
                 <!-- 記事タイトル -->
-                <h4 class="font-bold text-[15px] sm:text-base text-slate-900 group-hover:text-brand-green transition-colors flex-1 leading-snug break-words">
+                <h3 class="font-bold text-[15px] sm:text-base text-slate-900 group-hover:text-brand-green transition-colors flex-1 leading-snug break-words">
                   ${post.title || '無題のお知らせ'}
-                </h4>
+                </h3>
               </div>
 
               <!-- 右端アクション: FAQと同調した矢印ボタン -->

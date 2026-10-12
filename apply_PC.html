@@ -1037,11 +1037,6 @@
                 </div>
               </div>
 
-              <!-- Cloudflare Turnstile -->
-              <div class="flex justify-center my-3">
-                <div class="cf-turnstile" data-sitekey="0x4AAAAAAFUVxr1HR8KQNRY0" data-theme="light"></div>
-              </div>
-
               <!-- 送信ボタン -->
               <div id="submitApplyBtnWrapper" class="w-full">
                 <button id="submitApplyBtn" disabled class="w-full py-4 rounded-lg bg-slate-300 text-slate-500 font-headline-sm text-base sm:text-lg font-extrabold tracking-wide shadow-none transition-all flex items-center justify-center gap-2 cursor-not-allowed" type="submit">
@@ -1063,8 +1058,8 @@
 
           <!-- セキュリティ・決済保護のご案内 -->
           <div class="bg-slate-50/60 border border-slate-200/60 rounded-xl p-3 sm:p-3.5">
-            <!-- 2項目（SSL暗号化 / Stripe決済）: スマホで縦並び、md以上で左右2列 -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4 pb-2 border-b border-slate-200/60">
+            <!-- 3項目（SSL暗号化 / Stripe決済 / Cloudflare Turnstile）: スマホで縦並び、md以上で3列 -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 pb-2 border-b border-slate-200/60">
               <!-- SSL 256bit 暗号化通信 -->
               <div>
                 <div class="font-semibold text-slate-700 text-xs sm:text-[13px] flex items-center gap-1.5">
@@ -1082,6 +1077,15 @@
                 </div>
                 <p class="text-[11px] text-slate-500 mt-0.5 pl-[23px] leading-relaxed">国際最高基準（PCI DSS Level 1）準拠の決済システムを採用。</p>
               </div>
+
+              <!-- Cloudflare 不正アクセス防止 -->
+              <div>
+                <div class="font-semibold text-slate-700 text-xs sm:text-[13px] flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-emerald-700/80 text-[17px] shrink-0">shield</span>
+                  <span>Cloudflare 不正アクセス防止</span>
+                </div>
+                <p class="text-[11px] text-slate-500 mt-0.5 pl-[23px] leading-relaxed">高度なセキュリティ認証（Cloudflare Turnstile）を採用。不正な自動送信やスパムを検知・遮断し、安全な送信環境を保護しています。</p>
+              </div>
             </div>
 
             <!-- 補足文章（カード情報は当サイトに保存されない） -->
@@ -1094,6 +1098,8 @@
           </div>
         </div>
 
+        <!-- Cloudflare Turnstile (Invisible) -->
+        <div class="cf-turnstile" data-sitekey="0x4AAAAAAFUVxr1HR8KQNRY0" data-size="invisible" style="display:none;"></div>
       </form>
     </div>
   </div>
@@ -3435,16 +3441,6 @@ if (!parentKanaLastName || !parentKanaFirstName) {
         }
       }
 
-      // 5-3. Turnstile セキュリティ認証の確認
-      const turnstileInput = form.querySelector('input[name="cf-turnstile-response"]');
-      const turnstileToken = (turnstileInput ? turnstileInput.value : '') || (typeof turnstile !== 'undefined' ? turnstile.getResponse() : '');
-      if (!turnstileToken) {
-        resetSubmitBtn();
-        const turnstileElem = form.querySelector('.cf-turnstile') || submitBtn;
-        showFormError('セキュリティ認証（Turnstile）の確認を完了してください。', turnstileElem, turnstileElem);
-        return;
-      }
-
       // 全ての入力確認・バリデーションを通過：ローディング表示（二重防止）へ移行
       setSubmittingState();
 
@@ -3455,6 +3451,35 @@ if (!parentKanaLastName || !parentKanaFirstName) {
         resetSubmitBtn();
         showFormError('決済画面の接続に時間がかかっています。通信環境をご確認の上、再度お試しください。', submitBtn);
       }, 14000);
+
+      // 5-3. Turnstile セキュリティトークンの取得（Invisibleモード対応）
+      let turnstileToken = (form.querySelector('input[name="cf-turnstile-response"]')?.value || '').trim();
+      if (!turnstileToken && typeof turnstile !== 'undefined') {
+        turnstileToken = (turnstile.getResponse() || '').trim();
+        if (!turnstileToken) {
+          try {
+            const wElem = form.querySelector('.cf-turnstile');
+            if (wElem) turnstile.execute(wElem);
+            else turnstile.execute();
+          } catch (tExecErr) {
+            console.warn('[Turnstile] execute warning:', tExecErr);
+          }
+          // 最大3秒間トークン取得を待機
+          for (let i = 0; i < 30; i++) {
+            await new Promise(r => setTimeout(r, 100));
+            turnstileToken = (form.querySelector('input[name="cf-turnstile-response"]')?.value || turnstile.getResponse() || '').trim();
+            if (turnstileToken) break;
+          }
+        }
+      }
+
+      if (!turnstileToken) {
+        clearTimeout(safetyTimer);
+        hideLoadingOverlay();
+        resetSubmitBtn();
+        showFormError('セキュリティ認証の完了をお待ちいただくか、通信環境をご確認の上もう一度お試しください。', submitBtn);
+        return;
+      }
 
       try {
         // 6. 申込受付台帳（GAS / バックエンド）用 Payload の構築

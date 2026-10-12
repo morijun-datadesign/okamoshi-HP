@@ -306,10 +306,8 @@
           </label>
         </div>
 
-        <!-- Cloudflare Turnstile -->
-        <div class="flex justify-center pt-2">
-          <div class="cf-turnstile" data-sitekey="0x4AAAAAAFUVxr1HR8KQNRY0" data-theme="light"></div>
-        </div>
+        <!-- Cloudflare Turnstile (Invisible) -->
+        <div class="cf-turnstile" data-sitekey="0x4AAAAAAFUVxr1HR8KQNRY0" data-size="invisible" style="display:none;"></div>
 
         <!-- 送信ボタン -->
         <div class="pt-2 text-center">
@@ -317,6 +315,14 @@
             <span class="material-symbols-outlined text-xl">send</span>
             <span>お問い合わせを送信する</span>
           </button>
+          
+          <!-- セキュリティ注記 -->
+          <div class="mt-3.5 text-center">
+            <p class="text-[11px] sm:text-xs text-slate-500 leading-relaxed">
+              🔒 SSL 256bit 暗号化通信 / Cloudflare 不正アクセス防止<br>
+              ご入力内容は暗号化されて安全に送信され、最新のセキュリティ技術（Turnstile）により保護されています。
+            </p>
+          </div>
         </div>
       </form>
 
@@ -428,10 +434,8 @@
           </label>
         </div>
 
-        <!-- Cloudflare Turnstile -->
-        <div class="flex justify-center pt-2">
-          <div class="cf-turnstile" data-sitekey="0x4AAAAAAFUVxr1HR8KQNRY0" data-theme="light"></div>
-        </div>
+        <!-- Cloudflare Turnstile (Invisible) -->
+        <div class="cf-turnstile" data-sitekey="0x4AAAAAAFUVxr1HR8KQNRY0" data-size="invisible" style="display:none;"></div>
 
         <!-- 送信ボタン -->
         <div class="pt-2 text-center">
@@ -439,6 +443,14 @@
             <span class="material-symbols-outlined text-xl">send</span>
             <span>お問い合わせを送信する</span>
           </button>
+          
+          <!-- セキュリティ注記 -->
+          <div class="mt-3.5 text-center">
+            <p class="text-[11px] sm:text-xs text-slate-500 leading-relaxed">
+              🔒 SSL 256bit 暗号化通信 / Cloudflare 不正アクセス防止<br>
+              ご入力内容は暗号化されて安全に送信され、最新のセキュリティ技術（Turnstile）により保護されています。
+            </p>
+          </div>
         </div>
       </form>
 
@@ -656,15 +668,36 @@
           return;
         }
 
-        var turnstileToken = (orgForm.querySelector('input[name="cf-turnstile-response"]') ? orgForm.querySelector('input[name="cf-turnstile-response"]').value : '') || (typeof turnstile !== 'undefined' ? turnstile.getResponse() : '');
-        if (!turnstileToken) {
-          alert('セキュリティ認証（Turnstile）の確認を完了してください。');
-          return;
-        }
-
         var origHtml = btn.innerHTML;
         btn.disabled = true;
         btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-xl">progress_activity</span><span>送信中...</span>';
+
+        // Turnstile トークンの取得（Invisibleモード対応）
+        var turnstileToken = (orgForm.querySelector('input[name="cf-turnstile-response"]') ? orgForm.querySelector('input[name="cf-turnstile-response"]').value : '').trim();
+        if (!turnstileToken && typeof turnstile !== 'undefined') {
+          turnstileToken = (turnstile.getResponse() || '').trim();
+          if (!turnstileToken) {
+            try {
+              var wElem = orgForm.querySelector('.cf-turnstile');
+              if (wElem) turnstile.execute(wElem);
+              else turnstile.execute();
+            } catch (tExecErr) {
+              console.warn('[Turnstile] execute warning:', tExecErr);
+            }
+            for (var i = 0; i < 30; i++) {
+              await new Promise(function(resolve) { setTimeout(resolve, 100); });
+              turnstileToken = (orgForm.querySelector('input[name="cf-turnstile-response"]') ? orgForm.querySelector('input[name="cf-turnstile-response"]').value : turnstile.getResponse() || '').trim();
+              if (turnstileToken) break;
+            }
+          }
+        }
+
+        if (!turnstileToken) {
+          alert('セキュリティ認証の完了をお待ちいただくか、通信環境をご確認の上もう一度お試しください。');
+          btn.disabled = false;
+          btn.innerHTML = origHtml;
+          return;
+        }
 
         var formData = {
           organizationName: (document.getElementById('org-name') ? document.getElementById('org-name').value.trim() : ""),
@@ -719,15 +752,36 @@
           return;
         }
 
-        var turnstileToken = (indivForm.querySelector('input[name="cf-turnstile-response"]') ? indivForm.querySelector('input[name="cf-turnstile-response"]').value : '') || (typeof turnstile !== 'undefined' ? turnstile.getResponse() : '');
-        if (!turnstileToken) {
-          alert('セキュリティ認証（Turnstile）の確認を完了してください。');
-          return;
-        }
-
         var origHtml = btn.innerHTML;
         btn.disabled = true;
         btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-xl">progress_activity</span><span>送信中...</span>';
+
+        // Turnstile トークンの取得（Invisibleモード対応）
+        var turnstileToken = (indivForm.querySelector('input[name="cf-turnstile-response"]') ? indivForm.querySelector('input[name="cf-turnstile-response"]').value : '').trim();
+        if (!turnstileToken && typeof turnstile !== 'undefined') {
+          turnstileToken = (turnstile.getResponse() || '').trim();
+          if (!turnstileToken) {
+            try {
+              var wElem = indivForm.querySelector('.cf-turnstile');
+              if (wElem) turnstile.execute(wElem);
+              else turnstile.execute();
+            } catch (tExecErr) {
+              console.warn('[Turnstile] execute warning:', tExecErr);
+            }
+            for (var i = 0; i < 30; i++) {
+              await new Promise(function(resolve) { setTimeout(resolve, 100); });
+              turnstileToken = (indivForm.querySelector('input[name="cf-turnstile-response"]') ? indivForm.querySelector('input[name="cf-turnstile-response"]').value : turnstile.getResponse() || '').trim();
+              if (turnstileToken) break;
+            }
+          }
+        }
+
+        if (!turnstileToken) {
+          alert('セキュリティ認証の完了をお待ちいただくか、通信環境をご確認の上もう一度お試しください。');
+          btn.disabled = false;
+          btn.innerHTML = origHtml;
+          return;
+        }
 
         var formData = {
           organizationName: "",

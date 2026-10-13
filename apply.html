@@ -1056,42 +1056,34 @@
 
           <!-- セキュリティ・決済保護のご案内 -->
           <div class="bg-slate-50/60 border border-slate-200/60 rounded-xl p-3 sm:p-3.5">
-            <!-- 3項目（SSL暗号化 / Stripe決済 / Cloudflare Turnstile）: スマホで縦並び、md以上で3列 -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 pb-2 border-b border-slate-200/60">
-              <!-- SSL 256bit 暗号化通信 -->
+            <!-- 3項目（SSL暗号化通信 / Stripe決済 / Cloudflare不正アクセス防止）: スマホで縦並び、md以上で3列 -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
+              <!-- SSL暗号化通信 -->
               <div>
                 <div class="font-semibold text-slate-700 text-xs sm:text-[13px] flex items-center gap-1.5">
                   <span class="material-symbols-outlined text-emerald-700/80 text-[17px] shrink-0">lock</span>
-                  <span>SSL 256bit 暗号化通信</span>
+                  <span>SSL暗号化通信</span>
                 </div>
                 <p class="text-[11px] text-slate-500 mt-0.5 pl-[23px] leading-relaxed">ご入力情報は厳重に暗号化され、安全に保護されています。</p>
               </div>
 
-              <!-- Stripe Secure Payment -->
+              <!-- Stripe決済 -->
               <div>
                 <div class="font-semibold text-slate-700 text-xs sm:text-[13px] flex items-center gap-1.5">
                   <span class="material-symbols-outlined text-emerald-700/80 text-[17px] shrink-0">credit_score</span>
-                  <span>Stripe Secure Payment</span>
+                  <span>Stripe決済</span>
                 </div>
-                <p class="text-[11px] text-slate-500 mt-0.5 pl-[23px] leading-relaxed">国際最高基準（PCI DSS Level 1）準拠の決済システムを採用。</p>
+                <p class="text-[11px] text-slate-500 mt-0.5 pl-[23px] leading-relaxed">国際最高基準（PCI DSS Level 1）準拠の決済システムを採用。カード情報は当サイトに保存されず、Stripeにより安全に直接処理されます。</p>
               </div>
 
-              <!-- Cloudflare 不正アクセス防止 -->
+              <!-- Cloudflare不正アクセス防止 -->
               <div>
                 <div class="font-semibold text-slate-700 text-xs sm:text-[13px] flex items-center gap-1.5">
                   <span class="material-symbols-outlined text-emerald-700/80 text-[17px] shrink-0">shield</span>
-                  <span>Cloudflare 不正アクセス防止</span>
+                  <span>Cloudflare不正アクセス防止</span>
                 </div>
                 <p class="text-[11px] text-slate-500 mt-0.5 pl-[23px] leading-relaxed">高度なセキュリティ認証（Cloudflare Turnstile）を採用。不正な自動送信やスパムを検知・遮断し、安全な送信環境を保護しています。</p>
               </div>
-            </div>
-
-            <!-- 補足文章（カード情報は当サイトに保存されない） -->
-            <div class="pt-2 flex items-start gap-1.5 text-[11px] text-slate-500">
-              <span class="material-symbols-outlined text-sm text-slate-400 shrink-0 mt-0.5">info</span>
-              <p class="leading-relaxed">
-                カード情報は当サイトに保存されず、世界基準の決済システム（Stripe）で直接保護・安全に処理されます。
-              </p>
             </div>
           </div>
         </div>

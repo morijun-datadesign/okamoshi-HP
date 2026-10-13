@@ -600,6 +600,17 @@
     <div class="max-w-4xl mx-auto w-full px-0 pb-12 sm:pb-0">
       <form class="flex flex-col gap-8" id="applicationForm" action="javascript:void(0);" novalidate onsubmit="event.preventDefault(); handleApplySubmit(event); return false;">
         
+        <!-- 自動復元通知バナー（前回入力内容復元時のみ表示） -->
+        <div id="autofillNoticeBanner" class="hidden p-3.5 sm:p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 shadow-xs flex items-center justify-between gap-3 transition-all duration-300 -mb-2" role="status">
+          <div class="flex items-center gap-2.5 min-w-0">
+            <span class="text-lg shrink-0 select-none">💡</span>
+            <span class="text-xs sm:text-sm font-bold text-emerald-950 leading-snug">前回の入力内容を自動反映しました（内容の変更も可能です）</span>
+          </div>
+          <button type="button" onclick="dismissAutofillBanner()" class="p-1 text-emerald-700 hover:text-emerald-950 hover:bg-emerald-100 rounded-md transition-colors shrink-0 cursor-pointer" aria-label="閉じる">
+            <span class="material-symbols-outlined text-lg">close</span>
+          </button>
+        </div>
+
         <div class="flex flex-col gap-6">
 
           <!-- ========================================== -->
@@ -1087,6 +1098,23 @@
                 <p class="text-[11px] text-slate-500 mt-0.5 pl-[23px] leading-relaxed">高度なセキュリティ認証（Cloudflare Turnstile）を採用。不正な自動送信やスパムを検知・遮断し、安全な送信環境を保護しています。</p>
               </div>
             </div>
+          </div>
+
+          <!-- プライバシー配慮・入力情報自動保存の注記 & クリア機能 -->
+          <div class="text-center text-xs text-slate-500 space-y-1.5 pt-1 px-1">
+            <p class="leading-relaxed">
+              ※次回のお申込みをスムーズにするため、基本情報はお使いの端末（ブラウザ）内にのみ安全に一時保存されます。当サイトのサーバー側で未送信情報を保持することはありません。
+            </p>
+            <p id="storageClearActionContainer" class="flex items-center justify-center gap-2">
+              <button type="button" onclick="clearSavedProfile()" class="text-slate-500 hover:text-red-600 underline cursor-pointer transition-colors text-xs inline-flex items-center gap-1">
+                <span class="material-symbols-outlined text-[15px]">delete_outline</span>
+                <span>保存された情報を消去する</span>
+              </button>
+              <span id="storageClearSuccessMsg" class="hidden text-emerald-700 font-bold text-xs inline-flex items-center gap-1">
+                <span class="material-symbols-outlined text-[15px] text-emerald-600">check_circle</span>
+                <span>保存情報を消去しました</span>
+              </span>
+            </p>
           </div>
         </div>
 
@@ -3117,6 +3145,175 @@
     }
 
     // ========================================================
+    // 5.6 基本情報の localStorage 自動保存・自動復元（リピート申込支援）
+    // ========================================================
+    const OKAMOSHI_STORAGE_PROFILE_KEY = 'okamoshi_saved_profile';
+
+    /**
+     * バリデーション通過済みの基本情報を安全に localStorage へ保存
+     * ※ 受験回、希望会場、志望校、決済・クレジットカード情報は厳格に対象外
+     */
+    function saveProfileToStorage() {
+      try {
+        if (typeof window.localStorage === 'undefined') return;
+
+        const profileData = {
+          // 生徒氏名 / フリガナ
+          student_last_name: document.getElementById('studentLastName')?.value.trim() || '',
+          student_first_name: document.getElementById('studentFirstName')?.value.trim() || '',
+          student_kana_last_name: document.getElementById('studentKanaLastName')?.value.trim() || '',
+          student_kana_first_name: document.getElementById('studentKanaFirstName')?.value.trim() || '',
+          // 在籍中学校・小学校名
+          current_school: document.getElementById('currentSchool')?.value.trim() || '',
+          // 保護者氏名 / フリガナ
+          parent_last_name: document.getElementById('parentLastName')?.value.trim() || '',
+          parent_first_name: document.getElementById('parentFirstName')?.value.trim() || '',
+          parent_kana_last_name: document.getElementById('parentKanaLastName')?.value.trim() || '',
+          parent_kana_first_name: document.getElementById('parentKanaFirstName')?.value.trim() || '',
+          // メールアドレス
+          parent_email: document.getElementById('parentEmail')?.value.trim() || '',
+          // 電話番号
+          parent_tel: document.getElementById('parentTel')?.value.trim() || '',
+          // 郵便番号 / 住所
+          postal_code: document.getElementById('postalCode')?.value.trim() || '',
+          address_line1: document.getElementById('addressLine1')?.value.trim() || '',
+          address_line2: document.getElementById('addressLine2')?.value.trim() || '',
+          address_line3: document.getElementById('addressLine3')?.value.trim() || '',
+          saved_at: new Date().toISOString()
+        };
+
+        // 基本情報のいずれかが入力されている場合のみ保存
+        if (profileData.student_last_name || profileData.parent_last_name || profileData.parent_email) {
+          window.localStorage.setItem(OKAMOSHI_STORAGE_PROFILE_KEY, JSON.stringify(profileData));
+        }
+      } catch (err) {
+        // プライベートブラウズや容量制限等の例外を安全に吸収
+        console.warn('[AutoFill] localStorage save failed:', err);
+      }
+    }
+
+    /**
+     * ページ表示時に保存された基本情報を自動復元
+     */
+    function restoreSavedProfile() {
+      try {
+        if (typeof window.localStorage === 'undefined') return;
+
+        const raw = window.localStorage.getItem(OKAMOSHI_STORAGE_PROFILE_KEY);
+        if (!raw) return;
+
+        const data = JSON.parse(raw);
+        if (!data || typeof data !== 'object') return;
+
+        let restoredCount = 0;
+
+        const applyValue = (elemId, val) => {
+          if (!val) return;
+          const el = document.getElementById(elemId);
+          if (el && !el.value) {
+            el.value = val;
+            restoredCount++;
+            // 入力連動リスナーを発火させて既存バリデーションやスタイルを同期
+            el.dispatchEvent(new Event('input', { bubbles: true }));
+            el.dispatchEvent(new Event('change', { bubbles: true }));
+          }
+        };
+
+        applyValue('studentLastName', data.student_last_name);
+        applyValue('studentFirstName', data.student_first_name);
+        applyValue('studentKanaLastName', data.student_kana_last_name);
+        applyValue('studentKanaFirstName', data.student_kana_first_name);
+        applyValue('currentSchool', data.current_school);
+
+        applyValue('parentLastName', data.parent_last_name);
+        applyValue('parentFirstName', data.parent_first_name);
+        applyValue('parentKanaLastName', data.parent_kana_last_name);
+        applyValue('parentKanaFirstName', data.parent_kana_first_name);
+
+        applyValue('parentEmail', data.parent_email);
+        if (data.parent_email) {
+          applyValue('parentEmailConfirm', data.parent_email);
+        }
+        applyValue('parentTel', data.parent_tel);
+
+        applyValue('postalCode', data.postal_code);
+        applyValue('addressLine1', data.address_line1);
+        applyValue('addressLine2', data.address_line2);
+        applyValue('addressLine3', data.address_line3);
+
+        // データが復元された場合は自動反映バナーを表示
+        if (restoredCount > 0) {
+          const banner = document.getElementById('autofillNoticeBanner');
+          if (banner) {
+            banner.classList.remove('hidden');
+          }
+        }
+      } catch (err) {
+        console.warn('[AutoFill] localStorage restore failed:', err);
+      }
+    }
+
+    /**
+     * 自動反映バナーを閉じる
+     */
+    function dismissAutofillBanner() {
+      const banner = document.getElementById('autofillNoticeBanner');
+      if (banner) {
+        banner.classList.add('hidden');
+      }
+    }
+
+    /**
+     * 保存された基本情報を localStorage から消去し、入力欄をクリア
+     */
+    function clearSavedProfile() {
+      try {
+        if (typeof window.localStorage !== 'undefined') {
+          window.localStorage.removeItem(OKAMOSHI_STORAGE_PROFILE_KEY);
+        }
+
+        // 該当入力欄のクリア
+        const targetIds = [
+          'studentLastName', 'studentFirstName',
+          'studentKanaLastName', 'studentKanaFirstName',
+          'currentSchool',
+          'parentLastName', 'parentFirstName',
+          'parentKanaLastName', 'parentKanaFirstName',
+          'parentEmail', 'parentEmailConfirm',
+          'parentTel',
+          'postalCode',
+          'addressLine1', 'addressLine2', 'addressLine3'
+        ];
+
+        targetIds.forEach(id => {
+          const el = document.getElementById(id);
+          if (el) {
+            el.value = '';
+            el.dispatchEvent(new Event('input', { bubbles: true }));
+            el.dispatchEvent(new Event('change', { bubbles: true }));
+          }
+        });
+
+        // 自動復元バナーも非表示
+        dismissAutofillBanner();
+
+        // 消去完了の簡易フィードバック表示
+        const msgElem = document.getElementById('storageClearSuccessMsg');
+        if (msgElem) {
+          msgElem.classList.remove('hidden');
+          setTimeout(() => {
+            msgElem.classList.add('hidden');
+          }, 3500);
+        }
+      } catch (err) {
+        console.warn('[AutoFill] localStorage clear failed:', err);
+      }
+    }
+
+    window.dismissAutofillBanner = dismissAutofillBanner;
+    window.clearSavedProfile = clearSavedProfile;
+
+    // ========================================================
     // 6. フォームバリデーション & Stripe 決済接続ハンドラー
     // ========================================================
     let isSubmitting = false;
@@ -3435,6 +3632,9 @@ if (!parentKanaLastName || !parentKanaFirstName) {
 
       // 全ての入力確認・バリデーションを通過：ローディング表示（二重防止）へ移行
       setSubmittingState();
+
+      // 基本情報の次回自動入力用 localStorage 保存（機密・決済情報除外）
+      saveProfileToStorage();
 
       // 安全タイマー（通信遅延やハング時に自動的にローディング解除＆エラー表示）
       safetyTimer = setTimeout(() => {
@@ -3816,6 +4016,9 @@ if (!parentKanaLastName || !parentKanaFirstName) {
 
       // 規約同意チェック・コンビニ決済期限同意と送信ボタンの連動初期化
       initAgreementListeners();
+
+      // 基本情報の自動復元（前回保存データが存在する場合）
+      restoreSavedProfile();
     });
   </script>
 </body>

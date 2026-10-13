@@ -1065,6 +1065,31 @@
             </div>
           </div>
 
+          <!-- 入力情報の端末保存について（新設のインフォメーションカード） -->
+          <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 sm:p-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div class="space-y-1 min-w-0 flex-1">
+                <div class="font-semibold text-slate-700 text-xs sm:text-[13px] flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-slate-500 text-[18px] shrink-0">devices</span>
+                  <span>入力情報の端末保存について</span>
+                </div>
+                <p class="text-xs text-slate-600 leading-relaxed pl-[24px]">
+                  次回のお申込みをスムーズにするため、基本情報はお使いの端末（ブラウザ）内にのみ安全に一時保存されます。当サイトのサーバー側で未送信情報を保持することはありません。
+                </p>
+              </div>
+              <div class="shrink-0 pl-[24px] sm:pl-0 flex items-center gap-2">
+                <button type="button" onclick="clearSavedProfile()" class="px-3 py-1.5 text-xs text-slate-600 bg-white border border-slate-300 rounded hover:bg-slate-100 transition-colors inline-flex items-center gap-1.5 cursor-pointer shadow-2xs">
+                  <span class="material-symbols-outlined text-[15px] text-slate-400">delete_outline</span>
+                  <span>保存された情報を消去する</span>
+                </button>
+                <span id="storageClearSuccessMsg" class="hidden text-emerald-700 font-bold text-xs inline-flex items-center gap-1">
+                  <span class="material-symbols-outlined text-[15px] text-emerald-600">check_circle</span>
+                  <span>保存情報を消去しました</span>
+                </span>
+              </div>
+            </div>
+          </div>
+
           <!-- セキュリティ・決済保護のご案内 -->
           <div class="bg-slate-50/60 border border-slate-200/60 rounded-xl p-3 sm:p-3.5">
             <!-- 3項目（SSL暗号化通信 / Stripe決済 / Cloudflare不正アクセス防止）: スマホで縦並び、md以上で3列 -->
@@ -1096,23 +1121,6 @@
                 <p class="text-[11px] text-slate-500 mt-0.5 pl-[23px] leading-relaxed">高度なセキュリティ認証（Cloudflare Turnstile）を採用。不正な自動送信やスパムを検知・遮断し、安全な送信環境を保護しています。</p>
               </div>
             </div>
-          </div>
-
-          <!-- プライバシー配慮・入力情報自動保存の注記 & クリア機能 -->
-          <div class="text-center text-xs text-slate-500 space-y-1.5 pt-1 px-1">
-            <p class="leading-relaxed">
-              ※次回のお申込みをスムーズにするため、基本情報はお使いの端末（ブラウザ）内にのみ安全に一時保存されます。当サイトのサーバー側で未送信情報を保持することはありません。
-            </p>
-            <p id="storageClearActionContainer" class="flex items-center justify-center gap-2">
-              <button type="button" onclick="clearSavedProfile()" class="text-slate-500 hover:text-red-600 underline cursor-pointer transition-colors text-xs inline-flex items-center gap-1">
-                <span class="material-symbols-outlined text-[15px]">delete_outline</span>
-                <span>保存された情報を消去する</span>
-              </button>
-              <span id="storageClearSuccessMsg" class="hidden text-emerald-700 font-bold text-xs inline-flex items-center gap-1">
-                <span class="material-symbols-outlined text-[15px] text-emerald-600">check_circle</span>
-                <span>保存情報を消去しました</span>
-              </span>
-            </p>
           </div>
         </div>
 
@@ -3327,6 +3335,9 @@
      * 保存された基本情報を localStorage から消去し、入力欄をクリア
      */
     function clearSavedProfile() {
+      if (!window.confirm('端末に保存された入力情報を消去しますか？')) {
+        return;
+      }
       try {
         if (typeof window.localStorage !== 'undefined') {
           window.localStorage.removeItem(OKAMOSHI_STORAGE_PROFILE_KEY);

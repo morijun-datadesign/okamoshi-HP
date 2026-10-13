@@ -74,10 +74,17 @@ def optimize_images():
     if os.path.exists(optimize_script):
         subprocess.run([sys.executable, optimize_script], cwd=BASE_DIR, check=True)
 
+def build_ssg():
+    print("Building microCMS static pages (SSG)...")
+    ssg_script = os.path.join(BASE_DIR, "scripts", "build_ssg.py")
+    if os.path.exists(ssg_script):
+        subprocess.run([sys.executable, ssg_script], cwd=BASE_DIR, check=True)
+
 def main():
     print("=== okamoshi Production Build Started ===")
     build_css()
     optimize_images()
+    build_ssg()
     print("=== okamoshi Production Build Finished Successfully ===")
 
 if __name__ == "__main__":

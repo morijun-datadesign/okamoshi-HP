@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="ja" class="scroll-smooth">
 <head>
+  <script>
+    (function() {
+      var params = new URLSearchParams(window.location.search);
+      var id = params.get('id');
+      if (id) {
+        window.location.replace('/news/' + encodeURIComponent(id) + '/');
+      }
+    })();
+  </script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title id="page-title">お知らせ・受験情報詳細 | 岡山県統一模擬試験（おかもし）</title>

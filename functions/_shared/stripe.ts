@@ -47,3 +47,79 @@ export const fetchPaymentIntent = async (
     return null;
   }
 };
+
+/**
+ * Stripe Webhook 署名（Stripe-Signature）を Web Crypto API (HMAC-SHA256) で検証する。
+ * リプレイ攻撃防止（許容時間差: デフォルト300秒）およびタイミング攻撃対策（定時間比較）を実装。
+ */
+export const verifyStripeWebhookSignature = async (
+  rawBody: string,
+  signatureHeader: string | null,
+  webhookSecret: string,
+  toleranceSec = 300
+): Promise<{ valid: boolean; error?: string }> => {
+  if (!signatureHeader) {
+    return { valid: false, error: "Missing stripe-signature header" };
+  }
+  if (!webhookSecret) {
+    return { valid: false, error: "Missing webhookSecret" };
+  }
+
+  // 1. t と v1 を抽出
+  const parts = signatureHeader.split(",");
+  let timestamp = "";
+  const signatures: string[] = [];
+  for (const part of parts) {
+    const [k, v] = part.trim().split("=");
+    if (k === "t") timestamp = v;
+    if (k === "v1") signatures.push(v);
+  }
+
+  if (!timestamp || signatures.length === 0) {
+    return { valid: false, error: "Invalid stripe-signature header format" };
+  }
+
+  // 2. タイムスタンプの検証（リプレイ攻撃防止）
+  const eventTime = parseInt(timestamp, 10);
+  const now = Math.floor(Date.now() / 1000);
+  if (Number.isNaN(eventTime) || Math.abs(now - eventTime) > toleranceSec) {
+    return { valid: false, error: "Webhook timestamp outside tolerance zone" };
+  }
+
+  // 3. HMAC-SHA256 の計算
+  try {
+    const encoder = new TextEncoder();
+    const key = await crypto.subtle.importKey(
+      "raw",
+      encoder.encode(webhookSecret),
+      { name: "HMAC", hash: "SHA-256" },
+      false,
+      ["sign"]
+    );
+
+    const signedPayload = `${timestamp}.${rawBody}`;
+    const signatureBytes = await crypto.subtle.sign(
+      "HMAC",
+      key,
+      encoder.encode(signedPayload)
+    );
+
+    const expectedSignature = Array.from(new Uint8Array(signatureBytes))
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
+
+    // 4. 定数時間比較（Timing Attack 対策）
+    const isValid = signatures.some((sig) => {
+      if (sig.length !== expectedSignature.length) return false;
+      let mismatch = 0;
+      for (let i = 0; i < sig.length; i++) {
+        mismatch |= sig.charCodeAt(i) ^ expectedSignature.charCodeAt(i);
+      }
+      return mismatch === 0;
+    });
+
+    return isValid ? { valid: true } : { valid: false, error: "Signature mismatch" };
+  } catch (err) {
+    return { valid: false, error: `Signature verification exception: ${err}` };
+  }
+};

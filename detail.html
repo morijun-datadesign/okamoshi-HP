@@ -2144,7 +2144,7 @@
       if (!section || !grid) return;
 
       const domain = (typeof MICROCMS_CONFIG !== 'undefined' && MICROCMS_CONFIG.serviceDomain) || 'okamoshi-blog';
-      const apiKey = (typeof MICROCMS_CONFIG !== 'undefined' && MICROCMS_CONFIG.apiKey) || '4qO3xGjs5W1r7zolbBgAX2KXP8VEUooOpMtc';
+      const apiKey = (typeof MICROCMS_CONFIG !== 'undefined' && MICROCMS_CONFIG.apiKey) || '';
       const endpoint = (typeof MICROCMS_CONFIG !== 'undefined' && MICROCMS_CONFIG.endpoint) || 'blogs';
 
       const hasMicroCMS = domain && domain !== 'YOUR_SERVICE_DOMAIN' && apiKey && apiKey !== 'YOUR_API_KEY';
@@ -2539,7 +2539,7 @@
 
       let contents = [];
       const domain = (typeof MICROCMS_CONFIG !== 'undefined' && MICROCMS_CONFIG.serviceDomain) || 'okamoshi-blog';
-      const apiKey = (typeof MICROCMS_CONFIG !== 'undefined' && MICROCMS_CONFIG.apiKey) || '4qO3xGjs5W1r7zolbBgAX2KXP8VEUooOpMtc';
+      const apiKey = (typeof MICROCMS_CONFIG !== 'undefined' && MICROCMS_CONFIG.apiKey) || '';
       const url = `https://${domain}.microcms.io/api/v1/exam-guides?limit=100&_t=${Date.now()}`;
 
       try {

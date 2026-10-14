@@ -1,7 +1,7 @@
 import { Env, DEFAULT_GAS_URL, DEFAULT_FROM_EMAIL, DEFAULT_ADMIN_EMAIL, readEnv } from "../_shared/env";
 import { jsonResponse } from "../_shared/http";
 import { ExamRecord, recordsFromMetadata } from "../_shared/exam";
-import { fetchCheckoutSession, fetchPaymentIntent } from "../_shared/stripe";
+import { fetchCheckoutSession, fetchPaymentIntent, verifyStripeWebhookSignature } from "../_shared/stripe";
 import { sendResendEmail } from "../_shared/resend";
 
 const LOG = "[functions/api/stripe-webhook]";
@@ -79,7 +79,31 @@ const extractKonbiniInfo = (paymentIntent: Record<string, any> | null): KonbiniI
 
 export const onRequestPost: PagesFunction<Env> = async (context) => {
   try {
-    const event = (await context.request.json()) as Record<string, any>;
+    const rawBody = await context.request.text();
+    const env = context.env;
+    const webhookSecret = readEnv(env, "STRIPE_WEBHOOK_SECRET");
+    const signatureHeader = context.request.headers.get("stripe-signature");
+
+    // 0. 【セキュリティ改修】Stripe 公式の Webhook 署名検証（HMAC-SHA256）
+    if (webhookSecret) {
+      const sigResult = await verifyStripeWebhookSignature(rawBody, signatureHeader, webhookSecret);
+      if (!sigResult.valid) {
+        console.error(`${LOG} Webhook signature verification failed:`, sigResult.error);
+        return jsonResponse({ error: "Invalid signature", details: sigResult.error }, 400);
+      }
+      console.log(`${LOG} Webhook signature verified successfully.`);
+    } else {
+      console.warn(`${LOG} STRIPE_WEBHOOK_SECRET is not configured. Falling back to direct Stripe API verification.`);
+    }
+
+    let event: Record<string, any>;
+    try {
+      event = JSON.parse(rawBody);
+    } catch (parseErr) {
+      console.error(`${LOG} Failed to parse JSON body:`, parseErr);
+      return jsonResponse({ error: "Invalid JSON" }, 400);
+    }
+
     const eventType = String(event?.type || "");
     console.log(`${LOG} Stripe webhook received event:`, eventType, event?.id);
 
@@ -95,7 +119,6 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       return jsonResponse({ received: true, ignored: "no_session_id" });
     }
 
-    const env = context.env;
     const stripeSecretKey = readEnv(env, "STRIPE_SECRET_KEY");
     const gasUrl = readEnv(env, "GAS_APPLY_URL", DEFAULT_GAS_URL);
     const gasSecret = readEnv(env, "GAS_SHARED_SECRET");

@@ -18,13 +18,17 @@ from datetime import datetime
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# 環境変数（未設定時の安全なフォールバックを保持）
-MICROCMS_API_KEY = os.environ.get("MICROCMS_API_KEY", "4qO3xGjs5W1r7zolbBgAX2KXP8VEUooOpMtc")
+# 環境変数からAPIキーを取得（リポジトリ内へのハードコードは排除）
+MICROCMS_API_KEY = os.environ.get("MICROCMS_API_KEY", "")
 MICROCMS_SERVICE_DOMAIN = os.environ.get("MICROCMS_SERVICE_DOMAIN", "okamoshi-blog")
 MICROCMS_ENDPOINT = "blogs"
 
 def fetch_microcms_articles():
     """microCMS から全記事を取得（降順）"""
+    if not MICROCMS_API_KEY:
+        print("Notice: MICROCMS_API_KEY is not set. Using local fallback articles.")
+        return get_fallback_articles()
+
     url = f"https://{MICROCMS_SERVICE_DOMAIN}.microcms.io/api/v1/{MICROCMS_ENDPOINT}?limit=100&orders=-publishedAt"
     req = urllib.request.Request(url, headers={"X-MICROCMS-API-KEY": MICROCMS_API_KEY})
     print(f"Fetching articles from microCMS ({url})...")
@@ -40,6 +44,8 @@ def fetch_microcms_articles():
 
 def fetch_microcms_exam_guides():
     """microCMS から模試概要ウィジェット用データを取得"""
+    if not MICROCMS_API_KEY:
+        return []
     url = f"https://{MICROCMS_SERVICE_DOMAIN}.microcms.io/api/v1/exam-guides?limit=100"
     req = urllib.request.Request(url, headers={"X-MICROCMS-API-KEY": MICROCMS_API_KEY})
     try:

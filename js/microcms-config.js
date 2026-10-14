@@ -5,6 +5,6 @@
  */
 const MICROCMS_CONFIG = {
   serviceDomain: 'okamoshi-blog',
-  apiKey: '4qO3xGjs5W1r7zolbBgAX2KXP8VEUooOpMtc',
+  apiKey: '',
   endpoint: 'blogs'
 };

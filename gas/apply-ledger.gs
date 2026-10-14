@@ -65,8 +65,8 @@ function doPost(e) {
     var props = PropertiesService.getScriptProperties();
 
     var secret = props.getProperty('SHARED_SECRET');
-    if (secret && data.token !== secret) {
-      return json_({ status: 'error', message: 'unauthorized' });
+    if (!secret || data.token !== secret) {
+      return json_({ status: 'error', message: 'unauthorized: SHARED_SECRET is not configured or token mismatch' });
     }
 
     // 同時実行（複数 Webhook の同時到着）による重複追記・行ずれを防ぐ

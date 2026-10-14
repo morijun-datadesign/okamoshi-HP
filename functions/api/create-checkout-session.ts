@@ -23,9 +23,13 @@ interface CheckoutLineItem {
   record: { id: string; label: string; issue: string; title: string; venue: string; price: number; date: string };
 }
 
+/** 岡山県統一模擬試験・適性検査対策模試の正規定価（税込） */
+const OFFICIAL_EXAM_PRICE = 5500;
+
 /**
  * フロントから送られた exams 配列を、Stripe の line_items 用に1件ずつ正規化する。
- * 価格が不正（0以下・非数値）の要素は除外する。
+ * 【セキュリティ改修】クライアントから送られた価格は一切信用せず、
+ * サーバー側で定義された正規定価（5,500円）を強制適用して金額改ざんを防止する。
  */
 const buildExamLineItems = (exams: unknown): CheckoutLineItem[] => {
   if (!Array.isArray(exams)) return [];
@@ -33,8 +37,8 @@ const buildExamLineItems = (exams: unknown): CheckoutLineItem[] => {
   for (const exam of exams) {
     if (!exam || typeof exam !== "object") continue;
     const e = exam as Record<string, any>;
-    const unitAmount = Math.round(Number(e.price));
-    if (!Number.isFinite(unitAmount) || unitAmount <= 0) continue;
+    // サーバー側の正規定価を強制適用
+    const unitAmount = OFFICIAL_EXAM_PRICE;
 
     const title = String(e.title || e.exam_name || "岡山県統一模擬試験").trim();
     const venue = String(e.venue_name || e.venueLabel || e.venue || "").trim();
@@ -112,7 +116,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const parentName = String(body.parent_name || body.guardian_name || existingMeta.parent_name || "").trim();
     const parentKana = String(body.parent_kana || existingMeta.parent_kana || "").trim();
     const venueName = String(body.venue_name || body.venue || body.venueName || (Array.isArray(body.exams) && body.exams[0]?.venue_name) || (Array.isArray(body.exams) && body.exams[0]?.venue) || existingMeta.venue_name || existingMeta.venue || "会場未指定").trim();
-    const declaredAmount = Math.round(Number(body.amount || body.total_amount || body.price || existingMeta.amount || existingMeta.total_amount || (Array.isArray(body.exams) && body.exams[0]?.price) || 0)) || 4400;
+    const declaredAmount = Math.round(Number(body.amount || body.total_amount || existingMeta.amount || existingMeta.total_amount || 0)) || OFFICIAL_EXAM_PRICE;
     const phone = String(body.phone || existingMeta.phone || "").trim();
     const email = String(body.email || body.customer_email || existingMeta.email || "").trim();
     const postalCode = String(body.postal_code || existingMeta.postal_code || "").trim();
@@ -129,14 +133,15 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
     // 3-1. 選択された模試ごとに line_items を分割（レシートのように内訳を表示）
     const examLineItems = buildExamLineItems(body.exams);
-    const itemizedTotal = examLineItems.reduce((sum, item) => sum + item.unitAmount, 0);
-    if (examLineItems.length > 0 && itemizedTotal !== declaredAmount) {
-      console.warn(
-        `[functions/api/create-checkout-session] Amount mismatch: declared=${declaredAmount}, itemized=${itemizedTotal}. Using itemized total.`
+    if (examLineItems.length === 0) {
+      return jsonResponse(
+        { success: false, message: "お申込み対象の模試が正しく選択されていません。" },
+        400
       );
     }
-    // 実際に請求される金額（内訳合計）を正とする
-    const amountVal = examLineItems.length > 0 ? itemizedTotal : declaredAmount;
+    const itemizedTotal = examLineItems.reduce((sum, item) => sum + item.unitAmount, 0);
+    // 実際に請求される金額（内訳合計・サーバー正規価格の合算）を正とする
+    const amountVal = itemizedTotal;
     const examsDetail = examLineItems
       .map((item) => `${item.record.label}${item.record.venue ? `（${item.record.venue}）` : ""} ¥${item.unitAmount}`)
       .join(" / ");

@@ -14,15 +14,35 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const adminEmail = readEnv(context.env, "ADMIN_EMAIL", DEFAULT_ADMIN_EMAIL);
     const stripeSecretKey = readEnv(context.env, "STRIPE_SECRET_KEY");
 
-    // 1. Stripe Session ID があり、metadata が空の場合に Stripe API から直接取得を試みる
-    let stripeSessionData: Record<string, any> | null = null;
-    const incomingSessionId = body.session_id || body.stripe_session_id || (body.metadata && body.metadata.session_id) || "";
-    if (incomingSessionId && stripeSecretKey && (!body.student_name && !body.email)) {
-      console.log(`[functions/api/apply] Fetching Stripe session data for ${incomingSessionId}...`);
-      stripeSessionData = await fetchCheckoutSession(incomingSessionId, stripeSecretKey, "[functions/api/apply]");
-      if (stripeSessionData) {
-        console.log("[functions/api/apply] Stripe session successfully fetched:", stripeSessionData.id);
-      }
+    // 1. 【セキュリティ改修】Stripe Session ID の検証ガード（未認証での無制限メール送信を完全遮断）
+    const incomingSessionId = String(
+      body.session_id || body.stripe_session_id || (body.metadata && body.metadata.session_id) || ""
+    ).trim();
+    if (!incomingSessionId || !incomingSessionId.startsWith("cs_")) {
+      console.warn("[functions/api/apply] Unauthorized request: missing or invalid session_id");
+      return errorResponse("有効なStripe決済セッションID（session_id）が提供されていません。", 400);
+    }
+
+    if (!stripeSecretKey) {
+      console.error("[functions/api/apply] STRIPE_SECRET_KEY is not configured.");
+      return errorResponse("決済認証サービスの設定が完了していません。", 500);
+    }
+
+    // Stripe API から最新のセッションを取得して決済完了状態を照合する
+    console.log(`[functions/api/apply] Verifying Stripe session ${incomingSessionId}...`);
+    const stripeSessionData = await fetchCheckoutSession(incomingSessionId, stripeSecretKey, "[functions/api/apply]");
+    if (!stripeSessionData) {
+      console.warn(`[functions/api/apply] Stripe session not found: ${incomingSessionId}`);
+      return errorResponse("指定された決済セッションが見つかりません。", 404);
+    }
+
+    const sessionStatus = String(stripeSessionData.status || "");
+    const sessionPaymentStatus = String(stripeSessionData.payment_status || "");
+    if (sessionStatus !== "complete" && sessionPaymentStatus !== "paid" && sessionPaymentStatus !== "unpaid") {
+      console.warn(
+        `[functions/api/apply] Incomplete Stripe session state: status=${sessionStatus}, payment_status=${sessionPaymentStatus}`
+      );
+      return errorResponse("決済が完了していないセッションへの通知送信はできません。", 400);
     }
 
     const sessionMeta = (stripeSessionData && stripeSessionData.metadata) || {};

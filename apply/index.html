@@ -1312,16 +1312,15 @@
     // ========================================================
     const MICROCMS_CONFIG = {
       serviceDomain: 'okamoshi-blog',
-      apiKey: '4qO3xGjs5W1r7zolbBgAX2KXP8VEUooOpMtc',
+      apiKey: '',
       endpoint: 'exam-guides'
     };
 
     // Stripe Checkout セッション生成エンドポイント
     const CREATE_CHECKOUT_API_URL = '/api/create-checkout-session';
 
-    // Google Apps Script (GAS) 申込受付台帳連携エンドポイント & バックエンドAPI
+    // 申込受付完了通知 バックエンドAPI
     const APPLY_API_URL = '/api/apply';
-    const GAS_APPLY_URL = 'https://script.google.com/macros/s/AKfycbwYljLEwbfFCQWx-c6JneJUDINYbhYl0_M1-e9CwhBskBvRBEdIuwNotYceCg5i6M9z/exec';
 
     // ========================================================
     // 1. 模試フォールバック・マスターデータ（microCMS未取得時・欠損補完用）

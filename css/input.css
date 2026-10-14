@@ -201,6 +201,10 @@ details[open] summary svg {
 }
 
 /* インジケーター（ドット）：アクティブ時は濃いグリーン、非アクティブ時は薄いグレー */
+.features-nav-bar.is-floating .feature-dot .dot-inner.bg-brand-green,
+.features-nav-bar.is-floating .feature-dot .dot-inner.bg-emerald-800,
+.features-nav-bar.is-docked .feature-dot .dot-inner.bg-brand-green,
+.features-nav-bar.is-docked .feature-dot .dot-inner.bg-emerald-800,
 .features-nav-bar.is-floating .feature-dot.bg-brand-green,
 .features-nav-bar.is-floating .feature-dot.bg-emerald-800,
 .features-nav-bar.is-docked .feature-dot.bg-brand-green,
@@ -208,10 +212,14 @@ details[open] summary svg {
   background-color: #065f46 !important;
   box-shadow: 0 1px 3px rgba(6, 95, 70, 0.35) !important;
 }
+.features-nav-bar.is-floating .feature-dot .dot-inner:not(.bg-brand-green):not(.bg-emerald-800),
+.features-nav-bar.is-docked .feature-dot .dot-inner:not(.bg-brand-green):not(.bg-emerald-800),
 .features-nav-bar.is-floating .feature-dot:not(.bg-brand-green):not(.bg-emerald-800),
 .features-nav-bar.is-docked .feature-dot:not(.bg-brand-green):not(.bg-emerald-800) {
   background-color: #cbd5e1 !important;
 }
+.features-nav-bar.is-floating .feature-dot .dot-inner:not(.bg-brand-green):not(.bg-emerald-800):hover,
+.features-nav-bar.is-docked .feature-dot .dot-inner:not(.bg-brand-green):not(.bg-emerald-800):hover,
 .features-nav-bar.is-floating .feature-dot:not(.bg-brand-green):not(.bg-emerald-800):hover,
 .features-nav-bar.is-docked .feature-dot:not(.bg-brand-green):not(.bg-emerald-800):hover {
   background-color: #94a3b8 !important;

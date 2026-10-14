@@ -39,5 +39,21 @@
 /blog-detail_PC           /news.html             301
 /blog-detail_mobile.html  /news.html             301
 /blog-detail_mobile       /news.html             301
-/schools_mobile.html      /schools_PC.html       301
-/schools_mobile           /schools_PC.html       301
+/schools_mobile.html      /schools.html       301
+/schools_mobile           /schools.html       301
+/schools_PC.html          /schools.html       301
+/schools_PC               /schools.html       301
+
+# 非公開ファイル・管理スクリプトへの直接アクセス遮断
+/scripts/*                /404.html           404
+/gas/*                    /404.html           404
+/migrations/*             /404.html           404
+/db/*                     /404.html           404
+/package.json             /404.html           404
+/package-lock.json        /404.html           404
+/tsconfig.json           /404.html           404
+/tailwind.config.js       /404.html           404
+/DESIGN.md                /404.html           404
+/wrangler.toml            /404.html           404
+/.cursorrules             /404.html           404
+/css/input.css            /404.html           404

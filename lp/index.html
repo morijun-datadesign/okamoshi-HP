@@ -348,7 +348,7 @@
         </div>
 
         <a href="/news.html" class="hover:text-brand-green transition-colors py-1">お知らせ・受験情報</a>
-        <a href="/schools_PC.html" class="hover:text-brand-green transition-colors py-1">実施塾一覧</a>
+        <a href="/schools.html" class="hover:text-brand-green transition-colors py-1">実施塾一覧</a>
 
         <!-- お問い合わせドロップダウン -->
         <div class="relative group inline-block text-left" id="nav-contact-container">
@@ -424,7 +424,7 @@
         </a>
 
         <!-- 実施塾一覧 -->
-        <a href="/schools_PC.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-lg border border-slate-200 bg-white font-bold text-base text-slate-800 hover:bg-slate-50 shadow-xs transition-colors">
+        <a href="/schools.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-lg border border-slate-200 bg-white font-bold text-base text-slate-800 hover:bg-slate-50 shadow-xs transition-colors">
           <span>実施塾一覧</span>
           <span class="material-symbols-outlined text-base text-slate-400">arrow_forward</span>
         </a>
@@ -1211,7 +1211,7 @@
           
           <!-- 記事 1 -->
           <article class="bg-slate-50 rounded-lg border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all mb-3 overflow-hidden cursor-pointer group block">
-            <a href="detail.html?id=leoodvgmoet" class="flex items-center justify-between p-4 sm:p-5 gap-3 sm:gap-4 w-full">
+            <a href="/news/leoodvgmoet/" class="flex items-center justify-between p-4 sm:p-5 gap-3 sm:gap-4 w-full">
               <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 flex-1 min-w-0">
                 <div class="flex items-center gap-2.5 shrink-0">
                   <span class="flex items-center gap-1.5 text-xs text-slate-500 font-medium shrink-0">
@@ -1240,7 +1240,7 @@
 
           <!-- 記事 2 -->
           <article class="bg-slate-50 rounded-lg border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all mb-3 overflow-hidden cursor-pointer group block">
-            <a href="detail.html?id=b055d-p_k7" class="flex items-center justify-between p-4 sm:p-5 gap-3 sm:gap-4 w-full">
+            <a href="/news/b055d-p_k7/" class="flex items-center justify-between p-4 sm:p-5 gap-3 sm:gap-4 w-full">
               <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 flex-1 min-w-0">
                 <div class="flex items-center gap-2.5 shrink-0">
                   <span class="flex items-center gap-1.5 text-xs text-slate-500 font-medium shrink-0">
@@ -1268,7 +1268,7 @@
 
           <!-- 記事 3 -->
           <article class="bg-slate-50 rounded-lg border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all mb-3 overflow-hidden cursor-pointer group block">
-            <a href="detail.html?id=20p7a-hecrv" class="flex items-center justify-between p-4 sm:p-5 gap-3 sm:gap-4 w-full">
+            <a href="/news/20p7a-hecrv/" class="flex items-center justify-between p-4 sm:p-5 gap-3 sm:gap-4 w-full">
               <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 flex-1 min-w-0">
                 <div class="flex items-center gap-2.5 shrink-0">
                   <span class="flex items-center gap-1.5 text-xs text-slate-500 font-medium shrink-0">
@@ -1591,7 +1591,7 @@
           </a>
 
           <!-- Quick Card 2: Partner Schools -->
-          <a class="group p-4 sm:p-5 bg-slate-50/90 hover:bg-slate-50 rounded-xl border border-slate-200 shadow-2xs hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-between" href="/schools_PC.html">
+          <a class="group p-4 sm:p-5 bg-slate-50/90 hover:bg-slate-50 rounded-xl border border-slate-200 shadow-2xs hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-between" href="/schools.html">
             <div>
               <div class="flex items-center gap-3">
                 <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-emerald-100 text-brand-green flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
@@ -1783,7 +1783,7 @@
           <div class="space-y-2.5 sm:col-span-2">
             <div class="font-bold text-xs sm:text-sm text-white">ご案内・手続き</div>
             <ul class="space-y-2 text-xs sm:text-sm">
-              <li><a class="text-zinc-100 hover:text-white transition-colors" href="/schools_PC.html">実施塾一覧</a></li>
+              <li><a class="text-zinc-100 hover:text-white transition-colors" href="/schools.html">実施塾一覧</a></li>
               <li><a class="text-zinc-100 hover:text-white transition-colors" href="/apply">個人受験のお申込み</a></li>
             </ul>
           </div>
@@ -4314,7 +4314,7 @@
         const newBadgeHtml = isNew
           ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#c85a32] text-white shadow-xs shrink-0 tracking-tight leading-none text-center">NEW</span>`
           : '';
-        const detailUrl = `detail.html?id=${encodeURIComponent(post.id)}`;
+        const detailUrl = `/news/${encodeURIComponent(post.id)}/` // `detail.html?id=${encodeURIComponent(post.id)}`;
 
         return `
           <article class="bg-slate-50 rounded-lg border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all mb-3 overflow-hidden cursor-pointer group block">

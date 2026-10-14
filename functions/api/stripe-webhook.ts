@@ -1,18 +1,8 @@
-interface Env {
-  RESEND_API_KEY?: string;
-  RESEND_FROM_EMAIL?: string;
-  ADMIN_EMAIL?: string;
-  GAS_APPLY_URL?: string;
-  /** GAS のスクリプトプロパティ SHARED_SECRET と同じ値（GAS 側で照合） */
-  GAS_SHARED_SECRET?: string;
-  /** イベント内容を Stripe API で再取得して検証するために使用（必須） */
-  STRIPE_SECRET_KEY?: string;
-}
-
-const DEFAULT_RESEND_API_KEY = ["re", "jc13fgeZ", "54yeBoK6kyqLLidzHjGNiCen"].join("_");
-const DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbwYljLEwbfFCQWx-c6JneJUDINYbhYl0_M1-e9CwhBskBvRBEdIuwNotYceCg5i6M9z/exec";
-const DEFAULT_FROM_EMAIL = "岡山県統一模擬試験 <info@okayama-moshi.com>";
-const DEFAULT_ADMIN_EMAIL = "info@okayama-moshi.com";
+import { Env, DEFAULT_GAS_URL, DEFAULT_FROM_EMAIL, DEFAULT_ADMIN_EMAIL, readEnv } from "../_shared/env";
+import { jsonResponse } from "../_shared/http";
+import { ExamRecord, recordsFromMetadata } from "../_shared/exam";
+import { fetchCheckoutSession, fetchPaymentIntent } from "../_shared/stripe";
+import { sendResendEmail } from "../_shared/resend";
 
 const LOG = "[functions/api/stripe-webhook]";
 
@@ -27,16 +17,6 @@ const EVENT_COMPLETED = "checkout.session.completed";
 const EVENT_ASYNC_SUCCEEDED = "checkout.session.async_payment_succeeded";
 const EVENT_ASYNC_FAILED = "checkout.session.async_payment_failed";
 const HANDLED_EVENTS = [EVENT_COMPLETED, EVENT_ASYNC_SUCCEEDED, EVENT_ASYNC_FAILED];
-
-interface ExamRecord {
-  id: string;
-  label: string;
-  issue: string;
-  title: string;
-  venue: string;
-  price: number;
-  date: string;
-}
 
 interface KonbiniInfo {
   customerNumber: string;
@@ -54,12 +34,6 @@ const KONBINI_STORE_LABELS: Record<string, string> = {
   seicomart: "セイコーマート",
 };
 
-const jsonResponse = (data: unknown, status = 200) =>
-  new Response(JSON.stringify(data), { status, headers: { "Content-Type": "application/json" } });
-
-const readEnv = (env: Env, key: keyof Env): string =>
-  String(env[key] || (typeof process !== "undefined" && (process as any).env?.[key]) || "");
-
 const formatJst = (date: Date): string =>
   new Intl.DateTimeFormat("ja-JP", {
     timeZone: "Asia/Tokyo",
@@ -71,56 +45,6 @@ const formatJst = (date: Date): string =>
     second: "2-digit",
     hour12: false,
   }).format(date).replace(/\//g, "-");
-
-/**
- * create-checkout-session が session.metadata に保存した exam_1, exam_2, ... を復元する。
- * （1模試＝1レコードでスプレッドシートへ書き込むため）
- */
-const parseExamRecords = (metadata: Record<string, any>): ExamRecord[] => {
-  const keys = Object.keys(metadata)
-    .filter((k) => /^exam_\d+$/.test(k))
-    .sort((a, b) => Number(a.slice(5)) - Number(b.slice(5)));
-  const records: ExamRecord[] = [];
-  for (const key of keys) {
-    try {
-      const r = JSON.parse(String(metadata[key]));
-      const price = Math.round(Number(r?.price));
-      if (!r || !Number.isFinite(price) || price <= 0) continue;
-      records.push({
-        id: String(r.id || ""),
-        label: String(r.label || r.title || "").trim() || "月号不明（岡山県統一模擬試験）",
-        issue: String(r.issue || ""),
-        title: String(r.title || ""),
-        venue: String(r.venue || "").trim() || "会場未指定",
-        price,
-        date: String(r.date || ""),
-      });
-    } catch (e) {
-      console.warn(`${LOG} Failed to parse metadata ${key}:`, metadata[key]);
-    }
-  }
-  return records;
-};
-
-/** Stripe API から Checkout Session を payment_intent 展開付きで再取得する（イベント内容の検証を兼ねる） */
-const fetchCheckoutSession = async (sessionId: string, secretKey: string): Promise<Record<string, any> | null> => {
-  const url = `https://api.stripe.com/v1/checkout/sessions/${encodeURIComponent(sessionId)}?expand%5B%5D=payment_intent`;
-  const res = await fetch(url, { headers: { Authorization: `Bearer ${secretKey}` } });
-  const data = (await res.json().catch(() => null)) as Record<string, any> | null;
-  if (!res.ok || !data?.id) {
-    console.error(`${LOG} Failed to retrieve session ${sessionId}:`, res.status, JSON.stringify(data));
-    return null;
-  }
-  return data;
-};
-
-const fetchPaymentIntent = async (paymentIntentId: string, secretKey: string): Promise<Record<string, any> | null> => {
-  const res = await fetch(`https://api.stripe.com/v1/payment_intents/${encodeURIComponent(paymentIntentId)}`, {
-    headers: { Authorization: `Bearer ${secretKey}` },
-  });
-  const data = (await res.json().catch(() => null)) as Record<string, any> | null;
-  return res.ok && data?.id ? data : null;
-};
 
 /**
  * 店舗ごとの値を1つの文字列にまとめる。
@@ -153,29 +77,6 @@ const extractKonbiniInfo = (paymentIntent: Record<string, any> | null): KonbiniI
   };
 };
 
-const sendMail = async (
-  apiKey: string,
-  payload: { from: string; to: string[]; reply_to?: string; subject: string; text: string }
-): Promise<string | null> => {
-  try {
-    const res = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-        "User-Agent": "Okamoshi-StripeWebhook/1.0",
-      },
-      body: JSON.stringify(payload),
-    });
-    const json = (await res.json().catch(() => ({}))) as Record<string, any>;
-    if (!res.ok) console.error(`${LOG} Resend error:`, res.status, JSON.stringify(json));
-    return json?.id || null;
-  } catch (e) {
-    console.error(`${LOG} Resend network error:`, e);
-    return null;
-  }
-};
-
 export const onRequestPost: PagesFunction<Env> = async (context) => {
   try {
     const event = (await context.request.json()) as Record<string, any>;
@@ -196,21 +97,19 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
     const env = context.env;
     const stripeSecretKey = readEnv(env, "STRIPE_SECRET_KEY");
-    const gasUrl = readEnv(env, "GAS_APPLY_URL") || DEFAULT_GAS_URL;
+    const gasUrl = readEnv(env, "GAS_APPLY_URL", DEFAULT_GAS_URL);
     const gasSecret = readEnv(env, "GAS_SHARED_SECRET");
-    const apiKey = readEnv(env, "RESEND_API_KEY") || DEFAULT_RESEND_API_KEY;
-    const fromEmail = readEnv(env, "RESEND_FROM_EMAIL") || DEFAULT_FROM_EMAIL;
-    const adminEmail = readEnv(env, "ADMIN_EMAIL") || DEFAULT_ADMIN_EMAIL;
+    const apiKey = readEnv(env, "RESEND_API_KEY");
+    const fromEmail = readEnv(env, "RESEND_FROM_EMAIL", DEFAULT_FROM_EMAIL);
+    const adminEmail = readEnv(env, "ADMIN_EMAIL", DEFAULT_ADMIN_EMAIL);
 
     // 1. イベント内容をそのまま信用せず、Stripe API から最新のセッションを再取得して検証する
-    //    （Webhook 署名検証の代替。偽の「入金完了」リクエストで台帳が書き換わるのを防ぐ）
     if (!stripeSecretKey) {
       console.error(`${LOG} STRIPE_SECRET_KEY is not configured; cannot verify event.`);
       return jsonResponse({ error: "STRIPE_SECRET_KEY is not configured" }, 500);
     }
-    const session = await fetchCheckoutSession(sessionId, stripeSecretKey);
+    const session = await fetchCheckoutSession(sessionId, stripeSecretKey, LOG);
     if (!session) {
-      // 500 を返して Stripe に再送させる
       return jsonResponse({ error: "Failed to retrieve checkout session" }, 500);
     }
 
@@ -247,7 +146,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       let paymentIntent: Record<string, any> | null =
         session.payment_intent && typeof session.payment_intent === "object" ? session.payment_intent : null;
       if (!paymentIntent && typeof session.payment_intent === "string") {
-        paymentIntent = await fetchPaymentIntent(session.payment_intent, stripeSecretKey);
+        paymentIntent = await fetchPaymentIntent(session.payment_intent, stripeSecretKey, LOG);
       }
       konbini = extractKonbiniInfo(paymentIntent);
       if (!konbini.voucherUrl) {
@@ -278,28 +177,27 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const fullAddress = String(metadata.address || [prefectureVal, cityVal, address1Val, address2Val].filter(Boolean).join(" ")).trim();
     const examNameVal = String(metadata.exam_name || "岡山県統一模擬試験").trim();
 
-    // 1模試＝1レコード。exam_N が無い旧セッションは1行にまとめる
-    const parsedRecords = parseExamRecords(metadata);
+    // 1模試＝1レコード
+    const parsedRecords = recordsFromMetadata(metadata);
     const examRecords: ExamRecord[] = parsedRecords.length > 0
       ? parsedRecords
       : [{ id: "", label: examNameVal, issue: "", title: examNameVal, venue: venueName, price: amountVal, date: "" }];
 
-    // 5. GAS へ送信（1イベント＝1リクエスト。行の分割は GAS 側で records をループして行う）
-    //    update でも全項目を送る：該当行が無い場合に GAS 側で新規作成するためのフォールバック
+    // 5. GAS へ送信
     const gasPayload = {
       action,
       token: gasSecret || undefined,
       event_type: eventType,
       event_id: String(event?.id || ""),
       session_id: sessionId,
-      payment_status: ledgerStatus,          // F列
+      payment_status: ledgerStatus,
       payment_method: paymentMethodVal,
-      payment_method_label: paymentMethodLabel, // G列
-      received_at: jstReceivedAt,            // A列
-      konbini_customer_number: konbini.customerNumber,         // H列
-      konbini_confirmation_number: konbini.confirmationNumber, // I列
-      konbini_voucher_url: konbini.voucherUrl,                 // J列
-      konbini_expires_at: konbini.expiresAt,                   // U列
+      payment_method_label: paymentMethodLabel,
+      received_at: jstReceivedAt,
+      konbini_customer_number: konbini.customerNumber,
+      konbini_confirmation_number: konbini.confirmationNumber,
+      konbini_voucher_url: konbini.voucherUrl,
+      konbini_expires_at: konbini.expiresAt,
       student_name: studentFullName,
       student_kana: studentKana,
       grade,
@@ -313,9 +211,9 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       total_amount: amountVal,
       records: examRecords.map((r) => ({
         exam_id: r.id,
-        exam_name: r.label, // C列：対象模試（例: 10月号（岡山県統一模擬試験））
-        venue_name: r.venue, // D列：受験会場
-        price: r.price, // E列：単価
+        exam_name: r.label,
+        venue_name: r.venue,
+        price: r.price,
         issue_name: r.issue,
         exam_date: r.date,
       })),
@@ -349,19 +247,20 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
     // 6. ステータス更新イベント（入金完了／期限切れ）
     if (action === "update") {
-      // 台帳更新に失敗した場合は 500 を返し、Stripe に再送させる
       if (!gasOk) {
         return jsonResponse({ received: true, gas: gasResult, retry: true }, 500);
       }
       let adminMailId: string | null = null;
       if (apiKey) {
         const label = ledgerStatus === LEDGER_STATUS.PAID ? "コンビニ入金完了" : "コンビニ支払期限切れ";
-        adminMailId = await sendMail(apiKey, {
-          from: fromEmail,
-          to: [adminEmail],
-          reply_to: emailVal || undefined,
-          subject: `【${label}】${studentFullName} 様 (${grade})：${examNameVal}`,
-          text: `
+        const mailRes = await sendResendEmail(
+          apiKey,
+          {
+            from: fromEmail,
+            to: [adminEmail],
+            reply_to: emailVal || undefined,
+            subject: `【${label}】${studentFullName} 様 (${grade})：${examNameVal}`,
+            text: `
 【岡山県統一模擬試験 ${label}】
 --------------------------------------------------
 ■ お申し込み模試:
@@ -375,13 +274,15 @@ ${examsListText}
 ■ スプレッドシート連携 (GAS): ${gasSummary}
 通知日時: ${jstReceivedAt}
 `.trim(),
-        });
+          },
+          LOG
+        );
+        adminMailId = mailRes.id || null;
       }
       return jsonResponse({ received: true, action, status: ledgerStatus, gas: gasResult, resend: { admin_mail_id: adminMailId } });
     }
 
     // 7. 申込完了イベント：管理者・申込者へメール送信
-    //    （GAS 失敗時も 200 を返す。再送で申込者メールが重複しないよう、失敗は管理者メールで通知する）
     const isUnpaidKonbini = ledgerStatus === LEDGER_STATUS.UNPAID;
     const konbiniAdminBlock = isUnpaidKonbini
       ? `
@@ -468,23 +369,32 @@ Web : https://okayama-moshi.com
 --------------------------------------------------
 `.trim();
 
-      adminMailId = await sendMail(apiKey, {
-        from: fromEmail,
-        to: [adminEmail],
-        reply_to: emailVal || undefined,
-        subject: adminSubject,
-        text: adminText,
-      });
-
-      // GAS 側で「登録済み」と判定された再送イベントでは申込者メールを再送しない
-      if (emailVal && !gasResult.skipped) {
-        applicantMailId = await sendMail(apiKey, {
+      const adminRes = await sendResendEmail(
+        apiKey,
+        {
           from: fromEmail,
-          to: [emailVal],
-          reply_to: adminEmail,
-          subject: userSubject,
-          text: userText,
-        });
+          to: [adminEmail],
+          reply_to: emailVal || undefined,
+          subject: adminSubject,
+          text: adminText,
+        },
+        LOG
+      );
+      adminMailId = adminRes.id || null;
+
+      if (emailVal && !gasResult.skipped) {
+        const userRes = await sendResendEmail(
+          apiKey,
+          {
+            from: fromEmail,
+            to: [emailVal],
+            reply_to: adminEmail,
+            subject: userSubject,
+            text: userText,
+          },
+          LOG
+        );
+        applicantMailId = userRes.id || null;
       }
     }
 

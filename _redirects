@@ -44,16 +44,16 @@
 /schools_PC.html          /schools.html       301
 /schools_PC               /schools.html       301
 
-# 非公開ファイル・管理スクリプトへの直接アクセス遮断
-/scripts/*                /404.html           404
-/gas/*                    /404.html           404
-/migrations/*             /404.html           404
-/db/*                     /404.html           404
-/package.json             /404.html           404
-/package-lock.json        /404.html           404
-/tsconfig.json           /404.html           404
-/tailwind.config.js       /404.html           404
-/DESIGN.md                /404.html           404
-/wrangler.toml            /404.html           404
-/.cursorrules             /404.html           404
-/css/input.css            /404.html           404
+# 非公開ファイル・管理スクリプトへの直接アクセス遮断（404ページへリライト）
+/package.json             /404.html           200
+/package-lock.json        /404.html           200
+/tsconfig.json           /404.html           200
+/tailwind.config.js       /404.html           200
+/DESIGN.md                /404.html           200
+/wrangler.toml            /404.html           200
+/.cursorrules             /404.html           200
+/css/input.css            /404.html           200
+/scripts/*                /404.html           200
+/gas/*                    /404.html           200
+/migrations/*             /404.html           200
+/db/*                     /404.html           200

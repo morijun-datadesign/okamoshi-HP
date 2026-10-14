@@ -8,9 +8,7 @@
  *
  * 郵便番号→住所は日次で変わらないため、ブラウザ/エッジの双方で 1 日キャッシュする。
  */
-interface Env {
-  DB: D1Database;
-}
+import { Env } from "../_shared/env";
 
 interface ZipRow {
   prefecture: string;

@@ -1,137 +1,27 @@
-interface Env {
-  RESEND_API_KEY?: string;
-  RESEND_FROM_EMAIL?: string;
-  ADMIN_EMAIL?: string;
-  GAS_APPLY_URL?: string;
-  STRIPE_SECRET_KEY?: string;
-}
-
-const DEFAULT_RESEND_API_KEY = ["re", "jc13fgeZ", "54yeBoK6kyqLLidzHjGNiCen"].join("_");
-const DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbwYljLEwbfFCQWx-c6JneJUDINYbhYl0_M1-e9CwhBskBvRBEdIuwNotYceCg5i6M9z/exec";
-const DEFAULT_FROM_EMAIL = "岡山県統一模擬試験 <info@okayama-moshi.com>";
-const DEFAULT_ADMIN_EMAIL = "info@okayama-moshi.com";
-
-interface ExamRecord {
-  id: string;
-  label: string;
-  issue: string;
-  title: string;
-  venue: string;
-  price: number;
-  date: string;
-}
-
-/** 月号ラベルを生成する（例: 「10月号（岡山県統一模擬試験）」）。create-checkout-session と同じ規則。 */
-const formatExamLabel = (issueRaw: string, title: string, id: string): { issue: string; label: string } => {
-  let issue = String(issueRaw || "").trim();
-  if (issue && /^\d{1,2}月$/.test(issue)) issue += "号";
-  if (!issue) {
-    const m = String(id || "").match(/_(\d{1,2})$/);
-    if (m) issue = `${Number(m[1])}月号`;
-  }
-  const baseTitle = title.replace(/[（(][^（）()]*[）)]\s*$/, "").trim() || title;
-  return { issue, label: issue ? `${issue}（${baseTitle}）` : `月号不明（${baseTitle}）` };
-};
-
-/** フロントの exams 配列 → 1模試＝1レコード */
-const recordsFromExams = (exams: unknown): ExamRecord[] => {
-  if (!Array.isArray(exams)) return [];
-  const records: ExamRecord[] = [];
-  for (const ex of exams) {
-    if (!ex || typeof ex !== "object") continue;
-    const e = ex as Record<string, any>;
-    const price = Math.round(Number(e.price));
-    if (!Number.isFinite(price) || price <= 0) continue;
-    const title = String(e.title || e.exam_name || "岡山県統一模擬試験").trim();
-    const id = e.id !== undefined && e.id !== null ? String(e.id) : "";
-    const { issue, label } = formatExamLabel(e.issue_name || e.issueName || "", title, id);
-    records.push({
-      id,
-      label,
-      issue,
-      title,
-      venue: String(e.venue_name || e.venueLabel || e.venue || "").trim() || "会場未指定",
-      price,
-      date: String(e.exam_date || e.examDate || "").trim(),
-    });
-  }
-  return records;
-};
-
-/** Stripe session.metadata の exam_1, exam_2, ... → 1模試＝1レコード */
-const recordsFromMetadata = (metadata: Record<string, any>): ExamRecord[] => {
-  const keys = Object.keys(metadata || {})
-    .filter((k) => /^exam_\d+$/.test(k))
-    .sort((a, b) => Number(a.slice(5)) - Number(b.slice(5)));
-  const records: ExamRecord[] = [];
-  for (const key of keys) {
-    try {
-      const r = JSON.parse(String(metadata[key]));
-      const price = Math.round(Number(r?.price));
-      if (!r || !Number.isFinite(price) || price <= 0) continue;
-      records.push({
-        id: String(r.id || ""),
-        label: String(r.label || r.title || "").trim() || "月号不明（岡山県統一模擬試験）",
-        issue: String(r.issue || ""),
-        title: String(r.title || ""),
-        venue: String(r.venue || "").trim() || "会場未指定",
-        price,
-        date: String(r.date || ""),
-      });
-    } catch {
-      console.warn(`[functions/api/apply] Failed to parse metadata ${key}`);
-    }
-  }
-  return records;
-};
+import { Env, DEFAULT_FROM_EMAIL, DEFAULT_ADMIN_EMAIL, readEnv } from "../_shared/env";
+import { jsonResponse, errorResponse } from "../_shared/http";
+import { recordsFromExams, recordsFromMetadata } from "../_shared/exam";
+import { fetchCheckoutSession } from "../_shared/stripe";
+import { sendResendEmail } from "../_shared/resend";
 
 export const onRequestPost: PagesFunction<Env> = async (context) => {
   try {
     const body = (await context.request.json()) as Record<string, any>;
     console.log("[functions/api/apply] Received apply request:", JSON.stringify(body));
 
-    const gasUrl =
-      context.env.GAS_APPLY_URL ||
-      (typeof process !== "undefined" && process.env?.GAS_APPLY_URL) ||
-      DEFAULT_GAS_URL;
-
-    const apiKey =
-      context.env.RESEND_API_KEY ||
-      (typeof process !== "undefined" && process.env?.RESEND_API_KEY) ||
-      DEFAULT_RESEND_API_KEY;
-
-    const fromEmail =
-      context.env.RESEND_FROM_EMAIL ||
-      (typeof process !== "undefined" && process.env?.RESEND_FROM_EMAIL) ||
-      DEFAULT_FROM_EMAIL;
-
-    const adminEmail =
-      context.env.ADMIN_EMAIL ||
-      (typeof process !== "undefined" && process.env?.ADMIN_EMAIL) ||
-      DEFAULT_ADMIN_EMAIL;
-
-    const stripeSecretKey =
-      context.env.STRIPE_SECRET_KEY ||
-      (typeof process !== "undefined" && process.env?.STRIPE_SECRET_KEY) ||
-      "";
+    const apiKey = readEnv(context.env, "RESEND_API_KEY");
+    const fromEmail = readEnv(context.env, "RESEND_FROM_EMAIL", DEFAULT_FROM_EMAIL);
+    const adminEmail = readEnv(context.env, "ADMIN_EMAIL", DEFAULT_ADMIN_EMAIL);
+    const stripeSecretKey = readEnv(context.env, "STRIPE_SECRET_KEY");
 
     // 1. Stripe Session ID があり、metadata が空の場合に Stripe API から直接取得を試みる
-    let stripeSessionData: any = null;
+    let stripeSessionData: Record<string, any> | null = null;
     const incomingSessionId = body.session_id || body.stripe_session_id || (body.metadata && body.metadata.session_id) || "";
     if (incomingSessionId && stripeSecretKey && (!body.student_name && !body.email)) {
-      try {
-        console.log(`[functions/api/apply] Fetching Stripe session data for ${incomingSessionId}...`);
-        const stripeRes = await fetch(`https://api.stripe.com/v1/checkout/sessions/${incomingSessionId}`, {
-          headers: {
-            Authorization: `Bearer ${stripeSecretKey}`,
-          },
-        });
-        if (stripeRes.ok) {
-          stripeSessionData = await stripeRes.json();
-          console.log("[functions/api/apply] Stripe session successfully fetched:", stripeSessionData.id);
-        }
-      } catch (sErr) {
-        console.warn("[functions/api/apply] Could not fetch Stripe session directly:", sErr);
+      console.log(`[functions/api/apply] Fetching Stripe session data for ${incomingSessionId}...`);
+      stripeSessionData = await fetchCheckoutSession(incomingSessionId, stripeSecretKey, "[functions/api/apply]");
+      if (stripeSessionData) {
+        console.log("[functions/api/apply] Stripe session successfully fetched:", stripeSessionData.id);
       }
     }
 
@@ -180,7 +70,6 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const paymentStatusVal = String(body.payment_status || (stripeSessionData && stripeSessionData.payment_status) || "paid").trim();
 
     // 3. 台帳（GAS）への書き込みは Stripe Webhook（functions/api/stripe-webhook.ts）に一本化。
-    //    ここではメール本文用に模試の内訳だけを組み立てる（二重登録・未入金レコードの誤登録を防ぐため）。
     let examRecords = recordsFromExams(body.exams);
     if (examRecords.length === 0) examRecords = recordsFromMetadata(meta);
     if (examRecords.length === 0) {
@@ -191,7 +80,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const gasResponseData = { delegated_to: "stripe-webhook", records: examRecords.length };
     const gasErrorMessage: string | null = null;
 
-    // 5. Resend API によるメール送信
+    // 4. Resend API によるメール送信
     let applicantMailId: string | null = null;
     let adminMailId: string | null = null;
     let mailError: string | null = null;
@@ -280,98 +169,70 @@ Web : https://okayama-moshi.com
 `.trim();
 
     if (apiKey) {
-      // 1) 管理者宛て ジャーナル通知送信 (Reply-To: 申込者メール)
-      try {
-        console.log("[functions/api/apply] Sending admin notification via Resend...");
-        const adminMailRes = await fetch("https://api.resend.com/emails", {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${apiKey}`,
-            "Content-Type": "application/json",
-            "User-Agent": "Okamoshi-Apply/1.0",
-          },
-          body: JSON.stringify({
-            from: fromEmail,
-            to: [adminEmail],
-            reply_to: emailVal || undefined,
-            subject: adminSubject,
-            text: adminTextContent,
-          }),
-        });
-
-        const adminMailJson = await adminMailRes.json().catch(() => ({}));
-        if (adminMailRes.ok && adminMailJson?.id) {
-          adminMailId = adminMailJson.id;
-          console.log("[functions/api/apply] Admin notification email sent:", adminMailId);
-        } else {
-          console.error("[functions/api/apply] Admin notification email failed:", adminMailRes.status, adminMailJson);
-        }
-      } catch (adminMailErr: any) {
-        console.error("[functions/api/apply] Admin notification email network error:", adminMailErr);
-        mailError = adminMailErr?.message || String(adminMailErr);
+      // 1) 管理者宛て ジャーナル通知送信
+      console.log("[functions/api/apply] Sending admin notification via Resend...");
+      const adminMailResult = await sendResendEmail(
+        apiKey,
+        {
+          from: fromEmail,
+          to: [adminEmail],
+          reply_to: emailVal || undefined,
+          subject: adminSubject,
+          text: adminTextContent,
+        },
+        "[functions/api/apply/admin]"
+      );
+      if (adminMailResult.ok && adminMailResult.id) {
+        adminMailId = adminMailResult.id;
+      } else {
+        mailError = adminMailResult.error || "Admin email delivery failed";
       }
 
-      // 2) 申込者宛て サンクスメール送信 (Reply-To: 管理者メール)
+      // 2) 申込者宛て サンクスメール送信
       if (emailVal) {
-        try {
-          console.log(`[functions/api/apply] Sending applicant confirmation via Resend to ${emailVal}...`);
-          const userMailRes = await fetch("https://api.resend.com/emails", {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${apiKey}`,
-              "Content-Type": "application/json",
-              "User-Agent": "Okamoshi-Apply/1.0",
-            },
-            body: JSON.stringify({
-              from: fromEmail,
-              to: [emailVal],
-              reply_to: adminEmail,
-              subject: userSubject,
-              text: userTextContent,
-            }),
-          });
-
-          const userMailJson = await userMailRes.json().catch(() => ({}));
-          if (userMailRes.ok && userMailJson?.id) {
-            applicantMailId = userMailJson.id;
-            console.log("[functions/api/apply] Applicant confirmation email sent:", applicantMailId);
-          } else {
-            console.error("[functions/api/apply] Applicant confirmation email failed:", userMailRes.status, userMailJson);
-          }
-        } catch (userMailErr: any) {
-          console.error("[functions/api/apply] Applicant confirmation email network error:", userMailErr);
-          mailError = mailError ? `${mailError}, ${userMailErr?.message}` : (userMailErr?.message || String(userMailErr));
+        console.log(`[functions/api/apply] Sending applicant confirmation via Resend to ${emailVal}...`);
+        const userMailResult = await sendResendEmail(
+          apiKey,
+          {
+            from: fromEmail,
+            to: [emailVal],
+            reply_to: adminEmail,
+            subject: userSubject,
+            text: userTextContent,
+          },
+          "[functions/api/apply/user]"
+        );
+        if (userMailResult.ok && userMailResult.id) {
+          applicantMailId = userMailResult.id;
+        } else {
+          mailError = mailError
+            ? `${mailError}, ${userMailResult.error || "User email delivery failed"}`
+            : userMailResult.error || "User email delivery failed";
         }
       }
     } else {
       console.warn("[functions/api/apply] RESEND_API_KEY is not defined, email sending skipped.");
     }
 
-    return new Response(
-      JSON.stringify({
-        success: true,
-        status: "success",
-        message: "お申し込みを受け付けました",
-        gas: {
-          success: gasSuccess,
-          response: gasResponseData,
-          error: gasErrorMessage,
-        },
-        resend: {
-          admin_mail_id: adminMailId,
-          applicant_mail_id: applicantMailId,
-          error: mailError,
-        },
-        session_id: activeSessionId,
-        redirect_url: "/apply/success",
-      }),
-      { status: 200, headers: { "Content-Type": "application/json" } }
-    );
+    return jsonResponse({
+      success: true,
+      status: "success",
+      message: "お申し込みを受け付けました",
+      gas: {
+        success: gasSuccess,
+        response: gasResponseData,
+        error: gasErrorMessage,
+      },
+      resend: {
+        admin_mail_id: adminMailId,
+        applicant_mail_id: applicantMailId,
+        error: mailError,
+      },
+      session_id: activeSessionId,
+      redirect_url: "/apply/success",
+    });
   } catch (error: any) {
     console.error("[functions/api/apply] Internal Error:", error);
-    return new Response(
-      JSON.stringify({ success: false, message: error.message || "Server Error" }),
-      { status: 500, headers: { "Content-Type": "application/json" } }
-    );
+    return errorResponse(error.message || "Server Error", 500);
   }
 };

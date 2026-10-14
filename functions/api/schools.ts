@@ -9,9 +9,7 @@
  *
  * 【ソート要件】地元受検生が最速で選べるよう「岡山県」の学校を常に最上位に並べる。
  */
-interface Env {
-  DB: D1Database;
-}
+import { Env } from "../_shared/env";
 
 interface SchoolRow {
   school_code: string;

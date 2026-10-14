@@ -1,92 +1,44 @@
-interface Env {
-  RESEND_API_KEY?: string;
-  RESEND_FROM_EMAIL?: string;
-  ADMIN_EMAIL?: string;
-  ORG_ADMIN_EMAIL?: string;
-  ADMIN_EMAIL_ORG?: string;
-  CHUO_KYOIKU_EMAIL?: string;
-  TURNSTILE_SECRET_KEY?: string;
-}
+import { Env, DEFAULT_FROM_EMAIL, DEFAULT_ADMIN_EMAIL, readEnv } from "../_shared/env";
+import { jsonResponse, errorResponse } from "../_shared/http";
+import { verifyTurnstile } from "../_shared/turnstile";
+import { sendResendEmail } from "../_shared/resend";
 
 export const onRequestPost: PagesFunction<Env> = async (context) => {
   try {
     const body = (await context.request.json()) as Record<string, any>;
     console.log("Cloudflare Function received contact request:", body);
 
-    // Turnstile トークンの検証
-    const turnstileSecret =
-      context.env.TURNSTILE_SECRET_KEY ||
-      (typeof process !== "undefined" && process.env?.TURNSTILE_SECRET_KEY) ||
-      "";
-    const turnstileResponse =
-      body["cf-turnstile-response"] ||
-      body.turnstileToken ||
-      body.turnstile_token ||
-      "";
-    const remoteIp = context.request.headers.get("CF-Connecting-IP") || "";
-
-    const verifyFormData = new URLSearchParams();
-    verifyFormData.append("secret", turnstileSecret);
-    verifyFormData.append("response", String(turnstileResponse || ""));
-    if (remoteIp) {
-      verifyFormData.append("remoteip", remoteIp);
-    }
-
-    try {
-      const verifyRes = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
-        method: "POST",
-        body: verifyFormData,
-      });
-      const verifyResult = (await verifyRes.json()) as { success: boolean; "error-codes"?: string[] };
-      if (!verifyResult.success) {
-        console.error("[functions/api/contact] Turnstile verification failed:", verifyResult);
-        return new Response(
-          JSON.stringify({
-            success: false,
-            message: "セキュリティ認証に失敗しました。もう一度お試しください。",
-          }),
-          { status: 403, headers: { "Content-Type": "application/json" } }
-        );
-      }
-    } catch (verifyErr) {
-      console.error("[functions/api/contact] Turnstile verification error:", verifyErr);
-      return new Response(
-        JSON.stringify({
+    // 1. Turnstile トークンの検証
+    const turnstileSecret = readEnv(context.env, "TURNSTILE_SECRET_KEY");
+    const turnstileResult = await verifyTurnstile(context.request, body, turnstileSecret);
+    if (!turnstileResult.success) {
+      return jsonResponse(
+        {
           success: false,
-          message: "セキュリティ認証処理中にエラーが発生しました。もう一度お試しください。",
-        }),
-        { status: 403, headers: { "Content-Type": "application/json" } }
+          message: turnstileResult.error || "セキュリティ認証に失敗しました。もう一度お試しください。",
+        },
+        403
       );
     }
 
-    const apiKey = context.env.RESEND_API_KEY || (typeof process !== "undefined" && process.env?.RESEND_API_KEY);
-    const fromEmail =
-      context.env.RESEND_FROM_EMAIL ||
-      (typeof process !== "undefined" && process.env?.RESEND_FROM_EMAIL) ||
-      "岡山県統一模擬試験 <info@okayama-moshi.com>";
-    
-    // 個人問い合わせ向け管理者通知先: info@okayama-moshi.com
-    const individualAdminEmail =
-      context.env.ADMIN_EMAIL ||
-      (typeof process !== "undefined" && process.env?.ADMIN_EMAIL) ||
-      "info@okayama-moshi.com";
-
-    // 塾・学校関係者フォーム向け管理者通知先: 中央教育研究所の指定アドレス（環境変数で切り替え可能）
+    // 2. メール送信設定の取得
+    const apiKey = readEnv(context.env, "RESEND_API_KEY");
+    const fromEmail = readEnv(context.env, "RESEND_FROM_EMAIL", DEFAULT_FROM_EMAIL);
+    const individualAdminEmail = readEnv(context.env, "ADMIN_EMAIL", DEFAULT_ADMIN_EMAIL);
     const orgAdminEmail =
-      context.env.ORG_ADMIN_EMAIL ||
-      context.env.ADMIN_EMAIL_ORG ||
-      context.env.CHUO_KYOIKU_EMAIL ||
-      (typeof process !== "undefined" && (process.env?.ORG_ADMIN_EMAIL || process.env?.ADMIN_EMAIL_ORG || process.env?.CHUO_KYOIKU_EMAIL)) ||
+      readEnv(context.env, "ORG_ADMIN_EMAIL") ||
+      readEnv(context.env, "ADMIN_EMAIL_ORG") ||
+      readEnv(context.env, "CHUO_KYOIKU_EMAIL") ||
       "okayamamoshi@chuoh-kyouiku.co.jp";
 
     if (!apiKey) {
       console.error("RESEND_API_KEY is not configured.");
-      return new Response(
-        JSON.stringify({
+      return jsonResponse(
+        {
           success: false,
           message: "メール送信APIキー（RESEND_API_KEY）が設定されていません。",
-        }),
-        { status: 500, headers: { "Content-Type": "application/json" } }
+        },
+        500
       );
     }
 
@@ -117,39 +69,33 @@ ${body.message || "なし"}
 送信日時: ${new Date().toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" })}
 `.trim();
 
-    // 1. 管理者宛通知メール送信（塾・学校関係者様は中央教育研究所、個人はokayama-moshi）
+    // 3. 管理者宛通知メール送信
     const targetAdminEmail = isOrg ? orgAdminEmail : individualAdminEmail;
-
-    const adminEmailRes = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-        "User-Agent": "Okamoshi-Contact/1.0",
-      },
-      body: JSON.stringify({
+    const adminMailRes = await sendResendEmail(
+      apiKey,
+      {
         from: fromEmail,
         to: [targetAdminEmail],
         reply_to: body.email || undefined,
-        subject: subject,
+        subject,
         text: textContent,
-      }),
-    });
+      },
+      "[functions/api/contact/admin]"
+    );
 
-    if (!adminEmailRes.ok) {
-      const errData = await adminEmailRes.json().catch(() => ({}));
-      console.error("Resend API Error (Admin Notification):", adminEmailRes.status, errData);
-      return new Response(
-        JSON.stringify({
+    if (!adminMailRes.ok) {
+      console.error("Resend API Error (Admin Notification):", adminMailRes.status, adminMailRes.error);
+      return jsonResponse(
+        {
           success: false,
-          message: `Resend送信エラー: ${adminEmailRes.status}`,
-          details: errData,
-        }),
-        { status: 500, headers: { "Content-Type": "application/json" } }
+          message: `Resend送信エラー: ${adminMailRes.status}`,
+          details: adminMailRes.error,
+        },
+        500
       );
     }
 
-    // 2. ユーザー宛自動返信メール（メールアドレスが入力されている場合）
+    // 4. ユーザー宛自動返信メール（メールアドレスが入力されている場合）
     if (body.email) {
       const userSubject = "【岡山県統一模擬試験】お問い合わせを受け付けました";
       const userTextContent = `
@@ -187,33 +133,23 @@ Web : https://okayama-moshi.com
 --------------------------------------------------
 `.trim();
 
-      await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-          "Content-Type": "application/json",
-          "User-Agent": "Okamoshi-Contact/1.0",
-        },
-        body: JSON.stringify({
+      sendResendEmail(
+        apiKey,
+        {
           from: fromEmail,
           to: [body.email],
           subject: userSubject,
           text: userTextContent,
-        }),
-      }).catch((err) => {
+        },
+        "[functions/api/contact/user]"
+      ).catch((err) => {
         console.warn("User auto-reply failed (non-fatal):", err);
       });
     }
 
-    return new Response(
-      JSON.stringify({ success: true, message: "送信完了" }),
-      { status: 200, headers: { "Content-Type": "application/json" } }
-    );
+    return jsonResponse({ success: true, message: "送信完了" });
   } catch (error: any) {
     console.error("Function Internal Error:", error);
-    return new Response(
-      JSON.stringify({ success: false, message: error.message || "Server Error" }),
-      { status: 500, headers: { "Content-Type": "application/json" } }
-    );
+    return errorResponse(error.message || "Server Error", 500);
   }
 };

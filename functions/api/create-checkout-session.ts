@@ -1,13 +1,7 @@
-interface Env {
-  STRIPE_SECRET_KEY?: string;
-  TURNSTILE_SECRET_KEY?: string;
-}
-
-const jsonResponse = (data: unknown, status = 200) =>
-  new Response(JSON.stringify(data), {
-    status,
-    headers: { "Content-Type": "application/json" },
-  });
+import { Env, readEnv } from "../_shared/env";
+import { jsonResponse } from "../_shared/http";
+import { verifyTurnstile } from "../_shared/turnstile";
+import { formatExamLabel } from "../_shared/exam";
 
 /** 国内電話番号（例: 090-1234-5678）を E.164 形式（+819012345678）へ変換する。変換できない場合は空文字。 */
 const toE164JP = (raw: string): string => {
@@ -28,19 +22,6 @@ interface CheckoutLineItem {
   /** Webhook / スプレッドシート用の1模試＝1レコード情報（session.metadata[exam_N] に JSON で保存） */
   record: { id: string; label: string; issue: string; title: string; venue: string; price: number; date: string };
 }
-
-/** 月号ラベルを生成する（例: 「10月号（岡山県統一模擬試験）」）。月号が取れない場合は「月号不明」を明示する。 */
-const formatExamLabel = (issueRaw: string, title: string, id: string): { issue: string; label: string } => {
-  let issue = String(issueRaw || "").trim();
-  if (issue && /^\d{1,2}月$/.test(issue)) issue += "号";
-  if (!issue) {
-    const m = String(id || "").match(/_(\d{1,2})$/);
-    if (m) issue = `${Number(m[1])}月号`;
-  }
-  // 「岡山県統一模擬試験（おかもし）」→「岡山県統一模擬試験」（括弧の入れ子を避ける）
-  const baseTitle = title.replace(/[（(][^（）()]*[）)]\s*$/, "").trim() || title;
-  return { issue, label: issue ? `${issue}（${baseTitle}）` : `月号不明（${baseTitle}）` };
-};
 
 /**
  * フロントから送られた exams 配列を、Stripe の line_items 用に1件ずつ正規化する。
@@ -92,7 +73,7 @@ const buildExamLineItems = (exams: unknown): CheckoutLineItem[] => {
 
 export const onRequestPost: PagesFunction<Env> = async (context) => {
   try {
-    const stripeSecretKey = context.env.STRIPE_SECRET_KEY;
+    const stripeSecretKey = readEnv(context.env, "STRIPE_SECRET_KEY");
     if (!stripeSecretKey) {
       console.error("[functions/api/create-checkout-session] STRIPE_SECRET_KEY is not set.");
       return jsonResponse(
@@ -104,58 +85,25 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const body = (await context.request.json()) as Record<string, any>;
     console.log("[functions/api/create-checkout-session] Received request:", JSON.stringify(body));
 
-    // Turnstile トークンの検証
-    const turnstileSecret =
-      context.env.TURNSTILE_SECRET_KEY ||
-      (typeof process !== "undefined" && process.env?.TURNSTILE_SECRET_KEY) ||
-      "";
-    const turnstileResponse =
-      body["cf-turnstile-response"] ||
-      body.turnstileToken ||
-      body.turnstile_token ||
-      "";
-    const remoteIp = context.request.headers.get("CF-Connecting-IP") || "";
-
-    const verifyFormData = new URLSearchParams();
-    verifyFormData.append("secret", turnstileSecret);
-    verifyFormData.append("response", String(turnstileResponse || ""));
-    if (remoteIp) {
-      verifyFormData.append("remoteip", remoteIp);
-    }
-
-    try {
-      const verifyRes = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
-        method: "POST",
-        body: verifyFormData,
-      });
-      const verifyResult = (await verifyRes.json()) as { success: boolean; "error-codes"?: string[] };
-      if (!verifyResult.success) {
-        console.error("[functions/api/create-checkout-session] Turnstile verification failed:", verifyResult);
-        return jsonResponse(
-          {
-            success: false,
-            message: "セキュリティ認証に失敗しました。もう一度お試しください。",
-          },
-          403
-        );
-      }
-    } catch (verifyErr) {
-      console.error("[functions/api/create-checkout-session] Turnstile verification error:", verifyErr);
+    // 1. Turnstile トークンの検証
+    const turnstileSecret = readEnv(context.env, "TURNSTILE_SECRET_KEY");
+    const turnstileResult = await verifyTurnstile(context.request, body, turnstileSecret);
+    if (!turnstileResult.success) {
       return jsonResponse(
         {
           success: false,
-          message: "セキュリティ認証処理中にエラーが発生しました。もう一度お試しください。",
+          message: turnstileResult.error || "セキュリティ認証に失敗しました。もう一度お試しください。",
         },
         403
       );
     }
 
-    // 1. success_url / cancel_url
+    // 2. success_url / cancel_url
     const origin = new URL(context.request.url).origin;
     const successUrl = `${origin}/apply/success?session_id={CHECKOUT_SESSION_ID}`;
     const cancelUrl = `${origin}/apply.html`;
 
-    // 2. パラメータ抽出と正規化
+    // 3. パラメータ抽出と正規化
     const existingMeta = body.metadata || {};
     const studentName = String(body.student_name || body.client_reference_id || existingMeta.student_name || "").trim();
     const studentKana = String(body.student_kana || body.student_kana_name || body.kana || existingMeta.student_kana || existingMeta.kana || "").trim();
@@ -179,7 +127,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const requestedKonbiniDays = Math.round(Number(body.konbini_expires_after_days ?? body.payment_method_options?.konbini?.expires_after_days ?? 3));
     const konbiniExpiresAfterDays = Number.isFinite(requestedKonbiniDays) ? Math.min(3, Math.max(1, requestedKonbiniDays)) : 3;
 
-    // 2-1. 選択された模試ごとに line_items を分割（レシートのように内訳を表示）
+    // 3-1. 選択された模試ごとに line_items を分割（レシートのように内訳を表示）
     const examLineItems = buildExamLineItems(body.exams);
     const itemizedTotal = examLineItems.reduce((sum, item) => sum + item.unitAmount, 0);
     if (examLineItems.length > 0 && itemizedTotal !== declaredAmount) {
@@ -197,7 +145,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       ? examLineItems.map((item) => item.record.label).join(" / ")
       : examName;
 
-    // 3. metadata の構築とサニタイズ（全値文字列・最大500文字・キー長最大40文字）
+    // 4. metadata の構築とサニタイズ（全値文字列・最大500文字・キー長最大40文字）
     const metadataRaw: Record<string, string> = {
       student_name: studentName,
       student_kana: studentKana,
@@ -256,16 +204,13 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       }
     }
 
-    // 4. Stripe API（POST /v1/checkout/sessions）を直接呼び出す
+    // 5. Stripe API（POST /v1/checkout/sessions）を直接呼び出す
     const params = new URLSearchParams();
     params.append("mode", "payment");
     params.append("success_url", successUrl);
     params.append("cancel_url", cancelUrl);
 
-    // 4-1. Checkout へ連絡先を事前入力するため、Stripe Customer を作成して紐付ける
-    //      （customer と customer_email は併用不可）
-    //      - email: Customer.email があれば Checkout で事前入力される
-    //      - phone: phone_number_collection 有効時、Customer.phone（E.164）が事前入力される
+    // 5-1. Checkout へ連絡先を事前入力するため、Stripe Customer を作成して紐付ける
     const billingName = parentName || studentName;
     const phoneE164 = toE164JP(phone);
     let customerId = "";
@@ -307,11 +252,10 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       params.append("client_reference_id", studentName);
     }
 
-    // 4-2. 決済手段の限定：コンビニ選択時は konbini のみ、それ以外は card のみ
+    // 5-2. 決済手段の限定：コンビニ選択時は konbini のみ、それ以外は card のみ
     if (paymentMethod === "konbini") {
       params.append("payment_method_types[0]", "konbini");
       params.append("payment_method_options[konbini][expires_after_days]", String(konbiniExpiresAfterDays));
-      // 電話番号欄を Customer.phone で事前入力させる（Stripe 仕様：既存 Customer の phone がプリフィルされる）
       if (customerId && phoneE164) {
         params.append("phone_number_collection[enabled]", "true");
       }
@@ -333,7 +277,6 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
         params.append(`line_items[${i}][quantity]`, "1");
       });
     } else {
-      // exams 配列が無い場合のフォールバック（従来通り1行）
       params.append("line_items[0][price_data][currency]", "jpy");
       params.append("line_items[0][price_data][unit_amount]", String(amountVal));
       params.append("line_items[0][price_data][product_data][name]", examName);
@@ -365,7 +308,6 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
     console.log("[functions/api/create-checkout-session] Checkout Session created:", session.id);
 
-    // 5. レスポンス返却
     return jsonResponse({ success: true, url: session.url, session_id: session.id });
   } catch (error: any) {
     console.error("[functions/api/create-checkout-session] Internal Exception:", error);

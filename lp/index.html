@@ -737,8 +737,9 @@
                 loading="lazy"
                 decoding="async"
               />
-              <span id="card2-preview-badge" class="absolute bottom-3 right-3 bg-slate-900/80 backdrop-blur-xs text-white text-[10px] sm:text-xs px-2.5 py-1 rounded-full font-bold shadow-xs flex items-center gap-1">
-                <span>🔍 拡大して見る</span>
+              <span id="card2-preview-badge" class="absolute bottom-3.5 right-3.5 sm:bottom-4 sm:right-4 inline-flex items-center gap-1.5 py-2 sm:py-2.5 px-3.5 sm:px-4 rounded-full bg-orange-700 hover:bg-orange-800 text-white font-bold text-xs sm:text-sm shadow-lg shadow-orange-700/30 group-hover:scale-105 group-hover:shadow-xl transition-all duration-200 cursor-pointer select-none">
+                <span class="material-symbols-outlined text-base sm:text-lg">zoom_in</span>
+                <span>拡大して見る</span>
               </span>
             </div>
           </div>
@@ -1661,62 +1662,73 @@
     </div>
   </div>
 
-  <!-- 学力診断シート拡大見本モーダル（コンテナ内専用 Transform ズーム＆パン対応） -->
-  <div id="report-modal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md flex flex-col items-center justify-between p-2.5 sm:p-4 md:p-6 hidden select-none" onclick="if(event.target === this) closeReportModal()" role="dialog" aria-modal="true" aria-labelledby="modal-report-title" style="touch-action: none;">
-    
-    <!-- モーダルヘッダーバー -->
-    <div class="w-full max-w-5xl flex items-center justify-between py-1.5 px-2 text-white shrink-0">
-      <div class="flex items-center gap-2 min-w-0 pr-2">
-        <span class="w-2.5 h-2.5 rounded-full bg-brand-green shrink-0"></span>
-        <h4 id="modal-report-title" class="text-xs sm:text-base font-bold text-white tracking-wide truncate">
-          学力診断シート（個人成績表・2面構成）見本
-        </h4>
-        <span class="hidden md:inline text-xs text-slate-300 shrink-0">（当日点＋内申点の総合評価・弱点分析）</span>
-      </div>
+  <!-- 学力診断シート詳細解説モーダルスライダー（清潔感のある白基調・カルーセルギャラリー） -->
+  <div id="report-modal" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 md:p-8 hidden bg-slate-900/60 backdrop-blur-md transition-opacity duration-300" onclick="if(event.target === this) closeReportModal()" role="dialog" aria-modal="true" aria-labelledby="report-modal-title">
 
-      <!-- ズーム操作コントロール群（＋ / ー / 100%リセット / ✕閉じる） -->
-      <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
-        <div class="inline-flex items-center bg-white/10 rounded-lg p-0.5 border border-white/20">
-          <button type="button" onclick="modalZoomStep(-0.5)" aria-label="縮小" class="w-7 h-7 flex items-center justify-center text-white hover:bg-white/20 rounded text-sm font-bold transition-colors cursor-pointer">－</button>
-          <span id="modal-zoom-display" class="px-1.5 text-[11px] font-bold text-slate-200 min-w-[42px] text-center">100%</span>
-          <button type="button" onclick="modalZoomStep(0.5)" aria-label="拡大" class="w-7 h-7 flex items-center justify-center text-white hover:bg-white/20 rounded text-sm font-bold transition-colors cursor-pointer">＋</button>
-          <button type="button" onclick="modalResetZoom()" aria-label="リセット" class="hidden sm:inline-flex px-2 py-1 text-[11px] font-bold text-slate-200 hover:text-white hover:bg-white/20 rounded transition-colors cursor-pointer">リセット</button>
+    <!-- モーダルウィンドウ本体（白基調 × rounded-2xl × shadow-2xl） -->
+    <div class="relative w-full max-w-4xl max-h-[92vh] bg-white rounded-2xl shadow-2xl border border-slate-200/90 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200" onclick="event.stopPropagation()">
+      
+      <!-- モーダルヘッダー -->
+      <div class="px-4 sm:px-6 py-3.5 sm:py-4 bg-white border-b border-slate-100 flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-2.5 min-w-0 pr-3">
+          <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-xl">analytics</span>
+          </div>
+          <div class="min-w-0">
+            <h3 id="report-modal-title" class="text-sm sm:text-base font-bold text-slate-900 truncate">
+              学力診断シート（個人成績表）詳細解説
+            </h3>
+            <p class="text-[11px] sm:text-xs text-slate-500 font-medium hidden xs:block truncate">
+              総合合否判定・設問別分析・弱点克服アドバイス（2面構成）
+            </p>
+          </div>
         </div>
-        <button type="button" onclick="closeReportModal()" aria-label="閉じる" class="flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 text-white text-xs sm:text-sm font-bold transition-colors cursor-pointer border border-white/25 shadow-xs">
-          <span class="text-sm leading-none">✕</span>
-          <span class="hidden xs:inline">閉じる</span>
+
+        <!-- 閉じるボタン（×） -->
+        <button type="button" onclick="closeReportModal()" aria-label="モーダルを閉じる" class="w-10 h-10 min-w-[40px] min-h-[40px] rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 active:bg-slate-200 flex items-center justify-center transition-colors cursor-pointer shrink-0">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
       </div>
-    </div>
 
-    <!-- 画像コンテナ（画面いっぱいの高解像度拡大表示・コンテナ内Transformズーム＆パン） -->
-    <div id="modal-img-container" class="relative w-full max-w-5xl flex-1 min-h-0 my-1 overflow-hidden rounded-lg bg-slate-900/60 border border-white/10 shadow-2xl flex items-center justify-center select-none" style="touch-action: none;">
-      <div id="modal-img-wrapper" class="w-full h-full flex items-center justify-center cursor-zoom-in origin-center" style="will-change: transform;">
-        <img 
-          id="modal-report-img"
-          src="/images/preview-card-report.webp" 
-          alt="学力診断シート（成績カルテ・2面構成）高解像度見本" 
-          class="max-w-full max-h-full object-contain rounded-md block pointer-events-none select-none transition-opacity duration-200"
-          draggable="false"
-        />
+      <!-- カルーセルスライダーエリア -->
+      <div class="relative flex-1 min-h-0 bg-slate-50/70 overflow-hidden flex items-center justify-center">
+        
+        <!-- 左右ナビゲーションボタン（PC/タブレット） -->
+        <button type="button" id="report-slider-prev-btn" onclick="prevReportSlide()" aria-label="前の解説を見る" class="absolute left-2 sm:left-4 z-20 w-11 h-11 min-w-[44px] min-h-[44px] rounded-full bg-white/95 hover:bg-white text-slate-700 hover:text-emerald-800 shadow-md border border-slate-200/90 flex items-center justify-center transition-all cursor-pointer hover:scale-105 active:scale-95 disabled:opacity-30 disabled:pointer-events-none">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
+        </button>
+
+        <button type="button" id="report-slider-next-btn" onclick="nextReportSlide()" aria-label="次の解説を見る" class="absolute right-2 sm:right-4 z-20 w-11 h-11 min-w-[44px] min-h-[44px] rounded-full bg-white/95 hover:bg-white text-slate-700 hover:text-emerald-800 shadow-md border border-slate-200/90 flex items-center justify-center transition-all cursor-pointer hover:scale-105 active:scale-95 disabled:opacity-30 disabled:pointer-events-none">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+        </button>
+
+        <!-- スライドトラック -->
+        <div id="report-slider-track" class="w-full h-full flex transition-transform duration-300 ease-out select-none">
+          <!-- JSでスライドをレンダリング -->
+        </div>
       </div>
 
-      <!-- ズーム時のみ表示されるリセット用フロートバッジ（スマホ向け） -->
-      <button id="modal-mobile-reset-btn" type="button" onclick="modalResetZoom()" class="absolute bottom-3 right-3 hidden items-center gap-1 px-3 py-1.5 rounded-full bg-slate-900/80 backdrop-blur-md text-white text-xs font-bold border border-white/20 shadow-lg cursor-pointer transition-all active:scale-95">
-        <span>🔄 元のサイズに戻す</span>
-      </button>
-    </div>
+      <!-- モーダルフッター（ドットインジケーター ＆ カウンター ＆ 閉じる導線） -->
+      <div class="px-4 sm:px-6 py-3 sm:py-3.5 bg-white border-t border-slate-100 flex items-center justify-between gap-3 shrink-0">
+        
+        <!-- ドットインジケーター（タッチ領域32px確保） -->
+        <div id="report-slider-dots" class="flex items-center gap-1">
+          <!-- JSでレンダリング -->
+        </div>
 
-    <!-- 下部操作ガイドバー -->
-    <div class="w-full max-w-5xl py-1 px-2 flex items-center justify-between text-[11px] sm:text-xs text-slate-300 shrink-0">
-      <span class="flex items-center gap-1 truncate mr-2">
-        <span>🔍</span>
-        <span class="truncate">ピンチ（2本指）やタップ・＋－ボタンで枠内拡大、ドラッグで移動できます</span>
-      </span>
-      <button type="button" onclick="closeReportModal()" class="text-slate-300 hover:text-white underline cursor-pointer shrink-0">✕ 閉じる</button>
+        <!-- スライド番号 ＆ 閉じるボタン -->
+        <div class="flex items-center gap-3">
+          <span id="report-slider-counter" class="text-xs font-bold text-slate-600 bg-slate-100 px-2.5 py-1 rounded-full">
+            1 / 3
+          </span>
+          <button type="button" onclick="closeReportModal()" class="text-xs font-bold text-slate-600 hover:text-slate-900 py-1.5 px-3 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer">
+            閉じる
+          </button>
+        </div>
+      </div>
+
     </div>
   </div>
-
 
   <!-- =========================================================================
        現行サイト共通フッター（すっきりと整ったフッターデザイン）
@@ -3643,325 +3655,183 @@
     }
 
     // =========================================================================
-    // 診断シート拡大モーダル（コンテナ内専用 Transform ズーム＆パン ＆ ビューポート復元）
+    // 成績表（学力診断シート）詳細解説モーダルスライダー制御
     // =========================================================================
-    let origViewportMetaContent = '';
-    const modalZoomState = {
-      scale: 1.0,
-      panX: 0,
-      panY: 0,
-      minScale: 1.0,
-      maxScale: 4.0,
-      isPanning: false,
-      startX: 0,
-      startY: 0,
-      lastTapTime: 0,
-      initialPinchDist: 0,
-      initialScale: 1.0
-    };
+    const REPORT_SLIDES = [
+      {
+        tag: "第1面: 総合判定",
+        title: "当日点 × 内申点 の精密合否ドッキング判定",
+        desc: "岡山県公立高校入試の傾斜配点・内申点基準に完全連動。第1志望校から併願私立まで精度の高い合格可能性（A〜E判定）を算出します。",
+        image: "/images/preview-card-report.webp",
+        alt: "学力診断シート 第1面 総合判定・志望校合格可能性見本"
+      },
+      {
+        tag: "第2面: 設問別分析",
+        title: "単元・領域ごとの正答率と失点パターンを可視化",
+        desc: "全受検者の正答率と本人の正誤を照合。「落としてはいけない基本問題」や「合否を分ける重要問題」を一目で把握し、弱点克服へ直結させます。",
+        image: "/images/preview-card-answer.webp",
+        alt: "学力診断シート 第2面 設問別・領域別正答率チャート見本"
+      },
+      {
+        tag: "解説・学習指導",
+        title: "入試本番への具体的処方箋・重点復習アドバイス",
+        desc: "県内入試の出題傾向を踏まえた教科別学習アドバイス。弱点を補強し、次の模試・本番で確実に点数を伸ばすための学習指針を提供します。",
+        image: "/images/preview-card-exam.webp",
+        alt: "学力診断シート 教科別弱点克服アドバイス見本"
+      }
+    ];
 
-    function updateModalTransform(animate = false) {
-      const wrapper = document.getElementById('modal-img-wrapper');
-      const container = document.getElementById('modal-img-container');
-      const zoomDisplay = document.getElementById('modal-zoom-display');
-      const resetBtn = document.getElementById('modal-mobile-reset-btn');
-      if (!wrapper || !container) return;
+    let currentReportSlide = 0;
+    let reportTouchStartX = 0;
+    let reportTouchEndX = 0;
 
-      if (modalZoomState.scale <= 1.02) {
-        modalZoomState.scale = 1.0;
-        modalZoomState.panX = 0;
-        modalZoomState.panY = 0;
-      } else {
-        const cw = container.clientWidth;
-        const ch = container.clientHeight;
-        const maxPanX = Math.max(0, (cw * (modalZoomState.scale - 1)) / 2 + 50);
-        const maxPanY = Math.max(0, (ch * (modalZoomState.scale - 1)) / 2 + 50);
-        modalZoomState.panX = Math.max(-maxPanX, Math.min(maxPanX, modalZoomState.panX));
-        modalZoomState.panY = Math.max(-maxPanY, Math.min(maxPanY, modalZoomState.panY));
+    function renderReportSlides() {
+      const track = document.getElementById("report-slider-track");
+      const dotsContainer = document.getElementById("report-slider-dots");
+      if (!track || !dotsContainer) return;
+
+      track.innerHTML = REPORT_SLIDES.map((slide, idx) => `
+        <div class="report-slide w-full h-full shrink-0 flex flex-col items-center justify-center p-3 sm:p-5 overflow-y-auto">
+          <div class="w-full flex-1 min-h-0 flex items-center justify-center max-h-[46vh] sm:max-h-[52vh]">
+            <img 
+              src="${slide.image}" 
+              alt="${slide.alt}" 
+              width="640" 
+              height="432" 
+              class="max-w-full max-h-full object-contain rounded-xl shadow-sm border border-slate-200/90 bg-white select-none pointer-events-none"
+              loading="lazy"
+            />
+          </div>
+          <div class="mt-3 text-center max-w-xl shrink-0 space-y-1 px-2">
+            <div class="inline-flex items-center gap-2">
+              <span class="text-[11px] font-bold text-emerald-900 bg-emerald-100 px-2.5 py-0.5 rounded-full">${slide.tag}</span>
+              <h4 class="text-xs sm:text-sm font-bold text-slate-900">${slide.title}</h4>
+            </div>
+            <p class="text-[11px] sm:text-xs text-slate-600 leading-relaxed font-medium">
+              ${slide.desc}
+            </p>
+          </div>
+        </div>
+      `).join("");
+
+      dotsContainer.innerHTML = REPORT_SLIDES.map((slide, idx) => `
+        <button type="button" onclick="goToReportSlide(${idx})" aria-label="解説スライド${idx + 1}（${slide.tag}）へ" class="report-slider-dot min-w-[32px] min-h-[32px] p-2 flex items-center justify-center cursor-pointer">
+          <span class="dot-inner ${idx === 0 ? "w-5 h-2 bg-emerald-800" : "w-2 h-2 bg-slate-300 hover:bg-slate-400"} rounded-full transition-all duration-300"></span>
+        </button>
+      `).join("");
+
+      initReportSwipe();
+      updateReportSlideUI();
+    }
+
+    function updateReportSlideUI() {
+      const track = document.getElementById("report-slider-track");
+      const counter = document.getElementById("report-slider-counter");
+      const prevBtn = document.getElementById("report-slider-prev-btn");
+      const nextBtn = document.getElementById("report-slider-next-btn");
+      const dots = document.querySelectorAll(".report-slider-dot .dot-inner");
+
+      if (track) {
+        track.style.transform = `translateX(-${currentReportSlide * 100}%)`;
       }
 
-      if (animate) {
-        wrapper.style.transition = 'transform 0.22s cubic-bezier(0.2, 0, 0, 1)';
-      } else {
-        wrapper.style.transition = 'none';
+      if (counter) {
+        counter.textContent = `${currentReportSlide + 1} / ${REPORT_SLIDES.length}`;
       }
 
-      wrapper.style.transform = `translate3d(${modalZoomState.panX}px, ${modalZoomState.panY}px, 0) scale(${modalZoomState.scale})`;
-
-      if (zoomDisplay) {
-        zoomDisplay.textContent = Math.round(modalZoomState.scale * 100) + '%';
+      if (prevBtn) {
+        prevBtn.disabled = currentReportSlide === 0;
+      }
+      if (nextBtn) {
+        nextBtn.disabled = currentReportSlide === REPORT_SLIDES.length - 1;
       }
 
-      if (resetBtn) {
-        if (modalZoomState.scale > 1.05) {
-          resetBtn.classList.remove('hidden');
-          resetBtn.classList.add('inline-flex');
+      dots.forEach((dot, idx) => {
+        if (idx === currentReportSlide) {
+          dot.className = "dot-inner w-5 h-2 bg-emerald-800 rounded-full transition-all duration-300 shadow-2xs";
         } else {
-          resetBtn.classList.add('hidden');
-          resetBtn.classList.remove('inline-flex');
+          dot.className = "dot-inner w-2 h-2 bg-slate-300 hover:bg-slate-400 rounded-full transition-all duration-300";
         }
-      }
+      });
+    }
 
-      if (modalZoomState.scale > 1.05) {
-        wrapper.style.cursor = 'grab';
-      } else {
-        wrapper.style.cursor = 'zoom-in';
+    function goToReportSlide(index) {
+      if (index < 0 || index >= REPORT_SLIDES.length) return;
+      currentReportSlide = index;
+      updateReportSlideUI();
+    }
+
+    function prevReportSlide() {
+      if (currentReportSlide > 0) {
+        currentReportSlide--;
+        updateReportSlideUI();
       }
     }
 
-    function modalZoomStep(delta) {
-      const targetScale = Math.min(modalZoomState.maxScale, Math.max(modalZoomState.minScale, modalZoomState.scale + delta));
-      if (targetScale <= 1.02) {
-        modalZoomState.scale = 1.0;
-        modalZoomState.panX = 0;
-        modalZoomState.panY = 0;
-      } else {
-        modalZoomState.scale = targetScale;
-      }
-      updateModalTransform(true);
-    }
-
-    function modalResetZoom() {
-      modalZoomState.scale = 1.0;
-      modalZoomState.panX = 0;
-      modalZoomState.panY = 0;
-      updateModalTransform(true);
-    }
-
-    function toggleModalImageZoom() {
-      if (modalZoomState.scale > 1.2) {
-        modalResetZoom();
-      } else {
-        modalZoomStep(1.2);
+    function nextReportSlide() {
+      if (currentReportSlide < REPORT_SLIDES.length - 1) {
+        currentReportSlide++;
+        updateReportSlideUI();
       }
     }
 
-    function initModalPanZoomListeners() {
-      const container = document.getElementById('modal-img-container');
-      const wrapper = document.getElementById('modal-img-wrapper');
-      if (!container || !wrapper) return;
-      if (container._panzoomInitialized) return;
-      container._panzoomInitialized = true;
+    function initReportSwipe() {
+      const track = document.getElementById("report-slider-track");
+      if (!track || track._swipeInitialized) return;
+      track._swipeInitialized = true;
 
-      function getTouchDist(t1, t2) {
-        const dx = t1.clientX - t2.clientX;
-        const dy = t1.clientY - t2.clientY;
-        return Math.sqrt(dx * dx + dy * dy);
-      }
+      track.addEventListener("touchstart", (e) => {
+        reportTouchStartX = e.changedTouches[0].screenX;
+      }, { passive: true });
 
-      // 1. Touch Events (Passive: false でブラウザ全体のビューポートズーム・スクロールを完全防止)
-      container.addEventListener('touchstart', function(e) {
-        if (e.touches.length === 2) {
-          modalZoomState.isPanning = false;
-          modalZoomState.initialPinchDist = getTouchDist(e.touches[0], e.touches[1]);
-          modalZoomState.initialScale = modalZoomState.scale;
-          wrapper.style.transition = 'none';
-        } else if (e.touches.length === 1) {
-          const now = Date.now();
-          const touch = e.touches[0];
-          // ダブルタップ検知（拡大/リセット切り替え）
-          if (now - modalZoomState.lastTapTime < 320) {
-            e.preventDefault();
-            modalZoomState.lastTapTime = 0;
-            if (modalZoomState.scale > 1.2) {
-              modalResetZoom();
-            } else {
-              const rect = container.getBoundingClientRect();
-              const offsetX = (touch.clientX - rect.left) - rect.width / 2;
-              const offsetY = (touch.clientY - rect.top) - rect.height / 2;
-              modalZoomState.scale = 2.4;
-              modalZoomState.panX = -offsetX * 0.7;
-              modalZoomState.panY = -offsetY * 0.7;
-              updateModalTransform(true);
-            }
-            return;
-          }
-          modalZoomState.lastTapTime = now;
-
-          if (modalZoomState.scale > 1.0) {
-            modalZoomState.isPanning = true;
-            modalZoomState.startX = touch.clientX - modalZoomState.panX;
-            modalZoomState.startY = touch.clientY - modalZoomState.panY;
-            wrapper.style.cursor = 'grabbing';
-            wrapper.style.transition = 'none';
-          }
-        }
-      }, { passive: false });
-
-      container.addEventListener('touchmove', function(e) {
-        // ブラウザ全体のズームおよび背景スクロールを確実に遮断
-        e.preventDefault();
-        e.stopPropagation();
-
-        if (e.touches.length === 2 && modalZoomState.initialPinchDist > 0) {
-          const dist = getTouchDist(e.touches[0], e.touches[1]);
-          const ratio = dist / modalZoomState.initialPinchDist;
-          const newScale = Math.min(modalZoomState.maxScale, Math.max(modalZoomState.minScale, modalZoomState.initialScale * ratio));
-          modalZoomState.scale = newScale;
-          updateModalTransform(false);
-        } else if (e.touches.length === 1 && modalZoomState.isPanning && modalZoomState.scale > 1.0) {
-          const touch = e.touches[0];
-          modalZoomState.panX = touch.clientX - modalZoomState.startX;
-          modalZoomState.panY = touch.clientY - modalZoomState.startY;
-          updateModalTransform(false);
-        }
-      }, { passive: false });
-
-      container.addEventListener('touchend', function(e) {
-        if (e.touches.length === 0) {
-          modalZoomState.isPanning = false;
-          modalZoomState.initialPinchDist = 0;
-          if (modalZoomState.scale < 1.05) {
-            modalResetZoom();
+      track.addEventListener("touchend", (e) => {
+        reportTouchEndX = e.changedTouches[0].screenX;
+        const diff = reportTouchStartX - reportTouchEndX;
+        if (Math.abs(diff) > 40) {
+          if (diff > 0) {
+            nextReportSlide();
           } else {
-            updateModalTransform(true);
-          }
-        } else if (e.touches.length === 1) {
-          modalZoomState.initialPinchDist = 0;
-          if (modalZoomState.scale > 1.0) {
-            modalZoomState.isPanning = true;
-            const touch = e.touches[0];
-            modalZoomState.startX = touch.clientX - modalZoomState.panX;
-            modalZoomState.startY = touch.clientY - modalZoomState.panY;
+            prevReportSlide();
           }
         }
-      }, { passive: false });
-
-      // 2. マウスホイール（PC操作）
-      container.addEventListener('wheel', function(e) {
-        e.preventDefault();
-        const delta = e.deltaY < 0 ? 0.35 : -0.35;
-        const targetScale = Math.min(modalZoomState.maxScale, Math.max(modalZoomState.minScale, modalZoomState.scale + delta));
-        if (targetScale <= 1.02) {
-          modalResetZoom();
-        } else {
-          modalZoomState.scale = targetScale;
-          updateModalTransform(true);
-        }
-      }, { passive: false });
-
-      // 3. マウスドラッグ＆クリック（PC操作）
-      let isMouseDown = false;
-      let mouseStartX = 0;
-      let mouseStartY = 0;
-      let mouseMoved = false;
-
-      container.addEventListener('mousedown', function(e) {
-        if (e.button !== 0) return;
-        isMouseDown = true;
-        mouseMoved = false;
-        mouseStartX = e.clientX - modalZoomState.panX;
-        mouseStartY = e.clientY - modalZoomState.panY;
-        if (modalZoomState.scale > 1.0) {
-          wrapper.style.cursor = 'grabbing';
-          wrapper.style.transition = 'none';
-        }
-      });
-
-      window.addEventListener('mousemove', function(e) {
-        if (!isMouseDown) return;
-        const dx = Math.abs(e.clientX - (mouseStartX + modalZoomState.panX));
-        const dy = Math.abs(e.clientY - (mouseStartY + modalZoomState.panY));
-        if (dx > 3 || dy > 3) mouseMoved = true;
-
-        if (modalZoomState.scale > 1.0) {
-          modalZoomState.panX = e.clientX - mouseStartX;
-          modalZoomState.panY = e.clientY - mouseStartY;
-          updateModalTransform(false);
-        }
-      });
-
-      window.addEventListener('mouseup', function(e) {
-        if (!isMouseDown) return;
-        isMouseDown = false;
-        if (modalZoomState.scale > 1.0) {
-          wrapper.style.cursor = 'grab';
-          updateModalTransform(true);
-        }
-      });
-
-      container.addEventListener('click', function(e) {
-        if (mouseMoved || e.target.closest('button')) return;
-        if (modalZoomState.scale > 1.2) {
-          modalResetZoom();
-        } else {
-          const rect = container.getBoundingClientRect();
-          const offsetX = (e.clientX - rect.left) - rect.width / 2;
-          const offsetY = (e.clientY - rect.top) - rect.height / 2;
-          modalZoomState.scale = 2.4;
-          modalZoomState.panX = -offsetX * 0.7;
-          modalZoomState.panY = -offsetY * 0.7;
-          updateModalTransform(true);
-        }
-      });
+      }, { passive: true });
     }
 
     function openReportModal(grade) {
-      const modal = document.getElementById('report-modal');
+      const modal = document.getElementById("report-modal");
       if (!modal) return;
 
-      // 1. ビューポート保護: モーダル表示中はブラウザ全体のピンチズームを無効化
-      const viewportMeta = document.querySelector('meta[name="viewport"]');
-      if (viewportMeta) {
-        origViewportMetaContent = viewportMeta.getAttribute('content') || 'width=device-width, initial-scale=1.0';
-        viewportMeta.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
-      }
+      renderReportSlides();
+      currentReportSlide = 0;
+      updateReportSlideUI();
 
-      // 2. 背面のスクロール・タッチ挙動を完全ロック
-      document.documentElement.style.overflow = 'hidden';
-      document.body.style.overflow = 'hidden';
-      document.body.style.touchAction = 'none';
+      // 背面スクロールロック
+      document.documentElement.style.overflow = "hidden";
+      document.body.style.overflow = "hidden";
 
-      // 3. タイトル調整
-      const effectiveGrade = grade || (typeof selectedFeatureGrade !== 'undefined' ? selectedFeatureGrade : 'c3');
-      if (typeof featureCard2Data !== 'undefined' && featureCard2Data[effectiveGrade]?.modal?.title) {
-        const titleElem = document.getElementById('modal-report-title');
-        if (titleElem) titleElem.textContent = featureCard2Data[effectiveGrade].modal.title;
-      }
-
-      // 4. コンテナ内Transformリセット＆表示
-      initModalPanZoomListeners();
-      modalResetZoom();
-      modal.classList.remove('hidden');
+      modal.classList.remove("hidden");
     }
 
     function closeReportModal() {
-      const modal = document.getElementById('report-modal');
-      if (modal) modal.classList.add('hidden');
+      const modal = document.getElementById("report-modal");
+      if (modal) modal.classList.add("hidden");
 
-      // 1. モーダル内Transform状態をリセット
-      modalResetZoom();
-
-      // 2. ドキュメント全体の overflow / touch-action を正常復帰
-      document.documentElement.style.overflow = '';
-      document.documentElement.style.overflowX = 'clip';
-      document.body.style.overflow = '';
-      document.body.style.overflowX = 'clip';
-      document.body.style.touchAction = '';
-      document.body.style.width = '100%';
-
-      // 3. ビューポートのスケールを強制リセット（スマホの画面幅100%へ確実に復元）
-      const viewportMeta = document.querySelector('meta[name="viewport"]');
-      if (viewportMeta) {
-        // maximum-scale=1.0 でブラウザの visualViewport ズームを1.0に吸着
-        viewportMeta.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
-        void document.documentElement.offsetHeight; // リフロー強制
-        setTimeout(function() {
-          viewportMeta.setAttribute('content', origViewportMetaContent || 'width=device-width, initial-scale=1.0');
-          if (window.visualViewport) {
-            window.scrollTo(window.scrollX, window.scrollY);
-          }
-        }, 120);
-      }
+      // スクロール復帰
+      document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
     }
 
-    // Escキーで閉じる対応
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') {
-        const modal = document.getElementById('report-modal');
-        if (modal && !modal.classList.contains('hidden')) {
-          closeReportModal();
-        }
+    // キーボード操作（Escapeで閉じる、左右キーでスライド移動）
+    document.addEventListener("keydown", function(e) {
+      const modal = document.getElementById("report-modal");
+      if (!modal || modal.classList.contains("hidden")) return;
+
+      if (e.key === "Escape") {
+        closeReportModal();
+      } else if (e.key === "ArrowLeft") {
+        prevReportSlide();
+      } else if (e.key === "ArrowRight") {
+        nextReportSlide();
       }
     });
 
@@ -3975,9 +3845,9 @@
     window.switchCard3Grade = switchCard3Grade;
     window.openReportModal = openReportModal;
     window.closeReportModal = closeReportModal;
-    window.toggleModalImageZoom = toggleModalImageZoom;
-    window.modalZoomStep = modalZoomStep;
-    window.modalResetZoom = modalResetZoom;
+    window.prevReportSlide = prevReportSlide;
+    window.nextReportSlide = nextReportSlide;
+    window.goToReportSlide = goToReportSlide;
 
     // 共通ヘッダー制御ロジック
     function toggleNextExamDropdown(event) {

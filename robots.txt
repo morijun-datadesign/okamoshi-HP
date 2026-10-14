@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://okamoshi.pages.dev/sitemap.xml

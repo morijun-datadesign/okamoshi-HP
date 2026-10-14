@@ -6,6 +6,7 @@
   <title>模試Webお申込みフォーム | 岡山県統一模擬試験（おかもし）</title>
   <meta name="description" content="岡山県統一模擬試験（おかもし）の個人受験Webお申込みフォームです。中3・中2・中1・小6対象。希望模試、会場受験（岡山・倉敷・津山）または自宅受験を選択して簡単にお申し込みいただけます。">
   <link rel="canonical" href="https://okamoshi.pages.dev/apply.html">
+  <meta name="robots" content="index, follow">
   
   <!-- OGP -->
   <meta property="og:title" content="模試Webお申込みフォーム | 岡山県統一模擬試験（おかもし）">
@@ -1164,7 +1165,7 @@
         </div>
 
         <!-- Security Reassurance -->
-        <div class="mt-4 pt-3.5 border-t border-slate-100 flex items-center justify-center gap-1.5 text-[11px] text-slate-400 font-medium">
+        <div class="mt-4 pt-3.5 border-t border-slate-100 flex items-center justify-center gap-1.5 text-[11px] text-slate-500 font-medium">
           <span class="material-symbols-outlined text-[15px] text-emerald-700">lock</span>
           <span>Stripe公式の安全な決済システムへ遷移します</span>
         </div>
@@ -1997,7 +1998,7 @@
           : 'absolute inset-0 w-full h-full pl-3 pr-9 rounded-lg font-body-sm text-base appearance-none border shadow-2xs cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-primary-container text-gray-400 bg-gray-50 border-gray-200';
 
         const venueArrowClass = isChecked
-          ? (isVenueEmpty ? 'text-red-400' : 'text-slate-400')
+          ? (isVenueEmpty ? 'text-red-500' : 'text-slate-500')
           : 'text-gray-400';
 
         // 選択テキスト表示用ラベルの文字色（select本体と同じステート配色）
@@ -2046,6 +2047,7 @@
               </label>
               <div class="md:col-span-8 relative">
                 <select id="venue-${exam.id}" ${venueDisabledAttr} required
+                  aria-label="受験方法・希望会場"
                   onchange="updateExamVenue('${exam.id}', this)"
                   class="${venueSelectClass}" style="color: transparent;">
                   ${venueOptionsHtml}
@@ -2167,7 +2169,7 @@
         'text-slate-900', 'font-medium', 'bg-white', 'border-slate-200/80', 'border-slate-300'
       );
       if (arrow) {
-        arrow.classList.remove('text-gray-400', 'text-red-400', 'text-rose-400', 'text-slate-400', 'text-on-surface-variant');
+        arrow.classList.remove('text-gray-400', 'text-red-400', 'text-rose-400', 'text-slate-400', 'text-slate-500', 'text-on-surface-variant');
       }
 
       // 選択テキスト表示用ラベル（省略せず折り返して全文表示）の同期
@@ -2196,7 +2198,7 @@
       } else {
         // 3. 模試選択中 かつ 会場選択済み：標準白背景・通常テキスト
         selectElem.classList.add('text-slate-900', 'font-medium', 'bg-white', 'border-slate-300');
-        if (arrow) arrow.classList.add('text-slate-400');
+        if (arrow) arrow.classList.add('text-slate-500');
       }
     }
 
@@ -2964,7 +2966,7 @@
         dropdown.innerHTML = `
           <div class="p-4 text-xs text-slate-600 text-center space-y-1.5">
             <div>${scopeHint}</div>
-            <div class="text-[11px] text-slate-400">※候補にない学校名もそのまま直接ご入力いただけます</div>
+            <div class="text-[11px] text-slate-500">※候補にない学校名もそのまま直接ご入力いただけます</div>
           </div>
         `;
         dropdown.classList.remove('hidden');
@@ -2991,7 +2993,7 @@
         <div class="divide-y divide-slate-100 max-h-60 overflow-y-auto">
           ${itemsHtml}
         </div>
-        <div class="px-3.5 py-2 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
+        <div class="px-3.5 py-2 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
           <span>文部科学省 学校コード準拠</span>
           <span class="font-medium ${isNational ? 'text-emerald-700' : 'text-slate-500'}">${scopeBadge}</span>
         </div>

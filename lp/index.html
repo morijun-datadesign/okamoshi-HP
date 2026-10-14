@@ -849,7 +849,8 @@
           <div class="md:hidden flex items-center gap-2 w-full">
             <!-- 学年選択セレクト（アイコン付き） -->
             <div class="relative w-1/3">
-              <select id="sp-grade-select" onchange="selectGrade(this.value)" class="w-full h-10 pl-8 pr-7 bg-slate-100 hover:bg-slate-200/80 text-slate-800 font-bold text-sm sm:text-base rounded-lg border border-slate-300/80 appearance-none focus:outline-none focus:ring-2 focus:ring-emerald-600/30 transition-all cursor-pointer">
+              <label for="sp-grade-select" class="sr-only">学年選択</label>
+              <select id="sp-grade-select" aria-label="学年選択" onchange="selectGrade(this.value)" class="w-full h-10 pl-8 pr-7 bg-slate-100 hover:bg-slate-200/80 text-slate-800 font-bold text-sm sm:text-base rounded-lg border border-slate-300/80 appearance-none focus:outline-none focus:ring-2 focus:ring-emerald-600/30 transition-all cursor-pointer">
                 <option value="c3" selected>中3</option>
                 <option value="c2">中2</option>
                 <option value="c1">中1</option>
@@ -861,6 +862,7 @@
 
             <!-- 月号選択セレクト（見た目カスタム＋上に透明selectを配置） -->
             <div class="relative w-2/3">
+              <label for="sp-round-select" class="sr-only">実施回・月号選択</label>
               <select id="sp-round-select" onchange="handleSpRoundSelect(this.value)" class="peer absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" aria-label="実施回・月号選択">
                 <!-- JSで動的生成 -->
               </select>
@@ -3193,31 +3195,31 @@
           desc: "試験後にお届けする個人カルテです。単なる点数や偏差値だけでなく、志望校合格までの具体的な「あと何点」や優先して克服すべき単元がひと目で分かります。",
           bodyHtml: `
             <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-xs">
-              <div class="text-[11px] font-bold text-slate-400 mb-2">総合学力データ（5教科合計）</div>
+              <div class="text-[11px] font-bold text-slate-600 mb-2">総合学力データ（5教科合計）</div>
               <div class="grid grid-cols-3 gap-2 text-center">
                 <div class="border-r border-slate-100">
-                  <span class="text-[10px] text-slate-500 block">総合得点</span>
+                  <span class="text-[10px] text-slate-600 block">総合得点</span>
                   <span class="text-base font-bold text-slate-900">388<span class="text-xs font-normal"> / 500</span></span>
                 </div>
                 <div class="border-r border-slate-100">
-                  <span class="text-[10px] text-slate-500 block">総合偏差値</span>
+                  <span class="text-[10px] text-slate-600 block">総合偏差値</span>
                   <span class="text-base font-bold text-brand-green">64.8</span>
                 </div>
                 <div>
-                  <span class="text-[10px] text-slate-500 block">県内総合順位</span>
+                  <span class="text-[10px] text-slate-600 block">県内総合順位</span>
                   <span class="text-base font-bold text-slate-900">142<span class="text-xs font-normal"> / 2,180人</span></span>
                 </div>
               </div>
             </div>
 
             <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-xs space-y-2">
-              <div class="text-[11px] font-bold text-slate-400 mb-1">公立高校 志望校判定結果（内申点＋当日点総合判定）</div>
+              <div class="text-[11px] font-bold text-slate-600 mb-1">公立高校 志望校判定結果（内申点＋当日点総合判定）</div>
               
               <div class="flex items-center justify-between p-2.5 rounded-lg bg-emerald-50/70 border border-emerald-100">
                 <div>
                   <span class="text-[10px] font-bold text-brand-green">第1志望</span>
                   <div class="text-xs sm:text-sm font-bold text-slate-800">岡山朝日高等学校（普通科）</div>
-                  <span class="text-[10px] text-slate-500">志望者内 28位 / 342人</span>
+                  <span class="text-[10px] text-slate-600">志望者内 28位 / 342人</span>
                 </div>
                 <div class="text-right">
                   <span class="px-2.5 py-0.5 rounded bg-brand-green text-white font-bold text-xs">A 判定</span>
@@ -3227,19 +3229,19 @@
 
               <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 border border-slate-200/70">
                 <div>
-                  <span class="text-[10px] font-bold text-slate-500">第2志望</span>
+                  <span class="text-[10px] font-bold text-slate-600">第2志望</span>
                   <div class="text-xs sm:text-sm font-bold text-slate-800">岡山操山高等学校（普通科）</div>
-                  <span class="text-[10px] text-slate-500">志望者内 15位 / 290人</span>
+                  <span class="text-[10px] text-slate-600">志望者内 15位 / 290人</span>
                 </div>
                 <div class="text-right">
                   <span class="px-2.5 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-300 font-bold text-xs">A 判定</span>
-                  <span class="text-[10px] text-slate-500 font-bold block mt-0.5">安全圏 (+28点)</span>
+                  <span class="text-[10px] text-slate-600 font-bold block mt-0.5">安全圏 (+28点)</span>
                 </div>
               </div>
             </div>
 
             <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-xs">
-              <div class="text-[11px] font-bold text-slate-400 mb-2">教科別診断・弱点単元カルテ</div>
+              <div class="text-[11px] font-bold text-slate-600 mb-2">教科別診断・弱点単元カルテ</div>
               <div class="space-y-2 text-[11px]">
                 <div class="flex items-start gap-2.5">
                   <span class="w-12 text-center py-0.5 rounded bg-brand-green text-white font-bold text-[10px] shrink-0">数学</span>
@@ -3265,31 +3267,31 @@
           desc: "教科書の基礎から応用まで、単元ごとの定着度を県内平均と比較。現時点での到達度と、高校入試に向けた「つまずき単元」がひと目で分かります。",
           bodyHtml: `
             <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-xs">
-              <div class="text-[11px] font-bold text-slate-400 mb-2">総合学力到達度データ</div>
+              <div class="text-[11px] font-bold text-slate-600 mb-2">総合学力到達度データ</div>
               <div class="grid grid-cols-3 gap-2 text-center">
                 <div class="border-r border-slate-100">
-                  <span class="text-[10px] text-slate-500 block">到達度ランク</span>
+                  <span class="text-[10px] text-slate-600 block">到達度ランク</span>
                   <span class="text-base font-bold text-brand-green">S ランク<span class="text-xs font-normal"> (上位10%)</span></span>
                 </div>
                 <div class="border-r border-slate-100">
-                  <span class="text-[10px] text-slate-500 block">県平均比較</span>
+                  <span class="text-[10px] text-slate-600 block">県平均比較</span>
                   <span class="text-base font-bold text-brand-green">+32点</span>
                 </div>
                 <div>
-                  <span class="text-[10px] text-slate-500 block">県内総合順位</span>
+                  <span class="text-[10px] text-slate-600 block">県内総合順位</span>
                   <span class="text-base font-bold text-slate-900">215<span class="text-xs font-normal"> / 1,640人</span></span>
                 </div>
               </div>
             </div>
 
             <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-xs space-y-2">
-              <div class="text-[11px] font-bold text-slate-400 mb-1">志望校目安判定（現時点での学力到達水準）</div>
+              <div class="text-[11px] font-bold text-slate-600 mb-1">志望校目安判定（現時点での学力到達水準）</div>
               
               <div class="flex items-center justify-between p-2.5 rounded-lg bg-emerald-50/70 border border-emerald-100">
                 <div>
                   <span class="text-[10px] font-bold text-brand-green">志望校目安 1</span>
                   <div class="text-xs sm:text-sm font-bold text-slate-800">岡山操山高等学校（普通科）</div>
-                  <span class="text-[10px] text-slate-500">志望者内 42位 / 280人</span>
+                  <span class="text-[10px] text-slate-600">志望者内 42位 / 280人</span>
                 </div>
                 <div class="text-right">
                   <span class="px-2.5 py-0.5 rounded bg-brand-green text-white font-bold text-xs">B 判定</span>
@@ -3299,9 +3301,9 @@
 
               <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 border border-slate-200/70">
                 <div>
-                  <span class="text-[10px] font-bold text-slate-500">志望校目安 2</span>
+                  <span class="text-[10px] font-bold text-slate-600">志望校目安 2</span>
                   <div class="text-xs sm:text-sm font-bold text-slate-800">岡山芳泉高等学校（普通科）</div>
-                  <span class="text-[10px] text-slate-500">志望者内 25位 / 240人</span>
+                  <span class="text-[10px] text-slate-600">志望者内 25位 / 240人</span>
                 </div>
                 <div class="text-right">
                   <span class="px-2.5 py-0.5 rounded bg-brand-green text-white font-bold text-xs">A 判定</span>
@@ -3311,7 +3313,7 @@
             </div>
 
             <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-xs">
-              <div class="text-[11px] font-bold text-slate-400 mb-2">中1・2総復習優先単元カルテ</div>
+              <div class="text-[11px] font-bold text-slate-600 mb-2">中1・2総復習優先単元カルテ</div>
               <div class="space-y-2 text-[11px]">
                 <div class="flex items-start gap-2.5">
                   <span class="w-12 text-center py-0.5 rounded bg-brand-green text-white font-bold text-[10px] shrink-0">数学</span>
@@ -3366,31 +3368,31 @@
           desc: "岡山県立中高一貫3校（操山・大安寺・天城）の適性検査I・IIおよび作文の得点バランスと、プロ添削者による記述講評を詳細にフィードバックします。",
           bodyHtml: `
             <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-xs">
-              <div class="text-[11px] font-bold text-slate-400 mb-2">適性検査 得点バランス（200点満点）</div>
+              <div class="text-[11px] font-bold text-slate-600 mb-2">適性検査 得点バランス（200点満点）</div>
               <div class="grid grid-cols-3 gap-2 text-center">
                 <div class="border-r border-slate-100">
-                  <span class="text-[10px] text-slate-500 block">総合得点</span>
+                  <span class="text-[10px] text-slate-600 block">総合得点</span>
                   <span class="text-base font-bold text-slate-900">148<span class="text-xs font-normal"> / 200</span></span>
                 </div>
                 <div class="border-r border-slate-100">
-                  <span class="text-[10px] text-slate-500 block">総合偏差値</span>
+                  <span class="text-[10px] text-slate-600 block">総合偏差値</span>
                   <span class="text-base font-bold text-brand-green">58.4</span>
                 </div>
                 <div>
-                  <span class="text-[10px] text-slate-500 block">県立3校志望者内</span>
+                  <span class="text-[10px] text-slate-600 block">県立3校志望者内</span>
                   <span class="text-base font-bold text-slate-900">68<span class="text-xs font-normal"> / 420人</span></span>
                 </div>
               </div>
             </div>
 
             <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-xs space-y-2">
-              <div class="text-[11px] font-bold text-slate-400 mb-1">公立中高一貫校 志望校判定結果</div>
+              <div class="text-[11px] font-bold text-slate-600 mb-1">公立中高一貫校 志望校判定結果</div>
               
               <div class="flex items-center justify-between p-2.5 rounded-lg bg-amber-50/70 border border-amber-200/80">
                 <div>
                   <span class="text-[10px] font-bold text-amber-800">第1志望</span>
                   <div class="text-xs sm:text-sm font-bold text-slate-800">岡山県立操山中学校</div>
-                  <span class="text-[10px] text-slate-500">志望者内 35位 / 185人</span>
+                  <span class="text-[10px] text-slate-600">志望者内 35位 / 185人</span>
                 </div>
                 <div class="text-right">
                   <span class="px-2.5 py-0.5 rounded bg-amber-600 text-white font-bold text-xs">B 判定</span>
@@ -3400,19 +3402,19 @@
 
               <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 border border-slate-200/70">
                 <div>
-                  <span class="text-[10px] font-bold text-slate-500">第2志望</span>
+                  <span class="text-[10px] font-bold text-slate-600">第2志望</span>
                   <div class="text-xs sm:text-sm font-bold text-slate-800">岡山県立大安寺中等教育学校</div>
-                  <span class="text-[10px] text-slate-500">志望者内 22位 / 140人</span>
+                  <span class="text-[10px] text-slate-600">志望者内 22位 / 140人</span>
                 </div>
                 <div class="text-right">
                   <span class="px-2.5 py-0.5 rounded bg-amber-700 text-white font-bold text-xs">B 判定</span>
-                  <span class="text-[10px] text-slate-500 font-bold block mt-0.5">合格圏 (+4点)</span>
+                  <span class="text-[10px] text-slate-600 font-bold block mt-0.5">合格圏 (+4点)</span>
                 </div>
               </div>
             </div>
 
             <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-xs">
-              <div class="text-[11px] font-bold text-slate-400 mb-2">作文・論述添削 プロ講評カルテ</div>
+              <div class="text-[11px] font-bold text-slate-600 mb-2">作文・論述添削 プロ講評カルテ</div>
               <div class="space-y-2 text-[11px]">
                 <div class="flex items-start gap-2.5">
                   <span class="w-16 text-center py-0.5 rounded bg-amber-600 text-white font-bold text-[10px] shrink-0">作文添削</span>

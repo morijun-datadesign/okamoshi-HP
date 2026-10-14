@@ -87,7 +87,7 @@
             <span id="floating-status-badge" class="inline-block text-[9px] font-bold text-emerald-900 bg-emerald-100 border border-emerald-300 px-1.5 py-0.5 rounded">次回模試 受付中</span>
             <div id="floating-desc" class="text-xs font-bold text-slate-800 leading-tight truncate">岡山県統一模擬試験（おかもし）</div>
           </div>
-          <a href="${targetLink}" class="py-2.5 px-5 rounded-lg bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold shadow-md shadow-orange-600/25 active:scale-95 transition-all flex items-center gap-1.5 shrink-0">
+          <a href="${targetLink}" class="py-2.5 px-5 rounded-lg bg-orange-700 hover:bg-orange-800 text-white text-xs font-bold shadow-md shadow-orange-700/25 active:scale-95 transition-all flex items-center gap-1.5 shrink-0">
             <span>模試に申し込む</span>
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
           </a>

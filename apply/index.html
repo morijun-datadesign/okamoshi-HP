@@ -3216,14 +3216,18 @@
     // 5.6 基本情報の localStorage 自動保存・自動復元（リピート申込支援）
     // ========================================================
     const OKAMOSHI_STORAGE_PROFILE_KEY = 'okamoshi_saved_profile';
+    let isClearingProfile = false;
 
     /**
      * バリデーション通過済みの基本情報を安全に localStorage へ保存
      * ※ 受験回、希望会場、志望校、決済・クレジットカード情報は厳格に対象外
      */
     function saveProfileToStorage() {
+      if (isClearingProfile) return;
       try {
         if (typeof window.localStorage === 'undefined') return;
+
+        const selectedGender = document.querySelector('input[name="gender"]:checked')?.value || '';
 
         const profileData = {
           // 生徒氏名 / フリガナ
@@ -3231,6 +3235,9 @@
           student_first_name: document.getElementById('studentFirstName')?.value.trim() || '',
           student_kana_last_name: document.getElementById('studentKanaLastName')?.value.trim() || '',
           student_kana_first_name: document.getElementById('studentKanaFirstName')?.value.trim() || '',
+          // 性別
+          student_gender: selectedGender,
+          gender: selectedGender,
           // 在籍中学校・小学校名
           current_school: document.getElementById('currentSchool')?.value.trim() || '',
           // 保護者氏名 / フリガナ
@@ -3251,13 +3258,33 @@
         };
 
         // 基本情報のいずれかが入力されている場合のみ保存
-        if (profileData.student_last_name || profileData.parent_last_name || profileData.parent_email) {
+        if (profileData.student_last_name || profileData.parent_last_name || profileData.parent_email || profileData.student_gender) {
           window.localStorage.setItem(OKAMOSHI_STORAGE_PROFILE_KEY, JSON.stringify(profileData));
         }
       } catch (err) {
         // プライベートブラウズや容量制限等の例外を安全に吸収
         console.warn('[AutoFill] localStorage save failed:', err);
       }
+    }
+
+    /**
+     * 性別ラジオボタンの変更リスナー初期化（選択時に localStorage 保存）
+     */
+    function initGenderStorageListeners() {
+      const genderRadios = document.querySelectorAll('input[name="gender"]');
+      genderRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+          if (!isClearingProfile) {
+            saveProfileToStorage();
+            // 性別未選択エラーが表示されていればクリア
+            const formError = document.getElementById('formErrorMessage');
+            const formErrorText = document.getElementById('formErrorMessageText');
+            if (formError && !formError.classList.contains('hidden') && formErrorText?.textContent?.includes('性別')) {
+              formError.classList.add('hidden');
+            }
+          }
+        });
+      });
     }
 
     /**
@@ -3291,6 +3318,22 @@
         applyValue('studentFirstName', data.student_first_name);
         applyValue('studentKanaLastName', data.student_kana_last_name);
         applyValue('studentKanaFirstName', data.student_kana_first_name);
+
+        // 性別の自動復元
+        const savedGender = data.student_gender || data.gender;
+        if (savedGender) {
+          const currentChecked = document.querySelector('input[name="gender"]:checked');
+          if (!currentChecked) {
+            const targetRadio = document.querySelector(`input[name="gender"][value="${savedGender}"]`);
+            if (targetRadio) {
+              targetRadio.checked = true;
+              restoredCount++;
+              // changeイベントを発火し、カスタムUI（has-[:checked] スタイル等）を確実に同期
+              targetRadio.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+          }
+        }
+
         applyValue('currentSchool', data.current_school);
 
         applyValue('parentLastName', data.parent_last_name);
@@ -3338,6 +3381,7 @@
       if (!window.confirm('端末に保存された入力情報を消去しますか？')) {
         return;
       }
+      isClearingProfile = true;
       try {
         if (typeof window.localStorage !== 'undefined') {
           window.localStorage.removeItem(OKAMOSHI_STORAGE_PROFILE_KEY);
@@ -3365,6 +3409,15 @@
           }
         });
 
+        // 性別の選択状態を初期状態（未選択）にリセット
+        const genderRadios = document.querySelectorAll('input[name="gender"]');
+        genderRadios.forEach(radio => {
+          if (radio.checked) {
+            radio.checked = false;
+            radio.dispatchEvent(new Event('change', { bubbles: true }));
+          }
+        });
+
         // 自動復元バナーも非表示
         dismissAutofillBanner();
 
@@ -3378,6 +3431,10 @@
         }
       } catch (err) {
         console.warn('[AutoFill] localStorage clear failed:', err);
+      } finally {
+        setTimeout(() => {
+          isClearingProfile = false;
+        }, 100);
       }
     }
 
@@ -4091,6 +4148,9 @@ if (!parentKanaLastName || !parentKanaFirstName) {
 
       // 規約同意チェック・コンビニ決済期限同意と送信ボタンの連動初期化
       initAgreementListeners();
+
+      // 性別ラジオボタンの変更リスナー初期化（選択時に localStorage 保存）
+      initGenderStorageListeners();
 
       // 基本情報の自動復元（前回保存データが存在する場合）
       restoreSavedProfile();

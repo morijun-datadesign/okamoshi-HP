@@ -1,0 +1,245 @@
+[
+  {
+    "id": "z6-zki3fv",
+    "createdAt": "2026-09-23T07:03:33.422Z",
+    "updatedAt": "2026-09-28T01:47:27.709Z",
+    "publishedAt": "2026-09-23T07:03:39.705Z",
+    "revisedAt": "2026-09-28T01:47:27.709Z",
+    "grade_code": "e6",
+    "grade_name": "小6生",
+    "active_issue": [
+      "10月号"
+    ],
+    "sessions": [
+      {
+        "fieldId": "exam_session",
+        "issue_name": "10月号",
+        "notice_text": "受付中",
+        "title": "岡山県適性検査対策模試",
+        "schedules": null,
+        "catchphrase": "最終回",
+        "timetable": null
+      }
+    ]
+  },
+  {
+    "id": "lskht7j4q2",
+    "createdAt": "2026-09-23T07:01:37.686Z",
+    "updatedAt": "2026-09-28T01:47:15.222Z",
+    "publishedAt": "2026-09-23T07:01:37.686Z",
+    "revisedAt": "2026-09-28T01:47:15.222Z",
+    "grade_code": "c1",
+    "grade_name": "中1生",
+    "active_issue": [
+      "12月号"
+    ],
+    "sessions": [
+      {
+        "fieldId": "exam_session",
+        "issue_name": "12月",
+        "notice_text": "受付中",
+        "title": "岡山県統一模擬試験(おかもし)",
+        "schedules": null,
+        "catchphrase": "学年総まとめ",
+        "timetable": null
+      }
+    ]
+  },
+  {
+    "id": "l1rfmje18",
+    "createdAt": "2026-09-23T07:00:03.075Z",
+    "updatedAt": "2026-09-28T01:47:02.957Z",
+    "publishedAt": "2026-09-23T07:00:03.075Z",
+    "revisedAt": "2026-09-28T01:47:02.957Z",
+    "grade_code": "c2",
+    "grade_name": "中2生",
+    "active_issue": [
+      "12月号"
+    ],
+    "sessions": [
+      {
+        "fieldId": "exam_session",
+        "issue_name": "12月号",
+        "notice_text": "受付中",
+        "title": "岡山県統一模擬試験(おかもし)",
+        "schedules": null,
+        "catchphrase": "中2テスト中",
+        "fee": "5,500",
+        "timetable": null
+      }
+    ]
+  },
+  {
+    "id": "ojbryx6bu",
+    "createdAt": "2026-09-23T06:41:39.294Z",
+    "updatedAt": "2026-10-06T07:00:50.233Z",
+    "publishedAt": "2026-09-23T06:41:39.294Z",
+    "revisedAt": "2026-10-06T07:00:50.233Z",
+    "grade_code": "c3",
+    "grade_name": "中3生",
+    "active_issue": [
+      "10月号"
+    ],
+    "sessions": [
+      {
+        "fieldId": "exam_session",
+        "issue_name": "10月号",
+        "notice_text": "ただいま10月号のお申し込みを受付中です",
+        "title": "岡山県統一模擬試験（おかもし）",
+        "schedules": [
+          {
+            "fieldId": "schedule_item",
+            "venue_type": [
+              "岡山会場"
+            ],
+            "venue_name": "山陽学園中学校・高等学校",
+            "date_start": "2026-10-31T15:00:00.000Z"
+          },
+          {
+            "fieldId": "schedule_item",
+            "venue_type": [
+              "津山会場"
+            ],
+            "venue_name": "美作高等学校",
+            "date_start": "2026-10-24T15:00:00.000Z"
+          },
+          {
+            "fieldId": "schedule_item",
+            "venue_type": [
+              "自宅受験"
+            ],
+            "date_start": "2026-10-16T15:00:00.000Z",
+            "date_end": "2026-10-31T15:00:00.000Z"
+          }
+        ],
+        "catchphrase": "志望校決定の秋！合格に向けて今必要な「あと○点」を掴む！",
+        "deadline": "2026年10月16日(金)",
+        "fee": "5,500",
+        "apply_button_text": "中3おかもしに申し込む",
+        "shipping_date_venue": "10月13日(火)頃発送予定",
+        "belongings": "・制服着用 ・筆記用具（鉛筆・消しゴム・定規・コンパス） ・受験票 ・志望校記入用紙 ・昼食 ・飲料 ・上履き\n\n※志望校記入用紙と受験票は事前にご郵送いたします。当日必ずお持ちください。",
+        "timetable": [
+          {
+            "fieldId": "timetable_item",
+            "label": "受付",
+            "time_range": "9:30〜9:50"
+          },
+          {
+            "fieldId": "timetable_item",
+            "label": "ガイダンス",
+            "time_range": "9:55〜10:10"
+          },
+          {
+            "fieldId": "timetable_item",
+            "label": "社会",
+            "time_range": "10:10 〜 10:55"
+          },
+          {
+            "fieldId": "timetable_item",
+            "label": "数学",
+            "time_range": "11:05 〜 11:50"
+          },
+          {
+            "fieldId": "timetable_item",
+            "label": "昼食",
+            "time_range": "11:50 〜 12:25"
+          },
+          {
+            "fieldId": "timetable_item",
+            "label": "国語",
+            "time_range": "12:25 〜 13:10"
+          },
+          {
+            "fieldId": "timetable_item",
+            "label": "英語",
+            "time_range": "13:20 〜 14:05"
+          },
+          {
+            "fieldId": "timetable_item",
+            "label": "理科",
+            "time_range": "14:15 〜 15:00"
+          },
+          {
+            "fieldId": "timetable_item",
+            "label": "解散予定",
+            "time_range": "15:10頃"
+          }
+        ],
+        "shipping_date_home": "10月13日(火) 頃発送予定",
+        "return_date": "2026年11月12日(木) 発送予定",
+        "submission_deadline": "2026-11-11T15:00:00.000Z"
+      },
+      {
+        "fieldId": "exam_session",
+        "issue_name": "12月号",
+        "notice_text": "ただいま12月号のお申し込みを受付中です",
+        "title": "岡山県統一模擬試験（おかもし）",
+        "schedules": [
+          {
+            "fieldId": "schedule_item",
+            "venue_type": [
+              "岡山会場"
+            ],
+            "venue_name": "岡山市民会館",
+            "date_start": "2026-12-26T15:00:00.000Z"
+          },
+          {
+            "fieldId": "schedule_item",
+            "venue_type": [
+              "倉敷会場"
+            ],
+            "venue_name": "倉敷市民センター",
+            "date_start": "2026-12-25T15:00:00.000Z"
+          },
+          {
+            "fieldId": "schedule_item",
+            "venue_type": [
+              "津山会場"
+            ],
+            "venue_name": "津山商工会議所",
+            "date_start": "2027-01-08T15:00:00.000Z"
+          },
+          {
+            "fieldId": "schedule_item",
+            "venue_type": [
+              "自宅受験"
+            ],
+            "date_start": "2026-12-25T15:00:00.000Z",
+            "date_end": "2027-01-10T15:00:00.000Z"
+          }
+        ],
+        "catchphrase": "志望校決定の最終確認へ！現在の到達点をデジタルに計測！",
+        "deadline": "12月14日(月)",
+        "fee": "5,500",
+        "apply_button_text": "中3おかもしに申し込む",
+        "shipping_date_venue": "12月23日(水)発送予定",
+        "belongings": "・制服着用 ・筆記用具（鉛筆・消しゴム・定規・コンパス） ・受験票 ・志望校記入用紙 ・昼食 ・飲料 ・上履き\n\n※志望校記入用紙と受験票は事前にご郵送いたします。当日必ずお持ちください。",
+        "timetable": [
+          {
+            "fieldId": "timetable_item",
+            "label": "受付",
+            "time_range": "9:30 〜 9:50"
+          },
+          {
+            "fieldId": "timetable_item",
+            "label": "ガイダンス",
+            "time_range": "9:55 〜 10:10"
+          },
+          {
+            "fieldId": "timetable_item",
+            "label": "社会",
+            "time_range": "10:10 〜 10:55"
+          },
+          {
+            "fieldId": "timetable_item",
+            "label": "数学",
+            "time_range": "11:05 〜 11:50"
+          }
+        ],
+        "shipping_date_home": "12月23日(水)発送予定",
+        "return_date": "2020年1月22日(金)発送予定",
+        "submission_deadline": "2027-01-13T15:00:00.000Z"
+      }
+    ]
+  }
+]

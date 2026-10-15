@@ -23,11 +23,45 @@ MICROCMS_API_KEY = os.environ.get("MICROCMS_API_KEY", "")
 MICROCMS_SERVICE_DOMAIN = os.environ.get("MICROCMS_SERVICE_DOMAIN", "okamoshi-blog")
 MICROCMS_ENDPOINT = "blogs"
 
+def parse_article_display_date(article):
+    """
+    記事の画面表示用「公開日」を基準とした UNIX タイムスタンプを取得
+    優先順位: publishedAt > date > createdAt
+    """
+    raw_date = article.get("publishedAt") or article.get("date") or article.get("createdAt") or ""
+    if not raw_date:
+        return 0.0
+    try:
+        clean_str = raw_date.replace("Z", "+00:00")
+        dt = datetime.fromisoformat(clean_str)
+        return dt.timestamp()
+    except Exception:
+        try:
+            parts = str(raw_date)[:10].replace("-", ".").split(".")
+            if len(parts) == 3:
+                dt = datetime(int(parts[0]), int(parts[1]), int(parts[2]))
+                return dt.timestamp()
+        except Exception:
+            pass
+        return 0.0
+
+def sort_articles_by_display_date(articles):
+    """
+    記事一覧を「画面に表示されている公開日」の新しい順（降順）にソート
+    同日・同日時の場合は、第2ソート基準として id（文字列降順）で順序を固定化
+    """
+    def sort_key(a):
+        ts = parse_article_display_date(a)
+        a_id = str(a.get("id") or "")
+        return (ts, a_id)
+
+    return sorted(articles, key=sort_key, reverse=True)
+
 def fetch_microcms_articles():
-    """microCMS から全記事を取得（降順）"""
+    """microCMS から全記事を取得し、画面表示公開日の新しい順（降順）にソート"""
     if not MICROCMS_API_KEY:
         print("Notice: MICROCMS_API_KEY is not set. Using local fallback articles.")
-        return get_fallback_articles()
+        return sort_articles_by_display_date(get_fallback_articles())
 
     url = f"https://{MICROCMS_SERVICE_DOMAIN}.microcms.io/api/v1/{MICROCMS_ENDPOINT}?limit=100&orders=-publishedAt"
     req = urllib.request.Request(url, headers={"X-MICROCMS-API-KEY": MICROCMS_API_KEY})
@@ -37,15 +71,23 @@ def fetch_microcms_articles():
             data = json.loads(res.read().decode("utf-8"))
             contents = data.get("contents", [])
             print(f"Successfully fetched {len(contents)} articles from microCMS.")
-            return contents
+            return sort_articles_by_display_date(contents)
     except Exception as e:
         print(f"Warning: Failed to fetch from microCMS ({e}). Using local fallback articles.")
-        return get_fallback_articles()
+        return sort_articles_by_display_date(get_fallback_articles())
 
 def fetch_microcms_exam_guides():
     """microCMS から模試概要ウィジェット用データを取得"""
     if not MICROCMS_API_KEY:
+        fb_path = os.path.join(BASE_DIR, "scripts", "fallback_exam_guides.json")
+        if os.path.exists(fb_path):
+            try:
+                with open(fb_path, "r", encoding="utf-8") as f:
+                    return json.load(f)
+            except Exception:
+                pass
         return []
+
     url = f"https://{MICROCMS_SERVICE_DOMAIN}.microcms.io/api/v1/exam-guides?limit=100"
     req = urllib.request.Request(url, headers={"X-MICROCMS-API-KEY": MICROCMS_API_KEY})
     try:
@@ -54,65 +96,27 @@ def fetch_microcms_exam_guides():
             return data.get("contents", [])
     except Exception as e:
         print(f"Notice: Failed to fetch exam-guides from microCMS ({e}). Will use fallback.")
+        fb_path = os.path.join(BASE_DIR, "scripts", "fallback_exam_guides.json")
+        if os.path.exists(fb_path):
+            try:
+                with open(fb_path, "r", encoding="utf-8") as f:
+                    return json.load(f)
+            except Exception:
+                pass
         return []
 
 def get_fallback_articles():
-    """API通信不能時のフォールバック記事データ"""
-    return [
-        {
-            "id": "leoodvgmoet",
-            "title": "【8月号結果】岡山5校を志望校とした受験生が計1100名を超えました！",
-            "content": "<p>成績表は9/10（木）に一斉発送いたしました。関東から郵便のため到着まで数日かかりますが、届きましたらぜひご自身の取り組みを振り返るきっかけにしてみてください。</p>",
-            "category": {"id": "jttb2w0l9ua", "name": "模試活用法"},
-            "publishedAt": "2026-09-28T06:44:38.475Z",
-            "eyecatch": None,
-            "targetGrade": ["中学生"]
-        },
-        {
-            "id": "s9o093uhf",
-            "title": "小6生対象 岡山県適性検査対策模試 10月号",
-            "content": "<p>夏の成果をぶつける最初の挑戦！合格への道を確実に。お申し込みは10月13日(火)まで。</p>",
-            "category": {"id": "jttb2w0l9ua", "name": "模試活用法"},
-            "publishedAt": "2026-09-26T04:22:24.556Z",
-            "eyecatch": None,
-            "targetGrade": ["小6生"]
-        },
-        {
-            "id": "b055d-p_k7",
-            "title": "【岡山県の高校受験】合格への近道はここにある！「おかもし」が受験生から支持される理由",
-            "content": "<p>岡山県公立高校入試を突破するために最も重要なのは、「県内固有の出題形式への徹底適応」と「内申点を含めた正確な相対位置の把握」です。</p>",
-            "category": {"id": "jttb2w0l9ua", "name": "模試活用法"},
-            "publishedAt": "2026-09-23T12:07:45.448Z",
-            "eyecatch": {
-                "url": "https://images.microcms-assets.io/assets/1ac525f4c868455d9d89ba053378d2ec/472790e3ea034e348fc446be675dc5e5/%E3%81%8A%E3%81%8B%E3%82%82%E3%81%9720260923-1.jpeg",
-                "width": 1024,
-                "height": 572
-            },
-            "targetGrade": ["中学生"]
-        },
-        {
-            "id": "20p7a-hecrv",
-            "title": "おかもし　決済用リンク",
-            "content": "<p>中1・2・3生向け岡山県統一模擬試験、小6生向け岡山県適性検査対策模試をコンビニ決済でお申し込みになられ、決済期限が過ぎてしまった場合、こちらの決済リンクからご決済をお願いいたします。</p>",
-            "category": {"id": "jttb2w0l9ua", "name": "模試活用法"},
-            "publishedAt": "2026-09-23T05:20:07.810Z",
-            "eyecatch": {
-                "url": "https://images.microcms-assets.io/assets/1ac525f4c868455d9d89ba053378d2ec/9264e101b06c40348002c2d70b2d496a/%E3%81%8A%E3%81%8B%E3%82%82%E3%81%97Stripe%E6%B1%BA%E6%B8%88%E3%82%A4%E3%83%A1%E3%83%BC%E3%82%B7%E3%82%99.jpeg",
-                "width": 1024,
-                "height": 572
-            },
-            "targetGrade": ["全学年"]
-        },
-        {
-            "id": "if8frequgg",
-            "title": "不安や焦りを力に変える！中学生のための学力UPメンタル＆学習アプローチ",
-            "content": "<p>やる気が出ないのはあなたの意志が弱いからではなく、脳や感情の仕組みとして当然の反応です。</p>",
-            "category": None,
-            "publishedAt": "2026-04-01T05:34:00.000Z",
-            "eyecatch": None,
-            "targetGrade": ["中学生"]
-        }
-    ]
+    """API通信不能時のフォールバック記事データ（完全な本文リッチテキストを保持）"""
+    fb_path = os.path.join(BASE_DIR, "scripts", "fallback_articles.json")
+    if os.path.exists(fb_path):
+        try:
+            with open(fb_path, "r", encoding="utf-8") as f:
+                articles = json.load(f)
+                if articles and isinstance(articles, list):
+                    return articles
+        except Exception as e:
+            print(f"Notice: Failed to read fallback_articles.json ({e}).")
+    return []
 
 def format_date_ymd(iso_str):
     """ISO8601 日付文字列を YYYY.MM.DD に変換"""
@@ -176,13 +180,21 @@ def format_article_content(raw_html):
     # 1. 空段落の除去 (<p></p>, <p><br></p>, 空白のみのp)
     content = re.sub(r'<p>\s*(?:<br\s*/?>|&nbsp;|\s)*</p>', '', content, flags=re.IGNORECASE)
 
-    # 2. コールアウト要素の正規化 (<span class="box-fact">...</span> を <div class="box-fact">...</div> へ)
-    for box_cls in ['box-fact', 'box-action', 'box-warning']:
-        pattern = re.compile(rf'<p[^>]*>\s*<span class="{box_cls}"[^>]*>(.*?)</span>\s*</p>', re.DOTALL | re.IGNORECASE)
-        content = pattern.sub(rf'<div class="{box_cls}"><p>\1</p></div>', content)
-        # 連続する同クラスdivの統合
-        merge_pattern = re.compile(rf'</div>\s*<div class="{box_cls}">', re.IGNORECASE)
-        content = merge_pattern.sub(r'<br>', content)
+    # 2. コールアウト要素の正規化 (<span class="box-..."> を含む <p> を <div class="box-..."><p>...</p></div> へ)
+    # ※ </p> を越えた先読みによる無関係な段落の巻き込み・多重ラップを完全に防ぐ
+    supported_boxes = ['box-fact', 'box-action', 'box-warning', 'point-box', 'attention-box', 'info-box']
+    
+    def normalize_p_tag(match):
+        p_tag_full = match.group(0)
+        p_content = match.group(1)
+        for bcls in supported_boxes:
+            span_pattern = rf'<span\s+class=["\']?(?:[^"\']*\s+)?{re.escape(bcls)}(?:\s+[^"\']*)?["\']?>(.*?)</span>'
+            if re.search(span_pattern, p_content, flags=re.IGNORECASE | re.DOTALL):
+                clean_inner = re.sub(span_pattern, r'\1', p_content, flags=re.IGNORECASE | re.DOTALL)
+                return f'<div class="{bcls}"><p>{clean_inner}</p></div>'
+        return p_tag_full
+
+    content = re.sub(r'<p(?:\s+[^>]*)?>(.*?)</p>', normalize_p_tag, content, flags=re.DOTALL | re.IGNORECASE)
 
     # 3. 案内リンク（「おかもし日程一覧」「おかもし詳細・お申し込み」）のボタングリッドカード化
     has_schedule = bool(re.search(r'おかもし日程一覧', content))
@@ -397,16 +409,44 @@ def build_article_detail_page(article, all_articles, template_html, exam_guides)
         r_title = r.get("title", "")
         r_date = format_date_ymd(r.get("publishedAt") or r.get("createdAt"))
         r_cat, r_badge = get_category_info(r.get("category"), r_title)
+        r_eyecatch = r.get("eyecatch")
+        r_eyecatch_url = r_eyecatch.get("url") if isinstance(r_eyecatch, dict) else ""
+
+        if r_eyecatch_url:
+            thumb_html = f'''
+          <div class="aspect-[16/9] w-full overflow-hidden bg-slate-100">
+            <img src="{r_eyecatch_url}" alt="{html_escape(r_title)}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy">
+          </div>'''
+        else:
+            thumb_html = f'''
+          <div class="aspect-[16/9] w-full overflow-hidden bg-gradient-to-br from-emerald-50 to-slate-100 flex items-center justify-center text-emerald-800/40">
+            <span class="material-symbols-outlined text-4xl">article</span>
+          </div>'''
+
         related_cards.append(f'''
-        <a href="/news/{r_id}/" class="block p-3 sm:p-3.5 bg-white hover:bg-slate-100/80 rounded-lg border border-slate-200/90 hover:border-emerald-300 transition-all group shadow-2xs">
-          <div class="flex items-center gap-2 mb-1">
-            <span class="text-[11px] text-slate-500 tabular-nums">{r_date}</span>
-            <span class="px-2 py-0.2 rounded text-[10px] font-bold {r_badge}">{r_cat}</span>
-          </div>
-          <h4 class="font-bold text-xs sm:text-sm text-slate-900 group-hover:text-brand-green transition-colors leading-snug line-clamp-2">
-            {html_escape(r_title)}
-          </h4>
-        </a>''')
+        <article class="h-full">
+          <a href="/news/{r_id}/" class="flex flex-col h-full bg-white hover:bg-slate-50/80 rounded-xl border border-slate-200/90 hover:border-emerald-300 hover:shadow-md transition-all duration-200 group overflow-hidden shadow-2xs">
+            {thumb_html}
+            <div class="p-4 sm:p-5 flex flex-col flex-1 justify-between gap-3">
+              <div class="flex flex-col gap-2">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="flex items-center gap-1 text-[11px] sm:text-xs text-slate-500 font-medium">
+                    <span class="material-symbols-outlined text-[13px] text-slate-400">calendar_today</span>
+                    <span class="tabular-nums">{r_date}</span>
+                  </span>
+                  <span class="px-2 py-0.5 rounded text-[10px] sm:text-[11px] font-bold {r_badge}">{r_cat}</span>
+                </div>
+                <h3 class="font-bold text-xs sm:text-sm text-slate-900 group-hover:text-brand-green transition-colors leading-snug line-clamp-2">
+                  {html_escape(r_title)}
+                </h3>
+              </div>
+              <div class="flex items-center justify-between pt-2 border-t border-slate-100 text-xs font-bold text-slate-500 group-hover:text-brand-green transition-colors">
+                <span>記事を読む</span>
+                <span class="material-symbols-outlined text-[15px] group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+              </div>
+            </div>
+          </a>
+        </article>''')
     related_html = "\n".join(related_cards)
 
     # アイキャッチ画像ブロック
@@ -537,13 +577,21 @@ def build_article_detail_page(article, all_articles, template_html, exam_guides)
     # 前後記事ナビゲーション置換
     html = re.sub(r'<nav class="flex items-center justify-between gap-2 w-full.*?aria-label="記事ナビゲーション">.*?</nav>', lambda m: nav_html, html, flags=re.DOTALL)
 
-    # 関連記事置換
-    related_replacement = f'<div id="related-articles-grid" class="bg-transparent sm:bg-slate-50/80 p-0 sm:p-4 rounded-none sm:rounded-lg border-0 sm:border border-slate-200/80 flex flex-col gap-2.5">\n{related_html}\n</div>\n</div>\n<!-- Mobile Button'
-    html = re.sub(r'<div id="related-articles-grid"[^>]*>.*?</div>\s*</div>\s*<!-- Mobile Button', lambda m: related_replacement, html, flags=re.DOTALL)
+    # 関連記事置換 (detail.html の #related-articles-grid 開始タグから閉じタグまでを安全に置換)
+    html = re.sub(
+        r'<div id="related-articles-grid"[^>]*>.*?</div>\s*<!-- Mobile Button for Article List -->',
+        lambda m: f'<div id="related-articles-grid" class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">\n{related_html}\n    </div>\n\n    <!-- Mobile Button for Article List -->',
+        html,
+        flags=re.DOTALL
+    )
 
-    # サイドバー模試ウィジェット置換
-    exam_replacement = f'<div class="divide-y divide-slate-200" id="sidebar-exam-widget-list">\n{exam_widget_html}\n</div>\n</div>\n</div>'
-    html = re.sub(r'<div class="divide-y divide-slate-200" id="sidebar-exam-widget-list">.*?</div>\s*</div>\s*</div>', lambda m: exam_replacement, html, flags=re.DOTALL)
+    # サイドバー模試ウィジェット置換 (sidebar-exam-widget-list の開始から閉じタグまでを安全に置換)
+    html = re.sub(
+        r'<div class="divide-y divide-slate-200" id="sidebar-exam-widget-list">.*?</div>\s*</div>\s*</div>\s*<!-- 2\. Official Instagram Banner',
+        lambda m: f'<div class="divide-y divide-slate-200" id="sidebar-exam-widget-list">\n{exam_widget_html}\n    </div>\n  </div>\n</div>\n\n<!-- 2. Official Instagram Banner',
+        html,
+        flags=re.DOTALL
+    )
 
     # サイドバー目次カードの挿入（Instagramバナーの上に配置）
     if len(headings) >= 2:
@@ -709,17 +757,19 @@ def build_all_article_detail_pages(articles, exam_guides):
 
         page_html = build_article_detail_page(article, articles, template_html, exam_guides)
 
-        # 1. news/[id]/index.html
+        # news/[id]/index.html (ディレクトリ型クリーンURL)
         art_dir = os.path.join(BASE_DIR, "news", a_id)
         os.makedirs(art_dir, exist_ok=True)
         art_index_path = os.path.join(art_dir, "index.html")
         with open(art_index_path, "w", encoding="utf-8") as f:
             f.write(page_html)
 
-        # 2. news/[id].html (クリーンURLと拡張子付きURLの双方で開けるように配置)
-        art_file_path = os.path.join(BASE_DIR, "news", f"{a_id}.html")
-        with open(art_file_path, "w", encoding="utf-8") as f:
-            f.write(page_html)
+        # 過去またはテスト時に生成された news/[id].html が残っていると、
+        # VS Code Five Server (Go Live) 等の開発サーバーで /news/[id]/ へのアクセス時に
+        # ルーティング競合（/news/[id]/.html と誤判定され 404 となる）が発生するため確実に削除
+        legacy_art_file = os.path.join(BASE_DIR, "news", f"{a_id}.html")
+        if os.path.exists(legacy_art_file):
+            os.remove(legacy_art_file)
 
         generated_count += 1
 

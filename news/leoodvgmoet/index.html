@@ -138,7 +138,7 @@
   "description": "【8月号結果】岡山5校を志望校とした受験生が計1100名を超えました！",
   "image": "https://okamoshi.pages.dev/og-image.jpg",
   "datePublished": "2026-09-28T06:44:38.475Z",
-  "dateModified": "2026-09-28T06:44:38.475Z",
+  "dateModified": "2026-09-29T09:44:30.851Z",
   "author": {
     "@type": "Organization",
     "name": "岡山県統一模擬試験 教務進路指導部"
@@ -327,13 +327,10 @@
       margin-top: 0.25rem !important;
     }
 
-    /* 3. 空の <p></p> や <p><br></p> が入っていた場合の非表示化（不要な隙間除去） */
+    /* 3. 空の <p></p> が入っていた場合の非表示化（不要な隙間除去） */
     .entry-content p:empty,
-    .entry-content p:has(> br:only-child),
     .blog-body p:empty,
-    .blog-body p:has(> br:only-child),
-    .prose p:empty,
-    .prose p:has(> br:only-child) {
+    .prose p:empty {
       display: none !important;
       margin: 0 !important;
       padding: 0 !important;
@@ -444,282 +441,355 @@
     }
 
     /* ==================================================== */
-    /* microCMS リッチエディタ用カスタムコールアウト (.box-fact, .box-action, .box-warning) */
-    /* Shift+Enter (<br>) による改行を含め、1つの繋がった装飾ボックスとして描画 */
+    /* microCMS リッチエディタ用カスタム装飾ボックス */
+    /* (.point-box, .attention-box, .info-box, .box-fact, .box-action, .box-warning) */
     /* ==================================================== */
-    .box-fact,
-    .box-action,
-    .box-warning,
-    p.box-fact,
-    p.box-action,
-    p.box-warning,
-    div.box-fact,
-    div.box-action,
-    div.box-warning,
+
+    /* 1. 大枠（最外側の要素）のみに適用する共通ベーススタイル */
+    .entry-content .point-box,
+    .entry-content .attention-box,
+    .entry-content .info-box,
     .entry-content .box-fact,
     .entry-content .box-action,
     .entry-content .box-warning,
-    .entry-content p.box-fact,
-    .entry-content p.box-action,
-    .entry-content p.box-warning,
-    .entry-content div.box-fact,
-    .entry-content div.box-action,
-    .entry-content div.box-warning,
+    .blog-body .point-box,
+    .blog-body .attention-box,
+    .blog-body .info-box,
     .blog-body .box-fact,
     .blog-body .box-action,
     .blog-body .box-warning,
+    .prose .point-box,
+    .prose .attention-box,
+    .prose .info-box,
     .prose .box-fact,
     .prose .box-action,
-    .prose .box-warning,
-    .prose p.box-fact,
-    .prose p.box-action,
-    .prose p.box-warning,
-    .prose div.box-fact,
-    .prose div.box-action,
-    .prose div.box-warning {
+    .prose .box-warning {
       display: block !important;
       width: 100% !important;
       box-sizing: border-box !important;
-      padding: 1rem 1.25rem !important; /* p-4 sm:p-5 (16px〜20px) */
-      margin-top: 1.25rem !important; /* my-5 */
-      margin-bottom: 1.25rem !important; /* my-5 */
-      border-radius: 0 0.5rem 0.5rem 0 !important; /* rounded-r-lg (8px) */
+      padding: 1.125rem 1.25rem !important; /* 内側余白: 上下18px, 左右20px */
+      margin-top: 1.5rem !important;        /* 外側余白: 上24px */
+      margin-bottom: 1.5rem !important;     /* 外側余白: 下24px */
+      border-radius: 0 0.5rem 0.5rem 0 !important; /* 右側のみ角丸 (8px) */
       border-top: none !important;
       border-right: none !important;
       border-bottom: none !important;
       border-left-width: 4px !important;
       border-left-style: solid !important;
-      color: #334155 !important; /* text-slate-700 */
-      font-size: 0.9375rem !important; /* 15px */
-      line-height: 1.75 !important; /* leading-relaxed (改行後も均一な行間を維持) */
-      white-space: pre-wrap; /* 自然な改行を保持 */
+      color: #334155 !important;            /* text-slate-700 */
+      font-size: 0.9375rem !important;       /* 15px */
+      line-height: 1.8 !important;          /* 均一で読みやすい行間 */
       word-break: break-word;
       overflow-wrap: break-word;
     }
 
     @media (min-width: 768px) {
-      .box-fact,
-      .box-action,
-      .box-warning,
-      p.box-fact,
-      p.box-action,
-      p.box-warning,
-      div.box-fact,
-      div.box-action,
-      div.box-warning,
+      .entry-content .point-box,
+      .entry-content .attention-box,
+      .entry-content .info-box,
       .entry-content .box-fact,
       .entry-content .box-action,
       .entry-content .box-warning,
-      .entry-content p.box-fact,
-      .entry-content p.box-action,
-      .entry-content p.box-warning,
-      .entry-content div.box-fact,
-      .entry-content div.box-action,
-      .entry-content div.box-warning,
+      .blog-body .point-box,
+      .blog-body .attention-box,
+      .blog-body .info-box,
       .blog-body .box-fact,
       .blog-body .box-action,
       .blog-body .box-warning,
+      .prose .point-box,
+      .prose .attention-box,
+      .prose .info-box,
       .prose .box-fact,
       .prose .box-action,
-      .prose .box-warning,
-      .prose p.box-fact,
-      .prose p.box-action,
-      .prose p.box-warning,
-      .prose div.box-fact,
-      .prose div.box-action,
-      .prose div.box-warning {
-        font-size: 1rem !important; /* md:text-base (16px) */
-        padding: 1.25rem 1.5rem !important;
+      .prose .box-warning {
+        font-size: 1rem !important;          /* md:text-base (16px) */
+        padding: 1.25rem 1.5rem !important;  /* 内側余白: 上下20px, 左右24px */
       }
     }
 
-    /* 1. .box-fact（ファクト・補足用）: 薄いブルー / アクセントブルー */
-    .box-fact,
-    p.box-fact,
-    div.box-fact,
+    /* 2. テーマ別カラー指定（大枠のみ） */
+    /* ① 情報・ファクト・補足用（薄いブルー背景 / スカイブルー左線） */
+    .entry-content .info-box,
     .entry-content .box-fact,
+    .blog-body .info-box,
     .blog-body .box-fact,
+    .prose .info-box,
     .prose .box-fact {
       background-color: #f0f9ff !important; /* bg-sky-50 */
-      border-left-color: #0284c7 !important; /* border-sky-500 */
+      border-left-color: #0284c7 !important; /* border-sky-600 */
     }
 
-    /* 2. .box-action（実践テクニック・アクション用）: 薄いグリーン / エメラルドグリーン */
-    .box-action,
-    p.box-action,
-    div.box-action,
+    /* ② ポイント・実践テクニック用（薄いグリーン背景 / エメラルドグリーン左線） */
+    .entry-content .point-box,
     .entry-content .box-action,
+    .blog-body .point-box,
     .blog-body .box-action,
+    .prose .point-box,
     .prose .box-action {
       background-color: #ecfdf5 !important; /* bg-emerald-50 */
       border-left-color: #10b981 !important; /* border-emerald-500 */
     }
 
-    /* 3. .box-warning（注意・重要ポイント用）: 薄いオレンジ/イエロー / オレンジ */
-    .box-warning,
-    p.box-warning,
-    div.box-warning,
+    /* ③ 注意・重要・警告用（薄いイエロー/アンバー背景 / アンバー左線） */
+    .entry-content .attention-box,
     .entry-content .box-warning,
+    .blog-body .attention-box,
     .blog-body .box-warning,
+    .prose .attention-box,
     .prose .box-warning {
       background-color: #fffbeb !important; /* bg-amber-50 */
       border-left-color: #f59e0b !important; /* border-amber-500 */
     }
 
-    /* 内部の改行 (<br>) の余白・行間保持（display: block や余計な margin/padding を確実に解除） */
-    .box-fact br,
-    .box-action br,
-    .box-warning br,
-    .entry-content .box-fact br,
-    .entry-content .box-action br,
-    .entry-content .box-warning br {
-      display: inline !important;
-      margin: 0 !important;
-      padding: 0 !important;
-      line-height: inherit !important;
-      content: normal !important;
+    /* 3. 【最重要】装飾ボックス内部の子要素スタイル完全リセット（二重枠線・背景重複の防止） */
+    /* 親のボーダーや背景が子要素に二重適用・継承されないよう完全に無効化 */
+    .entry-content .point-box *,
+    .entry-content .attention-box *,
+    .entry-content .info-box *,
+    .entry-content .box-fact *,
+    .entry-content .box-action *,
+    .entry-content .box-warning *,
+    .blog-body .point-box *,
+    .blog-body .attention-box *,
+    .blog-body .info-box *,
+    .blog-body .box-fact *,
+    .blog-body .box-action *,
+    .blog-body .box-warning *,
+    .prose .point-box *,
+    .prose .attention-box *,
+    .prose .info-box *,
+    .prose .box-fact *,
+    .prose .box-action *,
+    .prose .box-warning * {
+      border: none !important;
+      border-left: none !important;
+      background: transparent !important;
+      background-color: transparent !important;
+      box-shadow: none !important;
     }
 
-    /* コールアウト内部のインライン要素リセット（多重ボーダー・背景の重複防止） */
-    .box-fact .box-fact,
-    .box-action .box-action,
-    .box-warning .box-warning,
-    .box-fact span,
-    .box-action span,
-    .box-warning span,
-    .box-fact p,
-    .box-action p,
-    .box-warning p {
-      background: transparent !important;
+    /* 内部の段落 <p> の余白・行間・カラーの適正化 */
+    .entry-content .point-box p,
+    .entry-content .attention-box p,
+    .entry-content .info-box p,
+    .entry-content .box-fact p,
+    .entry-content .box-action p,
+    .entry-content .box-warning p,
+    .blog-body .point-box p,
+    .blog-body .attention-box p,
+    .blog-body .info-box p,
+    .blog-body .box-fact p,
+    .blog-body .box-action p,
+    .blog-body .box-warning p,
+    .prose .point-box p,
+    .prose .attention-box p,
+    .prose .info-box p,
+    .prose .box-fact p,
+    .prose .box-action p,
+    .prose .box-warning p {
+      display: block !important;
       border: none !important;
+      background: transparent !important;
+      padding: 0 !important;
+      margin-top: 0 !important;
+      margin-bottom: 0.75rem !important; /* 複数段落がある場合の自然な間隔 */
+      color: inherit !important;
+      font-size: inherit !important;
+      line-height: inherit !important;
+      letter-spacing: inherit !important;
+    }
+
+    /* 内部の最初・最後の段落の余白を調整し、外枠パディングとの二重アキを防止 */
+    .entry-content .point-box p:first-child,
+    .entry-content .attention-box p:first-child,
+    .entry-content .info-box p:first-child,
+    .entry-content .box-fact p:first-child,
+    .entry-content .box-action p:first-child,
+    .entry-content .box-warning p:first-child,
+    .blog-body .point-box p:first-child,
+    .blog-body .attention-box p:first-child,
+    .blog-body .info-box p:first-child,
+    .blog-body .box-fact p:first-child,
+    .blog-body .box-action p:first-child,
+    .blog-body .box-warning p:first-child,
+    .prose .point-box p:first-child,
+    .prose .attention-box p:first-child,
+    .prose .info-box p:first-child,
+    .prose .box-fact p:first-child,
+    .prose .box-action p:first-child,
+    .prose .box-warning p:first-child {
+      margin-top: 0 !important;
+    }
+    .entry-content .point-box p:last-child,
+    .entry-content .attention-box p:last-child,
+    .entry-content .info-box p:last-child,
+    .entry-content .box-fact p:last-child,
+    .entry-content .box-action p:last-child,
+    .entry-content .box-warning p:last-child,
+    .blog-body .point-box p:last-child,
+    .blog-body .attention-box p:last-child,
+    .blog-body .info-box p:last-child,
+    .blog-body .box-fact p:last-child,
+    .blog-body .box-action p:last-child,
+    .blog-body .box-warning p:last-child,
+    .prose .point-box p:last-child,
+    .prose .attention-box p:last-child,
+    .prose .info-box p:last-child,
+    .prose .box-fact p:last-child,
+    .prose .box-action p:last-child,
+    .prose .box-warning p:last-child {
+      margin-bottom: 0 !important;
+    }
+
+    /* 内部のインライン要素 (span, strong, b, em) のスタイルリセット */
+    .entry-content .point-box span,
+    .entry-content .attention-box span,
+    .entry-content .info-box span,
+    .entry-content .box-fact span,
+    .entry-content .box-action span,
+    .entry-content .box-warning span,
+    .blog-body .point-box span,
+    .blog-body .attention-box span,
+    .blog-body .info-box span,
+    .blog-body .box-fact span,
+    .blog-body .box-action span,
+    .blog-body .box-warning span,
+    .prose .point-box span,
+    .prose .attention-box span,
+    .prose .info-box span,
+    .prose .box-fact span,
+    .prose .box-action span,
+    .prose .box-warning span {
+      border: none !important;
+      background: transparent !important;
       padding: 0 !important;
       margin: 0 !important;
-      border-radius: 0 !important;
       display: inline !important;
       color: inherit !important;
       font-size: inherit !important;
       line-height: inherit !important;
     }
 
-    /* CSSフォールバック（JavaScript実行前または未実行時の :has() セレクタ対応） */
-    .entry-content p:has(> span.box-fact),
-    .blog-body p:has(> span.box-fact),
-    .prose p:has(> span.box-fact),
-    p:has(> span.box-fact) {
-      display: block !important;
-      width: 100% !important;
-      box-sizing: border-box !important;
-      padding: 1rem 1.25rem !important;
-      margin-top: 1.25rem !important;
-      margin-bottom: 1.25rem !important;
-      border-radius: 0 0.5rem 0.5rem 0 !important;
-      border-top: none !important;
-      border-right: none !important;
-      border-bottom: none !important;
-      border-left: 4px solid #0284c7 !important;
-      background-color: #f0f9ff !important;
-      color: #334155 !important;
-      line-height: 1.75 !important;
+    .entry-content .point-box strong,
+    .entry-content .attention-box strong,
+    .entry-content .info-box strong,
+    .entry-content .box-fact strong,
+    .entry-content .box-action strong,
+    .entry-content .box-warning strong,
+    .entry-content .point-box b,
+    .entry-content .attention-box b,
+    .entry-content .info-box b,
+    .entry-content .box-fact b,
+    .entry-content .box-action b,
+    .entry-content .box-warning b,
+    .blog-body .point-box strong,
+    .blog-body .box-fact strong,
+    .blog-body .box-action strong,
+    .blog-body .box-warning strong,
+    .prose .point-box strong,
+    .prose .box-fact strong,
+    .prose .box-action strong,
+    .prose .box-warning strong {
+      color: #0f172a !important; /* 太字はしっかりとコントラストを確保 */
     }
 
-    .entry-content p:has(> span.box-action),
-    .blog-body p:has(> span.box-action),
-    .prose p:has(> span.box-action),
-    p:has(> span.box-action) {
-      display: block !important;
-      width: 100% !important;
-      box-sizing: border-box !important;
-      padding: 1rem 1.25rem !important;
-      margin-top: 1.25rem !important;
-      margin-bottom: 1.25rem !important;
-      border-radius: 0 0.5rem 0.5rem 0 !important;
-      border-top: none !important;
-      border-right: none !important;
-      border-bottom: none !important;
-      border-left: 4px solid #10b981 !important;
-      background-color: #ecfdf5 !important;
-      color: #334155 !important;
-      line-height: 1.75 !important;
-    }
-
-    .entry-content p:has(> span.box-warning),
-    .blog-body p:has(> span.box-warning),
-    .prose p:has(> span.box-warning),
-    p:has(> span.box-warning) {
-      display: block !important;
-      width: 100% !important;
-      box-sizing: border-box !important;
-      padding: 1rem 1.25rem !important;
-      margin-top: 1.25rem !important;
-      margin-bottom: 1.25rem !important;
-      border-radius: 0 0.5rem 0.5rem 0 !important;
-      border-top: none !important;
-      border-right: none !important;
-      border-bottom: none !important;
-      border-left: 4px solid #f59e0b !important;
-      background-color: #fffbeb !important;
-      color: #334155 !important;
-      line-height: 1.75 !important;
-    }
-
-    p:has(> span.box-fact) span.box-fact,
-    p:has(> span.box-action) span.box-action,
-    p:has(> span.box-warning) span.box-warning {
+    /* 内部の改行 (<br>) の余白リセット */
+    .entry-content .point-box br,
+    .entry-content .attention-box br,
+    .entry-content .info-box br,
+    .entry-content .box-fact br,
+    .entry-content .box-action br,
+    .entry-content .box-warning br,
+    .blog-body .point-box br,
+    .blog-body .box-fact br,
+    .blog-body .box-action br,
+    .blog-body .box-warning br,
+    .prose .point-box br,
+    .prose .box-fact br,
+    .prose .box-action br,
+    .prose .box-warning br {
       display: inline !important;
-      background: transparent !important;
-      border: none !important;
-      padding: 0 !important;
       margin: 0 !important;
+      padding: 0 !important;
+      line-height: inherit !important;
+    }
+
+    /* 4. 本文エリア共通スタイル（blockquote やリストなど）との衝突解消 */
+    .entry-content .point-box blockquote,
+    .entry-content .attention-box blockquote,
+    .entry-content .info-box blockquote,
+    .entry-content .box-fact blockquote,
+    .entry-content .box-action blockquote,
+    .entry-content .box-warning blockquote,
+    .blog-body .point-box blockquote,
+    .blog-body .box-fact blockquote,
+    .blog-body .box-action blockquote,
+    .blog-body .box-warning blockquote,
+    .prose .point-box blockquote,
+    .prose .box-fact blockquote,
+    .prose .box-action blockquote,
+    .prose .box-warning blockquote {
+      border-left: none !important;
+      background: transparent !important;
+      padding: 0 !important;
+      margin: 0.5rem 0 !important;
+    }
+
+    /* 万一装飾ボックスの中に別の装飾ボックスがネストされた場合の多重ボーダー・多重背景の完全無効化 */
+    .entry-content .point-box .point-box,
+    .entry-content .point-box .attention-box,
+    .entry-content .point-box .info-box,
+    .entry-content .point-box .box-fact,
+    .entry-content .point-box .box-action,
+    .entry-content .point-box .box-warning,
+    .entry-content .attention-box .point-box,
+    .entry-content .attention-box .attention-box,
+    .entry-content .attention-box .info-box,
+    .entry-content .attention-box .box-fact,
+    .entry-content .attention-box .box-action,
+    .entry-content .attention-box .box-warning,
+    .entry-content .info-box .point-box,
+    .entry-content .info-box .attention-box,
+    .entry-content .info-box .info-box,
+    .entry-content .info-box .box-fact,
+    .entry-content .info-box .box-action,
+    .entry-content .info-box .box-warning,
+    .entry-content .box-fact .point-box,
+    .entry-content .box-fact .attention-box,
+    .entry-content .box-fact .info-box,
+    .entry-content .box-fact .box-fact,
+    .entry-content .box-fact .box-action,
+    .entry-content .box-fact .box-warning,
+    .entry-content .box-action .point-box,
+    .entry-content .box-action .attention-box,
+    .entry-content .box-action .info-box,
+    .entry-content .box-action .box-fact,
+    .entry-content .box-action .box-action,
+    .entry-content .box-action .box-warning,
+    .entry-content .box-warning .point-box,
+    .entry-content .box-warning .attention-box,
+    .entry-content .box-warning .info-box,
+    .entry-content .box-warning .box-fact,
+    .entry-content .box-warning .box-action,
+    .entry-content .box-warning .box-warning {
+      border: none !important;
+      border-left: none !important;
+      background: transparent !important;
+      padding: 0 !important;
+      margin: 0.5rem 0 !important;
       border-radius: 0 !important;
     }
 
-    /* 単独の span.box-fact （親がpでない場合等）のフォールバック */
-    span.box-fact:not(p:has(> span.box-fact) span.box-fact):not(.box-fact span),
-    span.box-action:not(p:has(> span.box-action) span.box-action):not(.box-action span),
-    span.box-warning:not(p:has(> span.box-warning) span.box-warning):not(.box-warning span) {
-      display: block !important;
-      width: 100% !important;
-      box-sizing: border-box !important;
-      padding: 1rem 1.25rem !important;
-      margin-top: 1.25rem !important;
-      margin-bottom: 1.25rem !important;
-      border-radius: 0 0.5rem 0.5rem 0 !important;
-      border-top: none !important;
-      border-right: none !important;
-      border-bottom: none !important;
-      border-left-width: 4px !important;
-      border-left-style: solid !important;
-      color: #334155 !important;
-      font-size: 0.9375rem !important;
-      line-height: 1.75 !important;
-    }
-
-    /* エディタ側で改行時にタグが連続分割された場合のシームレス結合（1つの繋がったボックスとして描画） */
-    .box-fact + .box-fact,
-    .box-action + .box-action,
-    .box-warning + .box-warning,
+    /* 5. 同種装飾ボックスが連続した場合のシームレス連結（エディタでの改行分割対応） */
+    .entry-content .point-box + .point-box,
+    .entry-content .attention-box + .attention-box,
+    .entry-content .info-box + .info-box,
     .entry-content .box-fact + .box-fact,
     .entry-content .box-action + .box-action,
     .entry-content .box-warning + .box-warning {
-      margin-top: -1.25rem !important; /* 直前のボックスの下マージンと相殺 */
-      padding-top: 0.25rem !important; /* 隙間なく連続 */
+      margin-top: -1.5rem !important; /* 直前ボックスの下マージンと相殺 */
+      padding-top: 0.25rem !important;
       border-top-right-radius: 0 !important;
-    }
-    .box-fact:has(+ .box-fact),
-    .box-action:has(+ .box-action),
-    .box-warning:has(+ .box-warning) {
-      margin-bottom: 0 !important;
-      padding-bottom: 0.25rem !important;
-      border-bottom-right-radius: 0 !important;
-    }
-
-    .box-fact strong,
-    .box-action strong,
-    .box-warning strong,
-    .box-fact b,
-    .box-action b,
-    .box-warning b {
-      color: #0f172a !important;
     }
 
     /* ==================================================== */
@@ -1333,7 +1403,7 @@
 <!-- Table of Contents removed -->
 <!-- Main Article Body Container -->
 <div id="entry-content-body" class="entry-content blog-body prose">
-<p>成績表は9/10（木）に一斉発送いたしました。関東から郵便のため到着まで数日かかりますが、届きましたらぜひご自身の取り組みを振り返るきっかけにしてみてください。</p>
+<h2 id="h9d027a1889">おかもし8月号を受験したみなさんへ</h2><p>成績表は9/10（木）に一斉発送いたしました。 関東から郵便のため到着まで数日かかりますが、届きましたらぜひご自身の取り組みを振り返るきっかけにしてみてください。</p><p> 今回のおかもしで、岡山5校（朝日・操山・芳泉・一宮・城東）を志望した方が、第一志望、第二志望合わせて約1,100名もいらっしゃいました。 各高校の志望者数は次のとおりです。</p><p> 朝日：229名 ※学区外含む<br>操山：205名 ※学区外含む<br>芳泉：223名 ※学区外含む<br>一宮：277名 ※普通・理数の合計、学区外含む<br>城東：205名 ※普通・国際・音楽の合計</p><p> 「おかもし」の成績表には、志望校ごとの偏差値人数分布が掲載されています。 ABC判定だけでなく、「同じ志望校を目指す仲間の中で、今自分がどこに位置しているのか」を客観的に知ることで、これからの目標がよりクリアになります。</p><p> あと半年あります。そして、この半年間こそが大きく伸びるチャンスです。 ここからの取り組み次第で、志望校合格への道筋はしっかりと見えてきます。</p><h2 id="h33fc34a619">偏差値ごとの人数分布</h2><p>同じ志望校を目指すライバルたちがどの位置にいて、自分が今どこに立っているのかを確認できます。 これからの目標設定やモチベーションアップにぜひ役立ててください。</p><h2 id="h59ee82345b"> 小問分析</h2><p>成績表の「小問分析」を活用すると、自分の得意な分野や伸びしろがある分野が一目で分かります。 「次に何を集中して対策すればよいか」という具体的なステップが見えてくるはずです。 学習塾に通われている方は、ぜひ塾の先生にも相談してこれからの戦略を一緒に立ててみましょう。</p><p> 次回の模試で自分の成長を確かめるためにも、今回の結果をこれからの学習に活かしてください。</p><h2 id="h5cfdc38a63">おかもしを受験したことがないみなさんへ</h2><p>志望校合格に向けて、今の自分の実力を確かめてみませんか？ 「おかもし」は、岡山5校（朝日・操山・芳泉・一宮・城東）を目指す受験生が約1,100名集まる、本番さながらの模擬試験です。</p><p>受験することで、ご自身の今の学力はもちろん、同じ志望校を目指す仲間の中で自分がどの位置にいるのかを把握することができます。単なる成績チェックにとどまらず、志望校合格へ向けた「次の一手」が見つかることが「おかもし」の大きな魅力です。</p><p>対策を始めるのに、遅すぎるということはありません。 「本番で力を発揮するための練習」として、ぜひ一度「おかもし」に挑戦してみませんか？</p><h2 id="h5b27a4b7dc">次なるステップへ踏み出そう！</h2><p>おかもし10月号のお申し込みは10月5日(月)までです。</p><p> 本番と同じ緊張感を味わえる公開会場での受験も、ぜひご検討ください。</p><p>	•	岡山会場：11月1日（日）開催　山陽学園中学校・高等学校</p><p>	•	津山会場：10月25日（日）開催　美作高等学校</p>
 </div><!-- /#entry-content-body -->
 
 <!-- 記事末尾アクション・ナビゲーションエリア（余白をmy-3〜my-4に統一・コンパクト化） -->
@@ -1448,9 +1518,53 @@
         </div>
         <div class="text-xs text-slate-600 font-medium">岡山会場 または 自宅受験対応</div>
       </a>
+    </div>
+  </div>
 </div>
-</div>
-</div>
+
+
+<!-- Sidebar Table of Contents -->
+<div class="p-4 bg-white rounded-xl border border-slate-200/80 shadow-xs flex flex-col gap-2.5" id="sidebar-toc-card">
+  <span class="text-xs font-bold text-primary flex items-center gap-1.5">
+    <span class="material-symbols-outlined text-[16px] text-secondary">format_list_bulleted</span>目次
+  </span>
+  <ul class="space-y-1 divide-y divide-slate-100" id="sidebar-toc-list">
+
+          <li class="pt-1 font-medium">
+            <a href="#h9d027a1889" class="hover:text-secondary flex items-start gap-1.5 transition-colors py-0.5 truncate">
+              <span class="text-primary font-bold shrink-0">・</span>
+              <span class="truncate">おかもし8月号を受験したみなさんへ</span>
+            </a>
+          </li>
+
+          <li class="pt-1 font-medium">
+            <a href="#h33fc34a619" class="hover:text-secondary flex items-start gap-1.5 transition-colors py-0.5 truncate">
+              <span class="text-primary font-bold shrink-0">・</span>
+              <span class="truncate">偏差値ごとの人数分布</span>
+            </a>
+          </li>
+
+          <li class="pt-1 font-medium">
+            <a href="#h59ee82345b" class="hover:text-secondary flex items-start gap-1.5 transition-colors py-0.5 truncate">
+              <span class="text-primary font-bold shrink-0">・</span>
+              <span class="truncate">小問分析</span>
+            </a>
+          </li>
+
+          <li class="pt-1 font-medium">
+            <a href="#h5cfdc38a63" class="hover:text-secondary flex items-start gap-1.5 transition-colors py-0.5 truncate">
+              <span class="text-primary font-bold shrink-0">・</span>
+              <span class="truncate">おかもしを受験したことがないみなさんへ</span>
+            </a>
+          </li>
+
+          <li class="pt-1 font-medium">
+            <a href="#h5b27a4b7dc" class="hover:text-secondary flex items-start gap-1.5 transition-colors py-0.5 truncate">
+              <span class="text-primary font-bold shrink-0">・</span>
+              <span class="truncate">次なるステップへ踏み出そう！</span>
+            </a>
+          </li>
+  </ul>
 </div>
 
 <!-- 2. Official Instagram Banner (Compact) -->
@@ -1469,8 +1583,8 @@
 </div>
 </div>
 <!-- Related Articles Section -->
-<section id="related-articles-section" class="w-full border-t-2 border-slate-200 mt-12 sm:mt-16 pt-8 sm:pt-10">
-  <div class="w-full flex flex-col gap-4 sm:gap-5">
+<section id="related-articles-section" class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t-2 border-slate-200 mt-12 sm:mt-16 pt-8 sm:pt-10">
+  <div class="w-full flex flex-col gap-5 sm:gap-6">
     <!-- Section Header -->
     <div class="flex items-center justify-between pb-3 border-b border-slate-200">
       <h2 class="section-title text-xl sm:text-2xl font-bold text-emerald-950 tracking-tight" style="color: #064e3b !important;">こちらの記事も読まれています</h2>
@@ -1480,42 +1594,93 @@
       </a>
     </div>
 
-    <!-- Articles Card List (Horizontal Text List, Dynamic) -->
-    <div id="related-articles-grid" class="bg-transparent sm:bg-slate-50/80 p-0 sm:p-4 rounded-none sm:rounded-lg border-0 sm:border border-slate-200/80 flex flex-col gap-2.5">
+    <!-- Articles Card List (3-column grid on desktop, 1-column on mobile) -->
+    <div id="related-articles-grid" class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
 
-        <a href="/news/s9o093uhf/" class="block p-3 sm:p-3.5 bg-white hover:bg-slate-100/80 rounded-lg border border-slate-200/90 hover:border-emerald-300 transition-all group shadow-2xs">
-          <div class="flex items-center gap-2 mb-1">
-            <span class="text-[11px] text-slate-500 tabular-nums">2026.09.26</span>
-            <span class="px-2 py-0.2 rounded text-[10px] font-bold bg-[#fef3c7] text-[#92400e] border border-[#fde68a]">模試活用法</span>
+        <article class="h-full">
+          <a href="/news/s9o093uhf/" class="flex flex-col h-full bg-white hover:bg-slate-50/80 rounded-xl border border-slate-200/90 hover:border-emerald-300 hover:shadow-md transition-all duration-200 group overflow-hidden shadow-2xs">
+            
+          <div class="aspect-[16/9] w-full overflow-hidden bg-gradient-to-br from-emerald-50 to-slate-100 flex items-center justify-center text-emerald-800/40">
+            <span class="material-symbols-outlined text-4xl">article</span>
           </div>
-          <h4 class="font-bold text-xs sm:text-sm text-slate-900 group-hover:text-brand-green transition-colors leading-snug line-clamp-2">
-            小6生対象 岡山県適性検査対策模試 10月号
-          </h4>
-        </a>
+            <div class="p-4 sm:p-5 flex flex-col flex-1 justify-between gap-3">
+              <div class="flex flex-col gap-2">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="flex items-center gap-1 text-[11px] sm:text-xs text-slate-500 font-medium">
+                    <span class="material-symbols-outlined text-[13px] text-slate-400">calendar_today</span>
+                    <span class="tabular-nums">2026.09.26</span>
+                  </span>
+                  <span class="px-2 py-0.5 rounded text-[10px] sm:text-[11px] font-bold bg-[#fef3c7] text-[#92400e] border border-[#fde68a]">模試活用法</span>
+                </div>
+                <h3 class="font-bold text-xs sm:text-sm text-slate-900 group-hover:text-brand-green transition-colors leading-snug line-clamp-2">
+                  小6生対象 岡山県適性検査対策模試 10月号
+                </h3>
+              </div>
+              <div class="flex items-center justify-between pt-2 border-t border-slate-100 text-xs font-bold text-slate-500 group-hover:text-brand-green transition-colors">
+                <span>記事を読む</span>
+                <span class="material-symbols-outlined text-[15px] group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+              </div>
+            </div>
+          </a>
+        </article>
 
-        <a href="/news/b055d-p_k7/" class="block p-3 sm:p-3.5 bg-white hover:bg-slate-100/80 rounded-lg border border-slate-200/90 hover:border-emerald-300 transition-all group shadow-2xs">
-          <div class="flex items-center gap-2 mb-1">
-            <span class="text-[11px] text-slate-500 tabular-nums">2026.09.23</span>
-            <span class="px-2 py-0.2 rounded text-[10px] font-bold bg-[#fef3c7] text-[#92400e] border border-[#fde68a]">模試活用法</span>
+        <article class="h-full">
+          <a href="/news/b055d-p_k7/" class="flex flex-col h-full bg-white hover:bg-slate-50/80 rounded-xl border border-slate-200/90 hover:border-emerald-300 hover:shadow-md transition-all duration-200 group overflow-hidden shadow-2xs">
+            
+          <div class="aspect-[16/9] w-full overflow-hidden bg-slate-100">
+            <img src="https://images.microcms-assets.io/assets/1ac525f4c868455d9d89ba053378d2ec/472790e3ea034e348fc446be675dc5e5/%E3%81%8A%E3%81%8B%E3%82%82%E3%81%9720260923-1.jpeg" alt="【岡山県の高校受験】合格への近道はここにある！「おかもし」が受験生から支持される理由" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy">
           </div>
-          <h4 class="font-bold text-xs sm:text-sm text-slate-900 group-hover:text-brand-green transition-colors leading-snug line-clamp-2">
-            【岡山県の高校受験】合格への近道はここにある！「おかもし」が受験生から支持される理由
-          </h4>
-        </a>
+            <div class="p-4 sm:p-5 flex flex-col flex-1 justify-between gap-3">
+              <div class="flex flex-col gap-2">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="flex items-center gap-1 text-[11px] sm:text-xs text-slate-500 font-medium">
+                    <span class="material-symbols-outlined text-[13px] text-slate-400">calendar_today</span>
+                    <span class="tabular-nums">2026.09.23</span>
+                  </span>
+                  <span class="px-2 py-0.5 rounded text-[10px] sm:text-[11px] font-bold bg-[#fef3c7] text-[#92400e] border border-[#fde68a]">模試活用法</span>
+                </div>
+                <h3 class="font-bold text-xs sm:text-sm text-slate-900 group-hover:text-brand-green transition-colors leading-snug line-clamp-2">
+                  【岡山県の高校受験】合格への近道はここにある！「おかもし」が受験生から支持される理由
+                </h3>
+              </div>
+              <div class="flex items-center justify-between pt-2 border-t border-slate-100 text-xs font-bold text-slate-500 group-hover:text-brand-green transition-colors">
+                <span>記事を読む</span>
+                <span class="material-symbols-outlined text-[15px] group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+              </div>
+            </div>
+          </a>
+        </article>
 
-        <a href="/news/20p7a-hecrv/" class="block p-3 sm:p-3.5 bg-white hover:bg-slate-100/80 rounded-lg border border-slate-200/90 hover:border-emerald-300 transition-all group shadow-2xs">
-          <div class="flex items-center gap-2 mb-1">
-            <span class="text-[11px] text-slate-500 tabular-nums">2026.09.23</span>
-            <span class="px-2 py-0.2 rounded text-[10px] font-bold bg-[#fef3c7] text-[#92400e] border border-[#fde68a]">模試活用法</span>
+        <article class="h-full">
+          <a href="/news/20p7a-hecrv/" class="flex flex-col h-full bg-white hover:bg-slate-50/80 rounded-xl border border-slate-200/90 hover:border-emerald-300 hover:shadow-md transition-all duration-200 group overflow-hidden shadow-2xs">
+            
+          <div class="aspect-[16/9] w-full overflow-hidden bg-slate-100">
+            <img src="https://images.microcms-assets.io/assets/1ac525f4c868455d9d89ba053378d2ec/9264e101b06c40348002c2d70b2d496a/%E3%81%8A%E3%81%8B%E3%82%82%E3%81%97Stripe%E6%B1%BA%E6%B8%88%E3%82%A4%E3%83%A1%E3%83%BC%E3%82%B7%E3%82%99.jpeg" alt="おかもし　決済用リンク" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy">
           </div>
-          <h4 class="font-bold text-xs sm:text-sm text-slate-900 group-hover:text-brand-green transition-colors leading-snug line-clamp-2">
-            おかもし　決済用リンク
-          </h4>
-        </a>
-</div>
-</div>
-<!-- Mobile Button for Article List -->
-    <div class="md:hidden flex justify-center pt-1">
+            <div class="p-4 sm:p-5 flex flex-col flex-1 justify-between gap-3">
+              <div class="flex flex-col gap-2">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="flex items-center gap-1 text-[11px] sm:text-xs text-slate-500 font-medium">
+                    <span class="material-symbols-outlined text-[13px] text-slate-400">calendar_today</span>
+                    <span class="tabular-nums">2026.09.23</span>
+                  </span>
+                  <span class="px-2 py-0.5 rounded text-[10px] sm:text-[11px] font-bold bg-[#fef3c7] text-[#92400e] border border-[#fde68a]">模試活用法</span>
+                </div>
+                <h3 class="font-bold text-xs sm:text-sm text-slate-900 group-hover:text-brand-green transition-colors leading-snug line-clamp-2">
+                  おかもし　決済用リンク
+                </h3>
+              </div>
+              <div class="flex items-center justify-between pt-2 border-t border-slate-100 text-xs font-bold text-slate-500 group-hover:text-brand-green transition-colors">
+                <span>記事を読む</span>
+                <span class="material-symbols-outlined text-[15px] group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+              </div>
+            </div>
+          </a>
+        </article>
+    </div>
+
+    <!-- Mobile Button for Article List -->
+    <div class="md:hidden flex justify-center pt-2">
       <a class="w-full py-2.5 bg-surface-container text-primary font-bold text-sm rounded-lg text-center shadow-2xs hover:bg-surface-container-high transition-colors" data-path="news" href="/news.html">
         記事一覧へ戻る
       </a>

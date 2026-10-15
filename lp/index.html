@@ -4162,11 +4162,12 @@
       // 対象学年でフィルタリング
       const filtered = sourceArticles.filter(post => isArticleMatchGrade(post, gradeKey));
 
-      // 降順ソート (publishedAt / date / createdAt)
+      // 降順ソート (表示公開日: publishedAt > date > createdAt、同日は id 順)
       filtered.sort((a, b) => {
         const da = new Date(a.publishedAt || a.date || a.createdAt || 0).getTime();
         const db = new Date(b.publishedAt || b.date || b.createdAt || 0).getTime();
-        return db - da;
+        if (db !== da) return db - da;
+        return String(b.id || '').localeCompare(String(a.id || ''));
       });
 
       // 最新の3件〜5件（デザイン枠に収まる3件）を抽出

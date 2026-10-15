@@ -401,52 +401,9 @@ def build_article_detail_page(article, all_articles, template_html, exam_guides)
     {next_html}
   </nav>'''
 
-    # 関連記事HTML (自身を除く最大3件)
+    # 関連記事HTML (自身を除く最大3件、お知らせ一覧と完全に同じ横長リスト形式カード)
     related_items = [a for a in all_articles if a.get("id") != a_id][:3]
-    related_cards = []
-    for r in related_items:
-        r_id = r.get("id")
-        r_title = r.get("title", "")
-        r_date = format_date_ymd(r.get("publishedAt") or r.get("createdAt"))
-        r_cat, r_badge = get_category_info(r.get("category"), r_title)
-        r_eyecatch = r.get("eyecatch")
-        r_eyecatch_url = r_eyecatch.get("url") if isinstance(r_eyecatch, dict) else ""
-
-        if r_eyecatch_url:
-            thumb_html = f'''
-          <div class="aspect-[16/9] w-full overflow-hidden bg-slate-100">
-            <img src="{r_eyecatch_url}" alt="{html_escape(r_title)}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy">
-          </div>'''
-        else:
-            thumb_html = f'''
-          <div class="aspect-[16/9] w-full overflow-hidden bg-gradient-to-br from-emerald-50 to-slate-100 flex items-center justify-center text-emerald-800/40">
-            <span class="material-symbols-outlined text-4xl">article</span>
-          </div>'''
-
-        related_cards.append(f'''
-        <article class="h-full">
-          <a href="/news/{r_id}/" class="flex flex-col h-full bg-white hover:bg-slate-50/80 rounded-xl border border-slate-200/90 hover:border-emerald-300 hover:shadow-md transition-all duration-200 group overflow-hidden shadow-2xs">
-            {thumb_html}
-            <div class="p-4 sm:p-5 flex flex-col flex-1 justify-between gap-3">
-              <div class="flex flex-col gap-2">
-                <div class="flex items-center gap-2 flex-wrap">
-                  <span class="flex items-center gap-1 text-[11px] sm:text-xs text-slate-500 font-medium">
-                    <span class="material-symbols-outlined text-[13px] text-slate-400">calendar_today</span>
-                    <span class="tabular-nums">{r_date}</span>
-                  </span>
-                  <span class="px-2 py-0.5 rounded text-[10px] sm:text-[11px] font-bold {r_badge}">{r_cat}</span>
-                </div>
-                <h3 class="font-bold text-xs sm:text-sm text-slate-900 group-hover:text-brand-green transition-colors leading-snug line-clamp-2">
-                  {html_escape(r_title)}
-                </h3>
-              </div>
-              <div class="flex items-center justify-between pt-2 border-t border-slate-100 text-xs font-bold text-slate-500 group-hover:text-brand-green transition-colors">
-                <span>記事を読む</span>
-                <span class="material-symbols-outlined text-[15px] group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
-              </div>
-            </div>
-          </a>
-        </article>''')
+    related_cards = [build_article_card_html(r, is_top=False) for r in related_items]
     related_html = "\n".join(related_cards)
 
     # アイキャッチ画像ブロック
@@ -469,20 +426,6 @@ def build_article_detail_page(article, all_articles, template_html, exam_guides)
     # 模試ウィジェットHTML
     exam_widget_html = render_sidebar_exam_widget(exam_guides)
 
-    # 目次 (TOC) リストHTML (見出しが2件以上ある場合)
-    toc_items = []
-    for h in headings:
-        is_h2 = h["tag"] == "h2"
-        indent = "pt-1 font-medium" if is_h2 else "pl-3 text-xs text-on-surface-variant"
-        toc_items.append(f'''
-          <li class="{indent}">
-            <a href="#{h['id']}" class="hover:text-secondary flex items-start gap-1.5 transition-colors py-0.5 truncate">
-              <span class="text-primary font-bold shrink-0">・</span>
-              <span class="truncate">{html_escape(h['text'])}</span>
-            </a>
-          </li>''')
-    toc_html = "\n".join(toc_items)
-    toc_card_class = "p-4 bg-white rounded-xl border border-slate-200/80 shadow-xs flex flex-col gap-2.5" if len(headings) >= 2 else "hidden"
 
     # テンプレートを元に静的HTMLを組み立てる
     html = template_html
@@ -580,7 +523,7 @@ def build_article_detail_page(article, all_articles, template_html, exam_guides)
     # 関連記事置換 (detail.html の #related-articles-grid 開始タグから閉じタグまでを安全に置換)
     html = re.sub(
         r'<div id="related-articles-grid"[^>]*>.*?</div>\s*<!-- Mobile Button for Article List -->',
-        lambda m: f'<div id="related-articles-grid" class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">\n{related_html}\n    </div>\n\n    <!-- Mobile Button for Article List -->',
+        lambda m: f'<div id="related-articles-grid" class="space-y-3">\n{related_html}\n    </div>\n\n    <!-- Mobile Button for Article List -->',
         html,
         flags=re.DOTALL
     )
@@ -593,20 +536,6 @@ def build_article_detail_page(article, all_articles, template_html, exam_guides)
         flags=re.DOTALL
     )
 
-    # サイドバー目次カードの挿入（Instagramバナーの上に配置）
-    if len(headings) >= 2:
-        sidebar_toc_block = f'''
-<!-- Sidebar Table of Contents -->
-<div class="{toc_card_class}" id="sidebar-toc-card">
-  <span class="text-xs font-bold text-primary flex items-center gap-1.5">
-    <span class="material-symbols-outlined text-[16px] text-secondary">format_list_bulleted</span>目次
-  </span>
-  <ul class="space-y-1 divide-y divide-slate-100" id="sidebar-toc-list">
-{toc_html}
-  </ul>
-</div>
-'''
-        html = re.sub(r'(<!-- 2\. Official Instagram Banner)', lambda m: f'{sidebar_toc_block}\n' + m.group(1), html)
 
     # 不要なクライアントフェッチスクリプトを削除（静的化済みのため不要）
     html = re.sub(r'<script defer src="/?js/microcms-config\.js"></script>', '', html)

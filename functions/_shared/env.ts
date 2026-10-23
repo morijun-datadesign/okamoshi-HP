@@ -13,6 +13,7 @@ export interface Env {
   ORG_ADMIN_EMAIL?: string;
   ADMIN_EMAIL_ORG?: string;
   CHUO_KYOIKU_EMAIL?: string;
+  CONTACT_ADMIN_EMAILS?: string;
 
   // Cloudflare Turnstile
   TURNSTILE_SECRET_KEY?: string;
@@ -72,6 +73,28 @@ export const getAdminEmail = (env: Env | undefined): string => {
     anyEnv.ORG_ADMIN_EMAIL ||
     anyEnv.ADMIN_EMAIL_ORG;
   return typeof val === "string" && val.trim() !== "" ? val.trim() : DEFAULT_ADMIN_EMAIL;
+};
+
+/**
+ * お問い合わせ通知（管理者宛て）の宛先メールアドレス一覧を取得
+ * - Cloudflare Pages 環境変数 CONTACT_ADMIN_EMAILS (カンマ区切り) から取得
+ * - 複数アドレス指定時は配列に分割してトリム
+ * - 未設定・空文字列の場合は DEFAULT_ADMIN_EMAIL ("info@okayama-moshi.com") をフォールバック
+ */
+export const getContactAdminEmails = (env: Env | undefined): string[] => {
+  if (!env) return [DEFAULT_ADMIN_EMAIL];
+  const anyEnv = env as Record<string, any>;
+  const raw = anyEnv.CONTACT_ADMIN_EMAILS || anyEnv.CONTACT_ADMIN_EMAIL;
+  if (typeof raw === "string" && raw.trim() !== "") {
+    const list = raw
+      .split(",")
+      .map((s) => s.trim())
+      .filter((s) => s.length > 0 && s.includes("@"));
+    if (list.length > 0) {
+      return list;
+    }
+  }
+  return [DEFAULT_ADMIN_EMAIL];
 };
 
 /**

@@ -1,4 +1,11 @@
-import { Env, DEFAULT_FROM_EMAIL, DEFAULT_ADMIN_EMAIL, readEnv } from "../_shared/env";
+import {
+  Env,
+  DEFAULT_FROM_EMAIL,
+  readEnv,
+  getResendApiKey,
+  getFromEmail,
+  getContactAdminEmails,
+} from "../_shared/env";
 import { jsonResponse, errorResponse } from "../_shared/http";
 import { verifyTurnstile } from "../_shared/turnstile";
 import { sendResendEmail } from "../_shared/resend";
@@ -22,14 +29,10 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     }
 
     // 2. メール送信設定の取得
-    const apiKey = readEnv(context.env, "RESEND_API_KEY");
-    const fromEmail = readEnv(context.env, "RESEND_FROM_EMAIL", DEFAULT_FROM_EMAIL);
-    const individualAdminEmail = readEnv(context.env, "ADMIN_EMAIL", DEFAULT_ADMIN_EMAIL);
-    const orgAdminEmail =
-      readEnv(context.env, "ORG_ADMIN_EMAIL") ||
-      readEnv(context.env, "ADMIN_EMAIL_ORG") ||
-      readEnv(context.env, "CHUO_KYOIKU_EMAIL") ||
-      "okayamamoshi@chuoh-kyouiku.co.jp";
+    const resendConfig = getResendApiKey(context.env);
+    const apiKey = resendConfig.key;
+    const fromEmail = getFromEmail(context.env);
+    const adminEmails = getContactAdminEmails(context.env);
 
     if (!apiKey) {
       console.error("RESEND_API_KEY is not configured.");
@@ -69,13 +72,13 @@ ${body.message || "なし"}
 送信日時: ${new Date().toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" })}
 `.trim();
 
-    // 3. 管理者宛通知メール送信
-    const targetAdminEmail = isOrg ? orgAdminEmail : individualAdminEmail;
+    // 3. 管理者宛通知メール送信（CONTACT_ADMIN_EMAILS で指定された全宛先へ一括送信）
+    console.log(`[functions/api/contact] Sending admin notification to: [${adminEmails.join(", ")}]`);
     const adminMailRes = await sendResendEmail(
       apiKey,
       {
         from: fromEmail,
-        to: [targetAdminEmail],
+        to: adminEmails,
         reply_to: body.email || undefined,
         subject,
         text: textContent,
@@ -138,6 +141,7 @@ Web : https://okayama-moshi.com
         {
           from: fromEmail,
           to: [body.email],
+          reply_to: adminEmails[0] || DEFAULT_FROM_EMAIL,
           subject: userSubject,
           text: userTextContent,
         },

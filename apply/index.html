@@ -2725,7 +2725,7 @@
       }
     }
 
-    function applyAddressResult(zipInput, cleanZip, data) {
+    function applyAddressResult(zipInput, cleanZip, data, isManualTrigger = false) {
       const prefSelect = document.getElementById('prefecture');
       const addr1Input = document.getElementById('addressLine1');
       const addr2Input = document.getElementById('addressLine2');
@@ -2749,8 +2749,9 @@
         addr1Input.classList.remove('animate-address-filled');
       }, 2300);
 
-      // 2. 自動的に「丁目・番地・号」の入力欄へフォーカス（カーソル）を移動し、続きの入力を促す
-      if (addr2Input) {
+      // 2. 「丁目・番地・号」入力欄へのフォーカス
+      // ※ 自動復元中や、ユーザーが意図していない自動入力時は画面スクロールを防ぐためフォーカスしない
+      if (!isRestoringProfile && isManualTrigger && addr2Input) {
         addr2Input.focus();
         if (typeof addr2Input.setSelectionRange === 'function' && addr2Input.value) {
           addr2Input.setSelectionRange(addr2Input.value.length, addr2Input.value.length);
@@ -2770,6 +2771,9 @@
     }
 
     async function searchAddressByPostalCode(isManualTrigger = false) {
+      // 自動復元中は住所検索を実行しない（すでに保存された完全な住所を上書き・スクロールさせないため）
+      if (isRestoringProfile) return;
+
       const zipInput = document.getElementById('postalCode');
       const prefSelect = document.getElementById('prefecture');
       const addr1Input = document.getElementById('addressLine1');
@@ -2792,7 +2796,7 @@
       // 端末内キャッシュにあれば通信せず即時反映
       if (addressCache.has(cleanZip)) {
         const cached = addressCache.get(cleanZip);
-        if (cached) applyAddressResult(zipInput, cleanZip, cached);
+        if (cached) applyAddressResult(zipInput, cleanZip, cached, isManualTrigger);
         else showPostalMessage('該当する住所が見つかりませんでした。郵便番号をご確認ください。', true);
         return;
       }
@@ -2813,7 +2817,7 @@
         if (normalizeZipCode(zipInput.value) !== cleanZip) return;
 
         if (data && (data.prefecture || data.city)) {
-          applyAddressResult(zipInput, cleanZip, data);
+          applyAddressResult(zipInput, cleanZip, data, isManualTrigger);
         } else {
           showPostalMessage('該当する住所が見つかりませんでした。郵便番号をご確認ください。', true);
         }
@@ -2837,6 +2841,7 @@
 
       // スマホ等でキーボード表示時に市区町村・番地入力欄までしっかり画面内に収めるためのスクロール調整
       zipInput.addEventListener('focus', function() {
+        if (isRestoringProfile) return;
         clearPostalMessage();
         // フォーカス直後と仮想キーボード展開完了時（約260ms）の2段階で上部位置へスムーズスクロール
         setTimeout(smoothScrollToPostalSection, 50);
@@ -2844,6 +2849,7 @@
       });
 
       zipInput.addEventListener('input', function() {
+        if (isRestoringProfile) return;
         clearPostalMessage();
         const clean = normalizeZipCode(this.value);
         if (clean.length === 7) {
@@ -3331,6 +3337,9 @@
       });
     }
 
+    // 自動復元処理中フラグ（自動フォーカスや意図しないスクロール、郵便番号API自動実行をガード）
+    let isRestoringProfile = false;
+
     /**
      * ページ表示時に保存された基本情報を自動復元
      */
@@ -3344,7 +3353,13 @@
         const data = JSON.parse(raw);
         if (!data || typeof data !== 'object') return;
 
+        isRestoringProfile = true;
         let restoredCount = 0;
+
+        // 郵便番号検索が誤発火しないよう直前検索値を事前同期
+        if (data.postal_code) {
+          lastSearchedZip = normalizeZipCode(data.postal_code);
+        }
 
         const applyValue = (elemId, val) => {
           if (!val) return;
@@ -3405,6 +3420,10 @@
         }
       } catch (err) {
         console.warn('[AutoFill] localStorage restore failed:', err);
+      } finally {
+        setTimeout(() => {
+          isRestoringProfile = false;
+        }, 200);
       }
     }
 
@@ -4278,6 +4297,21 @@ if (!parentKanaLastName || !parentKanaFirstName) {
 
       // 基本情報の自動復元（前回保存データが存在する場合）
       restoreSavedProfile();
+
+      // 初期表示時の意図しない入力欄自動フォーカス・スクロールを完全に防止し、常に最上部で待機
+      if (document.activeElement && typeof document.activeElement.blur === 'function' && document.activeElement !== document.body) {
+        document.activeElement.blur();
+      }
+      window.scrollTo(0, 0);
+      setTimeout(() => {
+        if (document.activeElement && typeof document.activeElement.blur === 'function' && document.activeElement !== document.body) {
+          document.activeElement.blur();
+        }
+        window.scrollTo(0, 0);
+      }, 60);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+      }, 250);
     });
   </script>
 </body>

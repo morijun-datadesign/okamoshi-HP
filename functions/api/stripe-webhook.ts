@@ -193,12 +193,29 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const emailVal = String(customerDetails.email || session.customer_email || metadata.email || "").trim();
     const phoneVal = String(metadata.phone || customerDetails.phone || "").trim();
     const postalCodeVal = String(metadata.postal_code || customerDetails.address?.postal_code || "").trim();
-    const prefectureVal = String(metadata.prefecture || customerDetails.address?.state || "").trim();
-    const cityVal = String(metadata.city || customerDetails.address?.city || "").trim();
-    const address1Val = String(metadata.address1 || customerDetails.address?.line1 || "").trim();
-    const address2Val = String(metadata.address2 || customerDetails.address?.line2 || "").trim();
-    const fullAddress = String(metadata.address || [prefectureVal, cityVal, address1Val, address2Val].filter(Boolean).join(" ")).trim();
+    let prefVal = String(metadata.pref || metadata.prefecture || customerDetails.address?.state || "").trim();
+    let cityVal = String(metadata.city || customerDetails.address?.city || "").trim();
+    let addr1Val = String(metadata.addr1 || metadata.address1 || customerDetails.address?.line1 || "").trim();
+    let addr2Val = String(metadata.addr2 || metadata.address2 || customerDetails.address?.line2 || "").trim();
+
+    // 万一 pref/city が空で address のみある場合のフォールバックパース
+    if (!cityVal && metadata.address) {
+      const rawAddr = String(metadata.address).trim();
+      const pMatch = rawAddr.match(/^(東京都|北海道|(?:京都|大阪)府|.{2,3}県)(.*)$/);
+      if (pMatch) {
+        if (!prefVal) prefVal = pMatch[1];
+        const rest = pMatch[2].trim();
+        const cMatch = rest.match(/^([^0-9]+?郡[^0-9]+?[町村]|[^0-9]+?市[^0-9]+?区|[^0-9]+?[市区町村])(.*)$/);
+        if (cMatch) {
+          cityVal = cMatch[1].trim();
+          if (!addr1Val) addr1Val = cMatch[2].trim();
+        }
+      }
+    }
+
+    const fullAddress = String(metadata.address || [prefVal, cityVal, addr1Val, addr2Val].filter(Boolean).join(" ")).trim();
     const examNameVal = String(metadata.exam_name || "岡山県統一模擬試験").trim();
+    const remarksVal = String(metadata.remarks || "").trim().slice(0, 300);
 
     // 1模試＝1レコード
     const parsedRecords = recordsFromMetadata(metadata);
@@ -230,7 +247,12 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       email: emailVal,
       phone: phoneVal,
       postal_code: postalCodeVal,
+      prefecture: prefVal,
+      city: cityVal,
+      address_line1: addr1Val,
+      address_line2: addr2Val,
       address: fullAddress,
+      remarks: remarksVal,
       total_amount: amountVal,
       records: examRecords.map((r) => ({
         exam_id: r.id,
@@ -352,7 +374,7 @@ ${examsListText}
 ■ 保護者氏名: ${parentName || "未入力"}
 ■ メールアドレス: ${emailVal || "未入力"}
 ■ 電話番号: ${phoneVal || "未入力"}
-■ 住所: 〒${postalCodeVal} ${fullAddress}
+■ 住所: 〒${postalCodeVal} ${fullAddress}${remarksVal ? `\n■ 連絡事項・ご要望:\n${remarksVal}` : ""}
 --------------------------------------------------
 ■ スプレッドシート連携 (GAS): ${gasSummary}
 受付日時: ${jstReceivedAt}
@@ -377,7 +399,7 @@ ${konbiniUserBlock}
 ■ 学校名: ${schoolName}
 ■ お届け先住所: 〒${postalCodeVal} ${fullAddress}
 ■ お電話番号: ${phoneVal}
-■ メールアドレス: ${emailVal}
+■ メールアドレス: ${emailVal}${remarksVal ? `\n■ 連絡事項・ご要望:\n${remarksVal}` : ""}
 --------------------------------------------------
 
 【今後のスケジュール・受験票のお届け】

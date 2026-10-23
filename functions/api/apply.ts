@@ -85,6 +85,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const address1Val = String(body.address1 || meta.address1 || body.address_line2 || sessionCustomer.address?.line1 || "").trim();
     const address2Val = String(body.address2 || meta.address2 || body.address_line3 || sessionCustomer.address?.line2 || "").trim();
     const fullAddress = String(body.address || meta.address || [prefectureVal, cityVal, address1Val, address2Val].filter(Boolean).join(" ")).trim();
+    const remarksVal = String(body.remarks || meta.remarks || "").trim().slice(0, 300);
     const examNameVal = String(body.exam_name || meta.exam_name || (Array.isArray(body.exams) && body.exams[0]?.title) || "岡山県統一模擬試験").trim();
     const paymentMethodVal = String(body.payment_method || meta.payment_method || body.selected_payment_method || (body.raw_payment_method === "convenience_store" ? "konbini" : "card")).trim();
     const paymentStatusVal = String(body.payment_status || (stripeSessionData && stripeSessionData.payment_status) || "paid").trim();
@@ -136,7 +137,7 @@ ${examsListText}
 ■ メールアドレス: ${emailVal || "未入力"}
 ■ 電話番号: ${phoneVal || "未入力"}
 ■ 郵便番号: 〒${postalCodeVal || "未入力"}
-■ 住所: ${fullAddress || "未入力"}
+■ 住所: ${fullAddress || "未入力"}${remarksVal ? `\n■ 連絡事項・ご要望:\n${remarksVal}` : ""}
 --------------------------------------------------
 ■ スプレッドシート連携 (GAS): Stripe Webhook から登録（このメールからは書き込みません）
 受付日時: ${jstReceivedAt}
@@ -162,7 +163,7 @@ ${examsListText}
 ■ 学校名: ${schoolVal || "未入力"}
 ■ お届け先住所: 〒${postalCodeVal} ${fullAddress}
 ■ お電話番号: ${phoneVal}
-■ メールアドレス: ${emailVal}
+■ メールアドレス: ${emailVal}${remarksVal ? `\n■ 連絡事項・ご要望:\n${remarksVal}` : ""}
 --------------------------------------------------
 
 ${paymentMethodLabel === "コンビニ決済" ? `

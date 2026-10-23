@@ -966,6 +966,38 @@
             </div>
           </div>
 
+          <!-- ========================================== -->
+          <!-- SECTION 5: 連絡事項・ご要望（任意）         -->
+          <!-- ========================================== -->
+          <div class="bg-transparent sm:bg-surface-container-lowest rounded-none sm:rounded-lg p-0 sm:p-7 border-0 sm:border border-outline-variant/30 shadow-none sm:shadow-sm flex flex-col gap-4 sm:gap-5 pb-8 sm:pb-7 border-b sm:border-b-0 border-slate-200/80">
+            <div class="flex items-center justify-between pb-3 border-b border-surface-container">
+              <div class="flex items-center gap-2">
+                <span class="w-7 h-7 rounded-md bg-primary-container text-on-primary flex items-center justify-center font-label-md font-bold text-[13px] shrink-0">5</span>
+                <h2 class="font-headline-md text-base sm:text-lg md:text-[20px] font-bold text-primary whitespace-nowrap">連絡事項・ご要望</h2>
+              </div>
+              <span class="bg-surface-container-high text-on-surface-variant font-label-sm text-[10px] px-2 py-0.5 rounded-full font-bold">任意</span>
+            </div>
+
+            <div class="flex flex-col gap-2">
+              <label for="remarks" class="font-label-md text-xs sm:text-sm text-on-surface font-bold">
+                配慮事項やご要望がございましたらご記入ください
+              </label>
+              <textarea
+                id="remarks"
+                name="remarks"
+                rows="3"
+                maxlength="300"
+                placeholder="（例）左利きのため、可能であれば左端の座席を希望します。※お急ぎのご相談や欠席連絡等は専用窓口へお問い合わせください。"
+                class="w-full p-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-sm sm:text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40 transition-all resize-y"
+                oninput="updateRemarksCounter()"
+              ></textarea>
+              <div class="flex items-center justify-between text-xs text-on-surface-variant">
+                <span class="text-[11px] text-slate-500">※ご希望内容によっては対応いたしかねる場合もございます。</span>
+                <span id="remarksCounter" class="font-medium text-slate-500 shrink-0">最大300文字</span>
+              </div>
+            </div>
+          </div>
+
         </div>
 
         <!-- ========================================== -->
@@ -2396,6 +2428,18 @@
     }
 
     // ========================================================
+    // 連絡事項・ご要望カウンター
+    // ========================================================
+    function updateRemarksCounter() {
+      const elem = document.getElementById('remarks');
+      const countElem = document.getElementById('remarksCounter');
+      if (elem && countElem) {
+        const len = elem.value.length;
+        countElem.textContent = len > 0 ? `${len} / 300文字` : '最大300文字';
+      }
+    }
+
+    // ========================================================
     // 規約同意・コンビニ期限同意と送信ボタンの連動制御
     // ========================================================
     function updateSubmitButtonState() {
@@ -3442,6 +3486,59 @@
     window.clearSavedProfile = clearSavedProfile;
 
     // ========================================================
+    // 住所パース処理（都道府県、市区・郡町村、町名・丁目・番地、建物名・部屋番号）
+    // ========================================================
+    function parseJapaneseAddress(prefInput, addressLine1, addressLine2, addressLine3) {
+      let raw1 = (addressLine1 || '').trim();
+      let raw2 = (addressLine2 || '').trim();
+      let raw3 = (addressLine3 || '').trim();
+
+      // 1. 都道府県の抽出
+      let pref = '';
+      const prefMatch = raw1.match(/^(東京都|北海道|(?:京都|大阪)府|.{2,3}県)/);
+      if (prefMatch) {
+        pref = prefMatch[1];
+        raw1 = raw1.slice(pref.length).trim();
+      } else if (prefInput) {
+        pref = String(prefInput).trim();
+        if (raw1.startsWith(pref)) {
+          raw1 = raw1.slice(pref.length).trim();
+        }
+      }
+      if (!pref) pref = '岡山県';
+
+      // 2. 市区町村（郡町村を含む）の抽出
+      // 優先順位: 1) 郡＋町村（例: 都窪郡早島町, 伊予郡松前町） 2) 政令指定都市 市＋区（例: 岡山市北区） 3) 一般市/区/町/村
+      let city = '';
+      let town = '';
+      const countyMatch = raw1.match(/^([^0-9]+?郡[^0-9]+?[町村])(.*)$/);
+      const ordinanceCityMatch = raw1.match(/^([^0-9]+?市[^0-9]+?区)(.*)$/);
+      const generalMatch = raw1.match(/^([^0-9]+?[市区町村])(.*)$/);
+
+      if (countyMatch) {
+        city = countyMatch[1].trim();
+        town = countyMatch[2].trim();
+      } else if (ordinanceCityMatch) {
+        city = ordinanceCityMatch[1].trim();
+        town = ordinanceCityMatch[2].trim();
+      } else if (generalMatch) {
+        city = generalMatch[1].trim();
+        town = generalMatch[2].trim();
+      } else {
+        city = raw1;
+        town = '';
+      }
+
+      // 3. 町名・丁目・番地
+      const addr1 = [town, raw2].filter(Boolean).join(' ').trim();
+
+      // 4. 建物名・部屋番号
+      const addr2 = raw3;
+
+      return { pref, city, addr1, addr2 };
+    }
+
+    // ========================================================
     // 6. フォームバリデーション & Stripe 決済接続ハンドラー
     // ========================================================
     let isSubmitting = false;
@@ -3635,6 +3732,7 @@
       const addressLine3 = document.getElementById('addressLine3')?.value.trim() || '';
       const paymentMethod = form.querySelector('input[name="payment_method"]:checked')?.value || null;
       const agreeTerms = document.getElementById('agreeTerms')?.checked;
+      const remarks = (document.getElementById('remarks')?.value || '').trim().slice(0, 300);
 
       // 4. バリデーションチェック
       if (!studentLastName || !studentFirstName) {
@@ -3807,8 +3905,10 @@ if (!parentKanaLastName || !parentKanaFirstName) {
         const gradeLabels = { 'sho6': '小学6年生', 'chu1': '中学1年生', 'chu2': '中学2年生', 'chu3': '中学3年生' };
         const gradeText = gradeLabels[currentSelectedGrade] || currentSelectedGrade;
         const examNameStr = selectedExams.map(exam => exam.issueName ? `${exam.issueName} ${exam.title}` : exam.title).join(' / ');
-        const fullAddressString = [addressLine1, addressLine2, addressLine3].filter(Boolean).join(' ');
-        const extractedPref = addressLine1.match(/^(.+?[都道府県])/)?.[1] || prefecture || '岡山県';
+        
+        // 住所の4分割（都道府県、市区・郡町村、町名・丁目・番地、建物名・部屋番号）
+        const { pref, city, addr1, addr2 } = parseJapaneseAddress(prefecture, addressLine1, addressLine2, addressLine3);
+        const fullAddressString = [pref, city, addr1, addr2].filter(Boolean).join(' ');
         const firstVenueName = selectedExams[0]?.venueLabel || selectedExams[0]?.venue || '会場未指定';
 
         // 決済手段の動的切り替え（card / konbini）
@@ -3839,10 +3939,18 @@ if (!parentKanaLastName || !parentKanaFirstName) {
           phone: parentTel,
           email: parentEmail,
           postal_code: postalCode,
-          prefecture: extractedPref,
-          city: addressLine1,
-          address1: addressLine2,
-          address2: addressLine3,
+
+          // 住所パーツ4分割 & 連絡事項
+          pref: pref,
+          city: city,
+          addr1: addr1,
+          addr2: addr2,
+          remarks: remarks,
+
+          // 互換用
+          prefecture: pref,
+          address1: addr1,
+          address2: addr2,
 
           // エイリアス・互換用
           venue: firstVenueName,
@@ -3861,7 +3969,7 @@ if (!parentKanaLastName || !parentKanaFirstName) {
 
         const checkoutPayload = {
           // ========================================================
-          // 【GAS 申込受付台帳・必須19項目】
+          // 【GAS 申込受付台帳・必須25項目】
           // ========================================================
           received_at: '', // 決済完了時にJST日時を付与
           session_id: '',  // 決済完了時にStripeセッションIDを付与
@@ -3878,10 +3986,21 @@ if (!parentKanaLastName || !parentKanaFirstName) {
           email: parentEmail,
           phone: parentTel,
           postal_code: postalCode,
-          prefecture: extractedPref,
-          city: addressLine1,
-          address1: addressLine2,
-          address2: addressLine3,
+
+          // 住所パーツ4分割 & 連絡事項
+          pref: pref,
+          city: city,
+          addr1: addr1,
+          addr2: addr2,
+          remarks: remarks,
+
+          // 互換用
+          prefecture: pref,
+          address_line1: addr1,
+          address_line2: addr2,
+          address_line3: addr2,
+          address1: addr1,
+          address2: addr2,
 
           // エイリアス（空欄防止用）
           venue: firstVenueName,
@@ -3911,13 +4030,18 @@ if (!parentKanaLastName || !parentKanaFirstName) {
           // 【詳細パラメータ（顧客管理・DB保存用）】
           // ========================================================
           raw_payment_method: paymentMethod,
+          remarks: remarks,
           student_gender: gender,
           student_grade: currentSelectedGrade,
           student_grade_label: gradeText,
           student_school: currentSchool,
-          address_line1: addressLine1,
-          address_line2: addressLine2,
-          address_line3: addressLine3,
+          pref: pref,
+          city: city,
+          addr1: addr1,
+          addr2: addr2,
+          address_line1: addr1,
+          address_line2: addr2,
+          address_line3: addr2,
           address: fullAddressString,
           'cf-turnstile-response': turnstileToken,
           exams: selectedExams.map(exam => ({

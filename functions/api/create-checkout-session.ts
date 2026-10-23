@@ -120,11 +120,12 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const phone = String(body.phone || existingMeta.phone || "").trim();
     const email = String(body.email || body.customer_email || existingMeta.email || "").trim();
     const postalCode = String(body.postal_code || existingMeta.postal_code || "").trim();
-    const prefecture = String(body.prefecture || existingMeta.prefecture || "").trim();
-    const city = String(body.city || body.address_line1 || existingMeta.city || "").trim();
-    const address1 = String(body.address1 || body.address_line2 || existingMeta.address1 || "").trim();
-    const address2 = String(body.address2 || body.address_line3 || existingMeta.address2 || "").trim();
-    const address = String(body.address || existingMeta.address || [prefecture, city, address1, address2].filter(Boolean).join(" ")).trim();
+    const pref = String(body.pref || body.prefecture || existingMeta.pref || existingMeta.prefecture || "").trim();
+    const city = String(body.city || existingMeta.city || "").trim();
+    const addr1 = String(body.addr1 || body.address1 || body.address_line2 || existingMeta.addr1 || existingMeta.address1 || "").trim();
+    const addr2 = String(body.addr2 || body.address2 || body.address_line3 || existingMeta.addr2 || existingMeta.address2 || "").trim();
+    const address = String(body.address || existingMeta.address || [pref, city, addr1, addr2].filter(Boolean).join(" ")).trim();
+    const remarks = String(body.remarks || existingMeta.remarks || "").trim().slice(0, 300);
     const examName = String(body.exam_name || (Array.isArray(body.exams) && body.exams[0]?.title) || existingMeta.exam_name || "岡山県統一模擬試験").trim();
     const paymentMethod = String(body.payment_method || body.selected_payment_method || (body.raw_payment_method === "convenience_store" ? "konbini" : "card")).trim();
     // コンビニ支払期限（日数）。フォームが申込締切を考慮して算出した値を 1〜3 日に丸める（Stripe の最小値は 1）
@@ -161,10 +162,14 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       phone: phone,
       email: email,
       postal_code: postalCode,
-      prefecture: prefecture,
+      pref: pref,
       city: city,
-      address1: address1,
-      address2: address2,
+      addr1: addr1,
+      addr2: addr2,
+      remarks: remarks,
+      prefecture: pref,
+      address1: addr1,
+      address2: addr2,
       address: address,
       venue_name: venueName,
       exam_name: examNameWithIssue,
@@ -172,6 +177,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       amount: String(amountVal),
       exam_count: String(examLineItems.length || 1),
       exams_detail: examsDetail,
+      remarks: remarks,
 
       // エイリアス（GAS連携用互換）
       venue: venueName,

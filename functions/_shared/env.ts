@@ -25,6 +25,9 @@ export interface Env {
   // Google Apps Script (申込受付台帳)
   GAS_APPLY_URL?: string;
   GAS_SHARED_SECRET?: string;
+
+  // 実施塾データ同期用シークレット
+  CRAM_SCHOOLS_SYNC_SECRET?: string;
 }
 
 // メール送信用 Resend APIキー（※プレビュー/フォールバック用キーを安全に保持）
@@ -35,6 +38,7 @@ export const DEFAULT_GAS_URL =
 
 export const DEFAULT_FROM_EMAIL = "岡山県統一模擬試験 <info@okayama-moshi.com>";
 export const DEFAULT_ADMIN_EMAIL = "info@okayama-moshi.com";
+export const DEFAULT_CRAM_SCHOOLS_SYNC_SECRET = "okamoshi_cram_sync_2026_sec_7f9a2b";
 
 /**
  * Resend API キーを取得（環境変数 RESEND_API_KEY / RESEND_KEY を最優先、未設定時はフォールバックキー）

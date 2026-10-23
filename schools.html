@@ -2848,7 +2848,133 @@
         scrollTimeout = requestAnimationFrame(updateActiveTabOnScroll);
       }, { passive: true });
 
-      // 4. ヘッダーナビゲーション用ドロップダウン制御
+      // 4. Cloudflare D1 からの動的取得 & 繋ぎ込み (/api/cram-schools)
+      function escapeHtml(str) {
+        if (!str) return '';
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+      }
+
+      function renderDynamicSchools(data) {
+        if (!data || !data.success || !Array.isArray(data.schools) || data.schools.length === 0) return;
+
+        const areaToTable = {
+          'okayama-east': { tableId: 'tableOkayama', badgeId: 'badge-okayama', cfgIndex: 0 },
+          'kurashiki': { tableId: 'tableKurashiki', badgeId: 'badge-kurashiki', cfgIndex: 1 },
+          'mimasaka': { tableId: 'tableMimasaka', badgeId: 'badge-mimasaka', cfgIndex: 2 },
+          'seibi': { tableId: 'tableSeibi', badgeId: 'badge-seibi', cfgIndex: 3 }
+        };
+
+        const grouped = {
+          'okayama-east': [],
+          'kurashiki': [],
+          'mimasaka': [],
+          'seibi': []
+        };
+
+        data.schools.forEach(function(s) {
+          const area = s.area_id || 'okayama-east';
+          if (grouped[area]) {
+            grouped[area].push(s);
+          } else {
+            grouped['okayama-east'].push(s);
+          }
+        });
+
+        Object.keys(areaToTable).forEach(function(areaKey) {
+          const info = areaToTable[areaKey];
+          const tbody = document.getElementById(info.tableId);
+          const badge = document.getElementById(info.badgeId);
+          const list = grouped[areaKey] || [];
+          if (!tbody) return;
+
+          // districtConfigs の total とバッジを更新
+          if (districtConfigs[info.cfgIndex]) {
+            districtConfigs[info.cfgIndex].total = list.length;
+          }
+          if (badge) {
+            badge.setAttribute('data-total', list.length);
+            badge.textContent = list.length;
+          }
+
+          let html = '';
+          list.forEach(function(s, idx) {
+            const isStripe = idx % 2 === 1;
+            const stripeClass = isStripe ? 'bg-surface-container-low/40 ' : '';
+            const nameEsc = escapeHtml(s.name);
+            const telEsc = escapeHtml(s.phone_number || '');
+            const cleanTel = (s.phone_number || '').replace(/[^0-9]/g, '');
+
+            let nameHtml = '';
+            if (s.website_url && s.website_url.trim() !== '') {
+              const urlEsc = escapeHtml(s.website_url.trim());
+              nameHtml = '<a class="inline-flex items-center gap-1.5 hover:underline text-primary group font-medium transition-colors" href="' + urlEsc + '" target="_blank" rel="noopener noreferrer" title="' + nameEsc + ' の公式サイトを開く（新規タブ）">' +
+                '<span>' + nameEsc + '</span>' +
+                '<span class="material-symbols-outlined text-[15px] opacity-70 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all">open_in_new</span>' +
+                '</a>';
+            } else {
+              nameHtml = '<span class="text-on-surface font-normal">' + nameEsc + '</span>';
+            }
+
+            let telHtml = '';
+            if (s.phone_number && s.phone_number.trim() !== '') {
+              telHtml = '<a class="hover:text-primary transition-colors inline-flex items-center gap-1.5 text-on-surface-variant font-mono" href="tel:' + cleanTel + '" title="' + nameEsc + ' に電話をかける">' +
+                '<span class="material-symbols-outlined text-[16px] text-outline">call</span>' +
+                '<span>' + telEsc + '</span>' +
+                '</a>';
+            } else {
+              telHtml = '<span class="text-outline text-body-sm">-</span>';
+            }
+
+            html += '<tr class="' + stripeClass + 'hover:bg-primary-fixed/20 transition-colors juku-row" data-name="' + nameEsc + '" data-tel="' + telEsc + '">' +
+              '<td class="py-space-sm px-space-md">' + nameHtml + '</td>' +
+              '<td class="py-space-sm px-space-md font-mono text-on-surface-variant">' + telHtml + '</td>' +
+              '</tr>';
+          });
+
+          // 検索0件用プレースホルダー行
+          html += '<tr class="hidden no-results-row bg-surface-container-lowest">' +
+            '<td colspan="2" class="py-10 px-4 text-center text-on-surface-variant">' +
+            '<div class="inline-flex flex-col items-center justify-center gap-1.5 text-sm text-outline">' +
+            '<span class="material-symbols-outlined text-3xl text-outline-variant">search_off</span>' +
+            '<span>該当する塾・教室が見つかりませんでした</span>' +
+            '</div>' +
+            '</td>' +
+            '</tr>';
+
+          tbody.innerHTML = html;
+        });
+
+        // 検索フィルターを再適用
+        filterSchools();
+      }
+
+      function loadCramSchoolsFromD1() {
+        fetch('/api/cram-schools')
+          .then(function(res) {
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            return res.json();
+          })
+          .then(function(data) {
+            renderDynamicSchools(data);
+          })
+          .catch(function(err) {
+            console.warn('[schools.html] D1 fetch failed or using static fallback:', err);
+          });
+      }
+
+      // 初回ロード時に D1 から最新データをフェッチ
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', loadCramSchoolsFromD1);
+      } else {
+        loadCramSchoolsFromD1();
+      }
+
+      // 5. ヘッダーナビゲーション用ドロップダウン制御
       window.toggleNextExamDropdown = function(event) {
         if (event) event.stopPropagation();
         closeContactDropdown();

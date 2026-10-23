@@ -399,11 +399,10 @@ ${konbini.customerNumber ? `■ お客様番号: ${konbini.customerNumber}\n` : 
     let applicantMailId: string | null = null;
     let adminMailId: string | null = null;
 
-    if (apiKey) {
-      const adminSubject = isUnpaidKonbini
-        ? `【個人申込受付・未入金（コンビニ）】${studentFullName} 様 (${grade})：${examNameVal}`
-        : `【個人申込受付 (Webhook)】${studentFullName} 様 (${grade})：${examNameVal}`;
-      const adminText = `
+    const adminSubject = isUnpaidKonbini
+      ? `【個人申込受付・未入金（コンビニ）】${studentFullName} 様 (${grade})：${examNameVal}`
+      : `【個人申込受付 (Webhook)】${studentFullName} 様 (${grade})：${examNameVal}`;
+    const adminText = `
 【岡山県統一模擬試験 Webhookより${isUnpaidKonbini ? "コンビニ決済の申込（未入金）" : "決済完了"}が検知されました】
 --------------------------------------------------
 ■ お申し込み模試:
@@ -428,8 +427,8 @@ ${examsListText}
 受付日時: ${jstReceivedAt}
 `.trim();
 
-      const userSubject = "【岡山県統一模擬試験】お申し込みを受け付けました";
-      const userText = `
+    const userSubject = "【岡山県統一模擬試験】お申し込みを受け付けました";
+    const userText = `
 ${parentName ? parentName + " 様\n\n" : ""}岡山県統一模擬試験（おかもし）へのお申し込み、誠にありがとうございます。
 以下の内容でお申し込みを受け付けいたしました。
 
@@ -462,101 +461,101 @@ Web : https://okayama-moshi.com
 --------------------------------------------------
 `.trim();
 
-      let mailErrors: { admin?: string; user?: string } = {};
-      let skipReason: string | null = null;
+    let mailErrors: { admin?: string; user?: string } = {};
+    let skipReason: string | null = null;
 
-      const hasApiKey = !!apiKey && apiKey.trim().length > 0;
-      const apiKeyPrefix = hasApiKey ? apiKey.trim().slice(0, 5) : "";
-      const applicantEmail = emailVal || "";
+    const hasApiKey = !!apiKey && apiKey.trim().length > 0;
+    const apiKeyPrefix = hasApiKey ? apiKey.trim().slice(0, 5) : "";
+    const applicantEmail = emailVal || "";
 
-      console.log(`${LOG} [Pre-Mail-Check] Mail dispatch diagnostic:`, {
-        hasApiKey,
-        apiKeyPrefix,
-        applicantEmail,
-        adminEmail,
-        fromEmail,
-        ledgerStatus,
-      });
+    console.log(`${LOG} [Pre-Mail-Check] Mail dispatch diagnostic:`, {
+      hasApiKey,
+      apiKeyPrefix,
+      applicantEmail,
+      adminEmail,
+      fromEmail,
+      ledgerStatus,
+    });
 
-      if (!hasApiKey) {
-        skipReason = "RESEND_API_KEY is not configured or empty";
-        console.error(`${LOG} [CRITICAL] Email dispatch skipped: ${skipReason}`);
-      } else {
-        // A. 管理者宛て ジャーナル通知メール
+    if (!hasApiKey) {
+      skipReason = "RESEND_API_KEY is not configured or empty";
+      console.error(`${LOG} [CRITICAL] Email dispatch skipped: ${skipReason}`);
+    } else {
+      // A. 管理者宛て ジャーナル通知メール
+      try {
+        console.log(`${LOG} Sending admin journal email to ${adminEmail}...`);
+        const adminRes = await sendResendEmail(
+          apiKey,
+          {
+            from: fromEmail,
+            to: [adminEmail],
+            reply_to: applicantEmail || undefined,
+            subject: adminSubject,
+            text: adminText,
+          },
+          `${LOG}[admin]`
+        );
+        adminMailId = adminRes.id || null;
+        if (!adminRes.ok) {
+          mailErrors.admin = adminRes.error || `HTTP ${adminRes.status}`;
+          console.error(`${LOG} Admin email delivery failed:`, adminRes.error, "status:", adminRes.status);
+        } else {
+          console.log(`${LOG} Admin email delivered successfully: id=${adminMailId}`);
+        }
+      } catch (err: any) {
+        mailErrors.admin = err?.message || String(err);
+        console.error(`${LOG} Exception occurred while sending admin email:`, err);
+      }
+
+      // B. 申込者宛て サンクスメール
+      if (applicantEmail) {
         try {
-          console.log(`${LOG} Sending admin journal email to ${adminEmail}...`);
-          const adminRes = await sendResendEmail(
+          console.log(`${LOG} Sending applicant confirmation email to ${applicantEmail}...${gasResult.skipped ? " (ledger row already existed)" : ""}`);
+          const userRes = await sendResendEmail(
             apiKey,
             {
               from: fromEmail,
-              to: [adminEmail],
-              reply_to: applicantEmail || undefined,
-              subject: adminSubject,
-              text: adminText,
+              to: [applicantEmail],
+              reply_to: adminEmail,
+              subject: userSubject,
+              text: userText,
             },
-            `${LOG}[admin]`
+            `${LOG}[user]`
           );
-          adminMailId = adminRes.id || null;
-          if (!adminRes.ok) {
-            mailErrors.admin = adminRes.error || `HTTP ${adminRes.status}`;
-            console.error(`${LOG} Admin email delivery failed:`, adminRes.error, "status:", adminRes.status);
+          applicantMailId = userRes.id || null;
+          if (!userRes.ok) {
+            mailErrors.user = userRes.error || `HTTP ${userRes.status}`;
+            console.error(`${LOG} Applicant email delivery failed to ${applicantEmail}:`, userRes.error, "status:", userRes.status);
           } else {
-            console.log(`${LOG} Admin email delivered successfully: id=${adminMailId}`);
+            console.log(`${LOG} Applicant confirmation email delivered successfully to ${applicantEmail}: id=${applicantMailId}`);
           }
         } catch (err: any) {
-          mailErrors.admin = err?.message || String(err);
-          console.error(`${LOG} Exception occurred while sending admin email:`, err);
+          mailErrors.user = err?.message || String(err);
+          console.error(`${LOG} Exception occurred while sending applicant email:`, err);
         }
-
-        // B. 申込者宛て サンクスメール
-        if (applicantEmail) {
-          try {
-            console.log(`${LOG} Sending applicant confirmation email to ${applicantEmail}...${gasResult.skipped ? " (ledger row already existed)" : ""}`);
-            const userRes = await sendResendEmail(
-              apiKey,
-              {
-                from: fromEmail,
-                to: [applicantEmail],
-                reply_to: adminEmail,
-                subject: userSubject,
-                text: userText,
-              },
-              `${LOG}[user]`
-            );
-            applicantMailId = userRes.id || null;
-            if (!userRes.ok) {
-              mailErrors.user = userRes.error || `HTTP ${userRes.status}`;
-              console.error(`${LOG} Applicant email delivery failed to ${applicantEmail}:`, userRes.error, "status:", userRes.status);
-            } else {
-              console.log(`${LOG} Applicant confirmation email delivered successfully to ${applicantEmail}: id=${applicantMailId}`);
-            }
-          } catch (err: any) {
-            mailErrors.user = err?.message || String(err);
-            console.error(`${LOG} Exception occurred while sending applicant email:`, err);
-          }
-        } else {
-          skipReason = "Applicant email address is missing/empty";
-          console.warn(`${LOG} Applicant email is missing; skipped sending user confirmation email.`);
-        }
+      } else {
+        skipReason = "Applicant email address is missing/empty";
+        console.warn(`${LOG} Applicant email is missing; skipped sending user confirmation email.`);
       }
+    }
 
-      return jsonResponse({
-        received: true,
-        action,
-        status: ledgerStatus,
-        gas: gasResult,
-        resend: {
-          admin_mail_id: adminMailId,
-          applicant_mail_id: applicantMailId,
-          hasApiKey,
-          apiKeyPrefix,
-          applicantEmail,
-          skipReason: skipReason || (mailErrors.admin || mailErrors.user ? "Delivery failed with error" : null),
-          errors: Object.keys(mailErrors).length > 0 ? mailErrors : undefined,
-          from_email: fromEmail,
-          admin_email: adminEmail,
-        },
-      });
+    return jsonResponse({
+      received: true,
+      action,
+      status: ledgerStatus,
+      gas: gasResult,
+      resend: {
+        admin_mail_id: adminMailId,
+        applicant_mail_id: applicantMailId,
+        hasApiKey,
+        apiKeyPrefix,
+        applicantEmail,
+        skipReason: skipReason || (mailErrors.admin || mailErrors.user ? "Delivery failed with error" : null),
+        errors: Object.keys(mailErrors).length > 0 ? mailErrors : undefined,
+        from_email: fromEmail,
+        admin_email: adminEmail,
+      },
+    });
   } catch (error: any) {
     console.error(`${LOG} error:`, error);
     return jsonResponse({ error: error?.message || "Webhook error" }, 500);

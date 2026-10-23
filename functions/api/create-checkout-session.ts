@@ -177,7 +177,6 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       amount: String(amountVal),
       exam_count: String(examLineItems.length || 1),
       exams_detail: examsDetail,
-      remarks: remarks,
 
       // エイリアス（GAS連携用互換）
       venue: venueName,

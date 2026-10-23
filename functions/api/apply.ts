@@ -1,4 +1,12 @@
-import { Env, DEFAULT_FROM_EMAIL, DEFAULT_ADMIN_EMAIL, readEnv } from "../_shared/env";
+import {
+  Env,
+  DEFAULT_FROM_EMAIL,
+  DEFAULT_ADMIN_EMAIL,
+  readEnv,
+  getResendApiKey,
+  getFromEmail,
+  getAdminEmail,
+} from "../_shared/env";
 import { jsonResponse, errorResponse } from "../_shared/http";
 import { recordsFromExams, recordsFromMetadata } from "../_shared/exam";
 import { fetchCheckoutSession } from "../_shared/stripe";
@@ -9,9 +17,10 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const body = (await context.request.json()) as Record<string, any>;
     console.log("[functions/api/apply] Received apply request:", JSON.stringify(body));
 
-    const apiKey = readEnv(context.env, "RESEND_API_KEY");
-    const fromEmail = readEnv(context.env, "RESEND_FROM_EMAIL", DEFAULT_FROM_EMAIL);
-    const adminEmail = readEnv(context.env, "ADMIN_EMAIL", DEFAULT_ADMIN_EMAIL);
+    const resendConfig = getResendApiKey(context.env);
+    const apiKey = resendConfig.key;
+    const fromEmail = getFromEmail(context.env);
+    const adminEmail = getAdminEmail(context.env);
     const stripeSecretKey = readEnv(context.env, "STRIPE_SECRET_KEY");
 
     // 1. 【セキュリティ改修】Stripe Session ID の検証ガード（未認証での無制限メール送信を完全遮断）

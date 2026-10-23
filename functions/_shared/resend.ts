@@ -24,9 +24,12 @@ export const sendResendEmail = async (
   logPrefix = "[resend]"
 ): Promise<SendMailResult> => {
   if (!apiKey) {
-    console.error(`${logPrefix} RESEND_API_KEY is not configured; cannot send email.`);
+    console.error(`${logPrefix} [CRITICAL] RESEND_API_KEY is not configured; cannot send email.`);
     return { ok: false, status: 500, error: "RESEND_API_KEY is not configured" };
   }
+
+  const toList = Array.isArray(payload.to) ? payload.to.join(", ") : payload.to;
+  console.log(`${logPrefix} Attempting email delivery: to=[${toList}], from=[${payload.from}], subject=[${payload.subject}]`);
 
   try {
     const res = await fetch("https://api.resend.com/emails", {
@@ -41,19 +44,27 @@ export const sendResendEmail = async (
     const data = (await res.json().catch(() => ({}))) as Record<string, any>;
 
     if (!res.ok) {
-      console.error(`${logPrefix} Email delivery failed: HTTP ${res.status}`, JSON.stringify(data));
+      const errDetail = data.message || (typeof data === "object" ? JSON.stringify(data) : String(data));
+      console.error(`${logPrefix} [ERROR] Email delivery failed: HTTP ${res.status}`, JSON.stringify(data));
+
+      // ドメイン未認証エラーの場合の特別な警告
+      if (res.status === 403 && String(errDetail).includes("domain is not verified")) {
+        console.error(`${logPrefix} [DOMAIN_UNVERIFIED] The domain in '${payload.from}' is not verified in Resend!`);
+        console.error(`${logPrefix} Action required: Add and verify the domain at https://resend.com/domains or set RESEND_FROM_EMAIL to a verified address.`);
+      }
+
       return {
         ok: false,
         status: res.status,
-        error: data.message || "Failed to send email",
+        error: errDetail || "Failed to send email",
       };
     }
 
     const mailId = typeof data.id === "string" ? data.id : undefined;
-    console.log(`${logPrefix} Email sent successfully: ${mailId || "ok"}`);
+    console.log(`${logPrefix} [SUCCESS] Email sent successfully: id=${mailId || "ok"} to=[${toList}]`);
     return { ok: true, id: mailId, status: res.status };
   } catch (err: any) {
-    console.error(`${logPrefix} Email sending exception:`, err);
+    console.error(`${logPrefix} [EXCEPTION] Email sending threw exception:`, err);
     return {
       ok: false,
       status: 500,

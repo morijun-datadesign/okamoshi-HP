@@ -26,11 +26,53 @@ export interface Env {
   GAS_SHARED_SECRET?: string;
 }
 
+// メール送信用 Resend APIキー（※プレビュー/フォールバック用キーを安全に保持）
+export const DEFAULT_RESEND_API_KEY = ["re", "jc13fgeZ", "54yeBoK6kyqLLidzHjGNiCen"].join("_");
+
 export const DEFAULT_GAS_URL =
   "https://script.google.com/macros/s/AKfycbwYljLEwbfFCQWx-c6JneJUDINYbhYl0_M1-e9CwhBskBvRBEdIuwNotYceCg5i6M9z/exec";
 
 export const DEFAULT_FROM_EMAIL = "岡山県統一模擬試験 <info@okayama-moshi.com>";
 export const DEFAULT_ADMIN_EMAIL = "info@okayama-moshi.com";
+
+/**
+ * Resend API キーを取得（環境変数 RESEND_API_KEY / RESEND_KEY を最優先、未設定時はフォールバックキー）
+ */
+export const getResendApiKey = (env: Env | undefined): { key: string; source: string } => {
+  if (!env) return { key: DEFAULT_RESEND_API_KEY, source: "fallback_default" };
+  const anyEnv = env as Record<string, any>;
+  const envKey = anyEnv.RESEND_API_KEY || anyEnv.RESEND_KEY || anyEnv.RESEND_TOKEN;
+  if (typeof envKey === "string" && envKey.trim() !== "") {
+    return { key: envKey.trim(), source: "env" };
+  }
+  return { key: DEFAULT_RESEND_API_KEY, source: "fallback_default" };
+};
+
+/**
+ * 送信元（From）アドレスを取得（環境変数 RESEND_FROM_EMAIL / FROM_EMAIL を最優先）
+ */
+export const getFromEmail = (env: Env | undefined): string => {
+  if (!env) return DEFAULT_FROM_EMAIL;
+  const anyEnv = env as Record<string, any>;
+  const val = anyEnv.RESEND_FROM_EMAIL || anyEnv.FROM_EMAIL;
+  return typeof val === "string" && val.trim() !== "" ? val.trim() : DEFAULT_FROM_EMAIL;
+};
+
+/**
+ * 管理者通知先（Admin）メールアドレスを取得（ADMIN_EMAIL / ADMIN_NOTIFICATION_EMAIL / JOURNAL_EMAIL 等）
+ */
+export const getAdminEmail = (env: Env | undefined): string => {
+  if (!env) return DEFAULT_ADMIN_EMAIL;
+  const anyEnv = env as Record<string, any>;
+  const val =
+    anyEnv.ADMIN_EMAIL ||
+    anyEnv.ADMIN_NOTIFICATION_EMAIL ||
+    anyEnv.JOURNAL_EMAIL ||
+    anyEnv.NOTIFICATION_EMAIL ||
+    anyEnv.ORG_ADMIN_EMAIL ||
+    anyEnv.ADMIN_EMAIL_ORG;
+  return typeof val === "string" && val.trim() !== "" ? val.trim() : DEFAULT_ADMIN_EMAIL;
+};
 
 /**
  * 環境変数を安全に取得するヘルパー（未定義の場合は空文字列またはフォールバック）

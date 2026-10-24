@@ -316,10 +316,10 @@ def html_escape(text):
 def render_sidebar_exam_widget(exam_guides):
     """サイドバー模試ウィジェットの静的HTML事前生成"""
     target_configs = [
-        {"gradeBadge": "中3生", "codes": ["c3", "chu3"], "month": "10月号", "link": "/index.html?grade=chu3#schedule-selector"},
-        {"gradeBadge": "中2生", "codes": ["c2", "chu2", "c1_c2"], "month": "11月号", "link": "/index.html?grade=chu2#schedule-selector"},
-        {"gradeBadge": "中1生", "codes": ["c1", "chu1", "c1_c2"], "month": "11月号", "link": "/index.html?grade=chu1#schedule-selector"},
-        {"gradeBadge": "小6生", "codes": ["e6", "s6", "sho6"], "month": "10月号", "link": "/index.html?grade=sho6#schedule-selector"}
+        {"gradeBadge": "中3生", "codes": ["c3", "chu3"], "month": "12月号", "link": "/index.html?grade=chu3#schedule-selector"},
+        {"gradeBadge": "中2生", "codes": ["c2", "chu2", "c1_c2"], "month": "12月号", "link": "/index.html?grade=chu2#schedule-selector"},
+        {"gradeBadge": "中1生", "codes": ["c1", "chu1", "c1_c2"], "month": "12月号", "link": "/index.html?grade=chu1#schedule-selector"},
+        {"gradeBadge": "小6生", "codes": ["e6", "s6", "sho6"], "month": "12月号", "link": "/index.html?grade=sho6#schedule-selector"}
     ]
 
     cards = []

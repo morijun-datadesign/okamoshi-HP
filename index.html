@@ -2093,20 +2093,30 @@
     function formatDeadlineDisplayParallel(round) {
       if (!round) return '準備中（近日公開予定）';
       const raw = round.applyDeadlineRaw || round.deadline || '';
-      if (!raw) return round.deadline || '準備中（近日公開予定）';
+      if (!raw) return '準備中（近日公開予定）';
 
-      // 日時文字列のパース（YYYY-MM-DD HH:mm または YYYY/MM/DD 等）
+      // 日時文字列のパース（YYYY-MM-DD HH:mm または YYYY年MM月DD日 等）
       const clean = String(raw).trim();
-      const m = clean.match(/^(\d{4})[/-](\d{1,2})[/-](\d{1,2})(?:\s+(\d{1,2}):(\d{1,2}))?/);
-      if (!m) {
+      let y, mon, d, h = 23, min = 59;
+
+      const mIso = clean.match(/(\d{4})[/-](\d{1,2})[/-](\d{1,2})(?:\s+(\d{1,2}):(\d{1,2}))?/);
+      const mJp = clean.match(/(\d{4})年(\d{1,2})月(\d{1,2})日(?:\([^)]*\))?(?:\s*(\d{1,2}):(\d{1,2}))?/);
+
+      if (mIso) {
+        y = parseInt(mIso[1], 10);
+        mon = parseInt(mIso[2], 10);
+        d = parseInt(mIso[3], 10);
+        if (mIso[4]) h = parseInt(mIso[4], 10);
+        if (mIso[5]) min = parseInt(mIso[5], 10);
+      } else if (mJp) {
+        y = parseInt(mJp[1], 10);
+        mon = parseInt(mJp[2], 10);
+        d = parseInt(mJp[3], 10);
+        if (mJp[4]) h = parseInt(mJp[4], 10);
+        if (mJp[5]) min = parseInt(mJp[5], 10);
+      } else {
         return round.deadline || clean;
       }
-
-      const y = parseInt(m[1], 10);
-      const mon = parseInt(m[2], 10);
-      const d = parseInt(m[3], 10);
-      const h = m[4] ? parseInt(m[4], 10) : 23;
-      const min = m[5] ? parseInt(m[5], 10) : 59;
 
       const days = ['日', '月', '火', '水', '木', '金', '土'];
 
@@ -2191,7 +2201,17 @@
         }
         cardPrice.textContent = priceText;
       }
-      if (cardDeadline) cardDeadline.innerHTML = formatDeadlineDisplayParallel(r);
+      if (cardDeadline) {
+        if (r.status === 'pending' && !r.applyDeadlineRaw && !r.deadline) {
+          cardDeadline.textContent = '準備中（受付開始まで今しばらくお待ちください）';
+          cardDeadline.classList.add('text-slate-600');
+          cardDeadline.classList.remove('text-slate-900');
+        } else {
+          cardDeadline.innerHTML = formatDeadlineDisplayParallel(r);
+          cardDeadline.classList.remove('text-slate-600', 'text-slate-400');
+          cardDeadline.classList.add('text-slate-900');
+        }
+      }
 
       renderScopeList(r.scopeList);
       renderScheduleList(r.venuesList);
@@ -2214,11 +2234,6 @@
             badge.className = "inline-flex items-center px-2.5 py-0.5 sm:py-1 rounded-md text-xs sm:text-sm font-bold bg-slate-100 text-slate-500 border border-slate-200";
             badge.textContent = "受付終了";
           }
-          if (cardDeadline) {
-            cardDeadline.textContent = r.deadline || '受付期間終了';
-            cardDeadline.classList.add('text-slate-600');
-            cardDeadline.classList.remove('text-slate-900');
-          }
 
           ctaContainer.innerHTML = `
             <button disabled class="w-full py-4 px-6 rounded-lg bg-slate-200 text-slate-600 font-bold text-sm sm:text-base cursor-not-allowed">
@@ -2233,11 +2248,6 @@
             badge.className = "inline-flex items-center px-2.5 py-0.5 sm:py-1 rounded-md text-xs sm:text-sm font-bold bg-slate-100 text-slate-600 border border-slate-300";
             badge.textContent = "準備中";
           }
-          if (cardDeadline) {
-            cardDeadline.textContent = '準備中（受付開始まで今しばらくお待ちください）';
-            cardDeadline.classList.add('text-slate-600');
-            cardDeadline.classList.remove('text-slate-900');
-          }
 
           ctaContainer.innerHTML = `
             <button disabled class="w-full py-4 px-6 rounded-lg bg-slate-100 text-slate-600 border border-slate-200 font-bold text-sm sm:text-base cursor-not-allowed">
@@ -2251,11 +2261,6 @@
           if (badge) {
             badge.className = "inline-flex items-center px-2.5 py-0.5 sm:py-1 rounded-md text-xs sm:text-sm font-bold bg-emerald-100 text-emerald-900 border border-emerald-300";
             badge.textContent = r.status === 'active' ? '受付中' : '申込可';
-          }
-          if (cardDeadline) {
-            cardDeadline.textContent = r.deadline || '近日公開予定';
-            cardDeadline.classList.remove('text-slate-400');
-            cardDeadline.classList.add('text-slate-900');
           }
 
           const gradeParamMap = {

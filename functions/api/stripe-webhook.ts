@@ -10,7 +10,7 @@ import {
 } from "../_shared/env";
 import { jsonResponse } from "../_shared/http";
 import { ExamRecord, recordsFromMetadata } from "../_shared/exam";
-import { fetchCheckoutSession, fetchPaymentIntent, verifyStripeWebhookSignature } from "../_shared/stripe";
+import { fetchCheckoutSession, fetchPaymentIntent, verifyStripeWebhookSignature, checkRecentPaidSession } from "../_shared/stripe";
 import { sendResendEmail } from "../_shared/resend";
 
 const LOG = "[functions/api/stripe-webhook]";
@@ -239,6 +239,24 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const examNameVal = String(metadata.exam_name || "岡山県統一模擬試験").trim();
     const remarksVal = String(metadata.remarks || "").trim().slice(0, 300);
 
+    // 4-2. 重複決済ガード（コンビニ支払期限切れ時、同一生徒または同一メールで直近7日以内に決済完了があるか確認）
+    let isAlreadyPaidByOther = false;
+    let otherPaidSessionId = "";
+    if (eventType === EVENT_ASYNC_FAILED) {
+      try {
+        const checkRes = await checkRecentPaidSession(emailVal, studentFullName, stripeSecretKey, sessionId, 7, LOG);
+        if (checkRes.hasPaid) {
+          isAlreadyPaidByOther = true;
+          otherPaidSessionId = checkRes.matchedSessionId || "";
+          console.log(
+            `${LOG} [DuplicateGuard] Detected recent paid session (${otherPaidSessionId}) for student="${studentFullName}" email="${emailVal}". Skipping EXPIRED ledger update.`
+          );
+        }
+      } catch (checkErr) {
+        console.warn(`${LOG} [DuplicateGuard] Exception checking recent paid sessions:`, checkErr);
+      }
+    }
+
     // 1模試＝1レコード
     const parsedRecords = recordsFromMetadata(metadata);
     const examRecords: ExamRecord[] = parsedRecords.length > 0
@@ -246,66 +264,78 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       : [{ id: "", label: examNameVal, issue: "", title: examNameVal, venue: venueName, price: amountVal, date: "" }];
 
     // 5. GAS へ送信
-    const gasPayload = {
-      action,
-      token: gasSecret || undefined,
-      event_type: eventType,
-      event_id: String(event?.id || ""),
-      session_id: sessionId,
-      payment_status: ledgerStatus,
-      payment_method: paymentMethodVal,
-      payment_method_label: paymentMethodLabel,
-      received_at: jstReceivedAt,
-      konbini_customer_number: konbini.customerNumber,
-      konbini_confirmation_number: konbini.confirmationNumber,
-      konbini_voucher_url: konbini.voucherUrl,
-      konbini_expires_at: konbini.expiresAt,
-      student_name: studentFullName,
-      student_kana: studentKana,
-      grade,
-      school_name: schoolName,
-      parent_name: parentName,
-      parent_kana: parentKana,
-      email: emailVal,
-      phone: phoneVal,
-      postal_code: postalCodeVal,
-      prefecture: prefVal,
-      city: cityVal,
-      address_line1: addr1Val,
-      address_line2: addr2Val,
-      address: fullAddress,
-      remarks: remarksVal,
-      total_amount: amountVal,
-      records: examRecords.map((r) => ({
-        exam_id: r.id,
-        exam_name: r.label,
-        venue_name: r.venue,
-        price: r.price,
-        issue_name: r.issue,
-        exam_date: r.date,
-      })),
-    };
-
     let gasResult: Record<string, any> = {};
     let gasOk = false;
-    try {
-      console.log(`${LOG} Forwarding to GAS: action=${action} status=${ledgerStatus} records=${examRecords.length} session=${sessionId}`);
-      const gasRes = await fetch(gasUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "User-Agent": "Okamoshi-StripeWebhook/1.0" },
-        body: JSON.stringify(gasPayload),
-        redirect: "follow",
-      });
-      gasResult = ((await gasRes.json().catch(() => null)) as Record<string, any>) || { status: "error", message: `non-JSON response (HTTP ${gasRes.status})` };
-      gasOk = gasRes.ok && gasResult.status === "success";
-      if (!gasOk) console.error(`${LOG} GAS error:`, gasRes.status, JSON.stringify(gasResult));
-    } catch (gErr) {
-      gasResult = { status: "error", message: String(gErr) };
-      console.error(`${LOG} GAS request failed:`, gErr);
+
+    if (isAlreadyPaidByOther) {
+      gasOk = true;
+      gasResult = {
+        status: "skipped",
+        message: `別決済（セッション: ${otherPaidSessionId}）にて決済完了済みのため台帳更新をスキップしました`,
+      };
+      console.log(`${LOG} GAS forward skipped: already paid in other session ${otherPaidSessionId}`);
+    } else {
+      const gasPayload = {
+        action,
+        token: gasSecret || undefined,
+        event_type: eventType,
+        event_id: String(event?.id || ""),
+        session_id: sessionId,
+        payment_status: ledgerStatus,
+        payment_method: paymentMethodVal,
+        payment_method_label: paymentMethodLabel,
+        received_at: jstReceivedAt,
+        konbini_customer_number: konbini.customerNumber,
+        konbini_confirmation_number: konbini.confirmationNumber,
+        konbini_voucher_url: konbini.voucherUrl,
+        konbini_expires_at: konbini.expiresAt,
+        student_name: studentFullName,
+        student_kana: studentKana,
+        grade,
+        school_name: schoolName,
+        parent_name: parentName,
+        parent_kana: parentKana,
+        email: emailVal,
+        phone: phoneVal,
+        postal_code: postalCodeVal,
+        prefecture: prefVal,
+        city: cityVal,
+        address_line1: addr1Val,
+        address_line2: addr2Val,
+        address: fullAddress,
+        remarks: remarksVal,
+        total_amount: amountVal,
+        records: examRecords.map((r) => ({
+          exam_id: r.id,
+          exam_name: r.label,
+          venue_name: r.venue,
+          price: r.price,
+          issue_name: r.issue,
+          exam_date: r.date,
+        })),
+      };
+
+      try {
+        console.log(`${LOG} Forwarding to GAS: action=${action} status=${ledgerStatus} records=${examRecords.length} session=${sessionId}`);
+        const gasRes = await fetch(gasUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "User-Agent": "Okamoshi-StripeWebhook/1.0" },
+          body: JSON.stringify(gasPayload),
+          redirect: "follow",
+        });
+        gasResult = ((await gasRes.json().catch(() => null)) as Record<string, any>) || { status: "error", message: `non-JSON response (HTTP ${gasRes.status})` };
+        gasOk = gasRes.ok && gasResult.status === "success";
+        if (!gasOk) console.error(`${LOG} GAS error:`, gasRes.status, JSON.stringify(gasResult));
+      } catch (gErr) {
+        gasResult = { status: "error", message: String(gErr) };
+        console.error(`${LOG} GAS request failed:`, gErr);
+      }
     }
 
     const gasSummary = gasOk
-      ? `連携成功（${action === "create" ? `作成 ${gasResult.created ?? 0} 行${gasResult.skipped ? "・登録済みのためスキップ" : ""}` : `更新 ${gasResult.updated ?? 0} 行${gasResult.fallback_created ? "・該当行が無いため新規作成" : ""}`}）`
+      ? (isAlreadyPaidByOther
+          ? `スキップ（※別セッション ${otherPaidSessionId} にて決済完了済みのため台帳更新をスキップ）`
+          : `連携成功（${action === "create" ? `作成 ${gasResult.created ?? 0} 行${gasResult.skipped ? "・登録済みのためスキップ" : ""}` : `更新 ${gasResult.updated ?? 0} 行${gasResult.fallback_created ? "・該当行が無いため新規作成" : ""}`}）`)
       : `エラー（${gasResult.message || "不明"}）`;
 
     const examsListText = examRecords
@@ -323,7 +353,12 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       if (!apiKey) {
         console.error(`${LOG} [CRITICAL] RESEND_API_KEY is not configured; cannot send status update email.`);
       } else {
-        const label = ledgerStatus === LEDGER_STATUS.PAID ? "コンビニ入金完了" : "コンビニ支払期限切れ";
+        const label = isAlreadyPaidByOther
+          ? "コンビニ支払期限切れ（※別決済完了済のためスキップ）"
+          : (ledgerStatus === LEDGER_STATUS.PAID ? "コンビニ入金完了" : "コンビニ支払期限切れ");
+        const extraNote = isAlreadyPaidByOther
+          ? `\n※【自動判定ガード】同一生徒・メールアドレスにて、直近別セッション（ID: ${otherPaidSessionId}）での決済完了（paid）が確認されたため、台帳のステータス上書き（EXPIRED化）はスキップされました。\n`
+          : "";
         try {
           const mailRes = await sendResendEmail(
             apiKey,
@@ -334,12 +369,12 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
               subject: `【${label}】${studentFullName} 様 (${grade})：${examNameVal}`,
               text: `
 【岡山県統一模擬試験 ${label}】
---------------------------------------------------
+--------------------------------------------------${extraNote}
 ■ お申し込み模試:
 ${examsListText}
 ■ 合計金額: ￥${Number(amountVal).toLocaleString()} (税込)
-■ 決済ステータス: ${ledgerStatus}
-■ 決済セッションID: ${sessionId}
+■ 決済ステータス: ${isAlreadyPaidByOther ? "paid (別セッション完了済)" : ledgerStatus}
+■ 決済セッションID: ${sessionId}${otherPaidSessionId ? `\n■ 有効決済セッションID: ${otherPaidSessionId}` : ""}
 ■ 生徒氏名: ${studentFullName} / 保護者氏名: ${parentName}
 ■ 連絡先: ${emailVal} / ${phoneVal}
 --------------------------------------------------
@@ -362,7 +397,8 @@ ${examsListText}
       return jsonResponse({
         received: true,
         action,
-        status: ledgerStatus,
+        status: isAlreadyPaidByOther ? "skipped_already_paid" : ledgerStatus,
+        other_paid_session_id: otherPaidSessionId || undefined,
         gas: gasResult,
         resend: {
           admin_mail_id: adminMailId,

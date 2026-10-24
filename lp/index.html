@@ -936,10 +936,10 @@
               </div>
             </div>
             <!-- お申し込み締切 -->
-            <div class="flex items-baseline gap-3 sm:gap-4 pt-2.5 sm:pt-2 border-t border-slate-200/80">
-              <span class="w-24 sm:w-28 text-xs sm:text-sm font-bold text-slate-500 whitespace-nowrap shrink-0">お申し込み締切</span>
+            <div class="flex items-start gap-3 sm:gap-4 pt-2.5 sm:pt-2 border-t border-slate-200/80">
+              <span class="w-24 sm:w-28 text-xs sm:text-sm font-bold text-slate-500 whitespace-nowrap shrink-0 pt-0.5">お申し込み締切</span>
               <div class="flex-1 min-w-0">
-                <span id="card-deadline" class="text-xs sm:text-base font-bold text-slate-900 tracking-tight whitespace-nowrap overflow-hidden text-ellipsis block">2026年10月5日(月) 23:59まで</span>
+                <div id="card-deadline" class="text-xs sm:text-sm font-bold text-slate-900 tracking-tight">読み込み中...</div>
               </div>
             </div>
           </div>
@@ -2855,6 +2855,62 @@
       `;
     }
 
+    // 締切日時の2行並列型表示（クレジットカード決済 ＆ コンビニ決済）
+    function formatDeadlineDisplayParallel(round) {
+      if (!round) return '準備中（近日公開予定）';
+      const raw = round.applyDeadlineRaw || round.deadline || '';
+      if (!raw) return round.deadline || '準備中（近日公開予定）';
+
+      // 日時文字列のパース（YYYY-MM-DD HH:mm または YYYY/MM/DD 等）
+      const clean = String(raw).trim();
+      const m = clean.match(/^(\d{4})[/-](\d{1,2})[/-](\d{1,2})(?:\s+(\d{1,2}):(\d{1,2}))?/);
+      if (!m) {
+        return round.deadline || clean;
+      }
+
+      const y = parseInt(m[1], 10);
+      const mon = parseInt(m[2], 10);
+      const d = parseInt(m[3], 10);
+      const h = m[4] ? parseInt(m[4], 10) : 23;
+      const min = m[5] ? parseInt(m[5], 10) : 59;
+
+      const days = ['日', '月', '火', '水', '木', '金', '土'];
+
+      // クレジットカード決済締切日時
+      const cardDeadlineDate = new Date(y, mon - 1, d, h, min, 59, 999);
+      const cardW = days[cardDeadlineDate.getDay()];
+      const cardTimeStr = `${String(h).padStart(2, '0')}:${String(min).padStart(2, '0')}`;
+      const cardText = `${y}年${mon}月${d}日(${cardW}) ${cardTimeStr}まで`;
+
+      // コンビニ決済締切日: 3日前 23:59
+      const konbiniDeadlineDate = new Date(y, mon - 1, d - 3, 23, 59, 59, 999);
+      const konbiniY = konbiniDeadlineDate.getFullYear();
+      const konbiniM = konbiniDeadlineDate.getMonth() + 1;
+      const konbiniD = konbiniDeadlineDate.getDate();
+      const konbiniW = days[konbiniDeadlineDate.getDay()];
+
+      const now = new Date();
+      const isCardExpired = round.status === 'finished' || now.getTime() > cardDeadlineDate.getTime();
+      const isKonbiniExpired = isCardExpired || now.getTime() > konbiniDeadlineDate.getTime();
+
+      const konbiniText = isKonbiniExpired
+        ? '<span class="text-rose-600 font-bold">受付終了</span>'
+        : `${konbiniY}年${konbiniM}月${konbiniD}日(${konbiniW}) 23:59まで`;
+
+      return `
+        <div class="space-y-1 text-xs sm:text-sm font-bold text-slate-800 leading-snug">
+          <div class="flex items-center gap-1 flex-wrap">
+            <span class="text-slate-600 font-medium shrink-0">・クレジットカード決済：</span>
+            <span class="text-slate-900">${cardText}</span>
+          </div>
+          <div class="flex items-center gap-1 flex-wrap">
+            <span class="text-slate-600 font-medium shrink-0">・コンビニ決済：</span>
+            <span>${konbiniText}</span>
+          </div>
+        </div>
+      `;
+    }
+
     // カード詳細全体のレンダリング
     function renderCard() {
       const data = examData[currentGrade];
@@ -2901,7 +2957,7 @@
         }
         cardPrice.textContent = priceText;
       }
-      if (cardDeadline) cardDeadline.textContent = r.deadline || '準備中（近日公開予定）';
+      if (cardDeadline) cardDeadline.innerHTML = formatDeadlineDisplayParallel(r);
 
       renderScopeList(r.scopeList);
       renderScheduleList(r.venuesList);

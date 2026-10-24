@@ -928,13 +928,14 @@
               </label>
 
               <!-- コンビニ決済 -->
-              <label class="p-4 rounded-lg bg-surface-container-low border border-outline-variant/30 cursor-pointer hover:bg-surface-container flex flex-col justify-between gap-3 transition-all has-[:checked]:bg-primary-fixed/40 has-[:checked]:border-primary-container has-[:checked]:ring-1 has-[:checked]:ring-primary-container">
+              <label id="payment-method-konbini-label" class="p-4 rounded-lg bg-surface-container-low border border-outline-variant/30 cursor-pointer hover:bg-surface-container flex flex-col justify-between gap-3 transition-all has-[:checked]:bg-primary-fixed/40 has-[:checked]:border-primary-container has-[:checked]:ring-1 has-[:checked]:ring-primary-container">
                 <div class="flex items-start justify-between gap-3">
                   <div class="flex items-start gap-2.5">
-                    <input class="w-4 h-4 mt-1 text-primary-container accent-primary-container shrink-0" name="payment_method" type="radio" value="convenience_store" onchange="updatePaymentMethodSummary('convenience_store')" required>
+                    <input id="payment-method-konbini-radio" class="w-4 h-4 mt-1 text-primary-container accent-primary-container shrink-0" name="payment_method" type="radio" value="convenience_store" onchange="updatePaymentMethodSummary('convenience_store')" required>
                     <div class="flex flex-col gap-1">
                       <span class="font-label-md font-bold text-on-surface text-[15px]">コンビニ決済</span>
                       <span class="font-body-sm text-[11px] text-on-surface-variant" id="convenience-deadline-text">お申込み完了後4日以内（10/4(日)まで）にお支払い</span>
+                      <div id="convenience-closed-notice" class="hidden text-xs text-rose-600 font-bold mt-0.5">※コンビニ決済の受付期間は終了しました（クレジットカード決済のみ受付中）</div>
                       <div class="flex items-center gap-1.5 text-on-surface-variant font-label-sm text-[11px] pt-1 flex-wrap">
                         <span class="px-2 py-0.5 bg-surface-container-lowest border border-outline-variant/30 rounded text-[10px]">ファミリーマート</span>
                         <span class="px-2 py-0.5 bg-surface-container-lowest border border-outline-variant/30 rounded text-[10px]">ローソン</span>
@@ -2300,9 +2301,8 @@
 
     // ========================================================
     // 決済期限の動的計算ロジック
-    //  - 通常：当日含め 4 日間（本日＋3日後 23:59、Stripe expires_after_days = 3）
-    //  - 選択模試の申込締切がそれより早い場合は締切日までに短縮
-    //  - 締切日当日：「本日中」の支払いを案内。Stripe の仕様上 expires_after_days の最小値は 1（翌日 23:59 失効）
+    //  - コンビニ決済締切：申込締切日の3日前 23:59 まで
+    //  - 締切3日前を過ぎた場合はコンビニ決済を受付終了（クレジットカード決済のみ受付）
     // ========================================================
     function getConvenienceDeadline() {
       const KONBINI_DEFAULT_EXPIRES_AFTER_DAYS = 3;
@@ -2310,21 +2310,30 @@
       const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
       let expiresAfterDays = KONBINI_DEFAULT_EXPIRES_AFTER_DAYS;
       let isDeadlineDay = false;
+      let isClosed = false;
 
-      const deadlines = Object.values(selectedExamsState || {})
+      const selectedExams = Object.values(selectedExamsState || {});
+      const deadlines = selectedExams
         .map(exam => exam && exam.deadlineTime)
-        .filter(t => typeof t === 'number' && Number.isFinite(t) && t > now.getTime());
+        .filter(t => typeof t === 'number' && Number.isFinite(t));
+
       if (deadlines.length > 0) {
-        const earliest = new Date(Math.min(...deadlines));
-        const deadlineDay = new Date(earliest.getFullYear(), earliest.getMonth(), earliest.getDate());
+        const earliestTime = Math.min(...deadlines);
+        const earliestDate = new Date(earliestTime);
+        const deadlineDay = new Date(earliestDate.getFullYear(), earliestDate.getMonth(), earliestDate.getDate());
+
+        // コンビニ決済の受付締切日時: 3日前の 23:59:59
+        const konbiniDeadlineDate = new Date(earliestDate.getFullYear(), earliestDate.getMonth(), earliestDate.getDate() - 3, 23, 59, 59, 999);
+        if (now.getTime() > konbiniDeadlineDate.getTime()) {
+          isClosed = true;
+        }
+
         const diffDays = Math.round((deadlineDay.getTime() - today.getTime()) / 86400000);
         if (diffDays <= 0) isDeadlineDay = true;
-        expiresAfterDays = Math.max(1, Math.min(KONBINI_DEFAULT_EXPIRES_AFTER_DAYS, diffDays));
+        expiresAfterDays = Math.max(1, Math.min(KONBINI_DEFAULT_EXPIRES_AFTER_DAYS, Math.max(1, diffDays - 3)));
       }
 
-      const payBy = isDeadlineDay
-        ? today
-        : new Date(today.getFullYear(), today.getMonth(), today.getDate() + expiresAfterDays);
+      const payBy = new Date(today.getFullYear(), today.getMonth(), today.getDate() + expiresAfterDays);
       const m = payBy.getMonth() + 1;
       const d = payBy.getDate();
       const days = ['日', '月', '火', '水', '木', '金', '土'];
@@ -2335,13 +2344,57 @@
         shortText: `${m}/${d}(${w})`,
         expiresAfterDays,
         isDeadlineDay,
-        totalDays: isDeadlineDay ? 1 : expiresAfterDays + 1
+        isClosed,
+        totalDays: expiresAfterDays + 1
       };
+    }
+
+    // コンビニ決済の利用可否UIを同期
+    function syncConvenienceAvailability(dl) {
+      if (!dl) dl = getConvenienceDeadline();
+
+      const konbiniRadio = document.getElementById('payment-method-konbini-radio') || document.querySelector('input[name="payment_method"][value="convenience_store"]');
+      const konbiniLabel = document.getElementById('payment-method-konbini-label') || konbiniRadio?.closest('label');
+      const closedNotice = document.getElementById('convenience-closed-notice');
+      const deadlineBadge = document.getElementById('convenience-deadline-text');
+
+      if (dl.isClosed) {
+        // コンビニ決済を受付終了（disabled & 注意書き表示）
+        if (konbiniRadio) {
+          konbiniRadio.disabled = true;
+          if (konbiniRadio.checked) {
+            konbiniRadio.checked = false;
+            // 自動的にクレジットカード決済へ切り替え
+            const cardRadio = document.querySelector('input[name="payment_method"][value="credit_card"]');
+            if (cardRadio) cardRadio.checked = true;
+            updatePaymentMethodSummary('credit_card');
+          }
+        }
+        if (konbiniLabel) {
+          konbiniLabel.classList.add('opacity-60', 'cursor-not-allowed', 'bg-slate-100');
+          konbiniLabel.classList.remove('hover:bg-surface-container', 'cursor-pointer');
+        }
+        if (closedNotice) closedNotice.classList.remove('hidden');
+        if (deadlineBadge) deadlineBadge.classList.add('hidden');
+      } else {
+        // コンビニ決済が受付可能な場合
+        if (konbiniRadio) {
+          konbiniRadio.disabled = false;
+        }
+        if (konbiniLabel) {
+          konbiniLabel.classList.remove('opacity-60', 'cursor-not-allowed', 'bg-slate-100');
+          konbiniLabel.classList.add('hover:bg-surface-container', 'cursor-pointer');
+        }
+        if (closedNotice) closedNotice.classList.add('hidden');
+        if (deadlineBadge) deadlineBadge.classList.remove('hidden');
+      }
     }
 
     // コンビニ支払期限の表示テキストを更新（模試選択の変更時にも呼ばれる）
     function refreshConvenienceDeadline() {
       const dl = getConvenienceDeadline();
+      syncConvenienceAvailability(dl);
+
       const badge = document.getElementById('convenience-deadline-text');
       if (badge) {
         badge.textContent = dl.isDeadlineDay
@@ -3918,6 +3971,15 @@ if (!parentKanaLastName || !parentKanaFirstName) {
         return;
       }
       if (paymentMethod === 'convenience_store') {
+        const dl = getConvenienceDeadline();
+        if (dl.isClosed) {
+          resetSubmitBtn();
+          const cardRadio = document.querySelector('input[name="payment_method"][value="credit_card"]');
+          if (cardRadio) cardRadio.checked = true;
+          updatePaymentMethodSummary('credit_card');
+          showFormError('コンビニ決済の受付期間は終了いたしました。クレジットカード決済をご利用ください。', cardRadio);
+          return;
+        }
         const agreeConvenience = document.getElementById('agreeConvenienceTerms')?.checked;
         if (!agreeConvenience) {
           resetSubmitBtn();

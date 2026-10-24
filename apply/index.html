@@ -1918,6 +1918,21 @@
       const fallbackList = EXAMS_DATABASE.filter(e => e.grade === gradeKey);
 
       let candidateExams = [];
+      let activeIssueStr = '';
+
+      if (targetGradeData) {
+        if (targetGradeData.active_issue || targetGradeData.activeIssue) {
+          const rawActive = targetGradeData.active_issue || targetGradeData.activeIssue;
+          activeIssueStr = Array.isArray(rawActive)
+            ? (rawActive[0] || '')
+            : String(rawActive);
+        } else if (Array.isArray(targetGradeData.rounds)) {
+          const activeRound = targetGradeData.rounds.find(r => r.status === 'active');
+          if (activeRound) {
+            activeIssueStr = (activeRound.monthName || (activeRound.monthNum ? `${activeRound.monthNum}月号` : '')).trim();
+          }
+        }
+      }
 
       // パターンA: D1 データ形式（targetGradeData.rounds が存在する場合）
       if (targetGradeData && Array.isArray(targetGradeData.rounds) && targetGradeData.rounds.length > 0) {

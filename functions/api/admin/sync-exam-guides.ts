@@ -27,6 +27,12 @@ export interface SyncExamPayload {
   secret?: string;
 }
 
+// キー用文字列の空白・全角スペース完全除去 & 正規化
+function cleanKey(val: any): string {
+  if (!val) return "";
+  return String(val).replace(/[\s\u3000]+/g, "").trim();
+}
+
 export const onRequestPost: PagesFunction<Env> = async (context) => {
   const { request, env } = context;
 
@@ -80,15 +86,109 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
   }
 
   try {
-    const statements: D1PreparedStatement[] = [];
+    // 2. 外部キー整合性のためのID正規化とセット構築
+    // ① schedules
+    const scheduleIdSet = new Set<string>();
+    const cleanedSchedules = rawSchedules
+      .map((s, idx) => {
+        const id = cleanKey(s.id);
+        if (!id) return null;
+        scheduleIdSet.add(id);
+        return {
+          ...s,
+          id,
+          grade_code: cleanKey(s.grade_code),
+          grade_name: String(s.grade_name || "").trim(),
+          issue_name: String(s.issue_name || "").trim(),
+          sort_order: Number(s.sort_order ?? idx + 1),
+        };
+      })
+      .filter(Boolean) as any[];
 
-    // 1. 既存データの削除 (子テーブルから順に、または CASCADE)
-    statements.push(env.DB.prepare("DELETE FROM exam_scopes;"));
-    statements.push(env.DB.prepare("DELETE FROM exam_timetables;"));
-    statements.push(env.DB.prepare("DELETE FROM exam_venues;"));
-    statements.push(env.DB.prepare("DELETE FROM exam_schedules;"));
+    // ② venues (schedule_id が scheduleIdSet に存在するか確認)
+    const venueIdSet = new Set<string>();
+    const cleanedVenues = rawVenues
+      .map((v, idx) => {
+        const id = cleanKey(v.id);
+        const schedule_id = cleanKey(v.schedule_id);
+        if (!id || !schedule_id) return null;
 
-    // 2. exam_schedules INSERT
+        if (!scheduleIdSet.has(schedule_id)) {
+          console.warn(`${LOG} Skipping venue "${id}": schedule_id "${schedule_id}" not found in schedules.`);
+          return null;
+        }
+
+        venueIdSet.add(id);
+        return {
+          ...v,
+          id,
+          schedule_id,
+          venue_type: String(v.venue_type || "").trim(),
+          sort_order: Number(v.sort_order ?? idx + 1),
+        };
+      })
+      .filter(Boolean) as any[];
+
+    // ③ timetables (venue_id が venueIdSet に存在するか確認)
+    const cleanedTimetables = rawTimetables
+      .map((t, idx) => {
+        const id = cleanKey(t.id);
+        const venue_id = cleanKey(t.venue_id);
+        if (!id || !venue_id) return null;
+
+        if (!venueIdSet.has(venue_id)) {
+          console.warn(`${LOG} Skipping timetable "${id}": venue_id "${venue_id}" not found in venues.`);
+          return null;
+        }
+
+        return {
+          ...t,
+          id,
+          venue_id,
+          item_name: String(t.item_name || "").trim(),
+          time_range: String(t.time_range || "").trim(),
+          sort_order: Number(t.sort_order ?? idx + 1),
+        };
+      })
+      .filter(Boolean) as any[];
+
+    // ④ scopes (schedule_id が scheduleIdSet に存在するか確認)
+    const cleanedScopes = rawScopes
+      .map((sc, idx) => {
+        const id = cleanKey(sc.id);
+        const schedule_id = cleanKey(sc.schedule_id);
+        if (!id || !schedule_id) return null;
+
+        if (!scheduleIdSet.has(schedule_id)) {
+          console.warn(`${LOG} Skipping scope "${id}": schedule_id "${schedule_id}" not found in schedules.`);
+          return null;
+        }
+
+        return {
+          ...sc,
+          id,
+          schedule_id,
+          subject: String(sc.subject || "").trim(),
+          units: String(sc.units || "").trim(),
+          sort_order: Number(sc.sort_order ?? idx + 1),
+        };
+      })
+      .filter(Boolean) as any[];
+
+    // 3. 削除クエリ: 孫・子 -> 親の順序を厳格に順守
+    console.log(`${LOG} Deleting existing records in child-to-parent order...`);
+    await env.DB.batch([
+      env.DB.prepare("PRAGMA foreign_keys = OFF;"),
+      env.DB.prepare("DELETE FROM exam_timetables;"),
+      env.DB.prepare("DELETE FROM exam_scopes;"),
+      env.DB.prepare("DELETE FROM exam_venues;"),
+      env.DB.prepare("DELETE FROM exam_schedules;"),
+    ]);
+
+    // 4. 登録クエリ: 親 -> 子 -> 孫 の順序を厳格に作成
+    const insertStatements: D1PreparedStatement[] = [];
+
+    // ① 親: exam_schedules INSERT
     const insertScheduleSql = `
       INSERT INTO exam_schedules (
         id, grade_code, grade_name, issue_name, title, catch_copy, announcement,
@@ -96,16 +196,14 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
         ticket_shipping_note, result_shipping_date, result_shipping_note, sort_order
       ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16);
     `;
-
-    for (let i = 0; i < rawSchedules.length; i++) {
-      const s = rawSchedules[i];
+    for (const s of cleanedSchedules) {
       const feeNum = Number(String(s.fee || "0").replace(/[^0-9]/g, "")) || 5500;
-      statements.push(
+      insertStatements.push(
         env.DB.prepare(insertScheduleSql).bind(
-          String(s.id).trim(),
-          String(s.grade_code).trim(),
-          String(s.grade_name).trim(),
-          String(s.issue_name).trim(),
+          s.id,
+          s.grade_code,
+          s.grade_name,
+          s.issue_name,
           String(s.title || "岡山県統一模擬試験").trim(),
           s.catch_copy ? String(s.catch_copy).trim() : null,
           s.announcement ? String(s.announcement).trim() : null,
@@ -117,26 +215,24 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
           s.ticket_shipping_note ? String(s.ticket_shipping_note).trim() : null,
           s.result_shipping_date ? String(s.result_shipping_date).trim() : null,
           s.result_shipping_note ? String(s.result_shipping_note).trim() : null,
-          Number(s.sort_order ?? i + 1)
+          s.sort_order
         )
       );
     }
 
-    // 3. exam_venues INSERT
+    // ② 子: exam_venues INSERT
     const insertVenueSql = `
       INSERT INTO exam_venues (
         id, schedule_id, venue_type, venue_name, map_url,
         exam_date_start, exam_date_end, belongings, notice, deadline_home, sort_order
       ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11);
     `;
-
-    for (let i = 0; i < rawVenues.length; i++) {
-      const v = rawVenues[i];
-      statements.push(
+    for (const v of cleanedVenues) {
+      insertStatements.push(
         env.DB.prepare(insertVenueSql).bind(
-          String(v.id).trim(),
-          String(v.schedule_id).trim(),
-          String(v.venue_type).trim(),
+          v.id,
+          v.schedule_id,
+          v.venue_type,
           v.venue_name ? String(v.venue_name).trim() : null,
           v.map_url ? String(v.map_url).trim() : null,
           String(v.exam_date_start).trim(),
@@ -144,61 +240,59 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
           v.belongings ? String(v.belongings).trim() : null,
           v.notice ? String(v.notice).trim() : null,
           v.deadline_home ? String(v.deadline_home).trim() : null,
-          Number(v.sort_order ?? i + 1)
+          v.sort_order
         )
       );
     }
 
-    // 4. exam_timetables INSERT
+    // ③ 孫: exam_timetables INSERT
     const insertTimetableSql = `
       INSERT INTO exam_timetables (
         id, venue_id, item_name, time_range, sort_order
       ) VALUES (?1, ?2, ?3, ?4, ?5);
     `;
-
-    for (let i = 0; i < rawTimetables.length; i++) {
-      const t = rawTimetables[i];
-      statements.push(
+    for (const t of cleanedTimetables) {
+      insertStatements.push(
         env.DB.prepare(insertTimetableSql).bind(
-          String(t.id).trim(),
-          String(t.venue_id).trim(),
-          String(t.item_name).trim(),
-          String(t.time_range).trim(),
-          Number(t.sort_order ?? i + 1)
+          t.id,
+          t.venue_id,
+          t.item_name,
+          t.time_range,
+          t.sort_order
         )
       );
     }
 
-    // 5. exam_scopes INSERT
+    // ④ 子: exam_scopes INSERT
     const insertScopeSql = `
       INSERT INTO exam_scopes (
         id, schedule_id, subject, units, sort_order
       ) VALUES (?1, ?2, ?3, ?4, ?5);
     `;
-
-    for (let i = 0; i < rawScopes.length; i++) {
-      const sc = rawScopes[i];
-      statements.push(
+    for (const sc of cleanedScopes) {
+      insertStatements.push(
         env.DB.prepare(insertScopeSql).bind(
-          String(sc.id).trim(),
-          String(sc.schedule_id).trim(),
-          String(sc.subject).trim(),
-          String(sc.units).trim(),
-          Number(sc.sort_order ?? i + 1)
+          sc.id,
+          sc.schedule_id,
+          sc.subject,
+          sc.units,
+          sc.sort_order
         )
       );
     }
 
-    // 6. トランザクション一括実行 (D1 batch)
+    // 5. 登録実行 (チャンクごとに PRAGMA foreign_keys = OFF を設定して安全実行)
     console.log(
-      `${LOG} Executing batch: schedules=${rawSchedules.length}, venues=${rawVenues.length}, timetables=${rawTimetables.length}, scopes=${rawScopes.length}, total_statements=${statements.length}`
+      `${LOG} Inserting records in parent-to-child order: schedules=${cleanedSchedules.length}, venues=${cleanedVenues.length}, timetables=${cleanedTimetables.length}, scopes=${cleanedScopes.length}, total_statements=${insertStatements.length}`
     );
 
-    // D1のバッチ制限（通常100〜128件程度）に備え、必要に応じてチャンク分割実行
-    const CHUNK_SIZE = 100;
-    for (let i = 0; i < statements.length; i += CHUNK_SIZE) {
-      const chunk = statements.slice(i, i + CHUNK_SIZE);
-      await env.DB.batch(chunk);
+    const CHUNK_SIZE = 80;
+    for (let i = 0; i < insertStatements.length; i += CHUNK_SIZE) {
+      const chunk = insertStatements.slice(i, i + CHUNK_SIZE);
+      await env.DB.batch([
+        env.DB.prepare("PRAGMA foreign_keys = OFF;"),
+        ...chunk,
+      ]);
     }
 
     console.log(`${LOG} Sync completed successfully`);
@@ -207,10 +301,10 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       success: true,
       message: "Exam guides synced successfully",
       syncedCounts: {
-        schedules: rawSchedules.length,
-        venues: rawVenues.length,
-        timetables: rawTimetables.length,
-        scopes: rawScopes.length,
+        schedules: cleanedSchedules.length,
+        venues: cleanedVenues.length,
+        timetables: cleanedTimetables.length,
+        scopes: cleanedScopes.length,
       },
     });
   } catch (error: any) {

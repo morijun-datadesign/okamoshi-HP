@@ -44,49 +44,56 @@ function showExamSyncConfig() {
   );
 }
 
+// 文字列の余計な半角・全角スペースや改行を完全除去
+function cleanStr(val) {
+  if (val === null || val === undefined) return "";
+  return String(val)
+    .replace(/[！-～]/g, function (s) {
+      return String.fromCharCode(s.charCodeAt(0) - 0xfee0); // 全角英数を半角に
+    })
+    .replace(/[\s\u3000\r\n\t]+/g, "")
+    .trim();
+}
+
 // 学年名 -> 学年コード
 function normalizeGrade(val) {
-  if (!val) return { code: "c3", name: "中3" };
-  const str = String(val).trim();
-  if (str.includes("3") || str.includes("中3") || str.toLowerCase().includes("c3")) return { code: "c3", name: "中3" };
-  if (str.includes("2") || str.includes("中2") || str.toLowerCase().includes("c2")) return { code: "c2", name: "中2" };
-  if (str.includes("1") || str.includes("中1") || str.toLowerCase().includes("c1")) return { code: "c1", name: "中1" };
-  if (str.includes("6") || str.includes("小6") || str.toLowerCase().includes("p6")) return { code: "p6", name: "小6" };
+  const clean = cleanStr(val).toLowerCase();
+  if (clean.includes("3") || clean.includes("中3") || clean.includes("c3")) return { code: "c3", name: "中3" };
+  if (clean.includes("2") || clean.includes("中2") || clean.includes("c2")) return { code: "c2", name: "中2" };
+  if (clean.includes("1") || clean.includes("中1") || clean.includes("c1")) return { code: "c1", name: "中1" };
+  if (clean.includes("6") || clean.includes("小6") || clean.includes("p6")) return { code: "p6", name: "小6" };
   return { code: "c3", name: "中3" };
 }
 
 // 月号 -> 月号数字
 function normalizeMonth(val) {
-  if (!val) return { num: 10, name: "10月号" };
-  const str = String(val).trim();
-  const m = str.match(/(\d+)/);
+  const clean = cleanStr(val);
+  const m = clean.match(/(\d+)/);
   const num = m ? parseInt(m[1], 10) : 10;
   return { num: num, name: `${num}月号` };
 }
 
 // 会場区分 -> 会場スラッグ
 function normalizeVenueType(val) {
-  if (!val) return "venue";
-  const str = String(val).trim();
-  if (str.includes("岡山")) return "okayama";
-  if (str.includes("倉敷")) return "kurashiki";
-  if (str.includes("津山")) return "tsuyama";
-  if (str.includes("自宅")) return "home";
-  return "venue_" + Utilities.base64EncodeWebSafe(str).substring(0, 6);
+  const clean = cleanStr(val);
+  if (clean.includes("岡山")) return "okayama";
+  if (clean.includes("倉敷")) return "kurashiki";
+  if (clean.includes("津山")) return "tsuyama";
+  if (clean.includes("自宅")) return "home";
+  return "venue_" + Utilities.base64EncodeWebSafe(clean).substring(0, 6);
 }
 
 // 教科名 -> 教科スラッグ
 function normalizeSubject(val) {
-  if (!val) return "subject";
-  const str = String(val).trim();
-  if (str.includes("国語")) return "kokugo";
-  if (str.includes("数学") || str.includes("算数")) return "sugaku";
-  if (str.includes("英語")) return "eigo";
-  if (str.includes("理科")) return "rika";
-  if (str.includes("社会")) return "shakai";
-  if (str.includes("適性")) return "tekisei";
-  if (str.includes("作文")) return "sakubun";
-  return "subject_" + Utilities.base64EncodeWebSafe(str).substring(0, 6);
+  const clean = cleanStr(val);
+  if (clean.includes("国語")) return "kokugo";
+  if (clean.includes("数学") || clean.includes("算数")) return "sugaku";
+  if (clean.includes("英語")) return "eigo";
+  if (clean.includes("理科")) return "rika";
+  if (clean.includes("社会")) return "shakai";
+  if (clean.includes("適性")) return "tekisei";
+  if (clean.includes("作文")) return "sakubun";
+  return "subject_" + Utilities.base64EncodeWebSafe(clean).substring(0, 6);
 }
 
 // 日時オブジェクト/文字列を YYYY-MM-DD または YYYY-MM-DD HH:mm に変換
@@ -162,6 +169,8 @@ function syncExamGuidesToD1() {
     const sMap = createHeaderMap(schedHeaders);
 
     const schedules = [];
+    const validScheduleIds = new Set();
+
     for (let i = 1; i < schedData.length; i++) {
       const row = schedData[i];
       const gradeRaw = row[sMap["学年"]];
@@ -171,6 +180,7 @@ function syncExamGuidesToD1() {
       const g = normalizeGrade(gradeRaw);
       const m = normalizeMonth(monthRaw);
       const schedId = `${g.code}_${m.num}`;
+      validScheduleIds.add(schedId);
 
       schedules.push({
         id: schedId,
@@ -194,6 +204,8 @@ function syncExamGuidesToD1() {
 
     // B. venues のパース
     const venues = [];
+    const validVenueIds = new Set();
+
     if (sheetVenues) {
       const vData = sheetVenues.getDataRange().getValues();
       const vHeaders = vData[0];
@@ -209,8 +221,14 @@ function syncExamGuidesToD1() {
         const g = normalizeGrade(gradeRaw);
         const m = normalizeMonth(monthRaw);
         const schedId = `${g.code}_${m.num}`;
+        if (!validScheduleIds.has(schedId)) {
+          // schedules に定義されていない模試の会場行はスキップ
+          continue;
+        }
+
         const vSlug = normalizeVenueType(vTypeRaw);
         const venueId = `${schedId}_${vSlug}`;
+        validVenueIds.add(venueId);
 
         venues.push({
           id: venueId,
@@ -250,6 +268,11 @@ function syncExamGuidesToD1() {
         const vSlug = normalizeVenueType(vTypeRaw);
         const venueId = `${schedId}_${vSlug}`;
 
+        if (!validVenueIds.has(venueId)) {
+          // venues に定義されていない会場の時間割行はスキップ
+          continue;
+        }
+
         venueCounter[venueId] = (venueCounter[venueId] || 0) + 1;
         const timetableId = `${venueId}_${venueCounter[venueId]}`;
 
@@ -280,6 +303,12 @@ function syncExamGuidesToD1() {
         const g = normalizeGrade(gradeRaw);
         const m = normalizeMonth(monthRaw);
         const schedId = `${g.code}_${m.num}`;
+
+        if (!validScheduleIds.has(schedId)) {
+          // schedules に定義されていない模試の出題範囲行はスキップ
+          continue;
+        }
+
         const subjSlug = normalizeSubject(subjRaw);
         const scopeId = `${schedId}_${subjSlug}`;
 

@@ -1671,7 +1671,7 @@
       const day = days[d.getDay()];
       const hours = String(d.getHours()).padStart(2, '0');
       const mins = String(d.getMinutes()).padStart(2, '0');
-      const cardText = `${m}/${dt}(${day}) ${hours}:${mins}`;
+      const cardDeadlineText = `${m}/${dt}(${day}) ${hours}:${mins}`;
 
       // コンビニ締切: クレカ締切日の3日前の 23:59
       const konbiniDeadlineDate = new Date(d.getFullYear(), d.getMonth(), d.getDate() - 3, 23, 59, 59, 999);
@@ -1683,6 +1683,10 @@
       const isCardExpired = now > t;
       const isKonbiniExpired = isCardExpired || now > konbiniDeadlineDate.getTime();
 
+      const cardText = isCardExpired
+        ? '<span class="text-rose-600 font-bold">受付終了</span>'
+        : `<span class="text-secondary font-bold">${cardDeadlineText}</span>`;
+
       const konbiniText = isKonbiniExpired
         ? '<span class="text-rose-600 font-bold">受付終了</span>'
         : `${konbiniM}/${konbiniDt}(${konbiniDay}) 23:59`;
@@ -1691,7 +1695,7 @@
         <div class="text-xs sm:text-sm leading-tight text-slate-700 space-y-0.5 pt-0.5">
           <div class="font-bold text-slate-800">申込締切：</div>
           <div class="pl-2 space-y-0.5 font-bold">
-            <div class="text-slate-900">・クレカ：<span class="text-secondary font-bold">${cardText}</span></div>
+            <div class="text-slate-900">・クレカ：${cardText}</div>
             <div class="text-slate-900">・コンビニ：<span class="${isKonbiniExpired ? '' : 'text-slate-800 font-bold'}">${konbiniText}</span></div>
           </div>
         </div>

@@ -42,15 +42,20 @@ var COL = {
   EMAIL: 17,        // Q: メールアドレス
   PHONE: 18,        // R: 電話番号
   POSTAL: 19,       // S: 郵便番号
-  ADDRESS: 20,      // T: お届け先住所
-  EXPIRES_AT: 21    // U: 支払期限
+  PREFECTURE: 20,   // T: 都道府県
+  CITY: 21,         // U: 市区（郡町村）
+  ADDRESS1: 22,     // V: 町名・丁目・番地
+  ADDRESS2: 23,     // W: 建物名・部屋番号
+  EXPIRES_AT: 24,   // X: 支払期限
+  REMARKS: 25       // Y: 連絡事項・ご要望
 };
-var NUM_COLS = 21;
+var NUM_COLS = 25;
 
 var HEADERS = [
   '受付日時', 'セッションID', '対象模試', '受験会場', '単価（金額）', '決済ステータス', '決済手段',
   'お客様番号', '確認番号', '払込票URL', '生徒氏名', '生徒フリガナ', '学年', '中学校名',
-  '保護者氏名', '保護者フリガナ', 'メールアドレス', '電話番号', '郵便番号', 'お届け先住所', '支払期限'
+  '保護者氏名', '保護者フリガナ', 'メールアドレス', '電話番号', '郵便番号',
+  '都道府県', '市区（郡町村）', '町名・丁目・番地', '建物名・部屋番号', '支払期限', '連絡事項・ご要望'
 ];
 
 var STATUS_PAID = 'paid';
@@ -146,8 +151,37 @@ function buildRow_(data, record) {
   row[COL.EMAIL - 1] = str_(data.email);
   row[COL.PHONE - 1] = text_(data.phone);
   row[COL.POSTAL - 1] = text_(data.postal_code);
-  row[COL.ADDRESS - 1] = str_(data.address);
+
+  var pref = str_(data.prefecture || data.pref);
+  var city = str_(data.city);
+  var addr1 = str_(data.address_line1 || data.addr1);
+  var addr2 = str_(data.address_line2 || data.addr2 || data.address_line3);
+
+  // フォールバック：万一合体した address のみ届いた場合
+  if (!city && data.address) {
+    var rawAddr = str_(data.address);
+    var pMatch = rawAddr.match(/^(東京都|北海道|(?:京都|大阪)府|.{2,3}県)(.*)$/);
+    if (pMatch) {
+      if (!pref) pref = pMatch[1];
+      var rest = pMatch[2].trim();
+      var cMatch = rest.match(/^([^0-9]+?郡[^0-9]+?[町村]|[^0-9]+?市[^0-9]+?区|[^0-9]+?[市区町村])(.*)$/);
+      if (cMatch) {
+        city = cMatch[1].trim();
+        if (!addr1) addr1 = cMatch[2].trim();
+      } else {
+        city = rest;
+      }
+    } else {
+      city = rawAddr;
+    }
+  }
+
+  row[COL.PREFECTURE - 1] = pref;
+  row[COL.CITY - 1] = city;
+  row[COL.ADDRESS1 - 1] = text_(addr1);
+  row[COL.ADDRESS2 - 1] = text_(addr2);
   row[COL.EXPIRES_AT - 1] = str_(data.konbini_expires_at);
+  row[COL.REMARKS - 1] = str_(data.remarks);
   return row;
 }
 

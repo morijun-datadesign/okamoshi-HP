@@ -75,6 +75,20 @@ const buildExamLineItems = (exams: unknown): CheckoutLineItem[] => {
   return items;
 };
 
+/** 締切文字列（YYYY-MM-DD HH:mm または YYYY-MM-DD）からコンビニ決済締切（3日前 23:59:59）を判定 */
+const isKonbiniDeadlinePassed = (deadlineRaw: string, nowMs = Date.now()): boolean => {
+  if (!deadlineRaw) return false;
+  const clean = String(deadlineRaw).trim();
+  const m = clean.match(/^(\d{4})[/-](\d{1,2})[/-](\d{1,2})(?:\s+(\d{1,2}):(\d{1,2}))?/);
+  if (!m) return false;
+  const y = parseInt(m[1], 10);
+  const mon = parseInt(m[2], 10);
+  const d = parseInt(m[3], 10);
+  // コンビニ締切日: 3日前 23:59:59
+  const konbiniDeadlineDate = new Date(y, mon - 1, d - 3, 23, 59, 59, 999);
+  return nowMs > konbiniDeadlineDate.getTime();
+};
+
 export const onRequestPost: PagesFunction<Env> = async (context) => {
   try {
     const stripeSecretKey = readEnv(context.env, "STRIPE_SECRET_KEY");
@@ -120,11 +134,12 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const phone = String(body.phone || existingMeta.phone || "").trim();
     const email = String(body.email || body.customer_email || existingMeta.email || "").trim();
     const postalCode = String(body.postal_code || existingMeta.postal_code || "").trim();
-    const prefecture = String(body.prefecture || existingMeta.prefecture || "").trim();
-    const city = String(body.city || body.address_line1 || existingMeta.city || "").trim();
-    const address1 = String(body.address1 || body.address_line2 || existingMeta.address1 || "").trim();
-    const address2 = String(body.address2 || body.address_line3 || existingMeta.address2 || "").trim();
-    const address = String(body.address || existingMeta.address || [prefecture, city, address1, address2].filter(Boolean).join(" ")).trim();
+    const pref = String(body.pref || body.prefecture || existingMeta.pref || existingMeta.prefecture || "").trim();
+    const city = String(body.city || existingMeta.city || "").trim();
+    const addr1 = String(body.addr1 || body.address1 || body.address_line2 || existingMeta.addr1 || existingMeta.address1 || "").trim();
+    const addr2 = String(body.addr2 || body.address2 || body.address_line3 || existingMeta.addr2 || existingMeta.address2 || "").trim();
+    const address = String(body.address || existingMeta.address || [pref, city, addr1, addr2].filter(Boolean).join(" ")).trim();
+    const remarks = String(body.remarks || existingMeta.remarks || "").trim().slice(0, 300);
     const examName = String(body.exam_name || (Array.isArray(body.exams) && body.exams[0]?.title) || existingMeta.exam_name || "岡山県統一模擬試験").trim();
     const paymentMethod = String(body.payment_method || body.selected_payment_method || (body.raw_payment_method === "convenience_store" ? "konbini" : "card")).trim();
     // コンビニ支払期限（日数）。フォームが申込締切を考慮して算出した値を 1〜3 日に丸める（Stripe の最小値は 1）
@@ -139,6 +154,58 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
         400
       );
     }
+
+    // 3-2. コンビニ決済時の受付期限二重ガード（締切3日前の23:59を過ぎている場合は拒絶）
+    if (paymentMethod === "konbini") {
+      let konbiniClosed = false;
+
+      // A. D1 (okamoshi-master) から最新の apply_deadline を取得して検証
+      if (context.env.DB) {
+        const examIds = examLineItems.map((item) => item.record.id).filter(Boolean);
+        if (examIds.length > 0) {
+          try {
+            const placeholders = examIds.map(() => "?").join(",");
+            const stmt = context.env.DB.prepare(
+              `SELECT id, apply_deadline FROM exam_schedules WHERE id IN (${placeholders})`
+            );
+            const { results } = await stmt.bind(...examIds).all<{ id: string; apply_deadline: string | null }>();
+            if (results && results.length > 0) {
+              for (const row of results) {
+                if (row.apply_deadline && isKonbiniDeadlinePassed(row.apply_deadline)) {
+                  konbiniClosed = true;
+                  break;
+                }
+              }
+            }
+          } catch (dbErr) {
+            console.warn("[functions/api/create-checkout-session] DB query for exam_schedules failed:", dbErr);
+          }
+        }
+      }
+
+      // B. リクエスト payload 内の deadline もフォールバックとして検証
+      if (!konbiniClosed && Array.isArray(body.exams)) {
+        for (const ex of body.exams) {
+          const rawDl = ex?.deadline || ex?.apply_deadline || ex?.applyDeadlineRaw || body.deadline || "";
+          if (rawDl && isKonbiniDeadlinePassed(rawDl)) {
+            konbiniClosed = true;
+            break;
+          }
+        }
+      }
+
+      if (konbiniClosed) {
+        console.warn("[functions/api/create-checkout-session] Konbini payment rejected: deadline passed.");
+        return jsonResponse(
+          {
+            success: false,
+            message: "コンビニ決済の受付期間は終了いたしました。クレジットカード決済をご利用ください。",
+          },
+          400
+        );
+      }
+    }
+
     const itemizedTotal = examLineItems.reduce((sum, item) => sum + item.unitAmount, 0);
     // 実際に請求される金額（内訳合計・サーバー正規価格の合算）を正とする
     const amountVal = itemizedTotal;
@@ -161,10 +228,14 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       phone: phone,
       email: email,
       postal_code: postalCode,
-      prefecture: prefecture,
+      pref: pref,
       city: city,
-      address1: address1,
-      address2: address2,
+      addr1: addr1,
+      addr2: addr2,
+      remarks: remarks,
+      prefecture: pref,
+      address1: addr1,
+      address2: addr2,
       address: address,
       venue_name: venueName,
       exam_name: examNameWithIssue,

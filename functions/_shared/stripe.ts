@@ -49,6 +49,58 @@ export const fetchPaymentIntent = async (
 };
 
 /**
+ * 直近（7日以内）に同一メールアドレスまたは生徒氏名でステータスが「paid」のセッションが存在するかチェックする
+ */
+export const checkRecentPaidSession = async (
+  email: string,
+  studentName: string,
+  secretKey: string,
+  excludeSessionId: string,
+  days = 7,
+  logPrefix = "[stripe]"
+): Promise<{ hasPaid: boolean; matchedSessionId?: string }> => {
+  if (!secretKey || (!email && !studentName)) return { hasPaid: false };
+  try {
+    const sinceTimestamp = Math.floor((Date.now() - days * 86400 * 1000) / 1000);
+    const url = `https://api.stripe.com/v1/checkout/sessions?limit=50&created[gte]=${sinceTimestamp}&status=complete`;
+    const res = await fetch(url, {
+      headers: { Authorization: `Bearer ${secretKey}` },
+    });
+    if (!res.ok) {
+      console.warn(`${logPrefix} checkRecentPaidSession fetch error: HTTP ${res.status}`);
+      return { hasPaid: false };
+    }
+    const data = (await res.json()) as { data?: Array<Record<string, any>> };
+    const sessions = data.data || [];
+
+    const normEmail = email.toLowerCase().trim();
+    const normName = studentName.replace(/\s+/g, "").trim();
+
+    for (const s of sessions) {
+      if (s.id === excludeSessionId) continue;
+      if (s.payment_status !== "paid") continue;
+
+      const sEmail = String(s.customer_details?.email || s.customer_email || s.metadata?.email || "").toLowerCase().trim();
+      const sName = String(s.metadata?.student_name || s.client_reference_id || "").replace(/\s+/g, "").trim();
+
+      if (normEmail && sEmail === normEmail) {
+        console.log(`${logPrefix} Found paid session for email ${email}: session_id=${s.id}`);
+        return { hasPaid: true, matchedSessionId: s.id };
+      }
+      if (normName && sName === normName) {
+        console.log(`${logPrefix} Found paid session for student ${studentName}: session_id=${s.id}`);
+        return { hasPaid: true, matchedSessionId: s.id };
+      }
+    }
+    return { hasPaid: false };
+  } catch (err) {
+    console.warn(`${logPrefix} Error checking recent paid sessions:`, err);
+    return { hasPaid: false };
+  }
+};
+
+
+/**
  * Stripe Webhook 署名（Stripe-Signature）を Web Crypto API (HMAC-SHA256) で検証する。
  * リプレイ攻撃防止（許容時間差: デフォルト300秒）およびタイミング攻撃対策（定時間比較）を実装。
  */

@@ -936,10 +936,10 @@
               </div>
             </div>
             <!-- お申し込み締切 -->
-            <div class="flex items-baseline gap-3 sm:gap-4 pt-2.5 sm:pt-2 border-t border-slate-200/80">
-              <span class="w-24 sm:w-28 text-xs sm:text-sm font-bold text-slate-500 whitespace-nowrap shrink-0">お申し込み締切</span>
+            <div class="flex items-start gap-3 sm:gap-4 pt-2.5 sm:pt-2 border-t border-slate-200/80">
+              <span class="w-24 sm:w-28 text-xs sm:text-sm font-bold text-slate-500 whitespace-nowrap shrink-0 pt-0.5">お申し込み締切</span>
               <div class="flex-1 min-w-0">
-                <span id="card-deadline" class="text-xs sm:text-base font-bold text-slate-900 tracking-tight whitespace-nowrap overflow-hidden text-ellipsis block">2026年10月5日(月) 23:59まで</span>
+                <div id="card-deadline" class="text-xs sm:text-sm font-bold text-slate-900 tracking-tight">読み込み中...</div>
               </div>
             </div>
           </div>
@@ -2855,6 +2855,80 @@
       `;
     }
 
+    // 締切日時の2行並列型表示（クレジットカード決済 ＆ コンビニ決済）
+    function formatDeadlineDisplayParallel(round) {
+      if (!round) return '準備中（近日公開予定）';
+      const raw = round.applyDeadlineRaw || round.deadline || '';
+      if (!raw) return '準備中（近日公開予定）';
+
+      // 日時文字列のパース（YYYY-MM-DD HH:mm または YYYY年MM月DD日 等）
+      const clean = String(raw).trim();
+      let y, mon, d, h = 23, min = 59;
+
+      const mIso = clean.match(/(\d{4})[/-](\d{1,2})[/-](\d{1,2})(?:\s+(\d{1,2}):(\d{1,2}))?/);
+      const mJp = clean.match(/(\d{4})年(\d{1,2})月(\d{1,2})日(?:\([^)]*\))?(?:\s*(\d{1,2}):(\d{1,2}))?/);
+
+      if (mIso) {
+        y = parseInt(mIso[1], 10);
+        mon = parseInt(mIso[2], 10);
+        d = parseInt(mIso[3], 10);
+        if (mIso[4]) h = parseInt(mIso[4], 10);
+        if (mIso[5]) min = parseInt(mIso[5], 10);
+      } else if (mJp) {
+        y = parseInt(mJp[1], 10);
+        mon = parseInt(mJp[2], 10);
+        d = parseInt(mJp[3], 10);
+        if (mJp[4]) h = parseInt(mJp[4], 10);
+        if (mJp[5]) min = parseInt(mJp[5], 10);
+      } else {
+        if (round.status === 'finished') {
+          return '<span class="text-rose-600 font-bold">受付終了</span>';
+        }
+        return round.deadline || clean;
+      }
+
+      const days = ['日', '月', '火', '水', '木', '金', '土'];
+
+      // クレジットカード決済締切日時
+      const cardDeadlineDate = new Date(y, mon - 1, d, h, min, 59, 999);
+      const cardW = days[cardDeadlineDate.getDay()];
+      const cardTimeStr = `${String(h).padStart(2, '0')}:${String(min).padStart(2, '0')}`;
+      const cardDeadlineText = `${y}年${mon}月${d}日(${cardW}) ${cardTimeStr}まで`;
+
+      // コンビニ決済締切日: 3日前 23:59
+      const konbiniDeadlineDate = new Date(y, mon - 1, d - 3, 23, 59, 59, 999);
+      const konbiniY = konbiniDeadlineDate.getFullYear();
+      const konbiniM = konbiniDeadlineDate.getMonth() + 1;
+      const konbiniD = konbiniDeadlineDate.getDate();
+      const konbiniW = days[konbiniDeadlineDate.getDay()];
+      const konbiniDeadlineText = `${konbiniY}年${konbiniM}月${konbiniD}日(${konbiniW}) 23:59まで`;
+
+      const now = new Date();
+      const isCardExpired = round.status === 'finished' || now.getTime() > cardDeadlineDate.getTime();
+      const isKonbiniExpired = isCardExpired || now.getTime() > konbiniDeadlineDate.getTime();
+
+      const cardText = isCardExpired
+        ? '<span class="text-rose-600 font-bold">受付終了</span>'
+        : `<span class="text-slate-900">${cardDeadlineText}</span>`;
+
+      const konbiniText = isKonbiniExpired
+        ? '<span class="text-rose-600 font-bold">受付終了</span>'
+        : `<span class="text-slate-900">${konbiniDeadlineText}</span>`;
+
+      return `
+        <div class="space-y-1 text-xs sm:text-sm font-bold text-slate-800 leading-snug">
+          <div class="flex items-center gap-1 flex-wrap">
+            <span class="text-slate-600 font-medium shrink-0">・クレジットカード決済：</span>
+            ${cardText}
+          </div>
+          <div class="flex items-center gap-1 flex-wrap">
+            <span class="text-slate-600 font-medium shrink-0">・コンビニ決済：</span>
+            ${konbiniText}
+          </div>
+        </div>
+      `;
+    }
+
     // カード詳細全体のレンダリング
     function renderCard() {
       const data = examData[currentGrade];
@@ -2901,7 +2975,17 @@
         }
         cardPrice.textContent = priceText;
       }
-      if (cardDeadline) cardDeadline.textContent = r.deadline || '準備中（近日公開予定）';
+      if (cardDeadline) {
+        if (r.status === 'pending' && !r.applyDeadlineRaw && !r.deadline) {
+          cardDeadline.textContent = '準備中（受付開始まで今しばらくお待ちください）';
+          cardDeadline.classList.add('text-slate-600');
+          cardDeadline.classList.remove('text-slate-900');
+        } else {
+          cardDeadline.innerHTML = formatDeadlineDisplayParallel(r);
+          cardDeadline.classList.remove('text-slate-600', 'text-slate-400');
+          cardDeadline.classList.add('text-slate-900');
+        }
+      }
 
       renderScopeList(r.scopeList);
       renderScheduleList(r.venuesList);
@@ -2924,11 +3008,6 @@
             badge.className = "inline-flex items-center px-2.5 py-0.5 sm:py-1 rounded-md text-xs sm:text-sm font-bold bg-slate-100 text-slate-500 border border-slate-200";
             badge.textContent = "受付終了";
           }
-          if (cardDeadline) {
-            cardDeadline.textContent = r.deadline || '受付期間終了';
-            cardDeadline.classList.add('text-slate-400');
-            cardDeadline.classList.remove('text-slate-900');
-          }
 
           ctaContainer.innerHTML = `
             <button disabled class="w-full py-4 px-6 rounded-lg bg-slate-200 text-slate-400 font-bold text-sm sm:text-base cursor-not-allowed">
@@ -2943,11 +3022,6 @@
             badge.className = "inline-flex items-center px-2.5 py-0.5 sm:py-1 rounded-md text-xs sm:text-sm font-bold bg-slate-100 text-slate-600 border border-slate-300";
             badge.textContent = "準備中";
           }
-          if (cardDeadline) {
-            cardDeadline.textContent = '準備中（受付開始まで今しばらくお待ちください）';
-            cardDeadline.classList.add('text-slate-400');
-            cardDeadline.classList.remove('text-slate-900');
-          }
 
           ctaContainer.innerHTML = `
             <button disabled class="w-full py-4 px-6 rounded-lg bg-slate-100 text-slate-400 border border-slate-200 font-bold text-sm sm:text-base cursor-not-allowed">
@@ -2961,11 +3035,6 @@
           if (badge) {
             badge.className = "inline-flex items-center px-2.5 py-0.5 sm:py-1 rounded-md text-xs sm:text-sm font-bold bg-emerald-100 text-emerald-900 border border-emerald-300";
             badge.textContent = r.status === 'active' ? '受付中' : '申込可';
-          }
-          if (cardDeadline) {
-            cardDeadline.textContent = r.deadline || '近日公開予定';
-            cardDeadline.classList.remove('text-slate-400');
-            cardDeadline.classList.add('text-slate-900');
           }
 
           const gradeParamMap = {

@@ -928,13 +928,14 @@
               </label>
 
               <!-- コンビニ決済 -->
-              <label class="p-4 rounded-lg bg-surface-container-low border border-outline-variant/30 cursor-pointer hover:bg-surface-container flex flex-col justify-between gap-3 transition-all has-[:checked]:bg-primary-fixed/40 has-[:checked]:border-primary-container has-[:checked]:ring-1 has-[:checked]:ring-primary-container">
+              <label id="payment-method-konbini-label" class="p-4 rounded-lg bg-surface-container-low border border-outline-variant/30 cursor-pointer hover:bg-surface-container flex flex-col justify-between gap-3 transition-all has-[:checked]:bg-primary-fixed/40 has-[:checked]:border-primary-container has-[:checked]:ring-1 has-[:checked]:ring-primary-container">
                 <div class="flex items-start justify-between gap-3">
                   <div class="flex items-start gap-2.5">
-                    <input class="w-4 h-4 mt-1 text-primary-container accent-primary-container shrink-0" name="payment_method" type="radio" value="convenience_store" onchange="updatePaymentMethodSummary('convenience_store')" required>
+                    <input id="payment-method-konbini-radio" class="w-4 h-4 mt-1 text-primary-container accent-primary-container shrink-0" name="payment_method" type="radio" value="convenience_store" onchange="updatePaymentMethodSummary('convenience_store')" required>
                     <div class="flex flex-col gap-1">
                       <span class="font-label-md font-bold text-on-surface text-[15px]">コンビニ決済</span>
                       <span class="font-body-sm text-[11px] text-on-surface-variant" id="convenience-deadline-text">お申込み完了後4日以内（10/4(日)まで）にお支払い</span>
+                      <div id="convenience-closed-notice" class="hidden text-xs text-rose-600 font-bold mt-0.5">※コンビニ決済の受付期間は終了しました（クレジットカード決済のみ受付中）</div>
                       <div class="flex items-center gap-1.5 text-on-surface-variant font-label-sm text-[11px] pt-1 flex-wrap">
                         <span class="px-2 py-0.5 bg-surface-container-lowest border border-outline-variant/30 rounded text-[10px]">ファミリーマート</span>
                         <span class="px-2 py-0.5 bg-surface-container-lowest border border-outline-variant/30 rounded text-[10px]">ローソン</span>
@@ -962,6 +963,38 @@
                     本日はお申し込みの模試の申込締切日です。本日中にコンビニでのお支払いが必要です。
                   </p>
                 </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ========================================== -->
+          <!-- SECTION 5: 連絡事項・ご要望（任意）         -->
+          <!-- ========================================== -->
+          <div class="bg-transparent sm:bg-surface-container-lowest rounded-none sm:rounded-lg p-0 sm:p-7 border-0 sm:border border-outline-variant/30 shadow-none sm:shadow-sm flex flex-col gap-4 sm:gap-5 pb-8 sm:pb-7 border-b sm:border-b-0 border-slate-200/80">
+            <div class="flex items-center justify-between pb-3 border-b border-surface-container">
+              <div class="flex items-center gap-2">
+                <span class="w-7 h-7 rounded-md bg-primary-container text-on-primary flex items-center justify-center font-label-md font-bold text-[13px] shrink-0">5</span>
+                <h2 class="font-headline-md text-base sm:text-lg md:text-[20px] font-bold text-primary whitespace-nowrap">連絡事項・ご要望</h2>
+              </div>
+              <span class="bg-surface-container-high text-on-surface-variant font-label-sm text-[10px] px-2 py-0.5 rounded-full font-bold">任意</span>
+            </div>
+
+            <div class="flex flex-col gap-2">
+              <label for="remarks" class="font-label-md text-xs sm:text-sm text-on-surface font-bold">
+                配慮事項やご要望がございましたらご記入ください
+              </label>
+              <textarea
+                id="remarks"
+                name="remarks"
+                rows="3"
+                maxlength="300"
+                placeholder="（例）左利きのため、可能であれば左端の座席を希望します。※お急ぎのご相談や欠席連絡等は専用窓口へお問い合わせください。"
+                class="w-full p-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-sm sm:text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40 transition-all resize-y"
+                oninput="updateRemarksCounter()"
+              ></textarea>
+              <div class="flex items-center justify-between text-xs text-on-surface-variant">
+                <span class="text-[11px] text-slate-500">※ご希望内容によっては対応いたしかねる場合もございます。</span>
+                <span id="remarksCounter" class="font-medium text-slate-500 shrink-0">最大300文字</span>
               </div>
             </div>
           </div>
@@ -1341,8 +1374,9 @@
         status: 'open',
         isDefaultChecked: false,
         venues: [
-          { value: 'venue_okayama', label: '岡山会場（山陽学園中学校・高等学校）' },
-          { value: 'venue_tsuyama', label: '津山会場（美作高等学校）' },
+          { value: 'venue_okayama', label: '岡山会場（会場未定）' },
+          { value: 'venue_kurashiki', label: '倉敷会場（会場未定）' },
+          { value: 'venue_tsuyama', label: '津山会場（会場未定）' },
           { value: 'home', label: '自宅受験（問題冊子郵送・期日内答案返送）' }
         ]
       },
@@ -1361,9 +1395,9 @@
         status: 'open',
         isDefaultChecked: false,
         venues: [
-          { value: 'venue_okayama', label: '岡山会場（岡山市民会館）' },
-          { value: 'venue_kurashiki', label: '倉敷会場（倉敷市民センター）' },
-          { value: 'venue_tsuyama', label: '津山会場（津山商工会議所）' },
+          { value: 'venue_okayama', label: '岡山会場（会場未定）' },
+          { value: 'venue_kurashiki', label: '倉敷会場（会場未定）' },
+          { value: 'venue_tsuyama', label: '津山会場（会場未定）' },
           { value: 'home', label: '自宅受験（問題冊子郵送・期日内答案返送）' }
         ]
       },
@@ -1384,9 +1418,9 @@
         status: 'open',
         isDefaultChecked: false,
         venues: [
-          { value: 'venue_okayama', label: '岡山会場（山陽学園中学校・高等学校）' },
-          { value: 'venue_kurashiki', label: '倉敷会場（倉敷商工会議所）' },
-          { value: 'venue_tsuyama', label: '津山会場（美作大学）' },
+          { value: 'venue_okayama', label: '岡山会場（会場未定）' },
+          { value: 'venue_kurashiki', label: '倉敷会場（会場未定）' },
+          { value: 'venue_tsuyama', label: '津山会場（会場未定）' },
           { value: 'home', label: '自宅受験（問題冊子郵送・期日内答案返送）' }
         ]
       },
@@ -1405,9 +1439,9 @@
         status: 'open',
         isDefaultChecked: false,
         venues: [
-          { value: 'venue_okayama', label: '岡山会場（山陽学園中学校・高等学校）' },
-          { value: 'venue_kurashiki', label: '倉敷会場（倉敷商工会議所）' },
-          { value: 'venue_tsuyama', label: '津山会場（美作大学）' },
+          { value: 'venue_okayama', label: '岡山会場（会場未定）' },
+          { value: 'venue_kurashiki', label: '倉敷会場（会場未定）' },
+          { value: 'venue_tsuyama', label: '津山会場（会場未定）' },
           { value: 'home', label: '自宅受験（問題冊子郵送・期日内答案返送）' }
         ]
       },
@@ -1428,9 +1462,9 @@
         status: 'open',
         isDefaultChecked: false,
         venues: [
-          { value: 'venue_okayama', label: '岡山会場（山陽学園中学校・高等学校）' },
-          { value: 'venue_kurashiki', label: '倉敷会場（倉敷商工会議所）' },
-          { value: 'venue_tsuyama', label: '津山会場（美作大学）' },
+          { value: 'venue_okayama', label: '岡山会場（会場未定）' },
+          { value: 'venue_kurashiki', label: '倉敷会場（会場未定）' },
+          { value: 'venue_tsuyama', label: '津山会場（会場未定）' },
           { value: 'home', label: '自宅受験（問題冊子郵送・期日内答案返送）' }
         ]
       },
@@ -1449,9 +1483,9 @@
         status: 'open',
         isDefaultChecked: false,
         venues: [
-          { value: 'venue_okayama', label: '岡山会場（山陽学園中学校・高等学校）' },
-          { value: 'venue_kurashiki', label: '倉敷会場（倉敷商工会議所）' },
-          { value: 'venue_tsuyama', label: '津山会場（美作大学）' },
+          { value: 'venue_okayama', label: '岡山会場（会場未定）' },
+          { value: 'venue_kurashiki', label: '倉敷会場（会場未定）' },
+          { value: 'venue_tsuyama', label: '津山会場（会場未定）' },
           { value: 'home', label: '自宅受験（問題冊子郵送・期日内答案返送）' }
         ]
       },
@@ -1472,9 +1506,9 @@
         status: 'open',
         isDefaultChecked: false,
         venues: [
-          { value: 'venue_okayama', label: '岡山会場（岡山操山中学校 受験対応）' },
-          { value: 'venue_kurashiki', label: '倉敷会場（倉敷天城中学校 受験対応）' },
-          { value: 'venue_tsuyama', label: '津山会場（津山中学校 受験対応）' },
+          { value: 'venue_okayama', label: '岡山会場（岡山操山中対応・会場未定）' },
+          { value: 'venue_kurashiki', label: '倉敷会場（倉敷天城中対応・会場未定）' },
+          { value: 'venue_tsuyama', label: '津山会場（津山中対応・会場未定）' },
           { value: 'home', label: '自宅受験（問題冊子郵送・期日内答案返送）' }
         ]
       },
@@ -1493,9 +1527,9 @@
         status: 'open',
         isDefaultChecked: false,
         venues: [
-          { value: 'venue_okayama', label: '岡山会場（岡山操山中学校 受験対応）' },
-          { value: 'venue_kurashiki', label: '倉敷会場（倉敷天城中学校 受験対応）' },
-          { value: 'venue_tsuyama', label: '津山会場（津山中学校 受験対応）' },
+          { value: 'venue_okayama', label: '岡山会場（岡山操山中対応・会場未定）' },
+          { value: 'venue_kurashiki', label: '倉敷会場（倉敷天城中対応・会場未定）' },
+          { value: 'venue_tsuyama', label: '津山会場（津山中対応・会場未定）' },
           { value: 'home', label: '自宅受験（問題冊子郵送・期日内答案返送）' }
         ]
       }
@@ -1622,6 +1656,53 @@
     }
 
     /**
+     * 模試カード用：申込締切の2行並記表示（クレカ ＆ コンビニ）
+     */
+    function formatCardDeadlineParallel(deadlineRaw, parsedTime) {
+      const t = parsedTime || parseDeadline(deadlineRaw);
+      if (!t) {
+        return '<span class="text-xs sm:text-sm text-slate-500 font-medium">申込締切: 近日公開予定</span>';
+      }
+
+      const d = new Date(t);
+      const days = ['日', '月', '火', '水', '木', '金', '土'];
+      const m = d.getMonth() + 1;
+      const dt = d.getDate();
+      const day = days[d.getDay()];
+      const hours = String(d.getHours()).padStart(2, '0');
+      const mins = String(d.getMinutes()).padStart(2, '0');
+      const cardDeadlineText = `${m}/${dt}(${day}) ${hours}:${mins}`;
+
+      // コンビニ締切: クレカ締切日の3日前の 23:59
+      const konbiniDeadlineDate = new Date(d.getFullYear(), d.getMonth(), d.getDate() - 3, 23, 59, 59, 999);
+      const konbiniM = konbiniDeadlineDate.getMonth() + 1;
+      const konbiniDt = konbiniDeadlineDate.getDate();
+      const konbiniDay = days[konbiniDeadlineDate.getDay()];
+
+      const now = Date.now();
+      const isCardExpired = now > t;
+      const isKonbiniExpired = isCardExpired || now > konbiniDeadlineDate.getTime();
+
+      const cardText = isCardExpired
+        ? '<span class="text-rose-600 font-bold">受付終了</span>'
+        : `<span class="text-secondary font-bold">${cardDeadlineText}</span>`;
+
+      const konbiniText = isKonbiniExpired
+        ? '<span class="text-rose-600 font-bold">受付終了</span>'
+        : `${konbiniM}/${konbiniDt}(${konbiniDay}) 23:59`;
+
+      return `
+        <div class="text-xs sm:text-sm leading-tight text-slate-700 space-y-0.5 pt-0.5">
+          <div class="font-bold text-slate-800">申込締切：</div>
+          <div class="pl-2 space-y-0.5 font-bold">
+            <div class="text-slate-900">・クレカ：${cardText}</div>
+            <div class="text-slate-900">・コンビニ：<span class="${isKonbiniExpired ? '' : 'text-slate-800 font-bold'}">${konbiniText}</span></div>
+          </div>
+        </div>
+      `;
+    }
+
+    /**
      * schedules から代表日または実施期間を整形表示
      */
     function formatExamDate(session, fallbackExamDate) {
@@ -1662,6 +1743,59 @@
     }
 
     /**
+     * D1 の round データ（venuesList または venueDetails）から会場選択肢を動的生成
+     * スプレッドシート（venues）に設定された会場名・会場区分を動的に反映
+     */
+    function buildVenueOptionsFromRound(round, fallbackVenues) {
+      const venues = [];
+      const rawVenues = (round && (round.venuesList || round.venueDetails)) || [];
+
+      if (Array.isArray(rawVenues) && rawVenues.length > 0) {
+        rawVenues.forEach((v, idx) => {
+          const typeName = (v.badge || v.name || '').replace(/^🏠\s*/, '').trim();
+          const schoolName = (v.school || v.place || '').trim();
+          const isHome = typeName.includes('自宅') || schoolName.includes('自宅') || (v.id && String(v.id).includes('home'));
+
+          if (isHome) return; // 自宅受験は末尾に標準フォーマットで追加
+
+          // 会場名ラベルの整形（D1の値を優先反映）
+          let label = '';
+          const venueText = schoolName || '会場未定';
+          if (venueText.includes(typeName)) {
+            label = venueText;
+          } else {
+            label = `${typeName}（${venueText}）`;
+          }
+
+          let valKey = 'venue_' + idx;
+          if (typeName.includes('岡山')) valKey = 'venue_okayama';
+          else if (typeName.includes('倉敷')) valKey = 'venue_kurashiki';
+          else if (typeName.includes('津山')) valKey = 'venue_tsuyama';
+
+          if (!venues.some(item => item.label === label)) {
+            venues.push({
+              value: valKey,
+              label: label
+            });
+          }
+        });
+      }
+
+      // 「自宅受験」の選択肢を追加
+      venues.push({
+        value: 'home',
+        label: '自宅受験（問題冊子郵送・期日内答案返送）'
+      });
+
+      // スケジュールから会場が1つも抽出できず自宅受験のみの場合はフォールバック
+      if (venues.length === 1 && fallbackVenues && fallbackVenues.length > 0) {
+        return fallbackVenues;
+      }
+
+      return venues;
+    }
+
+    /**
      * schedules から会場名（venue_name）および「自宅受験」を動的選択肢として抽出
      */
     function extractVenuesFromSchedules(session, fallbackVenues) {
@@ -1674,10 +1808,17 @@
                          (sch.venue_name && sch.venue_name.includes('自宅'));
           if (!isHome) {
             const typeName = types[0] || '会場';
-            let label = sch.venue_name ? `${typeName}（${sch.venue_name}）` : typeName;
-            if (sch.venue_name && sch.venue_name.includes(typeName)) {
-              label = sch.venue_name;
+            const rawName = (sch.venue_name || '').trim();
+
+            // 会場名ラベルの整形（D1の値を優先反映）
+            let label = '';
+            const venueText = rawName || '会場未定';
+            if (venueText.includes(typeName)) {
+              label = venueText;
+            } else {
+              label = `${typeName}（${venueText}）`;
             }
+
             let valKey = 'venue_' + sIdx;
             if (typeName.includes('岡山')) valKey = 'venue_okayama';
             else if (typeName.includes('倉敷')) valKey = 'venue_kurashiki';
@@ -1740,11 +1881,10 @@
     // 4. microCMSデータ連動 & 締切フィルタリング & 動的レンダリング
     // ========================================================
     /**
-     * 学年キーに応じた模試一覧を生成（microCMS優先 + フォールバック補完）
-     * 1) 選択学年の sessions を抽出
-     * 2) application_deadline と現在日時をリアルタイム比較（締切を過ぎた模試は自動除外）
-     * 3) active_issue と一致する模試は「〇〇対象・受付中」、より後の号は「〇〇対象・予約受付」
-     * 4) schedules から希望会場および自宅受験を動的生成
+     * 学年キーに応じた模試一覧を生成（D1/API優先 + フォールバック補完）
+     * 1) 選択学年の rounds（または sessions）を抽出
+     * 2) 申込締切日時と現在日時をリアルタイム比較（締切を過ぎた模試は自動除外）
+     * 3) D1の venuesList / venueDetails から希望会場選択肢を動的生成
      */
     function getAvailableExamsForGrade(gradeKey) {
       const now = Date.now();
@@ -1752,87 +1892,126 @@
       const gradeLabel = gradeLabels[gradeKey] || '中3';
       const gradePrefix = `${gradeLabel}対象`;
 
-      // 学年コード・名称マッチング (c3: 中3, c2: 中2, c1: 中1, e6/s6: 小6)
-      const gradeCodeMap = { chu3: 'c3', chu2: 'c2', chu1: 'c1', sho6: 'e6' };
-      const targetCode = gradeCodeMap[gradeKey];
+      // 学年コード・名称マッチング (c3: 中3, c2: 中2, c1: 中1, p6: 小6)
+      const gradeCodeMap = { chu3: 'c3', chu2: 'c2', chu1: 'c1', sho6: 'p6', c3: 'c3', c2: 'c2', c1: 'c1', p6: 'p6' };
+      const targetCode = gradeCodeMap[gradeKey] || 'c3';
 
-      let targetGuide = null;
-      if (_examGuidesCache && Array.isArray(_examGuidesCache)) {
-        targetGuide = _examGuidesCache.find(g => {
-          if (targetCode && (g.grade_code === targetCode || (targetCode === 'e6' && (g.grade_code === 's6' || g.grade_code === 'e6')))) {
-            return true;
-          }
-          if (g.grade_name && g.grade_name.includes(gradeLabel)) {
-            return true;
-          }
-          return false;
-        });
-      }
-
-      // フォールバック模試リスト（microCMS未接続時または欠損補完用）
-      const fallbackList = EXAMS_DATABASE.filter(e => e.grade === gradeKey);
-
-      let rawSessions = [];
-      let activeIssueStr = '';
-
-      if (targetGuide) {
-        rawSessions = Array.isArray(targetGuide.sessions) ? targetGuide.sessions : [];
-        if (targetGuide.active_issue) {
-          activeIssueStr = Array.isArray(targetGuide.active_issue)
-            ? (targetGuide.active_issue[0] || '')
-            : String(targetGuide.active_issue);
+      let targetGradeData = null;
+      if (_examGuidesCache) {
+        if (_examGuidesCache[targetCode]) {
+          targetGradeData = _examGuidesCache[targetCode];
+        } else if (Array.isArray(_examGuidesCache)) {
+          targetGradeData = _examGuidesCache.find(g => {
+            if (targetCode && (g.grade_code === targetCode || (targetCode === 'p6' && (g.grade_code === 's6' || g.grade_code === 'e6' || g.grade_code === 'p6')))) {
+              return true;
+            }
+            if (g.grade_name && g.grade_name.includes(gradeLabel)) {
+              return true;
+            }
+            return false;
+          });
         }
       }
 
-      let candidateExams = [];
+      // フォールバック模試リスト（データ未接続時または欠損補完用）
+      const fallbackList = EXAMS_DATABASE.filter(e => e.grade === gradeKey);
 
-      // microCMS の sessions が存在する場合: microCMS のセッション情報のみを元に動的生成
-      if (rawSessions.length > 0) {
-        rawSessions.forEach((s, idx) => {
-          let issueName = (s.issue_name || s.session_label || '').trim();
-          // "12月" のような表記の場合 "12月号" に正規化
+      let candidateExams = [];
+      let activeIssueStr = '';
+
+      if (targetGradeData) {
+        if (targetGradeData.active_issue || targetGradeData.activeIssue) {
+          const rawActive = targetGradeData.active_issue || targetGradeData.activeIssue;
+          activeIssueStr = Array.isArray(rawActive)
+            ? (rawActive[0] || '')
+            : String(rawActive);
+        } else if (Array.isArray(targetGradeData.rounds)) {
+          const activeRound = targetGradeData.rounds.find(r => r.status === 'active');
+          if (activeRound) {
+            activeIssueStr = (activeRound.monthName || (activeRound.monthNum ? `${activeRound.monthNum}月号` : '')).trim();
+          }
+        }
+      }
+
+      // パターンA: D1 データ形式（targetGradeData.rounds が存在する場合）
+      if (targetGradeData && Array.isArray(targetGradeData.rounds) && targetGradeData.rounds.length > 0) {
+        targetGradeData.rounds.forEach((r, idx) => {
+          let issueName = (r.monthName || `${r.monthNum}月号` || '').trim();
           if (issueName && !issueName.endsWith('号') && /^\d+月$/.test(issueName)) {
             issueName += '号';
           }
 
-          // 対応するフォールバック情報（未設定項目の会場や締切等を補完）
           const fallback = fallbackList.find(f => f.issueName && issueName && (f.issueName === issueName || f.issueName.includes(issueName) || issueName.includes(f.issueName)))
             || fallbackList[idx]
             || {};
 
-          // 申込締切日時（microCMSのdeadline / application_deadline / applicationDeadline 等）
-          const deadlineRaw = s.deadline || s.application_deadline || s.applicationDeadline || fallback.deadline || '';
+          const deadlineRaw = r.applyDeadlineRaw || r.deadline || fallback.deadline || '';
           const deadlineTime = parseDeadline(deadlineRaw);
 
-          // 【申込締切日によるフィルタリング（自動判定）】:
-          // 締切日時を過ぎている模試（現在日時より前）は自動的に除外・非表示
+          // 【申込締切日によるフィルタリング】: 締切日時を過ぎている模試は除外
           if (deadlineTime && deadlineTime <= now) {
             return;
           }
 
-          // 模試タイトル: microCMS の title を優先
+          const title = r.title || fallback.title || (gradeKey === 'sho6' ? '岡山県立中高一貫校 適性検査対策模試' : '岡山県統一模擬試験（おかもし）');
+          const examDate = (r.venuesList && r.venuesList[0] && r.venuesList[0].date) ? r.venuesList[0].date : (fallback.examDate || '実施日未定');
+          const deadlineDisplay = formatDeadlineDisplay(deadlineRaw, deadlineTime);
+          const price = typeof r.fee === 'number' && r.fee > 0 ? r.fee : (fallback.price || 5500);
+
+          // D1 venuesList / venueDetails から会場選択肢を動的生成
+          const venues = buildVenueOptionsFromRound(r, fallback.venues);
+          const gradeName = targetGradeData.gradeName || fallback.gradeName || `${gradeLabel}生`;
+
+          candidateExams.push({
+            id: r.id || `${gradeKey}_${r.monthNum || idx}`,
+            grade: gradeKey,
+            gradeLabel: gradeLabel,
+            gradeName: gradeName,
+            issueName: issueName || fallback.issueName || '',
+            title: title,
+            examDate: examDate,
+            deadline: deadlineRaw,
+            applyDeadlineRaw: deadlineRaw,
+            deadlineTime: deadlineTime,
+            deadlineDisplay: deadlineDisplay,
+            price: price,
+            status: r.status || 'open',
+            venues: venues,
+            originalIndex: idx
+          });
+        });
+
+      // パターンB: 旧 microCMS sessions 形式（targetGradeData.sessions が存在する場合）
+      } else if (targetGradeData && Array.isArray(targetGradeData.sessions) && targetGradeData.sessions.length > 0) {
+        targetGradeData.sessions.forEach((s, idx) => {
+          let issueName = (s.issue_name || s.session_label || '').trim();
+          if (issueName && !issueName.endsWith('号') && /^\d+月$/.test(issueName)) {
+            issueName += '号';
+          }
+
+          const fallback = fallbackList.find(f => f.issueName && issueName && (f.issueName === issueName || f.issueName.includes(issueName) || issueName.includes(f.issueName)))
+            || fallbackList[idx]
+            || {};
+
+          const deadlineRaw = s.deadline || s.application_deadline || s.applicationDeadline || fallback.deadline || '';
+          const deadlineTime = parseDeadline(deadlineRaw);
+
+          if (deadlineTime && deadlineTime <= now) {
+            return;
+          }
+
           const title = s.title || fallback.title || (gradeKey === 'sho6' ? '岡山県立中高一貫校 適性検査対策模試' : '岡山県統一模擬試験（おかもし）');
-
-          // 実施日
           const examDate = formatExamDate(s, fallback.examDate);
-
-          // 申込締切表示
           const deadlineDisplay = formatDeadlineDisplay(deadlineRaw, deadlineTime);
 
-          // 受験料
           let price = fallback.price || 5500;
           if (s.fee) {
             const parsedFee = parseInt(String(s.fee).replace(/[^0-9]/g, ''), 10);
-            if (!isNaN(parsedFee) && parsedFee > 0) {
-              price = parsedFee;
-            }
+            if (!isNaN(parsedFee) && parsedFee > 0) price = parsedFee;
           }
 
-          // 会場リスト
           const venues = extractVenuesFromSchedules(s, fallback.venues);
-
-          // 学年名（例: 中3生, 小6生）
-          const gradeName = (targetGuide && targetGuide.grade_name) ? targetGuide.grade_name : (fallback.gradeName || `${gradeLabel}生`);
+          const gradeName = targetGradeData.grade_name || fallback.gradeName || `${gradeLabel}生`;
 
           candidateExams.push({
             id: `${gradeKey}_${s.id || issueName || idx}`,
@@ -1843,6 +2022,7 @@
             title: title,
             examDate: examDate,
             deadline: deadlineRaw,
+            applyDeadlineRaw: deadlineRaw,
             deadlineTime: deadlineTime,
             deadlineDisplay: deadlineDisplay,
             price: price,
@@ -1852,13 +2032,10 @@
           });
         });
 
-        // ※ microCMS 取得時はダミー配列からの余分な補完（存在しない11月号など）は行いません
-
+      // パターンC: 未接続時のフォールバック
       } else {
-        // microCMS 未取得時またはセッション未定義時はフォールバックリストを使用
         fallbackList.forEach(fb => {
           const fbDeadlineTime = parseDeadline(fb.deadline);
-          // 締切前のみ
           if (fb.status !== 'closed' && (!fbDeadlineTime || fbDeadlineTime > now)) {
             candidateExams.push({
               ...fb,
@@ -2030,9 +2207,9 @@
                   <span class="font-headline-sm text-base sm:text-lg font-bold text-on-surface leading-snug tracking-tight block">${exam.title}</span>
                 </div>
 
-                <!-- 下段：申込締切のみ強調表示（タイトル同等サイズへ拡大） -->
-                <div class="text-base sm:text-lg font-body-sm">
-                  <span class="text-on-surface-variant font-medium">申込締切: <strong class="text-secondary font-bold text-base sm:text-lg">${exam.deadlineDisplay}</strong></span>
+                <!-- 下段：申込締切（クレカ／コンビニ 2行並記） -->
+                <div class="border-t border-slate-100 pt-1.5 mt-0.5">
+                  ${formatCardDeadlineParallel(exam.deadline || exam.applyDeadlineRaw, exam.deadlineTime)}
                 </div>
               </div>
             </label>
@@ -2268,9 +2445,8 @@
 
     // ========================================================
     // 決済期限の動的計算ロジック
-    //  - 通常：当日含め 4 日間（本日＋3日後 23:59、Stripe expires_after_days = 3）
-    //  - 選択模試の申込締切がそれより早い場合は締切日までに短縮
-    //  - 締切日当日：「本日中」の支払いを案内。Stripe の仕様上 expires_after_days の最小値は 1（翌日 23:59 失効）
+    //  - コンビニ決済締切：申込締切日の3日前 23:59 まで
+    //  - 締切3日前を過ぎた場合はコンビニ決済を受付終了（クレジットカード決済のみ受付）
     // ========================================================
     function getConvenienceDeadline() {
       const KONBINI_DEFAULT_EXPIRES_AFTER_DAYS = 3;
@@ -2278,21 +2454,30 @@
       const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
       let expiresAfterDays = KONBINI_DEFAULT_EXPIRES_AFTER_DAYS;
       let isDeadlineDay = false;
+      let isClosed = false;
 
-      const deadlines = Object.values(selectedExamsState || {})
+      const selectedExams = Object.values(selectedExamsState || {});
+      const deadlines = selectedExams
         .map(exam => exam && exam.deadlineTime)
-        .filter(t => typeof t === 'number' && Number.isFinite(t) && t > now.getTime());
+        .filter(t => typeof t === 'number' && Number.isFinite(t));
+
       if (deadlines.length > 0) {
-        const earliest = new Date(Math.min(...deadlines));
-        const deadlineDay = new Date(earliest.getFullYear(), earliest.getMonth(), earliest.getDate());
+        const earliestTime = Math.min(...deadlines);
+        const earliestDate = new Date(earliestTime);
+        const deadlineDay = new Date(earliestDate.getFullYear(), earliestDate.getMonth(), earliestDate.getDate());
+
+        // コンビニ決済の受付締切日時: 3日前の 23:59:59
+        const konbiniDeadlineDate = new Date(earliestDate.getFullYear(), earliestDate.getMonth(), earliestDate.getDate() - 3, 23, 59, 59, 999);
+        if (now.getTime() > konbiniDeadlineDate.getTime()) {
+          isClosed = true;
+        }
+
         const diffDays = Math.round((deadlineDay.getTime() - today.getTime()) / 86400000);
         if (diffDays <= 0) isDeadlineDay = true;
-        expiresAfterDays = Math.max(1, Math.min(KONBINI_DEFAULT_EXPIRES_AFTER_DAYS, diffDays));
+        expiresAfterDays = Math.max(1, Math.min(KONBINI_DEFAULT_EXPIRES_AFTER_DAYS, Math.max(1, diffDays - 3)));
       }
 
-      const payBy = isDeadlineDay
-        ? today
-        : new Date(today.getFullYear(), today.getMonth(), today.getDate() + expiresAfterDays);
+      const payBy = new Date(today.getFullYear(), today.getMonth(), today.getDate() + expiresAfterDays);
       const m = payBy.getMonth() + 1;
       const d = payBy.getDate();
       const days = ['日', '月', '火', '水', '木', '金', '土'];
@@ -2303,13 +2488,57 @@
         shortText: `${m}/${d}(${w})`,
         expiresAfterDays,
         isDeadlineDay,
-        totalDays: isDeadlineDay ? 1 : expiresAfterDays + 1
+        isClosed,
+        totalDays: expiresAfterDays + 1
       };
+    }
+
+    // コンビニ決済の利用可否UIを同期
+    function syncConvenienceAvailability(dl) {
+      if (!dl) dl = getConvenienceDeadline();
+
+      const konbiniRadio = document.getElementById('payment-method-konbini-radio') || document.querySelector('input[name="payment_method"][value="convenience_store"]');
+      const konbiniLabel = document.getElementById('payment-method-konbini-label') || konbiniRadio?.closest('label');
+      const closedNotice = document.getElementById('convenience-closed-notice');
+      const deadlineBadge = document.getElementById('convenience-deadline-text');
+
+      if (dl.isClosed) {
+        // コンビニ決済を受付終了（disabled & 注意書き表示）
+        if (konbiniRadio) {
+          konbiniRadio.disabled = true;
+          if (konbiniRadio.checked) {
+            konbiniRadio.checked = false;
+            // 自動的にクレジットカード決済へ切り替え
+            const cardRadio = document.querySelector('input[name="payment_method"][value="credit_card"]');
+            if (cardRadio) cardRadio.checked = true;
+            updatePaymentMethodSummary('credit_card');
+          }
+        }
+        if (konbiniLabel) {
+          konbiniLabel.classList.add('opacity-60', 'cursor-not-allowed', 'bg-slate-100');
+          konbiniLabel.classList.remove('hover:bg-surface-container', 'cursor-pointer');
+        }
+        if (closedNotice) closedNotice.classList.remove('hidden');
+        if (deadlineBadge) deadlineBadge.classList.add('hidden');
+      } else {
+        // コンビニ決済が受付可能な場合
+        if (konbiniRadio) {
+          konbiniRadio.disabled = false;
+        }
+        if (konbiniLabel) {
+          konbiniLabel.classList.remove('opacity-60', 'cursor-not-allowed', 'bg-slate-100');
+          konbiniLabel.classList.add('hover:bg-surface-container', 'cursor-pointer');
+        }
+        if (closedNotice) closedNotice.classList.add('hidden');
+        if (deadlineBadge) deadlineBadge.classList.remove('hidden');
+      }
     }
 
     // コンビニ支払期限の表示テキストを更新（模試選択の変更時にも呼ばれる）
     function refreshConvenienceDeadline() {
       const dl = getConvenienceDeadline();
+      syncConvenienceAvailability(dl);
+
       const badge = document.getElementById('convenience-deadline-text');
       if (badge) {
         badge.textContent = dl.isDeadlineDay
@@ -2393,6 +2622,18 @@
         }
       }
       updateSubmitButtonState();
+    }
+
+    // ========================================================
+    // 連絡事項・ご要望カウンター
+    // ========================================================
+    function updateRemarksCounter() {
+      const elem = document.getElementById('remarks');
+      const countElem = document.getElementById('remarksCounter');
+      if (elem && countElem) {
+        const len = elem.value.length;
+        countElem.textContent = len > 0 ? `${len} / 300文字` : '最大300文字';
+      }
     }
 
     // ========================================================
@@ -2681,7 +2922,7 @@
       }
     }
 
-    function applyAddressResult(zipInput, cleanZip, data) {
+    function applyAddressResult(zipInput, cleanZip, data, isManualTrigger = false) {
       const prefSelect = document.getElementById('prefecture');
       const addr1Input = document.getElementById('addressLine1');
       const addr2Input = document.getElementById('addressLine2');
@@ -2705,12 +2946,16 @@
         addr1Input.classList.remove('animate-address-filled');
       }, 2300);
 
-      // 2. 自動的に「丁目・番地・号」の入力欄へフォーカス（カーソル）を移動し、続きの入力を促す
-      if (addr2Input) {
-        addr2Input.focus();
-        if (typeof addr2Input.setSelectionRange === 'function' && addr2Input.value) {
-          addr2Input.setSelectionRange(addr2Input.value.length, addr2Input.value.length);
-        }
+      // 2. 「丁目・番地・号」入力欄へのフォーカス
+      // ※ 自動復元中以外は、手動ボタン押下時および7桁自動入力完了時のいずれでも自動フォーカスして入力待ち状態にする
+      if (!isRestoringProfile && addr2Input) {
+        setTimeout(() => {
+          addr2Input.focus();
+          if (typeof addr2Input.setSelectionRange === 'function' && addr2Input.value) {
+            addr2Input.setSelectionRange(addr2Input.value.length, addr2Input.value.length);
+          }
+        }, 50);
+
         addr2Input.classList.remove('animate-address-next');
         void addr2Input.offsetWidth;
         addr2Input.classList.add('animate-address-next');
@@ -2726,6 +2971,9 @@
     }
 
     async function searchAddressByPostalCode(isManualTrigger = false) {
+      // 自動復元中は住所検索を実行しない（すでに保存された完全な住所を上書き・スクロールさせないため）
+      if (isRestoringProfile) return;
+
       const zipInput = document.getElementById('postalCode');
       const prefSelect = document.getElementById('prefecture');
       const addr1Input = document.getElementById('addressLine1');
@@ -2748,7 +2996,7 @@
       // 端末内キャッシュにあれば通信せず即時反映
       if (addressCache.has(cleanZip)) {
         const cached = addressCache.get(cleanZip);
-        if (cached) applyAddressResult(zipInput, cleanZip, cached);
+        if (cached) applyAddressResult(zipInput, cleanZip, cached, isManualTrigger);
         else showPostalMessage('該当する住所が見つかりませんでした。郵便番号をご確認ください。', true);
         return;
       }
@@ -2769,7 +3017,7 @@
         if (normalizeZipCode(zipInput.value) !== cleanZip) return;
 
         if (data && (data.prefecture || data.city)) {
-          applyAddressResult(zipInput, cleanZip, data);
+          applyAddressResult(zipInput, cleanZip, data, isManualTrigger);
         } else {
           showPostalMessage('該当する住所が見つかりませんでした。郵便番号をご確認ください。', true);
         }
@@ -2793,6 +3041,7 @@
 
       // スマホ等でキーボード表示時に市区町村・番地入力欄までしっかり画面内に収めるためのスクロール調整
       zipInput.addEventListener('focus', function() {
+        if (isRestoringProfile) return;
         clearPostalMessage();
         // フォーカス直後と仮想キーボード展開完了時（約260ms）の2段階で上部位置へスムーズスクロール
         setTimeout(smoothScrollToPostalSection, 50);
@@ -2800,6 +3049,7 @@
       });
 
       zipInput.addEventListener('input', function() {
+        if (isRestoringProfile) return;
         clearPostalMessage();
         const clean = normalizeZipCode(this.value);
         if (clean.length === 7) {
@@ -2869,17 +3119,24 @@
       }
     }
 
-    async function setSchoolSearchScope(isNational) {
+    async function setSchoolSearchScope(isNational, shouldFocus = true) {
       isNationalSchoolSearch = isNational;
       updateSchoolScopeButtonsUI(isNational);
 
       const input = document.getElementById('currentSchool');
       if (!input) return;
-      // 入力欄のフォーカスを維持・復帰
-      input.focus();
+      if (shouldFocus) {
+        // 入力欄のフォーカスを維持・復帰
+        input.focus();
+      }
+
+      // 選択状態を即座に localStorage に保存（復元時以外）
+      if (!isRestoringProfile) {
+        saveProfileToStorage();
+      }
 
       const val = input.value.trim();
-      if (val.length > 0) {
+      if (val.length > 0 && shouldFocus) {
         // ボタン切り替えイベントで即座に新しいモードのパラメータを付与して /api/schools を強制再取得
         await executeSchoolSearch(val, currentSelectedGrade, isNational, true);
       }
@@ -3013,8 +3270,17 @@
       if (input) {
         input.value = item.name;
         input.dataset.selectedSchool = item.name;
-        input.dispatchEvent(new Event('input'));
+        input.dataset.prefecture = item.prefecture || '';
+
+        // 選択された学校が岡山県外の場合は自動的に「県外・全国」モードに同期
+        if (item.prefecture && item.prefecture !== '岡山県') {
+          isNationalSchoolSearch = true;
+          updateSchoolScopeButtonsUI(true);
+        }
+
+        input.dispatchEvent(new Event('input', { bubbles: true }));
         input.focus();
+        saveProfileToStorage();
       }
       hideSchoolSuggestions();
     }
@@ -3238,8 +3504,11 @@
           // 性別
           student_gender: selectedGender,
           gender: selectedGender,
-          // 在籍中学校・小学校名
+          // 在籍中学校・小学校名 ＆ 学校区分
           current_school: document.getElementById('currentSchool')?.value.trim() || '',
+          school_is_national: !!isNationalSchoolSearch,
+          school_scope: isNationalSchoolSearch ? 'national' : 'pref',
+          school_prefecture: document.getElementById('currentSchool')?.dataset?.prefecture || '',
           // 保護者氏名 / フリガナ
           parent_last_name: document.getElementById('parentLastName')?.value.trim() || '',
           parent_first_name: document.getElementById('parentFirstName')?.value.trim() || '',
@@ -3287,6 +3556,9 @@
       });
     }
 
+    // 自動復元処理中フラグ（自動フォーカスや意図しないスクロール、郵便番号API自動実行をガード）
+    let isRestoringProfile = false;
+
     /**
      * ページ表示時に保存された基本情報を自動復元
      */
@@ -3300,7 +3572,13 @@
         const data = JSON.parse(raw);
         if (!data || typeof data !== 'object') return;
 
+        isRestoringProfile = true;
         let restoredCount = 0;
+
+        // 郵便番号検索が誤発火しないよう直前検索値を事前同期
+        if (data.postal_code) {
+          lastSearchedZip = normalizeZipCode(data.postal_code);
+        }
 
         const applyValue = (elemId, val) => {
           if (!val) return;
@@ -3336,6 +3614,37 @@
 
         applyValue('currentSchool', data.current_school);
 
+        // 学校区分（岡山県内 / 県外・全国）の復元
+        let isNational = false;
+        if (typeof data.school_is_national === 'boolean') {
+          isNational = data.school_is_national;
+        } else if (data.school_scope === 'national' || data.school_scope === 'all') {
+          isNational = true;
+        } else if (data.school_prefecture && data.school_prefecture !== '岡山県') {
+          isNational = true;
+        } else if (data.current_school) {
+          // 登録済みの学校名に岡山県外の都道府県名が含まれているか自動判定
+          const otherPrefs = [
+            '北海道', '青森', '岩手', '宮城', '秋田', '山形', '福島',
+            '茨城', '栃木', '群馬', '埼玉', '千葉', '東京', '神奈川',
+            '新潟', '富山', '石川', '福井', '山梨', '長野', '岐阜',
+            '静岡', '愛知', '三重', '滋賀', '京都', '大阪', '兵庫',
+            '奈良', '和歌山', '鳥取', '島根', '広島', '山口',
+            '徳島', '香川', '愛媛', '高知', '福岡', '佐賀', '長崎',
+            '熊本', '大分', '宮崎', '鹿児島', '沖縄'
+          ];
+          const schoolVal = String(data.current_school);
+          if (otherPrefs.some(p => schoolVal.includes(p)) && !schoolVal.includes('岡山')) {
+            isNational = true;
+          }
+        }
+
+        if (isNational) {
+          setSchoolSearchScope(true, false);
+        } else {
+          setSchoolSearchScope(false, false);
+        }
+
         applyValue('parentLastName', data.parent_last_name);
         applyValue('parentFirstName', data.parent_first_name);
         applyValue('parentKanaLastName', data.parent_kana_last_name);
@@ -3361,6 +3670,10 @@
         }
       } catch (err) {
         console.warn('[AutoFill] localStorage restore failed:', err);
+      } finally {
+        setTimeout(() => {
+          isRestoringProfile = false;
+        }, 200);
       }
     }
 
@@ -3440,6 +3753,59 @@
 
     window.dismissAutofillBanner = dismissAutofillBanner;
     window.clearSavedProfile = clearSavedProfile;
+
+    // ========================================================
+    // 住所パース処理（都道府県、市区・郡町村、町名・丁目・番地、建物名・部屋番号）
+    // ========================================================
+    function parseJapaneseAddress(prefInput, addressLine1, addressLine2, addressLine3) {
+      let raw1 = (addressLine1 || '').trim();
+      let raw2 = (addressLine2 || '').trim();
+      let raw3 = (addressLine3 || '').trim();
+
+      // 1. 都道府県の抽出
+      let pref = '';
+      const prefMatch = raw1.match(/^(東京都|北海道|(?:京都|大阪)府|.{2,3}県)/);
+      if (prefMatch) {
+        pref = prefMatch[1];
+        raw1 = raw1.slice(pref.length).trim();
+      } else if (prefInput) {
+        pref = String(prefInput).trim();
+        if (raw1.startsWith(pref)) {
+          raw1 = raw1.slice(pref.length).trim();
+        }
+      }
+      if (!pref) pref = '岡山県';
+
+      // 2. 市区町村（郡町村を含む）の抽出
+      // 優先順位: 1) 郡＋町村（例: 都窪郡早島町, 伊予郡松前町） 2) 政令指定都市 市＋区（例: 岡山市北区） 3) 一般市/区/町/村
+      let city = '';
+      let town = '';
+      const countyMatch = raw1.match(/^([^0-9]+?郡[^0-9]+?[町村])(.*)$/);
+      const ordinanceCityMatch = raw1.match(/^([^0-9]+?市[^0-9]+?区)(.*)$/);
+      const generalMatch = raw1.match(/^([^0-9]+?[市区町村])(.*)$/);
+
+      if (countyMatch) {
+        city = countyMatch[1].trim();
+        town = countyMatch[2].trim();
+      } else if (ordinanceCityMatch) {
+        city = ordinanceCityMatch[1].trim();
+        town = ordinanceCityMatch[2].trim();
+      } else if (generalMatch) {
+        city = generalMatch[1].trim();
+        town = generalMatch[2].trim();
+      } else {
+        city = raw1;
+        town = '';
+      }
+
+      // 3. 町名・丁目・番地
+      const addr1 = [town, raw2].filter(Boolean).join(' ').trim();
+
+      // 4. 建物名・部屋番号
+      const addr2 = raw3;
+
+      return { pref, city, addr1, addr2 };
+    }
 
     // ========================================================
     // 6. フォームバリデーション & Stripe 決済接続ハンドラー
@@ -3635,6 +4001,7 @@
       const addressLine3 = document.getElementById('addressLine3')?.value.trim() || '';
       const paymentMethod = form.querySelector('input[name="payment_method"]:checked')?.value || null;
       const agreeTerms = document.getElementById('agreeTerms')?.checked;
+      const remarks = (document.getElementById('remarks')?.value || '').trim().slice(0, 300);
 
       // 4. バリデーションチェック
       if (!studentLastName || !studentFirstName) {
@@ -3748,6 +4115,15 @@ if (!parentKanaLastName || !parentKanaFirstName) {
         return;
       }
       if (paymentMethod === 'convenience_store') {
+        const dl = getConvenienceDeadline();
+        if (dl.isClosed) {
+          resetSubmitBtn();
+          const cardRadio = document.querySelector('input[name="payment_method"][value="credit_card"]');
+          if (cardRadio) cardRadio.checked = true;
+          updatePaymentMethodSummary('credit_card');
+          showFormError('コンビニ決済の受付期間は終了いたしました。クレジットカード決済をご利用ください。', cardRadio);
+          return;
+        }
         const agreeConvenience = document.getElementById('agreeConvenienceTerms')?.checked;
         if (!agreeConvenience) {
           resetSubmitBtn();
@@ -3807,8 +4183,10 @@ if (!parentKanaLastName || !parentKanaFirstName) {
         const gradeLabels = { 'sho6': '小学6年生', 'chu1': '中学1年生', 'chu2': '中学2年生', 'chu3': '中学3年生' };
         const gradeText = gradeLabels[currentSelectedGrade] || currentSelectedGrade;
         const examNameStr = selectedExams.map(exam => exam.issueName ? `${exam.issueName} ${exam.title}` : exam.title).join(' / ');
-        const fullAddressString = [addressLine1, addressLine2, addressLine3].filter(Boolean).join(' ');
-        const extractedPref = addressLine1.match(/^(.+?[都道府県])/)?.[1] || prefecture || '岡山県';
+        
+        // 住所の4分割（都道府県、市区・郡町村、町名・丁目・番地、建物名・部屋番号）
+        const { pref, city, addr1, addr2 } = parseJapaneseAddress(prefecture, addressLine1, addressLine2, addressLine3);
+        const fullAddressString = [pref, city, addr1, addr2].filter(Boolean).join(' ');
         const firstVenueName = selectedExams[0]?.venueLabel || selectedExams[0]?.venue || '会場未指定';
 
         // 決済手段の動的切り替え（card / konbini）
@@ -3839,10 +4217,18 @@ if (!parentKanaLastName || !parentKanaFirstName) {
           phone: parentTel,
           email: parentEmail,
           postal_code: postalCode,
-          prefecture: extractedPref,
-          city: addressLine1,
-          address1: addressLine2,
-          address2: addressLine3,
+
+          // 住所パーツ4分割 & 連絡事項
+          pref: pref,
+          city: city,
+          addr1: addr1,
+          addr2: addr2,
+          remarks: remarks,
+
+          // 互換用
+          prefecture: pref,
+          address1: addr1,
+          address2: addr2,
 
           // エイリアス・互換用
           venue: firstVenueName,
@@ -3861,7 +4247,7 @@ if (!parentKanaLastName || !parentKanaFirstName) {
 
         const checkoutPayload = {
           // ========================================================
-          // 【GAS 申込受付台帳・必須19項目】
+          // 【GAS 申込受付台帳・必須25項目】
           // ========================================================
           received_at: '', // 決済完了時にJST日時を付与
           session_id: '',  // 決済完了時にStripeセッションIDを付与
@@ -3878,10 +4264,21 @@ if (!parentKanaLastName || !parentKanaFirstName) {
           email: parentEmail,
           phone: parentTel,
           postal_code: postalCode,
-          prefecture: extractedPref,
-          city: addressLine1,
-          address1: addressLine2,
-          address2: addressLine3,
+
+          // 住所パーツ4分割 & 連絡事項
+          pref: pref,
+          city: city,
+          addr1: addr1,
+          addr2: addr2,
+          remarks: remarks,
+
+          // 互換用
+          prefecture: pref,
+          address_line1: addr1,
+          address_line2: addr2,
+          address_line3: addr2,
+          address1: addr1,
+          address2: addr2,
 
           // エイリアス（空欄防止用）
           venue: firstVenueName,
@@ -3911,13 +4308,18 @@ if (!parentKanaLastName || !parentKanaFirstName) {
           // 【詳細パラメータ（顧客管理・DB保存用）】
           // ========================================================
           raw_payment_method: paymentMethod,
+          remarks: remarks,
           student_gender: gender,
           student_grade: currentSelectedGrade,
           student_grade_label: gradeText,
           student_school: currentSchool,
-          address_line1: addressLine1,
-          address_line2: addressLine2,
-          address_line3: addressLine3,
+          pref: pref,
+          city: city,
+          addr1: addr1,
+          addr2: addr2,
+          address_line1: addr1,
+          address_line2: addr2,
+          address_line3: addr2,
           address: fullAddressString,
           'cf-turnstile-response': turnstileToken,
           exams: selectedExams.map(exam => ({
@@ -4016,35 +4418,31 @@ if (!parentKanaLastName || !parentKanaFirstName) {
     }
 
     // ========================================================
-    // 7. microCMS からの動的データ取得（exam-guides API）
+    // 7. Cloudflare D1 からの動的データ取得（/api/exam-guides）
     // ========================================================
-    async function loadExamsFromMicroCMS() {
-      if (!MICROCMS_CONFIG.apiKey || MICROCMS_CONFIG.apiKey === 'YOUR_MICROCMS_API_KEY') {
-        console.info('[microCMS] APIキー未設定のため、内蔵の模試マスターデータを使用します。');
-        _examGuidesCache = null;
-        return;
-      }
-
+    async function loadExamsFromD1() {
       try {
-        const url = `https://${MICROCMS_CONFIG.serviceDomain}.microcms.io/api/v1/${MICROCMS_CONFIG.endpoint}?limit=100&_t=${Date.now()}`;
-        const res = await fetch(url, {
-          cache: 'no-store',
-          headers: { 'X-MICROCMS-API-KEY': MICROCMS_CONFIG.apiKey }
+        const res = await fetch('/api/exam-guides', {
+          cache: 'no-store'
         });
         if (res.ok) {
           const data = await res.json();
-          if (data && data.contents && data.contents.length > 0) {
-            _examGuidesCache = data.contents;
-            console.log('[microCMS] exam-guides データを正常に取得しました:', _examGuidesCache);
+          if (data && data.success && data.grades) {
+            _examGuidesCache = data.grades;
+            console.log('[D1] exam-guides データを正常に取得しました:', _examGuidesCache);
+            if (currentSelectedGrade && typeof renderExamCards === 'function') {
+              renderExamCards(currentSelectedGrade);
+            }
+            return;
           }
-        } else {
-          console.warn('[microCMS] HTTPレスポンスエラー:', res.status);
         }
+        console.warn('[D1] HTTPレスポンスエラーまたは無効なデータ形式:', res.status);
       } catch (err) {
-        console.warn('[microCMS] exam-guides データの取得に失敗しました。フォールバックデータを使用します:', err);
-        _examGuidesCache = null;
+        console.warn('[D1] exam-guides データの取得に失敗しました。フォールバックデータを使用します:', err);
       }
+      _examGuidesCache = null;
     }
+    const loadExamsFromMicroCMS = loadExamsFromD1; // 後方互換用エイリアス
 
     // ========================================================
     // 8. ナビゲーション・ドロップダウン用関数
@@ -4130,8 +4528,8 @@ if (!parentKanaLastName || !parentKanaFirstName) {
       initialTargetGrade = normalizedGrade || null; // パラメータ未指定時は null（未選択）
       initialTargetMonth = parseMonthParam(urlParams.get('month'));
 
-      // microCMSデータ取得（存在する場合）
-      await loadExamsFromMicroCMS();
+      // D1データ取得（/api/exam-guides から高速配信）
+      await loadExamsFromD1();
 
       // 初期学年および指定月号をフォームに反映（URL指定があれば選択、なければ未選択で待機）
       selectFormGrade(initialTargetGrade, initialTargetMonth);
@@ -4154,6 +4552,21 @@ if (!parentKanaLastName || !parentKanaFirstName) {
 
       // 基本情報の自動復元（前回保存データが存在する場合）
       restoreSavedProfile();
+
+      // 初期表示時の意図しない入力欄自動フォーカス・スクロールを完全に防止し、常に最上部で待機
+      if (document.activeElement && typeof document.activeElement.blur === 'function' && document.activeElement !== document.body) {
+        document.activeElement.blur();
+      }
+      window.scrollTo(0, 0);
+      setTimeout(() => {
+        if (document.activeElement && typeof document.activeElement.blur === 'function' && document.activeElement !== document.body) {
+          document.activeElement.blur();
+        }
+        window.scrollTo(0, 0);
+      }, 60);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+      }, 250);
     });
   </script>
 </body>

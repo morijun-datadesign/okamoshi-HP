@@ -681,10 +681,10 @@
               </div>
             </div>
             <!-- お申し込み締切 -->
-            <div class="flex items-baseline gap-3 sm:gap-4 pt-2.5 sm:pt-2 border-t border-slate-200/80">
-              <span class="w-24 sm:w-28 text-xs sm:text-sm font-bold text-slate-500 whitespace-nowrap shrink-0">お申し込み締切</span>
+            <div class="flex items-start gap-3 sm:gap-4 pt-2.5 sm:pt-2 border-t border-slate-200/80">
+              <span class="w-24 sm:w-28 text-xs sm:text-sm font-bold text-slate-500 whitespace-nowrap shrink-0 pt-0.5">お申し込み締切</span>
               <div class="flex-1 min-w-0">
-                <span id="card-deadline" class="text-xs sm:text-base font-bold text-slate-900 tracking-tight whitespace-nowrap overflow-hidden text-ellipsis block">2026年10月5日(月) 23:59まで</span>
+                <div id="card-deadline" class="text-xs sm:text-sm font-bold text-slate-900 tracking-tight">読み込み中...</div>
               </div>
             </div>
           </div>
@@ -1572,645 +1572,132 @@
   <!-- =========================================================================
        JavaScript ロジック（B案データモデル & 共通ヘッダー連動）
        ========================================================================= -->
-  <script defer src="/js/microcms-config.js"></script>
-  <script>
-    // 模試データモデル（examData）
-    const examData = {
-      c3: {
-        gradeName: "中学3年生",
-        examName: "岡山県統一模擬試験",
-        price: "5,500円",
-        rounds: [
-          { 
-            monthName: "3月号",
-            monthNum: 3,
-            deadline: "2026年4月6日(月) 23:59まで", 
-            status: "finished", 
-            statusText: "終了", 
-            scopeList: [
-              { subject: "国語", topics: ["中1・中2全範囲", "現代文", "古文", "文法総合"] },
-              { subject: "数学", topics: ["数と式", "一次関数", "平行と合同", "確率・資料の活用"] },
-              { subject: "英語", topics: ["中1・中2文法全般", "対話文読解", "英作文の基礎"] },
-              { subject: "理科", topics: ["光・音・力", "化学変化と原子・分子", "動物の生活", "天気とその変化"] },
-              { subject: "社会", topics: ["地理分野総合", "歴史分野（古代〜近世）"] }
-            ],
-            venuesList: [
-              { badge: "岡山会場", school: "山陽学園中学校・高等学校", date: "2026年4月19日(日)" },
-              { badge: "津山会場", school: "美作高等学校", date: "2026年4月19日(日)" },
-              { badge: "自宅受験", school: "", date: "2026年4月4日(土)〜4月19日(日)" }
-            ]
-          },
-          { 
-            monthName: "6月号",
-            monthNum: 6,
-            deadline: "2026年6月22日(月) 23:59まで", 
-            status: "finished", 
-            statusText: "終了", 
-            scopeList: [
-              { subject: "国語", topics: ["論説文", "小説", "古典の基礎", "漢字・語句"] },
-              { subject: "数学", topics: ["式の展開と因数分解", "平方根", "中1・中2の復習"] },
-              { subject: "英語", topics: ["現在完了形", "受動態", "長文読解"] },
-              { subject: "理科", topics: ["水溶液とイオンの基礎", "生命の連続性（生殖・遺伝）", "中1・中2総合"] },
-              { subject: "社会", topics: ["日本地理・世界地理", "歴史総合（開国〜明治・大正）"] }
-            ],
-            venuesList: [
-              { badge: "岡山会場", school: "山陽学園中学校・高等学校", date: "2026年7月5日(日)" },
-              { badge: "自宅受験", school: "", date: "2026年6月20日(土)〜7月5日(日)" }
-            ]
-          },
-          { 
-            monthName: "8月号",
-            monthNum: 8,
-            deadline: "2026年8月10日(月) 23:59まで", 
-            status: "finished", 
-            statusText: "終了", 
-            scopeList: [
-              { subject: "国語", topics: ["論説的文章", "文学的文章", "古文", "作文・表現"] },
-              { subject: "数学", topics: ["二次方程式の計算と応用", "関数 y=ax²の基礎", "図形の復習"] },
-              { subject: "英語", topics: ["不定詞・動名詞の応用", "関係代名詞（主格）", "英作文"] },
-              { subject: "理科", topics: ["化学変化とイオン", "運動とエネルギー（仕事）", "中1・中2全分野"] },
-              { subject: "社会", topics: ["歴史分野全範囲", "地理総合", "公民（私たちの生活と現代社会）"] }
-            ],
-            venuesList: [
-              { badge: "岡山会場", school: "山陽学園中学校・高等学校", date: "2026年8月23日(日)" },
-              { badge: "自宅受験", school: "", date: "2026年8月8日(土)〜8月23日(日)" }
-            ]
-          },
-          { 
-            monthName: "10月号",
-            monthNum: 10,
-            deadline: "2026年10月5日(月) 23:59まで", 
-            status: "active", 
-            statusText: "受付中", 
-            scopeList: [
-              { subject: "国語", topics: ["論説文", "古文", "小説", "文法"] },
-              { subject: "数学", topics: ["二次方程式", "関数y=ax²", "相似の基礎"] },
-              { subject: "英語", topics: ["関係代名詞", "長文読解"] },
-              { subject: "理科", topics: ["運動とエネルギー", "水溶液"] },
-              { subject: "社会", topics: ["現代の政治", "地理歴史総合"] }
-            ],
-            venuesList: [
-              { badge: "岡山会場", school: "山陽学園中学校・高等学校", date: "2026年11月1日(日)" },
-              { badge: "津山会場", school: "美作高等学校", date: "2026年10月25日(日)" },
-              { badge: "自宅受験", school: "全国どこからでも", date: "2026年10月17日(土)〜11月1日(日)" }
-            ],
-            venueDetails: [
-              {
-                id: "okayama",
-                name: "岡山会場",
-                place: "山陽学園中学校・高等学校",
-                examDate: "2026年11月1日(日)",
-                ticketDispatch: "10月26日(月) 発送予定",
-                reportDispatch: "11月12日(木) 発送予定",
-                schedule: [
-                  { label: "集合・諸注意", time: "8:45 〜 9:00" },
-                  { label: "国語（50分）", time: "9:05 〜 9:55" },
-                  { label: "数学（50分）", time: "10:10 〜 11:00" },
-                  { label: "英語（50分）", time: "11:15 〜 12:05" },
-                  { label: "昼食休憩", time: "12:05 〜 12:50" },
-                  { label: "理科（45分）", time: "12:55 〜 13:40" },
-                  { label: "社会（45分）", time: "13:55 〜 14:40" }
-                ],
-                items: "受験票、筆記用具（HB以上の鉛筆またはシャープペンシル、消しゴム）、コンパス、三角定規、腕時計、昼食・飲料、上履き（要持参）"
-              },
-              {
-                id: "tsuyama",
-                name: "津山会場",
-                place: "美作高等学校",
-                examDate: "2026年10月25日(日)",
-                ticketDispatch: "10月19日(月) 発送予定",
-                reportDispatch: "11月5日(木) 発送予定",
-                schedule: [
-                  { label: "集合・諸注意", time: "9:00 〜 9:15" },
-                  { label: "国語（50分）", time: "9:20 〜 10:10" },
-                  { label: "数学（50分）", time: "10:25 〜 11:15" },
-                  { label: "英語（50分）", time: "11:30 〜 12:20" },
-                  { label: "昼食休憩", time: "12:20 〜 13:05" },
-                  { label: "理科（45分）", time: "13:10 〜 13:55" },
-                  { label: "社会（45分）", time: "14:10 〜 14:55" }
-                ],
-                items: "受験票、筆記用具、コンパス、定規、腕時計、昼食・飲料、上履き（要持参）"
-              },
-              {
-                id: "home",
-                name: "🏠 自宅受験",
-                place: "全国どこからでも",
-                examDate: "2026年10月17日(土)〜11月1日(日) 答案返送締切",
-                ticketDispatch: "10月13日(火)頃に問題一式をご自宅へお届け",
-                reportDispatch: "答案受領後、約10日〜2週間で返送",
-                schedule: [
-                  { label: "問題同封の時間割・タイマーに沿って本番と同じ制限時間で自室にてご解答ください。" }
-                ],
-                items: "お届けする問題用紙・解答用紙、筆記用具、同封の返信用封筒（ポスト投函）"
-              }
-            ]
-          },
-          { 
-            monthName: "12月号",
-            monthNum: 12,
-            deadline: "2026年12月14日(月) 23:59まで", 
-            status: "open", 
-            statusText: "申込可", 
-            scopeList: [
-              { subject: "国語", topics: ["高校入試本番レベル総合", "論説文", "古文", "作文"] },
-              { subject: "数学", topics: ["相似な図形", "円周角の定理", "三平方の定理の基礎"] },
-              { subject: "英語", topics: ["関係代名詞総合", "長文読解演習", "対話文"] },
-              { subject: "理科", topics: ["地球と宇宙（天体）", "自然界と人間", "理科総合演習"] },
-              { subject: "社会", topics: ["日本国憲法と政治機構", "国際社会と地球課題", "全分野総合"] }
-            ],
-            venuesList: [
-              { badge: "岡山会場", school: "山陽学園中学校・高等学校", date: "2026年12月13日(日)" },
-              { badge: "津山会場", school: "美作高等学校", date: "2026年12月6日(日)" },
-              { badge: "自宅受験", school: "全国どこからでも", date: "2026年11月28日(土)〜12月13日(日)" }
-            ]
-          }
-        ]
-      },
-      c2: {
-        gradeName: "中学2年生",
-        examName: "岡山県統一模擬試験",
-        price: "4,400円",
-        rounds: [
-          { 
-            monthName: "3月号",
-            monthNum: 3,
-            deadline: "2026年4月6日(月) 23:59まで", 
-            status: "finished", 
-            statusText: "終了", 
-            scopeList: [
-              { subject: "国語", topics: ["中1全範囲", "文学的文章", "説明的文章", "文法総合"] },
-              { subject: "数学", topics: ["中1全範囲", "正の数・負の数", "文字と式", "方程式"] },
-              { subject: "英語", topics: ["中1全範囲", "一般動詞・be動詞", "過去形", "代名詞"] },
-              { subject: "理科", topics: ["中1全範囲", "光・音・力", "物質のすがた", "植物のつくり"] },
-              { subject: "社会", topics: ["地理分野全般", "歴史分野（古代〜中世）"] }
-            ],
-            venuesList: [
-              { badge: "岡山会場", school: "山陽学園中学校・高等学校", date: "2026年4月19日(日)" },
-              { badge: "自宅受験", school: "", date: "2026年4月4日(土)〜4月19日(日)" }
-            ]
-          },
-          { 
-            monthName: "8月号",
-            monthNum: 8,
-            deadline: "2026年8月10日(月)", 
-            status: "finished", 
-            statusText: "終了", 
-            scopeList: [
-              { subject: "国語", topics: ["中1全範囲", "中2 1学期の履修範囲"] },
-              { subject: "数学", topics: ["式の計算", "連立方程式の計算"] },
-              { subject: "英語", topics: ["過去形", "未来の表現(will, be going to)"] },
-              { subject: "理科", topics: ["化学変化と原子・分子", "中1の総復習"] },
-              { subject: "社会", topics: ["日本の諸地域", "江戸時代まで"] }
-            ],
-            venuesList: [
-              { badge: "岡山会場", school: "山陽学園中学校・高等学校", date: "2026年8月23日(日)" },
-              { badge: "自宅受験", school: "", date: "2026年8月8日(土)〜8月23日(日)" }
-            ]
-          },
-          { 
-            monthName: "12月号",
-            monthNum: 12,
-            deadline: "2026年11月10日(火) 23:59まで", 
-            status: "active", 
-            statusText: "受付中", 
-            scopeList: [
-              { subject: "国語", topics: ["説明文", "文学的文章", "文法（動詞の活用）", "古文の基礎"] },
-              { subject: "数学", topics: ["連立方程式の応用", "一次関数のグラフと式", "平行線と角"] },
-              { subject: "英語", topics: ["助動詞", "不定詞（名詞的・副詞的用法）", "動名詞"] },
-              { subject: "理科", topics: ["動物の体のつくりと働き（消化・呼吸・循環）", "天気の変化"] },
-              { subject: "社会", topics: ["江戸時代の産業・文化", "近畿・中部地方", "歴史総合"] }
-            ],
-            venuesList: [
-              { badge: "岡山会場", school: "山陽学園中学校・高等学校", date: "2026年12月14日(日)" },
-              { badge: "自宅受験", school: "全国どこからでも", date: "2026年12月6日(土)〜12月14日(日)" }
-            ],
-            venueDetails: [
-              {
-                id: "okayama",
-                name: "岡山会場",
-                place: "山陽学園中学校・高等学校",
-                examDate: "2026年12月14日(日)",
-                ticketDispatch: "12月7日(月) 発送予定",
-                reportDispatch: "12月25日(金) 発送予定",
-                schedule: [
-                  { label: "集合・諸注意", time: "8:45 〜 9:00" },
-                  { label: "国語（50分）", time: "9:05 〜 9:55" },
-                  { label: "数学（50分）", time: "10:10 〜 11:00" },
-                  { label: "英語（50分）", time: "11:15 〜 12:05" },
-                  { label: "昼食休憩", time: "12:05 〜 12:50" },
-                  { label: "理科（45分）", time: "12:55 〜 13:40" },
-                  { label: "社会（45分）", time: "13:55 〜 14:40" }
-                ],
-                items: "受験票、筆記用具（HB以上の鉛筆またはシャープペンシル、消しゴム）、コンパス、三角定規、腕時計、昼食・飲料、上履き（要持参）"
-              },
-              {
-                id: "home",
-                name: "🏠 自宅受験",
-                place: "全国どこからでも",
-                examDate: "2026年12月6日(土)〜12月14日(日) 答案返送締切",
-                ticketDispatch: "11月28日(土)頃に問題一式をご自宅へお届け",
-                reportDispatch: "答案受領後、約10日〜2週間で返送",
-                schedule: [
-                  { label: "問題同封の時間割・タイマーに沿って本番と同じ制限時間で自室にてご解答ください。" }
-                ],
-                items: "お届けする問題用紙・解答用紙、筆記用具、同封の返信用封筒（ポスト投函）"
-              }
-            ]
-          }
-        ]
-      },
-      c1: {
-        gradeName: "中学1年生",
-        examName: "岡山県統一模擬試験",
-        price: "4,400円",
-        rounds: [
-          { 
-            monthName: "3月号",
-            monthNum: 3,
-            deadline: "2026年4月6日(月) 23:59まで", 
-            status: "finished", 
-            statusText: "終了", 
-            scopeList: [
-              { subject: "国語", topics: ["小6全範囲", "中学準備基礎読解", "漢字・言葉のきまり"] },
-              { subject: "数学", topics: ["小学校の算数総合", "分数・小数の計算", "割合・比", "平面・空間図形"] },
-              { subject: "英語", topics: ["アルファベット・基本単語", "初歩の英文構成・自己紹介"] },
-              { subject: "理科", topics: ["小学校の理科総合", "物の燃え方", "水溶液", "てこ・電気"] },
-              { subject: "社会", topics: ["日本の歴史総合", "日本の地理基礎", "政治・国際社会の基礎"] }
-            ],
-            venuesList: [
-              { badge: "岡山会場", school: "山陽学園中学校・高等学校", date: "2026年4月19日(日)" },
-              { badge: "自宅受験", school: "", date: "2026年4月4日(土)〜4月19日(日)" }
-            ]
-          },
-          { 
-            monthName: "8月号",
-            monthNum: 8,
-            deadline: "2026年8月10日(月)", 
-            status: "finished", 
-            statusText: "終了", 
-            scopeList: [
-              { subject: "国語", topics: ["中1 1学期履修範囲", "指示語・接続語", "漢字"] },
-              { subject: "数学", topics: ["正の数・負の数", "文字と式"] },
-              { subject: "英語", topics: ["アルファベット", "be動詞と一般動詞の現在形"] },
-              { subject: "理科", topics: ["植物の生活と種類（花のつくり・葉・茎・根）"] },
-              { subject: "社会", topics: ["世界の姿", "古代までの日本"] }
-            ],
-            venuesList: [
-              { badge: "岡山会場", school: "山陽学園中学校・高等学校", date: "2026年8月23日(日)" },
-              { badge: "自宅受験", school: "", date: "2026年8月8日(土)〜8月23日(日)" }
-            ]
-          },
-          { 
-            monthName: "12月号",
-            monthNum: 12,
-            deadline: "2026年11月10日(火) 23:59まで", 
-            status: "active", 
-            statusText: "受付中", 
-            scopeList: [
-              { subject: "国語", topics: ["論説文", "物語", "言葉の単位・品詞", "古典の入り口"] },
-              { subject: "数学", topics: ["方程式の計算と応用", "比例と反比例のグラフと基礎"] },
-              { subject: "英語", topics: ["三人称単数現在形", "代名詞の格変化", "疑問詞(Who/What/When/Where)"] },
-              { subject: "理科", topics: ["物質のすがた（気体の発生・水溶液の濃度）", "光と音の性質"] },
-              { subject: "社会", topics: ["世界各地の人々の生活", "アジア州・ヨーロッパ州", "中世の日本"] }
-            ],
-            venuesList: [
-              { badge: "岡山会場", school: "山陽学園中学校・高等学校", date: "2026年12月14日(日)" },
-              { badge: "自宅受験", school: "全国どこからでも", date: "2026年12月6日(土)〜12月14日(日)" }
-            ],
-            venueDetails: [
-              {
-                id: "okayama",
-                name: "岡山会場",
-                place: "山陽学園中学校・高等学校",
-                examDate: "2026年12月14日(日)",
-                ticketDispatch: "12月7日(月) 発送予定",
-                reportDispatch: "12月25日(金) 発送予定",
-                schedule: [
-                  { label: "集合・諸注意", time: "8:45 〜 9:00" },
-                  { label: "国語（50分）", time: "9:05 〜 9:55" },
-                  { label: "数学（50分）", time: "10:10 〜 11:00" },
-                  { label: "英語（50分）", time: "11:15 〜 12:05" },
-                  { label: "昼食休憩", time: "12:05 〜 12:50" },
-                  { label: "理科（45分）", time: "12:55 〜 13:40" },
-                  { label: "社会（45分）", time: "13:55 〜 14:40" }
-                ],
-                items: "受験票、筆記用具（HB以上の鉛筆またはシャープペンシル、消しゴム）、コンパス、三角定規、腕時計、昼食・飲料、上履き（要持参）"
-              },
-              {
-                id: "home",
-                name: "🏠 自宅受験",
-                place: "全国どこからでも",
-                examDate: "2026年12月6日(土)〜12月14日(日) 答案返送締切",
-                ticketDispatch: "11月28日(土)頃に問題一式をご自宅へお届け",
-                reportDispatch: "答案受領後、約10日〜2週間で返送",
-                schedule: [
-                  { label: "問題同封の時間割・タイマーに沿って本番と同じ制限時間で自室にてご解答ください。" }
-                ],
-                items: "お届けする問題用紙・解答用紙、筆記用具、同封の返信用封筒（ポスト投函）"
-              }
-            ]
-          }
-        ]
-      },
-      p6: {
-        gradeName: "小学6年生",
-        examName: "岡山県適性検査対策模試",
-        price: "5,500円",
-        rounds: [
-          { 
-            monthName: "6月号",
-            monthNum: 6,
-            deadline: "2026年6月1日(月) 23:59まで", 
-            status: "finished", 
-            statusText: "終了", 
-            scopeList: [
-              { subject: "適性I", topics: ["自然科学・算数的思考", "規則性の発見", "グラフの読み取り"] },
-              { subject: "適性II", topics: ["文章読解", "要約記述", "自分の考えの論理的表現（作文）"] }
-            ],
-            venuesList: [
-              { badge: "岡山会場", school: "山陽学園中学校・高等学校", date: "2026年6月14日(日)" },
-              { badge: "自宅受験", school: "", date: "2026年5月30日(土)〜6月14日(日)" }
-            ]
-          },
-          { 
-            monthName: "9月号",
-            monthNum: 9,
-            deadline: "2026年9月21日(月) 23:59まで", 
-            status: "finished", 
-            statusText: "終了", 
-            scopeList: [
-              { subject: "適性I", topics: ["理科的実験思考", "条件整理・推理", "割合・比の活用"] },
-              { subject: "適性II", topics: ["長文読解", "会話文からの課題抽出", "400字作文"] }
-            ],
-            venuesList: [
-              { badge: "岡山会場", school: "山陽学園中学校・高等学校", date: "2026年10月4日(日)" },
-              { badge: "自宅受験", school: "", date: "2026年9月19日(土)〜10月4日(日)" }
-            ]
-          },
-          { 
-            monthName: "10月号",
-            monthNum: 10,
-            deadline: "2026年10月13日(火) 23:59まで", 
-            status: "active", 
-            statusText: "受付中", 
-            scopeList: [
-              { subject: "適性I", topics: ["操山・大安寺・天城傾向演習", "数理的処理", "自然科学の総合考察記述"] },
-              { subject: "適性II", topics: ["資料読み取り記述", "多角的な視点での論述", "本番形式長文作文"] }
-            ],
-            venuesList: [
-              { badge: "岡山会場", school: "山陽学園中学校・高等学校", date: "2026年11月1日(日)" },
-              { badge: "倉敷会場", school: "倉敷商工会議所", date: "2026年11月1日(日)" },
-              { badge: "自宅受験", school: "全国どこからでも", date: "2026年10月24日(土)〜11月1日(日)" }
-            ],
-            venueDetails: [
-              {
-                id: "okayama",
-                name: "岡山会場",
-                place: "山陽学園中学校・高等学校",
-                examDate: "2026年11月1日(日)",
-                ticketDispatch: "10月26日(月) 発送予定",
-                reportDispatch: "11月12日(木) 発送予定",
-                schedule: [
-                  { label: "集合・諸注意", time: "8:45 〜 9:00" },
-                  { label: "適性検査I（45分）", time: "9:05 〜 9:50" },
-                  { label: "適性検査II（45分）", time: "10:05 〜 10:50" },
-                  { label: "面接対策・諸連絡", time: "11:00 〜 11:30" }
-                ],
-                items: "受験票、筆記用具（HB以上の鉛筆またはシャープペンシル、消しゴム）、定規、上履き（要持参）"
-              },
-              {
-                id: "kurashiki",
-                name: "倉敷会場",
-                place: "倉敷商工会議所",
-                examDate: "2026年11月1日(日)",
-                ticketDispatch: "10月26日(月) 発送予定",
-                reportDispatch: "11月12日(木) 発送予定",
-                schedule: [
-                  { label: "集合・諸注意", time: "8:45 〜 9:00" },
-                  { label: "適性検査I（45分）", time: "9:05 〜 9:50" },
-                  { label: "適性検査II（45分）", time: "10:05 〜 10:50" },
-                  { label: "面接対策・諸連絡", time: "11:00 〜 11:30" }
-                ],
-                items: "受験票、筆記用具、定規、上履き（要持参）"
-              },
-              {
-                id: "home",
-                name: "🏠 自宅受験",
-                place: "全国どこからでも",
-                examDate: "2026年10月24日(土)〜11月1日(日) 答案返送締切",
-                ticketDispatch: "10月20日(火)頃に問題一式をご自宅へお届け",
-                reportDispatch: "答案受領後、約10日〜2週間で返送",
-                schedule: [
-                  { label: "問題同封の時間割・タイマーに沿って本番と同じ制限時間で自室にてご解答ください。" }
-                ],
-                items: "お届けする問題用紙・解答用紙、筆記用具、同封の返信用封筒（ポスト投函）"
-              }
-            ]
-          }
-        ]
-      }
+    <script>
+    // ==========================================
+    // 模試データモデル（Cloudflare D1 /api/exam-guides から動的取得）
+    // ==========================================
+    let examData = {
+      c3: { gradeCode: "c3", gradeName: "中3", examName: "岡山県統一模擬試験", price: "5,500円", rounds: [] },
+      c2: { gradeCode: "c2", gradeName: "中2", examName: "岡山県統一模擬試験", price: "5,500円", rounds: [] },
+      c1: { gradeCode: "c1", gradeName: "中1", examName: "岡山県統一模擬試験", price: "5,500円", rounds: [] },
+      p6: { gradeCode: "p6", gradeName: "小6", examName: "岡山県適性検査対策模試", price: "5,500円", rounds: [] }
     };
 
-    // ==========================================
-    // microCMS 動的模試日程・会場データ (exam-guides) 連動
-    // ==========================================
-    const MICROCMS_EXAM_CONFIG = {
-      serviceDomain: 'okamoshi-blog',
-      apiKey: '4qO3xGjs5W1r7zolbBgAX2KXP8VEUooOpMtc',
-      endpoint: 'exam-guides'
-    };
+    let isExamDataLoading = false;
+    let isExamDataError = false;
 
-    // ISO 8601 (UTC) を JST の「YYYY年M月D日(曜)」または「M/D(曜)」に変換する
-    function formatJstDate(isoStr, includeYear = true) {
-      if (!isoStr) return '';
-      const d = new Date(isoStr);
-      if (isNaN(d.getTime())) return isoStr;
-      
-      const jstDate = new Date(d.getTime() + 9 * 60 * 60 * 1000);
-      const y = jstDate.getUTCFullYear();
-      const m = jstDate.getUTCMonth() + 1;
-      const day = jstDate.getUTCDate();
-      const weekDays = ['日', '月', '火', '水', '木', '金', '土'];
-      const w = weekDays[jstDate.getUTCDay()];
+    // ローディング表示（スピナー＆スケルトン）
+    function renderExamLoadingState() {
+      const scheduleList = document.getElementById('schedule-list');
+      const scopeListContainer = document.getElementById('scope-list-container');
+      const venueDetailContent = document.getElementById('venue-detail-content');
+      const ctaContainer = document.getElementById('cta-container');
 
-      if (includeYear) {
-        return `${y}年${m}月${day}日(${w})`;
-      } else {
-        return `${m}月${day}日(${w})`;
+      const spinnerHtml = '<div class="py-8 flex flex-col items-center justify-center gap-2.5 text-slate-500">' +
+        '<div class="w-6 h-6 border-2 border-emerald-600/30 border-t-emerald-600 rounded-full animate-spin"></div>' +
+        '<span class="text-xs font-medium">模試データを読み込み中...</span>' +
+        '</div>';
+
+      if (scheduleList) scheduleList.innerHTML = spinnerHtml;
+      if (scopeListContainer) scopeListContainer.innerHTML = spinnerHtml;
+      if (venueDetailContent) venueDetailContent.innerHTML = spinnerHtml;
+      if (ctaContainer) {
+        ctaContainer.innerHTML = '<div class="w-full py-4 px-6 rounded-lg bg-slate-100 text-slate-400 font-bold text-center text-sm flex items-center justify-center gap-2">' +
+          '<div class="w-4 h-4 border-2 border-slate-300 border-t-emerald-600 rounded-full animate-spin"></div>' +
+          '<span>最新情報を取得中...</span>' +
+          '</div>';
       }
     }
 
-    // 学年と号名（例: "10月号", "12月号"）から対応するラウンドIndexを判定
-    function findTargetRoundIndex(gradeKey, issueName) {
-      if (!issueName) return -1;
-      const numMatch = issueName.match(/(\d+)/);
-      if (!numMatch) return -1;
-      const num = parseInt(numMatch[1], 10);
-      
-      const data = examData[gradeKey];
-      if (!data || !Array.isArray(data.rounds)) return -1;
+    // エラー表示 & 再読み込みUI
+    function renderExamErrorState() {
+      const scheduleList = document.getElementById('schedule-list');
+      const venueDetailContent = document.getElementById('venue-detail-content');
+      const ctaContainer = document.getElementById('cta-container');
 
-      return data.rounds.findIndex(r => r.monthNum === num);
-    }
+      const errorHtml = '<div class="py-8 px-4 text-center">' +
+        '<div class="inline-flex flex-col items-center justify-center gap-3 text-slate-600 max-w-md mx-auto">' +
+        '<span class="material-symbols-outlined text-3xl text-rose-500">wifi_off</span>' +
+        '<p class="text-sm font-medium text-slate-800 leading-relaxed">データを取得できませんでした。電波の良い環境でページを再読み込みしてください</p>' +
+        '<button type="button" onclick="window.loadExamGuidesFromD1()" class="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-800 hover:bg-emerald-900 text-white text-xs sm:text-sm font-bold rounded-lg shadow-xs transition-colors cursor-pointer">' +
+        '<span class="material-symbols-outlined text-base">refresh</span>' +
+        '<span>再読み込み</span>' +
+        '</button>' +
+        '</div>' +
+        '</div>';
 
-    // microCMS session データを examData にマージ・適用（フォールバック安全設計）
-    function applyMicroCmsSession(gradeKey, targetRoundIndex, s) {
-      const data = examData[gradeKey];
-      if (!data || !data.rounds || !data.rounds[targetRoundIndex]) return;
-      const roundObj = data.rounds[targetRoundIndex];
-
-      // 受験料
-      if (s.fee) {
-        const parsedFee = parseInt(String(s.fee).replace(/[^0-9]/g, ''), 10);
-        if (!isNaN(parsedFee) && parsedFee > 0) {
-          data.price = `${parsedFee.toLocaleString()}円`;
-        }
-      }
-
-      // 締切日
-      if (s.deadline) {
-        roundObj.deadline = s.deadline.includes('23:59') ? s.deadline : `${s.deadline} 23:59まで`;
-      }
-
-      // ステータス反映
-      if (s.status) {
-        roundObj.status = s.status;
-      }
-
-      // 会場日程リスト (venuesList)
-      if (Array.isArray(s.schedules) && s.schedules.length > 0) {
-        roundObj.venuesList = s.schedules.map(sc => {
-          const badge = Array.isArray(sc.venue_type) ? sc.venue_type[0] : (sc.venue_type || '会場');
-          const isHome = badge.includes('自宅');
-          let dateText = '';
-          if (isHome && sc.date_start && sc.date_end) {
-            dateText = `${formatJstDate(sc.date_start, true)}〜${formatJstDate(sc.date_end, false)}`;
-          } else if (sc.date_start) {
-            dateText = formatJstDate(sc.date_start, true);
-          }
-          return {
-            badge: badge,
-            school: isHome ? '全国どこからでも' : (sc.venue_name || ''),
-            date: dateText
-          };
-        });
-
-        // 会場詳細タイムライン (venueDetails)
-        roundObj.venueDetails = s.schedules.map(sc => {
-          const badge = Array.isArray(sc.venue_type) ? sc.venue_type[0] : (sc.venue_type || '会場');
-          const isHome = badge.includes('自宅');
-          const id = isHome ? 'home' : (badge.includes('津山') ? 'tsuyama' : (badge.includes('倉敷') ? 'kurashiki' : 'okayama'));
-          
-          let examDateText = '';
-          if (isHome && sc.date_start && sc.date_end) {
-            examDateText = `${formatJstDate(sc.date_start, true)}〜${formatJstDate(sc.date_end, false)} 答案返送締切`;
-          } else if (sc.date_start) {
-            examDateText = formatJstDate(sc.date_start, true);
-          }
-
-          // 時間割
-          let timetableItems = [];
-          if (Array.isArray(s.timetable) && s.timetable.length > 0) {
-            timetableItems = s.timetable.map(t => ({
-              label: t.label || '',
-              time: t.time_range || ''
-            }));
-          } else {
-            if (isHome) {
-              timetableItems = [
-                { label: "問題同封の時間割・タイマーに沿って本番と同じ制限時間で自室にてご解答ください。" }
-              ];
-            } else {
-              timetableItems = [
-                { label: "集合・諸注意", time: "8:45 〜 9:00" },
-                { label: "第1科目 〜 最終科目", time: "9:05 〜 14:40" }
-              ];
-            }
-          }
-
-          // 当日持参物
-          let itemsText = s.belongings;
-          if (!itemsText) {
-            itemsText = isHome 
-              ? "お届けする問題用紙・解答用紙、筆記用具、同封の返信用封筒（ポスト投函）"
-              : "受験票、筆記用具（HB以上の鉛筆またはシャープペンシル、消しゴム）、コンパス、三角定規、腕時計、昼食・飲料、上履き（要持参）";
-          }
-
-          // 受験票等の発送
-          const ticketDispatch = isHome 
-            ? (s.shipping_date_home || "試験日の約5日前発送予定")
-            : (s.shipping_date_venue || "試験日の約5日前発送予定");
-
-          // 成績表のご返却予定
-          const reportDispatch = s.return_date || "試験実施の約10日後発送予定";
-
-          return {
-            id: id,
-            name: isHome ? '🏠 自宅受験' : badge,
-            place: isHome ? '全国どこからでも' : (sc.venue_name || "指定会場"),
-            examDate: examDateText,
-            ticketDispatch: ticketDispatch,
-            reportDispatch: reportDispatch,
-            schedule: timetableItems,
-            items: itemsText
-          };
-        });
+      if (scheduleList) scheduleList.innerHTML = errorHtml;
+      if (venueDetailContent) venueDetailContent.innerHTML = errorHtml;
+      if (ctaContainer) {
+        ctaContainer.innerHTML = '<button type="button" onclick="window.loadExamGuidesFromD1()" class="w-full py-3.5 px-6 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-sm flex items-center justify-center gap-2 transition-colors cursor-pointer">' +
+          '<span class="material-symbols-outlined text-base">refresh</span>' +
+          '<span>再読み込み</span>' +
+          '</button>';
       }
     }
 
-    // microCMSからexam-guidesを取得
-    async function initExamGuidesFromMicroCMS() {
-      const cfg = MICROCMS_EXAM_CONFIG;
+    // Cloudflare D1 (/api/exam-guides) からの高速取得
+    async function loadExamGuidesFromD1() {
+      isExamDataLoading = true;
+      isExamDataError = false;
+      renderExamLoadingState();
+
       try {
-        const url = `https://${cfg.serviceDomain}.microcms.io/api/v1/${cfg.endpoint}?limit=100`;
-        const res = await fetch(url, {
-          headers: { 'X-MICROCMS-API-KEY': cfg.apiKey }
-        });
-        if (res.ok) {
-          const data = await res.json();
-          if (data && data.contents && data.contents.length > 0) {
-            data.contents.forEach(item => {
-              let gradeKey = item.grade_code;
-              if (gradeKey === 'e6') gradeKey = 'p6';
-              
-              if (examData[gradeKey] && Array.isArray(item.sessions)) {
-                item.sessions.forEach(s => {
-                  const targetIdx = findTargetRoundIndex(gradeKey, s.issue_name);
-                  if (targetIdx !== -1) {
-                    applyMicroCmsSession(gradeKey, targetIdx, s);
-                  }
-                });
-              }
-            });
+        const res = await fetch('/api/exam-guides');
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
 
-            // URLパラメータで指定された月号があればそれを最優先で維持、なければ現在のラウンドを再描画
-            try {
-              const params = new URLSearchParams(window.location.search);
-              const mParam = params.get('month');
-              if (mParam) {
-                const numMatch = mParam.match(/(\d+)/);
-                if (numMatch) {
-                  const num = parseInt(numMatch[1], 10);
-                  const curRounds = examData[currentGrade]?.rounds || [];
-                  const foundIdx = curRounds.findIndex(r => r.monthNum === num);
-                  if (foundIdx !== -1) {
-                    currentRoundIndex = foundIdx;
-                  }
-                }
-              }
-            } catch (e) {}
-
-            renderRoundTabs();
-            renderCard();
-          }
+        if (!data || !data.success || !data.grades) {
+          throw new Error('Invalid data format');
         }
+
+        examData = data.grades;
+        isExamDataLoading = false;
+
+        // URLパラメータによる学年・月号の反映（ディープリンク）
+        try {
+          const params = new URLSearchParams(window.location.search);
+          const gParam = params.get('grade');
+          const mParam = params.get('month');
+
+          if (gParam) {
+            const normG = (gParam.includes('3') || gParam === 'c3' || gParam === 'chu3') ? 'c3' :
+                          (gParam.includes('2') || gParam === 'c2' || gParam === 'chu2') ? 'c2' :
+                          (gParam.includes('1') || gParam === 'c1' || gParam === 'chu1') ? 'c1' :
+                          (gParam.includes('6') || gParam === 'p6' || gParam === 'sho6' || gParam === 'e6') ? 'p6' : currentGrade;
+            currentGrade = normG;
+          }
+
+          const curRounds = examData[currentGrade]?.rounds || [];
+          if (mParam) {
+            const numMatch = mParam.match(/(\d+)/);
+            if (numMatch) {
+              const num = parseInt(numMatch[1], 10);
+              const foundIdx = curRounds.findIndex(r => r.monthNum === num);
+              if (foundIdx !== -1) {
+                currentRoundIndex = foundIdx;
+              }
+            }
+          } else {
+            // デフォルトは受付中(active) または 申込可(open) を優先選択
+            let defIdx = curRounds.findIndex(r => r.status === 'active');
+            if (defIdx === -1) defIdx = curRounds.findIndex(r => r.status === 'open');
+            if (defIdx === -1) defIdx = Math.max(0, curRounds.length - 1);
+            currentRoundIndex = defIdx >= 0 ? defIdx : 0;
+          }
+        } catch (e) {}
+
+        renderRoundTabs();
+        renderCard();
       } catch (err) {
-        console.warn('microCMS exam-guides fetch fallback:', err);
+        console.error('[index.html] D1 exam-guides fetch failed:', err);
+        isExamDataError = true;
+        renderExamErrorState();
       }
     }
 
-    window.initExamGuidesFromMicroCMS = initExamGuidesFromMicroCMS;
-
+    window.loadExamGuidesFromD1 = loadExamGuidesFromD1;
+    window.initExamGuidesFromMicroCMS = loadExamGuidesFromD1; // 後方互換用エイリアス
     let currentGrade = 'c3';
     let currentRoundIndex = 3; // デフォルトで中3は10月号（index 3）
     let currentVenueIndex = 0;
@@ -2602,6 +2089,80 @@
       `;
     }
 
+    // 締切日時の2行並列型表示（クレジットカード決済 ＆ コンビニ決済）
+    function formatDeadlineDisplayParallel(round) {
+      if (!round) return '準備中（近日公開予定）';
+      const raw = round.applyDeadlineRaw || round.deadline || '';
+      if (!raw) return '準備中（近日公開予定）';
+
+      // 日時文字列のパース（YYYY-MM-DD HH:mm または YYYY年MM月DD日 等）
+      const clean = String(raw).trim();
+      let y, mon, d, h = 23, min = 59;
+
+      const mIso = clean.match(/(\d{4})[/-](\d{1,2})[/-](\d{1,2})(?:\s+(\d{1,2}):(\d{1,2}))?/);
+      const mJp = clean.match(/(\d{4})年(\d{1,2})月(\d{1,2})日(?:\([^)]*\))?(?:\s*(\d{1,2}):(\d{1,2}))?/);
+
+      if (mIso) {
+        y = parseInt(mIso[1], 10);
+        mon = parseInt(mIso[2], 10);
+        d = parseInt(mIso[3], 10);
+        if (mIso[4]) h = parseInt(mIso[4], 10);
+        if (mIso[5]) min = parseInt(mIso[5], 10);
+      } else if (mJp) {
+        y = parseInt(mJp[1], 10);
+        mon = parseInt(mJp[2], 10);
+        d = parseInt(mJp[3], 10);
+        if (mJp[4]) h = parseInt(mJp[4], 10);
+        if (mJp[5]) min = parseInt(mJp[5], 10);
+      } else {
+        if (round.status === 'finished') {
+          return '<span class="text-rose-600 font-bold">受付終了</span>';
+        }
+        return round.deadline || clean;
+      }
+
+      const days = ['日', '月', '火', '水', '木', '金', '土'];
+
+      // クレジットカード決済締切日時
+      const cardDeadlineDate = new Date(y, mon - 1, d, h, min, 59, 999);
+      const cardW = days[cardDeadlineDate.getDay()];
+      const cardTimeStr = `${String(h).padStart(2, '0')}:${String(min).padStart(2, '0')}`;
+      const cardDeadlineText = `${y}年${mon}月${d}日(${cardW}) ${cardTimeStr}まで`;
+
+      // コンビニ決済締切日: 3日前 23:59
+      const konbiniDeadlineDate = new Date(y, mon - 1, d - 3, 23, 59, 59, 999);
+      const konbiniY = konbiniDeadlineDate.getFullYear();
+      const konbiniM = konbiniDeadlineDate.getMonth() + 1;
+      const konbiniD = konbiniDeadlineDate.getDate();
+      const konbiniW = days[konbiniDeadlineDate.getDay()];
+      const konbiniDeadlineText = `${konbiniY}年${konbiniM}月${konbiniD}日(${konbiniW}) 23:59まで`;
+
+      const now = new Date();
+      const isCardExpired = round.status === 'finished' || now.getTime() > cardDeadlineDate.getTime();
+      const isKonbiniExpired = isCardExpired || now.getTime() > konbiniDeadlineDate.getTime();
+
+      const cardText = isCardExpired
+        ? '<span class="text-rose-600 font-bold">受付終了</span>'
+        : `<span class="text-slate-900">${cardDeadlineText}</span>`;
+
+      const konbiniText = isKonbiniExpired
+        ? '<span class="text-rose-600 font-bold">受付終了</span>'
+        : `<span class="text-slate-900">${konbiniDeadlineText}</span>`;
+
+      return `
+        <div class="space-y-1 text-xs sm:text-sm font-bold text-slate-800 leading-snug">
+          <div class="flex items-center gap-1 flex-wrap">
+            <span class="text-slate-600 font-medium shrink-0">・クレジットカード決済：</span>
+            ${cardText}
+          </div>
+          <div class="flex items-center gap-1 flex-wrap">
+            <span class="text-slate-600 font-medium shrink-0">・コンビニ決済：</span>
+            ${konbiniText}
+          </div>
+        </div>
+      `;
+    }
+
     // カード詳細全体のレンダリング
     function renderCard() {
       const data = examData[currentGrade];
@@ -2648,7 +2209,17 @@
         }
         cardPrice.textContent = priceText;
       }
-      if (cardDeadline) cardDeadline.textContent = r.deadline || '準備中（近日公開予定）';
+      if (cardDeadline) {
+        if (r.status === 'pending' && !r.applyDeadlineRaw && !r.deadline) {
+          cardDeadline.textContent = '準備中（受付開始まで今しばらくお待ちください）';
+          cardDeadline.classList.add('text-slate-600');
+          cardDeadline.classList.remove('text-slate-900');
+        } else {
+          cardDeadline.innerHTML = formatDeadlineDisplayParallel(r);
+          cardDeadline.classList.remove('text-slate-600', 'text-slate-400');
+          cardDeadline.classList.add('text-slate-900');
+        }
+      }
 
       renderScopeList(r.scopeList);
       renderScheduleList(r.venuesList);
@@ -2671,11 +2242,6 @@
             badge.className = "inline-flex items-center px-2.5 py-0.5 sm:py-1 rounded-md text-xs sm:text-sm font-bold bg-slate-100 text-slate-500 border border-slate-200";
             badge.textContent = "受付終了";
           }
-          if (cardDeadline) {
-            cardDeadline.textContent = r.deadline || '受付期間終了';
-            cardDeadline.classList.add('text-slate-600');
-            cardDeadline.classList.remove('text-slate-900');
-          }
 
           ctaContainer.innerHTML = `
             <button disabled class="w-full py-4 px-6 rounded-lg bg-slate-200 text-slate-600 font-bold text-sm sm:text-base cursor-not-allowed">
@@ -2690,11 +2256,6 @@
             badge.className = "inline-flex items-center px-2.5 py-0.5 sm:py-1 rounded-md text-xs sm:text-sm font-bold bg-slate-100 text-slate-600 border border-slate-300";
             badge.textContent = "準備中";
           }
-          if (cardDeadline) {
-            cardDeadline.textContent = '準備中（受付開始まで今しばらくお待ちください）';
-            cardDeadline.classList.add('text-slate-600');
-            cardDeadline.classList.remove('text-slate-900');
-          }
 
           ctaContainer.innerHTML = `
             <button disabled class="w-full py-4 px-6 rounded-lg bg-slate-100 text-slate-600 border border-slate-200 font-bold text-sm sm:text-base cursor-not-allowed">
@@ -2708,11 +2269,6 @@
           if (badge) {
             badge.className = "inline-flex items-center px-2.5 py-0.5 sm:py-1 rounded-md text-xs sm:text-sm font-bold bg-emerald-100 text-emerald-900 border border-emerald-300";
             badge.textContent = r.status === 'active' ? '受付中' : '申込可';
-          }
-          if (cardDeadline) {
-            cardDeadline.textContent = r.deadline || '近日公開予定';
-            cardDeadline.classList.remove('text-slate-400');
-            cardDeadline.classList.add('text-slate-900');
           }
 
           const gradeParamMap = {
@@ -4244,8 +3800,8 @@
       // microCMS お知らせの動的取得と初期学年フィルタ適用
       initLatestNews();
 
-      // microCMS 模試日程・会場動的データの取得
-      initExamGuidesFromMicroCMS();
+      // Cloudflare D1 模試日程・会場動的データの取得
+      loadExamGuidesFromD1();
 
       // よくあるご質問（FAQ）の動的レンダリング
       renderFaq();

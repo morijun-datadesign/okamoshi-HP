@@ -44,10 +44,25 @@ def optimize():
             sp_avif_path = os.path.join(img_dir, "hero-main-sp.avif")
             subprocess.run(["sips", "-s", "format", "avif", sp_webp_path, "--out", sp_avif_path], capture_output=True)
 
-    # 3. プレビューカード画像
+    # 3. 中3成績表（学力診断シート）画像
+    c3_report_src = None
+    for candidate in ["おかもしサイト用_おかもし成績表_中3_top.001.jpeg", "おかもしサイト用_おかもし成績表_中3_top.001.jpg"]:
+        c_path = os.path.join(img_dir, candidate)
+        if os.path.exists(c_path):
+            c3_report_src = c_path
+            break
+    
+    if c3_report_src:
+        with Image.open(c3_report_src) as im:
+            for base in ["preview-c3-report", "preview-card-report"]:
+                webp_out = os.path.join(img_dir, f"{base}.webp")
+                im.save(webp_out, "WEBP", quality=82, method=6)
+                avif_out = os.path.join(img_dir, f"{base}.avif")
+                subprocess.run(["sips", "-s", "format", "avif", webp_out, "--out", avif_out], capture_output=True)
+
+    # 4. プレビューカード画像
     cards = [
         ("preview-card-exam.webp", 480),
-        ("preview-card-report.webp", 512),
         ("preview-card-answer.webp", 360),
         ("article-classroom.webp", 512),
     ]

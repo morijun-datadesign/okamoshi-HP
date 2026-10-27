@@ -727,16 +727,20 @@
           <!-- 画像エリア（PC: 右側 7カラム / スマホ: 上側 / クリックで拡大モーダル） -->
           <div onclick="openReportModal()" class="w-full md:col-span-7 flex flex-col justify-center order-1 md:order-2 cursor-pointer group">
             <div id="card2-preview-container" class="relative w-full flex items-center justify-center overflow-hidden">
-              <img 
-                id="card2-preview-img"
-                src="/images/preview-card-report.webp" 
-                alt="おかもし成績表サンプル（学力診断シート）" 
-                class="w-full h-auto object-contain rounded-lg block"
-                width="512"
-                height="346"
-                loading="lazy"
-                decoding="async"
-              />
+              <picture class="w-full h-auto block">
+                <source type="image/avif" srcset="/images/preview-c3-report.avif">
+                <source type="image/webp" srcset="/images/preview-c3-report.webp">
+                <img 
+                  id="card2-preview-img"
+                  src="/images/preview-c3-report.webp" 
+                  alt="おかもし成績表サンプル（学力診断シート）" 
+                  class="w-full h-auto object-contain rounded-lg block"
+                  width="512"
+                  height="384"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </picture>
               <span id="card2-preview-badge" class="absolute bottom-3.5 right-3.5 sm:bottom-4 sm:right-4 inline-flex items-center gap-1.5 py-2 sm:py-2.5 px-3.5 sm:px-4 rounded-full bg-orange-700 hover:bg-orange-800 text-white font-bold text-xs sm:text-sm shadow-lg shadow-orange-700/30 group-hover:scale-105 group-hover:shadow-xl transition-all duration-200 cursor-pointer select-none">
                 <span class="material-symbols-outlined text-base sm:text-lg">zoom_in</span>
                 <span>拡大して見る</span>
@@ -3731,7 +3735,7 @@
         tag: "第1面: 総合判定",
         title: "当日点 × 内申点 の精密合否ドッキング判定",
         desc: "岡山県公立高校入試の傾斜配点・内申点基準に完全連動。第1志望校から併願私立まで精度の高い合格可能性（A〜E判定）を算出します。",
-        image: "/images/preview-card-report.webp",
+        image: "/images/preview-c3-report.webp",
         alt: "学力診断シート 第1面 総合判定・志望校合格可能性見本"
       },
       {

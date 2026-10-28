@@ -74,7 +74,7 @@ def optimize():
     ]
     for base in carousel_items:
         src_path = None
-        for ext in [".jpg", ".jpeg", ".png", ".webp"]:
+        for ext in [".jpg", ".jpeg", ".png"]:
             c_path = os.path.join(img_dir, f"{base}{ext}")
             if os.path.exists(c_path):
                 src_path = c_path

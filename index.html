@@ -415,16 +415,20 @@
           <!-- 画像エリア（PC: 右側 7カラム / スマホ: 上側） -->
           <div class="w-full md:col-span-7 flex flex-col justify-center order-1 md:order-2">
             <div id="card1-preview-container" class="relative w-full flex items-center justify-center overflow-hidden">
-              <img 
-                id="card1-preview-img"
-                src="/images/preview-card-exam.webp" 
-                alt="岡山県統一模擬試験 問題用紙見本" 
-                class="w-full h-auto object-contain rounded-lg block"
-                width="483"
-                height="512"
-                loading="lazy"
-                decoding="async"
-              />
+              <picture class="w-full h-auto block">
+                <source id="card1-preview-source-avif" type="image/avif" srcset="/images/preview-card-exam.avif">
+                <source id="card1-preview-source-webp" type="image/webp" srcset="/images/preview-card-exam.webp">
+                <img 
+                  id="card1-preview-img"
+                  src="/images/preview-card-exam.webp" 
+                  alt="岡山県統一模擬試験 問題用紙見本" 
+                  class="w-full h-auto object-contain rounded-lg block"
+                  width="483"
+                  height="512"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </picture>
               <span id="card1-preview-badge" class="absolute bottom-3 left-3 bg-slate-900/80 backdrop-blur-xs text-white text-[10px] sm:text-xs px-2.5 py-1 rounded-full font-bold shadow-xs">
                 公立高校入試型 模試用紙（B4判）
               </span>
@@ -530,16 +534,20 @@
           <!-- 画像エリア（PC: 右側 7カラム / スマホ: 上側 / h-full stretch・object-cover object-topで上下いっぱいに表示） -->
           <div class="w-full md:col-span-7 self-stretch order-1 md:order-2">
             <div id="card3-preview-container" class="relative w-full h-full min-h-[240px] overflow-hidden">
-              <img 
-                id="card3-preview-img"
-                src="/images/preview-card-answer.webp" 
-                alt="岡山県統一模擬試験 解答と解説冊子" 
-                class="absolute inset-0 w-full h-full object-cover object-top block"
-                width="359"
-                height="512"
-                loading="lazy"
-                decoding="async"
-              />
+              <picture class="w-full h-full block">
+                <source id="card3-preview-source-avif" type="image/avif" srcset="/images/preview-card-answer.avif">
+                <source id="card3-preview-source-webp" type="image/webp" srcset="/images/preview-card-answer.webp">
+                <img 
+                  id="card3-preview-img"
+                  src="/images/preview-card-answer.webp" 
+                  alt="岡山県統一模擬試験 解答と解説冊子" 
+                  class="absolute inset-0 w-full h-full object-cover object-top block"
+                  width="359"
+                  height="512"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </picture>
               <span id="card3-preview-badge" class="absolute bottom-3 left-3 bg-slate-900/80 backdrop-blur-xs text-white text-[10px] sm:text-xs px-2.5 py-1 rounded-full font-bold shadow-xs">
                 高校入試型 別冊解答解説（全問途中式・採点基準掲載）
               </span>
@@ -2471,7 +2479,12 @@
         sub: "",
         desc: "岡山の県立高校入試の記述量や配点バランスまで本番そっくりです。単なる知識の暗記では解けない、岡山県特有の「思考力・判断力・表現力」を問う記述問題やグラフ・資料分析問題にも徹底して合わせています。",
         featuresHtml: "",
-        previewLabel: "公立高校入試型 模試用紙（B4判）"
+        previewLabel: "公立高校入試型 模試用紙（B4判）",
+        imageAvif: "/images/preview-card-exam.avif",
+        imageWebp: "/images/preview-card-exam.webp",
+        imageAlt: "岡山県統一模擬試験 問題用紙見本",
+        width: 483,
+        height: 512
       },
       c12: {
         badge: "中1・2生",
@@ -2480,7 +2493,12 @@
         sub: "",
         desc: "定期テストの暗記学習だけでは見えてこない、高校入試に必要な初見問題への対応力を測定。学校内の順位ではなく、岡山県全体の受験者の中での「真の現在地」と弱点を早期に把握できます。",
         featuresHtml: "",
-        previewLabel: "中1・2生 学力診断型 模試用紙"
+        previewLabel: "中1・2生 学力診断型 模試用紙",
+        imageAvif: "/images/preview-card-exam.avif",
+        imageWebp: "/images/preview-card-exam.webp",
+        imageAlt: "岡山県統一模擬試験 問題用紙見本",
+        width: 483,
+        height: 512
       },
       p6: {
         badge: "小6生",
@@ -2503,7 +2521,12 @@
             <span class="text-[10px] font-bold text-amber-700 shrink-0 ml-2">県立3校完全対応</span>
           </div>
         `,
-        previewLabel: "公立中高一貫型（適性I・適性II、400字作文・要約記述枠、プロ添削対応）"
+        previewLabel: "公立中高一貫型（適性I・適性II、400字作文・要約記述枠、プロ添削対応）",
+        imageAvif: "/images/6-mondai.avif",
+        imageWebp: "/images/6-mondai.webp",
+        imageAlt: "公立中高一貫校 適性検査 問題用紙見本",
+        width: 1024,
+        height: 768
       }
     };
 
@@ -2773,7 +2796,12 @@
         sub: "",
         desc: "模試の最大の価値は「受験後の解き直し」にあります。単に正解を示すだけでなく、解法のプロセスや採点基準まで徹底解説。自宅での解き直しに疑問を残しません。",
         featuresHtml: "",
-        previewLabel: "高校入試型 別冊解答解説（全問途中式・採点基準掲載）"
+        previewLabel: "高校入試型 別冊解答解説（全問途中式・採点基準掲載）",
+        imageAvif: "/images/preview-card-answer.avif",
+        imageWebp: "/images/preview-card-answer.webp",
+        imageAlt: "岡山県統一模擬試験 解答と解説冊子",
+        width: 359,
+        height: 512
       },
       c12: {
         pointLabel: "",
@@ -2781,7 +2809,12 @@
         sub: "",
         desc: "中1・2の学習で最も大切なのは、つまずいた単元をそのまま放置しないことです。基礎事項の確認から標準・応用問題の着眼点まで、順を追って理解できる親切な解説で自学自習を強力にバックアップします。",
         featuresHtml: "",
-        previewLabel: "中1・2学力診断型 解答解説（ステップ式途中解説・重要事項まとめ）"
+        previewLabel: "中1・2学力診断型 解答解説（ステップ式途中解説・重要事項まとめ）",
+        imageAvif: "/images/preview-card-answer.avif",
+        imageWebp: "/images/preview-card-answer.webp",
+        imageAlt: "岡山県統一模擬試験 解答と解説冊子",
+        width: 359,
+        height: 512
       },
       p6: {
         pointLabel: "適性検査の思考プロセスを解き明かす",
@@ -2808,7 +2841,12 @@
             </p>
           </div>
         `,
-        previewLabel: "公立中高一貫適性検査型 解答解説（思考プロセス図解・作文講評）"
+        previewLabel: "公立中高一貫適性検査型 解答解説（思考プロセス図解・作文講評）",
+        imageAvif: "/images/6-kaisetu.avif",
+        imageWebp: "/images/6-kaisetu.webp",
+        imageAlt: "公立中高一貫校 適性検査・作文 解答解説見本",
+        width: 1024,
+        height: 768
       }
     };
 
@@ -2896,6 +2934,20 @@
 
       const previewBadge = document.getElementById('card1-preview-badge');
       if (previewBadge) previewBadge.textContent = data.previewLabel;
+
+      // 画像エリア（WebP / AVIF）の切り替え
+      const previewSourceAvif = document.getElementById('card1-preview-source-avif');
+      const previewSourceWebp = document.getElementById('card1-preview-source-webp');
+      const previewImg = document.getElementById('card1-preview-img');
+
+      if (previewSourceAvif && data.imageAvif) previewSourceAvif.srcset = data.imageAvif;
+      if (previewSourceWebp && data.imageWebp) previewSourceWebp.srcset = data.imageWebp;
+      if (previewImg) {
+        if (data.imageWebp) previewImg.src = data.imageWebp;
+        if (data.imageAlt) previewImg.alt = data.imageAlt;
+        if (data.width) previewImg.setAttribute('width', data.width);
+        if (data.height) previewImg.setAttribute('height', data.height);
+      }
     }
 
     function switchCard2Grade(grade) {
@@ -3012,6 +3064,20 @@
 
       const previewBadge = document.getElementById('card3-preview-badge');
       if (previewBadge) previewBadge.textContent = data.previewLabel;
+
+      // 画像エリア（WebP / AVIF）の切り替え
+      const previewSourceAvif = document.getElementById('card3-preview-source-avif');
+      const previewSourceWebp = document.getElementById('card3-preview-source-webp');
+      const previewImg = document.getElementById('card3-preview-img');
+
+      if (previewSourceAvif && data.imageAvif) previewSourceAvif.srcset = data.imageAvif;
+      if (previewSourceWebp && data.imageWebp) previewSourceWebp.srcset = data.imageWebp;
+      if (previewImg) {
+        if (data.imageWebp) previewImg.src = data.imageWebp;
+        if (data.imageAlt) previewImg.alt = data.imageAlt;
+        if (data.width) previewImg.setAttribute('width', data.width);
+        if (data.height) previewImg.setAttribute('height', data.height);
+      }
     }
 
     // =========================================================================
@@ -3155,17 +3221,17 @@
         }
 
         return `
-          <div class="report-slide w-full h-full shrink-0 flex flex-col overflow-hidden select-none">
-            <!-- ② 固定画像エリア（shrink-0 でスクロールせず固定・トリミング防止） -->
-            <div class="w-full shrink-0 flex flex-col items-center justify-center pt-2 pb-1.5 sm:pt-3 sm:pb-2.5 px-3 sm:px-6 bg-slate-50/80 border-b border-slate-100">
+          <div class="report-slide w-full h-full shrink-0 flex flex-col overflow-y-auto sm:overflow-hidden overscroll-contain select-none" style="-webkit-overflow-scrolling: touch;">
+            <!-- ② 画像エリア（スマホ時は横幅いっぱいに拡大、PC時はsm:shrink-0で上部固定） -->
+            <div class="w-full shrink-0 flex flex-col items-center justify-center pt-2 pb-1.5 sm:pt-3 sm:pb-2.5 px-1.5 sm:px-6 bg-slate-50/80 border-b border-slate-100">
               <div class="w-full flex items-center justify-center max-w-full">
-                <picture class="flex items-center justify-center max-w-full">
+                <picture class="w-full sm:w-auto flex items-center justify-center max-w-full">
                   <source type="image/avif" srcset="${slide.imageAvif}">
                   <source type="image/webp" srcset="${slide.imageWebp}">
                   <img 
                     src="${slide.imageWebp}" 
                     alt="${slide.alt}" 
-                    class="w-auto h-auto max-h-[29vh] max-h-[29dvh] sm:max-h-[44vh] max-w-full object-contain mx-auto rounded-lg shadow-2xs border border-slate-200/80 bg-white block"
+                    class="w-full sm:w-auto h-auto sm:max-h-[44vh] max-w-full object-contain mx-auto rounded-lg shadow-2xs border border-slate-200/80 bg-white block"
                     width="${slide.width}"
                     height="${slide.height}"
                     loading="lazy"
@@ -3173,7 +3239,7 @@
                   />
                 </picture>
               </div>
-              <div class="mt-1.5 flex items-center justify-center">
+              <div class="mt-1.5 mb-0.5 sm:my-1 flex items-center justify-center">
                 <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-900 font-bold text-[11px] sm:text-xs tracking-wide shadow-2xs">
                   <span class="w-1.5 h-1.5 rounded-full bg-brand-green"></span>
                   <span>${slide.badge || slide.label}</span>
@@ -3181,8 +3247,8 @@
               </div>
             </div>
 
-            <!-- ③ 独立縦スクロール解説リストエリア（下部余白pb-8確保） -->
-            <div class="report-slide-scroll-area w-full flex-1 min-h-0 overflow-y-auto overscroll-contain px-3 sm:px-6 py-2.5 sm:py-3.5 pb-8 sm:pb-8 select-text" style="-webkit-overflow-scrolling: touch;">
+            <!-- ③ 解説リストエリア（スマホ時はスライド全体でスクロール、PC時は独立縦スクロール） -->
+            <div class="report-slide-scroll-area w-full sm:flex-1 sm:min-h-0 sm:overflow-y-auto overscroll-contain px-2.5 sm:px-6 py-2.5 sm:py-3.5 pb-8 sm:pb-8 select-text" style="-webkit-overflow-scrolling: touch;">
               <div class="w-full max-w-4xl mx-auto">
                 ${textContentHtml}
               </div>
@@ -3212,8 +3278,8 @@
         track.style.transform = `translateX(-${currentReportSlide * 100}%)`;
       }
 
-      // スライド切り替え時に解説エリアの縦スクロールを最上部にリセット
-      document.querySelectorAll('.report-slide-scroll-area').forEach(el => {
+      // スライド切り替え時に縦スクロール（スライド本体および解説エリア）を最上部にリセット
+      document.querySelectorAll('.report-slide, .report-slide-scroll-area').forEach(el => {
         el.scrollTop = 0;
       });
 

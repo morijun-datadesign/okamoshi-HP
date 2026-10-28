@@ -44,9 +44,11 @@ def optimize():
             sp_avif_path = os.path.join(img_dir, "hero-main-sp.avif")
             subprocess.run(["sips", "-s", "format", "avif", sp_webp_path, "--out", sp_avif_path], capture_output=True)
 
-    # 3. サムネイル画像 (中3: 3_top, 中1・中2: 2-top/2-mondai/2-kaisetu, 小6: 6-top/6-mondai/6-kaisetu)
+    # 3. サムネイル画像 (中3: 3_top/3-mondai/3-kaisetu, 中1・中2: 2-top/2-mondai/2-kaisetu, 小6: 6-top/6-mondai/6-kaisetu)
     report_top_items = [
         ("3_top", ["3_top.jpg", "3_top.jpeg", "3_top.png", "おかもしサイト用_おかもし成績表_中3_top.001.jpeg", "おかもしサイト用_おかもし成績表_中3_top.001.jpg"], ["3_top", "preview-c3-report", "preview-card-report"]),
+        ("3-mondai", ["3-mondai.jpeg", "3-mondai.jpg", "3-mondai.png"], ["3-mondai"]),
+        ("3-kaisetu", ["3-kaisetu.jpeg", "3-kaisetu.jpg", "3-kaisetu.png"], ["3-kaisetu"]),
         ("2-top", ["2-top.jpeg", "2-top.jpg", "2-top.png"], ["2-top"]),
         ("2-mondai", ["2-mondai.jpeg", "2-mondai.jpg", "2-mondai.png"], ["2-mondai"]),
         ("2-kaisetu", ["2-kaisetu.jpeg", "2-kaisetu.jpg", "2-kaisetu.png"], ["2-kaisetu"]),

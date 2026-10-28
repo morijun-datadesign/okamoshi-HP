@@ -44,27 +44,26 @@ def optimize():
             sp_avif_path = os.path.join(img_dir, "hero-main-sp.avif")
             subprocess.run(["sips", "-s", "format", "avif", sp_webp_path, "--out", sp_avif_path], capture_output=True)
 
-    # 3. 中3成績表（学力診断シート）サムネイル画像
-    # 元画像: 3_top.* (または旧名 おかもしサイト用_おかもし成績表_中3_top.001.*)
-    c3_top_src = None
-    for candidate in [
-        "3_top.jpg", "3_top.jpeg", "3_top.png",
-        "おかもしサイト用_おかもし成績表_中3_top.001.jpeg", "おかもしサイト用_おかもし成績表_中3_top.001.jpg"
-    ]:
-        c_path = os.path.join(img_dir, candidate)
-        if os.path.exists(c_path):
-            c3_top_src = c_path
-            break
-    
-    if c3_top_src:
-        with Image.open(c3_top_src) as im:
-            # 3_top.webp / 3_top.avif および既存互換の preview-c3-report / preview-card-report
-            targets = ["3_top", "preview-c3-report", "preview-card-report"]
-            for base in targets:
-                webp_out = os.path.join(img_dir, f"{base}.webp")
-                im.save(webp_out, "WEBP", quality=85, method=6)
-                avif_out = os.path.join(img_dir, f"{base}.avif")
-                subprocess.run(["sips", "-s", "format", "avif", webp_out, "--out", avif_out], capture_output=True)
+    # 3. 成績表（学力診断シート）サムネイル画像 (中3: 3_top, 中1・中2: 2-top, 小6: 6-top)
+    report_top_items = [
+        ("3_top", ["3_top.jpg", "3_top.jpeg", "3_top.png", "おかもしサイト用_おかもし成績表_中3_top.001.jpeg", "おかもしサイト用_おかもし成績表_中3_top.001.jpg"], ["3_top", "preview-c3-report", "preview-card-report"]),
+        ("2-top", ["2-top.jpeg", "2-top.jpg", "2-top.png"], ["2-top"]),
+        ("6-top", ["6-top.jpeg", "6-top.jpg", "6-top.png"], ["6-top"]),
+    ]
+    for key, candidates, targets in report_top_items:
+        src = None
+        for cand in candidates:
+            cand_path = os.path.join(img_dir, cand)
+            if os.path.exists(cand_path):
+                src = cand_path
+                break
+        if src:
+            with Image.open(src) as im:
+                for base in targets:
+                    webp_out = os.path.join(img_dir, f"{base}.webp")
+                    im.save(webp_out, "WEBP", quality=85, method=6)
+                    avif_out = os.path.join(img_dir, f"{base}.avif")
+                    subprocess.run(["sips", "-s", "format", "avif", webp_out, "--out", avif_out], capture_output=True)
 
     # 4. 中3成績表拡大モーダル（カルーセル 3枚）画像
     carousel_items = [

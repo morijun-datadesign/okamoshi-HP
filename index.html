@@ -469,12 +469,12 @@
             <div id="card2-minikarte-container" class="empty:hidden"></div>
           </div>
 
-          <!-- 画像エリア（PC: 右側 7カラム / スマホ: 上側 / クリックで拡大モーダル） -->
-          <div onclick="openReportModal()" class="w-full md:col-span-7 flex flex-col justify-center order-1 md:order-2 cursor-pointer group">
+          <!-- 画像エリア（PC: 右側 7カラム / スマホ: 上側 / 中3のみクリックで拡大モーダル） -->
+          <div id="card2-preview-wrapper" onclick="openReportModal('c3')" class="w-full md:col-span-7 flex flex-col justify-center order-1 md:order-2 cursor-pointer group" role="button" tabindex="0" aria-label="学力診断シートを拡大して見る">
             <div id="card2-preview-container" class="relative w-full flex items-center justify-center overflow-hidden">
               <picture class="w-full h-auto block">
-                <source type="image/avif" srcset="/images/3_top.avif">
-                <source type="image/webp" srcset="/images/3_top.webp">
+                <source id="card2-preview-source-avif" type="image/avif" srcset="/images/3_top.avif">
+                <source id="card2-preview-source-webp" type="image/webp" srcset="/images/3_top.webp">
                 <img 
                   id="card2-preview-img"
                   src="/images/3_top.webp" 
@@ -2514,6 +2514,10 @@
         sub: "",
         desc: "岡山県立高校の選抜制度（当日点＋内申点の総合評価）に対応し、特別入試、一般入試も合否可能性を判定します。また、私立、国立高校の判定にも対応しています。",
         miniKarteHtml: "",
+        imageAvif: "/images/3_top.avif",
+        imageWebp: "/images/3_top.webp",
+        imageAlt: "おかもし中3成績表サンプル（学力診断シート）",
+        hasModal: true,
         modal: {
           title: "中3生｜学力診断シート（成績カルテ）見本",
           desc: "試験後にお届けする個人カルテです。単なる点数や偏差値だけでなく、志望校合格までの具体的な「あと何点」や優先して克服すべき単元がひと目で分かります。",
@@ -2586,6 +2590,10 @@
         sub: "",
         desc: "教科書レベルの定着度を県内受験者と比較。中1・2のうちに克服しておくべき優先復習単元を具体的に提示し、日々の学習や定期テスト対策へ直結させます。また志望校判定により、今の学力での到達点も計測できます。",
         miniKarteHtml: "",
+        imageAvif: "/images/2-top.avif",
+        imageWebp: "/images/2-top.webp",
+        imageAlt: "おかもし中1・2成績カルテサンプル",
+        hasModal: false,
         modal: {
           title: "中1・2生｜学力診断シート（成績カルテ）見本",
           desc: "教科書の基礎から応用まで、単元ごとの定着度を県内平均と比較。現時点での到達度と、高校入試に向けた「つまずき単元」がひと目で分かります。",
@@ -2679,14 +2687,17 @@
               <p class="text-[10px] text-slate-600 mt-1 leading-snug">「要約の字数制限と条件設定の減点箇所」</p>
             </div>
           </div>
-          <div class="p-3 rounded-lg bg-amber-50/80 border border-amber-200/80 flex items-center justify-between cursor-pointer hover:bg-amber-100/70 transition-colors" onclick="openReportModal('p6')">
+          <div class="p-3 rounded-lg bg-amber-50/80 border border-amber-200/80 flex items-center justify-between">
             <div>
               <span class="font-bold text-amber-900 block text-xs">操山・大安寺・天城の記述講評 小6適性検査判定カルテ</span>
               <p class="text-[11px] text-slate-700 mt-0.5 leading-snug">プロ添削者による論述講評で、合格基準に達するための減点防止策がわかる。</p>
             </div>
-            <span class="text-[10px] font-bold text-amber-800 shrink-0 ml-2">🔍 拡大で見る</span>
           </div>
         `,
+        imageAvif: "/images/6-top.avif",
+        imageWebp: "/images/6-top.webp",
+        imageAlt: "おかもし小6適性検査判定カルテサンプル",
+        hasModal: false,
         modal: {
           title: "小6生｜公立中高一貫適性検査対策模試 学力診断シート見本",
           desc: "岡山県立中高一貫3校（操山・大安寺・天城）の適性検査I・IIおよび作文の得点バランスと、プロ添削者による記述講評を詳細にフィードバックします。",
@@ -2921,6 +2932,48 @@
 
       const minikarteContainer = document.getElementById('card2-minikarte-container');
       if (minikarteContainer) minikarteContainer.innerHTML = data.miniKarteHtml || '';
+
+      // 画像エリア（WebP / AVIF）およびモーダルトリガーの切り替え
+      const previewWrapper = document.getElementById('card2-preview-wrapper');
+      const previewSourceAvif = document.getElementById('card2-preview-source-avif');
+      const previewSourceWebp = document.getElementById('card2-preview-source-webp');
+      const previewImg = document.getElementById('card2-preview-img');
+      const previewBadge = document.getElementById('card2-preview-badge');
+
+      if (previewSourceAvif && data.imageAvif) previewSourceAvif.srcset = data.imageAvif;
+      if (previewSourceWebp && data.imageWebp) previewSourceWebp.srcset = data.imageWebp;
+      if (previewImg) {
+        if (data.imageWebp) previewImg.src = data.imageWebp;
+        if (data.imageAlt) previewImg.alt = data.imageAlt;
+      }
+
+      if (data.hasModal) {
+        // 中3: モーダル有効（拡大して見るボタン表示・クリック可能）
+        if (previewWrapper) {
+          previewWrapper.onclick = () => openReportModal('c3');
+          previewWrapper.classList.add('cursor-pointer', 'group');
+          previewWrapper.classList.remove('cursor-default');
+          previewWrapper.setAttribute('role', 'button');
+          previewWrapper.setAttribute('tabindex', '0');
+          previewWrapper.setAttribute('aria-label', '学力診断シートを拡大して見る');
+        }
+        if (previewBadge) {
+          previewBadge.classList.remove('hidden');
+        }
+      } else {
+        // 中1・中2・小6: モーダルなし（拡大して見るボタン非表示・クリック無効化）
+        if (previewWrapper) {
+          previewWrapper.onclick = null;
+          previewWrapper.classList.remove('cursor-pointer', 'group');
+          previewWrapper.classList.add('cursor-default');
+          previewWrapper.removeAttribute('role');
+          previewWrapper.removeAttribute('tabindex');
+          previewWrapper.removeAttribute('aria-label');
+        }
+        if (previewBadge) {
+          previewBadge.classList.add('hidden');
+        }
+      }
     }
 
     function switchCard3Grade(grade) {
@@ -2974,6 +3027,8 @@
         alt: "学力診断シート 総合成績・出題内容ごとの成績・各科目偏差値推移",
         width: 575,
         height: 508,
+        wrapperClass: "max-h-[46vh] sm:max-h-[50vh]",
+        imgClass: "max-h-[46vh] sm:max-h-[50vh] max-w-full",
         sections: [
           {
             heading: "① 総合成績",
@@ -2999,6 +3054,8 @@
         alt: "学力診断シート 志望校判定（県立入試別・学科内偏差値・通知表評価点・私立国立判定）",
         width: 573,
         height: 651,
+        wrapperClass: "max-h-[48vh] sm:max-h-[50vh]",
+        imgClass: "max-h-[48vh] sm:max-h-[50vh] max-w-full",
         sections: [
           {
             heading: "④ 県立高校の入試別判定",
@@ -3028,6 +3085,8 @@
         alt: "学力診断シート 小問単位の学力分析表",
         width: 398,
         height: 452,
+        wrapperClass: "max-h-[60vh] sm:max-h-[50vh]",
+        imgClass: "max-h-[60vh] sm:max-h-[50vh] w-auto max-w-[94%] sm:max-w-full",
         singleSection: {
           heading: "学力分析表",
           body: "「どの問題を落としたのか」を小問単位で完全可視化。全体正答率と自分の〇×を突き合わせることで、「全員が解けた基本問題のミス」や「記述問題の部分点」まで明確になり、次に取り組むべき復習テーマが一目で分かります。"
@@ -3110,14 +3169,14 @@
 
         return `
           <div class="report-slide w-full h-full shrink-0 flex flex-col items-center justify-start p-2 sm:p-4 overflow-y-auto">
-            <div class="w-full flex items-center justify-center shrink-0 my-auto py-1 max-h-[44vh] sm:max-h-[50vh]">
-              <picture class="h-full flex items-center justify-center">
+            <div class="w-full flex items-center justify-center shrink-0 mt-1 mb-2 sm:my-auto sm:py-1 ${slide.wrapperClass}">
+              <picture class="flex items-center justify-center max-w-full">
                 <source type="image/avif" srcset="${slide.imageAvif}">
                 <source type="image/webp" srcset="${slide.imageWebp}">
                 <img 
                   src="${slide.imageWebp}" 
                   alt="${slide.alt}" 
-                  class="w-auto h-auto max-h-[44vh] sm:max-h-[50vh] max-w-full object-contain rounded-lg shadow-sm border border-slate-200/90 bg-white select-none"
+                  class="w-auto h-auto ${slide.imgClass} object-contain rounded-lg shadow-sm border border-slate-200/90 bg-white select-none block"
                   width="${slide.width}"
                   height="${slide.height}"
                   loading="lazy"
@@ -3216,6 +3275,9 @@
     }
 
     function openReportModal(grade) {
+      // 中3（c3または引数なし）のみモーダルを表示し、中1・中2・小6等は表示しない
+      if (grade && grade !== 'c3') return;
+
       const modal = document.getElementById("report-modal");
       if (!modal) return;
 

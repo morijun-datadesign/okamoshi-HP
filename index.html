@@ -473,15 +473,15 @@
           <div onclick="openReportModal()" class="w-full md:col-span-7 flex flex-col justify-center order-1 md:order-2 cursor-pointer group">
             <div id="card2-preview-container" class="relative w-full flex items-center justify-center overflow-hidden">
               <picture class="w-full h-auto block">
-                <source type="image/avif" srcset="/images/preview-c3-report.avif">
-                <source type="image/webp" srcset="/images/preview-c3-report.webp">
+                <source type="image/avif" srcset="/images/3_top.avif">
+                <source type="image/webp" srcset="/images/3_top.webp">
                 <img 
                   id="card2-preview-img"
-                  src="/images/preview-c3-report.webp" 
+                  src="/images/3_top.webp" 
                   alt="おかもし成績表サンプル（学力診断シート）" 
                   class="w-full h-auto object-contain rounded-lg block"
-                  width="512"
-                  height="384"
+                  width="1024"
+                  height="768"
                   loading="lazy"
                   decoding="async"
                 />
@@ -1429,7 +1429,7 @@
               学力診断シート（個人成績表）詳細解説
             </h3>
             <p class="text-[11px] sm:text-xs text-slate-500 font-medium hidden xs:block truncate">
-              総合合否判定・設問別分析・弱点克服アドバイス（2面構成）
+              総合合否判定・志望校判定・小問別学力分析表
             </p>
           </div>
         </div>
@@ -2966,25 +2966,72 @@
     // =========================================================================
     const REPORT_SLIDES = [
       {
-        tag: "第1面: 総合判定",
-        title: "当日点 × 内申点 の精密合否ドッキング判定",
-        desc: "岡山県公立高校入試の傾斜配点・内申点基準に完全連動。第1志望校から併願私立まで精度の高い合格可能性（A〜E判定）を算出します。",
-        image: "/images/preview-c3-report.webp",
-        alt: "学力診断シート 第1面 総合判定・志望校合格可能性見本"
+        tag: "1枚目: 総合成績・単元別・推移",
+        label: "総合成績・単元別・推移",
+        imageAvif: "/images/3-carousel-1.avif",
+        imageWebp: "/images/3-carousel-1.webp",
+        imageFallback: "/images/3-carousel-1.jpg",
+        alt: "学力診断シート 総合成績・出題内容ごとの成績・各科目偏差値推移",
+        width: 628,
+        height: 683,
+        sections: [
+          {
+            heading: "① 総合成績",
+            body: "全体順位だけでなく「学区内順位」まで精密に算出。教科別レーダーチャートで現在の学力バランスを一目で把握できます。"
+          },
+          {
+            heading: "② 出題内容ごとの成績",
+            body: "単元ごとの正答率を全体平均と棒グラフで比較。「いま克服すべき弱点単元」がピンポイントで浮き彫りになります。"
+          },
+          {
+            heading: "③ 各科目偏差値推移",
+            body: "中1からの連続した推移グラフを掲載。一時的なブレに惑わされず、入試に向けた確かな学力の伸びを客観的に追跡できます。"
+          }
+        ]
       },
       {
-        tag: "第2面: 設問別分析",
-        title: "単元・領域ごとの正答率と失点パターンを可視化",
-        desc: "全受検者の正答率と本人の正誤を照合。「落としてはいけない基本問題」や「合否を分ける重要問題」を一目で把握し、弱点克服へ直結させます。",
-        image: "/images/preview-card-answer.webp",
-        alt: "学力診断シート 第2面 設問別・領域別正答率チャート見本"
+        tag: "2枚目: 志望校判定",
+        label: "志望校判定",
+        badge: "志望校判定",
+        imageAvif: "/images/3-carousel-2.avif",
+        imageWebp: "/images/3-carousel-2.webp",
+        imageFallback: "/images/3-carousel-2.jpg",
+        alt: "学力診断シート 志望校判定（県立入試別・学科内偏差値・通知表評価点・私立国立判定）",
+        width: 643,
+        height: 720,
+        sections: [
+          {
+            heading: "④ 県立高校の入試別判定",
+            body: "岡山県立入試に対応し、「一般入試」と「特別入試」の両方の合否判定を個別にお出しします。"
+          },
+          {
+            heading: "⑤ 学科内偏差値分布とあなたの位置",
+            body: "学校・学科内志望者の中での立ち位置を可視化。単なるABC判定にとどまらず、「あと何点で合格圏へ届くか」が明確になります。"
+          },
+          {
+            heading: "⑥ 通知表評価点を加味した判定",
+            body: "偏差値だけでなく、実際の入試選抜と同じく内申点を掛け合わせた精密な合否判定を行います。おかもしならではの大きな特徴です。"
+          },
+          {
+            heading: "⑦ 私立・国立高校判定",
+            body: "私立・国立高校も3校まで、合否可能性をしっかり判定します。"
+          }
+        ]
       },
       {
-        tag: "解説・学習指導",
-        title: "入試本番への具体的処方箋・重点復習アドバイス",
-        desc: "県内入試の出題傾向を踏まえた教科別学習アドバイス。弱点を補強し、次の模試・本番で確実に点数を伸ばすための学習指針を提供します。",
-        image: "/images/preview-card-exam.webp",
-        alt: "学力診断シート 教科別弱点克服アドバイス見本"
+        tag: "3枚目: 学力分析表",
+        label: "学力分析表",
+        badge: "学力分析表",
+        imageAvif: "/images/3-carousel-3.avif",
+        imageWebp: "/images/3-carousel-3.webp",
+        imageFallback: "/images/3-carousel-3.jpg",
+        alt: "学力診断シート 小問単位の学力分析表",
+        width: 505,
+        height: 572,
+        singleSection: {
+          heading: "学力分析表",
+          body: "「どの問題を落としたのか」を小問単位で完全可視化。全体正答率と自分の〇×を突き合わせることで、「全員が解けた基本問題のミス」や「記述問題の部分点」まで明確になり、次に取り組むべき復習テーマが一目で分かります。"
+        }
       }
     ];
 
@@ -2997,30 +3044,96 @@
       const dotsContainer = document.getElementById("report-slider-dots");
       if (!track || !dotsContainer) return;
 
-      track.innerHTML = REPORT_SLIDES.map((slide, idx) => `
-        <div class="report-slide w-full h-full shrink-0 flex flex-col items-center justify-center px-2 sm:px-4 py-2 sm:py-3 overflow-y-auto">
-          <div class="w-full flex-1 min-h-0 flex items-center justify-center max-h-[70vh] sm:max-h-[76vh]">
-            <img 
-              src="${slide.image}" 
-              alt="${slide.alt}" 
-              class="w-full h-auto max-h-[70vh] sm:max-h-[76vh] max-w-full object-contain rounded-xl shadow-sm border border-slate-200/90 bg-white select-none pointer-events-none"
-              loading="lazy"
-            />
-          </div>
-          <div class="mt-2 text-center max-w-2xl shrink-0 space-y-0.5 px-2">
-            <div class="inline-flex items-center gap-2">
-              <span class="text-[11px] font-bold text-emerald-900 bg-emerald-100 px-2.5 py-0.5 rounded-full">${slide.tag}</span>
-              <h4 class="text-xs sm:text-sm font-bold text-slate-900">${slide.title}</h4>
+      track.innerHTML = REPORT_SLIDES.map((slide, idx) => {
+        let textContentHtml = "";
+
+        if (slide.sections && slide.sections.length === 3) {
+          // スライド1: ①〜③
+          textContentHtml = `
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-2 sm:gap-2.5 w-full text-left">
+              ${slide.sections.map(sec => `
+                <div class="bg-white rounded-lg p-2.5 sm:p-3 border border-slate-200/80 shadow-2xs">
+                  <h4 class="text-xs sm:text-[13px] font-bold text-emerald-950 flex items-center gap-1.5 leading-snug">
+                    <span class="w-1.5 h-1.5 rounded-full bg-brand-green shrink-0"></span>
+                    <span>${sec.heading}</span>
+                  </h4>
+                  <p class="text-[11px] sm:text-xs text-slate-600 mt-1 leading-relaxed">
+                    ${sec.body}
+                  </p>
+                </div>
+              `).join("")}
             </div>
-            <p class="text-[11px] sm:text-xs text-slate-600 leading-snug font-medium">
-              ${slide.desc}
-            </p>
+          `;
+        } else if (slide.sections && slide.sections.length === 4) {
+          // スライド2: 志望校判定 + ④〜⑦
+          textContentHtml = `
+            <div class="w-full text-left space-y-1.5">
+              <div class="flex items-center justify-center sm:justify-start">
+                <span class="inline-flex items-center gap-1 px-3 py-0.5 rounded-full bg-emerald-100 text-emerald-900 font-bold text-xs tracking-wide">
+                  <span class="w-1.5 h-1.5 rounded-full bg-brand-green"></span>
+                  ${slide.badge || '志望校判定'}
+                </span>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-2.5">
+                ${slide.sections.map(sec => `
+                  <div class="bg-white rounded-lg p-2.5 border border-slate-200/80 shadow-2xs">
+                    <h4 class="text-xs sm:text-[13px] font-bold text-emerald-950 flex items-center gap-1.5 leading-snug">
+                      <span class="w-1.5 h-1.5 rounded-full bg-brand-green shrink-0"></span>
+                      <span>${sec.heading}</span>
+                    </h4>
+                    <p class="text-[11px] sm:text-xs text-slate-600 mt-1 leading-relaxed">
+                      ${sec.body}
+                    </p>
+                  </div>
+                `).join("")}
+              </div>
+            </div>
+          `;
+        } else if (slide.singleSection) {
+          // スライド3: 学力分析表
+          textContentHtml = `
+            <div class="max-w-2xl mx-auto w-full text-left">
+              <div class="bg-white rounded-lg p-3 sm:p-4 border border-slate-200/80 shadow-2xs">
+                <div class="flex items-center justify-center sm:justify-start mb-1.5">
+                  <span class="inline-flex items-center gap-1 px-3 py-0.5 rounded-full bg-emerald-100 text-emerald-900 font-bold text-xs tracking-wide">
+                    <span class="w-1.5 h-1.5 rounded-full bg-brand-green"></span>
+                    ${slide.singleSection.heading}
+                  </span>
+                </div>
+                <p class="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium">
+                  ${slide.singleSection.body}
+                </p>
+              </div>
+            </div>
+          `;
+        }
+
+        return `
+          <div class="report-slide w-full h-full shrink-0 flex flex-col items-center justify-start p-2 sm:p-4 overflow-y-auto">
+            <div class="w-full flex items-center justify-center shrink-0 my-auto py-1 max-h-[44vh] sm:max-h-[50vh]">
+              <picture class="h-full flex items-center justify-center">
+                <source type="image/avif" srcset="${slide.imageAvif}">
+                <source type="image/webp" srcset="${slide.imageWebp}">
+                <img 
+                  src="${slide.imageWebp}" 
+                  alt="${slide.alt}" 
+                  class="w-auto h-auto max-h-[44vh] sm:max-h-[50vh] max-w-full object-contain rounded-lg shadow-sm border border-slate-200/90 bg-white select-none"
+                  width="${slide.width}"
+                  height="${slide.height}"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </picture>
+            </div>
+            <div class="mt-2 w-full max-w-4xl shrink-0 px-1 pb-1">
+              ${textContentHtml}
+            </div>
           </div>
-        </div>
-      `).join("");
+        `;
+      }).join("");
 
       dotsContainer.innerHTML = REPORT_SLIDES.map((slide, idx) => `
-        <button type="button" onclick="goToReportSlide(${idx})" aria-label="解説スライド${idx + 1}（${slide.tag}）へ" class="report-slider-dot min-w-[32px] min-h-[32px] p-2 flex items-center justify-center cursor-pointer">
+        <button type="button" onclick="goToReportSlide(${idx})" aria-label="解説スライド${idx + 1}（${slide.label}）へ" class="report-slider-dot min-w-[32px] min-h-[32px] p-2 flex items-center justify-center cursor-pointer">
           <span class="dot-inner ${idx === 0 ? "w-5 h-2 bg-emerald-800" : "w-2 h-2 bg-slate-300 hover:bg-slate-400"} rounded-full transition-all duration-300"></span>
         </button>
       `).join("");

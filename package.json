@@ -5,6 +5,7 @@
   "description": "岡山県統一模擬試験 公式サイト",
   "scripts": {
     "build": "python3 scripts/build.py",
+    "build:ssg": "python3 scripts/build_ssg.py",
     "build:functions": "wrangler pages functions build",
     "typecheck": "tsc --noEmit",
     "check": "npm run typecheck && npm run build:functions",

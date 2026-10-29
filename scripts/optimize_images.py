@@ -1,8 +1,17 @@
 import os
+import shutil
 from PIL import Image
 import subprocess
 
 def optimize():
+    if os.environ.get("CF_PAGES") or os.environ.get("CI"):
+        print("Notice: Skipping image optimization in CI / Cloudflare Pages environment.")
+        return
+
+    has_sips = shutil.which("sips") is not None
+    if not has_sips:
+        print("Notice: 'sips' command not found. Skipping AVIF generation.")
+
     img_dir = "images"
     
     # 1. PC用ヒーロー画像
@@ -24,8 +33,9 @@ def optimize():
             resized.save(hero_pc_src, "WEBP", quality=80, method=6)
             
             # AVIF保存 (sips使用)
-            avif_path = os.path.join(img_dir, "hero-main-pc.avif")
-            subprocess.run(["sips", "-s", "format", "avif", webp_path, "--out", avif_path], capture_output=True)
+            if has_sips:
+                avif_path = os.path.join(img_dir, "hero-main-pc.avif")
+                subprocess.run(["sips", "-s", "format", "avif", webp_path, "--out", avif_path], capture_output=True)
 
     # 2. スマホ用ヒーロー画像
     # 元: images/hero-main.webp からスマホ向けにリサイズ (800x405 または 800x540)
@@ -41,8 +51,9 @@ def optimize():
             sp_webp_path = os.path.join(img_dir, "hero-main-sp.webp")
             resized_sp.save(sp_webp_path, "WEBP", quality=80, method=6)
             
-            sp_avif_path = os.path.join(img_dir, "hero-main-sp.avif")
-            subprocess.run(["sips", "-s", "format", "avif", sp_webp_path, "--out", sp_avif_path], capture_output=True)
+            if has_sips:
+                sp_avif_path = os.path.join(img_dir, "hero-main-sp.avif")
+                subprocess.run(["sips", "-s", "format", "avif", sp_webp_path, "--out", sp_avif_path], capture_output=True)
 
     # 3. サムネイル画像 (中3: 3_top/3-mondai/3-kaisetu, 中1・中2: 2-top/2-mondai/2-kaisetu, 小6: 6-top/6-mondai/6-kaisetu)
     report_top_items = [
@@ -68,8 +79,9 @@ def optimize():
                 for base in targets:
                     webp_out = os.path.join(img_dir, f"{base}.webp")
                     im.save(webp_out, "WEBP", quality=85, method=6)
-                    avif_out = os.path.join(img_dir, f"{base}.avif")
-                    subprocess.run(["sips", "-s", "format", "avif", webp_out, "--out", avif_out], capture_output=True)
+                    if has_sips:
+                        avif_out = os.path.join(img_dir, f"{base}.avif")
+                        subprocess.run(["sips", "-s", "format", "avif", webp_out, "--out", avif_out], capture_output=True)
 
     # 4. 中3成績表拡大モーダル（カルーセル 3枚）画像
     carousel_items = [
@@ -89,8 +101,9 @@ def optimize():
             with Image.open(src_path) as im:
                 webp_out = os.path.join(img_dir, f"{base}.webp")
                 im.save(webp_out, "WEBP", quality=85, method=6)
-                avif_out = os.path.join(img_dir, f"{base}.avif")
-                subprocess.run(["sips", "-s", "format", "avif", webp_out, "--out", avif_out], capture_output=True)
+                if has_sips:
+                    avif_out = os.path.join(img_dir, f"{base}.avif")
+                    subprocess.run(["sips", "-s", "format", "avif", webp_out, "--out", avif_out], capture_output=True)
 
     # 5. プレビューカード画像
     cards = [
@@ -111,9 +124,10 @@ def optimize():
                 resized.save(path, "WEBP", quality=82, method=6)
                 
                 # AVIFも作成
-                base, _ = os.path.splitext(filename)
-                avif_path = os.path.join(img_dir, f"{base}.avif")
-                subprocess.run(["sips", "-s", "format", "avif", path, "--out", avif_path], capture_output=True)
+                if has_sips:
+                    base, _ = os.path.splitext(filename)
+                    avif_path = os.path.join(img_dir, f"{base}.avif")
+                    subprocess.run(["sips", "-s", "format", "avif", path, "--out", avif_path], capture_output=True)
 
     print("Image optimization finished.")
 

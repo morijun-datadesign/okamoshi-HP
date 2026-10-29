@@ -9,6 +9,7 @@ import sys
 import subprocess
 import urllib.request
 import platform
+import shutil
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -69,10 +70,20 @@ def build_css():
     print(f"CSS Build complete: {output_path} ({size_kb:.1f} KB)")
 
 def optimize_images():
+    if os.environ.get("CF_PAGES") or os.environ.get("CI"):
+        print("Notice: Skipping image optimization in CI / Cloudflare Pages environment.")
+        return
+    if not shutil.which("sips"):
+        print("Notice: 'sips' command not found (macOS only). Skipping image optimization.")
+        return
+
     print("Optimizing images...")
     optimize_script = os.path.join(BASE_DIR, "scripts", "optimize_images.py")
     if os.path.exists(optimize_script):
-        subprocess.run([sys.executable, optimize_script], cwd=BASE_DIR, check=True)
+        try:
+            subprocess.run([sys.executable, optimize_script], cwd=BASE_DIR, check=True)
+        except Exception as e:
+            print(f"Warning: Image optimization failed ({e}). Continuing build...")
 
 def build_ssg():
     print("Building microCMS static pages (SSG)...")
@@ -81,9 +92,17 @@ def build_ssg():
         subprocess.run([sys.executable, ssg_script], cwd=BASE_DIR, check=True)
 
 def main():
+    args = sys.argv[1:]
+    if "--ssg-only" in args:
+        print("=== okamoshi microCMS SSG Build Started ===")
+        build_ssg()
+        print("=== okamoshi microCMS SSG Build Finished Successfully ===")
+        return
+
     print("=== okamoshi Production Build Started ===")
     build_css()
-    optimize_images()
+    if "--skip-images" not in args:
+        optimize_images()
     build_ssg()
     print("=== okamoshi Production Build Finished Successfully ===")
 

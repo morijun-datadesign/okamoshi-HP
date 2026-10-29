@@ -1424,7 +1424,7 @@
   <div id="report-modal" class="fixed inset-0 z-50 flex items-center justify-center p-1 sm:p-2.5 md:p-4 hidden bg-slate-900/60 backdrop-blur-md transition-opacity duration-300" onclick="if(event.target === this) closeReportModal()" role="dialog" aria-modal="true" aria-labelledby="report-modal-title">
 
     <!-- モーダルウィンドウ本体（4段Flexbox構造: ①ヘッダー ②画像 ③解説 ④フッター） -->
-    <div class="relative w-full max-w-5xl lg:max-w-6xl h-[90vh] h-[90dvh] max-h-[90vh] max-h-[90dvh] bg-white rounded-2xl shadow-2xl border border-slate-200/90 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200" style="max-height: 90dvh;" onclick="event.stopPropagation()">
+    <div class="relative w-full max-w-5xl lg:max-w-6xl xl:max-w-7xl h-[90vh] h-[90dvh] max-h-[90vh] max-h-[90dvh] bg-white rounded-2xl shadow-2xl border border-slate-200/90 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200" style="max-height: 90dvh;" onclick="event.stopPropagation()">
       
       <!-- ① モーダルヘッダー（shrink-0 固定） -->
       <div class="px-3 sm:px-5 py-2 sm:py-2.5 bg-white border-b border-slate-100 flex items-center justify-between shrink-0">
@@ -1451,12 +1451,12 @@
       <!-- スライダーエリア（トラック + 左右固定矢印ボタン） -->
       <div class="relative flex-1 min-h-0 bg-slate-50/70 overflow-hidden flex flex-col">
         
-        <!-- 左右ナビゲーションボタン（固定画像エリアの左右中央に配置） -->
-        <button type="button" id="report-slider-prev-btn" onclick="prevReportSlide()" aria-label="前の解説を見る" class="absolute left-1 sm:left-3 top-[17vh] top-[17dvh] sm:top-[22vh] -translate-y-1/2 z-20 w-8 h-8 sm:w-11 sm:h-11 min-w-[32px] sm:min-w-[44px] min-h-[32px] sm:min-h-[44px] rounded-full bg-emerald-800/90 hover:bg-emerald-900 text-white shadow-md hover:shadow-lg shadow-emerald-950/25 border border-emerald-700/50 flex items-center justify-center transition-all cursor-pointer hover:scale-105 active:scale-95 disabled:opacity-20 disabled:pointer-events-none backdrop-blur-xs">
+        <!-- 左右ナビゲーションボタン（PC表示時は右側画像エリアの左右に配置し、左テキストへの干渉を防止） -->
+        <button type="button" id="report-slider-prev-btn" onclick="prevReportSlide()" aria-label="前の解説を見る" class="absolute left-1 sm:left-3 lg:left-[392px] xl:left-[432px] top-[19vh] sm:top-[22vh] lg:top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-11 sm:h-11 min-w-[32px] sm:min-w-[44px] min-h-[32px] sm:min-h-[44px] rounded-full bg-emerald-800/90 hover:bg-emerald-900 text-white shadow-md hover:shadow-lg shadow-emerald-950/25 border border-emerald-700/50 flex items-center justify-center transition-all cursor-pointer hover:scale-105 active:scale-95 disabled:opacity-20 disabled:pointer-events-none backdrop-blur-xs">
           <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
         </button>
 
-        <button type="button" id="report-slider-next-btn" onclick="nextReportSlide()" aria-label="次の解説を見る" class="absolute right-1 sm:right-3 top-[17vh] top-[17dvh] sm:top-[22vh] -translate-y-1/2 z-20 w-8 h-8 sm:w-11 sm:h-11 min-w-[32px] sm:min-w-[44px] min-h-[32px] sm:min-h-[44px] rounded-full bg-emerald-800/90 hover:bg-emerald-900 text-white shadow-md hover:shadow-lg shadow-emerald-950/25 border border-emerald-700/50 flex items-center justify-center transition-all cursor-pointer hover:scale-105 active:scale-95 disabled:opacity-20 disabled:pointer-events-none backdrop-blur-xs">
+        <button type="button" id="report-slider-next-btn" onclick="nextReportSlide()" aria-label="次の解説を見る" class="absolute right-1 sm:right-3 lg:right-3 xl:right-4 top-[19vh] sm:top-[22vh] lg:top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-11 sm:h-11 min-w-[32px] sm:min-w-[44px] min-h-[32px] sm:min-h-[44px] rounded-full bg-emerald-800/90 hover:bg-emerald-900 text-white shadow-md hover:shadow-lg shadow-emerald-950/25 border border-emerald-700/50 flex items-center justify-center transition-all cursor-pointer hover:scale-105 active:scale-95 disabled:opacity-20 disabled:pointer-events-none backdrop-blur-xs">
           <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
         </button>
 
@@ -3350,19 +3350,20 @@ ${returnMethodNote}
         alt: "学力診断シート 総合成績・出題内容ごとの成績・各科目偏差値推移",
         width: 575,
         height: 508,
-        wrapperClass: "max-h-[30vh] max-h-[30dvh] sm:max-h-[46vh]",
-        imgClass: "max-h-[30vh] max-h-[30dvh] sm:max-h-[46vh] max-w-full",
         sections: [
           {
-            heading: "① 総合成績",
+            num: 1,
+            title: "総合成績",
             body: "全体順位だけでなく「学区内順位」まで精密に算出。教科別レーダーチャートで現在の学力バランスを一目で把握できます。"
           },
           {
-            heading: "② 出題内容ごとの成績",
+            num: 2,
+            title: "出題内容ごとの成績",
             body: "単元ごとの正答率を全体平均と棒グラフで比較。「いま克服すべき弱点単元」がピンポイントで浮き彫りになります。"
           },
           {
-            heading: "③ 各科目偏差値推移",
+            num: 3,
+            title: "各科目偏差値推移",
             body: "中1からの連続した推移グラフを掲載。一時的なブレに惑わされず、入試に向けた確かな学力の伸びを客観的に追跡できます。"
           }
         ]
@@ -3377,23 +3378,25 @@ ${returnMethodNote}
         alt: "学力診断シート 志望校判定（県立入試別・学科内偏差値・通知表評価点・私立国立判定）",
         width: 573,
         height: 651,
-        wrapperClass: "max-h-[30vh] max-h-[30dvh] sm:max-h-[46vh]",
-        imgClass: "max-h-[30vh] max-h-[30dvh] sm:max-h-[46vh] max-w-full",
         sections: [
           {
-            heading: "④ 県立高校の入試別判定",
+            num: 4,
+            title: "県立高校の入試別判定",
             body: "岡山県立入試に対応し、「一般入試」と「特別入試」の両方の合否判定を個別にお出しします。"
           },
           {
-            heading: "⑤ 学科内偏差値分布とあなたの位置",
+            num: 5,
+            title: "学科内偏差値分布とあなたの位置",
             body: "学校・学科内志望者の中での立ち位置を可視化。単なるABC判定にとどまらず、「あと何点で合格圏へ届くか」が明確になります。"
           },
           {
-            heading: "⑥ 通知表評価点を加味した判定",
+            num: 6,
+            title: "通知表評価点を加味した判定",
             body: "偏差値だけでなく、実際の入試選抜と同じく内申点を掛け合わせた精密な合否判定を行います。おかもしならではの大きな特徴です。"
           },
           {
-            heading: "⑦ 私立・国立高校判定",
+            num: 7,
+            title: "私立・国立高校判定",
             body: "私立・国立高校も3校まで、合否可能性をしっかり判定します。"
           }
         ]
@@ -3408,10 +3411,8 @@ ${returnMethodNote}
         alt: "学力診断シート 小問単位の学力分析表",
         width: 398,
         height: 452,
-        wrapperClass: "max-h-[30vh] max-h-[30dvh] sm:max-h-[46vh]",
-        imgClass: "max-h-[30vh] max-h-[30dvh] sm:max-h-[46vh] w-auto max-w-[94%] sm:max-w-full",
         singleSection: {
-          heading: "小問別学力分析表",
+          title: "小問別学力分析表",
           body: "「どの問題を落としたのか」を小問単位で完全可視化。全体正答率と自分の〇×を突き合わせることで、「全員が解けた基本問題のミス」や「記述問題の部分点」まで明確になり、次に取り組むべき復習テーマが一目で分かります。"
         }
       }
@@ -3427,86 +3428,66 @@ ${returnMethodNote}
       if (!track || !dotsContainer) return;
 
       track.innerHTML = REPORT_SLIDES.map((slide, idx) => {
-        let textContentHtml = "";
+        return `
+          <div class="report-slide w-full h-full shrink-0 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden overscroll-contain select-none" style="-webkit-overflow-scrolling: touch;">
+            <!-- 左カラム（PC時）/ 下部（スマホ時）：解説テキストエリア -->
+            <div class="order-2 lg:order-1 w-full lg:w-[380px] xl:w-[420px] lg:shrink-0 flex flex-col px-3 sm:px-6 lg:px-5 py-2.5 sm:py-3.5 lg:py-5 lg:overflow-y-auto bg-white lg:bg-slate-50/70 border-t lg:border-t-0 lg:border-r border-slate-200/80 select-text">
+              <div class="mb-2 sm:mb-2.5 lg:mb-3 flex items-center justify-start">
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full bg-emerald-100 text-emerald-950 font-bold text-[11px] sm:text-xs tracking-wide shadow-2xs border border-emerald-200/70">
+                  <span class="w-1.5 h-1.5 rounded-full bg-brand-green"></span>
+                  <span>${slide.badge || slide.label}</span>
+                </span>
+              </div>
 
-        if (slide.sections && slide.sections.length === 3) {
-          // スライド1: ①〜③
-          textContentHtml = `
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-2 sm:gap-2.5 w-full text-left">
-              ${slide.sections.map(sec => `
-                <div class="bg-white rounded-lg p-2.5 sm:p-3 border border-slate-200/80 shadow-2xs">
-                  <h4 class="text-xs sm:text-[13px] font-bold text-emerald-950 flex items-center gap-1.5 leading-snug">
-                    <span class="w-1.5 h-1.5 rounded-full bg-brand-green shrink-0"></span>
-                    <span>${sec.heading}</span>
-                  </h4>
-                  <p class="text-[11px] sm:text-xs text-slate-600 mt-1 leading-relaxed">
-                    ${sec.body}
-                  </p>
-                </div>
-              `).join("")}
-            </div>
-          `;
-        } else if (slide.sections && slide.sections.length === 4) {
-          // スライド2: ④〜⑦
-          textContentHtml = `
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-2.5 w-full text-left">
-              ${slide.sections.map(sec => `
-                <div class="bg-white rounded-lg p-2.5 border border-slate-200/80 shadow-2xs">
-                  <h4 class="text-xs sm:text-[13px] font-bold text-emerald-950 flex items-center gap-1.5 leading-snug">
-                    <span class="w-1.5 h-1.5 rounded-full bg-brand-green shrink-0"></span>
-                    <span>${sec.heading}</span>
-                  </h4>
-                  <p class="text-[11px] sm:text-xs text-slate-600 mt-1 leading-relaxed">
-                    ${sec.body}
-                  </p>
-                </div>
-              `).join("")}
-            </div>
-          `;
-        } else if (slide.singleSection) {
-          // スライド3: 学力分析表
-          textContentHtml = `
-            <div class="max-w-2xl mx-auto w-full text-left">
-              <div class="bg-white rounded-lg p-3 sm:p-4 border border-slate-200/80 shadow-2xs">
-                <p class="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium">
-                  ${slide.singleSection.body}
-                </p>
+              <div class="flex flex-col gap-2 sm:gap-2.5 w-full text-left">
+                ${slide.sections ? slide.sections.map(sec => `
+                  <div class="bg-white rounded-lg p-2 sm:p-2.5 lg:p-2.5 border border-slate-200/80 shadow-2xs">
+                    <h4 class="text-xs sm:text-[13px] font-bold text-slate-900 flex items-center gap-1.5 leading-snug">
+                      <span class="inline-flex items-center justify-center w-5 h-5 sm:w-5.5 sm:h-5.5 rounded-full bg-[#c84b31] text-white text-[11px] sm:text-xs font-bold shrink-0 shadow-2xs leading-none">
+                        ${sec.num}
+                      </span>
+                      <span class="font-bold text-slate-900">${sec.title}</span>
+                    </h4>
+                    <p class="text-[11px] sm:text-xs text-slate-600 mt-1 leading-relaxed pl-6.5 sm:pl-7">
+                      ${sec.body}
+                    </p>
+                  </div>
+                `).join("") : ""}
+
+                ${slide.singleSection ? `
+                  <div class="bg-white rounded-lg p-3 sm:p-4 border border-slate-200/80 shadow-2xs">
+                    <div class="flex items-center gap-2 mb-1.5">
+                      <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-100 text-brand-green shrink-0">
+                        <span class="material-symbols-outlined text-[15px]">fact_check</span>
+                      </span>
+                      <h4 class="text-xs sm:text-sm font-bold text-slate-900">
+                        ${slide.singleSection.title}
+                      </h4>
+                    </div>
+                    <p class="text-xs sm:text-[13px] text-slate-600 leading-relaxed pl-8">
+                      ${slide.singleSection.body}
+                    </p>
+                  </div>
+                ` : ""}
               </div>
             </div>
-          `;
-        }
 
-        return `
-          <div class="report-slide w-full h-full shrink-0 flex flex-col overflow-y-auto sm:overflow-hidden overscroll-contain select-none" style="-webkit-overflow-scrolling: touch;">
-            <!-- ② 画像エリア（スマホ時は横幅いっぱいに拡大、PC時はsm:shrink-0で上部固定） -->
-            <div class="w-full shrink-0 flex flex-col items-center justify-center pt-2 pb-1.5 sm:pt-3 sm:pb-2.5 px-1.5 sm:px-6 bg-slate-50/80 border-b border-slate-100">
-              <div class="w-full flex items-center justify-center max-w-full">
-                <picture class="w-full sm:w-auto flex items-center justify-center max-w-full">
+            <!-- 右カラム（PC時）/ 上部（スマホ時）：学力診断シート画像エリア -->
+            <div class="order-1 lg:order-2 w-full lg:flex-1 lg:min-w-0 flex flex-col items-center justify-center p-2 sm:p-3 lg:p-4 bg-slate-50/80 lg:overflow-hidden shrink-0 lg:shrink">
+              <div class="w-full h-full flex items-center justify-center max-w-full">
+                <picture class="w-full lg:w-auto h-full flex items-center justify-center max-w-full">
                   <source type="image/avif" srcset="${slide.imageAvif}">
                   <source type="image/webp" srcset="${slide.imageWebp}">
                   <img 
                     src="${slide.imageWebp}" 
                     alt="${slide.alt}" 
-                    class="w-full sm:w-auto h-auto sm:max-h-[44vh] max-w-full object-contain mx-auto rounded-lg shadow-2xs border border-slate-200/80 bg-white block"
+                    class="w-auto h-auto max-h-[38vh] sm:max-h-[44vh] lg:max-h-[72vh] xl:max-h-[76vh] max-w-full object-contain mx-auto rounded-lg shadow-sm border border-slate-200/90 bg-white block p-1 sm:p-1.5"
                     width="${slide.width}"
                     height="${slide.height}"
                     loading="lazy"
                     decoding="async"
                   />
                 </picture>
-              </div>
-              <div class="mt-1.5 mb-0.5 sm:my-1 flex items-center justify-center">
-                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-900 font-bold text-[11px] sm:text-xs tracking-wide shadow-2xs">
-                  <span class="w-1.5 h-1.5 rounded-full bg-brand-green"></span>
-                  <span>${slide.badge || slide.label}</span>
-                </span>
-              </div>
-            </div>
-
-            <!-- ③ 解説リストエリア（スマホ時はスライド全体でスクロール、PC時は独立縦スクロール） -->
-            <div class="report-slide-scroll-area w-full sm:flex-1 sm:min-h-0 sm:overflow-y-auto overscroll-contain px-2.5 sm:px-6 py-2.5 sm:py-3.5 pb-8 sm:pb-8 select-text" style="-webkit-overflow-scrolling: touch;">
-              <div class="w-full max-w-4xl mx-auto">
-                ${textContentHtml}
               </div>
             </div>
           </div>

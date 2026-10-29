@@ -1586,7 +1586,72 @@
   <!-- =========================================================================
        JavaScript ロジック（B案データモデル & 共通ヘッダー連動）
        ========================================================================= -->
+    <script src="/js/common-date.js"></script>
     <script>
+    // ==========================================
+    // サイト共通 現在日時取得 & 締切判定ユーティリティ
+    // ==========================================
+    function getCurrentDate() {
+      if (typeof window.getCurrentDate === 'function' && window.getCurrentDate !== getCurrentDate) {
+        return window.getCurrentDate();
+      }
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('test_date')) {
+          const raw = urlParams.get('test_date') || '';
+          const parsed = new Date(raw.replace(/ /g, '+'));
+          if (!isNaN(parsed.getTime())) return parsed;
+        }
+      } catch (e) {}
+      return new Date();
+    }
+
+    function getTestDateString() {
+      if (typeof window.getTestDateString === 'function' && window.getTestDateString !== getTestDateString) {
+        return window.getTestDateString();
+      }
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get('test_date') || null;
+      } catch (e) {}
+      return null;
+    }
+
+    function parseRoundDeadline(round) {
+      if (!round) return null;
+      const raw = round.applyDeadlineRaw || round.deadline || '';
+      if (!raw) return null;
+      const clean = String(raw).trim();
+      let y, mon, d, h = 23, min = 59;
+      const mIso = clean.match(/(\d{4})[/-](\d{1,2})[/-](\d{1,2})(?:\s+(\d{1,2}):(\d{1,2}))?/);
+      const mJp = clean.match(/(\d{4})年(\d{1,2})月(\d{1,2})日(?:\([^)]*\))?(?:\s*(\d{1,2}):(\d{1,2}))?/);
+      if (mIso) {
+        y = parseInt(mIso[1], 10);
+        mon = parseInt(mIso[2], 10);
+        d = parseInt(mIso[3], 10);
+        if (mIso[4]) h = parseInt(mIso[4], 10);
+        if (mIso[5]) min = parseInt(mIso[5], 10);
+      } else if (mJp) {
+        y = parseInt(mJp[1], 10);
+        mon = parseInt(mJp[2], 10);
+        d = parseInt(mJp[3], 10);
+        if (mJp[4]) h = parseInt(mJp[4], 10);
+        if (mJp[5]) min = parseInt(mJp[5], 10);
+      } else {
+        return null;
+      }
+      return new Date(y, mon - 1, d, h, min, 59, 999);
+    }
+
+    function isRoundExpired(round) {
+      if (!round) return false;
+      if (round.status === 'finished') return true;
+      const dlDate = parseRoundDeadline(round);
+      if (!dlDate) return false;
+      const now = getCurrentDate();
+      return now.getTime() > dlDate.getTime();
+    }
+
     // ==========================================
     // 模試データモデル（Cloudflare D1 /api/exam-guides から動的取得）
     // ==========================================
@@ -1693,9 +1758,10 @@
               }
             }
           } else {
-            // デフォルトは受付中(active) または 申込可(open) を優先選択
-            let defIdx = curRounds.findIndex(r => r.status === 'active');
-            if (defIdx === -1) defIdx = curRounds.findIndex(r => r.status === 'open');
+            // デフォルトは受付中(active) または 申込可(open) を優先選択（締切前のものを優先）
+            let defIdx = curRounds.findIndex(r => (r.status === 'active' || r.status === 'open') && !isRoundExpired(r));
+            if (defIdx === -1) defIdx = curRounds.findIndex(r => !isRoundExpired(r));
+            if (defIdx === -1) defIdx = curRounds.findIndex(r => r.status === 'active' || r.status === 'open');
             if (defIdx === -1) defIdx = Math.max(0, curRounds.length - 1);
             currentRoundIndex = defIdx >= 0 ? defIdx : 0;
           }
@@ -1768,8 +1834,9 @@
       const examInfo = examData[normalized];
       if (examInfo && Array.isArray(examInfo.rounds)) {
         const rounds = examInfo.rounds;
-        let targetIndex = rounds.findIndex(r => r.status === 'active');
-        if (targetIndex === -1) targetIndex = rounds.findIndex(r => r.status === 'open');
+        let targetIndex = rounds.findIndex(r => (r.status === 'active' || r.status === 'open') && !isRoundExpired(r));
+        if (targetIndex === -1) targetIndex = rounds.findIndex(r => !isRoundExpired(r));
+        if (targetIndex === -1) targetIndex = rounds.findIndex(r => r.status === 'active' || r.status === 'open');
         if (targetIndex === -1) targetIndex = Math.max(0, rounds.length - 1);
 
         currentRoundIndex = targetIndex;
@@ -1814,10 +1881,12 @@
       if (spRoundSelect) {
         spRoundSelect.innerHTML = rounds.map((r, idx) => {
           let statusText = '';
-          if (r.status === 'active') statusText = '【受付中】';
+          const isExpired = isRoundExpired(r) || r.status === 'finished';
+          if (isExpired) statusText = '【受付終了】';
+          else if (r.status === 'active') statusText = '【受付中】';
           else if (r.status === 'open') statusText = '【申込可】';
           else if (r.status === 'pending') statusText = '【準備中】';
-          else statusText = '【終了】';
+          else statusText = '【受付終了】';
           return `<option value="${idx}" ${idx === currentRoundIndex ? 'selected' : ''}>${r.monthName} ${statusText}</option>`;
         }).join('');
         spRoundSelect.value = currentRoundIndex;
@@ -1828,10 +1897,12 @@
       if (actionRoundSelect) {
         actionRoundSelect.innerHTML = rounds.map((r, idx) => {
           let statusText = '';
-          if (r.status === 'active') statusText = '【受付中】';
+          const isExpired = isRoundExpired(r) || r.status === 'finished';
+          if (isExpired) statusText = '【受付終了】';
+          else if (r.status === 'active') statusText = '【受付中】';
           else if (r.status === 'open') statusText = '【申込可】';
           else if (r.status === 'pending') statusText = '【準備中】';
-          else statusText = '【終了】';
+          else statusText = '【受付終了】';
           return `<option value="${idx}" ${idx === currentRoundIndex ? 'selected' : ''}>${r.monthName} ${statusText}</option>`;
         }).join('');
         actionRoundSelect.value = currentRoundIndex;
@@ -1843,7 +1914,11 @@
       const badgeEl = document.getElementById('sp-round-badge');
       if (currentRound && monthTextEl && badgeEl) {
         monthTextEl.textContent = currentRound.monthName;
-        if (currentRound.status === 'active') {
+        const isCurrentExpired = isRoundExpired(currentRound) || currentRound.status === 'finished';
+        if (isCurrentExpired) {
+          badgeEl.textContent = '受付終了';
+          badgeEl.className = 'bg-slate-100 text-slate-600 text-xs font-medium px-2 py-0.5 rounded-full border border-slate-200 whitespace-nowrap';
+        } else if (currentRound.status === 'active') {
           badgeEl.textContent = '受付中';
           badgeEl.className = 'bg-emerald-100 text-emerald-800 text-xs font-bold px-2 py-0.5 rounded-full whitespace-nowrap';
         } else if (currentRound.status === 'open') {
@@ -1853,7 +1928,7 @@
           badgeEl.textContent = '準備中';
           badgeEl.className = 'bg-slate-100 text-slate-600 text-xs font-bold px-2 py-0.5 rounded-full border border-slate-200 whitespace-nowrap';
         } else {
-          badgeEl.textContent = '終了';
+          badgeEl.textContent = '受付終了';
           badgeEl.className = 'bg-slate-100 text-slate-600 text-xs font-medium px-2 py-0.5 rounded-full border border-slate-200 whitespace-nowrap';
         }
       }
@@ -1868,14 +1943,17 @@
         btn.type = 'button';
         
         let statusBadge = '';
-        if (r.status === 'active') {
+        const isExpired = isRoundExpired(r) || r.status === 'finished';
+        if (isExpired) {
+          statusBadge = `<span class="text-[9px] px-1.5 py-0.5 rounded-full ${isSelected ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-700'} font-medium">受付終了</span>`;
+        } else if (r.status === 'active') {
           statusBadge = `<span class="text-[9px] px-1.5 py-0.5 rounded-full ${isSelected ? 'bg-white text-emerald-900' : 'bg-emerald-100 text-emerald-900'} font-bold">受付中</span>`;
         } else if (r.status === 'open') {
           statusBadge = `<span class="text-[9px] px-1.5 py-0.5 rounded-full ${isSelected ? 'bg-white text-emerald-900' : 'bg-emerald-100 text-emerald-900'} font-bold">申込可</span>`;
         } else if (r.status === 'pending') {
           statusBadge = `<span class="text-[9px] px-1.5 py-0.5 rounded-full ${isSelected ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-700'} font-bold">準備中</span>`;
         } else {
-          statusBadge = `<span class="text-[9px] px-1.5 py-0.5 rounded-full ${isSelected ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-700'} font-medium">終了</span>`;
+          statusBadge = `<span class="text-[9px] px-1.5 py-0.5 rounded-full ${isSelected ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-700'} font-medium">受付終了</span>`;
         }
 
         btn.className = `shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all border cursor-pointer ${
@@ -2151,9 +2229,9 @@
       const konbiniW = days[konbiniDeadlineDate.getDay()];
       const konbiniDeadlineText = `${konbiniY}年${konbiniM}月${konbiniD}日(${konbiniW}) 23:59まで`;
 
-      const now = new Date();
-      const isCardExpired = round.status === 'finished' || now.getTime() > cardDeadlineDate.getTime();
-      const isKonbiniExpired = isCardExpired || now.getTime() > konbiniDeadlineDate.getTime();
+      const now = getCurrentDate();
+      const isCardExpired = round.status === 'finished' || (cardDeadlineDate && now.getTime() > cardDeadlineDate.getTime());
+      const isKonbiniExpired = isCardExpired || (konbiniDeadlineDate && now.getTime() > konbiniDeadlineDate.getTime());
 
       const cardText = isCardExpired
         ? '<span class="text-rose-600 font-bold">受付終了</span>'
@@ -2251,7 +2329,8 @@
       }
 
       if (ctaContainer) {
-        if (r.status === 'finished') {
+        const isExpired = isRoundExpired(r) || r.status === 'finished';
+        if (isExpired) {
           if (badge) {
             badge.className = "inline-flex items-center px-2.5 py-0.5 sm:py-1 rounded-md text-xs sm:text-sm font-bold bg-slate-100 text-slate-500 border border-slate-200";
             badge.textContent = "受付終了";
@@ -2296,9 +2375,11 @@
             sho6: '小6'
           };
           const gradeParamVal = gradeParamMap[currentGrade] || '中3';
+          const testDate = getTestDateString();
+          const testParam = testDate ? `&test_date=${encodeURIComponent(testDate)}` : '';
 
           ctaContainer.innerHTML = `
-            <a href="/apply?grade=${encodeURIComponent(gradeParamVal)}&month=${r.monthNum}" id="card-cta-btn" class="w-full py-4 px-6 rounded-lg bg-orange-700 hover:bg-orange-800 text-white font-bold text-base sm:text-lg flex items-center justify-center gap-2 shadow-lg shadow-orange-700/25 hover:shadow-orange-700/35 active:scale-[0.98] transition-all hover:-translate-y-0.5">
+            <a href="/apply?grade=${encodeURIComponent(gradeParamVal)}&month=${r.monthNum}${testParam}" id="card-cta-btn" class="w-full py-4 px-6 rounded-lg bg-orange-700 hover:bg-orange-800 text-white font-bold text-base sm:text-lg flex items-center justify-center gap-2 shadow-lg shadow-orange-700/25 hover:shadow-orange-700/35 active:scale-[0.98] transition-all hover:-translate-y-0.5">
               <span>${r.monthName}をWEBで申し込む</span>
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
             </a>
@@ -4051,7 +4132,7 @@
       const START_TIME = new Date('2026-11-02T00:00:00+09:00').getTime();
       const END_TIME = new Date('2026-12-01T00:00:00+09:00').getTime();
 
-      let now = Date.now();
+      let now = getCurrentDate().getTime();
       let urlParams;
       try {
         urlParams = new URLSearchParams(window.location.search);
@@ -4064,18 +4145,10 @@
         try {
           localStorage.setItem(STORAGE_KEY, '0');
         } catch (e) {}
-      }
-
-      // 開発・検証用日時偽装 (?test_date=2026-11-05 や ?test_date=2026-12-01)
-      if (urlParams.has('test_date')) {
-        const rawDate = urlParams.get('test_date') || '';
-        const parsed = new Date(rawDate.replace(/ /g, '+')).getTime();
-        if (!isNaN(parsed)) {
-          now = parsed;
+        if (!urlParams.has('test_date') && now < START_TIME) {
+          // 11月2日前の検証時、reset_notice=1 単体でもテストできるよう期間開始後とみなす
+          now = START_TIME + 1000;
         }
-      } else if (urlParams.get('reset_notice') === '1' && now < START_TIME) {
-        // 11月2日前の検証時、reset_notice=1 単体でもテストできるよう期間開始後とみなす
-        now = START_TIME + 1000;
       }
 
       // 1. 【期間判定】11月中のみ表示（12月1日 00:00:00 自動終了）

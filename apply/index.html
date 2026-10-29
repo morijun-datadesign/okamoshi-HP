@@ -1338,7 +1338,23 @@
   <!-- ========================================== -->
   <!-- SCRIPT LOGIC                               -->
   <!-- ========================================== -->
+  <script src="/js/common-date.js"></script>
   <script>
+    function getCurrentDate() {
+      if (typeof window.getCurrentDate === 'function' && window.getCurrentDate !== getCurrentDate) {
+        return window.getCurrentDate();
+      }
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('test_date')) {
+          const raw = urlParams.get('test_date') || '';
+          const parsed = new Date(raw.replace(/ /g, '+'));
+          if (!isNaN(parsed.getTime())) return parsed;
+        }
+      } catch (e) {}
+      return new Date();
+    }
+
     // ========================================================
     // 0. microCMS & Stripe 設定
     // ========================================================
@@ -1679,7 +1695,7 @@
       const konbiniDt = konbiniDeadlineDate.getDate();
       const konbiniDay = days[konbiniDeadlineDate.getDay()];
 
-      const now = Date.now();
+      const now = getCurrentDate().getTime();
       const isCardExpired = now > t;
       const isKonbiniExpired = isCardExpired || now > konbiniDeadlineDate.getTime();
 
@@ -1887,7 +1903,7 @@
      * 3) D1の venuesList / venueDetails から希望会場選択肢を動的生成
      */
     function getAvailableExamsForGrade(gradeKey) {
-      const now = Date.now();
+      const now = getCurrentDate().getTime();
       const gradeLabels = { sho6: '小6', chu1: '中1', chu2: '中2', chu3: '中3' };
       const gradeLabel = gradeLabels[gradeKey] || '中3';
       const gradePrefix = `${gradeLabel}対象`;
@@ -2450,7 +2466,7 @@
     // ========================================================
     function getConvenienceDeadline() {
       const KONBINI_DEFAULT_EXPIRES_AFTER_DAYS = 3;
-      const now = new Date();
+      const now = getCurrentDate();
       const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
       let expiresAfterDays = KONBINI_DEFAULT_EXPIRES_AFTER_DAYS;
       let isDeadlineDay = false;

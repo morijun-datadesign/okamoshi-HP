@@ -1750,8 +1750,1138 @@
   <!-- ==================================================== -->
   <!-- microCMS 記事詳細取得 & 目次（TOC）自動生成 スクリプト -->
   <!-- ==================================================== -->
+  <script src="/js/common-date.js"></script>
   
+<script>
+    function getCurrentDate() {
+      if (typeof window.getCurrentDate === 'function' && window.getCurrentDate !== getCurrentDate) {
+        return window.getCurrentDate();
+      }
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('test_date')) {
+          const raw = urlParams.get('test_date') || '';
+          const parsed = new Date(raw.replace(/ /g, '+'));
+          if (!isNaN(parsed.getTime())) return parsed;
+        }
+      } catch (e) {}
+      return new Date();
+    }
 
+    function getTestDateString() {
+      if (typeof window.getTestDateString === 'function' && window.getTestDateString !== getTestDateString) {
+        return window.getTestDateString();
+      }
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get('test_date') || null;
+      } catch (e) {}
+      return null;
+    }
+
+    function parseDeadlineString(str) {
+      if (!str) return null;
+      if (/^\d{4}-\d{2}-\d{2}/.test(str)) {
+        const t = new Date(str).getTime();
+        if (!isNaN(t)) return t;
+      }
+      const m = str.match(/(\d{4})[年\/-](\d{1,2})[月\/-](\d{1,2})(?:\([^)]*\))?(?:\s*(\d{1,2}):(\d{1,2}))?/);
+      if (m) {
+        const y = parseInt(m[1], 10);
+        const mon = parseInt(m[2], 10);
+        const d = parseInt(m[3], 10);
+        const h = m[4] ? parseInt(m[4], 10) : 23;
+        const min = m[5] ? parseInt(m[5], 10) : 59;
+        return new Date(y, mon - 1, d, h, min, 59, 999).getTime();
+      }
+      return null;
+    }
+    // 2. モック記事データ（フォールバック用）
+    const DETAIL_FALLBACK_POSTS = {
+      'oct-2026-guide': {
+        title: '2026年度 10月号 中学3年生おかもし実施要項を公開しました（会場・自宅受験）',
+        category: '重要なお知らせ',
+        subCategory: '重要なお知らせ',
+        publishedAt: '2026-09-04T10:00:00+09:00',
+        updatedAt: '2026-09-04T10:00:00+09:00',
+        description: '秋の本格的受験期突入に合わせて実施される「中3・第2回岡山県統一模試」。県立普通科トップ高から私立有力校まで、岡山県高校入試の出題傾向と配点基準を完全踏襲した実践判定を行います。',
+        eyecatch: { url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB6xlEasRGIYDs0aMSY_2xmIiKipy01AfojnFUvHgmbdmqWObeLT_LVcvtCq8ALpq7ImgeDkLR2PiRpBAK2W5ShFBzdRKQMunMRPPcAXApLvOaBESlFqa_84xrk1tL3cossrAVr2D725mlhVn-BjA8tC7o2eLloEh9PDAY1rNachCrC1A5MLyAIgAvdY08rqxI0AX_YTg-R7wDKAbD_YYIWCHtsLYb3xX-SmPsEHoXkH3TQqywAnLqP' }
+      },
+      'payment-guide': {
+        title: 'おかもし 決済用リンクおよびコンビニ決済手順について',
+        category: 'トピックス',
+        subCategory: '受験手続き・事務',
+        publishedAt: '2026-08-19T10:00:00+09:00',
+        updatedAt: '2026-08-20T10:00:00+09:00',
+        description: '個人受験お申し込み時にお選びいただけるクレジットカード決済、およびセブンイレブン・ファミリーマート・ローソン等でのコンビニ店頭払込の確定フローをご案内します。',
+        eyecatch: { url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBsNNSSYVNzAFgLU3zxYiPy5NxY9NtLwv_fCnTn9bHNDDUv59jwUkb7OEKwDZMSUXqHzKd5RAKKkYM_uTU5D-UTk77LJpU4ANtGOH5Iw_oCv4Lg66kAVk5Xa5oHTRTE4SW72Kx0WfrEdMNcHWejONucKPSiOlqhY2DMkDW_ruWxiUo8atkrjG44-8jWlHZA9h1Yc5accnyvoiL66Yvz1MX5gqTfC4CBPpdOQzLHxJOc_EgkYTE8oIR-' }
+      },
+      'senior-interview': {
+        title: '【岡山県の高校受験】合格への近道はここにある！先輩受験生が語る「おかもし」活用法',
+        category: '入試・受験情報',
+        subCategory: '合格体験・模試活用',
+        publishedAt: '2026-07-30T10:00:00+09:00',
+        updatedAt: '2026-08-10T10:00:00+09:00',
+        description: '岡山県公立高校入試の出題傾向とおかもしの合致点、内申点を加味した合否判定、先輩受験生たちの体験談を解説。',
+        eyecatch: { url: 'images/article-classroom.webp' }
+      },
+      'hall-exam-benefit': {
+        title: 'おかもし 会場受験のススメ 〜本番さながらの空気感と「しんどい」の先にある成長〜',
+        category: '学習コラム',
+        subCategory: '受験メンタル対策',
+        publishedAt: '2026-07-21T10:00:00+09:00',
+        updatedAt: '2026-07-21T10:00:00+09:00',
+        description: '自宅受験では体験できない周囲の緊張感、マークミスへの配慮、時間配分のプレッシャー。本番当日に本来の実力を発揮するためのメンタルトレーニング論。',
+        eyecatch: { url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuC4Ko4ztH0TGrEYNKSrhmpTCyr-cD3PXIMShV-YahCDMGeEDGDmrSDHelf0rBCvX388sBFXglNTZMYWN4bjqJ8TVgUWzZo7LQo7MJMZvrT3VTJMFVBKpTdJQa85EhI10V1I2F-wYfIdDbAyu3uXxJbHxpMEgTokvR9WSnr9i5v-ug5u0KJfku9sMlbF2tXlvtO8mLKosqIXPla6wiqH9jel9LTgZzn2RvLk4_o8OryXKhFXF9hugHwJ' }
+      },
+      'elementary-exam': {
+        title: '小6生対象 岡山県適性検査対策模試 9月号 実施要項・出題範囲のご案内',
+        category: '実施要項',
+        subCategory: '県立中高一貫校受験',
+        publishedAt: '2026-07-13T10:00:00+09:00',
+        updatedAt: '2026-07-13T10:00:00+09:00',
+        description: '岡山大安寺中等教育学校・岡山操山中・倉敷天城中の公立中高一貫校受験に対応した適性検査I・IIの模試概要。',
+        eyecatch: { url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuA_RyGui2dp6pwnKedw0uSxzZJiSIelHIxJrxIVIRkDiLyqBF1u11ZycpTB-d2M9GlxnRmKUF0ocNIoWfbV64KU0ZdNbDgc8hOYPXDSJllgAwwFTuPiqIJtk7YUM8bZ2Qpt8tlD6kNNVuTlVDZGtac0zCsCpJNvve-a8c20UT_vATkmr5K2QRN-t34ijPuvgkUgGjPw4rr0Ok5ADeDJjBIwWY41cGGs_MCL-EqRApG_ju-8bdNTRVJD' }
+      },
+      'naishinten-analysis': {
+        title: '岡山朝日高校・操山高校・芳泉高校の志望校判定基準と内申点（通知表評価点）の重要性',
+        category: '入試・受験情報',
+        subCategory: '岡山県入試制度研究',
+        publishedAt: '2026-06-28T10:00:00+09:00',
+        updatedAt: '2026-06-28T10:00:00+09:00',
+        description: '岡山県公立高校入試の選抜比率（学力検査と調査書）を徹底解説。おかもし独自の「内申点加味型合格可能性判定」がなぜ保護者や進路指導に信頼されるのかを紐解きます。',
+        eyecatch: { url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBER3dl2bSesq7hzylGQlzHqZ2tkVezLOssHjuPtkUSxuRA_hdvrXmoExwq7U3mpJeWa8gtIiDo1A1zxZ13VbKIvzOPWriOrHgBFcaFPeV9m2kbcyT5mXbbpKTZBbKHww2cKJYI28T9NNHOARVe0zkPdXFQgdsRzuxWeougtiZOTTF5OZRuhddk9d--C6unwm0hZHAUArzAKW45L78dSp7egN5ObRCE4cCpcnuHWuLdQHBUxiEwTdKK' }
+      },
+      'report-analysis': {
+        title: '返却された「学力診断シート」の正しい見方と、弱点克服への学習サイクル',
+        category: '模試活用法',
+        subCategory: '成績表活用マニュアル',
+        publishedAt: '2026-06-15T10:00:00+09:00',
+        updatedAt: '2026-06-15T10:00:00+09:00',
+        description: '偏差値や判定記号に一喜一憂するだけで終わらせない。大問・小問別の正答率マトリクスを用いた「復習すべき優先単元のあぶり出し方」を専門指導員がレクチャー。',
+        eyecatch: { url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAmRNjkULsUOOKOzy90r7eDwSXDMu-2gxIid5tcWUT0Xt6aAmHtd5ArtgY23QLNFpbjzZZY2k1BZiD0FbcKBX3QTs8vKeWS0rqspoNs57V1cHZv3tG2_A8XeTFw4fOfla41IbtEu7J8a7Z_lvjMoM2il6wPFzmXjEbet5m6yCiwA4NWN6-adJPizN6QKWfaJmPANae6igs-A-kzIitvqZ8FTamMUx_LZMjfItiqpNnVexGUi9ytOcPA' }
+      },
+      // microCMS 実記事フォールバック（API障害時の保険）
+      'b055d-p_k7': {
+        title: '【岡山県の高校受験】合格への近道はここにある！「おかもし」が受験生から支持される理由',
+        category: '模試活用法',
+        subCategory: '合格体験・模試活用',
+        publishedAt: '2026-09-23T05:32:00+09:00',
+        updatedAt: '2026-09-23T05:32:00+09:00',
+        description: '岡山県公立高校入試を突破するために最も重要なのは、「県内固有の出題形式への徹底適応」と「内申点を含めた正確な相対位置の把握」です。',
+        eyecatch: { url: 'https://images.microcms-assets.io/assets/1ac525f4c868455d9d89ba053378d2ec/472790e3ea034e348fc446be675dc5e5/%E3%81%8A%E3%81%8B%E3%82%82%E3%81%9720260923-1.jpeg' }
+      },
+      '20p7a-hecrv': {
+        title: 'おかもし　決済用リンク',
+        category: '模試活用法',
+        subCategory: '受験手続き・事務',
+        publishedAt: '2026-09-23T05:32:00+09:00',
+        updatedAt: '2026-09-23T05:32:00+09:00',
+        description: '個人受験お申し込み時にお選びいただけるクレジットカード決済、およびコンビニ店頭払込の確定フローをご案内します。',
+        eyecatch: { url: 'https://images.microcms-assets.io/assets/1ac525f4c868455d9d89ba053378d2ec/9264e101b06c40348002c2d70b2d496a/%E3%81%8A%E3%81%8B%E3%82%82%E3%81%97Stripe%E6%B1%BA%E6%B8%88%E3%82%A4%E3%83%A1%E3%83%BC%E3%82%B7%E3%82%99.jpeg' }
+      },
+      '0qf1y_rb2': {
+        title: '（サンプル）まずはこの記事を開きましょう',
+        category: 'お知らせ',
+        subCategory: 'お知らせ',
+        publishedAt: '2026-09-23T05:32:00+09:00',
+        updatedAt: '2026-09-23T05:32:00+09:00',
+        description: 'サンプル記事です。',
+        eyecatch: { url: '' }
+      }
+    };
+
+    // microCMS コールアウト要素 (.box-fact, .box-action, .box-warning) の正規化
+    // Shift+Enter (<br>) によるタグ分割や連続段落を1つの装飾カードに統合
+    function normalizeCalloutBoxes(container) {
+      if (!container) return;
+      const boxClasses = ['box-fact', 'box-action', 'box-warning', 'point-box', 'attention-box', 'info-box'];
+
+      boxClasses.forEach(cls => {
+        // 1. <p> や <div> 内の <span class="box-..."> などのインライン要素を親ブロックごと装飾コンテナへ昇格
+        const spans = Array.from(container.querySelectorAll(`span.${cls}`));
+        spans.forEach(span => {
+          const parent = span.parentElement;
+          if (!parent || parent === container) return;
+
+          // 親が既にいずれかのコールアウトコンテナなら span のクラスを解除
+          if (boxClasses.some(c => parent.classList.contains(c))) {
+            span.classList.remove(cls);
+            return;
+          }
+
+          // 親が段落 <p> または <div> の場合
+          if (parent.tagName.toLowerCase() === 'p' || parent.tagName.toLowerCase() === 'div') {
+            const hasOtherBoxClass = boxClasses.filter(c => c !== cls).some(c => parent.querySelector(`.${c}`));
+            if (!hasOtherBoxClass) {
+              const newDiv = document.createElement('div');
+              newDiv.className = cls;
+              while (parent.firstChild) {
+                newDiv.appendChild(parent.firstChild);
+              }
+              // 新しいコンテナ内の同一クラスを解除
+              newDiv.querySelectorAll(`.${cls}`).forEach(child => child.classList.remove(cls));
+              if (parent.parentNode) {
+                parent.parentNode.replaceChild(newDiv, parent);
+              }
+            }
+          }
+        });
+
+        // 2. 連続する同一クラスのコールアウトコンテナ（<div class="box-..."> が連続する場合）を1つに統合
+        const boxes = Array.from(container.querySelectorAll(`div.${cls}, p.${cls}`));
+        for (let i = 0; i < boxes.length; i++) {
+          const curr = boxes[i];
+          if (!curr || !curr.parentNode) continue;
+
+          let next = curr.nextElementSibling;
+          // 間の空要素や空白テキストをスキップ・除去
+          while (next && (
+            (next.tagName.toLowerCase() === 'p' && !next.textContent.trim()) ||
+            (next.nodeType === 3 && !next.textContent.trim())
+          )) {
+            const emptyEl = next;
+            next = next.nextElementSibling;
+            emptyEl.remove();
+          }
+
+          if (next && next.classList.contains(cls)) {
+            const br = document.createElement('br');
+            curr.appendChild(br);
+            while (next.firstChild) {
+              curr.appendChild(next.firstChild);
+            }
+            next.remove();
+            i--; // マージ後に次も同一クラスが続く可能性があるため再チェック
+          }
+        }
+      });
+    }
+
+    // 3. 本文内の <h2> <h3> を自動走査してIDを付与する関数（目次表示は廃止）
+    function generateTableOfContents() {
+      const contentBody = document.getElementById('entry-content-body');
+      if (!contentBody) return;
+
+      const headings = contentBody.querySelectorAll('h2, h3');
+      headings.forEach((heading, index) => {
+        if (!heading.id) {
+          heading.id = `toc-section-${index + 1}`;
+        }
+      });
+    }
+
+    // 4. メタタグ・JSON-LDの動的更新
+    function updatePageMetadata(post) {
+      if (!post) return;
+      const title = post.title + ' | 岡山県統一模擬試験（おかもし）';
+      document.title = title;
+
+      const breadcrumbTitle = document.getElementById('breadcrumb-current-title');
+      if (breadcrumbTitle) breadcrumbTitle.textContent = post.title;
+
+      const pageDesc = post.description || post.title;
+      const descMeta = document.querySelector('meta[name="description"]');
+      if (descMeta) descMeta.setAttribute('content', pageDesc);
+
+      const ogTitle = document.querySelector('meta[property="og:title"]');
+      if (ogTitle) ogTitle.setAttribute('content', title);
+
+      const ogDesc = document.querySelector('meta[property="og:description"]');
+      if (ogDesc) ogDesc.setAttribute('content', pageDesc);
+
+      if (post.eyecatch && post.eyecatch.url) {
+        const ogImg = document.querySelector('meta[property="og:image"]');
+        if (ogImg) ogImg.setAttribute('content', post.eyecatch.url);
+      }
+
+      // JSON-LD 更新
+      const jsonLd = document.getElementById('jsonld-article');
+      if (jsonLd) {
+        const articleData = {
+          "@context": "https://schema.org",
+          "@type": "BlogPosting",
+          "headline": post.title,
+          "description": pageDesc,
+          "image": (post.eyecatch && post.eyecatch.url) || "https://okamoshi.pages.dev/og-image.jpg",
+          "datePublished": post.publishedAt || new Date().toISOString(),
+          "dateModified": post.updatedAt || post.publishedAt || new Date().toISOString(),
+          "author": {
+            "@type": "Organization",
+            "name": "岡山県統一模擬試験 教務進路指導部"
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "岡山県統一模擬試験実行委員会",
+            "url": "https://okamoshi.pages.dev/"
+          }
+        };
+        jsonLd.textContent = JSON.stringify(articleData, null, 2);
+      }
+    }
+
+    // 画像プリロード関数（ブラウザへの読み込み完了まで待機しチラつき・Hydration Flashを防止）
+    function preloadImage(src) {
+      return new Promise((resolve) => {
+        if (!src) return resolve(false);
+        const img = new Image();
+        let settled = false;
+        const done = (ok) => {
+          if (!settled) {
+            settled = true;
+            resolve(ok);
+          }
+        };
+        img.onload = () => done(true);
+        img.onerror = () => done(false);
+        img.src = src;
+        // 低速回線でもユーザーを待たせすぎない安全弁タイマー (1200ms)
+        setTimeout(() => done(false), 1200);
+      });
+    }
+
+    // 記事コンテンツのフェードイン表示制御（スケルトンUIからのスムーズな切り替え）
+    function showArticleContent() {
+      const skeletonEl = document.getElementById('article-skeleton');
+      const contentWrapper = document.getElementById('article-content-wrapper');
+      if (skeletonEl) skeletonEl.style.display = 'none';
+      if (contentWrapper) {
+        contentWrapper.classList.remove('hidden');
+        void contentWrapper.offsetWidth; // リフロー強制
+        contentWrapper.classList.add('animate-fade-in');
+        contentWrapper.classList.remove('opacity-0');
+      }
+    }
+
+    // 5. 記事本文・メタの画面反映
+    async function renderPostDetail(post) {
+      if (!post) return;
+
+      const titleEl = document.getElementById('article-title');
+      if (titleEl) titleEl.textContent = post.title;
+
+      const leadEl = document.getElementById('article-lead');
+      if (leadEl) {
+        if (post.description) {
+          leadEl.textContent = post.description;
+          leadEl.style.display = 'block';
+        } else {
+          leadEl.style.display = 'none';
+        }
+      }
+
+      const catBadge = document.getElementById('article-category-badge');
+      if (catBadge) {
+        const catName = post.category ? (post.category.name || post.category) : 'お知らせ';
+        catBadge.innerHTML = `<span class="material-symbols-outlined text-[13px]">school</span><span>${catName}</span>`;
+      }
+
+      const pubEl = document.getElementById('article-published-date');
+      const pubDate = post.publishedAt || post.createdAt;
+      if (pubEl && pubDate) {
+        pubEl.textContent = new Date(pubDate).toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '.');
+      }
+
+      // アイキャッチ画像のチラつき防止＆ロード待機
+      const heroContainer = document.getElementById('article-hero-container');
+      const heroImg = document.getElementById('article-hero-img');
+      const heroTag = document.getElementById('article-hero-tag');
+
+      if (heroContainer && heroImg) {
+        if (post.eyecatch && post.eyecatch.url) {
+          // 画像がブラウザで完全にロードされるまで待機（一瞬のチラつき・旧画像・白枠を防止）
+          await preloadImage(post.eyecatch.url);
+          heroImg.src = post.eyecatch.url;
+          heroImg.alt = post.title || 'ブログアイキャッチ';
+          heroContainer.classList.remove('hidden');
+          heroImg.classList.remove('opacity-0');
+          if (heroTag) {
+            const catName = post.category ? (post.category.name || post.category) : 'おかもし';
+            heroTag.textContent = catName;
+          }
+        } else {
+          // アイキャッチ画像が無い記事はコンテナ枠を非表示にして無駄な空白を防ぐ
+          heroContainer.classList.add('hidden');
+          heroImg.src = '';
+        }
+      }
+
+      // 本文HTMLの反映（リッチエディタのHTMLタグを流し込み）
+      const contentBody = document.getElementById('entry-content-body');
+      if (contentBody) {
+        if (post.content) {
+          contentBody.innerHTML = post.content;
+          // microCMS出力の空段落 (<p></p>, <p><br></p>, 空白のみのp) を除去
+          contentBody.querySelectorAll('p').forEach(p => {
+            if (!p.textContent.trim() && (!p.children.length || (p.children.length === 1 && p.children[0].tagName === 'BR'))) {
+              p.remove();
+            }
+          });
+
+          // microCMS コールアウトボックス (.box-fact, .box-action, .box-warning) の正規化
+          // Shift+Enter (<br>) によるタグ分割を1つの装飾ボックスに統合
+          normalizeCalloutBoxes(contentBody);
+
+          // 記事末尾の案内リンク（おかもし日程一覧・申込等）のボタンカード化
+          const candidates = Array.from(contentBody.querySelectorAll('p, a, li, div'));
+          let scheduleTarget = null;
+          let applyTarget = null;
+
+          for (const el of candidates) {
+            const rawText = el.textContent.trim().replace(/\s+/g, '');
+            if (rawText === 'おかもし日程一覧' || rawText === 'おかもし日程一覧を見る') {
+              const target = (el.tagName.toLowerCase() === 'a' && el.parentElement && el.parentElement.tagName.toLowerCase() === 'p') ? el.parentElement : el;
+              if (!scheduleTarget) scheduleTarget = target;
+            } else if (rawText === 'おかもし詳細・お申し込み' || rawText === 'おかもし詳細・お申込み' || rawText === 'おかもし詳細お申し込み' || rawText === 'おかもし詳細お申込み') {
+              const target = (el.tagName.toLowerCase() === 'a' && el.parentElement && el.parentElement.tagName.toLowerCase() === 'p') ? el.parentElement : el;
+              if (!applyTarget) applyTarget = target;
+            }
+          }
+
+          if (scheduleTarget || applyTarget) {
+            const btnContainer = document.createElement('div');
+            btnContainer.className = 'not-prose my-6 grid grid-cols-1 sm:grid-cols-2 gap-3.5';
+
+            if (scheduleTarget) {
+              const scheduleLink = scheduleTarget.querySelector('a')?.getAttribute('href') || 'index.html#schedule';
+              const scheduleCard = document.createElement('a');
+              scheduleCard.href = scheduleLink;
+              scheduleCard.className = 'bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-200 py-3 px-4 rounded-lg flex justify-between items-center transition-all group font-bold shadow-2xs no-underline cursor-pointer';
+              scheduleCard.innerHTML = `
+                <div class="flex items-center gap-2.5 min-w-0">
+                  <span class="w-8 h-8 rounded-md bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                    <span class="material-symbols-outlined text-[20px]">calendar_month</span>
+                  </span>
+                  <span class="text-sm sm:text-base font-bold text-emerald-900 truncate">おかもし日程一覧</span>
+                </div>
+                <span class="material-symbols-outlined text-emerald-700 text-lg group-hover:translate-x-1 transition-transform shrink-0">arrow_forward</span>
+              `;
+              btnContainer.appendChild(scheduleCard);
+            }
+
+            if (applyTarget) {
+              const applyLink = applyTarget.querySelector('a')?.getAttribute('href') || 'apply.html';
+              const applyCard = document.createElement('a');
+              applyCard.href = applyLink;
+              applyCard.className = 'bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-200 py-3 px-4 rounded-lg flex justify-between items-center transition-all group font-bold shadow-2xs no-underline cursor-pointer';
+              applyCard.innerHTML = `
+                <div class="flex items-center gap-2.5 min-w-0">
+                  <span class="w-8 h-8 rounded-md bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                    <span class="material-symbols-outlined text-[20px]">how_to_reg</span>
+                  </span>
+                  <span class="text-sm sm:text-base font-bold text-emerald-900 truncate">おかもし詳細・お申し込み</span>
+                </div>
+                <span class="material-symbols-outlined text-emerald-700 text-lg group-hover:translate-x-1 transition-transform shrink-0">arrow_forward</span>
+              `;
+              btnContainer.appendChild(applyCard);
+            }
+
+            const insertRef = scheduleTarget || applyTarget;
+            if (insertRef && insertRef.parentNode) {
+              insertRef.parentNode.insertBefore(btnContainer, insertRef);
+            }
+            if (scheduleTarget && scheduleTarget.parentNode) scheduleTarget.remove();
+            if (applyTarget && applyTarget.parentNode) applyTarget.remove();
+          }
+        } else {
+          // フォールバック時: 本文なしの場合は焼き込み本文を隠してプレースホルダー表示
+          contentBody.innerHTML = `
+            <section class="flex flex-col gap-space-md">
+              <p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+                ${post.description || ''}
+              </p>
+              <div class="p-space-lg bg-surface-container-low rounded-lg text-center flex flex-col items-center gap-space-sm">
+                <span class="material-symbols-outlined text-4xl text-outline">article</span>
+                <p class="font-body-md text-body-md text-on-surface-variant">この記事の詳細はmicroCMS連携後にご覧いただけます。</p>
+              </div>
+            </section>
+          `;
+        }
+      }
+
+      // 目次の再生成
+      generateTableOfContents();
+      // メタタグ更新
+      updatePageMetadata(post);
+
+      // 全データおよびアイキャッチ画像の準備が完了したタイミングでスケルトンを消してフェードイン表示
+      showArticleContent();
+    }
+
+    // 6. microCMS から記事詳細を取得
+    async function loadArticleDetail() {
+      const params = new URLSearchParams(window.location.search);
+      const articleId = params.get('id');
+      const draftKey = params.get('draftKey');
+
+      // 下書きプレビュー時は検索エンジンにインデックスされないよう noindex を付与
+      if (draftKey) {
+        let robotsMeta = document.querySelector('meta[name="robots"]');
+        if (!robotsMeta) {
+          robotsMeta = document.createElement('meta');
+          robotsMeta.name = 'robots';
+          document.head.appendChild(robotsMeta);
+        }
+        robotsMeta.content = 'noindex, nofollow';
+      }
+
+      const hasMicroCMSConfig = MICROCMS_CONFIG.serviceDomain &&
+                                MICROCMS_CONFIG.serviceDomain !== 'YOUR_SERVICE_DOMAIN' &&
+                                MICROCMS_CONFIG.apiKey &&
+                                MICROCMS_CONFIG.apiKey !== 'YOUR_API_KEY';
+
+      if (articleId && hasMicroCMSConfig) {
+        try {
+          let url = `https://${MICROCMS_CONFIG.serviceDomain}.microcms.io/api/v1/${MICROCMS_CONFIG.endpoint}/${articleId}`;
+          if (draftKey) {
+            url += `?draftKey=${encodeURIComponent(draftKey)}`;
+          }
+          const res = await fetch(url, {
+            headers: { 'X-MICROCMS-API-KEY': MICROCMS_CONFIG.apiKey }
+          });
+          if (res.ok) {
+            const post = await res.json();
+            await renderPostDetail(post);
+
+            // 下書きプレビュー時はヘッダーにバッジを表示
+            if (draftKey) {
+              const badgesContainer = document.getElementById('article-badges-container');
+              if (badgesContainer && !document.getElementById('article-draft-badge')) {
+                const previewBadge = document.createElement('span');
+                previewBadge.id = 'article-draft-badge';
+                previewBadge.className = 'px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-xs font-bold flex items-center gap-1 border border-amber-300';
+                previewBadge.innerHTML = '<span class="material-symbols-outlined text-[13px]">visibility</span>下書きプレビュー';
+                badgesContainer.appendChild(previewBadge);
+              }
+            }
+
+            loadRelatedArticles(post, articleId);
+            return;
+          }
+        } catch (err) {
+          console.warn('microCMS detail fetch failed, falling back:', err);
+        }
+      }
+
+      // フォールバック処理
+      if (articleId && DETAIL_FALLBACK_POSTS[articleId]) {
+        const post = DETAIL_FALLBACK_POSTS[articleId];
+        await renderPostDetail(post);
+        loadRelatedArticles(post, articleId);
+      } else if (articleId) {
+        // IDはあるがフォールバックにも存在しない場合（404表示）
+        const skeletonEl = document.getElementById('article-skeleton');
+        if (skeletonEl) skeletonEl.style.display = 'none';
+        const contentWrapper = document.getElementById('article-content-wrapper');
+        if (contentWrapper) {
+          contentWrapper.classList.remove('hidden', 'opacity-0');
+        }
+        const heroContainer = document.getElementById('article-hero-container');
+        if (heroContainer) heroContainer.classList.add('hidden');
+        const contentBody = document.getElementById('entry-content-body');
+        if (contentBody) {
+          contentBody.innerHTML = '<div class="p-8 text-center text-on-surface-variant flex flex-col items-center gap-space-sm rounded-lg bg-surface-container-low"><span class="material-symbols-outlined text-4xl text-outline">article</span><p class="font-bold text-base text-on-surface mt-2">記事が見つかりませんでした</p><p class="text-sm mt-1">URLを確認するか、<a href="/news.html" class="text-primary underline">記事一覧</a>からお探しください。</p></div>';
+        }
+        const titleEl = document.getElementById('article-title');
+        if (titleEl) titleEl.textContent = '記事が見つかりませんでした';
+        loadRelatedArticles(null, articleId);
+      } else {
+        // ID未指定：デフォルト記事をレンダリングしてフェードイン
+        const defaultPost = DETAIL_FALLBACK_POSTS['leoodvgmoet'] || Object.values(DETAIL_FALLBACK_POSTS)[0];
+        if (defaultPost) {
+          await renderPostDetail(defaultPost);
+          loadRelatedArticles(defaultPost, defaultPost.id || '');
+        } else {
+          showArticleContent();
+        }
+      }
+    }
+
+    // 関連記事の動的取得と描画 (microCMS API連動)
+    async function loadRelatedArticles(currentPost, currentArticleId) {
+      const section = document.getElementById('related-articles-section');
+      const grid = document.getElementById('related-articles-grid');
+      if (!section || !grid) return;
+
+      const domain = (typeof MICROCMS_CONFIG !== 'undefined' && MICROCMS_CONFIG.serviceDomain) || 'okamoshi-blog';
+      const apiKey = (typeof MICROCMS_CONFIG !== 'undefined' && MICROCMS_CONFIG.apiKey) || '';
+      const endpoint = (typeof MICROCMS_CONFIG !== 'undefined' && MICROCMS_CONFIG.endpoint) || 'blogs';
+
+      const hasMicroCMS = domain && domain !== 'YOUR_SERVICE_DOMAIN' && apiKey && apiKey !== 'YOUR_API_KEY';
+      let relatedPosts = [];
+
+      let categoryId = null;
+      if (currentPost && currentPost.category) {
+        if (typeof currentPost.category === 'object' && currentPost.category.id) {
+          categoryId = currentPost.category.id;
+        } else if (typeof currentPost.category === 'string') {
+          categoryId = currentPost.category;
+        }
+      }
+
+      if (hasMicroCMS) {
+        // 1. 同カテゴリの記事を取得
+        if (categoryId) {
+          try {
+            const catUrl = `https://${domain}.microcms.io/api/v1/${endpoint}?filters=category[equals]${encodeURIComponent(categoryId)}&orders=-publishedAt&limit=5`;
+            const catRes = await fetch(catUrl, { headers: { 'X-MICROCMS-API-KEY': apiKey } });
+            if (catRes.ok) {
+              const catData = await catRes.json();
+              if (catData && Array.isArray(catData.contents)) {
+                relatedPosts = catData.contents.filter(item => item.id !== currentArticleId);
+              }
+            }
+          } catch (e) {
+            console.warn('Failed to fetch category related posts:', e);
+          }
+        }
+
+        // 2. 3件未満の場合は、カテゴリ指定を外して全記事から最新順で補填取得
+        if (relatedPosts.length < 3) {
+          try {
+            const allUrl = `https://${domain}.microcms.io/api/v1/${endpoint}?orders=-publishedAt&limit=6`;
+            const allRes = await fetch(allUrl, { headers: { 'X-MICROCMS-API-KEY': apiKey } });
+            if (allRes.ok) {
+              const allData = await allRes.json();
+              if (allData && Array.isArray(allData.contents)) {
+                for (const item of allData.contents) {
+                  if (item.id === currentArticleId) continue;
+                  if (!relatedPosts.some(p => p.id === item.id)) {
+                    relatedPosts.push(item);
+                  }
+                  if (relatedPosts.length >= 3) break;
+                }
+              }
+            }
+          } catch (e) {
+            console.warn('Failed to fetch fallback latest posts:', e);
+          }
+        }
+      }
+
+      // 3. microCMSで0件の場合、モック・フォールバック記事から補填
+      if (relatedPosts.length === 0 && typeof DETAIL_FALLBACK_POSTS !== 'undefined') {
+        const fallbackKeys = Object.keys(DETAIL_FALLBACK_POSTS);
+        for (const key of fallbackKeys) {
+          if (key === currentArticleId) continue;
+          const fb = DETAIL_FALLBACK_POSTS[key];
+          relatedPosts.push({
+            id: key,
+            title: fb.title,
+            category: { name: fb.category || '模試情報' },
+            publishedAt: fb.publishedAt,
+            eyecatch: fb.eyecatch
+          });
+          if (relatedPosts.length >= 3) break;
+        }
+      }
+
+      // 該当記事が1件もない場合は関連記事エリア全体を非表示
+      if (relatedPosts.length === 0) {
+        section.style.display = 'none';
+        return;
+      }
+
+      // NEWバッジ判定（現在日時から10日以内）
+      function isNewArticle(dateString) {
+        if (!dateString) return false;
+        let pubDate = new Date(dateString);
+        if (isNaN(pubDate.getTime())) {
+          const parts = String(dateString).split('.');
+          if (parts.length === 3) {
+            pubDate = new Date(parts[0], parseInt(parts[1], 10) - 1, parts[2]);
+          }
+        }
+        if (isNaN(pubDate.getTime())) return false;
+        const now = new Date();
+        const diffMs = now.getTime() - pubDate.getTime();
+        const diffDays = diffMs / (1000 * 60 * 60 * 24);
+        return diffDays >= -1 && diffDays <= 10;
+      }
+
+      // カテゴリに応じたバッジスタイル決定
+      function getCategoryBadgeClass(categoryText, fallbackClass) {
+        if (fallbackClass) return fallbackClass;
+        if (!categoryText) return 'bg-surface-container-high text-on-surface-variant';
+        if (categoryText.includes('重要') || categoryText.includes('トピックス')) {
+          return 'bg-secondary-fixed text-on-secondary-fixed-variant';
+        } else if (categoryText.includes('入試') || categoryText.includes('受験') || categoryText.includes('受検')) {
+          return 'bg-primary-container text-on-primary-container';
+        } else if (categoryText.includes('活用') || categoryText.includes('コラム')) {
+          return 'bg-tertiary-fixed text-on-tertiary-fixed';
+        } else if (categoryText.includes('要項') || categoryText.includes('日程')) {
+          return 'bg-secondary text-white';
+        }
+        return 'bg-primary-container text-on-primary-container';
+      }
+
+      const cardsHtml = relatedPosts.slice(0, 3).map(item => {
+        const categoryName = (item.category && item.category.name) || (typeof item.category === 'string' ? item.category : '模試情報');
+        let badgeCls = 'bg-[#e8f5ee] text-[#134230] border border-[#a1d1b8]';
+        if (categoryName.includes('お知らせ') || categoryName.includes('重要')) {
+          badgeCls = 'bg-[#dcfce7] text-[#166534] border border-[#86efac]';
+        } else if (categoryName.includes('模試') || categoryName.includes('要項')) {
+          badgeCls = 'bg-[#fef3c7] text-[#92400e] border border-[#fde68a]';
+        }
+        const rawDate = item.publishedAt || item.date || item.createdAt;
+        const publishedDate = formatArticleDate(rawDate);
+        const isNew = isNewArticle(rawDate);
+        const detailHref = `/news/${encodeURIComponent(item.id)}/`;
+
+        const newBadgeHtml = isNew 
+          ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#c85a32] text-white shadow-xs shrink-0 tracking-tight leading-none text-center">NEW</span>` 
+          : '';
+
+        return `
+          <!-- 記事カード (${item.id}) -->
+          <article class="bg-slate-50 rounded-lg border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all mb-3 overflow-hidden cursor-pointer group block" data-category="${categoryName}">
+            <a href="${detailHref}" class="flex items-center justify-between p-4 sm:p-5 gap-3 sm:gap-4 w-full">
+              <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 flex-1 min-w-0">
+                <div class="flex items-center gap-2.5 shrink-0">
+                  <span class="flex items-center gap-1.5 text-xs text-slate-500 font-medium shrink-0">
+                    <span class="material-symbols-outlined text-[15px] text-slate-400">calendar_today</span>
+                    <span class="tabular-nums">${publishedDate}</span>
+                  </span>
+                  ${newBadgeHtml}
+                  <span class="px-2.5 py-0.5 rounded-md text-[11px] font-bold ${badgeCls} shrink-0 shadow-2xs">
+                    ${categoryName}
+                  </span>
+                </div>
+                <h3 class="font-bold text-[15px] sm:text-base text-slate-900 group-hover:text-brand-green transition-colors flex-1 leading-snug break-words">
+                  ${item.title || ''}
+                </h3>
+              </div>
+              <div class="flex items-center gap-2 shrink-0">
+                <span class="text-xs font-bold text-slate-500 group-hover:text-brand-green transition-colors hidden md:inline">詳細を読む</span>
+                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white border border-slate-200 group-hover:bg-emerald-50 flex items-center justify-center text-slate-400 group-hover:text-brand-green transition-colors shrink-0 group-hover:translate-x-0.5">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </div>
+              </div>
+            </a>
+          </article>
+        `;
+      }).join('');
+
+      grid.innerHTML = cardsHtml;
+      section.style.display = '';
+    }
+
+    function formatArticleDate(dateStr) {
+      if (!dateStr) return '';
+      try {
+        const d = new Date(dateStr);
+        if (isNaN(d.getTime())) return String(dateStr).substring(0, 10).replace(/-/g, '.');
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${y}.${m}.${day}`;
+      } catch (e) {
+        return String(dateStr).substring(0, 10).replace(/-/g, '.');
+      }
+    }
+
+    // 7. ヘッダードロップダウン & SPメニュー
+    function toggleNextExamDropdown(event) {
+      event.stopPropagation();
+      const dropdown = document.getElementById('nav-next-exam-dropdown');
+      const chevron = document.getElementById('nav-next-exam-chevron');
+      if (!dropdown) return;
+      const isOpen = !dropdown.classList.contains('hidden');
+      dropdown.classList.toggle('hidden', isOpen);
+      if (chevron) chevron.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+    }
+
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      const icon = document.getElementById('mobile-menu-icon');
+      if (!menu) return;
+      const isOpen = !menu.classList.contains('hidden');
+      menu.classList.toggle('hidden', isOpen);
+      if (icon) icon.textContent = isOpen ? 'menu' : 'close';
+    }
+
+    function selectNavExamTab(examId) {
+      window.location.href = `/index.html#exam-tabs-section`;
+    }
+
+    document.addEventListener('click', function(e) {
+      const container = document.getElementById('nav-next-exam-container');
+      const dropdown = document.getElementById('nav-next-exam-dropdown');
+      const chevron = document.getElementById('nav-next-exam-chevron');
+      if (container && !container.contains(e.target) && dropdown && !dropdown.classList.contains('hidden')) {
+        dropdown.classList.add('hidden');
+        if (chevron) chevron.style.transform = 'rotate(0deg)';
+      }
+    });
+
+    /* =========================================================================
+       9. サイドバー「次回の模試・お申込み」動的生成スクリプト
+       ========================================================================= */
+    const SIDEBAR_EXAM_GUIDES_FALLBACK = [
+      {
+        grade_code: 'c3',
+        grade_name: '中3生',
+        exam_name: '岡山県統一模擬試験（おかもし）',
+        active_issue: '10月号',
+        sessions: [
+          {
+            issue_name: '10月号',
+            title: '岡山県統一模擬試験（おかもし）',
+            fee: '5,500',
+            deadline: '2026年10月5日(月)',
+            application_deadline: '2026年10月5日(月)',
+            home_period: '10/17(土)〜11/1(日)',
+            venues_summary: '岡山会場、津山会場、自宅受験',
+            schedules: [
+              { venue_type: ['岡山会場'], venue_name: '山陽学園中学校・高等学校', date_start: '2026-10-31T15:00:00.000Z' },
+              { venue_type: ['津山会場'], venue_name: '美作高等学校', date_start: '2026-10-24T15:00:00.000Z' },
+              { venue_type: ['自宅受験'], date_start: '2026-10-16T15:00:00.000Z', date_end: '2026-10-31T15:00:00.000Z', date_text: '10/17(土)〜11/1(日)' }
+            ]
+          }
+        ]
+      },
+      {
+        grade_code: 'c2',
+        grade_name: '中2生',
+        exam_name: '岡山県統一模擬試験（おかもし）',
+        active_issue: '12月号',
+        sessions: [
+          {
+            issue_name: '12月号',
+            title: '岡山県統一模擬試験（おかもし）',
+            fee: '4,500',
+            deadline: '2026年11月10日(火)',
+            application_deadline: '2026年11月10日(火)',
+            home_period: '12/6(土)〜12/14(日)',
+            venues_summary: '山陽学園会場、自宅受験',
+            schedules: [
+              { venue_type: ['岡山会場'], venue_name: '山陽学園中学校', date_start: '2026-12-14T00:00:00.000Z' },
+              { venue_type: ['自宅受験'], date_start: '2026-12-06T00:00:00.000Z', date_end: '2026-12-14T00:00:00.000Z', date_text: '12/6(土)〜12/14(日)' }
+            ]
+          }
+        ]
+      },
+      {
+        grade_code: 'c1',
+        grade_name: '中1生',
+        exam_name: '岡山県統一模擬試験（おかもし）',
+        active_issue: '12月号',
+        sessions: [
+          {
+            issue_name: '12月号',
+            title: '岡山県統一模擬試験（おかもし）',
+            fee: '4,500',
+            deadline: '2026年11月10日(火)',
+            application_deadline: '2026年11月10日(火)',
+            home_period: '12/6(土)〜12/14(日)',
+            venues_summary: '山陽学園会場、自宅受験',
+            schedules: [
+              { venue_type: ['岡山会場'], venue_name: '山陽学園中学校', date_start: '2026-12-14T00:00:00.000Z' },
+              { venue_type: ['自宅受験'], date_start: '2026-12-06T00:00:00.000Z', date_end: '2026-12-14T00:00:00.000Z', date_text: '12/6(土)〜12/14(日)' }
+            ]
+          }
+        ]
+      },
+      {
+        grade_code: 'e6',
+        grade_name: '小6生',
+        exam_name: '岡山県立中高一貫校 適性検査対策模試',
+        active_issue: '10月号',
+        sessions: [
+          {
+            issue_name: '10月号',
+            title: '岡山県立中高一貫校 適性検査対策模試',
+            fee: '5,500',
+            deadline: '2026年10月13日(火)',
+            application_deadline: '2026年10月13日(火)',
+            home_period: '10/24(土)〜11/1(日)',
+            venues_summary: '山陽学園会場、自宅受験',
+            schedules: [
+              { venue_type: ['岡山会場'], venue_name: '山陽学園中学校', date_start: '2026-11-01T00:00:00.000Z' },
+              { venue_type: ['自宅受験'], date_start: '2026-10-24T00:00:00.000Z', date_end: '2026-11-01T00:00:00.000Z', date_text: '10/24(土)〜11/1(日)' }
+            ]
+          }
+        ]
+      }
+    ];
+
+    const JST_WEEKDAYS = ['日', '月', '火', '水', '木', '金', '土'];
+
+    function parseToJST(dateStr) {
+      if (!dateStr) return null;
+      const d = new Date(dateStr);
+      if (isNaN(d.getTime())) return null;
+      const jst = new Date(d.getTime() + (9 * 60 * 60 * 1000));
+      return {
+        year: jst.getUTCFullYear(),
+        month: jst.getUTCMonth() + 1,
+        day: jst.getUTCDate(),
+        weekday: JST_WEEKDAYS[jst.getUTCDay()]
+      };
+    }
+
+    function formatJSTSingleDate(dateStr) {
+      if (!dateStr) return '';
+      const p = parseToJST(dateStr);
+      if (!p) return dateStr;
+      return `${p.year}年${p.month}月${p.day}日(${p.weekday})`;
+    }
+
+    function formatJSTPeriod(startStr, endStr) {
+      if (!startStr && !endStr) return '';
+      const p1 = parseToJST(startStr);
+      const p2 = parseToJST(endStr);
+      if (p1 && p2) {
+        if (p1.year === p2.year) {
+          return `${p1.month}/${p1.day}(${p1.weekday})〜${p2.month}/${p2.day}(${p2.weekday})`;
+        } else {
+          return `${p1.year}/${p1.month}/${p1.day}〜${p2.year}/${p2.month}/${p2.day}`;
+        }
+      }
+      if (p1 && !p2) return `${p1.month}/${p1.day}(${p1.weekday})`;
+      return `${startStr || ''}〜${endStr || ''}`;
+    }
+
+    function extractHomePeriod(schedules, defaultPeriod) {
+      if (!schedules || schedules.length === 0) return defaultPeriod || '自宅受験対応';
+      const home = schedules.find(s => {
+        const vt = (s.venue_type && s.venue_type[0]) || '';
+        return vt === '自宅受験' || /自宅/.test(vt);
+      });
+      if (home) {
+        if (home.date_text) return home.date_text;
+        if (home.date_start && home.date_end) return formatJSTPeriod(home.date_start, home.date_end);
+      }
+      for (const s of schedules) {
+        if (s.date_text && /〜/.test(s.date_text)) return s.date_text;
+        if (s.date_start && s.date_end) return formatJSTPeriod(s.date_start, s.date_end);
+      }
+      return defaultPeriod || '自宅受験対応';
+    }
+
+    function extractVenuesSummary(schedules, defaultSummary) {
+      if (!schedules || schedules.length === 0) return defaultSummary || '各会場 または 自宅受験';
+      const list = [];
+      let hasHome = false;
+      schedules.forEach(s => {
+        const vt = (s.venue_type && s.venue_type[0]) || '';
+        if (vt === '自宅受験' || /自宅/.test(vt)) {
+          hasHome = true;
+        } else if (vt) {
+          list.push(vt);
+        } else if (s.venue_name) {
+          list.push(s.venue_name.replace(/中学校・高等学校|中学校|高等学校|高校/g, '会場'));
+        }
+      });
+      if (hasHome) list.push('自宅受験');
+      const unique = Array.from(new Set(list));
+      if (unique.length === 0) return defaultSummary || '各会場 または 自宅受験';
+      return unique.join('、');
+    }
+
+    function getFormattedDeadline(session, fallbackDeadline) {
+      let dl = session.application_deadline || session.deadline || fallbackDeadline || '受付中';
+      const parsedTime = parseDeadlineString(dl);
+      const now = (typeof getCurrentDate === 'function') ? getCurrentDate().getTime() : Date.now();
+      if (parsedTime && now > parsedTime) {
+        return '<span class="text-rose-600 font-bold">受付終了</span>';
+      }
+      if (/^\d{4}-\d{2}-\d{2}/.test(dl)) {
+        return formatJSTSingleDate(dl);
+      }
+      return dl;
+    }
+
+    function getFeeText(session, gradeKey) {
+      if (session && session.fee) {
+        let f = String(session.fee).replace(/[^0-9]/g, '');
+        if (f) return `¥${Number(f).toLocaleString()}`;
+      }
+      if (gradeKey === 'chu2' || gradeKey === 'chu1') return '¥4,500';
+      return '¥5,500';
+    }
+
+    async function loadSidebarNextExamWidget() {
+      const container = document.getElementById('sidebar-exam-widget-list');
+      if (!container) return;
+
+      let contents = [];
+      const domain = (typeof MICROCMS_CONFIG !== 'undefined' && MICROCMS_CONFIG.serviceDomain) || 'okamoshi-blog';
+      const apiKey = (typeof MICROCMS_CONFIG !== 'undefined' && MICROCMS_CONFIG.apiKey) || '';
+      const url = `https://${domain}.microcms.io/api/v1/exam-guides?limit=100&_t=${Date.now()}`;
+
+      try {
+        const res = await fetch(url, {
+          cache: 'no-store',
+          headers: { 'X-MICROCMS-API-KEY': apiKey }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data && Array.isArray(data.contents)) {
+            contents = data.contents;
+          }
+        }
+      } catch (e) {
+        console.warn('Sidebar exam widget fetch failed, using fallback:', e);
+      }
+
+      const targetConfigs = [
+        {
+          gradeKey: 'chu3',
+          gradeBadge: '中3生',
+          matchCodes: ['c3', 'chu3'],
+          defaultTitle: '岡山県統一模擬試験（おかもし）',
+          link: 'index.html?grade=chu3#next-exam',
+          fallbackKey: 'c3'
+        },
+        {
+          gradeKey: 'chu2',
+          gradeBadge: '中2生',
+          matchCodes: ['c2', 'chu2', 'c1_c2'],
+          defaultTitle: '岡山県統一模擬試験（おかもし）',
+          link: 'index.html?grade=chu2#next-exam',
+          fallbackKey: 'c2'
+        },
+        {
+          gradeKey: 'chu1',
+          gradeBadge: '中1生',
+          matchCodes: ['c1', 'chu1', 'c1_c2'],
+          defaultTitle: '岡山県統一模擬試験（おかもし）',
+          link: 'index.html?grade=chu1#next-exam',
+          fallbackKey: 'c1'
+        },
+        {
+          gradeKey: 'sho6',
+          gradeBadge: '小6生',
+          matchCodes: ['e6', 's6', 'sho6'],
+          defaultTitle: '岡山県立中高一貫校 適性検査対策模試',
+          link: 'index.html?grade=sho6#next-exam',
+          fallbackKey: 'e6'
+        }
+      ];
+
+      const cardsHTML = targetConfigs.map(config => {
+        let matchedItem = null;
+        for (const code of config.matchCodes) {
+          matchedItem = contents.find(c => c.grade_code === code);
+          if (matchedItem) break;
+        }
+
+        const fallbackDef = SIDEBAR_EXAM_GUIDES_FALLBACK.find(f => f.grade_code === config.fallbackKey);
+
+        let activeIssue = '';
+        if (matchedItem && matchedItem.active_issue) {
+          activeIssue = Array.isArray(matchedItem.active_issue)
+            ? (matchedItem.active_issue[0] || '')
+            : String(matchedItem.active_issue || '');
+        }
+        if (!activeIssue && fallbackDef) {
+          activeIssue = fallbackDef.active_issue || '';
+        }
+
+        const rawSessions = (matchedItem && Array.isArray(matchedItem.sessions) && matchedItem.sessions.length > 0)
+          ? matchedItem.sessions
+          : (fallbackDef ? fallbackDef.sessions : []);
+
+        let targetSession = null;
+        if (activeIssue) {
+          targetSession = rawSessions.find(s => {
+            const sName = (s.issue_name || s.session_label || '').trim();
+            return sName === activeIssue.trim();
+          });
+        }
+        if (!targetSession && rawSessions.length > 0) {
+          targetSession = rawSessions.find(s => s.is_active === true || s.is_active === 'true') || rawSessions[0];
+        }
+
+        let fallbackSession = null;
+        if (fallbackDef && fallbackDef.sessions) {
+          const matchName = targetSession ? (targetSession.issue_name || targetSession.session_label || '').trim() : activeIssue.trim();
+          fallbackSession = fallbackDef.sessions.find(fs => (fs.issue_name || fs.session_label || '').trim() === matchName) || fallbackDef.sessions[0];
+        }
+
+        const session = Object.assign({}, fallbackSession || {}, targetSession || {});
+        if ((!session.schedules || session.schedules.length === 0) && fallbackSession && fallbackSession.schedules) {
+          session.schedules = fallbackSession.schedules;
+        }
+
+        let issueName = (session.issue_name || session.session_label || activeIssue || '10月号').trim();
+        if (/^\d+月$/.test(issueName)) {
+          issueName += '号';
+        }
+        let displayTitle = session.title || (matchedItem && matchedItem.exam_name) || (fallbackDef && fallbackDef.exam_name) || config.defaultTitle;
+        if (issueName && displayTitle.startsWith(issueName)) {
+          displayTitle = displayTitle.replace(issueName, '').trim();
+        }
+        const homePeriod = extractHomePeriod(session.schedules, fallbackSession && fallbackSession.home_period);
+        const venuesSummary = extractVenuesSummary(session.schedules, fallbackSession && fallbackSession.venues_summary);
+        const deadlineText = getFormattedDeadline(session, fallbackSession && fallbackSession.deadline);
+
+        const monthNumMatch = issueName.match(/(\d+)/);
+        const monthParam = monthNumMatch ? `&month=${monthNumMatch[1]}` : '';
+        const testDate = (typeof getTestDateString === 'function') ? getTestDateString() : null;
+        const testParam = testDate ? `&test_date=${encodeURIComponent(testDate)}` : '';
+        const cardLink = `index.html?grade=${config.gradeKey}${monthParam}${testParam}#schedule-selector`;
+
+        const parsedTime = parseDeadlineString(session.application_deadline || session.deadline || (fallbackSession && fallbackSession.deadline));
+        const now = (typeof getCurrentDate === 'function') ? getCurrentDate().getTime() : Date.now();
+        const isSessionExpired = parsedTime && now > parsedTime;
+        const statusBadge = isSessionExpired
+          ? `<span class="inline-flex items-center justify-center px-2 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200 font-medium text-xs shrink-0 leading-tight">受付終了</span>`
+          : `<span class="inline-flex items-center justify-center px-2 py-0.5 rounded bg-emerald-100 text-emerald-900 border border-emerald-300 font-bold text-xs shrink-0 leading-tight">${issueName}</span>`;
+
+        return `
+          <a href="${cardLink}" class="block p-3.5 sm:p-4 hover:bg-slate-100/70 transition-colors cursor-pointer group">
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <span class="inline-flex items-center justify-center px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 font-bold text-xs shrink-0 leading-tight">${config.gradeBadge}</span>
+                ${statusBadge}
+              </div>
+              <div class="w-6 h-6 rounded-full bg-emerald-800 text-white flex items-center justify-center shrink-0 group-hover:scale-105 group-hover:bg-emerald-900 transition-all shadow-2xs">
+                <span class="material-symbols-outlined text-[15px] text-white">chevron_right</span>
+              </div>
+            </div>
+            <div class="space-y-1.5 text-xs sm:text-sm leading-snug">
+              <div class="flex items-center justify-between gap-2">
+                <span class="text-slate-500 shrink-0 font-medium flex items-center gap-1 text-xs sm:text-sm">
+                  <span class="material-symbols-outlined text-[14px] text-slate-400">schedule</span>日程
+                </span>
+                <span class="font-bold text-secondary text-right truncate text-xs sm:text-sm">${homePeriod}</span>
+              </div>
+              <div class="flex items-center justify-between gap-2">
+                <span class="text-slate-500 shrink-0 font-medium flex items-center gap-1 text-xs sm:text-sm">
+                  <span class="material-symbols-outlined text-[14px] text-slate-400">location_on</span>会場
+                </span>
+                <span class="text-right truncate font-medium text-slate-700 text-xs sm:text-sm">${venuesSummary}</span>
+              </div>
+              <div class="flex items-center justify-between gap-2 pt-1.5 border-t border-slate-200/60">
+                <span class="text-slate-500 shrink-0 font-medium flex items-center gap-1 text-xs sm:text-sm">
+                  <span class="material-symbols-outlined text-[14px] text-slate-400">event</span>申込締切
+                </span>
+                <span class="font-bold text-slate-800 text-right text-xs sm:text-sm">${deadlineText}</span>
+              </div>
+            </div>
+          </a>
+        `;
+      }).join('');
+
+      container.innerHTML = cardsHTML;
+    }
+
+    // 8. ページ読み込み時に実行
+    function initDetailPage() {
+      loadArticleDetail();
+      loadSidebarNextExamWidget();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initDetailPage);
+    } else {
+      initDetailPage();
+    }
+  </script>
 <script id="header-navigation-script">
   function toggleNextExamDropdown(event) {
     if (event) event.stopPropagation();

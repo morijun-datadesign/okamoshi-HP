@@ -25,6 +25,7 @@ interface ScheduleRow {
   apply_deadline: string | null;
   ticket_shipping_date: string | null;
   ticket_shipping_note: string | null;
+  home_return_deadline?: string | null;
   result_shipping_date: string | null;
   result_shipping_note: string | null;
   sort_order: number;
@@ -75,6 +76,19 @@ function formatJapaneseDate(dateStr: string | null | undefined, includeYear = tr
     return includeYear ? `${y}年${mon}月${d}日(${w})` : `${mon}月${d}日(${w})`;
   }
   return clean;
+}
+
+// 自宅受験答案返送締切日を「YYYY年M月D日(曜) 必着」に変換
+function formatHomeReturnDeadline(dateStr: string | null | undefined): string {
+  if (!dateStr) return "";
+  const clean = dateStr.trim();
+  if (!clean) return "";
+  const formatted = formatJapaneseDate(clean, true);
+  if (!formatted) return "";
+  if (formatted.includes("必着") || formatted.includes("まで") || formatted.includes("消印")) {
+    return formatted;
+  }
+  return `${formatted} 必着`;
 }
 
 // 締切文字列からステータス判定 (active, finished, pending)
@@ -209,6 +223,10 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
 
       // 会場一覧 (venuesList / venueDetails)
       const schedVenues = venuesBySchedule[s.id] || [];
+      const homeVenueRow = schedVenues.find((v) => v.venue_type.includes("自宅"));
+      const rawHomeReturnDeadline = s.home_return_deadline || homeVenueRow?.deadline_home || null;
+      const formattedHomeReturnDeadline = formatHomeReturnDeadline(rawHomeReturnDeadline);
+
       const venuesList = schedVenues.map((v) => {
         const isHome = v.venue_type.includes("自宅");
         let dateText = "";
@@ -264,6 +282,9 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
           ? "答案受領後、約10日〜2週間で返送"
           : "試験実施の約10日後発送予定";
 
+        const venueHomeReturnRaw = v.deadline_home || rawHomeReturnDeadline;
+        const venueHomeReturnFormatted = formatHomeReturnDeadline(venueHomeReturnRaw);
+
         return {
           id: v.id,
           name: isHome ? "🏠 自宅受験" : v.venue_type,
@@ -275,6 +296,8 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
           schedule: timetableItems,
           items: belongingsText,
           notice: v.notice || null,
+          home_return_deadline: isHome ? venueHomeReturnRaw : null,
+          homeReturnDeadline: isHome ? (venueHomeReturnFormatted || null) : null,
         };
       });
 
@@ -305,6 +328,9 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
         applyDeadlineRaw: s.apply_deadline,
         ticketShippingDate: s.ticket_shipping_date,
         ticketShippingNote: s.ticket_shipping_note,
+        home_return_deadline: rawHomeReturnDeadline,
+        homeReturnDeadlineRaw: rawHomeReturnDeadline,
+        homeReturnDeadline: formattedHomeReturnDeadline || null,
         resultShippingDate: s.result_shipping_date,
         resultShippingNote: s.result_shipping_note,
         status,

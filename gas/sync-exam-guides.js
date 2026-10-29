@@ -12,9 +12,11 @@
  */
 
 const EXAM_SYNC_CONFIG = {
-  // 本番用: "https://okayama-moshi.com/api/admin/sync-exam-guides"
-  // プレビュー用: "https://feature-idea-b.okamoshi.pages.dev/api/admin/sync-exam-guides"
-  API_URL: "https://okayama-moshi.com/api/admin/sync-exam-guides",
+  // 本番環境とプレビュー環境へ同時同期するエンドポイント配列
+  API_URLS: [
+    "https://okamoshi-hp.pages.dev/api/admin/sync-exam-guides",
+    "https://feature-idea-b.okamoshi-hp.pages.dev/api/admin/sync-exam-guides",
+  ],
 
   // Cloudflare Pages 環境変数 EXAM_GUIDES_SYNC_SECRET と一致させる
   SYNC_SECRET: "okamoshi_exam_sync_2026_sec_8d3e1f",
@@ -37,9 +39,10 @@ function onOpen() {
  */
 function showExamSyncConfig() {
   const ui = SpreadsheetApp.getUi();
+  const urlListText = EXAM_SYNC_CONFIG.API_URLS.map((url, idx) => `${idx + 1}. ${url}`).join("\n");
   ui.alert(
     "同期設定の確認",
-    `同期先URL:\n${EXAM_SYNC_CONFIG.API_URL}\n\n認証シークレット:\n${EXAM_SYNC_CONFIG.SYNC_SECRET.substring(0, 10)}...`,
+    `同期先URL (${EXAM_SYNC_CONFIG.API_URLS.length}件):\n${urlListText}\n\n認証シークレット:\n${EXAM_SYNC_CONFIG.SYNC_SECRET.substring(0, 10)}...`,
     ui.ButtonSet.OK
   );
 }
@@ -131,7 +134,12 @@ function createHeaderMap(headers) {
   const map = {};
   headers.forEach((h, idx) => {
     if (h) {
-      map[String(h).trim()] = idx;
+      const trimmed = String(h).trim();
+      map[trimmed] = idx;
+      const cleaned = trimmed.replace(/[\s\u3000\r\n\t]+/g, "");
+      if (cleaned) {
+        map[cleaned] = idx;
+      }
     }
   });
   return map;
@@ -170,6 +178,7 @@ function syncExamGuidesToD1() {
 
     const schedules = [];
     const validScheduleIds = new Set();
+    const scheduleHomeReturnMap = {};
 
     for (let i = 1; i < schedData.length; i++) {
       const row = schedData[i];
@@ -181,6 +190,21 @@ function syncExamGuidesToD1() {
       const m = normalizeMonth(monthRaw);
       const schedId = `${g.code}_${m.num}`;
       validScheduleIds.add(schedId);
+
+      // L列「自宅受験答案返送締切日」の取得（ヘッダー名一致を優先し、表記揺れにも対応）
+      const homeReturnColIdx =
+        sMap["自宅受験答案返送締切日"] !== undefined
+          ? sMap["自宅受験答案返送締切日"]
+          : sMap["自宅受験答案締切"] !== undefined
+          ? sMap["自宅受験答案締切"]
+          : sMap["答案返送締切日"] !== undefined
+          ? sMap["答案返送締切日"]
+          : sMap["自宅受験返送締切日"] !== undefined
+          ? sMap["自宅受験返送締切日"]
+          : undefined;
+      const homeReturnDeadline =
+        homeReturnColIdx !== undefined ? formatDateTimeString(row[homeReturnColIdx]) : null;
+      scheduleHomeReturnMap[schedId] = homeReturnDeadline;
 
       schedules.push({
         id: schedId,
@@ -196,6 +220,7 @@ function syncExamGuidesToD1() {
         apply_deadline: formatDateTimeString(row[sMap["申込締切日時"]]),
         ticket_shipping_date: formatDateTimeString(row[sMap["受験票発送予定日"]]),
         ticket_shipping_note: row[sMap["受験票発送の注記"]] ? String(row[sMap["受験票発送の注記"]]).trim() : null,
+        home_return_deadline: homeReturnDeadline,
         result_shipping_date: formatDateTimeString(row[sMap["成績返却予定日"]]),
         result_shipping_note: row[sMap["成績返却の注記"]] ? String(row[sMap["成績返却の注記"]]).trim() : null,
         sort_order: row[sMap["表示順"]] ? Number(row[sMap["表示順"]]) : i,
@@ -230,6 +255,10 @@ function syncExamGuidesToD1() {
         const venueId = `${schedId}_${vSlug}`;
         validVenueIds.add(venueId);
 
+        const venueDeadlineHome =
+          formatDateTimeString(row[vMap["自宅受験答案締切"]]) ||
+          (vSlug === "home" ? scheduleHomeReturnMap[schedId] || null : null);
+
         venues.push({
           id: venueId,
           schedule_id: schedId,
@@ -240,7 +269,7 @@ function syncExamGuidesToD1() {
           exam_date_end: formatDateTimeString(row[vMap["実施終了日"]]),
           belongings: row[vMap["持参物"]] ? String(row[vMap["持参物"]]).trim() : null,
           notice: row[vMap["注意事項"]] ? String(row[vMap["注意事項"]]).trim() : null,
-          deadline_home: formatDateTimeString(row[vMap["自宅受験答案締切"]]),
+          deadline_home: venueDeadlineHome,
           sort_order: row[vMap["表示順"]] ? Number(row[vMap["表示順"]]) : i,
         });
       }
@@ -322,7 +351,7 @@ function syncExamGuidesToD1() {
       }
     }
 
-    // 2. ペイロード構築 & 送信
+    // 2. ペイロード構築 & 複数エンドポイントへ順次送信
     const payload = {
       secret: EXAM_SYNC_CONFIG.SYNC_SECRET,
       schedules: schedules,
@@ -341,28 +370,48 @@ function syncExamGuidesToD1() {
       muteHttpExceptions: true,
     };
 
-    const response = UrlFetchApp.fetch(EXAM_SYNC_CONFIG.API_URL, options);
-    const statusCode = response.getResponseCode();
-    const resText = response.getContentText();
+    const results = [];
+    let allSucceeded = true;
 
-    let resJson = {};
-    try {
-      resJson = JSON.parse(resText);
-    } catch (e) {}
+    for (let i = 0; i < EXAM_SYNC_CONFIG.API_URLS.length; i++) {
+      const apiUrl = EXAM_SYNC_CONFIG.API_URLS[i];
+      try {
+        const response = UrlFetchApp.fetch(apiUrl, options);
+        const statusCode = response.getResponseCode();
+        const resText = response.getContentText();
 
-    if (statusCode === 200 && resJson.success) {
-      ui.alert(
-        "同期完了",
-        `D1への同期が正常に完了しました！\n\n反映件数:\n・模試基本情報: ${schedules.length} 件\n・会場・日程: ${venues.length} 件\n・時間割: ${timetables.length} 件\n・出題範囲: ${scopes.length} 件`,
-        ui.ButtonSet.OK
-      );
-    } else {
-      ui.alert(
-        "同期エラー",
-        `同期に失敗しました。(HTTP ${statusCode})\n${resJson.error || resText}`,
-        ui.ButtonSet.OK
-      );
+        let resJson = {};
+        try {
+          resJson = JSON.parse(resText);
+        } catch (e) {}
+
+        if (statusCode === 200 && resJson.success) {
+          results.push(`✅ [成功] ${apiUrl} (HTTP ${statusCode})`);
+        } else {
+          allSucceeded = false;
+          results.push(`❌ [失敗] ${apiUrl} (HTTP ${statusCode})\n   理由: ${resJson.error || resText}`);
+        }
+      } catch (fetchErr) {
+        allSucceeded = false;
+        results.push(`❌ [通信エラー] ${apiUrl}\n   理由: ${fetchErr.message}`);
+      }
     }
+
+    const summaryHeader = allSucceeded
+      ? "すべての環境（本番・プレビュー）への同期が正常に完了しました！"
+      : "一部の環境への同期でエラーが発生しました。";
+
+    ui.alert(
+      allSucceeded ? "同期完了" : "同期結果（一部エラー）",
+      `${summaryHeader}\n\n` +
+        `【送信結果】\n${results.join("\n\n")}\n\n` +
+        `【反映データ件数】\n` +
+        `・模試基本情報: ${schedules.length} 件\n` +
+        `・会場・日程: ${venues.length} 件\n` +
+        `・時間割: ${timetables.length} 件\n` +
+        `・出題範囲: ${scopes.length} 件`,
+      ui.ButtonSet.OK
+    );
   } catch (err) {
     ui.alert("実行エラー", `スクリプト実行中にエラーが発生しました:\n${err.message}`, ui.ButtonSet.OK);
   }

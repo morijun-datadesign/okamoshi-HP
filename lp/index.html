@@ -2417,7 +2417,8 @@
             ticketDispatch: ticketDispatch,
             reportDispatch: reportDispatch,
             schedule: timetableItems,
-            items: itemsText
+            items: itemsText,
+            home_return_deadline: isHome ? (s.home_return_deadline || s.submission_deadline || null) : null
           };
         });
       }
@@ -2716,6 +2717,27 @@
       }).join('');
     }
 
+    // 自宅受験答案返送締切日の表示フォーマット整形（例: "2027/01/14" -> "2027年1月14日(木) 必着"）
+    function formatHomeReturnDeadline(rawVal) {
+      if (!rawVal) return '';
+      const clean = String(rawVal).trim();
+      if (!clean) return '';
+      const m = clean.match(/^(\d{4})[/-](\d{1,2})[/-](\d{1,2})/);
+      if (m) {
+        const y = parseInt(m[1], 10);
+        const mon = parseInt(m[2], 10);
+        const d = parseInt(m[3], 10);
+        const dt = new Date(Date.UTC(y, mon - 1, d, 12, 0, 0));
+        const weekDays = ['日', '月', '火', '水', '木', '金', '土'];
+        const w = weekDays[dt.getUTCDay()];
+        return `${y}年${mon}月${d}日(${w}) 必着`;
+      }
+      if (clean.includes('必着') || clean.includes('まで') || clean.includes('消印')) {
+        return clean;
+      }
+      return `${clean} 必着`;
+    }
+
     // 会場詳細タイムラインのレンダリング
     function renderVenueDetails(r) {
       const venueTabsContainer = document.getElementById('venue-tabs');
@@ -2733,7 +2755,9 @@
           { label: "集合・諸注意", time: "8:45 〜 9:00" },
           { label: "第1科目 〜 最終科目", time: "9:05 〜 14:40" }
         ],
-        items: v.school ? "受験票、筆記用具（鉛筆またはシャープペンシル、消しゴム）、コンパス、三角定規、腕時計、昼食・飲料、上履き（要持参）" : "お届けする問題用紙・解答用紙、筆記用具、同封の返信用封筒"
+        items: v.school ? "受験票、筆記用具（鉛筆またはシャープペンシル、消しゴム）、コンパス、三角定規、腕時計、昼食・飲料、上履き（要持参）" : "お届けする問題用紙・解答用紙、筆記用具、同封の返信用封筒",
+        notice: v.notice || v.notes || v.caution || v.attention || null,
+        home_return_deadline: v.home_return_deadline || v.deadline_home || r.home_return_deadline || r.homeReturnDeadline || null
       })) : []);
 
       venueTabsContainer.innerHTML = '';
@@ -2810,6 +2834,27 @@
         examDateText = examDateText.replace(/(\d+)月(\d+)日/g, '$1/$2').replace(/\s*〜\s*/g, '〜');
       }
 
+      let noticeHtml = '';
+      const rawNotice = (activeVenue.notice || activeVenue.notes || activeVenue.caution || activeVenue.attention || '').trim();
+      if (rawNotice) {
+        const formattedNotice = rawNotice.startsWith('※') ? rawNotice : `※${rawNotice}`;
+        noticeHtml = `
+          <div class="mt-2 text-[13px] sm:text-sm text-rose-600 font-medium leading-relaxed whitespace-pre-line">
+            ${formattedNotice}
+          </div>
+        `;
+      }
+
+      const rawHomeReturn =
+        activeVenue.homeReturnDeadline ||
+        activeVenue.home_return_deadline ||
+        activeVenue.deadline_home ||
+        r.homeReturnDeadline ||
+        r.home_return_deadline ||
+        r.homeReturnDeadlineRaw ||
+        '';
+      const formattedHomeReturn = formatHomeReturnDeadline(rawHomeReturn);
+
       venueDetailContainer.innerHTML = `
         <div class="pb-3 border-b border-slate-200">
           <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1.5 sm:gap-4">
@@ -2821,6 +2866,7 @@
               ${examDateText}
             </div>
           </div>
+          ${noticeHtml}
         </div>
 
         <div class="space-y-5 pt-1.5">
@@ -2855,10 +2901,24 @@
             </div>
           </div>
 
-          <!-- ④ 成績表のご返却予定 -->
+          ${isHome ? `
+          <!-- ④ 答案用紙の返送締切（自宅受験のみ） -->
           <div class="space-y-1.5">
             <div class="flex items-center gap-2">
-              <div class="w-6 h-6 rounded-full bg-emerald-100 text-brand-green flex items-center justify-center font-bold text-xs shrink-0 border border-emerald-200">4</div>
+              <div class="w-6 h-6 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center font-bold text-xs shrink-0 border border-slate-200">4</div>
+              <span class="font-bold text-slate-900 text-sm sm:text-base">答案用紙の返送締切</span>
+            </div>
+            <div class="pl-8">
+              <p class="text-sm sm:text-base text-slate-700 font-medium leading-relaxed">${formattedHomeReturn || '決まり次第ご案内します'}</p>
+              <p class="text-xs sm:text-sm text-slate-500 mt-1 leading-relaxed">※同封の返信用封筒にて期日までにご投函・ご返送ください。</p>
+            </div>
+          </div>
+          ` : ''}
+
+          <!-- 成績表のご返却予定 -->
+          <div class="space-y-1.5">
+            <div class="flex items-center gap-2">
+              <div class="w-6 h-6 rounded-full bg-emerald-100 text-brand-green flex items-center justify-center font-bold text-xs shrink-0 border border-emerald-200">${isHome ? '5' : '4'}</div>
               <span class="font-bold text-slate-900 text-sm sm:text-base">成績表のご返却予定</span>
             </div>
             <p class="text-sm sm:text-base text-slate-700 pl-8 font-medium leading-relaxed">${activeVenue.reportDispatch}</p>

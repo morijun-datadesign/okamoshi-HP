@@ -89,17 +89,21 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     // 2. 外部キー整合性のためのID正規化とセット構築
     // ① schedules
     const scheduleIdSet = new Set<string>();
+    const scheduleHomeReturnMap = new Map<string, string | null>();
     const cleanedSchedules = rawSchedules
       .map((s, idx) => {
         const id = cleanKey(s.id);
         if (!id) return null;
         scheduleIdSet.add(id);
+        const homeReturn = s.home_return_deadline ? String(s.home_return_deadline).trim() : null;
+        scheduleHomeReturnMap.set(id, homeReturn);
         return {
           ...s,
           id,
           grade_code: cleanKey(s.grade_code),
           grade_name: String(s.grade_name || "").trim(),
           issue_name: String(s.issue_name || "").trim(),
+          home_return_deadline: homeReturn,
           sort_order: Number(s.sort_order ?? idx + 1),
         };
       })
@@ -119,11 +123,20 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
         }
 
         venueIdSet.add(id);
+        const venueTypeStr = String(v.venue_type || "").trim();
+        const isHome = venueTypeStr.includes("自宅") || id.endsWith("_home");
+        const deadlineHome = v.deadline_home
+          ? String(v.deadline_home).trim()
+          : isHome
+          ? scheduleHomeReturnMap.get(schedule_id) || null
+          : null;
+
         return {
           ...v,
           id,
           schedule_id,
-          venue_type: String(v.venue_type || "").trim(),
+          venue_type: venueTypeStr,
+          deadline_home: deadlineHome,
           sort_order: Number(v.sort_order ?? idx + 1),
         };
       })
@@ -175,6 +188,13 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       })
       .filter(Boolean) as any[];
 
+    // 2.5. home_return_deadline カラムが未追加の環境でも安全に動作するよう自動カラム追加を試行
+    try {
+      await env.DB.prepare("ALTER TABLE exam_schedules ADD COLUMN home_return_deadline TEXT;").run();
+    } catch (_) {
+      // 既にカラムが存在する場合は無視
+    }
+
     // 3. 削除クエリ: 孫・子 -> 親の順序を厳格に順守
     console.log(`${LOG} Deleting existing records in child-to-parent order...`);
     await env.DB.batch([
@@ -193,8 +213,8 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       INSERT INTO exam_schedules (
         id, grade_code, grade_name, issue_name, title, catch_copy, announcement,
         fee, fee_note, subjects_note, apply_deadline, ticket_shipping_date,
-        ticket_shipping_note, result_shipping_date, result_shipping_note, sort_order
-      ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16);
+        ticket_shipping_note, home_return_deadline, result_shipping_date, result_shipping_note, sort_order
+      ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17);
     `;
     for (const s of cleanedSchedules) {
       const feeNum = Number(String(s.fee || "0").replace(/[^0-9]/g, "")) || 5500;
@@ -213,6 +233,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
           s.apply_deadline ? String(s.apply_deadline).trim() : null,
           s.ticket_shipping_date ? String(s.ticket_shipping_date).trim() : null,
           s.ticket_shipping_note ? String(s.ticket_shipping_note).trim() : null,
+          s.home_return_deadline ? String(s.home_return_deadline).trim() : null,
           s.result_shipping_date ? String(s.result_shipping_date).trim() : null,
           s.result_shipping_note ? String(s.result_shipping_note).trim() : null,
           s.sort_order

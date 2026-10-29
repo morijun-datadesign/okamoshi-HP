@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS exam_schedules (
   apply_deadline TEXT,               -- 2026-10-16 23:59
   ticket_shipping_date TEXT,         -- 2026-10-13 (YYYY-MM-DD)
   ticket_shipping_note TEXT,         -- ※試験3日前までに...
+  home_return_deadline TEXT,         -- 2027-01-14 (自宅受験答案返送締切日)
   result_shipping_date TEXT,         -- 2026-11-12 (YYYY-MM-DD)
   result_shipping_note TEXT,         -- ※成績表・個人診断票...
   sort_order INTEGER DEFAULT 0

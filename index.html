@@ -4357,6 +4357,14 @@ ${returnMethodNote}
         urlParams = new URLSearchParams();
       }
 
+      // プレビュー・強制表示フラグ (?preview_notice=true または ?preview_notice=1)
+      // 日付制限やlocalStorageの閲覧回数制限をバイパスして即時表示
+      const isPreview = urlParams.get('preview_notice') === 'true' || urlParams.get('preview_notice') === '1';
+      if (isPreview) {
+        showRenewalNotice();
+        return;
+      }
+
       // 開発・検証用リセット機能 (?reset_notice=1)
       if (urlParams.get('reset_notice') === '1') {
         try {

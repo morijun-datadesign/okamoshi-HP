@@ -1390,7 +1390,7 @@
                 </h3>
               </div>
               <p class="text-sm text-slate-700 mt-2.5 leading-relaxed">
-                入試ワンポイント解説、英単語ミニクイズ、願書提出締切リマインドなど受験生・保護者向け情報をリアルタイム発信中。
+                おかもしの会場の様子、次回のご案内など、受験生・保護者向け情報を発信中!
               </p>
             </div>
             <div class="mt-4 pt-3 border-t border-slate-200/80">
@@ -4013,8 +4013,131 @@
 
       // よくあるご質問（FAQ）の動的レンダリング
       renderFaq();
+
+      // サイトリニューアルお知らせポップアップ（2026年11月限定）の初期化
+      initRenewalNotice();
     });
+
+    // ==========================================
+    // サイトリニューアルお知らせポップアップ制御（2026年11月限定）
+    // ==========================================
+    function showRenewalNotice() {
+      const banner = document.getElementById('renewal-notice-banner');
+      if (!banner) return;
+      banner.classList.remove('hidden');
+      setTimeout(() => {
+        banner.classList.remove('translate-y-12', 'opacity-0', 'pointer-events-none');
+        banner.classList.add('translate-y-0', 'opacity-100', 'pointer-events-auto');
+      }, 60);
+    }
+
+    function closeRenewalNotice() {
+      try {
+        localStorage.setItem('okamoshi_notice_view_count_202611', '2');
+      } catch (e) {}
+      const banner = document.getElementById('renewal-notice-banner');
+      if (!banner) return;
+      banner.classList.remove('translate-y-0', 'opacity-100', 'pointer-events-auto');
+      banner.classList.add('translate-y-12', 'opacity-0', 'pointer-events-none');
+      setTimeout(() => {
+        banner.classList.add('hidden');
+      }, 300);
+    }
+    window.closeRenewalNotice = closeRenewalNotice;
+
+    function initRenewalNotice() {
+      const STORAGE_KEY = 'okamoshi_notice_view_count_202611';
+      // JST基準（開始: 2026年11月2日 00:00:00 JST、終了: 2026年12月1日 00:00:00 JST）
+      const START_TIME = new Date('2026-11-02T00:00:00+09:00').getTime();
+      const END_TIME = new Date('2026-12-01T00:00:00+09:00').getTime();
+
+      let now = Date.now();
+      let urlParams;
+      try {
+        urlParams = new URLSearchParams(window.location.search);
+      } catch (e) {
+        urlParams = new URLSearchParams();
+      }
+
+      // 開発・検証用リセット機能 (?reset_notice=1)
+      if (urlParams.get('reset_notice') === '1') {
+        try {
+          localStorage.setItem(STORAGE_KEY, '0');
+        } catch (e) {}
+      }
+
+      // 開発・検証用日時偽装 (?test_date=2026-11-05 や ?test_date=2026-12-01)
+      if (urlParams.has('test_date')) {
+        const rawDate = urlParams.get('test_date') || '';
+        const parsed = new Date(rawDate.replace(/ /g, '+')).getTime();
+        if (!isNaN(parsed)) {
+          now = parsed;
+        }
+      } else if (urlParams.get('reset_notice') === '1' && now < START_TIME) {
+        // 11月2日前の検証時、reset_notice=1 単体でもテストできるよう期間開始後とみなす
+        now = START_TIME + 1000;
+      }
+
+      // 1. 【期間判定】11月中のみ表示（12月1日 00:00:00 自動終了）
+      const isPeriodValid = (now >= START_TIME && now < END_TIME);
+      if (!isPeriodValid) {
+        return;
+      }
+
+      // 2. 【回数判定】ユーザーあたり最大2回まで表示
+      let count = 0;
+      try {
+        const val = localStorage.getItem(STORAGE_KEY);
+        count = val !== null ? parseInt(val, 10) : 0;
+        if (isNaN(count)) count = 0;
+      } catch (e) {
+        count = 0;
+      }
+
+      if (count < 2) {
+        // 表示された時点でカウントをインクリメント（count + 1）して保存
+        try {
+          localStorage.setItem(STORAGE_KEY, String(count + 1));
+        } catch (e) {}
+
+        // バナーを表示
+        showRenewalNotice();
+      }
+    }
   </script>
+
+  <!-- =========================================================================
+       サイトリニューアルのお知らせ ポップアップバナー（2026年11月限定）
+       ========================================================================= -->
+  <div id="renewal-notice-banner" class="fixed z-50 bottom-4 left-4 right-4 sm:bottom-6 sm:right-6 sm:left-auto sm:max-w-md bg-white border border-slate-200 rounded-xl shadow-xl p-4 sm:p-5 transition-all duration-300 ease-out transform translate-y-12 opacity-0 pointer-events-none hidden" role="region" aria-label="サイトリニューアルのお知らせ">
+    <div class="flex items-start gap-3">
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center gap-2 mb-1.5">
+          <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#e8f5ee] text-[#134230] border border-[#c3e6d2]">
+            <span class="material-symbols-outlined text-sm">campaign</span>
+            <span>お知らせ</span>
+          </span>
+          <span class="text-[11px] text-slate-500 font-medium">NEW</span>
+        </div>
+        <h3 class="text-sm sm:text-base font-bold text-slate-900 leading-snug mb-1">
+          岡山県統一模擬試験 公式サイトをリニューアルしました
+        </h3>
+        <p class="text-xs text-slate-600 leading-relaxed mb-3">
+          より見やすく、お申し込みや模試情報が確認しやすいサイトへと全面刷新いたしました。
+        </p>
+        <div class="flex items-center">
+          <a href="/news/" class="inline-flex items-center gap-1 text-xs font-bold text-[#134230] hover:text-[#0c2b20] hover:underline transition-colors group">
+            <span>お知らせを見る</span>
+            <span class="material-symbols-outlined text-sm transition-transform group-hover:translate-x-0.5">arrow_forward</span>
+          </a>
+        </div>
+      </div>
+      <button type="button" id="close-renewal-notice" onclick="closeRenewalNotice()" class="shrink-0 -mr-1 -mt-1 p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer" aria-label="お知らせを閉じる">
+        <span class="material-symbols-outlined text-lg leading-none">close</span>
+      </button>
+    </div>
+  </div>
+
   <script defer src="/js/floating-cta.js"></script>
 </body>
 </html>

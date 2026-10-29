@@ -2030,6 +2030,41 @@
       }).join('');
     }
 
+    // 任意の日付文字列から「YYYY年M月D日(曜)」を正確に抽出・生成する関数
+    function extractJapaneseDateOnly(val) {
+      if (!val) return '';
+      const clean = String(val).trim();
+      if (!clean) return '';
+      // 既に "YYYY年M月D日(曜)" または "YYYY年M月D日" が含まれているか
+      const mJp = clean.match(/(\d{4}年\d{1,2}月\d{1,2}日(?:\([日月火水木金土]\))?)/);
+      if (mJp) {
+        let jpDate = mJp[1];
+        if (!jpDate.includes('(')) {
+          const mParts = jpDate.match(/(\d{4})年(\d{1,2})月(\d{1,2})日/);
+          if (mParts) {
+            const y = parseInt(mParts[1], 10);
+            const mon = parseInt(mParts[2], 10);
+            const d = parseInt(mParts[3], 10);
+            const dt = new Date(Date.UTC(y, mon - 1, d, 12, 0, 0));
+            const weekDays = ['日', '月', '火', '水', '木', '金', '土'];
+            jpDate = `${y}年${mon}月${d}日(${weekDays[dt.getUTCDay()]})`;
+          }
+        }
+        return jpDate;
+      }
+      // "YYYY/MM/DD" または "YYYY-MM-DD" 形式
+      const mIso = clean.match(/(\d{4})[/-](\d{1,2})[/-](\d{1,2})/);
+      if (mIso) {
+        const y = parseInt(mIso[1], 10);
+        const mon = parseInt(mIso[2], 10);
+        const d = parseInt(mIso[3], 10);
+        const dt = new Date(Date.UTC(y, mon - 1, d, 12, 0, 0));
+        const weekDays = ['日', '月', '火', '水', '木', '金', '土'];
+        return `${y}年${mon}月${d}日(${weekDays[dt.getUTCDay()]})`;
+      }
+      return '';
+    }
+
     // 自宅受験答案返送締切日の表示フォーマット整形（例: "2027/01/14" -> "2027年1月14日(木) 必着"）
     function formatHomeReturnDeadline(rawVal) {
       if (!rawVal) return '';
@@ -2158,31 +2193,135 @@
         `;
       }
 
-      const rawHomeReturn =
-        activeVenue.homeReturnDeadline ||
-        activeVenue.home_return_deadline ||
-        activeVenue.deadline_home ||
-        r.homeReturnDeadline ||
-        r.home_return_deadline ||
-        r.homeReturnDeadlineRaw ||
-        '';
-      const formattedHomeReturn = formatHomeReturnDeadline(rawHomeReturn);
+      // 自宅受験の学年判定
+      const isJuniorHigh = currentGrade === 'c1' || currentGrade === 'c2' || currentGrade === 'c3';
+      const isPrimary6 = currentGrade === 'p6';
+      const isJuniorHome = isJuniorHigh && isHome;
+      const isPrimaryHome = isPrimary6 && isHome;
 
-      venueDetailContainer.innerHTML = `
-        <div class="pb-3 border-b border-slate-200">
-          <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1.5 sm:gap-4">
-            <div class="flex flex-wrap items-baseline gap-2 sm:gap-2.5">
-              <span class="font-bold text-slate-900 text-base sm:text-lg">${venueBadgeText}</span>
-              ${placeName ? `<span class="font-bold text-slate-700 text-sm sm:text-base">${placeName}</span>` : ''}
+      let stepsHtml = '';
+      if (isJuniorHome || isPrimaryHome) {
+        // 1. 問題一式のお届け（発送日）
+        const rawTicketShipping =
+          activeVenue.ticketShippingDateJp ||
+          activeVenue.ticketShippingDate ||
+          r.ticketShippingDateJp ||
+          r.ticketShippingDate ||
+          r.ticket_shipping_date ||
+          activeVenue.ticketDispatch ||
+          '';
+        const ticketDateJp = extractJapaneseDateOnly(rawTicketShipping);
+        const homeTicketText = ticketDateJp
+          ? `${ticketDateJp}頃に問題一式をご自宅へ発送`
+          : '試験日の約5日前頃に問題一式をご自宅へ発送';
+
+        // 2. お届けするもの（中1〜中3 vs 小6）
+        const itemsText = isPrimaryHome
+          ? `問題用紙・解答用紙、解答例と解説\n志望校カード、バーコードシート\n答案整理表、返送用シール、付録 : Road To Victory`
+          : `問題用紙・解答用紙、解答解説集、英語リスニング用CD\n志望校記入用紙、志望校コード表、バーコードシート\n東安整理表、返送用シール`;
+
+        // 4. 答案のご返送
+        const rawHomeReturn =
+          activeVenue.homeReturnDeadlineJp ||
+          activeVenue.homeReturnDeadline ||
+          activeVenue.home_return_deadline ||
+          r.homeReturnDeadlineJp ||
+          r.homeReturnDeadline ||
+          r.home_return_deadline ||
+          r.homeReturnDeadlineRaw ||
+          activeVenue.deadline_home ||
+          activeVenue.exam_date_end ||
+          '';
+        const returnDateJp = extractJapaneseDateOnly(rawHomeReturn);
+        const returnDateLine = returnDateJp
+          ? `${returnDateJp}指定業者必着です。`
+          : '指定業者必着です。';
+        const returnMethodNote = isPrimaryHome
+          ? 'レターパックなど追跡できる方法でご送付ください。'
+          : 'レターパックライトなど追跡できる方法でご送付ください。';
+
+        // 5. 成績表のご返却予定
+        const rawResultShipping =
+          activeVenue.resultShippingDateJp ||
+          activeVenue.resultShippingDate ||
+          r.resultShippingDateJp ||
+          r.resultShippingDate ||
+          r.result_shipping_date ||
+          activeVenue.reportDispatch ||
+          '';
+        const resultDateJp = extractJapaneseDateOnly(rawResultShipping);
+        const homeReportText = resultDateJp
+          ? `${resultDateJp}発送予定`
+          : (activeVenue.reportDispatch || '試験実施の約10日後発送予定');
+
+        stepsHtml = `
+          <!-- ① 問題一式のお届け（発送日） -->
+          <div class="space-y-1.5">
+            <div class="flex items-center gap-2">
+              <div class="w-6 h-6 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center font-bold text-xs shrink-0 border border-slate-200">1</div>
+              <span class="font-bold text-slate-900 text-sm sm:text-base">問題一式のお届け（発送日）</span>
             </div>
-            <div class="text-base sm:text-lg font-bold text-[#8B3A18] tracking-tight">
-              ${examDateText}
+            <p class="text-sm sm:text-base text-slate-700 pl-8 font-medium leading-relaxed">${homeTicketText}</p>
+          </div>
+
+          <!-- ② お届けするもの -->
+          <div class="space-y-1.5">
+            <div class="flex items-center gap-2">
+              <div class="w-6 h-6 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center font-bold text-xs shrink-0 border border-slate-200">2</div>
+              <span class="font-bold text-slate-900 text-sm sm:text-base">お届けするもの</span>
+            </div>
+            <div class="pl-8">
+              <div class="text-sm sm:text-base text-slate-700 leading-relaxed font-medium whitespace-pre-line">${itemsText}</div>
             </div>
           </div>
-          ${noticeHtml}
-        </div>
 
-        <div class="space-y-5 pt-1.5">
+          <!-- ③ 受験方法・時間割 -->
+          <div class="space-y-1.5">
+            <div class="flex items-center gap-2">
+              <div class="w-6 h-6 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center font-bold text-xs shrink-0 border border-slate-200">3</div>
+              <span class="font-bold text-slate-900 text-sm sm:text-base">受験方法・時間割</span>
+            </div>
+            <div class="pl-8">
+              <div class="text-sm sm:text-base text-slate-700 leading-relaxed font-medium whitespace-pre-line">各科目 45分です。実施期間内、ご都合に合わせてお取り組みください。
+詳細は、問題用紙同封の実施方法をご確認ください。</div>
+            </div>
+          </div>
+
+          <!-- ④ 答案のご返送 -->
+          <div class="space-y-1.5">
+            <div class="flex items-center gap-2">
+              <div class="w-6 h-6 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center font-bold text-xs shrink-0 border border-slate-200">4</div>
+              <span class="font-bold text-slate-900 text-sm sm:text-base">答案のご返送</span>
+            </div>
+            <div class="pl-8">
+              <div class="text-sm sm:text-base text-slate-700 leading-relaxed font-medium whitespace-pre-line">${returnDateLine}
+${returnMethodNote}
+送料はお客様負担となりますことあらかじめご了承ください。</div>
+            </div>
+          </div>
+
+          <!-- ⑤ 成績表のご返却予定 -->
+          <div class="space-y-1.5">
+            <div class="flex items-center gap-2">
+              <div class="w-6 h-6 rounded-full bg-emerald-100 text-brand-green flex items-center justify-center font-bold text-xs shrink-0 border border-emerald-200">5</div>
+              <span class="font-bold text-slate-900 text-sm sm:text-base">成績表のご返却予定</span>
+            </div>
+            <p class="text-sm sm:text-base text-slate-700 pl-8 font-medium leading-relaxed">${homeReportText}</p>
+          </div>
+        `;
+      } else {
+        // 会場受験、および小6自宅受験（既存ロジックを完全維持）
+        const rawHomeReturn =
+          activeVenue.homeReturnDeadline ||
+          activeVenue.home_return_deadline ||
+          activeVenue.deadline_home ||
+          r.homeReturnDeadline ||
+          r.home_return_deadline ||
+          r.homeReturnDeadlineRaw ||
+          '';
+        const formattedHomeReturn = formatHomeReturnDeadline(rawHomeReturn);
+
+        stepsHtml = `
           <!-- ① 受験票等の発送 -->
           <div class="space-y-1.5">
             <div class="flex items-center gap-2">
@@ -2236,6 +2375,25 @@
             </div>
             <p class="text-sm sm:text-base text-slate-700 pl-8 font-medium leading-relaxed">${activeVenue.reportDispatch}</p>
           </div>
+        `;
+      }
+
+      venueDetailContainer.innerHTML = `
+        <div class="pb-3 border-b border-slate-200">
+          <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1.5 sm:gap-4">
+            <div class="flex flex-wrap items-baseline gap-2 sm:gap-2.5">
+              <span class="font-bold text-slate-900 text-base sm:text-lg">${venueBadgeText}</span>
+              ${placeName ? `<span class="font-bold text-slate-700 text-sm sm:text-base">${placeName}</span>` : ''}
+            </div>
+            <div class="text-base sm:text-lg font-bold text-[#8B3A18] tracking-tight">
+              ${examDateText}
+            </div>
+          </div>
+          ${noticeHtml}
+        </div>
+
+        <div class="space-y-5 pt-1.5">
+          ${stepsHtml}
         </div>
       `;
     }

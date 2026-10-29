@@ -224,7 +224,15 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
       // 会場一覧 (venuesList / venueDetails)
       const schedVenues = venuesBySchedule[s.id] || [];
       const homeVenueRow = schedVenues.find((v) => v.venue_type.includes("自宅"));
-      const rawHomeReturnDeadline = s.home_return_deadline || homeVenueRow?.deadline_home || null;
+      let rawHomeReturnDeadline = s.home_return_deadline || null;
+      if (!rawHomeReturnDeadline && homeVenueRow) {
+        const dl = (homeVenueRow.deadline_home || "").trim();
+        if (dl && /^\d{4}[/-]\d{1,2}[/-]\d{1,2}/.test(dl)) {
+          rawHomeReturnDeadline = dl;
+        } else if (homeVenueRow.exam_date_end && /^\d{4}[/-]\d{1,2}[/-]\d{1,2}/.test(homeVenueRow.exam_date_end.trim())) {
+          rawHomeReturnDeadline = homeVenueRow.exam_date_end.trim();
+        }
+      }
       const formattedHomeReturnDeadline = formatHomeReturnDeadline(rawHomeReturnDeadline);
 
       const venuesList = schedVenues.map((v) => {
@@ -293,11 +301,16 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
           examDate: dateText,
           ticketDispatch,
           reportDispatch,
+          ticketShippingDate: s.ticket_shipping_date || null,
+          ticketShippingDateJp: formatJapaneseDate(s.ticket_shipping_date, true) || null,
+          resultShippingDate: s.result_shipping_date || null,
+          resultShippingDateJp: formatJapaneseDate(s.result_shipping_date, true) || null,
           schedule: timetableItems,
           items: belongingsText,
           notice: v.notice || null,
-          home_return_deadline: isHome ? venueHomeReturnRaw : null,
-          homeReturnDeadline: isHome ? (venueHomeReturnFormatted || null) : null,
+          home_return_deadline: isHome ? rawHomeReturnDeadline : null,
+          homeReturnDeadline: isHome ? (formattedHomeReturnDeadline || null) : null,
+          homeReturnDeadlineJp: isHome ? (formatJapaneseDate(rawHomeReturnDeadline, true) || null) : null,
         };
       });
 
@@ -327,11 +340,14 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
         deadline: deadlineDisplay,
         applyDeadlineRaw: s.apply_deadline,
         ticketShippingDate: s.ticket_shipping_date,
+        ticketShippingDateJp: formatJapaneseDate(s.ticket_shipping_date, true) || null,
         ticketShippingNote: s.ticket_shipping_note,
         home_return_deadline: rawHomeReturnDeadline,
         homeReturnDeadlineRaw: rawHomeReturnDeadline,
         homeReturnDeadline: formattedHomeReturnDeadline || null,
+        homeReturnDeadlineJp: formatJapaneseDate(rawHomeReturnDeadline, true) || null,
         resultShippingDate: s.result_shipping_date,
+        resultShippingDateJp: formatJapaneseDate(s.result_shipping_date, true) || null,
         resultShippingNote: s.result_shipping_note,
         status,
         venuesList,

@@ -313,13 +313,49 @@ def html_escape(text):
         return ""
     return str(text).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;").replace("'", "&#39;")
 
-def render_sidebar_exam_widget(exam_guides):
+def render_sidebar_exam_widget(exam_guides=None):
     """サイドバー模試ウィジェットの静的HTML事前生成"""
     target_configs = [
-        {"gradeBadge": "中3生", "codes": ["c3", "chu3"], "month": "12月号", "link": "/index.html?grade=chu3#schedule-selector", "isEnded": False},
-        {"gradeBadge": "中2生", "codes": ["c2", "chu2", "c1_c2"], "month": "12月号", "link": "/index.html?grade=chu2#schedule-selector", "isEnded": False},
-        {"gradeBadge": "中1生", "codes": ["c1", "chu1", "c1_c2"], "month": "12月号", "link": "/index.html?grade=chu1#schedule-selector", "isEnded": False},
-        {"gradeBadge": "小6生", "codes": ["p6", "sho6", "e6", "s6"], "month": "", "link": "/index.html?grade=sho6#schedule-selector", "isEnded": True}
+        {
+            "gradeBadge": "中3生",
+            "codes": ["c3", "chu3"],
+            "month": "12月号",
+            "link": "/index.html?grade=chu3#schedule-selector",
+            "period": "12/26(土)〜1/11(月)",
+            "venues": "岡山・倉敷・津山・自宅",
+            "deadline": "2026年12月14日(月)",
+            "isEnded": False
+        },
+        {
+            "gradeBadge": "中2生",
+            "codes": ["c2", "chu2", "c1_c2"],
+            "month": "12月号",
+            "link": "/index.html?grade=chu2#schedule-selector",
+            "period": "12/26(土)〜1/11(月)",
+            "venues": "岡山・倉敷・津山・自宅",
+            "deadline": "2026年12月14日(月)",
+            "isEnded": False
+        },
+        {
+            "gradeBadge": "中1生",
+            "codes": ["c1", "chu1", "c1_c2"],
+            "month": "12月号",
+            "link": "/index.html?grade=chu1#schedule-selector",
+            "period": "12/26(土)〜1/11(月)",
+            "venues": "岡山・倉敷・津山・自宅",
+            "deadline": "2026年12月14日(月)",
+            "isEnded": False
+        },
+        {
+            "gradeBadge": "小6生",
+            "codes": ["p6", "sho6", "e6", "s6"],
+            "month": "",
+            "link": "/index.html?grade=sho6#schedule-selector",
+            "period": "",
+            "venues": "",
+            "deadline": "",
+            "isEnded": True
+        }
     ]
 
     cards = []
@@ -347,7 +383,26 @@ def render_sidebar_exam_widget(exam_guides):
             <span class="material-symbols-outlined text-[15px] text-white">chevron_right</span>
           </div>
         </div>
-        <div class="text-xs text-slate-600 font-medium">岡山会場 または 自宅受験対応</div>
+        <div class="space-y-1.5 text-xs sm:text-sm leading-snug">
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-slate-500 shrink-0 font-medium flex items-center gap-1 text-xs sm:text-sm">
+              <span class="material-symbols-outlined text-[14px] text-slate-400">schedule</span>日程
+            </span>
+            <span class="font-bold text-secondary text-right truncate text-xs sm:text-sm">{cfg['period']}</span>
+          </div>
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-slate-500 shrink-0 font-medium flex items-center gap-1 text-xs sm:text-sm">
+              <span class="material-symbols-outlined text-[14px] text-slate-400">location_on</span>会場
+            </span>
+            <span class="text-right truncate font-medium text-slate-700 text-xs sm:text-sm">{cfg['venues']}</span>
+          </div>
+          <div class="flex items-center justify-between gap-2 pt-1.5 border-t border-slate-200/60">
+            <span class="text-slate-500 shrink-0 font-medium flex items-center gap-1 text-xs sm:text-sm">
+              <span class="material-symbols-outlined text-[14px] text-slate-400">event</span>申込締切
+            </span>
+            <span class="font-bold text-slate-800 text-right text-xs sm:text-sm">{cfg['deadline']}</span>
+          </div>
+        </div>
       </a>''')
 
     return "\n".join(cards)

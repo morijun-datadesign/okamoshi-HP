@@ -21,41 +21,54 @@
     return new Date(y, mon - 1, d, h, min, 59, 999).getTime();
   }
 
-  function formatVenueGuide(venuesList) {
-    if (!Array.isArray(venuesList) || venuesList.length === 0) {
-      return '岡山会場 または 自宅受験対応';
-    }
-
-    const hasHome = venuesList.some(function(v) {
+  function extractPeriodText(round) {
+    if (!round) return '12/26(土)〜1/11(月)';
+    const venues = Array.isArray(round.venuesList) ? round.venuesList : [];
+    const home = venues.find(function(v) {
       return (v.badge || v.name || '').indexOf('自宅') !== -1;
     });
+    if (home && home.date) {
+      return home.date.replace(/^202\d年/, '').replace(/(\d{4})年/g, '');
+    }
+    for (let i = 0; i < venues.length; i++) {
+      if (venues[i].date) {
+        return venues[i].date.replace(/^202\d年/, '');
+      }
+    }
+    return '12/26(土)〜1/11(月)';
+  }
 
-    const physicalVenues = venuesList
-      .filter(function(v) {
-        return (v.badge || v.name || '').indexOf('自宅') === -1;
-      })
-      .map(function(v) {
-        return (v.badge || v.name || '').replace(/会場$/, '').trim();
-      })
-      .filter(Boolean);
+  function extractVenuesSummary(round) {
+    if (!round) return '岡山・倉敷・津山・自宅';
+    const venues = Array.isArray(round.venuesList) ? round.venuesList : [];
+    if (venues.length === 0) return '岡山・倉敷・津山・自宅';
 
-    // 重複除去
-    const uniqueVenues = [];
-    physicalVenues.forEach(function(pv) {
-      if (uniqueVenues.indexOf(pv) === -1) {
-        uniqueVenues.push(pv);
+    const hasHome = venues.some(function(v) {
+      return (v.badge || v.name || '').indexOf('自宅') !== -1;
+    });
+    const physical = [];
+    venues.forEach(function(v) {
+      const name = (v.badge || v.name || '').replace(/会場$/, '').trim();
+      if (name && name.indexOf('自宅') === -1 && physical.indexOf(name) === -1) {
+        physical.push(name);
       }
     });
 
-    if (uniqueVenues.length > 0 && hasHome) {
-      return uniqueVenues.join('・') + '会場 または 自宅受験対応';
-    } else if (uniqueVenues.length > 0) {
-      return uniqueVenues.join('・') + '会場にて実施';
+    if (physical.length > 0 && hasHome) {
+      return physical.join('・') + '・自宅';
+    } else if (physical.length > 0) {
+      return physical.join('・') + '会場';
     } else if (hasHome) {
-      return '自宅受験（全国郵送対応）';
+      return '自宅受験対応';
     }
+    return '岡山・倉敷・津山・自宅';
+  }
 
-    return '岡山会場 または 自宅受験対応';
+  function extractDeadlineText(round) {
+    if (!round || !round.deadline) return '2026年12月14日(月)';
+    let dl = String(round.deadline).trim();
+    dl = dl.replace(/\s*\d{1,2}:\d{2}(?:まで)?$/, '').trim();
+    return dl || '2026年12月14日(月)';
   }
 
   async function updateSidebarExamWidget() {
@@ -143,7 +156,26 @@
             '      <span class="material-symbols-outlined text-[15px] text-white">chevron_right</span>',
             '    </div>',
             '  </div>',
-            '  <div class="text-xs text-slate-600 font-medium">岡山会場 または 自宅受験対応</div>',
+            '  <div class="space-y-1.5 text-xs sm:text-sm leading-snug">',
+            '    <div class="flex items-center justify-between gap-2">',
+            '      <span class="text-slate-500 shrink-0 font-medium flex items-center gap-1 text-xs sm:text-sm">',
+            '        <span class="material-symbols-outlined text-[14px] text-slate-400">schedule</span>日程',
+            '      </span>',
+            '      <span class="font-bold text-secondary text-right truncate text-xs sm:text-sm">12/26(土)〜1/11(月)</span>',
+            '    </div>',
+            '    <div class="flex items-center justify-between gap-2">',
+            '      <span class="text-slate-500 shrink-0 font-medium flex items-center gap-1 text-xs sm:text-sm">',
+            '        <span class="material-symbols-outlined text-[14px] text-slate-400">location_on</span>会場',
+            '      </span>',
+            '      <span class="text-right truncate font-medium text-slate-700 text-xs sm:text-sm">岡山・倉敷・津山・自宅</span>',
+            '    </div>',
+            '    <div class="flex items-center justify-between gap-2 pt-1.5 border-t border-slate-200/60">',
+            '      <span class="text-slate-500 shrink-0 font-medium flex items-center gap-1 text-xs sm:text-sm">',
+            '        <span class="material-symbols-outlined text-[14px] text-slate-400">event</span>申込締切',
+            '      </span>',
+            '      <span class="font-bold text-slate-800 text-right text-xs sm:text-sm">2026年12月14日(月)</span>',
+            '    </div>',
+            '  </div>',
             '</a>'
           ].join('\n');
         }
@@ -182,7 +214,9 @@
         issueText += '号';
       }
 
-      const venueGuide = formatVenueGuide(targetRound.venuesList);
+      const periodText = extractPeriodText(targetRound);
+      const venuesSummary = extractVenuesSummary(targetRound);
+      const deadlineText = extractDeadlineText(targetRound);
 
       return [
         '<a href="' + cfg.link + '" class="block p-3.5 sm:p-4 hover:bg-slate-100/70 transition-colors cursor-pointer group">',
@@ -195,7 +229,26 @@
         '      <span class="material-symbols-outlined text-[15px] text-white">chevron_right</span>',
         '    </div>',
         '  </div>',
-        '  <div class="text-xs text-slate-600 font-medium">' + venueGuide + '</div>',
+        '  <div class="space-y-1.5 text-xs sm:text-sm leading-snug">',
+        '    <div class="flex items-center justify-between gap-2">',
+        '      <span class="text-slate-500 shrink-0 font-medium flex items-center gap-1 text-xs sm:text-sm">',
+        '        <span class="material-symbols-outlined text-[14px] text-slate-400">schedule</span>日程',
+        '      </span>',
+        '      <span class="font-bold text-secondary text-right truncate text-xs sm:text-sm">' + periodText + '</span>',
+        '    </div>',
+        '    <div class="flex items-center justify-between gap-2">',
+        '      <span class="text-slate-500 shrink-0 font-medium flex items-center gap-1 text-xs sm:text-sm">',
+        '        <span class="material-symbols-outlined text-[14px] text-slate-400">location_on</span>会場',
+        '      </span>',
+        '      <span class="text-right truncate font-medium text-slate-700 text-xs sm:text-sm">' + venuesSummary + '</span>',
+        '    </div>',
+        '    <div class="flex items-center justify-between gap-2 pt-1.5 border-t border-slate-200/60">',
+        '      <span class="text-slate-500 shrink-0 font-medium flex items-center gap-1 text-xs sm:text-sm">',
+        '        <span class="material-symbols-outlined text-[14px] text-slate-400">event</span>申込締切',
+        '      </span>',
+        '      <span class="font-bold text-slate-800 text-right text-xs sm:text-sm">' + deadlineText + '</span>',
+        '    </div>',
+        '  </div>',
         '</a>'
       ].join('\n');
     });

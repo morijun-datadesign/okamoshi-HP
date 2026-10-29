@@ -429,9 +429,6 @@
                   decoding="async"
                 />
               </picture>
-              <span id="card1-preview-badge" class="absolute bottom-3 left-3 bg-slate-900/80 backdrop-blur-xs text-white text-[10px] sm:text-xs px-2.5 py-1 rounded-full font-bold shadow-xs">
-                公立高校入試型 模試用紙（B4判）
-              </span>
             </div>
           </div>
 
@@ -548,9 +545,6 @@
                   decoding="async"
                 />
               </picture>
-              <span id="card3-preview-badge" class="absolute bottom-3 left-3 bg-slate-900/80 backdrop-blur-xs text-white text-[10px] sm:text-xs px-2.5 py-1 rounded-full font-bold shadow-xs">
-                高校入試型 別冊解答解説（全問途中式・採点基準掲載）
-              </span>
             </div>
           </div>
 
@@ -3172,16 +3166,6 @@ ${returnMethodNote}
       const featuresContainer = document.getElementById('card1-features-container');
       if (featuresContainer) featuresContainer.innerHTML = data.featuresHtml || '';
 
-      const previewBadge = document.getElementById('card1-preview-badge');
-      if (previewBadge) {
-        previewBadge.textContent = data.previewLabel || '';
-        if (data.previewLabel) {
-          previewBadge.classList.remove('hidden');
-        } else {
-          previewBadge.classList.add('hidden');
-        }
-      }
-
       // 画像エリア（WebP / AVIF）の切り替え
       const previewSourceAvif = document.getElementById('card1-preview-source-avif');
       const previewSourceWebp = document.getElementById('card1-preview-source-webp');
@@ -3317,9 +3301,6 @@ ${returnMethodNote}
 
       const featuresContainer = document.getElementById('card3-features-container');
       if (featuresContainer) featuresContainer.innerHTML = data.featuresHtml || '';
-
-      const previewBadge = document.getElementById('card3-preview-badge');
-      if (previewBadge) previewBadge.textContent = data.previewLabel;
 
       // 画像エリア（WebP / AVIF）の切り替え
       const previewSourceAvif = document.getElementById('card3-preview-source-avif');

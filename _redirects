@@ -4,14 +4,8 @@
 /application/          /apply                    301
 /schedule              /#schedule-selector       302
 /schedule/             /#schedule-selector       302
-/schools               /schools.html             301
-/schools/              /schools.html             301
-/privacy               /privacy.html             301
-/privacy/              /privacy.html             301
-/legal                 /tokushoho.html           301
-/legal/                /tokushoho.html           301
-/tokushoho             /tokushoho.html           301
-/tokushoho/            /tokushoho.html           301
+/legal                 /tokushoho                301
+/legal/                /tokushoho                301
 /apply.html            /apply                    301
 /apply/success.html    /apply/success            301
 /complete.html          /apply/success            301

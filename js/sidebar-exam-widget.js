@@ -102,7 +102,7 @@
       return; // 取得失敗時は現在の静的HTMLをそのまま保持
     }
 
-    const now = Date.now();
+    const now = (typeof getCurrentDate === 'function') ? getCurrentDate().getTime() : Date.now();
 
     const renderedCards = targetConfigs.map(function(cfg) {
       // 該当学年のデータ取得
@@ -116,6 +116,38 @@
       }
 
       const rounds = (gradeInfo && Array.isArray(gradeInfo.rounds)) ? gradeInfo.rounds : [];
+
+      // rounds が空（未設定またはデータ取得不完全）の場合の安全なフォールバック
+      if (!rounds || rounds.length === 0) {
+        if (cfg.gradeBadge === '小6生') {
+          return [
+            '<div class="block p-3.5 sm:p-4 opacity-70 bg-slate-50/50">',
+            '  <div class="flex items-center justify-between gap-2 mb-2">',
+            '    <div class="flex items-center gap-1.5 flex-wrap">',
+            '      <span class="inline-flex items-center justify-center px-2 py-0.5 rounded bg-slate-200 text-slate-700 font-bold text-xs shrink-0 leading-tight">' + cfg.gradeBadge + '</span>',
+            '      <span class="inline-flex items-center justify-center px-2 py-0.5 rounded bg-slate-200 text-slate-600 font-bold text-xs shrink-0 leading-tight">受付終了</span>',
+            '    </div>',
+            '  </div>',
+            '  <div class="text-xs text-slate-500 font-medium">今年度の受付は終了しました</div>',
+            '</div>'
+          ].join('\n');
+        } else {
+          return [
+            '<a href="' + cfg.link + '" class="block p-3.5 sm:p-4 hover:bg-slate-100/70 transition-colors cursor-pointer group">',
+            '  <div class="flex items-center justify-between gap-2 mb-2">',
+            '    <div class="flex items-center gap-1.5 flex-wrap">',
+            '      <span class="inline-flex items-center justify-center px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 font-bold text-xs shrink-0 leading-tight">' + cfg.gradeBadge + '</span>',
+            '      <span class="inline-flex items-center justify-center px-2 py-0.5 rounded bg-emerald-100 text-emerald-900 border border-emerald-300 font-bold text-xs shrink-0 leading-tight">12月号</span>',
+            '    </div>',
+            '    <div class="w-6 h-6 rounded-full bg-emerald-800 text-white flex items-center justify-center shrink-0 group-hover:scale-105 group-hover:bg-emerald-900 transition-all shadow-2xs">',
+            '      <span class="material-symbols-outlined text-[15px] text-white">chevron_right</span>',
+            '    </div>',
+            '  </div>',
+            '  <div class="text-xs text-slate-600 font-medium">岡山会場 または 自宅受験対応</div>',
+            '</a>'
+          ].join('\n');
+        }
+      }
 
       // 申込締切が現在日時以降（受付中）の模試を抽出
       const activeRounds = rounds.filter(function(r) {

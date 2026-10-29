@@ -316,15 +316,27 @@ def html_escape(text):
 def render_sidebar_exam_widget(exam_guides):
     """サイドバー模試ウィジェットの静的HTML事前生成"""
     target_configs = [
-        {"gradeBadge": "中3生", "codes": ["c3", "chu3"], "month": "12月号", "link": "/index.html?grade=chu3#schedule-selector"},
-        {"gradeBadge": "中2生", "codes": ["c2", "chu2", "c1_c2"], "month": "12月号", "link": "/index.html?grade=chu2#schedule-selector"},
-        {"gradeBadge": "中1生", "codes": ["c1", "chu1", "c1_c2"], "month": "12月号", "link": "/index.html?grade=chu1#schedule-selector"},
-        {"gradeBadge": "小6生", "codes": ["e6", "s6", "sho6"], "month": "12月号", "link": "/index.html?grade=sho6#schedule-selector"}
+        {"gradeBadge": "中3生", "codes": ["c3", "chu3"], "month": "12月号", "link": "/index.html?grade=chu3#schedule-selector", "isEnded": False},
+        {"gradeBadge": "中2生", "codes": ["c2", "chu2", "c1_c2"], "month": "12月号", "link": "/index.html?grade=chu2#schedule-selector", "isEnded": False},
+        {"gradeBadge": "中1生", "codes": ["c1", "chu1", "c1_c2"], "month": "12月号", "link": "/index.html?grade=chu1#schedule-selector", "isEnded": False},
+        {"gradeBadge": "小6生", "codes": ["p6", "sho6", "e6", "s6"], "month": "", "link": "/index.html?grade=sho6#schedule-selector", "isEnded": True}
     ]
 
     cards = []
     for cfg in target_configs:
-        cards.append(f'''
+        if cfg.get("isEnded"):
+            cards.append(f'''
+      <div class="block p-3.5 sm:p-4 opacity-70 bg-slate-50/50">
+        <div class="flex items-center justify-between gap-2 mb-2">
+          <div class="flex items-center gap-1.5 flex-wrap">
+            <span class="inline-flex items-center justify-center px-2 py-0.5 rounded bg-slate-200 text-slate-700 font-bold text-xs shrink-0 leading-tight">{cfg['gradeBadge']}</span>
+            <span class="inline-flex items-center justify-center px-2 py-0.5 rounded bg-slate-200 text-slate-600 font-bold text-xs shrink-0 leading-tight">受付終了</span>
+          </div>
+        </div>
+        <div class="text-xs text-slate-500 font-medium">今年度の受付は終了しました</div>
+      </div>''')
+        else:
+            cards.append(f'''
       <a href="{cfg['link']}" class="block p-3.5 sm:p-4 hover:bg-slate-100/70 transition-colors cursor-pointer group">
         <div class="flex items-center justify-between gap-2 mb-2">
           <div class="flex items-center gap-1.5 flex-wrap">

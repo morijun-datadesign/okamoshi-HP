@@ -158,6 +158,27 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       return jsonResponse({ error: "Failed to retrieve checkout session" }, 500);
     }
 
+    // 1-1. 【緊急ガード】旧サイト決済除外フィルター
+    // 現在稼働中の旧サイトとStripe本番アカウントを共有しているため、
+    // 旧サイト経由の決済イベント（新サイト /apply 経由でないもの）はメール送信やGASスプレッドシート連携を一切行わず即座に終了する。
+    const sessionMeta = (session.metadata || {}) as Record<string, any>;
+    const successUrl = String(session.success_url || "");
+    const isNewSiteUrl = successUrl.includes("/apply/success") || successUrl.includes("/apply");
+    const hasNewSiteMeta = Boolean(
+      sessionMeta.source === "okamoshi_apply" ||
+      (sessionMeta.student_name && (sessionMeta.grade || sessionMeta.student_grade_label)) ||
+      sessionMeta.exam_1 ||
+      (sessionMeta.student_name && sessionMeta.exam_name)
+    );
+
+    if (!isNewSiteUrl && !hasNewSiteMeta) {
+      console.log(`${LOG} [LegacySiteGuard] Session ${sessionId} is from legacy site or external checkout. Ignored.`, {
+        success_url: successUrl,
+        metadata_keys: Object.keys(sessionMeta),
+      });
+      return jsonResponse({ received: true, ignored: "legacy_site_session" });
+    }
+
     const sessionPaymentStatus = String(session.payment_status || "");
     const paymentMethodVal = String(session.payment_method_types?.[0] || session.metadata?.payment_method || "card").trim();
     const isKonbini = paymentMethodVal === "konbini";

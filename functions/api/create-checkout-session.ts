@@ -219,6 +219,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
     // 4. metadata の構築とサニタイズ（全値文字列・最大500文字・キー長最大40文字）
     const metadataRaw: Record<string, string> = {
+      source: "okamoshi_apply",
       student_name: studentName,
       student_kana: studentKana,
       grade: grade,

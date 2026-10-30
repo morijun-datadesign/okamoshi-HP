@@ -57,6 +57,21 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const sessionMeta = (stripeSessionData && stripeSessionData.metadata) || {};
     const sessionCustomer = (stripeSessionData && stripeSessionData.customer_details) || {};
 
+    // 1-2. 【緊急ガード】旧サイト決済除外フィルター
+    const successUrl = String((stripeSessionData && stripeSessionData.success_url) || "");
+    const isNewSiteUrl = successUrl.includes("/apply/success") || successUrl.includes("/apply");
+    const hasNewSiteMeta = Boolean(
+      sessionMeta.source === "okamoshi_apply" ||
+      (sessionMeta.student_name && (sessionMeta.grade || sessionMeta.student_grade_label)) ||
+      sessionMeta.exam_1 ||
+      (sessionMeta.student_name && sessionMeta.exam_name)
+    );
+
+    if (!isNewSiteUrl && !hasNewSiteMeta) {
+      console.warn(`[functions/api/apply] Legacy site session ignored: ${incomingSessionId}`);
+      return jsonResponse({ received: true, ignored: "legacy_site_session" });
+    }
+
     // 2. フィールド正規化
     const now = new Date();
     const jstReceivedAt =

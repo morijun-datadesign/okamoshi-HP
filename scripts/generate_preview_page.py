@@ -44,7 +44,7 @@ def main():
     # 4. プレビュー用トップ固定バーの挿入 (<body> 直後)
     preview_bar_html = """
   <!-- プレビューモード専用トップ固定バー -->
-  <div id="preview-mode-bar" class="sticky top-0 z-[100] bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-bold text-xs sm:text-sm py-2.5 px-4 shadow-md flex items-center justify-between">
+  <div id="preview-mode-bar" class="sticky top-0 z-[100] bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-bold text-xs sm:text-sm py-2 px-4 shadow-md flex items-center justify-between">
     <div class="flex items-center gap-2">
       <span class="material-symbols-outlined text-base">visibility</span>
       <span>microCMS 画面プレビュー（確認用）</span>
@@ -58,12 +58,126 @@ def main():
 """
     html = re.sub(r"(<body[^>]*>)", r"\1\n" + preview_bar_html, html, count=1)
 
-    # 5. loadArticleDetail 関数をプレビューAPI連携版に置き換え
-    preview_load_func = """async function loadArticleDetail() {
+    # 5. renderPostDetail を堅牢化（category/eyecatch の未定義・多様な型に対応）
+    # renderPostDetail の冒頭とカテゴリ・アイキャッチ処理を安全に改善
+    safe_render_logic = """
+    // 5. 記事詳細データのレンダリング
+    async function renderPostDetail(post) {
+      if (!post) throw new Error('記事データが空です');
+      
+      // カテゴリ名の安全な取得
+      let catName = 'お知らせ';
+      if (post.category) {
+        if (typeof post.category === 'object' && post.category.name) {
+          catName = post.category.name;
+        } else if (typeof post.category === 'string') {
+          catName = post.category;
+        }
+      }
+
+      // カテゴリバッジ
+      const catBadge = document.getElementById('article-category-badge');
+      if (catBadge) {
+        catBadge.className = 'px-2.5 py-1 rounded-full text-xs font-bold inline-flex items-center gap-1 shrink-0 ' + getCategoryBadgeClass(catName);
+        catBadge.innerHTML = `<span class="material-symbols-outlined text-[13px]">school</span><span>${catName}</span>`;
+      }
+
+      // タイトル
+      const titleEl = document.getElementById('article-title');
+      if (titleEl) {
+        titleEl.textContent = post.title || '（タイトル未設定）';
+      }
+
+      // 公開日・更新日
+      const pubEl = document.getElementById('article-published-date');
+      const rawDate = post.publishedAt || post.createdAt || post.date || new Date().toISOString();
+      if (pubEl) {
+        pubEl.textContent = formatArticleDate(rawDate);
+      }
+
+      // アイキャッチ画像のチラつき防止＆ロード待機
+      const heroContainer = document.getElementById('article-hero-container');
+      const heroImg = document.getElementById('article-hero-img');
+      const heroTag = document.getElementById('article-hero-tag');
+
+      if (heroContainer && heroImg) {
+        const eyecatchUrl = post.eyecatch && (typeof post.eyecatch === 'object' ? post.eyecatch.url : post.eyecatch);
+        if (eyecatchUrl) {
+          try {
+            await preloadImage(eyecatchUrl);
+            heroImg.src = eyecatchUrl;
+            heroImg.alt = post.title || 'ブログアイキャッチ';
+            heroContainer.classList.remove('hidden');
+            heroImg.classList.remove('opacity-0');
+            if (heroTag) heroTag.textContent = catName;
+          } catch (imgErr) {
+            console.warn('[Preview] Eyecatch load error:', imgErr);
+            heroContainer.classList.add('hidden');
+          }
+        } else {
+          heroContainer.classList.add('hidden');
+          heroImg.src = '';
+        }
+      }
+
+      // 本文HTMLの反映
+      const contentBody = document.getElementById('entry-content-body');
+      if (contentBody) {
+        if (post.content) {
+          contentBody.innerHTML = post.content;
+          contentBody.querySelectorAll('p').forEach(p => {
+            if (!p.textContent.trim() && (!p.children.length || (p.children.length === 1 && p.children[0].tagName === 'BR'))) {
+              p.remove();
+            }
+          });
+          if (typeof normalizeCalloutBoxes === 'function') {
+            normalizeCalloutBoxes(contentBody);
+          }
+        } else {
+          contentBody.innerHTML = `
+            <div class="p-8 text-center text-slate-500 bg-slate-50 rounded-xl border border-slate-200">
+              <span class="material-symbols-outlined text-4xl text-slate-400">edit_note</span>
+              <p class="font-bold text-base mt-2">本文がまだ入力されていません</p>
+              <p class="text-sm mt-1">microCMSのエディタで本文を入力して画面プレビューを更新してください。</p>
+            </div>
+          `;
+        }
+      }
+
+      // 目次の再生成
+      if (typeof generateTableOfContents === 'function') {
+        generateTableOfContents();
+      }
+
+      // ページタイトル更新
+      document.title = `【プレビュー】${post.title || '記事詳細'} | 岡山県統一模擬試験（おかもし）`;
+
+      // スケルトンを消してフェードイン表示
+      showArticleContent();
+    }
+"""
+
+    render_pattern = re.compile(r"// 5\.\s*記事本文・メタの画面反映.*?async function renderPostDetail\(post\)\s*\{.*?showArticleContent\(\);\s*\}", re.DOTALL)
+    if render_pattern.search(html):
+        html = render_pattern.sub(safe_render_logic, html)
+        print("Updated renderPostDetail with safe implementation.")
+
+    # 6. loadArticleDetail 関数の置き換え（Functions API ＋ microCMS 直接フォールバックの二重構成 ＆ 確実な起動）
+    preview_load_func = """
+    // microCMS 直接取得用のフォールバック設定（万が一 Functions API が失敗した場合の保険）
+    const PREVIEW_DIRECT_CONFIG = {
+      serviceDomain: 'okamoshi-blog',
+      apiKey: '4qO3xGjs5W1r7zolbBgAX2KXP8VEUooOpMtc',
+      endpoint: 'blogs'
+    };
+
+    async function loadArticleDetail() {
       const params = new URLSearchParams(window.location.search);
-      const articleId = params.get('id');
-      const draftKey = params.get('draftKey') || '';
+      const articleId = params.get('id') ? params.get('id').trim() : '';
+      const draftKey = params.get('draftKey') ? params.get('draftKey').trim() : '';
       const statusPill = document.getElementById('preview-status-pill');
+
+      console.log('[Preview] Initializing preview for id=' + articleId + ', draftKey=' + draftKey);
 
       if (!articleId) {
         if (statusPill) {
@@ -74,50 +188,94 @@ def main():
         return;
       }
 
+      let post = null;
+      let lastErrorMessage = '';
+
+      // 1. まず Cloudflare Pages Functions (/api/news-preview) を試行
       try {
         let apiUrl = `/api/news-preview?id=${encodeURIComponent(articleId)}`;
-        if (draftKey) {
+        if (draftKey.length > 0) {
           apiUrl += `&draftKey=${encodeURIComponent(draftKey)}`;
         }
-
+        console.log('[Preview] Fetching via Functions API:', apiUrl);
         const res = await fetch(apiUrl);
-        if (!res.ok) {
+        if (res.ok) {
+          post = await res.json();
+          console.log('[Preview] Successfully fetched via Functions API:', post);
+        } else {
           const errData = await res.json().catch(() => ({}));
-          throw new Error(errData.message || `HTTP ${res.status}`);
+          lastErrorMessage = errData.message || `API HTTP ${res.status}`;
+          console.warn('[Preview] Functions API returned error:', lastErrorMessage);
         }
+      } catch (funcErr) {
+        console.warn('[Preview] Functions API fetch failed:', funcErr);
+        lastErrorMessage = funcErr.message || String(funcErr);
+      }
 
-        const post = await res.json();
+      // 2. Functions で取得できなかった場合、ブラウザから microCMS API へ直接フェッチ（フォールバック）
+      if (!post) {
+        console.log('[Preview] Falling back to direct microCMS API fetch...');
+        try {
+          let directUrl = `https://${PREVIEW_DIRECT_CONFIG.serviceDomain}.microcms.io/api/v1/${PREVIEW_DIRECT_CONFIG.endpoint}/${encodeURIComponent(articleId)}`;
+          if (draftKey.length > 0) {
+            directUrl += `?draftKey=${encodeURIComponent(draftKey)}`;
+          }
+          const directRes = await fetch(directUrl, {
+            headers: { 'X-MICROCMS-API-KEY': PREVIEW_DIRECT_CONFIG.apiKey }
+          });
+          if (directRes.ok) {
+            post = await directRes.json();
+            console.log('[Preview] Successfully fetched via direct microCMS fallback:', post);
+          } else {
+            const errText = await directRes.text();
+            lastErrorMessage = `microCMS直接取得エラー (${directRes.status}): ${errText}`;
+            console.error('[Preview] Direct microCMS fetch error:', lastErrorMessage);
+          }
+        } catch (directErr) {
+          console.error('[Preview] Direct microCMS fetch exception:', directErr);
+          lastErrorMessage = directErr.message || String(directErr);
+        }
+      }
 
-        // プレビュー表示用ステータス更新
+      // 3. 取得結果の描画
+      if (post) {
+        try {
+          if (statusPill) {
+            statusPill.textContent = draftKey.length > 0 ? 'DRAFT' : 'PUBLISHED';
+            statusPill.className = draftKey.length > 0
+              ? 'px-2 py-0.5 rounded text-[10px] bg-slate-900 text-amber-300 font-mono tracking-wider'
+              : 'px-2 py-0.5 rounded text-[10px] bg-emerald-700 text-white font-mono tracking-wider';
+          }
+
+          await renderPostDetail(post);
+
+          // 記事バッジ欄にプレビュー中タグを追加
+          const badgesContainer = document.getElementById('article-badges-container');
+          if (badgesContainer && !document.getElementById('article-draft-badge')) {
+            const previewBadge = document.createElement('span');
+            previewBadge.id = 'article-draft-badge';
+            previewBadge.className = 'px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 text-xs font-bold flex items-center gap-1 border border-amber-300 shadow-2xs';
+            previewBadge.innerHTML = `<span class="material-symbols-outlined text-[13px]">visibility</span>${draftKey.length > 0 ? '下書きプレビュー' : '公開中プレビュー'}`;
+            badgesContainer.appendChild(previewBadge);
+          }
+
+          if (typeof loadRelatedArticles === 'function') {
+            loadRelatedArticles(post, articleId);
+          }
+        } catch (renderErr) {
+          console.error('[Preview] Render error:', renderErr);
+          if (statusPill) {
+            statusPill.textContent = 'RENDER ERROR';
+            statusPill.className = 'px-2 py-0.5 rounded text-[10px] bg-rose-600 text-white font-mono tracking-wider';
+          }
+          showPreviewError(`記事の描画中にエラーが発生しました。<br><span class="text-xs font-mono text-rose-700 mt-1 block bg-rose-100/60 p-2 rounded">${renderErr.message}</span>`);
+        }
+      } else {
         if (statusPill) {
-          statusPill.textContent = draftKey ? 'DRAFT' : 'PUBLISHED';
-          statusPill.className = draftKey 
-            ? 'px-2 py-0.5 rounded text-[10px] bg-slate-900 text-amber-300 font-mono tracking-wider'
-            : 'px-2 py-0.5 rounded text-[10px] bg-emerald-700 text-white font-mono tracking-wider';
-        }
-
-        // 記事詳細を描画
-        await renderPostDetail(post);
-
-        // 記事ヘッダーのバッジ欄にプレビュー中タグを追加
-        const badgesContainer = document.getElementById('article-badges-container');
-        if (badgesContainer && !document.getElementById('article-draft-badge')) {
-          const previewBadge = document.createElement('span');
-          previewBadge.id = 'article-draft-badge';
-          previewBadge.className = 'px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 text-xs font-bold flex items-center gap-1 border border-amber-300 shadow-2xs';
-          previewBadge.innerHTML = `<span class="material-symbols-outlined text-[13px]">visibility</span>${draftKey ? '下書きプレビュー' : '公開中プレビュー'}`;
-          badgesContainer.appendChild(previewBadge);
-        }
-
-        // 関連記事の読み込み
-        loadRelatedArticles(post, articleId);
-      } catch (err) {
-        console.error('[Preview] Failed to load preview article:', err);
-        if (statusPill) {
-          statusPill.textContent = 'ERROR';
+          statusPill.textContent = 'NOT FOUND';
           statusPill.className = 'px-2 py-0.5 rounded text-[10px] bg-rose-600 text-white font-mono tracking-wider';
         }
-        showPreviewError(`プレビューデータの取得に失敗しました。<br><span class="text-xs font-mono text-rose-700 font-normal mt-1 block bg-rose-100/60 p-2 rounded">${err.message}</span>`);
+        showPreviewError(`プレビューデータの取得に失敗しました。<br><span class="text-xs font-mono text-rose-700 mt-1 block bg-rose-100/60 p-2 rounded">${lastErrorMessage}</span>`);
       }
     }
 
@@ -146,16 +304,30 @@ def main():
         `;
       }
       showArticleContent();
-    }"""
+    }
 
-    # loadArticleDetail の置換
+    // ページの読み込み完了時に確実に loadArticleDetail を起動
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', loadArticleDetail);
+    } else {
+      loadArticleDetail();
+    }
+"""
+
     load_pattern = re.compile(r"async function loadArticleDetail\(\)\s*\{.*?(?=// 関連記事の動的取得)", re.DOTALL)
     if load_pattern.search(html):
         html = load_pattern.sub(preview_load_func + "\n\n    ", html)
-        print("Replaced loadArticleDetail successfully.")
+        print("Replaced loadArticleDetail and added automatic invocation.")
     else:
-        print("Error: Could not locate loadArticleDetail function.")
-        return
+        print("Warning: load_pattern not matched. Searching preview_load_func...")
+        # すでに前回置換済みの場合はそのブロックを置換
+        alt_pattern = re.compile(r"async function loadArticleDetail\(\)\s*\{.*?function showPreviewError.*?showArticleContent\(\);\s*\}", re.DOTALL)
+        if alt_pattern.search(html):
+            html = alt_pattern.sub(preview_load_func, html)
+            print("Replaced previous preview load function successfully.")
+        else:
+            print("Error: Could not locate loadArticleDetail function.")
+            return
 
     with open(PREVIEW_FILE, "w", encoding="utf-8") as f:
         f.write(html)

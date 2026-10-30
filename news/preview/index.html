@@ -1068,7 +1068,7 @@
 <body class="bg-[#F1F5F9] font-body-md text-body-md text-on-surface antialiased min-h-screen flex flex-col justify-between selection:bg-primary/20 selection:text-primary pt-16 sm:pt-[4.5rem]">
 
   <!-- プレビューモード専用トップ固定バー -->
-  <div id="preview-mode-bar" class="sticky top-0 z-[100] bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-bold text-xs sm:text-sm py-2.5 px-4 shadow-md flex items-center justify-between">
+  <div id="preview-mode-bar" class="sticky top-0 z-[100] bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-bold text-xs sm:text-sm py-2 px-4 shadow-md flex items-center justify-between">
     <div class="flex items-center gap-2">
       <span class="material-symbols-outlined text-base">visibility</span>
       <span>microCMS 画面プレビュー（確認用）</span>
@@ -1988,33 +1988,39 @@
       }
     }
 
-    // 5. 記事本文・メタの画面反映
+    
+    // 5. 記事詳細データのレンダリング
     async function renderPostDetail(post) {
-      if (!post) return;
-
-      const titleEl = document.getElementById('article-title');
-      if (titleEl) titleEl.textContent = post.title;
-
-      const leadEl = document.getElementById('article-lead');
-      if (leadEl) {
-        if (post.description) {
-          leadEl.textContent = post.description;
-          leadEl.style.display = 'block';
-        } else {
-          leadEl.style.display = 'none';
+      if (!post) throw new Error('記事データが空です');
+      
+      // カテゴリ名の安全な取得
+      let catName = 'お知らせ';
+      if (post.category) {
+        if (typeof post.category === 'object' && post.category.name) {
+          catName = post.category.name;
+        } else if (typeof post.category === 'string') {
+          catName = post.category;
         }
       }
 
+      // カテゴリバッジ
       const catBadge = document.getElementById('article-category-badge');
       if (catBadge) {
-        const catName = post.category ? (post.category.name || post.category) : 'お知らせ';
+        catBadge.className = 'px-2.5 py-1 rounded-full text-xs font-bold inline-flex items-center gap-1 shrink-0 ' + getCategoryBadgeClass(catName);
         catBadge.innerHTML = `<span class="material-symbols-outlined text-[13px]">school</span><span>${catName}</span>`;
       }
 
+      // タイトル
+      const titleEl = document.getElementById('article-title');
+      if (titleEl) {
+        titleEl.textContent = post.title || '（タイトル未設定）';
+      }
+
+      // 公開日・更新日
       const pubEl = document.getElementById('article-published-date');
-      const pubDate = post.publishedAt || post.createdAt;
-      if (pubEl && pubDate) {
-        pubEl.textContent = new Date(pubDate).toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '.');
+      const rawDate = post.publishedAt || post.createdAt || post.date || new Date().toISOString();
+      if (pubEl) {
+        pubEl.textContent = formatArticleDate(rawDate);
       }
 
       // アイキャッチ画像のチラつき防止＆ロード待機
@@ -2023,132 +2029,78 @@
       const heroTag = document.getElementById('article-hero-tag');
 
       if (heroContainer && heroImg) {
-        if (post.eyecatch && post.eyecatch.url) {
-          // 画像がブラウザで完全にロードされるまで待機（一瞬のチラつき・旧画像・白枠を防止）
-          await preloadImage(post.eyecatch.url);
-          heroImg.src = post.eyecatch.url;
-          heroImg.alt = post.title || 'ブログアイキャッチ';
-          heroContainer.classList.remove('hidden');
-          heroImg.classList.remove('opacity-0');
-          if (heroTag) {
-            const catName = post.category ? (post.category.name || post.category) : 'おかもし';
-            heroTag.textContent = catName;
+        const eyecatchUrl = post.eyecatch && (typeof post.eyecatch === 'object' ? post.eyecatch.url : post.eyecatch);
+        if (eyecatchUrl) {
+          try {
+            await preloadImage(eyecatchUrl);
+            heroImg.src = eyecatchUrl;
+            heroImg.alt = post.title || 'ブログアイキャッチ';
+            heroContainer.classList.remove('hidden');
+            heroImg.classList.remove('opacity-0');
+            if (heroTag) heroTag.textContent = catName;
+          } catch (imgErr) {
+            console.warn('[Preview] Eyecatch load error:', imgErr);
+            heroContainer.classList.add('hidden');
           }
         } else {
-          // アイキャッチ画像が無い記事はコンテナ枠を非表示にして無駄な空白を防ぐ
           heroContainer.classList.add('hidden');
           heroImg.src = '';
         }
       }
 
-      // 本文HTMLの反映（リッチエディタのHTMLタグを流し込み）
+      // 本文HTMLの反映
       const contentBody = document.getElementById('entry-content-body');
       if (contentBody) {
         if (post.content) {
           contentBody.innerHTML = post.content;
-          // microCMS出力の空段落 (<p></p>, <p><br></p>, 空白のみのp) を除去
           contentBody.querySelectorAll('p').forEach(p => {
             if (!p.textContent.trim() && (!p.children.length || (p.children.length === 1 && p.children[0].tagName === 'BR'))) {
               p.remove();
             }
           });
-
-          // microCMS コールアウトボックス (.box-fact, .box-action, .box-warning) の正規化
-          // Shift+Enter (<br>) によるタグ分割を1つの装飾ボックスに統合
-          normalizeCalloutBoxes(contentBody);
-
-          // 記事末尾の案内リンク（おかもし日程一覧・申込等）のボタンカード化
-          const candidates = Array.from(contentBody.querySelectorAll('p, a, li, div'));
-          let scheduleTarget = null;
-          let applyTarget = null;
-
-          for (const el of candidates) {
-            const rawText = el.textContent.trim().replace(/\s+/g, '');
-            if (rawText === 'おかもし日程一覧' || rawText === 'おかもし日程一覧を見る') {
-              const target = (el.tagName.toLowerCase() === 'a' && el.parentElement && el.parentElement.tagName.toLowerCase() === 'p') ? el.parentElement : el;
-              if (!scheduleTarget) scheduleTarget = target;
-            } else if (rawText === 'おかもし詳細・お申し込み' || rawText === 'おかもし詳細・お申込み' || rawText === 'おかもし詳細お申し込み' || rawText === 'おかもし詳細お申込み') {
-              const target = (el.tagName.toLowerCase() === 'a' && el.parentElement && el.parentElement.tagName.toLowerCase() === 'p') ? el.parentElement : el;
-              if (!applyTarget) applyTarget = target;
-            }
-          }
-
-          if (scheduleTarget || applyTarget) {
-            const btnContainer = document.createElement('div');
-            btnContainer.className = 'not-prose my-6 grid grid-cols-1 sm:grid-cols-2 gap-3.5';
-
-            if (scheduleTarget) {
-              const scheduleLink = scheduleTarget.querySelector('a')?.getAttribute('href') || 'index.html#schedule';
-              const scheduleCard = document.createElement('a');
-              scheduleCard.href = scheduleLink;
-              scheduleCard.className = 'bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-200 py-3 px-4 rounded-lg flex justify-between items-center transition-all group font-bold shadow-2xs no-underline cursor-pointer';
-              scheduleCard.innerHTML = `
-                <div class="flex items-center gap-2.5 min-w-0">
-                  <span class="w-8 h-8 rounded-md bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                    <span class="material-symbols-outlined text-[20px]">calendar_month</span>
-                  </span>
-                  <span class="text-sm sm:text-base font-bold text-emerald-900 truncate">おかもし日程一覧</span>
-                </div>
-                <span class="material-symbols-outlined text-emerald-700 text-lg group-hover:translate-x-1 transition-transform shrink-0">arrow_forward</span>
-              `;
-              btnContainer.appendChild(scheduleCard);
-            }
-
-            if (applyTarget) {
-              const applyLink = applyTarget.querySelector('a')?.getAttribute('href') || 'apply.html';
-              const applyCard = document.createElement('a');
-              applyCard.href = applyLink;
-              applyCard.className = 'bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-200 py-3 px-4 rounded-lg flex justify-between items-center transition-all group font-bold shadow-2xs no-underline cursor-pointer';
-              applyCard.innerHTML = `
-                <div class="flex items-center gap-2.5 min-w-0">
-                  <span class="w-8 h-8 rounded-md bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                    <span class="material-symbols-outlined text-[20px]">how_to_reg</span>
-                  </span>
-                  <span class="text-sm sm:text-base font-bold text-emerald-900 truncate">おかもし詳細・お申し込み</span>
-                </div>
-                <span class="material-symbols-outlined text-emerald-700 text-lg group-hover:translate-x-1 transition-transform shrink-0">arrow_forward</span>
-              `;
-              btnContainer.appendChild(applyCard);
-            }
-
-            const insertRef = scheduleTarget || applyTarget;
-            if (insertRef && insertRef.parentNode) {
-              insertRef.parentNode.insertBefore(btnContainer, insertRef);
-            }
-            if (scheduleTarget && scheduleTarget.parentNode) scheduleTarget.remove();
-            if (applyTarget && applyTarget.parentNode) applyTarget.remove();
+          if (typeof normalizeCalloutBoxes === 'function') {
+            normalizeCalloutBoxes(contentBody);
           }
         } else {
-          // フォールバック時: 本文なしの場合は焼き込み本文を隠してプレースホルダー表示
           contentBody.innerHTML = `
-            <section class="flex flex-col gap-space-md">
-              <p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
-                ${post.description || ''}
-              </p>
-              <div class="p-space-lg bg-surface-container-low rounded-lg text-center flex flex-col items-center gap-space-sm">
-                <span class="material-symbols-outlined text-4xl text-outline">article</span>
-                <p class="font-body-md text-body-md text-on-surface-variant">この記事の詳細はmicroCMS連携後にご覧いただけます。</p>
-              </div>
-            </section>
+            <div class="p-8 text-center text-slate-500 bg-slate-50 rounded-xl border border-slate-200">
+              <span class="material-symbols-outlined text-4xl text-slate-400">edit_note</span>
+              <p class="font-bold text-base mt-2">本文がまだ入力されていません</p>
+              <p class="text-sm mt-1">microCMSのエディタで本文を入力して画面プレビューを更新してください。</p>
+            </div>
           `;
         }
       }
 
       // 目次の再生成
-      generateTableOfContents();
-      // メタタグ更新
-      updatePageMetadata(post);
+      if (typeof generateTableOfContents === 'function') {
+        generateTableOfContents();
+      }
 
-      // 全データおよびアイキャッチ画像の準備が完了したタイミングでスケルトンを消してフェードイン表示
+      // ページタイトル更新
+      document.title = `【プレビュー】${post.title || '記事詳細'} | 岡山県統一模擬試験（おかもし）`;
+
+      // スケルトンを消してフェードイン表示
       showArticleContent();
     }
 
+
     // 6. microCMS から記事詳細を取得
+    
+    // microCMS 直接取得用のフォールバック設定（万が一 Functions API が失敗した場合の保険）
+    const PREVIEW_DIRECT_CONFIG = {
+      serviceDomain: 'okamoshi-blog',
+      apiKey: '4qO3xGjs5W1r7zolbBgAX2KXP8VEUooOpMtc',
+      endpoint: 'blogs'
+    };
+
     async function loadArticleDetail() {
       const params = new URLSearchParams(window.location.search);
-      const articleId = params.get('id');
-      const draftKey = params.get('draftKey') || '';
+      const articleId = params.get('id') ? params.get('id').trim() : '';
+      const draftKey = params.get('draftKey') ? params.get('draftKey').trim() : '';
       const statusPill = document.getElementById('preview-status-pill');
+
+      console.log('[Preview] Initializing preview for id=' + articleId + ', draftKey=' + draftKey);
 
       if (!articleId) {
         if (statusPill) {
@@ -2159,50 +2111,94 @@
         return;
       }
 
+      let post = null;
+      let lastErrorMessage = '';
+
+      // 1. まず Cloudflare Pages Functions (/api/news-preview) を試行
       try {
         let apiUrl = `/api/news-preview?id=${encodeURIComponent(articleId)}`;
-        if (draftKey) {
+        if (draftKey.length > 0) {
           apiUrl += `&draftKey=${encodeURIComponent(draftKey)}`;
         }
-
+        console.log('[Preview] Fetching via Functions API:', apiUrl);
         const res = await fetch(apiUrl);
-        if (!res.ok) {
+        if (res.ok) {
+          post = await res.json();
+          console.log('[Preview] Successfully fetched via Functions API:', post);
+        } else {
           const errData = await res.json().catch(() => ({}));
-          throw new Error(errData.message || `HTTP ${res.status}`);
+          lastErrorMessage = errData.message || `API HTTP ${res.status}`;
+          console.warn('[Preview] Functions API returned error:', lastErrorMessage);
         }
+      } catch (funcErr) {
+        console.warn('[Preview] Functions API fetch failed:', funcErr);
+        lastErrorMessage = funcErr.message || String(funcErr);
+      }
 
-        const post = await res.json();
+      // 2. Functions で取得できなかった場合、ブラウザから microCMS API へ直接フェッチ（フォールバック）
+      if (!post) {
+        console.log('[Preview] Falling back to direct microCMS API fetch...');
+        try {
+          let directUrl = `https://${PREVIEW_DIRECT_CONFIG.serviceDomain}.microcms.io/api/v1/${PREVIEW_DIRECT_CONFIG.endpoint}/${encodeURIComponent(articleId)}`;
+          if (draftKey.length > 0) {
+            directUrl += `?draftKey=${encodeURIComponent(draftKey)}`;
+          }
+          const directRes = await fetch(directUrl, {
+            headers: { 'X-MICROCMS-API-KEY': PREVIEW_DIRECT_CONFIG.apiKey }
+          });
+          if (directRes.ok) {
+            post = await directRes.json();
+            console.log('[Preview] Successfully fetched via direct microCMS fallback:', post);
+          } else {
+            const errText = await directRes.text();
+            lastErrorMessage = `microCMS直接取得エラー (${directRes.status}): ${errText}`;
+            console.error('[Preview] Direct microCMS fetch error:', lastErrorMessage);
+          }
+        } catch (directErr) {
+          console.error('[Preview] Direct microCMS fetch exception:', directErr);
+          lastErrorMessage = directErr.message || String(directErr);
+        }
+      }
 
-        // プレビュー表示用ステータス更新
+      // 3. 取得結果の描画
+      if (post) {
+        try {
+          if (statusPill) {
+            statusPill.textContent = draftKey.length > 0 ? 'DRAFT' : 'PUBLISHED';
+            statusPill.className = draftKey.length > 0
+              ? 'px-2 py-0.5 rounded text-[10px] bg-slate-900 text-amber-300 font-mono tracking-wider'
+              : 'px-2 py-0.5 rounded text-[10px] bg-emerald-700 text-white font-mono tracking-wider';
+          }
+
+          await renderPostDetail(post);
+
+          // 記事バッジ欄にプレビュー中タグを追加
+          const badgesContainer = document.getElementById('article-badges-container');
+          if (badgesContainer && !document.getElementById('article-draft-badge')) {
+            const previewBadge = document.createElement('span');
+            previewBadge.id = 'article-draft-badge';
+            previewBadge.className = 'px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 text-xs font-bold flex items-center gap-1 border border-amber-300 shadow-2xs';
+            previewBadge.innerHTML = `<span class="material-symbols-outlined text-[13px]">visibility</span>${draftKey.length > 0 ? '下書きプレビュー' : '公開中プレビュー'}`;
+            badgesContainer.appendChild(previewBadge);
+          }
+
+          if (typeof loadRelatedArticles === 'function') {
+            loadRelatedArticles(post, articleId);
+          }
+        } catch (renderErr) {
+          console.error('[Preview] Render error:', renderErr);
+          if (statusPill) {
+            statusPill.textContent = 'RENDER ERROR';
+            statusPill.className = 'px-2 py-0.5 rounded text-[10px] bg-rose-600 text-white font-mono tracking-wider';
+          }
+          showPreviewError(`記事の描画中にエラーが発生しました。<br><span class="text-xs font-mono text-rose-700 mt-1 block bg-rose-100/60 p-2 rounded">${renderErr.message}</span>`);
+        }
+      } else {
         if (statusPill) {
-          statusPill.textContent = draftKey ? 'DRAFT' : 'PUBLISHED';
-          statusPill.className = draftKey 
-            ? 'px-2 py-0.5 rounded text-[10px] bg-slate-900 text-amber-300 font-mono tracking-wider'
-            : 'px-2 py-0.5 rounded text-[10px] bg-emerald-700 text-white font-mono tracking-wider';
-        }
-
-        // 記事詳細を描画
-        await renderPostDetail(post);
-
-        // 記事ヘッダーのバッジ欄にプレビュー中タグを追加
-        const badgesContainer = document.getElementById('article-badges-container');
-        if (badgesContainer && !document.getElementById('article-draft-badge')) {
-          const previewBadge = document.createElement('span');
-          previewBadge.id = 'article-draft-badge';
-          previewBadge.className = 'px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 text-xs font-bold flex items-center gap-1 border border-amber-300 shadow-2xs';
-          previewBadge.innerHTML = `<span class="material-symbols-outlined text-[13px]">visibility</span>${draftKey ? '下書きプレビュー' : '公開中プレビュー'}`;
-          badgesContainer.appendChild(previewBadge);
-        }
-
-        // 関連記事の読み込み
-        loadRelatedArticles(post, articleId);
-      } catch (err) {
-        console.error('[Preview] Failed to load preview article:', err);
-        if (statusPill) {
-          statusPill.textContent = 'ERROR';
+          statusPill.textContent = 'NOT FOUND';
           statusPill.className = 'px-2 py-0.5 rounded text-[10px] bg-rose-600 text-white font-mono tracking-wider';
         }
-        showPreviewError(`プレビューデータの取得に失敗しました。<br><span class="text-xs font-mono text-rose-700 font-normal mt-1 block bg-rose-100/60 p-2 rounded">${err.message}</span>`);
+        showPreviewError(`プレビューデータの取得に失敗しました。<br><span class="text-xs font-mono text-rose-700 mt-1 block bg-rose-100/60 p-2 rounded">${lastErrorMessage}</span>`);
       }
     }
 
@@ -2232,6 +2228,14 @@
       }
       showArticleContent();
     }
+
+    // ページの読み込み完了時に確実に loadArticleDetail を起動
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', loadArticleDetail);
+    } else {
+      loadArticleDetail();
+    }
+
 
     // 関連記事の動的取得と描画 (microCMS API連動)
     async function loadRelatedArticles(currentPost, currentArticleId) {

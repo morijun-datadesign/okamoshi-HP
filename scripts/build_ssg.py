@@ -875,6 +875,13 @@ def build_ssg():
     # 5. sitemap.xml の自動生成
     generate_sitemap(articles)
 
+    # 6. 下書きプレビュー用ページ (news/preview/index.html) の生成・同期
+    try:
+        from generate_preview_page import main as generate_preview_page
+        generate_preview_page()
+    except Exception as e:
+        print(f"Warning: Failed to generate preview page ({e})")
+
     print("--- microCMS SSG Static Generation Finished Successfully ---")
 
 if __name__ == "__main__":

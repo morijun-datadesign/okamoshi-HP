@@ -10,4 +10,5 @@ _worker.bundle
 _worker.bundle/
 db/seed/
 bin/
+legacy_images/
 

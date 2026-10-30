@@ -31,6 +31,11 @@ export interface Env {
 
   // 模試日程・会場データ同期用シークレット
   EXAM_GUIDES_SYNC_SECRET?: string;
+
+  // microCMS API（ブログプレビュー・記事取得用）
+  MICROCMS_API_KEY?: string;
+  MICROCMS_SERVICE_DOMAIN?: string;
+  MICROCMS_ENDPOINT?: string;
 }
 
 // メール送信用 Resend APIキー（※プレビュー/フォールバック用キーを安全に保持）

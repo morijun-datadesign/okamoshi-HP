@@ -196,6 +196,13 @@ def format_article_content(raw_html):
 
     content = re.sub(r'<p(?:\s+[^>]*)?>(.*?)</p>', normalize_p_tag, content, flags=re.DOTALL | re.IGNORECASE)
 
+    # 2.5. リンク文字列の巻き込み補正（例: <a href="https://okayama-moshi.com）への再登録...">）
+    content = re.sub(
+        r'<a\s+([^>]*?)href=["\'](https?://[^\s"\'）\)]+)([）\)][^"\']*)["\']([^>]*)>\2\3</a>',
+        r'<a \1href="\2"\4>\2</a>\3',
+        content
+    )
+
     # 3. 案内リンク（「おかもし日程一覧」「おかもし詳細・お申し込み」）のボタングリッドカード化
     has_schedule = bool(re.search(r'おかもし日程一覧', content))
     has_apply = bool(re.search(r'おかもし詳細[・\s]?お申(?:し)?込み', content))
@@ -517,7 +524,7 @@ def build_article_detail_page(article, all_articles, template_html, exam_guides)
     # メタタグ・タイトル置換（属性の有無を問わずマッチ）
     article_title = f"{title} | 岡山県統一模擬試験（おかもし）"
     article_desc = lead_text or title
-    page_url = f"https://okamoshi.pages.dev/news/{a_id}/"
+    page_url = f"https://okayama-moshi.com/news/{a_id}/"
 
     html = re.sub(r'<title[^>]*>.*?</title>', f'<title>{html_escape(article_title)}</title>', html, count=1)
     html = re.sub(r'<meta[^>]*name=["\']description["\'][^>]*>', f'<meta name="description" content="{html_escape(article_desc)}">', html, count=1)
@@ -534,7 +541,7 @@ def build_article_detail_page(article, all_articles, template_html, exam_guides)
         "@type": "BlogPosting",
         "headline": title,
         "description": article_desc,
-        "image": eyecatch_url or "https://okamoshi.pages.dev/og-image.jpg",
+        "image": eyecatch_url or "https://okayama-moshi.com/og-image.jpg",
         "datePublished": pub_raw or datetime.now().isoformat(),
         "dateModified": article.get("updatedAt") or pub_raw or datetime.now().isoformat(),
         "author": {
@@ -544,7 +551,7 @@ def build_article_detail_page(article, all_articles, template_html, exam_guides)
         "publisher": {
             "@type": "Organization",
             "name": "岡山県統一模擬試験実行委員会",
-            "url": "https://okamoshi.pages.dev/"
+            "url": "https://okayama-moshi.com/"
         }
     }
     json_ld_str = json.dumps(json_ld_data, ensure_ascii=False, indent=2)
@@ -797,6 +804,56 @@ def update_detail_html_redirect():
             f.write(content)
         print("Added instant redirect from detail.html?id=xxx to /news/xxx/.")
 
+def generate_sitemap(articles):
+    """sitemap.xml を自動生成（主要固定ページ＋microCMS全公開記事、noindexページは除外）"""
+    sitemap_path = os.path.join(BASE_DIR, "sitemap.xml")
+    today_str = datetime.now().strftime("%Y-%m-%d")
+
+    static_pages = [
+        {"loc": "https://okayama-moshi.com/", "priority": "1.0", "changefreq": "weekly"},
+        {"loc": "https://okayama-moshi.com/apply", "priority": "0.9", "changefreq": "weekly"},
+        {"loc": "https://okayama-moshi.com/news.html", "priority": "0.8", "changefreq": "weekly"},
+        {"loc": "https://okayama-moshi.com/schools.html", "priority": "0.8", "changefreq": "monthly"},
+        {"loc": "https://okayama-moshi.com/contact/", "priority": "0.6", "changefreq": "monthly"},
+        {"loc": "https://okayama-moshi.com/contact/individual/", "priority": "0.6", "changefreq": "monthly"},
+        {"loc": "https://okayama-moshi.com/contact/organization/", "priority": "0.6", "changefreq": "monthly"},
+        {"loc": "https://okayama-moshi.com/privacy.html", "priority": "0.4", "changefreq": "yearly"},
+        {"loc": "https://okayama-moshi.com/tokushoho.html", "priority": "0.4", "changefreq": "yearly"},
+        {"loc": "https://okayama-moshi.com/lp/", "priority": "0.7", "changefreq": "monthly"},
+    ]
+
+    url_entries = []
+    for sp in static_pages:
+        url_entries.append(f'''  <url>
+    <loc>{sp["loc"]}</loc>
+    <lastmod>{today_str}</lastmod>
+    <changefreq>{sp["changefreq"]}</changefreq>
+    <priority>{sp["priority"]}</priority>
+  </url>''')
+
+    for article in articles:
+        a_id = article.get("id")
+        if not a_id:
+            continue
+        raw_mod = article.get("updatedAt") or article.get("publishedAt") or article.get("createdAt") or ""
+        lastmod_str = raw_mod[:10] if len(str(raw_mod)) >= 10 else today_str
+        loc = f"https://okayama-moshi.com/news/{a_id}/"
+        url_entries.append(f'''  <url>
+    <loc>{loc}</loc>
+    <lastmod>{lastmod_str}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>''')
+
+    sitemap_xml = f'''<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{chr(10).join(url_entries)}
+</urlset>
+'''
+    with open(sitemap_path, "w", encoding="utf-8") as f:
+        f.write(sitemap_xml)
+    print(f"Generated sitemap.xml with {len(url_entries)} URLs.")
+
 def build_ssg():
     """SSG ビルドのメインエントリーポイント"""
     print("--- Starting microCMS SSG Static Generation ---")
@@ -814,6 +871,9 @@ def build_ssg():
 
     # 4. detail.html の転送処理
     update_detail_html_redirect()
+
+    # 5. sitemap.xml の自動生成
+    generate_sitemap(articles)
 
     print("--- microCMS SSG Static Generation Finished Successfully ---")
 

@@ -14,16 +14,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title id="page-title">お知らせ・受験情報詳細 | 岡山県統一模擬試験（おかもし）</title>
   <meta id="page-desc" name="description" content="岡山県統一模擬試験（おかもし）のお知らせ・受験情報詳細ページです。">
-  <link rel="canonical" href="https://okamoshi.pages.dev/blog-detail.html">
+  <link rel="canonical" href="https://okayama-moshi.com/news.html">
   
   <!-- OGP -->
   <meta id="og-title" property="og:title" content="お知らせ・受験情報詳細 | 岡山県統一模擬試験（おかもし）">
   <meta id="og-desc" property="og:description" content="岡山県統一模擬試験（おかもし）のお知らせ・受験情報詳細ページです。">
   <meta property="og:type" content="article">
-  <meta property="og:url" content="https://okamoshi.pages.dev/blog-detail.html">
-  <meta id="og-image" property="og:image" content="https://okamoshi.pages.dev/og-image.jpg">
+  <meta property="og:url" content="https://okayama-moshi.com/news.html">
+  <meta id="og-image" property="og:image" content="https://okayama-moshi.com/og-image.jpg">
   <meta property="og:site_name" content="岡山県統一模擬試験（おかもし）">
   <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QCFQWJHMQD"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QCFQWJHMQD');
+  </script>
+
+  <!-- Microsoft Clarity -->
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "z5nnqjwyks");
+  </script>
 
   <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -145,7 +163,7 @@
     "@type": "BlogPosting",
     "headline": "【岡山県の高校受験】合格への近道はここにある！先輩受験生が語る「おかもし」活用法",
     "description": "岡山県公立高校入試の出題傾向とおかもしの合致点、内申点を加味した合否判定、先輩受験生たちの体験談を解説。",
-    "image": "https://okamoshi.pages.dev/og-image.jpg",
+    "image": "https://okayama-moshi.com/og-image.jpg",
     "datePublished": "2026-08-10T10:00:00+09:00",
     "dateModified": "2026-08-10T10:00:00+09:00",
     "author": {
@@ -155,7 +173,7 @@
     "publisher": {
       "@type": "Organization",
       "name": "岡山県統一模擬試験実行委員会",
-      "url": "https://okamoshi.pages.dev/"
+      "url": "https://okayama-moshi.com/"
     }
   }
   </script>
@@ -1911,7 +1929,7 @@
           "@type": "BlogPosting",
           "headline": post.title,
           "description": pageDesc,
-          "image": (post.eyecatch && post.eyecatch.url) || "https://okamoshi.pages.dev/og-image.jpg",
+          "image": (post.eyecatch && post.eyecatch.url) || "https://okayama-moshi.com/og-image.jpg",
           "datePublished": post.publishedAt || new Date().toISOString(),
           "dateModified": post.updatedAt || post.publishedAt || new Date().toISOString(),
           "author": {
@@ -1921,7 +1939,7 @@
           "publisher": {
             "@type": "Organization",
             "name": "岡山県統一模擬試験実行委員会",
-            "url": "https://okamoshi.pages.dev/"
+            "url": "https://okayama-moshi.com/"
           }
         };
         jsonLd.textContent = JSON.stringify(articleData, null, 2);

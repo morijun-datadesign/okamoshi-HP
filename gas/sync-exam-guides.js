@@ -13,8 +13,10 @@
 
 const EXAM_SYNC_CONFIG = {
   // 本番環境とプレビュー環境へ同時同期するエンドポイント配列
+  // ※ご注意：11月2日のネームサーバー切り替え（DNS反映）前に同期テストを実行する場合は、
+  // 一時的に本番URLを "https://okamoshi-hp.pages.dev/api/admin/sync-exam-guides" に戻して実行してください。
   API_URLS: [
-    "https://okamoshi-hp.pages.dev/api/admin/sync-exam-guides",
+    "https://okayama-moshi.com/api/admin/sync-exam-guides",
     "https://feature-idea-b.okamoshi-hp.pages.dev/api/admin/sync-exam-guides",
   ],
 

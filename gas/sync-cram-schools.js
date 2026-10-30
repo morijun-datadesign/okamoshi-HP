@@ -11,7 +11,8 @@
 const CRAM_SYNC_CONFIG = {
   // 同期先 API エンドポイント
   // 本番用: "https://okayama-moshi.com/api/admin/sync-cram-schools"
-  // プレビュー用: "https://feature-idea-b.okamoshi.pages.dev/api/admin/sync-cram-schools"
+  // プレビュー用: "https://feature-idea-b.okamoshi-hp.pages.dev/api/admin/sync-cram-schools"
+  // ※11月2日のネームサーバー切り替え前に同期テストを行う場合は一時的に "https://okamoshi-hp.pages.dev/api/admin/sync-cram-schools" を指定してください。
   API_URL: "https://okayama-moshi.com/api/admin/sync-cram-schools",
 
   // 認証シークレットキー (Cloudflare Pages 環境変数 CRAM_SCHOOLS_SYNC_SECRET と一致)

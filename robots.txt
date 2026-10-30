@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /apply/success
 
-Sitemap: https://okamoshi.pages.dev/sitemap.xml
+Sitemap: https://okayama-moshi.com/sitemap.xml

@@ -1988,7 +1988,81 @@
       }
     }
 
-    
+    // ----------------------------------------------------
+    // プレビュー共通ヘルパー関数群（スコープエラー防止）
+    // ----------------------------------------------------
+
+    // カテゴリに応じたバッジスタイル決定
+    function getCategoryBadgeClass(categoryText) {
+      if (!categoryText) return 'bg-[#134230] text-white';
+      if (categoryText.includes('お知らせ') || categoryText.includes('更新')) {
+        return 'bg-[#134230] text-white';
+      } else if (categoryText.includes('入試') || categoryText.includes('一貫') || categoryText.includes('高校')) {
+        return 'bg-[#0f5b47] text-white';
+      } else if (categoryText.includes('活用') || categoryText.includes('コラム') || categoryText.includes('勉強')) {
+        return 'bg-[#1e3a2f] text-white';
+      }
+      return 'bg-[#134230] text-white';
+    }
+
+    // 日付フォーマット (YYYY.MM.DD)
+    function formatArticleDate(dateStr) {
+      if (!dateStr) return '';
+      try {
+        const d = new Date(dateStr);
+        if (isNaN(d.getTime())) return String(dateStr).substring(0, 10).replace(/-/g, '.');
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${y}.${m}.${day}`;
+      } catch (e) {
+        return String(dateStr).substring(0, 10).replace(/-/g, '.');
+      }
+    }
+
+    // HTMLエスケープ
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    // 画像プリロード待機
+    function preloadImage(src) {
+      return new Promise((resolve) => {
+        if (!src) { resolve(false); return; }
+        const img = new Image();
+        let settled = false;
+        const done = (ok) => {
+          if (!settled) {
+            settled = true;
+            resolve(ok);
+          }
+        };
+        img.onload = () => done(true);
+        img.onerror = () => done(false);
+        img.src = src;
+        setTimeout(() => done(false), 1200);
+      });
+    }
+
+    // 記事コンテンツのフェードイン表示制御（スケルトンUIからのスムーズな切り替え）
+    function showArticleContent() {
+      const skeletonEl = document.getElementById('article-skeleton');
+      const contentWrapper = document.getElementById('article-content-wrapper');
+      if (skeletonEl) skeletonEl.style.display = 'none';
+      if (contentWrapper) {
+        contentWrapper.classList.remove('hidden');
+        void contentWrapper.offsetWidth; // リフロー強制
+        contentWrapper.classList.add('animate-fade-in');
+        contentWrapper.classList.remove('opacity-0');
+      }
+    }
+
     // 5. 記事詳細データのレンダリング
     async function renderPostDetail(post) {
       if (!post) throw new Error('記事データが空です');
@@ -2007,7 +2081,7 @@
       const catBadge = document.getElementById('article-category-badge');
       if (catBadge) {
         catBadge.className = 'px-2.5 py-1 rounded-full text-xs font-bold inline-flex items-center gap-1 shrink-0 ' + getCategoryBadgeClass(catName);
-        catBadge.innerHTML = `<span class="material-symbols-outlined text-[13px]">school</span><span>${catName}</span>`;
+        catBadge.innerHTML = `<span class="material-symbols-outlined text-[13px]">school</span><span>${escapeHtml(catName)}</span>`;
       }
 
       // タイトル
@@ -2083,7 +2157,6 @@
       // スケルトンを消してフェードイン表示
       showArticleContent();
     }
-
 
     // 6. microCMS から記事詳細を取得
     

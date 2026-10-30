@@ -58,9 +58,83 @@ def main():
 """
     html = re.sub(r"(<body[^>]*>)", r"\1\n" + preview_bar_html, html, count=1)
 
-    # 5. renderPostDetail を堅牢化（category/eyecatch の未定義・多様な型に対応）
-    # renderPostDetail の冒頭とカテゴリ・アイキャッチ処理を安全に改善
-    safe_render_logic = """
+    # 5. ヘルパー関数群（トップレベルスコープに確実に定義）
+    helpers_and_render_logic = """
+    // ----------------------------------------------------
+    // プレビュー共通ヘルパー関数群（スコープエラー防止）
+    // ----------------------------------------------------
+
+    // カテゴリに応じたバッジスタイル決定
+    function getCategoryBadgeClass(categoryText) {
+      if (!categoryText) return 'bg-[#134230] text-white';
+      if (categoryText.includes('お知らせ') || categoryText.includes('更新')) {
+        return 'bg-[#134230] text-white';
+      } else if (categoryText.includes('入試') || categoryText.includes('一貫') || categoryText.includes('高校')) {
+        return 'bg-[#0f5b47] text-white';
+      } else if (categoryText.includes('活用') || categoryText.includes('コラム') || categoryText.includes('勉強')) {
+        return 'bg-[#1e3a2f] text-white';
+      }
+      return 'bg-[#134230] text-white';
+    }
+
+    // 日付フォーマット (YYYY.MM.DD)
+    function formatArticleDate(dateStr) {
+      if (!dateStr) return '';
+      try {
+        const d = new Date(dateStr);
+        if (isNaN(d.getTime())) return String(dateStr).substring(0, 10).replace(/-/g, '.');
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${y}.${m}.${day}`;
+      } catch (e) {
+        return String(dateStr).substring(0, 10).replace(/-/g, '.');
+      }
+    }
+
+    // HTMLエスケープ
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    // 画像プリロード待機
+    function preloadImage(src) {
+      return new Promise((resolve) => {
+        if (!src) { resolve(false); return; }
+        const img = new Image();
+        let settled = false;
+        const done = (ok) => {
+          if (!settled) {
+            settled = true;
+            resolve(ok);
+          }
+        };
+        img.onload = () => done(true);
+        img.onerror = () => done(false);
+        img.src = src;
+        setTimeout(() => done(false), 1200);
+      });
+    }
+
+    // 記事コンテンツのフェードイン表示制御（スケルトンUIからのスムーズな切り替え）
+    function showArticleContent() {
+      const skeletonEl = document.getElementById('article-skeleton');
+      const contentWrapper = document.getElementById('article-content-wrapper');
+      if (skeletonEl) skeletonEl.style.display = 'none';
+      if (contentWrapper) {
+        contentWrapper.classList.remove('hidden');
+        void contentWrapper.offsetWidth; // リフロー強制
+        contentWrapper.classList.add('animate-fade-in');
+        contentWrapper.classList.remove('opacity-0');
+      }
+    }
+
     // 5. 記事詳細データのレンダリング
     async function renderPostDetail(post) {
       if (!post) throw new Error('記事データが空です');
@@ -79,7 +153,7 @@ def main():
       const catBadge = document.getElementById('article-category-badge');
       if (catBadge) {
         catBadge.className = 'px-2.5 py-1 rounded-full text-xs font-bold inline-flex items-center gap-1 shrink-0 ' + getCategoryBadgeClass(catName);
-        catBadge.innerHTML = `<span class="material-symbols-outlined text-[13px]">school</span><span>${catName}</span>`;
+        catBadge.innerHTML = `<span class="material-symbols-outlined text-[13px]">school</span><span>${escapeHtml(catName)}</span>`;
       }
 
       // タイトル
@@ -157,10 +231,18 @@ def main():
     }
 """
 
-    render_pattern = re.compile(r"// 5\.\s*記事本文・メタの画面反映.*?async function renderPostDetail\(post\)\s*\{.*?showArticleContent\(\);\s*\}", re.DOTALL)
+    render_pattern = re.compile(r"// 4\. アイキャッチ画像の.*?showArticleContent\(\);\s*\}", re.DOTALL)
     if render_pattern.search(html):
-        html = render_pattern.sub(safe_render_logic, html)
-        print("Updated renderPostDetail with safe implementation.")
+        html = render_pattern.sub(helpers_and_render_logic.strip(), html)
+        print("Replaced preloadImage, showArticleContent, and renderPostDetail with comprehensive helpers.")
+    else:
+        # 代替パターン
+        alt_pattern = re.compile(r"// 5\.\s*記事本文・メタの画面反映.*?showArticleContent\(\);\s*\}", re.DOTALL)
+        if alt_pattern.search(html):
+            html = alt_pattern.sub(helpers_and_render_logic.strip(), html)
+            print("Replaced renderPostDetail with comprehensive helpers.")
+        else:
+            print("Warning: render_pattern not matched.")
 
     # 6. loadArticleDetail 関数の置き換え（Functions API ＋ microCMS 直接フォールバックの二重構成 ＆ 確実な起動）
     preview_load_func = """
@@ -319,8 +401,6 @@ def main():
         html = load_pattern.sub(preview_load_func + "\n\n    ", html)
         print("Replaced loadArticleDetail and added automatic invocation.")
     else:
-        print("Warning: load_pattern not matched. Searching preview_load_func...")
-        # すでに前回置換済みの場合はそのブロックを置換
         alt_pattern = re.compile(r"async function loadArticleDetail\(\)\s*\{.*?function showPreviewError.*?showArticleContent\(\);\s*\}", re.DOTALL)
         if alt_pattern.search(html):
             html = alt_pattern.sub(preview_load_func, html)

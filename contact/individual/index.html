@@ -341,7 +341,7 @@
 
     <!-- フォームカード -->
     <div class="bg-white rounded-none sm:rounded-lg border-0 sm:border border-slate-200/90 shadow-none sm:shadow-md px-0 sm:p-10 mb-8">
-      <form id="individual-contact-form" onsubmit="handleSubmit(event)" class="space-y-6">
+      <form id="individual-contact-form" class="space-y-6">
         
         <!-- 保護者様お名前 -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -377,10 +377,10 @@
             <select id="student-grade" name="grade" required aria-label="学年"
               class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 text-slate-800 text-base outline-none transition-all bg-white cursor-pointer">
               <option value="" disabled selected>学年を選択してください</option>
-              <option value="中学3年生">中学3年生（中3おかもし）</option>
-              <option value="中学2年生">中学2年生（中2おかもし）</option>
-              <option value="中学1年生">中学1年生（中1おかもし）</option>
-              <option value="小学6年生">小学6年生（小6適性検査対策模試）</option>
+              <option value="中学3年生">中学3年生</option>
+              <option value="中学2年生">中学2年生</option>
+              <option value="中学1年生">中学1年生</option>
+              <option value="小学6年生">小学6年生</option>
               <option value="その他">その他</option>
             </select>
           </div>
@@ -473,17 +473,18 @@
       </form>
 
       <!-- 送信完了メッセージエリア（初期非表示） -->
-      <div id="complete-msg" class="hidden text-center py-10 space-y-4">
+      <div id="complete-msg" class="hidden text-center py-10 px-4 space-y-4">
         <div class="w-16 h-16 mx-auto rounded-full bg-[#e8f5ee] text-primary flex items-center justify-center shadow-sm">
           <span class="material-symbols-outlined text-3xl">check_circle</span>
         </div>
-        <h3 class="text-2xl font-bold text-primary">お問い合わせを受け付けました</h3>
-        <p class="text-sm text-on-surface-variant max-w-md mx-auto leading-relaxed">
-          送信が完了いたしました。<br>
-          担当者より内容を確認のうえ、2営業日以内にご連絡差し上げます。
+        <h2 class="text-xl sm:text-2xl font-bold text-primary">お問い合わせを受け付けました</h2>
+        <p class="text-sm sm:text-base text-slate-700 max-w-lg mx-auto leading-relaxed">
+          お問い合わせいただきありがとうございます。<br>
+          ご入力いただいたメールアドレス宛に自動返信メール（控え）をお送りいたしました。<br>
+          担当者より内容を確認の上、順次ご連絡いたします。
         </p>
         <div class="pt-4">
-          <a href="/index.html" class="inline-flex items-center gap-1.5 px-6 py-2.5 rounded-full bg-primary text-white text-sm font-bold shadow-sm hover:bg-primary-container transition-all">
+          <a href="/" class="inline-flex items-center gap-1.5 px-6 py-2.5 rounded-full bg-primary text-white text-sm font-bold shadow-sm hover:bg-primary-container transition-all">
             <span class="material-symbols-outlined text-base">arrow_back</span>
             <span>トップページへ戻る</span>
           </a>

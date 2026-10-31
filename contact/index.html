@@ -238,7 +238,7 @@
     <!-- 1. 塾・学校関係者様 フォームコンテナ -->
     <div id="container-organization" class="transition-opacity duration-200">
       <div class="bg-white rounded-none sm:rounded-lg border-0 sm:border border-slate-200/90 shadow-none sm:shadow-md px-0 sm:p-10 mb-8">
-        <form id="org-contact-form" onsubmit="handleSubmit(event)" class="space-y-6">
+        <form id="org-contact-form" class="space-y-6">
         
         <!-- 貴塾・学校名 -->
         <div>
@@ -321,8 +321,8 @@
 
         <!-- プライバシーポリシー同意 -->
         <div class="p-4 rounded-lg bg-slate-50 border border-slate-200 flex items-start gap-3">
-          <input type="checkbox" id="privacy-agree" required class="mt-1 w-4 h-4 rounded text-primary focus:ring-primary border-slate-300 cursor-pointer">
-          <label for="privacy-agree" class="text-xs text-on-surface-variant leading-relaxed cursor-pointer select-none">
+          <input type="checkbox" id="privacy-agree-org" required class="mt-1 w-4 h-4 rounded text-primary focus:ring-primary border-slate-300 cursor-pointer">
+          <label for="privacy-agree-org" class="text-xs text-on-surface-variant leading-relaxed cursor-pointer select-none">
             当委員会の <a href="/privacy.html" target="_blank" rel="noopener noreferrer" class="text-primary font-bold underline hover:text-primary-container">プライバシーポリシー</a> に同意の上、送信します。ご入力いただいた情報は、お問い合わせへの回答および模試運営のご案内にのみ利用いたします。
           </label>
         </div>
@@ -363,9 +363,21 @@
       </form>
 
       <!-- 送信完了メッセージエリア（初期非表示） -->
-      <div id="complete-msg-org" class="hidden text-center py-10 space-y-4">
+      <div id="complete-msg-org" class="hidden text-center py-10 px-4 space-y-4">
         <div class="w-16 h-16 mx-auto rounded-full bg-[#e8f5ee] text-primary flex items-center justify-center shadow-sm">
           <span class="material-symbols-outlined text-3xl">check_circle</span>
+        </div>
+        <h2 class="text-xl sm:text-2xl font-bold text-primary">お問い合わせを受け付けました</h2>
+        <p class="text-sm sm:text-base text-slate-700 max-w-lg mx-auto leading-relaxed">
+          お問い合わせいただきありがとうございます。<br>
+          ご入力いただいたメールアドレス宛に自動返信メール（控え）をお送りいたしました。<br>
+          担当者より内容を確認の上、順次ご連絡いたします。
+        </p>
+        <div class="pt-4">
+          <a href="/" class="inline-flex items-center gap-1.5 px-6 py-2.5 rounded-full bg-primary text-white text-sm font-bold shadow-sm hover:bg-primary-container transition-all">
+            <span class="material-symbols-outlined text-base">arrow_back</span>
+            <span>トップページへ戻る</span>
+          </a>
         </div>
       </div>
     </div>
@@ -374,7 +386,7 @@
     <!-- 2. 個人申込の方 フォームコンテナ -->
     <div id="container-individual" class="hidden transition-opacity duration-200">
       <div class="bg-white rounded-none sm:rounded-lg border-0 sm:border border-slate-200/90 shadow-none sm:shadow-md px-0 sm:p-10 mb-8">
-        <form id="individual-contact-form" onsubmit="handleSubmit(event)" class="space-y-6">
+        <form id="individual-contact-form" class="space-y-6">
         
         <!-- 保護者様お名前 -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -410,10 +422,10 @@
             <select id="student-grade" name="grade" required aria-label="学年"
               class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 text-slate-800 text-base outline-none transition-all bg-white cursor-pointer">
               <option value="" disabled selected>学年を選択してください</option>
-              <option value="中学3年生">中学3年生（中3おかもし）</option>
-              <option value="中学2年生">中学2年生（中2おかもし）</option>
-              <option value="中学1年生">中学1年生（中1おかもし）</option>
-              <option value="小学6年生">小学6年生（小6適性検査対策模試）</option>
+              <option value="中学3年生">中学3年生</option>
+              <option value="中学2年生">中学2年生</option>
+              <option value="中学1年生">中学1年生</option>
+              <option value="小学6年生">小学6年生</option>
               <option value="その他">その他</option>
             </select>
           </div>
@@ -464,8 +476,8 @@
 
         <!-- プライバシーポリシー同意 -->
         <div class="p-4 rounded-lg bg-slate-50 border border-slate-200 flex items-start gap-3">
-          <input type="checkbox" id="privacy-agree" required class="mt-1 w-4 h-4 rounded text-primary focus:ring-primary border-slate-300 cursor-pointer">
-          <label for="privacy-agree" class="text-xs text-on-surface-variant leading-relaxed cursor-pointer select-none">
+          <input type="checkbox" id="privacy-agree-indiv" required class="mt-1 w-4 h-4 rounded text-primary focus:ring-primary border-slate-300 cursor-pointer">
+          <label for="privacy-agree-indiv" class="text-xs text-on-surface-variant leading-relaxed cursor-pointer select-none">
             当委員会の <a href="/privacy.html" target="_blank" rel="noopener noreferrer" class="text-primary font-bold underline hover:text-primary-container">プライバシーポリシー</a> に同意の上、送信します。ご入力いただいた情報は、お問い合わせへの回答および模試運営のご案内にのみ利用いたします。
           </label>
         </div>
@@ -506,9 +518,21 @@
       </form>
 
       <!-- 送信完了メッセージエリア（初期非表示） -->
-      <div id="complete-msg-indiv" class="hidden text-center py-10 space-y-4">
+      <div id="complete-msg-indiv" class="hidden text-center py-10 px-4 space-y-4">
         <div class="w-16 h-16 mx-auto rounded-full bg-[#e8f5ee] text-primary flex items-center justify-center shadow-sm">
           <span class="material-symbols-outlined text-3xl">check_circle</span>
+        </div>
+        <h2 class="text-xl sm:text-2xl font-bold text-primary">お問い合わせを受け付けました</h2>
+        <p class="text-sm sm:text-base text-slate-700 max-w-lg mx-auto leading-relaxed">
+          お問い合わせいただきありがとうございます。<br>
+          ご入力いただいたメールアドレス宛に自動返信メール（控え）をお送りいたしました。<br>
+          担当者より内容を確認の上、順次ご連絡いたします。
+        </p>
+        <div class="pt-4">
+          <a href="/" class="inline-flex items-center gap-1.5 px-6 py-2.5 rounded-full bg-primary text-white text-sm font-bold shadow-sm hover:bg-primary-container transition-all">
+            <span class="material-symbols-outlined text-base">arrow_back</span>
+            <span>トップページへ戻る</span>
+          </a>
         </div>
       </div>
     </div>

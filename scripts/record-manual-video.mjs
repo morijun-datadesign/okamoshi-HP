@@ -40,6 +40,7 @@ const MIME_TYPES = {
   '.jpg': 'image/jpeg',
   '.jpeg': 'image/jpeg',
   '.webp': 'image/webp',
+  '.avif': 'image/avif',
   '.svg': 'image/svg+xml',
   '.ico': 'image/x-icon',
   '.woff2': 'font/woff2',
@@ -89,100 +90,184 @@ function buildStripeCheckoutHtml({ email, successUrl }) {
       font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", sans-serif;
       background: #ffffff;
       color: #1a1f36;
-      padding-bottom: 120px;
+      padding-bottom: 130px;
     }
     .stripe-header {
       background: #f7fafc;
       border-bottom: 1px solid #e3e8ee;
-      padding: 16px 20px 18px;
+      padding: 14px 18px 14px;
     }
     .merchant-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
     }
     .merchant-brand {
       display: flex;
       align-items: center;
       gap: 8px;
-      font-size: 14px;
+      font-size: 13.5px;
       font-weight: 700;
       color: #134230;
     }
     .merchant-icon {
-      width: 26px;
-      height: 26px;
+      width: 24px;
+      height: 24px;
       border-radius: 6px;
       background: #134230;
       color: #fff;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 800;
     }
     .secure-badge {
       font-size: 11px;
-      font-weight: 600;
-      color: #4f566b;
-      background: #edf2f7;
+      font-weight: 700;
+      color: #065f46;
+      background: #d1fae5;
+      border: 1px solid #6ee7b7;
       padding: 3px 8px;
-      border-radius: 4px;
+      border-radius: 999px;
+    }
+    .order-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 4px;
     }
     .order-label {
-      font-size: 12px;
+      font-size: 11.5px;
       color: #697386;
-      margin-bottom: 2px;
     }
     .order-amount {
-      font-size: 28px;
+      font-size: 24px;
       font-weight: 800;
       color: #1a1f36;
       letter-spacing: -0.02em;
-      margin-bottom: 6px;
     }
     .order-item {
-      font-size: 13px;
+      font-size: 12.5px;
       color: #3c4257;
       font-weight: 600;
       display: flex;
       justify-content: space-between;
-      padding-top: 8px;
+      padding-top: 6px;
       border-top: 1px dashed #e3e8ee;
     }
     .order-sub {
-      font-size: 11.5px;
+      font-size: 11px;
       color: #697386;
-      margin-top: 3px;
+      margin-top: 2px;
     }
     .checkout-main {
-      padding: 20px 20px 28px;
+      padding: 14px 18px 24px;
+    }
+    .security-assurance-box {
+      background: #ecfdf5;
+      border: 1.5px solid #6ee7b7;
+      border-radius: 8px;
+      padding: 9px 11px;
+      margin-bottom: 12px;
+    }
+    .security-assurance-title {
+      font-size: 12px;
+      font-weight: 800;
+      color: #064e3b;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      margin-bottom: 3px;
+    }
+    .security-assurance-sub {
+      font-size: 11px;
+      font-weight: 600;
+      color: #047857;
+      line-height: 1.4;
+    }
+    .express-wallet-section {
+      margin-bottom: 12px;
+    }
+    .express-wallet-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #4f566b;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .wallet-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .wallet-btn {
+      height: 40px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+    }
+    .wallet-btn.apple-pay {
+      background: #000000;
+      color: #ffffff;
+    }
+    .wallet-btn.google-pay {
+      background: #ffffff;
+      color: #1f2937;
+      border: 1.5px solid #cbd5e1;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+    .divider-line {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      color: #8792a2;
+      font-size: 11px;
+      font-weight: 600;
+      margin: 10px 0 12px;
+    }
+    .divider-line::before,
+    .divider-line::after {
+      content: "";
+      flex: 1;
+      border-bottom: 1px solid #e3e8ee;
+    }
+    .divider-line span {
+      padding: 0 10px;
     }
     .section-title {
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 700;
       color: #1a1f36;
-      margin: 0 0 12px;
+      margin: 0 0 8px;
     }
     .field-group {
-      margin-bottom: 16px;
+      margin-bottom: 12px;
     }
     .field-label {
       display: block;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
       color: #3c4257;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
     .readonly-box {
       width: 100%;
-      padding: 11px 12px;
+      padding: 9px 11px;
       border-radius: 6px;
       border: 1px solid #e3e8ee;
       background: #f7fafc;
       color: #3c4257;
-      font-size: 14px;
+      font-size: 13px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -200,8 +285,8 @@ function buildStripeCheckoutHtml({ email, successUrl }) {
     }
     .stripe-input {
       width: 100%;
-      height: 44px;
-      padding: 10px 12px;
+      height: 42px;
+      padding: 8px 12px;
       border: none;
       font-size: 15px;
       color: #1a1f36;
@@ -250,13 +335,13 @@ function buildStripeCheckoutHtml({ email, successUrl }) {
     }
     .submit-btn {
       width: 100%;
-      height: 48px;
-      margin-top: 8px;
+      height: 46px;
+      margin-top: 6px;
       border: none;
       border-radius: 6px;
       background: #0070f3;
       color: #ffffff;
-      font-size: 16px;
+      font-size: 15.5px;
       font-weight: 700;
       cursor: pointer;
       display: flex;
@@ -285,10 +370,10 @@ function buildStripeCheckoutHtml({ email, successUrl }) {
       to { transform: rotate(360deg); }
     }
     .footer-note {
-      margin-top: 16px;
+      margin-top: 12px;
       text-align: center;
       font-size: 11px;
-      color: #8792a2;
+      color: #697386;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -303,10 +388,12 @@ function buildStripeCheckoutHtml({ email, successUrl }) {
         <span class="merchant-icon">岡</span>
         <span>岡山県統一模擬試験</span>
       </div>
-      <span class="secure-badge">🔒 Stripe 安全決済</span>
+      <span class="secure-badge">🔒 Stripe 公式安全決済</span>
     </div>
-    <div class="order-label">お支払い合計（税込）</div>
-    <div class="order-amount">￥5,500</div>
+    <div class="order-row">
+      <span class="order-label">お支払い合計（税込）</span>
+      <span class="order-amount">￥5,500</span>
+    </div>
     <div class="order-item">
       <span>第5回 12月号 岡山県統一模擬試験</span>
       <span>￥5,500</span>
@@ -315,11 +402,39 @@ function buildStripeCheckoutHtml({ email, successUrl }) {
   </div>
 
   <div class="checkout-main">
+    <!-- セキュリティ＆カード番号非保持の安心バッジ -->
+    <div id="stripeSecurityBadgeBox" class="security-assurance-box">
+      <div class="security-assurance-title">
+        <span>🔒 当事務局にカード番号は一切保存されません</span>
+      </div>
+      <div class="security-assurance-sub">
+        💡 Apple Pay・Google Payなら16桁のカード番号すら送信せず、顔認証・指紋認証だけで安全・簡単に決済できます
+      </div>
+    </div>
+
+    <!-- Apple Pay / Google Pay ワンタップ決済エリア -->
+    <div id="stripeWalletBox" class="express-wallet-section">
+      <div class="express-wallet-label">
+        <span>ワンタップ決済（カード番号の入力不要）</span>
+        <span style="color:#047857;font-weight:800;">生体認証対応</span>
+      </div>
+      <div class="wallet-grid">
+        <button type="button" class="wallet-btn apple-pay">
+          <span> Pay</span>
+        </button>
+        <button type="button" class="wallet-btn google-pay">
+          <span style="color:#4285F4;font-weight:900;">G</span><span>Pay</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="divider-line"><span>またはクレジットカードで支払う</span></div>
+
     <div class="field-group">
       <label class="field-label">連絡先メールアドレス</label>
       <div class="readonly-box" id="stripeEmailBox">
         <span>${email}</span>
-        <span style="font-size:11px;color:#697386;">確認済み</span>
+        <span style="font-size:11px;color:#047857;font-weight:700;">✓ 自動引継ぎ済</span>
       </div>
     </div>
 
@@ -349,7 +464,7 @@ function buildStripeCheckoutHtml({ email, successUrl }) {
     <div class="field-group">
       <label class="field-label" for="billingName">カード名義人（ローマ字）</label>
       <div class="single-input-box">
-        <input id="billingName" class="stripe-input sans" type="text" placeholder="TARO OKAYAMA" autocomplete="off">
+        <input id="billingName" class="stripe-input sans" type="text" placeholder="HANAKO OKAYAMA" autocomplete="off">
       </div>
     </div>
 
@@ -360,7 +475,7 @@ function buildStripeCheckoutHtml({ email, successUrl }) {
     <div class="footer-note">
       <span>Powered by <strong>stripe</strong></span>
       <span>｜</span>
-      <span>カード情報は暗号化され安全に処理されます</span>
+      <span>PCI DSS Level 1 国際最高基準暗号化</span>
     </div>
   </div>
 
@@ -413,7 +528,7 @@ async function ensureOverlayHelpers(page) {
         right: 10px;
         bottom: 14px;
         z-index: 2147483645;
-        background: rgba(15, 23, 42, 0.90);
+        background: rgba(15, 23, 42, 0.92);
         backdrop-filter: blur(8px);
         -webkit-backdrop-filter: blur(8px);
         color: #ffffff;
@@ -442,7 +557,7 @@ async function ensureOverlayHelpers(page) {
         flex-shrink: 0;
       }
       #okamoshi-caption-bar .cap-title {
-        font-size: 14px;
+        font-size: 13.5px;
         font-weight: 800;
         color: #ffffff;
         line-height: 1.3;
@@ -450,7 +565,7 @@ async function ensureOverlayHelpers(page) {
       #okamoshi-caption-bar .cap-sub {
         font-size: 11.5px;
         font-weight: 500;
-        color: #e2e8f0;
+        color: #fde68a;
         line-height: 1.4;
         padding-left: 2px;
       }
@@ -519,65 +634,74 @@ async function setCaption(page, badge, title, sub) {
 /**
  * 対象要素が画面中央（ヘッダーと下部テロップバーの間）に収まるよう滑らかにスクロールする
  */
-async function smoothScrollToLocator(page, locator) {
+async function smoothScrollToLocator(page, locator, offsetTop = 210) {
   await locator.waitFor({ state: 'visible', timeout: 10000 });
   const handle = await locator.elementHandle();
   if (!handle) return;
-  await page.evaluate((el) => {
-    const rect = el.getBoundingClientRect();
-    const targetTop = Math.max(0, window.scrollY + rect.top - 210);
-    if (Math.abs(window.scrollY - targetTop) > 35) {
-      window.scrollTo({ top: targetTop, behavior: 'smooth' });
-    }
-  }, handle);
+  await page.evaluate(
+    ({ el, offset }) => {
+      const rect = el.getBoundingClientRect();
+      const targetTop = Math.max(0, window.scrollY + rect.top - offset);
+      if (Math.abs(window.scrollY - targetTop) > 35) {
+        window.scrollTo({ top: targetTop, behavior: 'smooth' });
+      }
+    },
+    { el: handle, offset: offsetTop }
+  );
   await page.waitForTimeout(750);
 }
 
 /**
- * 対象要素を赤枠＋波紋エフェクトで 0.8秒（800ms）光らせる視覚演出
+ * 対象要素を赤枠＋波紋エフェクトで光らせる視覚演出
  */
-async function highlightTarget(page, locator, durationMs = 800) {
+async function highlightTarget(page, locator, durationMs = 800, withRipple = true) {
   await ensureOverlayHelpers(page);
   await locator.waitFor({ state: 'visible', timeout: 10000 });
-  await locator.evaluate((el, dur) => {
-    const rect = el.getBoundingClientRect();
-    const ring = document.createElement('div');
-    ring.className = 'okamoshi-focus-ring';
-    ring.style.left = `${Math.max(4, rect.left - 5)}px`;
-    ring.style.top = `${Math.max(4, rect.top - 5)}px`;
-    ring.style.width = `${Math.min(window.innerWidth - 8, rect.width + 10)}px`;
-    ring.style.height = `${rect.height + 10}px`;
-    document.body.appendChild(ring);
+  await locator.evaluate(
+    (el, { dur, ripple }) => {
+      const rect = el.getBoundingClientRect();
+      const ring = document.createElement('div');
+      ring.className = 'okamoshi-focus-ring';
+      ring.style.left = `${Math.max(4, rect.left - 5)}px`;
+      ring.style.top = `${Math.max(4, rect.top - 5)}px`;
+      ring.style.width = `${Math.min(window.innerWidth - 8, rect.width + 10)}px`;
+      ring.style.height = `${rect.height + 10}px`;
+      document.body.appendChild(ring);
 
-    const cx = rect.left + Math.min(rect.width * 0.5, 140);
-    const cy = rect.top + rect.height * 0.5;
-    const ripple1 = document.createElement('div');
-    ripple1.className = 'okamoshi-tap-ripple';
-    ripple1.style.left = `${cx}px`;
-    ripple1.style.top = `${cy}px`;
-    document.body.appendChild(ripple1);
+      let ripple1 = null;
+      if (ripple) {
+        const cx = rect.left + Math.min(rect.width * 0.5, 140);
+        const cy = rect.top + rect.height * 0.5;
+        ripple1 = document.createElement('div');
+        ripple1.className = 'okamoshi-tap-ripple';
+        ripple1.style.left = `${cx}px`;
+        ripple1.style.top = `${cy}px`;
+        document.body.appendChild(ripple1);
 
-    setTimeout(() => {
-      const ripple2 = document.createElement('div');
-      ripple2.className = 'okamoshi-tap-ripple';
-      ripple2.style.left = `${cx}px`;
-      ripple2.style.top = `${cy}px`;
-      document.body.appendChild(ripple2);
-      setTimeout(() => ripple2.remove(), 650);
-    }, 220);
+        setTimeout(() => {
+          const ripple2 = document.createElement('div');
+          ripple2.className = 'okamoshi-tap-ripple';
+          ripple2.style.left = `${cx}px`;
+          ripple2.style.top = `${cy}px`;
+          document.body.appendChild(ripple2);
+          setTimeout(() => ripple2.remove(), 650);
+        }, 220);
+      }
 
-    setTimeout(() => {
-      ring.remove();
-      ripple1.remove();
-    }, dur);
-  }, durationMs);
+      setTimeout(() => {
+        ring.remove();
+        if (ripple1) ripple1.remove();
+      }, dur);
+    },
+    { dur: durationMs, ripple: withRipple }
+  );
   await page.waitForTimeout(durationMs);
 }
 
-async function tapWithEffect(page, locator, { pauseBefore = 1500, pauseAfter = 1600 } = {}) {
+async function tapWithEffect(page, locator, { pauseBefore = 1500, pauseAfter = 1600, highlightMs = 800 } = {}) {
   await smoothScrollToLocator(page, locator);
   if (pauseBefore > 0) await page.waitForTimeout(pauseBefore);
-  await highlightTarget(page, locator, 800);
+  await highlightTarget(page, locator, highlightMs, true);
   await locator.click();
   if (pauseAfter > 0) await page.waitForTimeout(pauseAfter);
 }
@@ -586,11 +710,13 @@ async function typeWithEffect(
   page,
   locator,
   text,
-  { delay = 100, pauseBefore = 1500, pauseAfter = 1600 } = {}
+  { delay = 100, pauseBefore = 1500, pauseAfter = 1600, scroll = true } = {}
 ) {
-  await smoothScrollToLocator(page, locator);
+  if (scroll) {
+    await smoothScrollToLocator(page, locator);
+  }
   if (pauseBefore > 0) await page.waitForTimeout(pauseBefore);
-  await highlightTarget(page, locator, 800);
+  await highlightTarget(page, locator, 800, true);
   await locator.click();
   await locator.pressSequentially(text, { delay });
   if (pauseAfter > 0) await page.waitForTimeout(pauseAfter);
@@ -607,6 +733,24 @@ function getVideoDurationSec(ffmpegBin, filePath) {
     }
   }
   return 0;
+}
+
+// 各シーンのナレーション台本（指定文面と完全一致）
+const NARRATION_TEMPLATES = {
+  1: '岡山県統一模擬試験の、お申し込み手順をご案内いたします。まずは、お子様の学年をタップし、ご希望の模試にチェックを入れます。チェックを入れると、すぐ下の会場欄が案内表示に変わりますので、ご希望の会場、または自宅受験をお選びください。',
+  2: '次に、お子様の情報を入力いたします。お名前とフリガナを入力し、性別を選択してください。フリガナは、ひらがなで入力しても自動でカタカナに変換されますのでご安心ください。続いて、中学校名です。学校名の一部を入力すると候補が表示されますので、タップするだけで簡単に入力いただけます。県外の学校も、上のボタンから検索できます。',
+  3: '続いて、保護者様のご連絡先を入力いたします。お名前とフリガナに続けて、お申し込み完了メールを受け取るメールアドレスを、打ち間違い防止のため2回入力いたします。キャリアメールをご利用の方は、受信設定もあわせてご確認ください。最後に、お電話番号を入力します。ハイフンあり・なしや、全角数字が混ざっていても、自動で整えられますのでご安心ください。',
+  4: '次に、受験票や成績表のお届け先を入力いたします。郵便番号を7桁入力すると、ボタンを押すことなく自動で町名まで入力され、そのまま次の番地欄へカーソルが移動します。続けて、丁目や番地、建物名をご入力ください。もし郵便番号の桁数が足りない場合や、存在しない番号を入力された場合も、その場ですぐにお知らせしますので、打ち間違いの心配もございません。',
+  5: '続いて、お支払い方法を選択します。クレジットカード決済と、コンビニ決済の2種類からお選びいただけます。今回はクレジットカード決済を選択し、お申し込み内容と合計金額を確認します。同意欄にチェックを入れるとボタンがオレンジ色に変わりますので、タップして進みます。ボタンを2回押してしまっても二重送信にならない安全設計ですので、画面が切り替わるまでそのままお待ちください。',
+  6: '決済は、世界最高水準のセキュリティを持つストライプ社の公式画面で行われます。当事務局にカード番号が保存されることは一切ございませんので、どうぞご安心ください。また、アップルペイやグーグルペイをご利用の場合は、16桁のカード番号すら送信せず、顔認証や指紋認証だけで、すぐにお支払いが完了いたします。カード番号を入力される場合は、16桁の番号、有効期限、裏面の3桁のコード、名義人を入力し、支払うボタンをタップしてください。',
+  7: 'これでお申し込みは完了です。ご登録のメールアドレス宛に完了通知メールが届きますのでご確認ください。なお、次回以降のお申し込み時には、今回ご入力いただいた基本情報が自動で反映されますので、さらに簡単にお手続きいただけます。',
+};
+
+// 1秒あたり約4.0文字（3.8〜4.2文字以内）に確実に収めるための目標秒数算出
+function getTargetDurationForScene(sceneNum, charsPerSecTarget = 3.98) {
+  const text = NARRATION_TEMPLATES[sceneNum] || '';
+  const charCount = text.replace(/[、。]/g, '').length;
+  return Number((charCount / charsPerSecTarget).toFixed(2));
 }
 
 async function main() {
@@ -636,7 +780,7 @@ async function main() {
   const videoStartMs = performance.now();
   const page = await context.newPage();
 
-  // Turnstile・郵便番号API・決済APIの安定したハンドリング
+  // Turnstile・郵便番号API・学校検索API・決済APIの安定したハンドリング
   await page.addInitScript(() => {
     try {
       localStorage.clear();
@@ -651,12 +795,34 @@ async function main() {
   await page.route('**/challenges.cloudflare.com/**', (route) => route.abort());
   await page.route('**/api/exam-guides*', (route) => route.fulfill({ json: examGuidesFixture }));
   await page.route('**/api/cram-schools*', (route) => route.fulfill({ json: cramSchoolsFixture }));
-  await page.route('**/api/address*', async (route) => {
-    await new Promise((r) => setTimeout(r, 200));
+  await page.route('**/api/schools*', async (route) => {
+    await new Promise((r) => setTimeout(r, 120));
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
       body: JSON.stringify({
+        scope: 'pref',
+        pref: '岡山県',
+        results: [
+          {
+            code: '3320101',
+            name: '岡山市立操南中学校',
+            type: '中学校',
+            prefecture: '岡山県',
+            label: '岡山市立操南中学校 (岡山県)',
+          },
+        ],
+      }),
+    });
+  });
+
+  await page.route('**/api/address*', async (route) => {
+    await new Promise((r) => setTimeout(r, 160));
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        zip: '7000822',
         prefecture: '岡山県',
         city: '岡山市北区',
         town: '表町',
@@ -664,8 +830,9 @@ async function main() {
     });
   });
 
+  // #stripeLoadingOverlay を約1.5秒間しっかり見せるため 1600ms 待機して返す
   await page.route('**/api/create-checkout-session', async (route) => {
-    await new Promise((r) => setTimeout(r, 900));
+    await new Promise((r) => setTimeout(r, 1600));
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
@@ -696,40 +863,51 @@ async function main() {
   const scenes = [];
   const nowSec = () => (performance.now() - videoStartMs) / 1000;
 
+  async function waitUntilSceneTarget(sceneStartSec, targetDurationSec, reserveAfterSec = 0) {
+    const elapsed = nowSec() - sceneStartSec;
+    const remain = targetDurationSec - reserveAfterSec - elapsed;
+    if (remain > 0.05) {
+      await page.waitForTimeout(Math.round(remain * 1000));
+    }
+  }
+
   // =========================================================================
-  // SCENE 01: 模試と受験会場の選択
+  // SCENE 01: 模試と受験会場の選択（104文字 → 目標 約26.1秒）
   // =========================================================================
   await page.goto(`${baseUrl}/apply/`, { waitUntil: 'domcontentloaded' });
   await page.evaluate(() => document.fonts?.ready).catch(() => {});
 
   const s1Start = nowSec();
+  const s1Target = getTargetDurationForScene(1); // ~26.1s
   await setCaption(
     page,
     'STEP 1',
     '模試と受験会場の選択',
-    'お子様の学年を選び、受験する模試と会場を選択します'
+    'お子様の学年を選び、受験する模試と会場（または自宅受験）を選択します'
   );
-  await page.waitForTimeout(1800);
+  await page.waitForTimeout(3200);
 
   // 学年「中3」を選択
   await tapWithEffect(page, page.locator('#grade-btn-chu3'), {
-    pauseBefore: 1500,
-    pauseAfter: 1700,
+    pauseBefore: 2400,
+    pauseAfter: 2600,
   });
 
   // 模試「第5回 12月号 岡山県統一模擬試験」をチェック
   await tapWithEffect(page, page.locator('#check-r12'), {
-    pauseBefore: 1500,
-    pauseAfter: 1600,
+    pauseBefore: 2400,
+    pauseAfter: 600,
   });
 
-  // 受験会場「岡山会場（山陽学園中学校・高等学校）」を選択
+  // チェック直後：会場セレクトボックスが淡い赤色でハイライト（未選択案内表示）された状態を1.5秒しっかり見せる
   const venueSelect = page.locator('#venue-r12');
   await smoothScrollToLocator(page, venueSelect);
   await page.waitForTimeout(1500);
-  await highlightTarget(page, venueSelect, 800);
+
+  // 受験会場「岡山会場（山陽学園中学校・高等学校）」を選択して白背景に変わる動きを見せる
+  await highlightTarget(page, venueSelect, 900, true);
   await venueSelect.selectOption('venue_okayama');
-  await page.waitForTimeout(1800);
+  await waitUntilSceneTarget(s1Start, s1Target);
   const s1End = nowSec();
   scenes.push({
     num: 1,
@@ -738,93 +916,109 @@ async function main() {
     end: s1End,
     caption: 'STEP 1：模試と受験会場の選択（お子様の学年を選び、受験する模試と会場を選択します）',
     motion:
-      'お申し込みフォームを開き、学年「中3」をタップ →「12月号 岡山県統一模擬試験」にチェック → 受験会場「岡山会場（山陽学園中学校・高等学校）」を選択',
+      'お申し込みフォームを開き、学年「中3」をタップ →「12月号 岡山県統一模擬試験」にチェック → 会場欄が淡い赤色の案内表示に変わった状態を1.5秒表示 →「岡山会場（山陽学園中学校・高等学校）」を選択して白背景に変化',
   });
 
   // =========================================================================
-  // SCENE 02: 受験生（お子様）情報の入力
+  // SCENE 02: 受験生（お子様）情報の入力（145文字 → 目標 約36.4秒）
   // =========================================================================
   const s2Start = nowSec();
+  const s2Target = getTargetDurationForScene(2); // ~36.4s
   await setCaption(
     page,
     'STEP 2',
     '受験生（お子様）情報の入力',
-    'お子様の氏名・フリガナ・性別・在籍中学校を入力します'
+    'フリガナはひらがなでも自動変換・学校名は候補からタップ選択できます'
   );
-  await page.waitForTimeout(1500);
+  await page.waitForTimeout(1800);
 
   await typeWithEffect(page, page.locator('#studentLastName'), '岡山', {
     delay: 110,
-    pauseBefore: 1500,
+    pauseBefore: 1400,
     pauseAfter: 1200,
   });
   await typeWithEffect(page, page.locator('#studentFirstName'), '太郎', {
     delay: 110,
-    pauseBefore: 1200,
-    pauseAfter: 1500,
+    pauseBefore: 1100,
+    pauseAfter: 1300,
   });
   await typeWithEffect(page, page.locator('#studentKanaLastName'), 'オカヤマ', {
     delay: 100,
-    pauseBefore: 1200,
-    pauseAfter: 1200,
+    pauseBefore: 1100,
+    pauseAfter: 1100,
   });
   await typeWithEffect(page, page.locator('#studentKanaFirstName'), 'タロウ', {
     delay: 100,
-    pauseBefore: 1200,
-    pauseAfter: 1500,
+    pauseBefore: 1100,
+    pauseAfter: 1300,
   });
 
   // 性別（男子）を選択
   const maleLabel = page.locator('input[name="gender"][value="male"]').locator('..');
   await tapWithEffect(page, maleLabel, {
-    pauseBefore: 1500,
-    pauseAfter: 1500,
+    pauseBefore: 1300,
+    pauseAfter: 1400,
   });
 
-  // 在籍中学校を入力
-  await typeWithEffect(page, page.locator('#currentSchool'), '岡山市立操南中学校', {
-    delay: 100,
-    pauseBefore: 1500,
-    pauseAfter: 1200,
+  // 在籍中学校の横にある「岡山県内 / 県外・全国」の切り替えタブに一度赤枠ハイライト（1.5秒）を当てる
+  const schoolScopeContainer = page.locator('#schoolScopeContainer');
+  await smoothScrollToLocator(page, page.locator('#currentSchool'));
+  await page.waitForTimeout(800);
+  await highlightTarget(page, schoolScopeContainer, 1500, false);
+  await page.waitForTimeout(600);
+
+  // 入力欄に「操南」の2文字だけを入力 → サジェスト候補「岡山市立操南中学校 (岡山県)」を表示
+  await typeWithEffect(page, page.locator('#currentSchool'), '操南', {
+    delay: 140,
+    pauseBefore: 800,
+    pauseAfter: 400,
+    scroll: false,
   });
-  // サジェストドロップダウンを閉じてすっきり見せる
+
+  // サジェスト候補が表示された状態で1.5秒ポーズ → 候補を赤枠波紋エフェクトでタップして確定
+  const suggestItem = page.locator('#schoolSuggestDropdown .school-suggest-item').first();
+  await suggestItem.waitFor({ state: 'visible', timeout: 5000 });
+  await page.waitForTimeout(1500);
+  await highlightTarget(page, suggestItem, 800, true);
   await page.evaluate(() => {
-    const dd = document.getElementById('schoolSuggestDropdown');
-    if (dd) dd.classList.add('hidden');
+    if (typeof window.selectSchoolSuggestion === 'function') {
+      window.selectSchoolSuggestion(0);
+    }
   });
-  await page.waitForTimeout(1600);
+  await waitUntilSceneTarget(s2Start, s2Target);
   const s2End = nowSec();
   scenes.push({
     num: 2,
     file: 'scene_02.mp4',
     start: s2Start,
     end: s2End,
-    caption: 'STEP 2：受験生（お子様）情報の入力（お子様の氏名・フリガナ・性別・在籍中学校を入力します）',
+    caption: 'STEP 2：受験生（お子様）情報の入力（フリガナはひらがなでも自動変換・学校名は候補からタップ選択できます）',
     motion:
-      '受験生情報へスクロールし、お子様の氏名「岡山 太郎」、フリガナ「オカヤマ タロウ」、性別「男子」、在籍校「岡山市立操南中学校」を順に入力',
+      'お子様の氏名「岡山 太郎」、フリガナ「オカヤマ タロウ」、性別「男子」を選択 →「岡山県内 / 県外・全国」タブを1.5秒ハイライト → 在籍校欄に「操南」の2文字を入力 → 候補「岡山市立操南中学校 (岡山県)」を1.5秒表示後にタップして確定',
   });
 
   // =========================================================================
-  // SCENE 03: 保護者様のお名前・ご連絡先の入力
+  // SCENE 03: 保護者様のお名前・ご連絡先の入力（156文字 → 目標 約39.2秒）
   // =========================================================================
   const s3Start = nowSec();
+  const s3Target = getTargetDurationForScene(3); // ~39.2s
   await setCaption(
     page,
     'STEP 3',
     '保護者様のご連絡先の入力',
-    '保護者様の氏名・メールアドレス・電話番号を入力します'
+    '※電話番号はハイフンあり・なし、全角でも自動で整えられます'
   );
-  await page.waitForTimeout(1500);
+  await page.waitForTimeout(1600);
 
   await typeWithEffect(page, page.locator('#parentLastName'), '岡山', {
     delay: 110,
-    pauseBefore: 1500,
+    pauseBefore: 1400,
     pauseAfter: 1200,
   });
   await typeWithEffect(page, page.locator('#parentFirstName'), '花子', {
     delay: 110,
     pauseBefore: 1200,
-    pauseAfter: 1500,
+    pauseAfter: 1400,
   });
   await typeWithEffect(page, page.locator('#parentKanaLastName'), 'オカヤマ', {
     delay: 100,
@@ -834,14 +1028,14 @@ async function main() {
   await typeWithEffect(page, page.locator('#parentKanaFirstName'), 'ハナコ', {
     delay: 100,
     pauseBefore: 1200,
-    pauseAfter: 1500,
+    pauseAfter: 1400,
   });
 
-  // ランダムなテスト用メールアドレス（Linkポップアップ回避）
+  // テスト用メールアドレス（確認用とあわせて2回入力）
   await typeWithEffect(page, page.locator('#parentEmail'), testEmail, {
     delay: 85,
-    pauseBefore: 1500,
-    pauseAfter: 1500,
+    pauseBefore: 1400,
+    pauseAfter: 1400,
   });
   await typeWithEffect(page, page.locator('#parentEmailConfirm'), testEmail, {
     delay: 85,
@@ -851,99 +1045,115 @@ async function main() {
 
   // 電話番号
   await typeWithEffect(page, page.locator('#parentTel'), '09012345678', {
-    delay: 100,
-    pauseBefore: 1500,
+    delay: 105,
+    pauseBefore: 1600,
     pauseAfter: 1800,
   });
+  await waitUntilSceneTarget(s3Start, s3Target);
   const s3End = nowSec();
   scenes.push({
     num: 3,
     file: 'scene_03.mp4',
     start: s3Start,
     end: s3End,
-    caption: 'STEP 3：保護者様のご連絡先の入力（保護者様の氏名・メールアドレス・電話番号を入力します）',
+    caption: 'STEP 3：保護者様のご連絡先の入力（※電話番号はハイフンあり・なし、全角でも自動で整えられます）',
     motion:
-      '保護者氏名「岡山 花子」、フリガナ「オカヤマ ハナコ」、メールアドレス（確認用含む）、日中連絡先の電話番号を入力',
+      '保護者氏名「岡山 花子」、フリガナ「オカヤマ ハナコ」、メールアドレス（確認用含む2回）、日中連絡先の電話番号を入力',
   });
 
   // =========================================================================
-  // SCENE 04: ご住所（成績表のお届け先）の入力
+  // SCENE 04: ご住所（お届け先）の入力（154文字 → 目標 約38.7秒）
   // =========================================================================
   const s4Start = nowSec();
+  const s4Target = getTargetDurationForScene(4); // ~38.7s
   await setCaption(
     page,
     'STEP 4',
     'ご住所（お届け先）の入力',
-    '郵便番号から住所を自動入力し、番地・建物名を入力します'
+    '※桁数不足や存在しない郵便番号、番地の抜けがある場合はその場でお知らせします'
   );
-  await page.waitForTimeout(1500);
+  await page.waitForTimeout(2200);
 
+  // 郵便番号欄に「7000822」を7桁入力 → ボタン操作なしで自動補完＆番地欄へ自動フォーカス移動
   await typeWithEffect(page, page.locator('#postalCode'), '7000822', {
-    delay: 110,
-    pauseBefore: 1500,
-    pauseAfter: 1800,
+    delay: 130,
+    pauseBefore: 2000,
+    pauseAfter: 200,
   });
-  const addr1Val = await page.locator('#addressLine1').inputValue();
-  if (!addr1Val) {
-    await page.locator('#addressLine1').fill('岡山県岡山市北区表町');
-  }
 
-  // 丁目・番地・号、建物名を入力
+  // ① #addressLine1 がグリーンに光るアニメーション、② 直下の緑色メッセージ、③ #addressLine2 への自動フォーカス＆緑枠演出を 2.0秒しっかり見せる
+  await page.waitForTimeout(2000);
+
+  // 続けて「丁目・番地・号」と「建物名・部屋番号」を入力
   await typeWithEffect(page, page.locator('#addressLine2'), '1丁目5-1', {
-    delay: 110,
-    pauseBefore: 1500,
-    pauseAfter: 1500,
+    delay: 120,
+    pauseBefore: 1800,
+    pauseAfter: 2200,
   });
   await typeWithEffect(page, page.locator('#addressLine3'), '岡山教育ビル3F', {
-    delay: 100,
-    pauseBefore: 1500,
-    pauseAfter: 1800,
+    delay: 110,
+    pauseBefore: 2000,
+    pauseAfter: 2200,
   });
+  await waitUntilSceneTarget(s4Start, s4Target);
   const s4End = nowSec();
   scenes.push({
     num: 4,
     file: 'scene_04.mp4',
     start: s4Start,
     end: s4End,
-    caption: 'STEP 4：ご住所（お届け先）の入力（郵便番号から住所を自動入力し、番地・建物名を入力します）',
+    caption:
+      'STEP 4：ご住所（お届け先）の入力（※桁数不足や存在しない郵便番号、番地の抜けがある場合はその場でお知らせします）',
     motion:
-      '郵便番号「700-0822」を入力 →「住所自動入力」ボタンをタップして町名まで自動反映 → 番地「1丁目5-1」と建物名「岡山教育ビル3F」を入力',
+      '郵便番号「7000822」を7桁入力 → ボタン操作なしで「岡山県岡山市北区表町」が緑色に光って自動反映＆緑色メッセージ表示＆番地欄へ自動フォーカス移動（2秒表示） → 番地「1丁目5-1」と建物名「岡山教育ビル3F」を入力',
   });
 
   // =========================================================================
-  // SCENE 05: お支払い方法の選択と内容確認・送信
+  // SCENE 05: お支払い方法の選択と内容確認・送信（168文字 → 目標 約42.2秒）
   // =========================================================================
   const s5Start = nowSec();
+  const s5Target = getTargetDurationForScene(5); // ~42.2s
   await setCaption(
     page,
     'STEP 5',
-    'お支払い方法の選択と確認',
-    'クレジットカード決済を選び、同意チェックを入れて決済へ進みます'
+    'お支払い方法の選択（クレジットカード決済・コンビニ決済から選べます）',
+    '同意チェックを入れて進みます（※ボタン連打でも二重送信にならない安全設計）'
   );
-  await page.waitForTimeout(1500);
+  await page.waitForTimeout(2200);
 
-  // クレジットカード決済を選択確認
+  // お支払い方法エリアへスクロールし、「コンビニ決済」側にも一度赤枠ハイライト（1.5秒）を当てる
+  const konbiniMethodLabel = page.locator('#payment-method-konbini-label');
+  await smoothScrollToLocator(page, konbiniMethodLabel, 240);
+  await page.waitForTimeout(1800);
+  await highlightTarget(page, konbiniMethodLabel, 1500, false);
+  await page.waitForTimeout(1400);
+
+  // 「クレジットカード決済」を選択
   const cardMethodLabel = page.locator('input[name="payment_method"][value="credit_card"]').locator('../..');
   await tapWithEffect(page, cardMethodLabel, {
-    pauseBefore: 1500,
-    pauseAfter: 1700,
+    pauseBefore: 1600,
+    pauseAfter: 2400,
   });
 
   // お申し込みサマリー（合計金額 ¥5,500）を確認
-  await smoothScrollToLocator(page, page.locator('#summaryTotalAmount'));
+  const summaryTotal = page.locator('#summaryTotalAmount');
+  await smoothScrollToLocator(page, summaryTotal);
+  await page.waitForTimeout(1800);
+  await highlightTarget(page, summaryTotal, 1200, false);
   await page.waitForTimeout(1800);
 
-  // 規約同意チェックボックスをタップ
+  // 規約同意チェックボックスをタップ（ボタンがオレンジ色に変化）
   await tapWithEffect(page, page.locator('#agreeTerms'), {
-    pauseBefore: 1500,
-    pauseAfter: 1700,
+    pauseBefore: 1800,
+    pauseAfter: 2400,
   });
 
-  // 「入力内容を確認し、お支払いへ進む」ボタンをタップ → Stripe Checkout へ遷移
+  // 送信ボタンまでスクロールし、クリック＋オーバーレイ1.6秒＋遷移後の待機を含めて s5Target にピタリと合わせる
   const submitBtn = page.locator('#submitApplyBtn');
   await smoothScrollToLocator(page, submitBtn);
-  await page.waitForTimeout(1500);
-  await highlightTarget(page, submitBtn, 800);
+  await waitUntilSceneTarget(s5Start, s5Target, 3.4);
+  await highlightTarget(page, submitBtn, 800, true);
+  // クリックすると #stripeLoadingOverlay が約1.6秒間表示されてから Stripe Checkout へ遷移
   await Promise.all([
     page.waitForURL(checkoutUrl, { waitUntil: 'domcontentloaded', timeout: 15000 }),
     submitBtn.click(),
@@ -951,66 +1161,76 @@ async function main() {
   await setCaption(
     page,
     'STEP 6',
-    'クレジットカード情報の入力',
-    'カード番号・有効期限・セキュリティコードを入力して決済します'
+    'Stripe 安全決済・カード情報の入力',
+    '当事務局にカード番号は一切残らず、Apple Pay / Google Pay にも対応しています'
   );
-  await page.waitForTimeout(1500);
+  await waitUntilSceneTarget(s5Start, s5Target);
   const s5End = nowSec();
   scenes.push({
     num: 5,
     file: 'scene_05.mp4',
     start: s5Start,
     end: s5End,
-    caption: 'STEP 5：お支払い方法の選択と確認（クレジットカード決済を選び、同意チェックを入れて決済へ進みます）',
+    caption: 'STEP 5：お支払い方法の選択（クレジットカード決済・コンビニ決済から選べます）',
     motion:
-      '「クレジットカード決済」を選択 → お申し込みサマリー（￥5,500）を確認 → 規約同意にチェック →「入力内容を確認し、お支払いへ進む」をタップして決済画面へ遷移',
+      'お支払い方法エリアで「コンビニ決済」を1.5秒ハイライト紹介 →「クレジットカード決済」を選択 → お申し込みサマリー（￥5,500）を確認 → 同意欄にチェックを入れてボタンがオレンジ色に変化 → タップして二重送信防止オーバーレイ（「決済画面へ安全に接続しています…」）を約1.5秒表示後に決済画面へ遷移',
   });
 
   // =========================================================================
-  // SCENE 06: Stripe クレジットカード決済の入力・実行
+  // SCENE 06: Stripe クレジットカード決済の入力・実行（191文字 → 目標 約48.0秒）
   // =========================================================================
   const s6Start = nowSec();
+  const s6Target = getTargetDurationForScene(6); // ~48.0s
   await setCaption(
     page,
     'STEP 6',
-    'クレジットカード情報の入力',
-    'カード番号・有効期限・セキュリティコードを入力して決済します'
+    'Stripe 安全決済・カード情報の入力',
+    '当事務局にカード番号は一切残らず、Apple Pay / Google Pay にも対応しています'
   );
-  await page.waitForTimeout(1600);
+  await page.waitForTimeout(1400);
+
+  // 前半（約6〜7秒）：カード番号非保持バッジ＆Apple Pay / Google Pay ワンタップ決済ボタンをハイライト演出
+  const securityBadgeBox = page.locator('#stripeSecurityBadgeBox');
+  await highlightTarget(page, securityBadgeBox, 2600, false);
+  await page.waitForTimeout(900);
+
+  const walletBox = page.locator('#stripeWalletBox');
+  await highlightTarget(page, walletBox, 2600, false);
+  await page.waitForTimeout(1200);
 
   // カード番号: 4242 4242 4242 4242
   await typeWithEffect(page, page.locator('#cardNumber'), '4242424242424242', {
-    delay: 100,
-    pauseBefore: 1500,
-    pauseAfter: 1600,
+    delay: 105,
+    pauseBefore: 1600,
+    pauseAfter: 1800,
   });
 
   // 有効期限: 12/28
   await typeWithEffect(page, page.locator('#cardExpiry'), '1228', {
-    delay: 115,
-    pauseBefore: 1500,
-    pauseAfter: 1600,
+    delay: 120,
+    pauseBefore: 1600,
+    pauseAfter: 1800,
   });
 
   // CVC: 123
   await typeWithEffect(page, page.locator('#cardCvc'), '123', {
-    delay: 120,
-    pauseBefore: 1500,
-    pauseAfter: 1600,
+    delay: 125,
+    pauseBefore: 1600,
+    pauseAfter: 1800,
   });
 
   // カード名義人: HANAKO OKAYAMA
   await typeWithEffect(page, page.locator('#billingName'), 'HANAKO OKAYAMA', {
-    delay: 95,
-    pauseBefore: 1500,
-    pauseAfter: 1600,
+    delay: 100,
+    pauseBefore: 1600,
+    pauseAfter: 1800,
   });
 
   // 「￥5,500 を支払う」ボタンをタップ → サンクスページへ遷移
   const stripeSubmitBtn = page.locator('#stripeSubmitBtn');
   await smoothScrollToLocator(page, stripeSubmitBtn);
-  await page.waitForTimeout(1500);
-  await highlightTarget(page, stripeSubmitBtn, 800);
+  await waitUntilSceneTarget(s6Start, s6Target, 3.4);
+  await highlightTarget(page, stripeSubmitBtn, 800, true);
   await Promise.all([
     page.waitForURL(/\/apply\/success/, { waitUntil: 'domcontentloaded', timeout: 15000 }),
     stripeSubmitBtn.click(),
@@ -1019,45 +1239,55 @@ async function main() {
     page,
     'STEP 7',
     'お申し込み完了・メールのご確認',
-    'お申し込み完了です。自動返信メールと今後の流れをご確認ください'
+    '次回以降のお申し込み時は、今回の基本情報が自動で反映されます'
   );
-  await page.waitForTimeout(1200);
+  await waitUntilSceneTarget(s6Start, s6Target);
   const s6End = nowSec();
   scenes.push({
     num: 6,
     file: 'scene_06.mp4',
     start: s6Start,
     end: s6End,
-    caption: 'STEP 6：クレジットカード情報の入力（カード番号・有効期限・セキュリティコードを入力して決済します）',
+    caption:
+      'STEP 6：Stripe 安全決済・カード情報の入力（当事務局にカード番号は一切残らず、Apple Pay / Google Pay にも対応）',
     motion:
-      'Stripe決済画面でカード番号「4242 4242 4242 4242」、有効期限「12/28」、CVC「123」、カード名義人を入力し「￥5,500 を支払う」をタップして決済完了',
+      '前半約7秒間で「🔒 当事務局にカード番号は一切保存されません」バッジと「Apple Pay / Google Pay ワンタップ決済ボタン」を順にハイライト表示 → カード番号「4242 4242 4242 4242」、有効期限「12/28」、CVC「123」、カード名義人「HANAKO OKAYAMA」を入力し「￥5,500 を支払う」をタップして決済完了',
   });
 
   // =========================================================================
-  // SCENE 07: お申し込み完了（サンクスページ）の確認
+  // SCENE 07: お申し込み完了（サンクスページ）の確認（104文字 → 目標 約26.1秒）
   // =========================================================================
   const s7Start = nowSec();
+  const s7Target = getTargetDurationForScene(7); // ~26.1s
   await setCaption(
     page,
     'STEP 7',
     'お申し込み完了・メールのご確認',
-    'お申し込み完了です。自動返信メールと今後の流れをご確認ください'
+    '次回以降のお申し込み時は、今回の基本情報が自動で反映されます'
   );
-  await page.waitForTimeout(2200);
+  await page.waitForTimeout(5500);
 
-  // 今後のスケジュール案内まで滑らかにスクロールし、3秒間しっかり映して終了
+  // 完了通知メール確認ボックスをハイライト
+  const mailNoticeBox = page.locator('main .bg-slate-50').first();
+  await smoothScrollToLocator(page, mailNoticeBox);
+  await page.waitForTimeout(2500);
+  await highlightTarget(page, mailNoticeBox, 2000, false);
+  await page.waitForTimeout(3000);
+
+  // 今後のスケジュール案内まで滑らかにスクロールしてしっかり映す
   const scheduleHeading = page.locator('main h2').first();
   await smoothScrollToLocator(page, scheduleHeading);
-  await page.waitForTimeout(3200);
+  await waitUntilSceneTarget(s7Start, s7Target);
   const s7End = nowSec();
   scenes.push({
     num: 7,
     file: 'scene_07.mp4',
     start: s7Start,
     end: s7End,
-    caption: 'STEP 7：お申し込み完了・メールのご確認（お申し込み完了です。自動返信メールと今後の流れをご確認ください）',
+    caption:
+      'STEP 7：お申し込み完了・メールのご確認（次回以降のお申し込み時は、今回の基本情報が自動で反映されます）',
     motion:
-      'お申し込み完了画面（「お申し込みを受け付けました」）を表示し、今後のスケジュール案内を滑らかにスクロールして3秒間表示',
+      'お申し込み完了画面（「お申し込みを受け付けました」）と完了通知メール案内を表示し、今後のスケジュール案内まで滑らかにスクロールして表示',
   });
 
   const recordedTotalSec = nowSec();
@@ -1148,29 +1378,19 @@ async function main() {
     );
   }
 
-  // 3. 実測秒数に合わせた Google Vids 用ナレーション台本（1秒あたり約4〜5文字目安）を生成
-  const narrationTemplates = {
-    1: '岡山県統一模擬試験の、お申し込み手順をご案内いたします。まずは、お子様の学年をタップし、ご希望の模試にチェックを入れます。続けて、受験される会場をお選びください。',
-    2: '次に、受験されるお子様の情報を入力いたします。お子様の氏名を漢字で入力し、続けて、フリガナをカタカナで入力してください。次に、性別をタップして選択いたします。続いて、現在通われている中学校名を入力してください。文字を入力すると、学校の候補が表示されますので、そのまま入力いただけます。',
-    3: '続いて、保護者様のご連絡先を入力いたします。保護者様の氏名を漢字で入力し、フリガナをカタカナで入力してください。次に、お申し込み完了メールを受け取るメールアドレスを、確認用とあわせて2回入力いたします。キャリアメールをご利用の場合は、受信設定もあわせてご確認ください。最後に、日中にご連絡のつく電話番号を、ハイフンなしで入力いたします。',
-    4: '次に、問題用紙や成績表のお届け先となる、ご住所を入力いたします。郵便番号を7桁で入力し、住所自動入力ボタンをタップすると、町名まで自動で反映されます。続けて、丁目や番地と、マンション名や部屋番号を、お間違いのないようご入力ください。',
-    5: '続いて、お支払い方法で、クレジットカード決済を選択いたします。お申し込み内容と合計金額をご確認のうえ、個人情報の取扱いなどの同意欄にチェックを入れ、オレンジ色のボタンをタップして決済画面へ進みます。',
-    6: '安全な決済画面に切り替わりましたら、クレジットカードの情報を入力いたします。まずは、16桁のカード番号を入力してください。続けて、カードの有効期限を、月、年の順番で入力し、裏面のセキュリティコード3桁を入力いたします。次に、カード名義人をローマ字で入力し、最後に、支払うボタンをタップすると、決済が完了いたします。',
-    7: 'これでお申し込みは完了です。完了通知メールをご確認ください。',
-  };
-
+  // 3. 実測秒数に合わせた Google Vids 用ナレーション台本（1秒あたり 3.8〜4.2 文字目安）を生成
   let md = `# 岡山県統一模擬試験（おかもし）お申し込み手順動画 ナレーション台本（Google Vids用）
 
 - **全体動画ファイル**: \`manual_video_assets/full_manual.mp4\`（総尺：約 ${actualFullDuration.toFixed(1)} 秒 ／ スマホ縦画面 780×1688px 高解像度）
 - **対象視聴者**: 中学生・小学生のお子様を持つ保護者様（40代中心）
-- **読み上げ速度基準**: 1秒あたり約4〜5文字目安（Google Vids の AI 音声ナレーションで自然・丁寧に聞き取れる速度）
+- **読み上げ速度基準**: 1秒あたり約 3.8〜4.2 文字目安（Google Vids の AI 音声ナレーションで自然・丁寧に聞き取れる速度）
 
 ---
 
 `;
 
   for (const sc of scenes) {
-    const scriptText = narrationTemplates[sc.num];
+    const scriptText = NARRATION_TEMPLATES[sc.num];
     const charCount = scriptText.replace(/[、。]/g, '').length;
     const charsPerSec = (charCount / sc.durationSec).toFixed(1);
     md += `## シーン ${String(sc.num).padStart(2, '0')}：\`${sc.file}\`（${sc.durationSec.toFixed(1)}秒）
@@ -1200,6 +1420,6 @@ ${scriptText}
 }
 
 main().catch((err) => {
-  console.error(err);
+  console.error('[Video Recorder] Fatal error:', err);
   process.exit(1);
 });

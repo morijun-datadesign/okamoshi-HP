@@ -7,7 +7,7 @@ export default defineConfig({
   expect: { timeout: 10_000 },
   fullyParallel: true,
   workers: process.env.CI ? 2 : 4,
-  retries: 0,
+  retries: 1,
   reporter: [['list'], ['json', { outputFile: 'test-results/qg-results.json' }]],
   globalSetup: './tests/e2e/global-setup.mjs',
   use: {

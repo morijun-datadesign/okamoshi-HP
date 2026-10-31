@@ -6,6 +6,7 @@ node_modules
 
 # Cloudflare local state / generated D1 seed SQL
 .wrangler
+wrangler.toml
 _worker.bundle
 _worker.bundle/
 db/seed/

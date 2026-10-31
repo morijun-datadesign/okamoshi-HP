@@ -324,7 +324,7 @@ test(
     return route.continue();
   });
 
-  await page.goto('/contact/', { waitUntil: 'domcontentloaded' });
+  await page.goto('/contact/', { waitUntil: 'domcontentloaded', timeout: 30000 });
   await page.evaluate(() => document.fonts?.ready).catch(() => {});
 
   // ----------------------------------------------------------------

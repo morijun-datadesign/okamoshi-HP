@@ -9,8 +9,9 @@ import {
 } from "../_shared/env";
 import { jsonResponse, errorResponse } from "../_shared/http";
 import { recordsFromExams, recordsFromMetadata } from "../_shared/exam";
-import { fetchCheckoutSession } from "../_shared/stripe";
+import { fetchCheckoutSession, fetchPaymentIntent } from "../_shared/stripe";
 import { sendResendEmail } from "../_shared/resend";
+import { extractKonbiniInfo, KonbiniInfo, EMPTY_KONBINI } from "../_shared/konbini";
 
 export const onRequestPost: PagesFunction<Env> = async (context) => {
   try {
@@ -112,7 +113,37 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const remarksVal = String(body.remarks || meta.remarks || "").trim().slice(0, 300);
     const examNameVal = String(body.exam_name || meta.exam_name || (Array.isArray(body.exams) && body.exams[0]?.title) || "岡山県統一模擬試験").trim();
     const paymentMethodVal = String(body.payment_method || meta.payment_method || body.selected_payment_method || (body.raw_payment_method === "convenience_store" ? "konbini" : "card")).trim();
-    const paymentStatusVal = String(body.payment_status || (stripeSessionData && stripeSessionData.payment_status) || "paid").trim();
+    // Stripe側の payment_status を正とする（コンビニ未入金時は必ず "unpaid"）
+    const stripePaymentStatus = String(stripeSessionData?.payment_status || "").trim();
+    const paymentStatusVal = stripePaymentStatus || String(body.payment_status || "paid").trim();
+
+    const isKonbini =
+      paymentMethodVal === "konbini" ||
+      body.raw_payment_method === "convenience_store" ||
+      stripeSessionData?.payment_method_types?.[0] === "konbini";
+    const isUnpaidKonbini = isKonbini && paymentStatusVal === "unpaid";
+
+    // コンビニ支払情報（未入金時）の抽出
+    let konbini: KonbiniInfo = { ...EMPTY_KONBINI };
+    if (isKonbini) {
+      try {
+        let paymentIntent: Record<string, any> | null =
+          stripeSessionData?.payment_intent && typeof stripeSessionData.payment_intent === "object"
+            ? stripeSessionData.payment_intent
+            : null;
+        if (!paymentIntent && typeof stripeSessionData?.payment_intent === "string") {
+          paymentIntent = await fetchPaymentIntent(stripeSessionData.payment_intent, stripeSecretKey, "[functions/api/apply]");
+        }
+        konbini = extractKonbiniInfo(paymentIntent);
+        console.log("[functions/api/apply] Extracted konbini info:", {
+          hasVoucher: !!konbini.voucherUrl,
+          customerNumber: konbini.customerNumber,
+          expiresAt: konbini.expiresAt,
+        });
+      } catch (kErr) {
+        console.warn("[functions/api/apply] Failed to extract konbini info:", kErr);
+      }
+    }
 
     // 3. 台帳（GAS）への書き込みは Stripe Webhook（functions/api/stripe-webhook.ts）に一本化。
     let examRecords = recordsFromExams(body.exams);
@@ -130,25 +161,45 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     let adminMailId: string | null = null;
     let mailError: string | null = null;
 
-    const paymentMethodLabel = (paymentMethodVal === "konbini" || body.raw_payment_method === "convenience_store")
-      ? "コンビニ決済"
-      : "クレジットカード決済";
+    const paymentMethodLabel = isKonbini ? "コンビニ決済" : "クレジットカード決済";
 
     const examsListText = examRecords
       .map((r) => `  ・${r.label}（${r.venue}） / ￥${r.price.toLocaleString()}${r.date ? ` / 試験日: ${r.date}` : ""}`)
       .join("\n");
 
+    const konbiniAdminBlock = isUnpaidKonbini
+      ? `
+■ お客様番号: ${konbini.customerNumber || "取得できませんでした"}
+■ 確認番号: ${konbini.confirmationNumber || "取得できませんでした"}
+■ 払込票URL: ${konbini.voucherUrl || "取得できませんでした"}
+■ 支払期限: ${konbini.expiresAt || "不明"}`
+      : "";
+
+    const konbiniUserBlock = isUnpaidKonbini
+      ? `
+【コンビニでのお支払いについて】
+以下の内容で、お近くのコンビニエンスストアにてお支払いください。
+■ お支払い期限: ${konbini.expiresAt || "払込票に記載の期限"}
+${konbini.customerNumber ? `■ お客様番号: ${konbini.customerNumber}\n` : ""}${konbini.confirmationNumber ? `■ 確認番号: ${konbini.confirmationNumber}\n` : ""}${konbini.voucherUrl ? `■ 払込票（お支払い方法の詳細）: ${konbini.voucherUrl}\n` : ""}
+期限までにお支払いが確認できない場合、お申し込みは自動キャンセルとなります。
+お支払いの確認後、受付が確定いたします。
+--------------------------------------------------
+`
+      : "";
+
     // A. 管理者宛て ジャーナル通知メール
-    const adminSubject = `【個人申込受付】${studentFullName || "生徒氏名未入力"} 様 (${gradeVal || "学年未入力"})：${examNameVal}`;
+    const adminSubject = isUnpaidKonbini
+      ? `【個人申込受付・未入金（コンビニ）】${studentFullName || "生徒氏名未入力"} 様 (${gradeVal || "学年未入力"})：${examNameVal}`
+      : `【個人申込受付】${studentFullName || "生徒氏名未入力"} 様 (${gradeVal || "学年未入力"})：${examNameVal}`;
     const adminTextContent = `
-【岡山県統一模擬試験 Webサイトより個人申し込み・決済完了がありました】
+【岡山県統一模擬試験 Webサイトより${isUnpaidKonbini ? "コンビニ決済の申込（未入金）" : "個人申し込み・決済完了"}がありました】
 --------------------------------------------------
 ■ お申し込み模試:
 ${examsListText}
 ■ 合計金額: ￥${Number(amountVal).toLocaleString()} (税込)
-■ 決済状況: ${paymentMethodLabel === "コンビニ決済" ? "未入金（コンビニでのお支払い待ち）" : (paymentStatusVal === "paid" ? "決済完了 (paid)" : paymentStatusVal)}
+■ 決済状況: ${isUnpaidKonbini ? "未入金（コンビニでのお支払い待ち）" : (paymentStatusVal === "paid" ? "決済完了 (paid)" : paymentStatusVal)}
 ■ 決済方法: ${paymentMethodLabel}
-■ 決済セッションID: ${activeSessionId || "なし"}
+■ 決済セッションID: ${activeSessionId || "なし"}${konbiniAdminBlock}
 --------------------------------------------------
 【生徒情報】
 ■ 生徒氏名: ${studentFullName} (${studentKanaFullName || "未入力"})
@@ -168,7 +219,9 @@ ${examsListText}
 `.trim();
 
     // B. 申込者宛て サンクスメール
-    const userSubject = "【岡山県統一模擬試験】お申し込みを受け付けました";
+    const userSubject = isUnpaidKonbini
+      ? "【岡山県統一模擬試験】お申し込みを受け付けました（コンビニ決済のお願い）"
+      : "【岡山県統一模擬試験】お申し込みを受け付けました";
     const userTextContent = `
 ${parentFullName ? parentFullName + " 様\n（生徒様：" + (studentFullName || "生徒") + " 様）\n\n" : (studentFullName ? studentFullName + " 様\n\n" : "")}岡山県統一模擬試験（おかもし）へのお申し込み、誠にありがとうございます。
 以下の内容でお申し込みおよび決済手続きを受け付けいたしました。
@@ -178,8 +231,9 @@ ${parentFullName ? parentFullName + " 様\n（生徒様：" + (studentFullName |
 ${examsListText}
 ■ 合計金額: ￥${Number(amountVal).toLocaleString()} (税込)
 ■ 決済方法: ${paymentMethodLabel}
-■ 決済状況: ${paymentMethodLabel === "コンビニ決済" ? "お支払い待ち（コンビニでのお支払い後に確定）" : "お支払い完了"}
+■ 決済状況: ${isUnpaidKonbini ? "お支払い待ち（コンビニでのお支払い後に確定）" : "お支払い完了"}
 --------------------------------------------------
+${konbiniUserBlock}
 【ご登録内容】
 ■ 生徒氏名: ${studentFullName} 様
 ■ フリガナ: ${studentKanaFullName || ""}
@@ -190,13 +244,6 @@ ${examsListText}
 ■ メールアドレス: ${emailVal}${remarksVal ? `\n■ 連絡事項・ご要望:\n${remarksVal}` : ""}
 --------------------------------------------------
 
-${paymentMethodLabel === "コンビニ決済" ? `
-【コンビニ決済をご選択された方へ】
-決済代行システムより、お支払い番号・払込手順を記載した案内メールが別途届きます。
-記載されたお支払い期限（払込票に記載の期限）までにお近くのコンビニエンスストアにてお支払いをお願いいたします。
-期限を過ぎますとお申し込みは自動キャンセルとなりますのでご注意ください。
---------------------------------------------------
-` : ""}
 【今後のスケジュール・受験票のお届け】
 ・会場受験：試験日の約1週間前に受験票をご自宅宛てにお届けします。
 ・自宅受験：試験日の約1週間前に問題冊子・解答用紙一式をご自宅宛てにお届けします。

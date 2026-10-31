@@ -59,6 +59,7 @@
 /tailwind.config.js       /404.html           200
 /DESIGN.md                /404.html           200
 /wrangler.toml            /404.html           200
+/wrangler.toml.example    /404.html           200
 /.cursorrules             /404.html           200
 /css/input.css            /404.html           200
 /scripts/*                /404.html           200

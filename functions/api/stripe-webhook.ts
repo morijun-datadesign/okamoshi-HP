@@ -12,6 +12,7 @@ import { jsonResponse } from "../_shared/http";
 import { ExamRecord, recordsFromMetadata } from "../_shared/exam";
 import { fetchCheckoutSession, fetchPaymentIntent, verifyStripeWebhookSignature, checkRecentPaidSession } from "../_shared/stripe";
 import { sendResendEmail } from "../_shared/resend";
+import { extractKonbiniInfo, KonbiniInfo, EMPTY_KONBINI, formatJst } from "../_shared/konbini";
 
 const LOG = "[functions/api/stripe-webhook]";
 
@@ -26,65 +27,6 @@ const EVENT_COMPLETED = "checkout.session.completed";
 const EVENT_ASYNC_SUCCEEDED = "checkout.session.async_payment_succeeded";
 const EVENT_ASYNC_FAILED = "checkout.session.async_payment_failed";
 const HANDLED_EVENTS = [EVENT_COMPLETED, EVENT_ASYNC_SUCCEEDED, EVENT_ASYNC_FAILED];
-
-interface KonbiniInfo {
-  customerNumber: string;
-  confirmationNumber: string;
-  voucherUrl: string;
-  expiresAt: string;
-}
-
-const EMPTY_KONBINI: KonbiniInfo = { customerNumber: "", confirmationNumber: "", voucherUrl: "", expiresAt: "" };
-
-const KONBINI_STORE_LABELS: Record<string, string> = {
-  familymart: "ファミリーマート",
-  lawson: "ローソン",
-  ministop: "ミニストップ",
-  seicomart: "セイコーマート",
-};
-
-const formatJst = (date: Date): string =>
-  new Intl.DateTimeFormat("ja-JP", {
-    timeZone: "Asia/Tokyo",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: false,
-  }).format(date).replace(/\//g, "-");
-
-/**
- * 店舗ごとの値を1つの文字列にまとめる。
- * 全店舗で同じ値ならその値のみ、異なる場合は「ファミリーマート: xxx / ローソン・ミニストップ: yyy」形式。
- */
-const joinStoreValues = (stores: Record<string, any>, field: "payment_code" | "confirmation_number"): string => {
-  const byValue = new Map<string, string[]>();
-  for (const [store, info] of Object.entries(stores || {})) {
-    const value = String(info?.[field] || "").trim();
-    if (!value) continue;
-    const label = KONBINI_STORE_LABELS[store] || store;
-    byValue.set(value, [...(byValue.get(value) || []), label]);
-  }
-  if (byValue.size === 0) return "";
-  if (byValue.size === 1) return [...byValue.keys()][0];
-  return [...byValue.entries()].map(([value, labels]) => `${labels.join("・")}: ${value}`).join(" / ");
-};
-
-/** PaymentIntent.next_action.konbini_display_details からお客様番号・確認番号・払込票URL・支払期限を抽出 */
-const extractKonbiniInfo = (paymentIntent: Record<string, any> | null): KonbiniInfo => {
-  const details = paymentIntent?.next_action?.konbini_display_details;
-  if (!details) return { ...EMPTY_KONBINI };
-  const stores = details.stores || {};
-  const expiresAtSec = Number(details.expires_at);
-  return {
-    customerNumber: joinStoreValues(stores, "payment_code"),
-    confirmationNumber: joinStoreValues(stores, "confirmation_number"),
-    voucherUrl: String(details.hosted_voucher_url || ""),
-    expiresAt: Number.isFinite(expiresAtSec) && expiresAtSec > 0 ? formatJst(new Date(expiresAtSec * 1000)) : "",
-  };
-};
 
 export const onRequestPost: PagesFunction<Env> = async (context) => {
   try {
@@ -209,14 +151,18 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     // 3. コンビニ支払情報（申込時の未入金レコードのみ）
     let konbini: KonbiniInfo = { ...EMPTY_KONBINI };
     if (action === "create" && isKonbini && ledgerStatus === LEDGER_STATUS.UNPAID) {
-      let paymentIntent: Record<string, any> | null =
-        session.payment_intent && typeof session.payment_intent === "object" ? session.payment_intent : null;
-      if (!paymentIntent && typeof session.payment_intent === "string") {
-        paymentIntent = await fetchPaymentIntent(session.payment_intent, stripeSecretKey, LOG);
-      }
-      konbini = extractKonbiniInfo(paymentIntent);
-      if (!konbini.voucherUrl) {
-        console.warn(`${LOG} Konbini display details not found for session ${sessionId}`);
+      try {
+        let paymentIntent: Record<string, any> | null =
+          session.payment_intent && typeof session.payment_intent === "object" ? session.payment_intent : null;
+        if (!paymentIntent && typeof session.payment_intent === "string") {
+          paymentIntent = await fetchPaymentIntent(session.payment_intent, stripeSecretKey, LOG);
+        }
+        konbini = extractKonbiniInfo(paymentIntent);
+        if (!konbini.voucherUrl) {
+          console.warn(`${LOG} Konbini display details not found for session ${sessionId}`);
+        }
+      } catch (kErr) {
+        console.warn(`${LOG} Exception extracting konbini info:`, kErr);
       }
     }
 

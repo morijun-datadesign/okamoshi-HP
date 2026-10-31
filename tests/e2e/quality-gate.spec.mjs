@@ -63,6 +63,7 @@ async function setupPage(page) {
 
 async function settle(page) {
   await page.waitForLoadState('networkidle').catch(() => {});
+  await page.evaluate(() => document.fonts?.ready).catch(() => {});
   // 遅延読み込み画像・スクロール連動要素を発火させるため最下部までスクロール
   await page.evaluate(async () => {
     const step = Math.max(400, window.innerHeight * 0.8);
@@ -73,6 +74,7 @@ async function settle(page) {
     window.scrollTo(0, 0);
   });
   await page.waitForLoadState('networkidle').catch(() => {});
+  await page.evaluate(() => document.fonts?.ready).catch(() => {});
   await page.waitForTimeout(400);
 }
 

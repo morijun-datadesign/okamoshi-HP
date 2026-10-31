@@ -525,6 +525,12 @@ test(
     await examCheckbox.check();
     await expect(venueSelect, '模試チェック後は会場セレクトが enabled になること').toBeEnabled();
 
+    // 模試カード内の申込締切表示（クレジットカード / コンビニ表記 & 「クレカ」略称の排除）
+    const deadlineBlock = page.locator('#card-r12').locator('text=申込締切：').locator('..');
+    await expect(deadlineBlock).toContainText('・クレジットカード：');
+    await expect(deadlineBlock).toContainText('・コンビニ：');
+    await expect(deadlineBlock).not.toContainText('・クレカ：');
+
     const venueOptions = await venueSelect.locator('option:not([disabled])').evaluateAll((opts) =>
       opts.map((o) => ({ value: o.value, label: o.textContent.trim() }))
     );

@@ -1693,7 +1693,7 @@
     }
 
     /**
-     * 模試カード用：申込締切の2行並記表示（クレカ ＆ コンビニ）
+     * 模試カード用：申込締切の2行並記表示（クレジットカード ＆ コンビニ）
      */
     function formatCardDeadlineParallel(deadlineRaw, parsedTime) {
       const t = parsedTime || parseDeadline(deadlineRaw);
@@ -1710,7 +1710,7 @@
       const mins = String(d.getMinutes()).padStart(2, '0');
       const cardDeadlineText = `${m}/${dt}(${day}) ${hours}:${mins}`;
 
-      // コンビニ締切: クレカ締切日の3日前の 23:59
+      // コンビニ締切: クレジットカード締切日の3日前の 23:59
       const konbiniDeadlineDate = new Date(d.getFullYear(), d.getMonth(), d.getDate() - 3, 23, 59, 59, 999);
       const konbiniM = konbiniDeadlineDate.getMonth() + 1;
       const konbiniDt = konbiniDeadlineDate.getDate();
@@ -1722,18 +1722,18 @@
 
       const cardText = isCardExpired
         ? '<span class="text-rose-600 font-bold">受付終了</span>'
-        : `<span class="text-secondary font-bold">${cardDeadlineText}</span>`;
+        : `<span class="text-slate-900 font-bold">${cardDeadlineText}</span>`;
 
       const konbiniText = isKonbiniExpired
         ? '<span class="text-rose-600 font-bold">受付終了</span>'
-        : `${konbiniM}/${konbiniDt}(${konbiniDay}) 23:59`;
+        : `<span class="text-slate-900 font-bold">${konbiniM}/${konbiniDt}(${konbiniDay}) 23:59</span>`;
 
       return `
         <div class="text-xs sm:text-sm leading-tight text-slate-700 space-y-0.5 pt-0.5">
           <div class="font-bold text-slate-800">申込締切：</div>
           <div class="pl-2 space-y-0.5 font-bold">
-            <div class="text-slate-900">・クレカ：${cardText}</div>
-            <div class="text-slate-900">・コンビニ：<span class="${isKonbiniExpired ? '' : 'text-slate-800 font-bold'}">${konbiniText}</span></div>
+            <div class="text-slate-900">・クレジットカード：${cardText}</div>
+            <div class="text-slate-900">・コンビニ：${konbiniText}</div>
           </div>
         </div>
       `;
@@ -2244,7 +2244,7 @@
                   <span class="font-headline-sm text-base sm:text-lg font-bold text-on-surface leading-snug tracking-tight block">${exam.title}</span>
                 </div>
 
-                <!-- 下段：申込締切（クレカ／コンビニ 2行並記） -->
+                <!-- 下段：申込締切（クレジットカード／コンビニ 2行並記） -->
                 <div class="border-t border-slate-100 pt-1.5 mt-0.5">
                   ${formatCardDeadlineParallel(exam.deadline || exam.applyDeadlineRaw, exam.deadlineTime)}
                 </div>

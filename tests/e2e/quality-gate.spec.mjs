@@ -64,6 +64,25 @@ async function setupPage(page) {
     if (local && url.pathname.startsWith('/api/') && !process.env.QG_BASE_URL) {
       if (url.pathname.startsWith('/api/exam-guides')) return route.fulfill({ json: examGuidesFixture });
       if (url.pathname.startsWith('/api/cram-schools')) return route.fulfill({ json: cramSchoolsFixture });
+      if (url.pathname.startsWith('/api/address')) {
+        const rawZip = url.searchParams.get('zip') || '';
+        const zip = rawZip
+          .replace(/[０-９]/g, (s) => String.fromCharCode(s.charCodeAt(0) - 0xfee0))
+          .replace(/\D/g, '');
+        const mockZips = {
+          '7000822': { zip: '7000822', prefecture: '岡山県', city: '岡山市北区', town: '表町' },
+          '7000024': { zip: '7000024', prefecture: '岡山県', city: '岡山市北区', town: '駅元町' },
+          '7100055': { zip: '7100055', prefecture: '岡山県', city: '倉敷市', town: '阿知' },
+          '7080004': { zip: '7080004', prefecture: '岡山県', city: '津山市', town: '山北' },
+        };
+        if (!/^\d{7}$/.test(zip)) {
+          return route.fulfill({ status: 200, json: { error: 'invalid_zip' } });
+        }
+        if (mockZips[zip]) {
+          return route.fulfill({ status: 200, json: mockZips[zip] });
+        }
+        return route.fulfill({ status: 200, json: { error: 'not_found' } });
+      }
       return route.fulfill({ json: { success: true, results: [], schools: [] } });
     }
     if (local || ALLOW_HOSTS.has(url.hostname) || url.protocol === 'data:') return route.continue();
@@ -602,11 +621,56 @@ test(
     await page.locator('#parentEmail').fill('apply-test@example.com');
     await page.locator('#parentEmailConfirm').fill('apply-test@example.com');
     await page.locator('#parentTel').fill('09012345678');
-    await page.locator('#postalCode').fill('700-0822');
-    await page.locator('#addressLine1').fill('岡山県岡山市北区表町');
     await page.locator('#addressLine2').fill('1丁目5-1');
     await page.locator('#addressLine3').fill('岡山教育ビル 3F');
     await page.locator('#remarks').fill('会場受験×カード決済のE2Eテスト送信です。');
+
+    // ----------------------------------------------------------------
+    // 4-2. 郵便番号：「住所自動入力」ボタン廃止 ＆ 自動補完・バリデーションガード検証
+    // ----------------------------------------------------------------
+    const postalInput = page.locator('#postalCode');
+    const postalMsg = page.locator('#postalMsg');
+    const addr1Input = page.locator('#addressLine1');
+
+    await expect(page.locator('#btnSearchAddress'), '「住所自動入力」ボタンが削除されていること').toHaveCount(0);
+    await expect(page.locator('#postalCodeHint')).toContainText('7桁入力で住所が自動入力されます（ハイフンなし）');
+
+    // (a) 7桁未満（6桁）でフォーカスが外れた（blurした）場合の即時エラー表示 ＆ 送信ブロック
+    await postalInput.fill('700082');
+    await postalInput.blur();
+    await expect(postalMsg).toBeVisible();
+    await expect(postalMsg).toHaveText('郵便番号は7桁で入力してください（現在6桁です）');
+
+    await addr1Input.fill('岡山県岡山市北区表町');
+    await submitBtn.click();
+    await expect(page.locator('#formErrorMessage')).toBeVisible();
+    await expect(page.locator('#formErrorMessageText')).toContainText('郵便番号が正しくないか、ご住所と一致していません');
+
+    // (b) 7桁入力されたが実在しない郵便番号の場合の即時警告 ＆ 手入力送信ブロック
+    await postalInput.fill('0000000');
+    await expect(postalMsg).toBeVisible();
+    await expect(postalMsg).toHaveText('該当する住所が見つかりません。郵便番号にお間違いがないかご確認ください');
+
+    await addr1Input.fill('岡山県岡山市北区表町');
+    await submitBtn.click();
+    await expect(page.locator('#formErrorMessage')).toBeVisible();
+    await expect(page.locator('#formErrorMessageText')).toContainText('郵便番号が正しくないか、ご住所と一致していません');
+
+    // (c) 全角数字・ハイフン入力時の半角数字7桁への自動正規化 ＆ ボタンなし自動補完
+    await addr1Input.fill('');
+    await postalInput.fill('７００ー０８２２');
+    await expect(postalInput, '全角数字・ハイフンが自動で半角数字7桁のみに正規化されること').toHaveValue('7000822');
+    await expect(addr1Input, '7桁入力時点で自動的に住所が補完されること').toHaveValue('岡山県岡山市北区表町');
+
+    // (d) 郵便番号の地域（岡山県岡山市北区）と手入力の都道府県・市区町村が不一致の場合の送信ブロック
+    await addr1Input.fill('東京都千代田区千代田');
+    await submitBtn.click();
+    await expect(page.locator('#formErrorMessage')).toBeVisible();
+    await expect(page.locator('#formErrorMessageText')).toContainText('郵便番号が正しくないか、ご住所と一致していません');
+
+    // 正しい住所に戻して送信を実行
+    await postalInput.fill('7000822');
+    await addr1Input.fill('岡山県岡山市北区表町');
 
     await Promise.all([
       page.waitForURL(/\/apply\/success/, { waitUntil: 'domcontentloaded', timeout: 15000 }),

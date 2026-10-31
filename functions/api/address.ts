@@ -76,7 +76,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
       .all<ZipRow>();
 
     if (!results || results.length === 0) {
-      response = json({ error: "not_found" }, 404, CACHE_MISS);
+      response = json({ error: "not_found" }, 200, CACHE_MISS);
     } else {
       const first = results[0];
       const sameArea = results.filter((r) => r.prefecture === first.prefecture && r.city === first.city);

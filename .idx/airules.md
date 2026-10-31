@@ -4,13 +4,15 @@
 
 > このファイルは AI エージェントがセッション開始時に自動で読み込む常駐ルールです。
 > ユーザーが毎回指示しなくても、**すべてのタスクで以下の2大絶対ルールを100%遵守すること。**
-> 正本は `GEMINI.md`。`.cursorrules` / `.idx/airules.md` / `.antigravity/rules.md` / `.agents/rules/okamoshi-core.md` は
+> 正本は `GEMINI.md`。`CLAUDE.md` / `.cursorrules` / `.idx/airules.md` / `.antigravity/rules.md` / `.agents/rules/okamoshi-core.md` は
 > `node scripts/sync-ai-rules.mjs` で自動生成されるコピー（直接編集禁止・品質ゲートで同期を検査）。
 
 - 思考プロセス（Scratchpad）、作業計画（Goal）、アクションログ、ファイル操作の解説、および会話の応答はすべて日本語で行う（内部的な思考や要約ステップでも英語を使わない）。
 - 本番環境: Cloudflare Pages（プロジェクト `okamoshi-hp`、`main` ブランチ、`https://okayama-moshi.com`、公開ディレクトリはリポジトリ直下 `.`）。
 - プレビュー環境: `feature/idea-b` ブランチ（Cloudflare Pages エイリアスURL: `https://feature-idea-b.okamoshi-hp.pages.dev`）。
-  - **本番・プレビュー環境の整合性維持ルール**: サイト修正時はまずプレビュー環境（`feature/idea-b` ブランチ → `https://feature-idea-b.okamoshi-hp.pages.dev`）で確認するため、常に本番（`main`）とプレビュー（`feature/idea-b`）の両方で同じ最新状態・同じ環境変数が動くように整合性を保つこと。
+  - **本番・プレビュー環境の整合性維持およびブランチ完全同期ルール（絶対遵守）**:
+    - サイト修正時はまずプレビュー環境（`feature/idea-b` ブランチ → `https://feature-idea-b.okamoshi-hp.pages.dev`）で確認するため、常に本番（`main`）とプレビュー（`feature/idea-b`）の両方で同じ最新状態・同じ環境変数が動くように整合性を保つこと。
+    - **本番反映時（または本番 `main` プッシュ時の品質ゲートで不合格となり修正が発生した場合）は、`main` だけを単独で修正・プッシュするのではなく、必ず `feature/idea-b`（プレビュー）と `main`（本番）の双方が完全に同一コミット（同一SHA）になるように同期・プッシュすること。**
   - **GAS 同期先の保護ルール**: `gas/sync-exam-guides.js` および `gas/sync-cram-schools.js` の同期先配列（`API_URLS`：本番URL `https://okayama-moshi.com/api/admin/...` ＋ プレビューURL `https://feature-idea-b.okamoshi-hp.pages.dev/api/admin/...`）は、本番とプレビュー双方のD1を常に同一状態に保つため**絶対に片方を削らないこと**。
 
 ---
@@ -107,10 +109,13 @@ npm run quality-gate:smart                # スマート品質ゲート（変更
 | 4 | SEO・一貫性 | `<title>`、description、OGP、`alt`、`<h1>`は1つ、見出し階層の飛びなし、許可外カラーなし、コントラスト比（>=3.0）、TypeScript型チェック |
 | 5 | **フォーム死活監視（`@critical-forms`）** | **いかなる軽微な修正時でも毎回100%実行**：① `/contact/`（個人・団体両タブの送信完了画面視認性・学年選択肢表記）、② `/apply/`（必須バリデーション、会場受験×カード決済、自宅受験×コンビニ決済の送信完了画面 `/apply/success` 視認性・コントラスト比） |
 
-### スマート品質ゲート（`scripts/smart-quality-gate.mjs`）と物理ロック
-- **高速モード（FAST MODE）**: 特定ページの軽微な文言・記事修正のみの場合、「修正した該当ページのデザインルール・コントラスト・レイアウト・リンク切れ検査」＋「`@critical-forms`（フォーム2種の全パターン送信＆完了画面検査）」のみを実行し、無関係な他ページの走査を省いて高速化しつつフォーム2種の安全確認を100%担保する。
-- **フルモード（FULL MODE）**: 共通CSS（`css/`）・共通JS（`js/`）・`functions/`・フォーム関連（`apply/`・`contact/`）・テスト・設定ファイルを1行でも変更した場合は、全ページのフルデザイン検査＋`@critical-forms` を含む全60テストを強制実行する。
-- **物理ロック**: `git push` 時は `.githooks/pre-push` および `.git/hooks/pre-push` が自動で `scripts/smart-quality-gate.mjs` を実行し、1項目でも FAIL ならプッシュ自体をシステム的にブロックする。`--no-verify` での回避は禁止。
+### スマート品質ゲート（`scripts/smart-quality-gate.mjs`）と「プレビュー高速・本番厳格」2段階ギア制御
+- **プレビュー超高速モード（PREVIEW MODE / `--preview`）**: `main` 以外のブランチ（`feature/idea-b` 等のプレビュー）のみへのプッシュ時は、Playwright E2Eテストをスキップし、数秒で完了する「静的検査・AIルール同期・TypeScript型チェック」のみの超高速モードで即座に通過させる。
+- **高速モード（FAST MODE）**: ローカルでの `npm run quality-gate:smart` 実行時に特定ページの軽微な文言・記事修正のみの場合、「修正した該当ページのデザインルール・コントラスト・レイアウト・リンク切れ検査」＋「`@critical-forms`（フォーム2種の全パターン送信＆完了画面検査）」のみを実行する。
+- **本番厳格・フルモード（FULL MODE / `--full`）**: `main` ブランチ（本番）へのプッシュ時、または共通CSS（`css/`）・共通JS（`js/`）・`functions/`・フォーム関連（`apply/`・`contact/`）・テスト・設定ファイルを1行でも変更した場合は、全ページのフルデザイン検査＋`@critical-forms` を含む Playwright 実ブラウザ全テストを厳格に実行する。**`main` ブランチへのプッシュ時は `SKIP_QUALITY_GATE=1` が指定されてもバイパスを絶対禁止とする。**
+- **物理ロックとブランチ完全同期ルール**:
+  - `git push` 時は `.githooks/pre-push` および `.git/hooks/pre-push` が自動で `scripts/smart-quality-gate.mjs` を実行し、1項目でも FAIL ならプッシュ自体をシステム的にブロックする。`--no-verify` での回避は禁止。
+  - 本番反映時（または本番 `main` プッシュ時の品質ゲートで不合格となり修正が発生した場合）は、`main` だけを単独で修正するのではなく、**必ず `feature/idea-b`（プレビュー）と `main`（本番）の双方が同一コミットになるように同期・プッシュすること**。
 - **FAIL した場合はユーザーに報告する前に自己修復**し、再実行して PASS させてから報告する。修復できない場合は、FAIL 内容と原因をそのまま正直に報告する（PASS と偽らない）。
 - テストやチェックを**緩めて通すこと（閾値変更・除外追加・テスト削除）は禁止**。正当な理由で除外が必要な場合は `tests/e2e/known-issues.json` に理由付きで追加し、ユーザーに明示的に報告する。
 

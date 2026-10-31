@@ -1,13 +1,51 @@
 #!/bin/sh
-# git push 前にスマート品質ゲート（scripts/smart-quality-gate.mjs）を強制実行し、
+# git push 前にスマート品質ゲート（scripts/smart-quality-gate.mjs）を実行し、
 # 1項目でも FAIL ならプッシュをシステム的にブロックする物理ロック。
+#
+# 【2段階ギア制御】
+# - main ブランチへのプッシュ時（本番）:
+#     Playwright 実ブラウザテスト（全テスト）を含むフル品質ゲートを厳格に実行。
+#     SKIP_QUALITY_GATE=1 が指定されてもバイパスを禁止。
+# - main 以外のブランチのみへのプッシュ時（feature/idea-b 等のプレビュー）:
+#     Playwright E2Eテストをスキップし、数秒で完了する静的検査・AIルール同期・TypeScript型チェックのみの
+#     「超高速モード（--preview）」で即座に通過させる。
+#
 # 有効化: npm install（prepare スクリプトが core.hooksPath=.githooks および .git/hooks/pre-push を設定）
-# ※ `git push --no-verify` による回避は運用ルール（GEMINI.md 絶対ルール②）で禁止。
+# ※ `git push --no-verify` による回避は運用ルール（GEMINI.md / CLAUDE.md 絶対ルール②）で禁止。
 
-# pre-push の標準入力 (<local ref> <local sha> <remote ref> <remote sha>) からプッシュ対象差分ファイルを収集
+export PATH="$HOME/.local/bin:/opt/homebrew/bin:/usr/local/bin:$PATH"
+
 PUSH_FILES=""
+PUSH_BRANCHES=""
+IS_MAIN_PUSH=0
+READ_LINES=0
 ZERO_SHA="0000000000000000000000000000000000000000"
+
 while read local_ref local_sha remote_ref remote_sha; do
+  READ_LINES=$((READ_LINES + 1))
+
+  case "$remote_ref" in
+    refs/heads/main)
+      IS_MAIN_PUSH=1
+      ;;
+  esac
+  case "$local_ref" in
+    refs/heads/main)
+      if [ -z "$remote_ref" ] || [ "$remote_ref" = "refs/heads/main" ]; then
+        IS_MAIN_PUSH=1
+      fi
+      ;;
+  esac
+
+  BRANCH_NAME=$(printf "%s" "$remote_ref" | sed 's|^refs/heads/||')
+  if [ -n "$BRANCH_NAME" ]; then
+    if [ -z "$PUSH_BRANCHES" ]; then
+      PUSH_BRANCHES="$BRANCH_NAME"
+    else
+      PUSH_BRANCHES="${PUSH_BRANCHES},${BRANCH_NAME}"
+    fi
+  fi
+
   if [ -n "$local_sha" ] && [ "$local_sha" != "$ZERO_SHA" ]; then
     if [ -n "$remote_sha" ] && [ "$remote_sha" != "$ZERO_SHA" ]; then
       DIFF_OUT=$(git diff --name-only "$remote_sha".."$local_sha" 2>/dev/null || true)
@@ -19,12 +57,36 @@ ${DIFF_OUT}"
   fi
 done
 
-echo "🔒 pre-push: スマート品質ゲート（node scripts/smart-quality-gate.mjs）を実行します…"
-if ! QG_PUSH_FILES="$PUSH_FILES" node scripts/smart-quality-gate.mjs; then
-  echo ""
-  echo "❌ 品質ゲートが FAIL しました。プッシュをシステム的にブロックしました。"
-  echo "   上記レポートの FAIL 項目を修正し、再度 git push してください。"
-  exit 1
+# 標準入力が空（手動実行時など）の場合は現在のブランチから判定
+if [ "$READ_LINES" -eq 0 ]; then
+  CURRENT_BRANCH=$(git symbolic-ref --short HEAD 2>/dev/null || echo "")
+  PUSH_BRANCHES="$CURRENT_BRANCH"
+  if [ "$CURRENT_BRANCH" = "main" ]; then
+    IS_MAIN_PUSH=1
+  fi
 fi
+
+if [ "$IS_MAIN_PUSH" -eq 1 ]; then
+  if [ "${SKIP_QUALITY_GATE:-0}" = "1" ]; then
+    echo "⚠️  [本番保護] main ブランチへのプッシュ時は SKIP_QUALITY_GATE=1 によるバイパスは禁止されています。"
+    echo "   本番厳格モードで全品質ゲート（Playwright E2E 全テスト含む）を強制実行します。"
+  fi
+  echo "🔒 pre-push [本番厳格モード]: main ブランチへのプッシュを検知しました。フル品質ゲートを実行します…"
+  if ! SKIP_QUALITY_GATE=0 QG_PUSH_BRANCH="main" QG_PUSH_FILES="$PUSH_FILES" node scripts/smart-quality-gate.mjs --full; then
+    echo ""
+    echo "❌ 本番品質ゲートが FAIL しました。main へのプッシュをシステム的にブロックしました。"
+    echo "   修正コミットを作成し、必ず feature/idea-b と main の両方が同一コミットになるよう同期して再度 git push してください。"
+    exit 1
+  fi
+else
+  echo "⚡ pre-push [プレビュー超高速モード]: ${PUSH_BRANCHES:-non-main} へのプッシュを検知しました（Playwright E2Eスキップ・静的検査＆型チェックのみ実行）…"
+  if ! QG_PUSH_BRANCH="${PUSH_BRANCHES:-preview}" QG_PUSH_FILES="$PUSH_FILES" node scripts/smart-quality-gate.mjs --preview; then
+    echo ""
+    echo "❌ 品質ゲート（超高速モード）が FAIL しました。プッシュをシステム的にブロックしました。"
+    echo "   上記レポートの FAIL 項目を修正し、再度 git push してください。"
+    exit 1
+  fi
+fi
+
 echo "✅ 品質ゲート ALL PASS。プッシュを続行します。"
 exit 0

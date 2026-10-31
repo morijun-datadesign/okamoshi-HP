@@ -867,20 +867,19 @@
                 <input class="w-full h-11 px-3 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40" id="parentTel" name="parent_tel" placeholder="09012345678（ハイフンなし可）" required type="tel" inputmode="numeric">
               </div>
 
-              <!-- 郵便番号 + 自動入力ボタン -->
+              <!-- 郵便番号（7桁入力で住所自動補完） -->
               <div class="flex flex-col gap-1.5 md:col-span-2">
-                <div class="flex items-center justify-between">
-                  <label class="font-label-md text-sm font-bold text-on-surface" for="postalCode">郵便番号</label>
-                  <span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold">必須</span>
+                <div class="flex items-center justify-between gap-2">
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <label class="font-label-md text-sm font-bold text-on-surface" for="postalCode">郵便番号</label>
+                    <span id="postalCodeHint" class="text-[11px] sm:text-xs text-on-surface-variant font-medium">7桁入力で住所が自動入力されます（ハイフンなし）</span>
+                  </div>
+                  <span class="bg-secondary text-on-secondary font-label-sm text-[11px] px-2.5 py-0.5 rounded-full font-bold shrink-0">必須</span>
                 </div>
-                <div class="flex items-center gap-2 w-full">
-                  <input class="w-[62%] sm:w-48 h-11 px-3.5 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40 shrink-0 font-mono" id="postalCode" name="postal_code" maxlength="8" placeholder="700-0822" required type="tel" inputmode="numeric" autocomplete="postal-code">
-                  <button id="btnSearchAddress" class="w-[38%] sm:w-auto px-2.5 sm:px-4 h-11 py-2.5 bg-primary hover:bg-primary-container disabled:opacity-60 disabled:cursor-not-allowed text-on-primary font-bold text-xs sm:text-sm rounded-lg transition-colors shadow-sm shrink-0 flex items-center justify-center gap-1 sm:gap-1.5 cursor-pointer whitespace-nowrap active:scale-[0.98]" onclick="searchAddressByPostalCode(true)" type="button">
-                    <span id="btnSearchAddressIcon" class="material-symbols-outlined text-[16px] shrink-0">location_searching</span>
-                    <span id="btnSearchAddressText">住所自動入力</span>
-                  </button>
+                <div class="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-3 w-full">
+                  <input class="w-full sm:w-72 h-11 px-3.5 bg-surface-container-low text-on-surface rounded-lg font-body-md text-base border border-outline-variant/30 placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/40 shrink-0 font-mono" id="postalCode" name="postal_code" maxlength="10" placeholder="7000822（7桁入力で住所が自動入力されます）" required type="tel" inputmode="numeric" autocomplete="postal-code" aria-describedby="postalCodeHint postalMsg">
                 </div>
-                <p id="postalMsg" class="text-xs font-medium hidden mt-0.5"></p>
+                <p id="postalMsg" class="text-xs font-medium hidden mt-0.5" role="status" aria-live="polite"></p>
                 <input type="hidden" id="prefecture" name="prefecture" value="岡山県">
               </div>
 
@@ -2877,50 +2876,49 @@
     const addressCache = new Map();
     let addressAbortController = null;
     let lastSearchedZip = '';
+    let _postalSuccessTimer = null;
 
     function normalizeZipCode(raw) {
       if (!raw) return '';
       return String(raw)
         .replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0))
-        .replace(/[^\d]/g, '');
+        .replace(/[^\d]/g, '')
+        .slice(0, 7);
     }
 
     function showPostalMessage(text, isError = true) {
+      if (_postalSuccessTimer) {
+        clearTimeout(_postalSuccessTimer);
+        _postalSuccessTimer = null;
+      }
       const msgElem = document.getElementById('postalMsg');
+      const zipInput = document.getElementById('postalCode');
+      if (zipInput) {
+        if (isError) {
+          zipInput.classList.add('apply-input-error', '!border-red-500', '!ring-2', '!ring-red-200');
+        } else {
+          zipInput.classList.remove('apply-input-error', '!border-red-500', '!ring-2', '!ring-red-200');
+        }
+      }
       if (!msgElem) return;
       msgElem.textContent = text;
-      msgElem.className = `text-xs font-medium mt-1.5 ${isError ? 'text-rose-600' : 'text-emerald-700'}`;
+      msgElem.className = `text-xs font-bold mt-1.5 ${isError ? 'text-rose-600' : 'text-emerald-700'}`;
       msgElem.classList.remove('hidden');
     }
 
     function clearPostalMessage() {
+      if (_postalSuccessTimer) {
+        clearTimeout(_postalSuccessTimer);
+        _postalSuccessTimer = null;
+      }
       const msgElem = document.getElementById('postalMsg');
+      const zipInput = document.getElementById('postalCode');
+      if (zipInput) {
+        zipInput.classList.remove('apply-input-error', '!border-red-500', '!ring-2', '!ring-red-200');
+      }
       if (!msgElem) return;
       msgElem.textContent = '';
       msgElem.classList.add('hidden');
-    }
-
-    function setAddressButtonLoading(loading) {
-      const btn = document.getElementById('btnSearchAddress');
-      const icon = document.getElementById('btnSearchAddressIcon');
-      const text = document.getElementById('btnSearchAddressText');
-      if (!btn) return;
-
-      if (loading) {
-        btn.disabled = true;
-        if (icon) {
-          icon.textContent = 'sync';
-          icon.classList.add('animate-spin');
-        }
-        if (text) text.textContent = '検索中...';
-      } else {
-        btn.disabled = false;
-        if (icon) {
-          icon.textContent = 'location_searching';
-          icon.classList.remove('animate-spin');
-        }
-        if (text) text.textContent = '住所自動入力';
-      }
     }
 
     async function fetchAddress(zip7, signal) {
@@ -2932,6 +2930,10 @@
       }
       if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
       const data = await res.json();
+      if (!data || data.error || (!data.prefecture && !data.city)) {
+        addressCache.set(zip7, null);
+        return null;
+      }
       addressCache.set(zip7, data);
       return data;
     }
@@ -2964,8 +2966,8 @@
       const addr1Input = document.getElementById('addressLine1');
       const addr2Input = document.getElementById('addressLine2');
 
-      // 郵便番号をハイフン付き（700-0822）に自動フォーマット
-      zipInput.value = `${cleanZip.slice(0, 3)}-${cleanZip.slice(3)}`;
+      // 郵便番号を半角数字7桁（ハイフンなし）に正規化して保持
+      zipInput.value = cleanZip;
       lastSearchedZip = cleanZip;
 
       // 1.「都道府県・市区町村・町名」入力欄の自動補完（全国対応）
@@ -2984,7 +2986,7 @@
       }, 2300);
 
       // 2. 「丁目・番地・号」入力欄へのフォーカス
-      // ※ 自動復元中以外は、手動ボタン押下時および7桁自動入力完了時のいずれでも自動フォーカスして入力待ち状態にする
+      // ※ 自動復元中以外は、7桁自動入力完了時に自動フォーカスして入力待ち状態にする
       if (!isRestoringProfile && addr2Input) {
         setTimeout(() => {
           addr2Input.focus();
@@ -3002,7 +3004,7 @@
       }
 
       showPostalMessage('✓ 住所を自動入力しました。続けて「丁目・番地・号」をご入力ください', false);
-      setTimeout(() => {
+      _postalSuccessTimer = setTimeout(() => {
         clearPostalMessage();
       }, 5000);
     }
@@ -3017,24 +3019,36 @@
       if (!zipInput || !prefSelect || !addr1Input) return;
 
       const cleanZip = normalizeZipCode(zipInput.value);
+      if (zipInput.value !== cleanZip) {
+        zipInput.value = cleanZip;
+      }
 
       // 入力桁数チェック
       if (cleanZip.length !== 7) {
-        if (isManualTrigger) {
-          showPostalMessage('郵便番号を7桁で入力してください（例: 700-0822）', true);
-          zipInput.focus();
+        if (isManualTrigger || cleanZip.length > 0) {
+          showPostalMessage(`郵便番号は7桁で入力してください（現在${cleanZip.length}桁です）`, true);
         }
         return;
       }
 
       // 自動トリガーで、すでに同じ郵便番号で取得済みの場合は重複実行しない
-      if (!isManualTrigger && cleanZip === lastSearchedZip) return;
+      if (!isManualTrigger && cleanZip === lastSearchedZip && addressCache.has(cleanZip)) {
+        const cached = addressCache.get(cleanZip);
+        if (!cached || (!cached.prefecture && !cached.city)) {
+          showPostalMessage('該当する住所が見つかりません。郵便番号にお間違いがないかご確認ください', true);
+        }
+        return;
+      }
 
       // 端末内キャッシュにあれば通信せず即時反映
       if (addressCache.has(cleanZip)) {
         const cached = addressCache.get(cleanZip);
-        if (cached) applyAddressResult(zipInput, cleanZip, cached, isManualTrigger);
-        else showPostalMessage('該当する住所が見つかりませんでした。郵便番号をご確認ください。', true);
+        if (cached && (cached.prefecture || cached.city)) {
+          applyAddressResult(zipInput, cleanZip, cached, isManualTrigger);
+        } else {
+          lastSearchedZip = cleanZip;
+          showPostalMessage('該当する住所が見つかりません。郵便番号にお間違いがないかご確認ください', true);
+        }
         return;
       }
 
@@ -3044,8 +3058,6 @@
       addressAbortController = controller;
       const timeoutId = setTimeout(() => controller.abort(), ADDRESS_API_TIMEOUT_MS);
 
-      // 通常は数十msで完了するため、スピナーは遅延表示してチラつきを防ぐ
-      const spinnerTimer = setTimeout(() => setAddressButtonLoading(true), 150);
       clearPostalMessage();
 
       try {
@@ -3056,7 +3068,9 @@
         if (data && (data.prefecture || data.city)) {
           applyAddressResult(zipInput, cleanZip, data, isManualTrigger);
         } else {
-          showPostalMessage('該当する住所が見つかりませんでした。郵便番号をご確認ください。', true);
+          addressCache.set(cleanZip, null);
+          lastSearchedZip = cleanZip;
+          showPostalMessage('該当する住所が見つかりません。郵便番号にお間違いがないかご確認ください', true);
         }
       } catch (err) {
         if (addressAbortController !== controller) return; // 新しいリクエストに置き換わった
@@ -3064,10 +3078,8 @@
         showPostalMessage('住所の取得に失敗しました。お手数ですが直接ご入力ください。', true);
       } finally {
         clearTimeout(timeoutId);
-        clearTimeout(spinnerTimer);
         if (addressAbortController === controller) {
           addressAbortController = null;
-          setAddressButtonLoading(false);
         }
       }
     }
@@ -3079,20 +3091,42 @@
       // スマホ等でキーボード表示時に市区町村・番地入力欄までしっかり画面内に収めるためのスクロール調整
       zipInput.addEventListener('focus', function() {
         if (isRestoringProfile) return;
-        clearPostalMessage();
         // フォーカス直後と仮想キーボード展開完了時（約260ms）の2段階で上部位置へスムーズスクロール
         setTimeout(smoothScrollToPostalSection, 50);
         setTimeout(smoothScrollToPostalSection, 260);
       });
 
-      zipInput.addEventListener('input', function() {
+      const handleZipInput = function(e) {
         if (isRestoringProfile) return;
-        clearPostalMessage();
-        const clean = normalizeZipCode(this.value);
+        if (e && e.isComposing) return;
+        const clean = normalizeZipCode(zipInput.value);
+        if (zipInput.value !== clean) {
+          zipInput.value = clean;
+        }
         if (clean.length === 7) {
           searchAddressByPostalCode(false);
-        } else if (addressAbortController) {
-          addressAbortController.abort();
+        } else {
+          lastSearchedZip = '';
+          if (addressAbortController) {
+            addressAbortController.abort();
+            addressAbortController = null;
+          }
+          clearPostalMessage();
+        }
+      };
+
+      zipInput.addEventListener('input', handleZipInput);
+      zipInput.addEventListener('compositionend', handleZipInput);
+
+      // 7桁未満のままフォーカスが外れた（blurした）場合は即時エラーメッセージを表示
+      zipInput.addEventListener('blur', function() {
+        if (isRestoringProfile || isClearingProfile) return;
+        const clean = normalizeZipCode(this.value);
+        if (this.value !== clean) {
+          this.value = clean;
+        }
+        if (clean.length > 0 && clean.length < 7) {
+          showPostalMessage(`郵便番号は7桁で入力してください（現在${clean.length}桁です）`, true);
         }
       });
 
@@ -3693,7 +3727,7 @@
         }
         applyValue('parentTel', data.parent_tel);
 
-        applyValue('postalCode', data.postal_code);
+        applyValue('postalCode', normalizeZipCode(data.postal_code));
         applyValue('addressLine1', data.address_line1);
         applyValue('addressLine2', data.address_line2);
         applyValue('addressLine3', data.address_line3);
@@ -3965,12 +3999,7 @@
       // (1) 郵便番号・電話番号・住所の半角自動正規化
       const postalCodeElem = document.getElementById('postalCode');
       if (postalCodeElem) {
-        let pVal = normalizeToHalfWidth(postalCodeElem.value).replace(/\s+/g, '');
-        const pDigits = pVal.replace(/[^\d]/g, '');
-        if (pDigits.length === 7 && !pVal.includes('-')) {
-          pVal = `${pDigits.slice(0, 3)}-${pDigits.slice(3)}`;
-        }
-        postalCodeElem.value = pVal;
+        postalCodeElem.value = normalizeZipCode(postalCodeElem.value);
       }
 
       const parentTelElem = document.getElementById('parentTel');
@@ -4103,10 +4132,11 @@ if (!parentKanaLastName || !parentKanaFirstName) {
         showFormError('日中連絡可能な電話番号を正しく入力してください。', target);
         return;
       }
-      if (!postalCode) {
+      if (!postalCode || postalCode.length !== 7) {
         resetSubmitBtn();
         const target = document.getElementById('postalCode');
-        showFormError('郵便番号を入力してください。', target);
+        showPostalMessage(`郵便番号は7桁で入力してください（現在${(postalCode || '').length}桁です）`, true);
+        showFormError('郵便番号が正しくないか、ご住所と一致していません', target);
         return;
       }
       if (!addressLine1) {
@@ -4114,6 +4144,43 @@ if (!parentKanaLastName || !parentKanaFirstName) {
         const target = document.getElementById('addressLine1');
         showFormError('「都道府県・市区町村・町名」を入力してください。', target);
         return;
+      }
+
+      // 【郵便番号とご住所の整合性チェック】
+      // 実在しない郵便番号、または郵便番号の地域（都道府県・市区町村）と手入力の住所が不一致の場合は送信をブロック
+      let verifiedZipData = addressCache.get(postalCode);
+      if (verifiedZipData === undefined) {
+        try {
+          const checkCtrl = new AbortController();
+          const checkTimer = setTimeout(() => checkCtrl.abort(), ADDRESS_API_TIMEOUT_MS);
+          verifiedZipData = await fetchAddress(postalCode, checkCtrl.signal);
+          clearTimeout(checkTimer);
+        } catch (err) {
+          console.warn('Postal code verification fetch failed:', err);
+        }
+      }
+      if (!verifiedZipData || (!verifiedZipData.prefecture && !verifiedZipData.city)) {
+        resetSubmitBtn();
+        const target = document.getElementById('postalCode');
+        showPostalMessage('該当する住所が見つかりません。郵便番号にお間違いがないかご確認ください', true);
+        showFormError('郵便番号が正しくないか、ご住所と一致していません', target);
+        return;
+      } else {
+        const normAddr1 = addressLine1.replace(/[\s　]+/g, '');
+        const expectedPref = (verifiedZipData.prefecture || '').replace(/[\s　]+/g, '');
+        const expectedCity = (verifiedZipData.city || '').replace(/[\s　]+/g, '');
+        const isPrefMatched = !expectedPref || normAddr1.startsWith(expectedPref);
+        const addrAfterPref = expectedPref && normAddr1.startsWith(expectedPref)
+          ? normAddr1.slice(expectedPref.length)
+          : normAddr1;
+        const isCityMatched = !expectedCity || addrAfterPref.startsWith(expectedCity);
+        if (!isPrefMatched || !isCityMatched) {
+          resetSubmitBtn();
+          const target = document.getElementById('postalCode');
+          showPostalMessage('郵便番号が正しくないか、ご住所と一致していません', true);
+          showFormError('郵便番号が正しくないか、ご住所と一致していません', target);
+          return;
+        }
       }
 
       if (!addressLine2) {

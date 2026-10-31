@@ -5,6 +5,7 @@
  *   node scripts/sync-ai-rules.mjs --check  … 同期ずれ検査（品質ゲートから呼び出し）
  *
  * 生成先:
+ *   CLAUDE.md                      … Claude Code 用プロジェクト常駐ルール
  *   .agents/rules/okamoshi-core.md … Antigravity ワークスペースルール（always_on）
  *   .antigravity/rules.md          … 互換用コピー
  *   .idx/airules.md                … Firebase Studio / IDX の AI ルール
@@ -16,6 +17,7 @@ import path from 'node:path';
 const SOURCE = 'GEMINI.md';
 const HEADER = '<!-- このファイルは GEMINI.md から自動生成されています。直接編集せず GEMINI.md を編集して `node scripts/sync-ai-rules.mjs` を実行してください。 -->\n\n';
 const TARGETS = [
+  { file: 'CLAUDE.md', frontmatter: '' },
   { file: '.agents/rules/okamoshi-core.md', frontmatter: '---\ntrigger: always_on\ndescription: おかもし公式サイトの2大絶対ルール（デザインシステム厳守・品質ゲート必須）\n---\n\n' },
   { file: '.antigravity/rules.md', frontmatter: '' },
   { file: '.idx/airules.md', frontmatter: '' },

@@ -13,6 +13,7 @@
     "quality-gate": "node scripts/quality-gate/run.mjs",
     "quality-gate:smart": "node scripts/smart-quality-gate.mjs",
     "quality-gate:full": "node scripts/smart-quality-gate.mjs --full",
+    "quality-gate:preview": "node scripts/smart-quality-gate.mjs --preview",
     "qg:static": "node scripts/quality-gate/static-checks.mjs",
     "qg:e2e": "playwright test -c playwright.config.mjs",
     "qg:forms": "playwright test -c playwright.config.mjs --grep @critical-forms",

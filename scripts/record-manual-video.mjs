@@ -878,14 +878,8 @@ async function main() {
   );
   await page.waitForTimeout(1500);
 
-  await typeWithEffect(page, page.locator('#postalCode'), '700-0822', {
+  await typeWithEffect(page, page.locator('#postalCode'), '7000822', {
     delay: 110,
-    pauseBefore: 1500,
-    pauseAfter: 1500,
-  });
-
-  // 住所自動入力ボタンをタップ
-  await tapWithEffect(page, page.locator('#btnSearchAddress'), {
     pauseBefore: 1500,
     pauseAfter: 1800,
   });

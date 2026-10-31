@@ -100,10 +100,10 @@ def optimize():
         if src_path:
             with Image.open(src_path) as im:
                 webp_out = os.path.join(img_dir, f"{base}.webp")
-                im.save(webp_out, "WEBP", quality=85, method=6)
+                im.save(webp_out, "WEBP", quality=95, method=6)
                 if has_sips:
                     avif_out = os.path.join(img_dir, f"{base}.avif")
-                    subprocess.run(["sips", "-s", "format", "avif", webp_out, "--out", avif_out], capture_output=True)
+                    subprocess.run(["sips", "-s", "format", "avif", "-s", "formatOptions", "95", webp_out, "--out", avif_out], capture_output=True)
 
     # 5. プレビューカード画像
     cards = [

@@ -168,8 +168,8 @@
         <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
           お申し込みを受け付けました
         </h1>
-        <p class="text-sm sm:text-base text-slate-600 leading-relaxed max-w-lg mx-auto">
-          岡山県統一模擬試験（おかもし）へのお申し込み、誠にありがとうございます。<br>
+        <p id="successLeadParagraph" class="text-sm sm:text-base text-slate-600 leading-relaxed max-w-lg mx-auto">
+          <span id="successExamTitle">岡山県統一模擬試験（おかもし）</span>へのお申し込み、誠にありがとうございます。<br>
           ご入力いただいたメールアドレス宛に、お申し込み完了通知メールをお送りいたしました。
         </p>
       </div>
@@ -181,7 +181,7 @@
           <span>完了通知メールをご確認ください</span>
         </div>
         <p class="text-slate-600 leading-relaxed pl-7 text-xs sm:text-[13px]">
-          お申し込み内容の確認メールが届いていない場合は、迷惑メールフォルダをご確認いただくか、受信設定（@chuoh-kyouiku.co.jp からの受信許可）をお確かめください。
+          お申し込み内容の確認メールが届いていない場合は、迷惑メールフォルダをご確認いただくか、受信設定（info@okayama-moshi.com からの受信許可）をお確かめください。
         </p>
       </div>
 
@@ -219,14 +219,10 @@
       </div>
 
       <!-- Action Buttons -->
-      <div class="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
-        <a href="/index.html" class="w-full sm:w-auto min-w-[200px] inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-primary hover:bg-primary-container text-white font-bold text-sm shadow-md transition-all active:scale-[0.99]">
+      <div class="pt-4 flex items-center justify-center">
+        <a href="/index.html" class="w-full sm:w-auto min-w-[220px] inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-primary hover:bg-primary-container text-white font-bold text-sm shadow-md transition-all active:scale-[0.99]">
           <span class="material-symbols-outlined text-lg">arrow_back</span>
           <span>トップページへ戻る</span>
-        </a>
-        <a href="/index.html#schedule-table" class="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-5 py-3.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm transition-colors">
-          <span>年間日程を確認する</span>
-          <span class="material-symbols-outlined text-base">chevron_right</span>
         </a>
       </div>
 
@@ -298,10 +294,83 @@
         return null;
       }
 
+      function detectExamTypeFromData(urlParams, dataObj) {
+        if (urlParams) {
+          const paramType = (urlParams.get('exam_type') || urlParams.get('type') || urlParams.get('exam') || '').toLowerCase();
+          if (paramType === 'both') return 'both';
+          if (paramType.includes('tekisei') || paramType.includes('適性')) return 'tekisei';
+          if (paramType.includes('touitsu') || paramType.includes('統一')) return 'touitsu';
+        }
+        if (!dataObj || typeof dataObj !== 'object') return 'touitsu';
+
+        const meta = dataObj.metadata || {};
+        const explicitType = String(dataObj.exam_type || meta.exam_type || '').toLowerCase();
+        if (explicitType === 'both') return 'both';
+        if (explicitType.includes('tekisei') || explicitType.includes('適性')) return 'tekisei';
+        if (explicitType.includes('touitsu') || explicitType.includes('統一')) return 'touitsu';
+
+        let hasTekisei = false;
+        let hasTouitsu = false;
+
+        const checkToken = (str) => {
+          const s = String(str || '').toLowerCase();
+          if (!s) return;
+          if (s.includes('適性') || s.includes('tekisei') || s.includes('sho6') || s.includes('p6') || s.includes('小学6') || s.includes('小6')) {
+            hasTekisei = true;
+          }
+          if (s.includes('統一') || s.includes('おかもし') || s.includes('chu') || s.includes('中学') || /^c[123]$/.test(s)) {
+            hasTouitsu = true;
+          }
+        };
+
+        if (Array.isArray(dataObj.exams) && dataObj.exams.length > 0) {
+          for (const ex of dataObj.exams) {
+            if (!ex || typeof ex !== 'object') continue;
+            const titleText = String(ex.title || ex.label || ex.exam_name || '');
+            if (titleText.includes('適性') || String(ex.id || '').toLowerCase().includes('tekisei') || String(ex.id || '').toLowerCase().includes('sho6') || String(ex.id || '').toLowerCase().includes('p6')) {
+              hasTekisei = true;
+            } else if (titleText.includes('統一') || titleText.includes('おかもし')) {
+              hasTouitsu = true;
+            } else {
+              checkToken(ex.grade || ex.grade_label || ex.id);
+            }
+          }
+        }
+
+        if (!hasTekisei && !hasTouitsu) {
+          const examNameStr = String(dataObj.exam_name || meta.exam_name || '');
+          if (examNameStr.includes('適性')) hasTekisei = true;
+          if (examNameStr.includes('統一') || examNameStr.includes('おかもし')) hasTouitsu = true;
+        }
+
+        if (!hasTekisei && !hasTouitsu) {
+          checkToken(dataObj.grade || meta.grade || dataObj.student_grade || meta.student_grade || dataObj.student_grade_label || meta.student_grade_label);
+        }
+
+        if (hasTekisei && hasTouitsu) return 'both';
+        if (hasTekisei) return 'tekisei';
+        return 'touitsu';
+      }
+
+      function applyExamTitleToDom(examType) {
+        const titleEl = document.getElementById('successExamTitle');
+        if (!titleEl) return;
+        if (examType === 'tekisei') {
+          titleEl.textContent = '岡山県適性検査対策模試';
+        } else if (examType === 'both') {
+          titleEl.textContent = '岡山県統一模擬試験（おかもし）・岡山県適性検査対策模試';
+        } else {
+          titleEl.textContent = '岡山県統一模擬試験（おかもし）';
+        }
+      }
+
       try {
         const urlParams = new URLSearchParams(window.location.search);
         const sessionId = urlParams.get('session_id') || urlParams.get('sessionId') || '';
         let payload = restorePendingPayload(sessionId);
+
+        // 申し込んだ模試の種別に応じてリード文を即時切り替え
+        applyExamTitleToDom(detectExamTypeFromData(urlParams, payload));
 
         // 決済方法に応じた案内ボックスの表示調整
         if (payload) {
@@ -419,6 +488,9 @@
           if (res.ok) {
             const apiResult = await res.json().catch(() => ({}));
             console.log('[apply/success] Successfully recorded via backend API:', apiResult);
+            if (apiResult && (apiResult.exam_type || apiResult.exam_name || apiResult.exams)) {
+              applyExamTitleToDom(detectExamTypeFromData(urlParams, apiResult));
+            }
             backendSuccess = true;
             sessionStorage.setItem(registrationKey, 'true');
           } else {

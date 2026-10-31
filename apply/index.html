@@ -4214,6 +4214,9 @@ if (!parentKanaLastName || !parentKanaFirstName) {
         const gradeLabels = { 'sho6': '小学6年生', 'chu1': '中学1年生', 'chu2': '中学2年生', 'chu3': '中学3年生' };
         const gradeText = gradeLabels[currentSelectedGrade] || currentSelectedGrade;
         const examNameStr = selectedExams.map(exam => exam.issueName ? `${exam.issueName} ${exam.title}` : exam.title).join(' / ');
+        const hasTekisei = selectedExams.some(exam => String(exam.title || '').includes('適性') || String(exam.id || '').includes('tekisei') || String(exam.grade || currentSelectedGrade) === 'sho6');
+        const hasTouitsu = selectedExams.some(exam => (String(exam.title || '').includes('統一') || String(exam.title || '').includes('おかもし')) && !String(exam.title || '').includes('適性'));
+        const examType = (hasTekisei && hasTouitsu) ? 'both' : (hasTekisei ? 'tekisei' : 'touitsu');
         
         // 住所の4分割（都道府県、市区・郡町村、町名・丁目・番地、建物名・部屋番号）
         const { pref, city, addr1, addr2 } = parseJapaneseAddress(prefecture, addressLine1, addressLine2, addressLine3);
@@ -4244,6 +4247,7 @@ if (!parentKanaLastName || !parentKanaFirstName) {
           venue_name: firstVenueName,
           amount: String(totalAmount),
           exam_name: examNameStr,
+          exam_type: examType,
           payment_method: selectedPaymentMethod,
           phone: parentTel,
           email: parentEmail,
@@ -4283,6 +4287,7 @@ if (!parentKanaLastName || !parentKanaFirstName) {
           received_at: '', // 決済完了時にJST日時を付与
           session_id: '',  // 決済完了時にStripeセッションIDを付与
           exam_name: examNameStr,
+          exam_type: examType,
           venue_name: firstVenueName,
           amount: totalAmount,
           payment_status: isKonbini ? 'unpaid' : 'paid',
@@ -4330,7 +4335,7 @@ if (!parentKanaLastName || !parentKanaFirstName) {
           customer_email: parentEmail,
           client_reference_id: `${studentLastName} ${studentFirstName}`,
           metadata: stripeMetadata,
-          success_url: `${window.location.origin}/apply/success?session_id={CHECKOUT_SESSION_ID}`,
+          success_url: `${window.location.origin}/apply/success?session_id={CHECKOUT_SESSION_ID}&exam_type=${encodeURIComponent(examType)}`,
           cancel_url: `${window.location.origin}/apply`,
           ...(paymentMethodOptions ? { payment_method_options: paymentMethodOptions } : {}),
           ...(isKonbini ? { konbini_expires_after_days: KONBINI_EXPIRES_AFTER_DAYS } : {}),

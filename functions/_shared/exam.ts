@@ -92,3 +92,60 @@ export const recordsFromMetadata = (metadata: Record<string, any> | undefined): 
   }
   return records;
 };
+
+export type ExamType = "touitsu" | "tekisei" | "both";
+
+/**
+ * 模試レコード配列や学年・模試名から模試種別（touitsu / tekisei / both）を判定する
+ */
+export const detectExamType = (
+  records: ExamRecord[],
+  examNameRaw = "",
+  gradeRaw = "",
+  explicitTypeRaw = ""
+): ExamType => {
+  const explicit = String(explicitTypeRaw || "").toLowerCase().trim();
+  if (explicit === "both") return "both";
+  if (explicit.includes("tekisei") || explicit.includes("適性")) return "tekisei";
+  if (explicit.includes("touitsu") || explicit.includes("統一")) return "touitsu";
+
+  let hasTekisei = false;
+  let hasTouitsu = false;
+
+  for (const r of records) {
+    const t = `${r.title} ${r.label} ${r.id}`.toLowerCase();
+    if (t.includes("適性") || t.includes("tekisei") || t.includes("sho6") || t.includes("p6")) {
+      hasTekisei = true;
+    } else if (t.includes("統一") || t.includes("おかもし") || t.includes("chu") || /^c[123]_/.test(t)) {
+      hasTouitsu = true;
+    }
+  }
+
+  if (!hasTekisei && !hasTouitsu && examNameRaw) {
+    if (examNameRaw.includes("適性")) hasTekisei = true;
+    if (examNameRaw.includes("統一") || examNameRaw.includes("おかもし")) hasTouitsu = true;
+  }
+
+  if (!hasTekisei && !hasTouitsu && gradeRaw) {
+    const g = String(gradeRaw).toLowerCase();
+    if (g.includes("sho6") || g.includes("p6") || g.includes("小学6") || g.includes("小6")) {
+      hasTekisei = true;
+    } else if (g.includes("chu") || g.includes("中学") || /^c[123]$/.test(g)) {
+      hasTouitsu = true;
+    }
+  }
+
+  if (hasTekisei && hasTouitsu) return "both";
+  if (hasTekisei) return "tekisei";
+  return "touitsu";
+};
+
+/**
+ * 模試種別に応じた正式名称（リード文・メール挨拶文用）を返す
+ */
+export const getExamBrandTitle = (examType: ExamType): string => {
+  if (examType === "tekisei") return "岡山県適性検査対策模試";
+  if (examType === "both") return "岡山県統一模擬試験（おかもし）・岡山県適性検査対策模試";
+  return "岡山県統一模擬試験（おかもし）";
+};
+

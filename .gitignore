@@ -26,3 +26,6 @@ scripts/archive/blog-migration/data/microcms_import_manual.json
 test-results/
 playwright-report/
 .dev.vars
+
+# Google Vids用 操作手順動画の生成バイナリ（※台本と撮影スクリプトのみGit管理）
+manual_video_assets/*.mp4

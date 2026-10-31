@@ -17,7 +17,7 @@ const fail = (check, file, msg) => results.push({ check, file, msg });
 // ---------------------------------------------------------------- 対象ファイル
 const allFiles = execSync('git ls-files -co --exclude-standard', { encoding: 'utf8' })
   .split('\n').filter(Boolean).filter((f) => fs.existsSync(f));
-const BINARY = /\.(png|jpe?g|webp|avif|gif|ico|pdf|woff2?|ttf|otf|zip|gz)$/i;
+const BINARY = /\.(png|jpe?g|webp|avif|gif|ico|pdf|woff2?|ttf|otf|zip|gz|mp4|webm|mov)$/i;
 const textFiles = allFiles.filter((f) => !BINARY.test(f) && f !== 'package-lock.json' && !f.startsWith('scripts/quality-gate/'));
 const read = (f) => fs.readFileSync(f, 'utf8');
 

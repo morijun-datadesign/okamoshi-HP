@@ -8,7 +8,7 @@ import {
   getAdminEmail,
 } from "../_shared/env";
 import { jsonResponse, errorResponse } from "../_shared/http";
-import { recordsFromExams, recordsFromMetadata } from "../_shared/exam";
+import { recordsFromExams, recordsFromMetadata, detectExamType, getExamBrandTitle } from "../_shared/exam";
 import { fetchCheckoutSession, fetchPaymentIntent } from "../_shared/stripe";
 import { sendResendEmail } from "../_shared/resend";
 import { extractKonbiniInfo, KonbiniInfo, EMPTY_KONBINI } from "../_shared/konbini";
@@ -151,6 +151,14 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     if (examRecords.length === 0) {
       examRecords = [{ id: "", label: examNameVal, issue: "", title: examNameVal, venue: venueVal, price: amountVal, date: "" }];
     }
+    const examType = detectExamType(
+      examRecords,
+      examNameVal,
+      gradeVal,
+      String(body.exam_type || meta.exam_type || "")
+    );
+    const examBrandTitle = getExamBrandTitle(examType);
+    const subjectPrefix = examType === "tekisei" ? "【岡山県適性検査対策模試】" : "【岡山県統一模擬試験】";
 
     const gasSuccess = true;
     const gasResponseData = { delegated_to: "stripe-webhook", records: examRecords.length };
@@ -220,10 +228,10 @@ ${examsListText}
 
     // B. 申込者宛て サンクスメール
     const userSubject = isUnpaidKonbini
-      ? "【岡山県統一模擬試験】お申し込みを受け付けました（コンビニ決済のお願い）"
-      : "【岡山県統一模擬試験】お申し込みを受け付けました";
+      ? `${subjectPrefix}お申し込みを受け付けました（コンビニ決済のお願い）`
+      : `${subjectPrefix}お申し込みを受け付けました`;
     const userTextContent = `
-${parentFullName ? parentFullName + " 様\n（生徒様：" + (studentFullName || "生徒") + " 様）\n\n" : (studentFullName ? studentFullName + " 様\n\n" : "")}岡山県統一模擬試験（おかもし）へのお申し込み、誠にありがとうございます。
+${parentFullName ? parentFullName + " 様\n（生徒様：" + (studentFullName || "生徒") + " 様）\n\n" : (studentFullName ? studentFullName + " 様\n\n" : "")}${examBrandTitle}へのお申し込み、誠にありがとうございます。
 以下の内容でお申し込みおよび決済手続きを受け付けいたしました。
 
 --------------------------------------------------
@@ -321,6 +329,8 @@ Web : https://okayama-moshi.com
         error: mailError,
       },
       session_id: activeSessionId,
+      exam_type: examType,
+      exam_name: examNameVal,
       redirect_url: "/apply/success",
     });
   } catch (error: any) {

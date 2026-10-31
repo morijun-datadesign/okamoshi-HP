@@ -624,15 +624,16 @@ test(
     await expect(successHeading).toHaveText('お申し込みを受け付けました');
     await expect(successLead).toContainText('岡山県統一模擬試験（おかもし）へのお申し込み、誠にありがとうございます。');
     await expect(successLead).toContainText('ご入力いただいたメールアドレス宛に、お申し込み完了通知メールをお送りいたしました。');
+    await expect(page.locator('main')).toContainText('受信設定（info@okayama-moshi.com からの受信許可）');
+    await expect(page.locator('main')).not.toContainText('@chuoh-kyouiku.co.jp');
     await expect(backHomeBtn).toContainText('トップページへ戻る');
-    await expect(scheduleBtn).toContainText('年間日程を確認する');
+    await expect(scheduleBtn, '「年間日程を確認する」ボタンが削除されていること').toHaveCount(0);
     await expect(konbiniNoticeBox, 'カード決済完了時はコンビニ決済案内ボックスが非表示であること').toBeHidden();
 
     await verifyReadableStyle(successHeading, '申込完了画面(カード)の見出し(h1)');
     await verifyReadableStyle(successLead, '申込完了画面(カード)のリード本文');
     await verifyReadableStyle(successScheduleHeading, '申込完了画面(カード)のスケジュール見出し(h2)');
     await verifyReadableStyle(backHomeBtn, '申込完了画面(カード)の「トップページへ戻る」ボタン');
-    await verifyReadableStyle(scheduleBtn, '申込完了画面(カード)の「年間日程を確認する」ボタン');
 
     expect(checkoutRequests.length).toBe(1);
     expect(checkoutRequests[0].grade).toBe('中学3年生');
@@ -668,6 +669,10 @@ test(
     await page.evaluate(() => document.fonts?.ready).catch(() => {});
 
     await expect(successHeading).toHaveText('お申し込みを受け付けました');
+    await expect(
+      successLead,
+      '適性検査模試申込時はリード文が「岡山県適性検査対策模試」に動的に切り替わること'
+    ).toContainText('岡山県適性検査対策模試へのお申し込み、誠にありがとうございます。');
     await expect(konbiniNoticeBox, 'コンビニ決済時は完了画面にコンビニ決済案内ボックスが表示されること').toBeVisible();
     await verifyReadableStyle(konbiniNoticeBox.locator('span').nth(1), '申込完了画面(コンビニ)の案内見出し');
     await verifyReadableStyle(konbiniNoticeBox.locator('p'), '申込完了画面(コンビニ)の案内本文');

@@ -9,7 +9,7 @@ import {
   getAdminEmail,
 } from "../_shared/env";
 import { jsonResponse } from "../_shared/http";
-import { ExamRecord, recordsFromMetadata } from "../_shared/exam";
+import { ExamRecord, recordsFromMetadata, detectExamType, getExamBrandTitle } from "../_shared/exam";
 import { fetchCheckoutSession, fetchPaymentIntent, verifyStripeWebhookSignature, checkRecentPaidSession } from "../_shared/stripe";
 import { sendResendEmail } from "../_shared/resend";
 import { extractKonbiniInfo, KonbiniInfo, EMPTY_KONBINI, formatJst } from "../_shared/konbini";
@@ -229,6 +229,9 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const examRecords: ExamRecord[] = parsedRecords.length > 0
       ? parsedRecords
       : [{ id: "", label: examNameVal, issue: "", title: examNameVal, venue: venueName, price: amountVal, date: "" }];
+    const examType = detectExamType(examRecords, examNameVal, grade, String(metadata.exam_type || ""));
+    const examBrandTitle = getExamBrandTitle(examType);
+    const subjectPrefix = examType === "tekisei" ? "【岡山県適性検査対策模試】" : "【岡山県統一模擬試験】";
 
     // 5. GAS へ送信
     let gasResult: Record<string, any> = {};
@@ -371,9 +374,9 @@ ${examsListText}
                 from: fromEmail,
                 to: [emailVal],
                 reply_to: adminEmail,
-                subject: "【岡山県統一模擬試験】コンビニ決済のご入金を確認いたしました",
+                subject: `${subjectPrefix}コンビニ決済のご入金を確認いたしました`,
                 text: `
-${parentName ? parentName + " 様\n\n" : ""}岡山県統一模擬試験（おかもし）へのお申し込み、誠にありがとうございます。
+${parentName ? parentName + " 様\n\n" : ""}${examBrandTitle}へのお申し込み、誠にありがとうございます。
 コンビニエンスストアでのお支払い（ご入金）を確認いたしましたので、以下の内容でお申し込みが確定いたしました。
 
 --------------------------------------------------
@@ -487,9 +490,9 @@ ${examsListText}
 受付日時: ${jstReceivedAt}
 `.trim();
 
-    const userSubject = "【岡山県統一模擬試験】お申し込みを受け付けました";
+    const userSubject = `${subjectPrefix}お申し込みを受け付けました`;
     const userText = `
-${parentName ? parentName + " 様\n\n" : ""}岡山県統一模擬試験（おかもし）へのお申し込み、誠にありがとうございます。
+${parentName ? parentName + " 様\n\n" : ""}${examBrandTitle}へのお申し込み、誠にありがとうございます。
 以下の内容でお申し込みを受け付けいたしました。
 
 --------------------------------------------------

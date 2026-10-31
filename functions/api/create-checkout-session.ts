@@ -1,7 +1,7 @@
 import { Env, readEnv } from "../_shared/env";
 import { jsonResponse } from "../_shared/http";
 import { verifyTurnstile } from "../_shared/turnstile";
-import { formatExamLabel } from "../_shared/exam";
+import { formatExamLabel, detectExamType } from "../_shared/exam";
 
 /** 国内電話番号（例: 090-1234-5678）を E.164 形式（+819012345678）へ変換する。変換できない場合は空文字。 */
 const toE164JP = (raw: string): string => {
@@ -216,10 +216,18 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const examNameWithIssue = examLineItems.length > 0
       ? examLineItems.map((item) => item.record.label).join(" / ")
       : examName;
+    const examType = detectExamType(
+      examLineItems.map((item) => item.record),
+      examNameWithIssue,
+      grade,
+      String(body.exam_type || existingMeta.exam_type || "")
+    );
+    const finalSuccessUrl = `${successUrl}&exam_type=${encodeURIComponent(examType)}`;
 
     // 4. metadata の構築とサニタイズ（全値文字列・最大500文字・キー長最大40文字）
     const metadataRaw: Record<string, string> = {
       source: "okamoshi_apply",
+      exam_type: examType,
       student_name: studentName,
       student_kana: studentKana,
       grade: grade,
@@ -284,7 +292,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     // 5. Stripe API（POST /v1/checkout/sessions）を直接呼び出す
     const params = new URLSearchParams();
     params.append("mode", "payment");
-    params.append("success_url", successUrl);
+    params.append("success_url", finalSuccessUrl);
     params.append("cancel_url", cancelUrl);
 
     // 5-1. Checkout へ連絡先を事前入力するため、Stripe Customer を作成して紐付ける

@@ -246,20 +246,12 @@ def main():
 
     # 6. loadArticleDetail 関数の置き換え（Functions API ＋ microCMS 直接フォールバックの二重構成 ＆ 確実な起動）
     preview_load_func = """
-    // microCMS 直接取得用のフォールバック設定（万が一 Functions API が失敗した場合の保険）
-    const PREVIEW_DIRECT_CONFIG = {
-      serviceDomain: 'okamoshi-blog',
-      apiKey: '4qO3xGjs5W1r7zolbBgAX2KXP8VEUooOpMtc',
-      endpoint: 'blogs'
-    };
-
     async function loadArticleDetail() {
       const params = new URLSearchParams(window.location.search);
       const articleId = params.get('id') ? params.get('id').trim() : '';
       const draftKey = params.get('draftKey') ? params.get('draftKey').trim() : '';
       const statusPill = document.getElementById('preview-status-pill');
 
-      console.log('[Preview] Initializing preview for id=' + articleId + ', draftKey=' + draftKey);
 
       if (!articleId) {
         if (statusPill) {
@@ -279,11 +271,9 @@ def main():
         if (draftKey.length > 0) {
           apiUrl += `&draftKey=${encodeURIComponent(draftKey)}`;
         }
-        console.log('[Preview] Fetching via Functions API:', apiUrl);
         const res = await fetch(apiUrl);
         if (res.ok) {
           post = await res.json();
-          console.log('[Preview] Successfully fetched via Functions API:', post);
         } else {
           const errData = await res.json().catch(() => ({}));
           lastErrorMessage = errData.message || `API HTTP ${res.status}`;
@@ -294,32 +284,9 @@ def main():
         lastErrorMessage = funcErr.message || String(funcErr);
       }
 
-      // 2. Functions で取得できなかった場合、ブラウザから microCMS API へ直接フェッチ（フォールバック）
-      if (!post) {
-        console.log('[Preview] Falling back to direct microCMS API fetch...');
-        try {
-          let directUrl = `https://${PREVIEW_DIRECT_CONFIG.serviceDomain}.microcms.io/api/v1/${PREVIEW_DIRECT_CONFIG.endpoint}/${encodeURIComponent(articleId)}`;
-          if (draftKey.length > 0) {
-            directUrl += `?draftKey=${encodeURIComponent(draftKey)}`;
-          }
-          const directRes = await fetch(directUrl, {
-            headers: { 'X-MICROCMS-API-KEY': PREVIEW_DIRECT_CONFIG.apiKey }
-          });
-          if (directRes.ok) {
-            post = await directRes.json();
-            console.log('[Preview] Successfully fetched via direct microCMS fallback:', post);
-          } else {
-            const errText = await directRes.text();
-            lastErrorMessage = `microCMS直接取得エラー (${directRes.status}): ${errText}`;
-            console.error('[Preview] Direct microCMS fetch error:', lastErrorMessage);
-          }
-        } catch (directErr) {
-          console.error('[Preview] Direct microCMS fetch exception:', directErr);
-          lastErrorMessage = directErr.message || String(directErr);
-        }
-      }
+      // ※ブラウザから microCMS へ直接アクセスする旧フォールバックは、APIキーが公開されるため廃止（Functions 経由のみ）
 
-      // 3. 取得結果の描画
+      // 2. 取得結果の描画
       if (post) {
         try {
           if (statusPill) {

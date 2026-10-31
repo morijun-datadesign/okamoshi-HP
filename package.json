@@ -9,10 +9,15 @@
     "build:functions": "wrangler pages functions build",
     "typecheck": "tsc --noEmit",
     "check": "npm run typecheck && npm run build:functions",
-    "dev": "wrangler pages dev . --compatibility-date=2025-01-01"
+    "dev": "wrangler pages dev . --compatibility-date=2025-01-01",
+    "quality-gate": "node scripts/quality-gate/run.mjs",
+    "qg:static": "node scripts/quality-gate/static-checks.mjs",
+    "qg:e2e": "playwright test -c playwright.config.mjs",
+    "prepare": "git config core.hooksPath .githooks || true"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250214.0",
+    "@playwright/test": "^1.64.1",
     "typescript": "^5.7.3",
     "wrangler": "^3.109.2"
   }

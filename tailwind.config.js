@@ -5,6 +5,7 @@ module.exports = {
     "./apply/**/*.html",
     "./contact/**/*.html",
     "./lp/**/*.html",
+    "./news/**/*.html",
     "./js/**/*.js"
   ],
   darkMode: "class",

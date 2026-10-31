@@ -1,0 +1,15 @@
+#!/bin/sh
+# git push 前に品質ゲートを強制実行し、1項目でも FAIL ならプッシュをブロックする。
+# 有効化: npm install（prepare スクリプトが core.hooksPath=.githooks を設定）
+#         または手動で `git config core.hooksPath .githooks`
+# ※ `git push --no-verify` による回避は運用ルール（GEMINI.md 絶対ルール②）で禁止。
+
+echo "🔒 pre-push: 品質ゲート（npm run quality-gate）を実行します…"
+if ! npm run --silent quality-gate; then
+  echo ""
+  echo "❌ 品質ゲートが FAIL しました。プッシュを中止します。"
+  echo "   上記レポートの FAIL 項目を修正し、再度 git push してください。"
+  exit 1
+fi
+echo "✅ 品質ゲート ALL PASS。プッシュを続行します。"
+exit 0

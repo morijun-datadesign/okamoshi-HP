@@ -3,8 +3,8 @@ import { jsonResponse, errorResponse } from "../_shared/http";
 
 const LOG = "[functions/api/news-preview]";
 
-// フォールバック用 microCMS 設定（環境変数が未設定の場合でも動作を保証）
-const DEFAULT_MICROCMS_API_KEY = "4qO3xGjs5W1r7zolbBgAX2KXP8VEUooOpMtc";
+// microCMS 接続設定（APIキーは Cloudflare Pages の環境変数 MICROCMS_API_KEY（シークレット）でのみ指定する。
+// ※ソースコードへのキー直書きは禁止：GitHub/公開アセット経由で漏洩するため）
 const DEFAULT_MICROCMS_SERVICE_DOMAIN = "okamoshi-blog";
 const DEFAULT_MICROCMS_ENDPOINT = "blogs";
 
@@ -19,7 +19,11 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
       return errorResponse("記事ID（id）が指定されていません。", 400);
     }
 
-    const apiKey = readEnv(context.env, "MICROCMS_API_KEY") || DEFAULT_MICROCMS_API_KEY;
+    const apiKey = readEnv(context.env, "MICROCMS_API_KEY");
+    if (!apiKey) {
+      console.error(`${LOG} MICROCMS_API_KEY is not configured.`);
+      return errorResponse("サーバー側の microCMS APIキー（MICROCMS_API_KEY）が設定されていません。", 500);
+    }
     const serviceDomain = readEnv(context.env, "MICROCMS_SERVICE_DOMAIN") || DEFAULT_MICROCMS_SERVICE_DOMAIN;
     const endpoint = readEnv(context.env, "MICROCMS_ENDPOINT") || DEFAULT_MICROCMS_ENDPOINT;
 
@@ -29,7 +33,6 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
       microcmsUrl += `?draftKey=${encodeURIComponent(draftKey)}`;
     }
 
-    console.log(`${LOG} Fetching preview from microCMS: id=${id} hasDraftKey=${draftKey.length > 0} url=${microcmsUrl}`);
 
     const res = await fetch(microcmsUrl, {
       method: "GET",

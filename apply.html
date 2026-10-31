@@ -4355,10 +4355,6 @@ if (!parentKanaLastName || !parentKanaFirstName) {
           }))
         };
 
-        console.log('==============================================');
-        console.log('【申込・決済セッション作成 Payload 準備完了】');
-        console.log(JSON.stringify(checkoutPayload, null, 2));
-        console.log('==============================================');
 
         // 決済完了時（success遷移時）に台帳登録と通知を実行するため一時ストレージ＆Cookieに三重保存
         try {
@@ -4398,7 +4394,6 @@ if (!parentKanaLastName || !parentKanaFirstName) {
 
         checkoutUrl = result.url || result.checkout_url || null;
         createdSessionId = result.session_id || result.sessionId || result.id || (checkoutUrl ? checkoutUrl.match(/(cs_[a-zA-Z0-9_]+)/)?.[1] : null);
-        console.log('[API] Stripe checkout session created directly:', checkoutUrl, createdSessionId);
 
         if (!checkoutUrl || typeof checkoutUrl !== 'string' || !checkoutUrl.startsWith('http')) {
           throw new Error('決済画面のURLが取得できませんでした。');
@@ -4420,7 +4415,6 @@ if (!parentKanaLastName || !parentKanaFirstName) {
 
         // タイマークリア＆Stripe決済画面へリダイレクト
         clearTimeout(safetyTimer);
-        console.log('[Redirect] Navigating to Stripe Checkout:', checkoutUrl);
         window.location.href = checkoutUrl;
 
       } catch (err) {
@@ -4450,7 +4444,6 @@ if (!parentKanaLastName || !parentKanaFirstName) {
           const data = await res.json();
           if (data && data.success && data.grades) {
             _examGuidesCache = data.grades;
-            console.log('[D1] exam-guides データを正常に取得しました:', _examGuidesCache);
             if (currentSelectedGrade && typeof renderExamCards === 'function') {
               renderExamCards(currentSelectedGrade);
             }

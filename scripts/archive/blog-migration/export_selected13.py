@@ -9,7 +9,8 @@ import re
 import csv
 import json
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# アーカイブ移動後: 入出力データは同階層の data/ 配下
+BASE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 INPUT_JSON = os.path.join(BASE_DIR, "microcms_import_manual.json")
 OUTPUT_CSV = os.path.join(BASE_DIR, "microcms_import_selected13.csv")
 OUTPUT_JSON = os.path.join(BASE_DIR, "microcms_import_selected13.json")

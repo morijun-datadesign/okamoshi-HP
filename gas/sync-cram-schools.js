@@ -16,7 +16,11 @@ const CRAM_SYNC_CONFIG = {
   API_URL: "https://okayama-moshi.com/api/admin/sync-cram-schools",
 
   // 認証シークレットキー (Cloudflare Pages 環境変数 CRAM_SCHOOLS_SYNC_SECRET と一致)
-  SYNC_SECRET: "okamoshi_cram_sync_2026_sec_7f9a2b",
+  // ※シークレットはコードに直書きしない。GASエディタ「プロジェクトの設定 > スクリプト プロパティ」に
+  //   SYNC_SECRET を登録して読み込む（値は Cloudflare Pages の同名環境変数と一致させる）
+  get SYNC_SECRET() {
+    return PropertiesService.getScriptProperties().getProperty("SYNC_SECRET") || "";
+  },
 
   // 対象シート名（空文字 '' の場合は現在開いているアクティブシート）
   SHEET_NAME: "実施塾一覧",

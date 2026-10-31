@@ -13,7 +13,8 @@ import urllib.request
 import urllib.parse
 from datetime import datetime
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# アーカイブ移動後: 入出力データは同階層の data/ 配下
+BASE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 INPUT_JSON = os.path.join(BASE_DIR, "microcms_import_clean.json")
 OUTPUT_CSV = os.path.join(BASE_DIR, "microcms_import_manual.csv")
 OUTPUT_JSON = os.path.join(BASE_DIR, "microcms_import_manual.json")

@@ -2,73 +2,67 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://okayama-moshi.com/</loc>
-    <lastmod>2026-10-30</lastmod>
+    <lastmod>2026-10-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://okayama-moshi.com/apply</loc>
-    <lastmod>2026-10-30</lastmod>
+    <lastmod>2026-10-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://okayama-moshi.com/news.html</loc>
-    <lastmod>2026-10-30</lastmod>
+    <lastmod>2026-10-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://okayama-moshi.com/schools.html</loc>
-    <lastmod>2026-10-30</lastmod>
+    <lastmod>2026-10-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://okayama-moshi.com/contact/</loc>
-    <lastmod>2026-10-30</lastmod>
+    <lastmod>2026-10-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://okayama-moshi.com/contact/individual/</loc>
-    <lastmod>2026-10-30</lastmod>
+    <lastmod>2026-10-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://okayama-moshi.com/contact/organization/</loc>
-    <lastmod>2026-10-30</lastmod>
+    <lastmod>2026-10-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://okayama-moshi.com/privacy.html</loc>
-    <lastmod>2026-10-30</lastmod>
+    <lastmod>2026-10-31</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://okayama-moshi.com/tokushoho.html</loc>
-    <lastmod>2026-10-30</lastmod>
+    <lastmod>2026-10-31</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://okayama-moshi.com/lp/</loc>
-    <lastmod>2026-10-30</lastmod>
+    <lastmod>2026-10-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://okayama-moshi.com/news/ynvbigkqcq/</loc>
-    <lastmod>2026-10-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://okayama-moshi.com/news/leoodvgmoet/</loc>
-    <lastmod>2026-09-29</lastmod>
+    <lastmod>2026-10-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -79,20 +73,80 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://okayama-moshi.com/news/b055d-p_k7/</loc>
-    <lastmod>2026-09-26</lastmod>
+    <loc>https://okayama-moshi.com/news/20260914-1/</loc>
+    <lastmod>2026-10-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://okayama-moshi.com/news/20p7a-hecrv/</loc>
-    <lastmod>2026-09-26</lastmod>
+    <loc>https://okayama-moshi.com/news/20260721_1/</loc>
+    <lastmod>2026-10-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://okayama-moshi.com/news/if8frequgg/</loc>
     <lastmod>2026-10-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://okayama-moshi.com/news/column-7/</loc>
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://okayama-moshi.com/news/column-6/</loc>
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://okayama-moshi.com/news/column-5/</loc>
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://okayama-moshi.com/news/column-4/</loc>
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://okayama-moshi.com/news/column-3/</loc>
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://okayama-moshi.com/news/column-2/</loc>
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://okayama-moshi.com/news/column/</loc>
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://okayama-moshi.com/news/202408101-2/</loc>
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://okayama-moshi.com/news/10140831-2/</loc>
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://okayama-moshi.com/news/okayama-highschoolexam_tokubetsu_1/</loc>
+    <lastmod>2026-10-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>

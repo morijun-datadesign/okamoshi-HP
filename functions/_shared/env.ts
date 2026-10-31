@@ -38,28 +38,27 @@ export interface Env {
   MICROCMS_ENDPOINT?: string;
 }
 
-// メール送信用 Resend APIキー（※プレビュー/フォールバック用キーを安全に保持）
-export const DEFAULT_RESEND_API_KEY = ["re", "jc13fgeZ", "54yeBoK6kyqLLidzHjGNiCen"].join("_");
+// ※シークレット（Resend APIキー・同期シークレット・microCMS APIキー等）のソースコード直書きは禁止。
+//   すべて Cloudflare Pages の環境変数（シークレット）でのみ設定する。品質ゲートで自動検出される。
 
 export const DEFAULT_GAS_URL =
   "https://script.google.com/macros/s/AKfycbwYljLEwbfFCQWx-c6JneJUDINYbhYl0_M1-e9CwhBskBvRBEdIuwNotYceCg5i6M9z/exec";
 
 export const DEFAULT_FROM_EMAIL = "岡山県統一模擬試験 <info@okayama-moshi.com>";
 export const DEFAULT_ADMIN_EMAIL = "info@okayama-moshi.com";
-export const DEFAULT_CRAM_SCHOOLS_SYNC_SECRET = "okamoshi_cram_sync_2026_sec_7f9a2b";
-export const DEFAULT_EXAM_GUIDES_SYNC_SECRET = "okamoshi_exam_sync_2026_sec_8d3e1f";
 
 /**
- * Resend API キーを取得（環境変数 RESEND_API_KEY / RESEND_KEY を最優先、未設定時はフォールバックキー）
+ * Resend API キーを取得（環境変数 RESEND_API_KEY / RESEND_KEY / RESEND_TOKEN）。未設定時は空文字（送信不可）
  */
 export const getResendApiKey = (env: Env | undefined): { key: string; source: string } => {
-  if (!env) return { key: DEFAULT_RESEND_API_KEY, source: "fallback_default" };
+  if (!env) return { key: "", source: "missing" };
   const anyEnv = env as Record<string, any>;
   const envKey = anyEnv.RESEND_API_KEY || anyEnv.RESEND_KEY || anyEnv.RESEND_TOKEN;
   if (typeof envKey === "string" && envKey.trim() !== "") {
     return { key: envKey.trim(), source: "env" };
   }
-  return { key: DEFAULT_RESEND_API_KEY, source: "fallback_default" };
+  console.error("[env] RESEND_API_KEY is not configured.");
+  return { key: "", source: "missing" };
 };
 
 /**

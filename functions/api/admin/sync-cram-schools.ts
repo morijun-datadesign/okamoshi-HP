@@ -6,7 +6,7 @@
  *
  * 認証:
  *   ヘッダー: `x-sync-secret` または `Authorization: Bearer <secret>`
- *   (環境変数 CRAM_SCHOOLS_SYNC_SECRET または DEFAULT_CRAM_SCHOOLS_SYNC_SECRET と照合)
+ *   (環境変数 CRAM_SCHOOLS_SYNC_SECRET と照合。未設定時は常に拒否)
  *
  * リクエストボディ (以下のいずれの形式にも対応):
  *   形式 1 (オブジェクト配列):
@@ -33,7 +33,6 @@
 import {
   Env,
   readEnv,
-  DEFAULT_CRAM_SCHOOLS_SYNC_SECRET,
 } from "../../_shared/env";
 import { jsonResponse } from "../../_shared/http";
 
@@ -55,7 +54,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
   const expectedSecret =
     readEnv(env, "CRAM_SCHOOLS_SYNC_SECRET") ||
     (env as any)?.SYNC_SECRET ||
-    DEFAULT_CRAM_SCHOOLS_SYNC_SECRET;
+    "";
 
   const headerSecret =
     request.headers.get("x-sync-secret") ||
@@ -71,7 +70,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
   const clientSecret = headerSecret || body.secret || "";
 
-  if (!clientSecret || clientSecret !== expectedSecret) {
+  if (!expectedSecret || !clientSecret || clientSecret !== expectedSecret) {
     console.warn(`${LOG} Unauthorized access attempt`);
     return jsonResponse({ success: false, error: "Unauthorized: Invalid secret key" }, 401);
   }

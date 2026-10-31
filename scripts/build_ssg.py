@@ -12,6 +12,7 @@ import os
 import sys
 import re
 import json
+import shutil
 import urllib.request
 import urllib.parse
 from datetime import datetime
@@ -266,7 +267,7 @@ def format_article_content(raw_html):
 
     return content, headings
 
-def build_article_card_html(article, is_top=False):
+def build_article_card_html(article, is_top=False, heading_level=3):
     """お知らせ一覧・トップ用の共通カードHTML生成"""
     a_id = article.get("id", "")
     title = article.get("title", "無題のお知らせ")
@@ -299,9 +300,9 @@ def build_article_card_html(article, is_top=False):
                     {cat_name}
                   </span>
                 </div>
-                <h3 class="font-bold text-[15px] sm:text-base text-slate-900 group-hover:text-brand-green transition-colors flex-1 leading-snug break-words">
+                <h{heading_level} class="font-bold text-[15px] sm:text-base text-slate-900 group-hover:text-brand-green transition-colors flex-1 leading-snug break-words">
                   {html_escape(title)}
-                </h3>
+                </h{heading_level}>
               </div>
               <div class="flex items-center gap-2 shrink-0">
                 <span class="text-xs font-bold text-slate-500 group-hover:text-brand-green transition-colors hidden md:inline">詳細を読む</span>
@@ -617,9 +618,9 @@ def build_article_detail_page(article, all_articles, template_html, exam_guides)
 
     return html
 
-def update_top_page(articles):
-    """トップページ（index.html）の最新お知らせ枠を事前レンダリング & クライアントfetch廃止"""
-    index_path = os.path.join(BASE_DIR, "index.html")
+def update_top_page(articles, rel_path="index.html"):
+    """トップページ（index.html）/ LP（lp/index.html）の最新お知らせ枠を事前レンダリング & クライアントfetch廃止"""
+    index_path = os.path.join(BASE_DIR, rel_path)
     if not os.path.exists(index_path):
         return
 
@@ -641,13 +642,13 @@ def update_top_page(articles):
         after_parts = rest.split(end_tag)
         after = after_parts[1]
         content = f"{before}{start_tag}\n{cards_html}\n        </div>\n\n        {end_tag}{after}"
-        print("Updated index.html #latest-news-list with static cards.")
+        print(f"Updated {rel_path} #latest-news-list with static cards.")
     else:
         # 正規表現フォールバック
         reg = re.compile(r'(<div id="latest-news-list"[^>]*>).*?(</div>\s*<!-- すべてのお知らせを見る)', re.DOTALL)
         if reg.search(content):
             content = reg.sub(f'\\1\n{cards_html}\n        \\2', content)
-            print("Updated index.html #latest-news-list via regex.")
+            print(f"Updated {rel_path} #latest-news-list via regex.")
 
     # 全記事データをインライン埋め込みし、クライアントfetchを廃止
     articles_json = json.dumps([{
@@ -674,7 +675,7 @@ def update_top_page(articles):
 
     if init_func_pattern.search(content):
         content = init_func_pattern.sub(replacement_init, content)
-        print("Replaced index.html client fetch with inline SSG article data.")
+        print(f"Replaced {rel_path} client fetch with inline SSG article data.")
 
     with open(index_path, "w", encoding="utf-8") as f:
         f.write(content)
@@ -689,7 +690,7 @@ def update_news_index_page(articles):
         content = f.read()
 
     # 全記事のカードHTML生成
-    cards_html = "\n".join([build_article_card_html(a, is_top=False) for a in articles])
+    cards_html = "\n".join([build_article_card_html(a, is_top=False, heading_level=2) for a in articles])
 
     # #articles-list-container の中身を置換（ローディングスピナーを削除して静的カードを配置）
     start_tag = '<div id="articles-list-container" class="space-y-3">'
@@ -777,6 +778,21 @@ def build_all_article_detail_pages(articles, exam_guides):
         generated_count += 1
 
     print(f"Generated {generated_count} static article detail pages in news/[id]/.")
+
+    # 非公開化・削除された記事の静的ページが残り続けないよう、今回生成対象外の news/[id]/ を削除
+    # （news/preview/ や news/index.html など記事以外は対象外）
+    current_ids = {str(a.get("id") or "") for a in articles}
+    news_root = os.path.join(BASE_DIR, "news")
+    removed = []
+    for name in sorted(os.listdir(news_root)):
+        path = os.path.join(news_root, name)
+        if name in current_ids or name == "preview" or not os.path.isdir(path):
+            continue
+        if os.path.exists(os.path.join(path, "index.html")):
+            shutil.rmtree(path)
+            removed.append(name)
+    if removed:
+        print(f"Removed {len(removed)} stale article pages: {', '.join(removed)}")
 
 def update_detail_html_redirect():
     """過去URL (detail.html?id=xxx) でアクセスされた場合のリダイレクト整備"""
@@ -868,6 +884,7 @@ def build_ssg():
 
     # 3. トップページのお知らせ枠の更新 (index.html)
     update_top_page(articles)
+    update_top_page(articles, "lp/index.html")
 
     # 4. detail.html の転送処理
     update_detail_html_redirect()

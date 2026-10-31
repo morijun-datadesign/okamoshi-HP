@@ -435,6 +435,15 @@
     .entry-content tr:nth-child(even) td {
       background-color: #fafafa;
     }
+    /* スマホで列の多い表がページ全体を横にはみ出させないよう、表のみ横スクロール（pre と同じ方式） */
+    @media (max-width: 767px) {
+      .entry-content table {
+        display: block;
+        max-width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+    }
     .entry-content code {
       background-color: #f1f5f9;
       color: #a23e18;
@@ -1455,16 +1464,16 @@
   
   <nav class="flex items-center justify-between gap-2 w-full p-2.5 sm:p-3 bg-white rounded-xl border border-slate-200/80 shadow-2xs" aria-label="記事ナビゲーション">
     
-    <span class="flex items-center gap-1 text-xs sm:text-sm text-slate-300 font-medium shrink-0 cursor-not-allowed select-none opacity-50">
-      <span class="material-symbols-outlined text-[16px] text-slate-300">arrow_back</span>
-      <span>前の記事</span>
-    </span>
+    <a class="flex items-center gap-1 text-xs sm:text-sm text-slate-600 hover:text-emerald-700 font-medium transition-colors shrink-0 group cursor-pointer" data-path="news-detail-prev" href="/news/column-7/">
+      <span class="material-symbols-outlined text-[16px] text-slate-400 group-hover:text-emerald-600 group-hover:-translate-x-0.5 transition-transform shrink-0">arrow_back</span>
+      <span class="font-bold text-slate-700 group-hover:text-emerald-700">前の記事</span>
+    </a>
     <a class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[11px] sm:text-xs font-medium text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200/80 border border-slate-200/80 transition-all shadow-2xs shrink-0" data-path="news" href="/news.html">
       <span class="material-symbols-outlined text-[14px] text-slate-500">grid_view</span>
       <span>記事一覧に戻る</span>
     </a>
     
-    <a class="flex items-center justify-end gap-1 text-xs sm:text-sm text-slate-600 hover:text-emerald-700 font-medium transition-colors shrink-0 text-right group cursor-pointer" data-path="news-detail-next" href="/news/20p7a-hecrv/">
+    <a class="flex items-center justify-end gap-1 text-xs sm:text-sm text-slate-600 hover:text-emerald-700 font-medium transition-colors shrink-0 text-right group cursor-pointer" data-path="news-detail-next" href="/news/20260721_1/">
       <span class="font-bold text-slate-700 group-hover:text-emerald-700">次の記事</span>
       <span class="material-symbols-outlined text-[16px] text-slate-400 group-hover:text-emerald-600 group-hover:translate-x-0.5 transition-transform shrink-0">arrow_forward</span>
     </a>
@@ -1480,9 +1489,9 @@
 <!-- 3. 次回の模試・お申込みCTAエリア -->
 <div class="w-full">
   <div class="flex items-center justify-between gap-3 mb-3">
-    <h3 class="section-title text-xl sm:text-2xl font-bold text-emerald-950 tracking-tight" style="color: #064e3b !important;">
+    <h2 class="section-title text-xl sm:text-2xl font-bold text-emerald-950 tracking-tight" style="color: #064e3b !important;">
       次回の模試・お申込み
-    </h3>
+    </h2>
     <span class="text-[11px] font-bold text-secondary bg-[#ffdbcf] px-2.5 py-0.5 rounded-full shadow-2xs shrink-0">受付中</span>
   </div>
   <div class="bg-slate-50 rounded-xl border border-slate-200 overflow-hidden shadow-xs" id="sidebar-next-exam-widget">
@@ -1634,44 +1643,15 @@
                 <div class="flex items-center gap-2.5 shrink-0">
                   <span class="flex items-center gap-1.5 text-xs text-slate-500 font-medium shrink-0">
                     <span class="material-symbols-outlined text-[15px] text-slate-400">calendar_today</span>
-                    <span class="tabular-nums">2026.10.29</span>
+                    <span class="tabular-nums">2026.11.01</span>
                   </span>
-                  <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#c85a32] text-white shadow-xs shrink-0 tracking-tight leading-none text-center">NEW</span>
+                  
                   <span class="px-2.5 py-0.5 rounded-md text-[11px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 shrink-0 shadow-2xs">
                     お知らせ
                   </span>
                 </div>
                 <h3 class="font-bold text-[15px] sm:text-base text-slate-900 group-hover:text-brand-green transition-colors flex-1 leading-snug break-words">
                   岡山県統一模擬試験 公式Webサイトをリニューアルいたしました
-                </h3>
-              </div>
-              <div class="flex items-center gap-2 shrink-0">
-                <span class="text-xs font-bold text-slate-500 group-hover:text-brand-green transition-colors hidden md:inline">詳細を読む</span>
-                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white border border-slate-200 group-hover:bg-emerald-50 flex items-center justify-center text-slate-400 group-hover:text-brand-green transition-colors shrink-0 group-hover:translate-x-0.5">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
-                  </svg>
-                </div>
-              </div>
-            </a>
-          </article>
-
-          <!-- 記事カード (leoodvgmoet) -->
-          <article class="bg-slate-50 rounded-lg border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all mb-3 overflow-hidden cursor-pointer group block" data-category="模試活用法">
-            <a href="/news/leoodvgmoet/" class="flex items-center justify-between p-4 sm:p-5 gap-3 sm:gap-4 w-full">
-              <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 flex-1 min-w-0">
-                <div class="flex items-center gap-2.5 shrink-0">
-                  <span class="flex items-center gap-1.5 text-xs text-slate-500 font-medium shrink-0">
-                    <span class="material-symbols-outlined text-[15px] text-slate-400">calendar_today</span>
-                    <span class="tabular-nums">2026.09.28</span>
-                  </span>
-                  
-                  <span class="px-2.5 py-0.5 rounded-md text-[11px] font-bold bg-[#e8f5ee] text-[#134230] border border-[#a1d1b8] shrink-0 shadow-2xs">
-                    模試活用法
-                  </span>
-                </div>
-                <h3 class="font-bold text-[15px] sm:text-base text-slate-900 group-hover:text-brand-green transition-colors flex-1 leading-snug break-words">
-                  【8月号結果】岡山5校を志望校とした受験生が計1100名を超えました！
                 </h3>
               </div>
               <div class="flex items-center gap-2 shrink-0">
@@ -1701,6 +1681,35 @@
                 </div>
                 <h3 class="font-bold text-[15px] sm:text-base text-slate-900 group-hover:text-brand-green transition-colors flex-1 leading-snug break-words">
                   小6生対象 岡山県適性検査対策模試 10月号
+                </h3>
+              </div>
+              <div class="flex items-center gap-2 shrink-0">
+                <span class="text-xs font-bold text-slate-500 group-hover:text-brand-green transition-colors hidden md:inline">詳細を読む</span>
+                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white border border-slate-200 group-hover:bg-emerald-50 flex items-center justify-center text-slate-400 group-hover:text-brand-green transition-colors shrink-0 group-hover:translate-x-0.5">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </div>
+              </div>
+            </a>
+          </article>
+
+          <!-- 記事カード (20260914-1) -->
+          <article class="bg-slate-50 rounded-lg border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all mb-3 overflow-hidden cursor-pointer group block" data-category="更新情報">
+            <a href="/news/20260914-1/" class="flex items-center justify-between p-4 sm:p-5 gap-3 sm:gap-4 w-full">
+              <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 flex-1 min-w-0">
+                <div class="flex items-center gap-2.5 shrink-0">
+                  <span class="flex items-center gap-1.5 text-xs text-slate-500 font-medium shrink-0">
+                    <span class="material-symbols-outlined text-[15px] text-slate-400">calendar_today</span>
+                    <span class="tabular-nums">2026.09.14</span>
+                  </span>
+                  
+                  <span class="px-2.5 py-0.5 rounded-md text-[11px] font-bold bg-[#e8f5ee] text-[#134230] border border-[#a1d1b8] shrink-0 shadow-2xs">
+                    更新情報
+                  </span>
+                </div>
+                <h3 class="font-bold text-[15px] sm:text-base text-slate-900 group-hover:text-brand-green transition-colors flex-1 leading-snug break-words">
+                  【8月号結果】岡山5校を志望校とした受験生が計1100名を超えました！
                 </h3>
               </div>
               <div class="flex items-center gap-2 shrink-0">

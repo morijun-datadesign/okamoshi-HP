@@ -16,11 +16,12 @@ import mimetypes
 import urllib.request
 import urllib.error
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# アーカイブ移動後: 入出力データは同階層の data/ 配下
+BASE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 LEGACY_IMAGES_DIR = os.path.join(BASE_DIR, "legacy_images")
-CACHE_FILE = os.path.join(BASE_DIR, "scripts", ".microcms_media_cache.json")
+CACHE_FILE = os.path.join(BASE_DIR, ".microcms_media_cache.json")
 
-API_KEY = os.environ.get("MICROCMS_API_KEY", "4qO3xGjs5W1r7zolbBgAX2KXP8VEUooOpMtc")
+API_KEY = os.environ.get("MICROCMS_API_KEY", "")
 SERVICE_DOMAIN = "okamoshi-blog"
 ENDPOINT = "blogs"
 

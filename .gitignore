@@ -12,3 +12,16 @@ db/seed/
 bin/
 legacy_images/
 
+
+# ブログ移行作業の生データ（画像・WordPressエクスポート等）※スクリプトのみGit管理
+scripts/archive/blog-migration/data/legacy_images/
+scripts/archive/blog-migration/data/.microcms_media_cache.json
+scripts/archive/blog-migration/data/microcms_import.csv
+scripts/archive/blog-migration/data/microcms_import.json
+scripts/archive/blog-migration/data/microcms_import_manual.csv
+scripts/archive/blog-migration/data/microcms_import_manual.json
+
+# Playwright 品質ゲートの出力
+test-results/
+playwright-report/
+.dev.vars

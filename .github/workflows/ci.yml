@@ -31,6 +31,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Quality gate (static checks & AI rules sync)
+        run: |
+          node scripts/quality-gate/static-checks.mjs
+          node scripts/sync-ai-rules.mjs --check
+
       - name: Type check (TypeScript)
         run: npm run typecheck
 

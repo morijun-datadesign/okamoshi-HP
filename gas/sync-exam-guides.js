@@ -21,7 +21,11 @@ const EXAM_SYNC_CONFIG = {
   ],
 
   // Cloudflare Pages 環境変数 EXAM_GUIDES_SYNC_SECRET と一致させる
-  SYNC_SECRET: "okamoshi_exam_sync_2026_sec_8d3e1f",
+  // ※シークレットはコードに直書きしない。GASエディタ「プロジェクトの設定 > スクリプト プロパティ」に
+  //   SYNC_SECRET を登録して読み込む（値は Cloudflare Pages の同名環境変数と一致させる）
+  get SYNC_SECRET() {
+    return PropertiesService.getScriptProperties().getProperty("SYNC_SECRET") || "";
+  },
 };
 
 /**

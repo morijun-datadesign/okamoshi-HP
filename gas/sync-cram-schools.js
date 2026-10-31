@@ -9,11 +9,12 @@
 // 設定
 // ============================================================
 const CRAM_SYNC_CONFIG = {
-  // 同期先 API エンドポイント
-  // 本番用: "https://okayama-moshi.com/api/admin/sync-cram-schools"
-  // プレビュー用: "https://feature-idea-b.okamoshi-hp.pages.dev/api/admin/sync-cram-schools"
-  // ※11月2日のネームサーバー切り替え前に同期テストを行う場合は一時的に "https://okamoshi-hp.pages.dev/api/admin/sync-cram-schools" を指定してください。
-  API_URL: "https://okayama-moshi.com/api/admin/sync-cram-schools",
+  // 本番環境とプレビュー環境へ同時同期するエンドポイント配列（絶対に片方を削らないこと）
+  // ※11月2日のネームサーバー切り替え前に同期テストを行う場合は一時的に本番URLを "https://okamoshi-hp.pages.dev/api/admin/sync-cram-schools" に指定してください。
+  API_URLS: [
+    "https://okayama-moshi.com/api/admin/sync-cram-schools",
+    "https://feature-idea-b.okamoshi-hp.pages.dev/api/admin/sync-cram-schools",
+  ],
 
   // 認証シークレットキー (Cloudflare Pages 環境変数 CRAM_SCHOOLS_SYNC_SECRET と一致)
   // ※シークレットはコードに直書きしない。GASエディタ「プロジェクトの設定 > スクリプト プロパティ」に
@@ -106,7 +107,7 @@ function syncCramSchoolsToD1() {
       return;
     }
 
-    // API へ POST 送信
+    // API へ POST 送信（本番・プレビューの全エンドポイントへ順次送信）
     const payload = JSON.stringify({ schools: schools });
     const options = {
       method: "post",
@@ -118,30 +119,44 @@ function syncCramSchoolsToD1() {
       muteHttpExceptions: true,
     };
 
-    const response = UrlFetchApp.fetch(CRAM_SYNC_CONFIG.API_URL, options);
-    const statusCode = response.getResponseCode();
-    const responseText = response.getContentText();
+    const results = [];
+    let allSucceeded = true;
 
-    let result = {};
-    try {
-      result = JSON.parse(responseText);
-    } catch (e) {
-      result = { error: responseText };
+    for (let i = 0; i < CRAM_SYNC_CONFIG.API_URLS.length; i++) {
+      const apiUrl = CRAM_SYNC_CONFIG.API_URLS[i];
+      try {
+        const response = UrlFetchApp.fetch(apiUrl, options);
+        const statusCode = response.getResponseCode();
+        const responseText = response.getContentText();
+
+        let result = {};
+        try {
+          result = JSON.parse(responseText);
+        } catch (e) {
+          result = { error: responseText };
+        }
+
+        if (statusCode === 200 && result.success) {
+          results.push(`✅ [成功] ${apiUrl} (反映: ${result.synced_count || schools.length}件)`);
+        } else {
+          allSucceeded = false;
+          results.push(`❌ [失敗] ${apiUrl} (HTTP ${statusCode})\n   理由: ${result.error || responseText}`);
+        }
+      } catch (fetchErr) {
+        allSucceeded = false;
+        results.push(`❌ [通信エラー] ${apiUrl}\n   理由: ${fetchErr.message}`);
+      }
     }
 
-    if (statusCode === 200 && result.success) {
-      ui.alert(
-        "同期完了",
-        `D1 への同期が正常に完了しました！\n\n反映件数: ${result.synced_count || schools.length} 件\n実行日時: ${new Date().toLocaleString("ja-JP")}`,
-        ui.ButtonSet.OK
-      );
-    } else {
-      ui.alert(
-        "同期エラー (HTTP " + statusCode + ")",
-        `エラーが発生しました:\n${result.error || responseText}`,
-        ui.ButtonSet.OK
-      );
-    }
+    const summaryHeader = allSucceeded
+      ? "すべての環境（本番・プレビュー）への同期が正常に完了しました！"
+      : "一部の環境への同期でエラーが発生しました。";
+
+    ui.alert(
+      allSucceeded ? "同期完了" : "同期結果（一部エラー）",
+      `${summaryHeader}\n\n【送信結果】\n${results.join("\n\n")}\n\n実行日時: ${new Date().toLocaleString("ja-JP")}`,
+      ui.ButtonSet.OK
+    );
   } catch (err) {
     ui.alert("実行時エラー", "例外が発生しました:\n" + err.toString(), ui.ButtonSet.OK);
   }

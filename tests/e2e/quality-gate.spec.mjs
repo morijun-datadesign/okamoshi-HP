@@ -327,6 +327,15 @@ test(
   await page.goto('/contact/', { waitUntil: 'domcontentloaded', timeout: 30000 });
   await page.evaluate(() => document.fonts?.ready).catch(() => {});
 
+  // Turnstile ウィジェットの属性検証（サポート外の data-size="invisible" 等でないこと）
+  const contactTurnstileSizes = await page.locator('.cf-turnstile').evaluateAll((els) =>
+    els.map((el) => el.getAttribute('data-size') || 'normal')
+  );
+  expect(contactTurnstileSizes.length).toBeGreaterThanOrEqual(2);
+  for (const sz of contactTurnstileSizes) {
+    expect(['compact', 'flexible', 'normal'], 'Turnstile の data-size が有効な値であること').toContain(sz);
+  }
+
   // ----------------------------------------------------------------
   // 1. 「個人申込の方」タブ：学年プルダウン選択肢の表記テスト＆フォーム送信
   // ----------------------------------------------------------------
@@ -473,6 +482,15 @@ test(
 
     await page.goto('/apply/', { waitUntil: 'domcontentloaded' });
     await page.evaluate(() => document.fonts?.ready).catch(() => {});
+
+    // Turnstile ウィジェットの属性検証（サポート外の data-size="invisible" 等でないこと）
+    const applyTurnstileSizes = await page.locator('.cf-turnstile').evaluateAll((els) =>
+      els.map((el) => el.getAttribute('data-size') || 'normal')
+    );
+    expect(applyTurnstileSizes.length).toBeGreaterThanOrEqual(1);
+    for (const sz of applyTurnstileSizes) {
+      expect(['compact', 'flexible', 'normal'], 'Turnstile の data-size が有効な値であること').toContain(sz);
+    }
 
     // ----------------------------------------------------------------
     // 1. 学年ボタン群の表記検証（不要なカッコ書きや旧表記がないこと）

@@ -1178,8 +1178,8 @@
           </div>
         </div>
 
-        <!-- Cloudflare Turnstile (Invisible) -->
-        <div class="cf-turnstile" data-sitekey="0x4AAAAAAFUVxr1HR8KQNRY0" data-size="invisible" style="display:none;"></div>
+        <!-- Cloudflare Turnstile -->
+        <div class="cf-turnstile" data-sitekey="0x4AAAAAAFUVxr1HR8KQNRY0" data-size="flexible" data-appearance="interaction-only" style="margin:0;"></div>
       </form>
     </div>
   </div>
@@ -4185,33 +4185,27 @@ if (!parentKanaLastName || !parentKanaFirstName) {
         showFormError('決済画面の接続に時間がかかっています。通信環境をご確認の上、再度お試しください。', submitBtn);
       }, 14000);
 
-      // 5-3. Turnstile セキュリティトークンの取得（Invisibleモード対応）
-      let turnstileToken = (form.querySelector('input[name="cf-turnstile-response"]')?.value || '').trim();
-      if (!turnstileToken && typeof turnstile !== 'undefined') {
-        turnstileToken = (turnstile.getResponse() || '').trim();
-        if (!turnstileToken) {
+      // 5-3. Turnstile セキュリティトークンの取得
+      const wElem = form.querySelector('.cf-turnstile');
+      const readTurnstileToken = () => {
+        const inputVal = (form.querySelector('input[name="cf-turnstile-response"]')?.value || '').trim();
+        if (inputVal) return inputVal;
+        if (typeof turnstile !== 'undefined' && typeof turnstile.getResponse === 'function') {
           try {
-            const wElem = form.querySelector('.cf-turnstile');
-            if (wElem) turnstile.execute(wElem);
-            else turnstile.execute();
-          } catch (tExecErr) {
-            console.warn('[Turnstile] execute warning:', tExecErr);
-          }
-          // 最大3秒間トークン取得を待機
-          for (let i = 0; i < 30; i++) {
-            await new Promise(r => setTimeout(r, 100));
-            turnstileToken = (form.querySelector('input[name="cf-turnstile-response"]')?.value || turnstile.getResponse() || '').trim();
-            if (turnstileToken) break;
+            return ((wElem ? turnstile.getResponse(wElem) : '') || turnstile.getResponse() || '').trim();
+          } catch (_) {
+            return '';
           }
         }
-      }
-
-      if (!turnstileToken) {
-        clearTimeout(safetyTimer);
-        hideLoadingOverlay();
-        resetSubmitBtn();
-        showFormError('セキュリティ認証の完了をお待ちいただくか、通信環境をご確認の上もう一度お試しください。', submitBtn);
-        return;
+        return '';
+      };
+      let turnstileToken = readTurnstileToken();
+      if (!turnstileToken && typeof turnstile !== 'undefined') {
+        for (let i = 0; i < 10; i++) {
+          await new Promise(r => setTimeout(r, 100));
+          turnstileToken = readTurnstileToken();
+          if (turnstileToken) break;
+        }
       }
 
       try {

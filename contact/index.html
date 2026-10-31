@@ -327,8 +327,8 @@
           </label>
         </div>
 
-        <!-- Cloudflare Turnstile (Invisible) -->
-        <div class="cf-turnstile" data-sitekey="0x4AAAAAAFUVxr1HR8KQNRY0" data-size="invisible" style="display:none;"></div>
+        <!-- Cloudflare Turnstile -->
+        <div class="cf-turnstile" data-sitekey="0x4AAAAAAFUVxr1HR8KQNRY0" data-size="flexible" data-appearance="interaction-only" style="margin:0;"></div>
 
         <!-- 送信ボタン -->
         <div class="pt-2 text-center">
@@ -482,8 +482,8 @@
           </label>
         </div>
 
-        <!-- Cloudflare Turnstile (Invisible) -->
-        <div class="cf-turnstile" data-sitekey="0x4AAAAAAFUVxr1HR8KQNRY0" data-size="invisible" style="display:none;"></div>
+        <!-- Cloudflare Turnstile -->
+        <div class="cf-turnstile" data-sitekey="0x4AAAAAAFUVxr1HR8KQNRY0" data-size="flexible" data-appearance="interaction-only" style="margin:0;"></div>
 
         <!-- 送信ボタン -->
         <div class="pt-2 text-center">
@@ -747,31 +747,28 @@
         btn.disabled = true;
         btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-xl">progress_activity</span><span>送信中...</span>';
 
-        // Turnstile トークンの取得（Invisibleモード対応）
-        var turnstileToken = (orgForm.querySelector('input[name="cf-turnstile-response"]') ? orgForm.querySelector('input[name="cf-turnstile-response"]').value : '').trim();
-        if (!turnstileToken && typeof turnstile !== 'undefined') {
-          turnstileToken = (turnstile.getResponse() || '').trim();
-          if (!turnstileToken) {
+        // Turnstile トークンの取得
+        var readOrgTurnstileToken = function() {
+          var inputEl = orgForm.querySelector('input[name="cf-turnstile-response"]');
+          var inputVal = (inputEl ? inputEl.value : '').trim();
+          if (inputVal) return inputVal;
+          if (typeof turnstile !== 'undefined' && typeof turnstile.getResponse === 'function') {
             try {
               var wElem = orgForm.querySelector('.cf-turnstile');
-              if (wElem) turnstile.execute(wElem);
-              else turnstile.execute();
-            } catch (tExecErr) {
-              console.warn('[Turnstile] execute warning:', tExecErr);
-            }
-            for (var i = 0; i < 30; i++) {
-              await new Promise(function(resolve) { setTimeout(resolve, 100); });
-              turnstileToken = (orgForm.querySelector('input[name="cf-turnstile-response"]') ? orgForm.querySelector('input[name="cf-turnstile-response"]').value : turnstile.getResponse() || '').trim();
-              if (turnstileToken) break;
+              return ((wElem ? turnstile.getResponse(wElem) : '') || turnstile.getResponse() || '').trim();
+            } catch (_) {
+              return '';
             }
           }
-        }
-
-        if (!turnstileToken) {
-          alert('セキュリティ認証の完了をお待ちいただくか、通信環境をご確認の上もう一度お試しください。');
-          btn.disabled = false;
-          btn.innerHTML = origHtml;
-          return;
+          return '';
+        };
+        var turnstileToken = readOrgTurnstileToken();
+        if (!turnstileToken && typeof turnstile !== 'undefined') {
+          for (var i = 0; i < 10; i++) {
+            await new Promise(function(resolve) { setTimeout(resolve, 100); });
+            turnstileToken = readOrgTurnstileToken();
+            if (turnstileToken) break;
+          }
         }
 
         var formData = {
@@ -831,31 +828,28 @@
         btn.disabled = true;
         btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-xl">progress_activity</span><span>送信中...</span>';
 
-        // Turnstile トークンの取得（Invisibleモード対応）
-        var turnstileToken = (indivForm.querySelector('input[name="cf-turnstile-response"]') ? indivForm.querySelector('input[name="cf-turnstile-response"]').value : '').trim();
-        if (!turnstileToken && typeof turnstile !== 'undefined') {
-          turnstileToken = (turnstile.getResponse() || '').trim();
-          if (!turnstileToken) {
+        // Turnstile トークンの取得
+        var readIndivTurnstileToken = function() {
+          var inputEl = indivForm.querySelector('input[name="cf-turnstile-response"]');
+          var inputVal = (inputEl ? inputEl.value : '').trim();
+          if (inputVal) return inputVal;
+          if (typeof turnstile !== 'undefined' && typeof turnstile.getResponse === 'function') {
             try {
               var wElem = indivForm.querySelector('.cf-turnstile');
-              if (wElem) turnstile.execute(wElem);
-              else turnstile.execute();
-            } catch (tExecErr) {
-              console.warn('[Turnstile] execute warning:', tExecErr);
-            }
-            for (var i = 0; i < 30; i++) {
-              await new Promise(function(resolve) { setTimeout(resolve, 100); });
-              turnstileToken = (indivForm.querySelector('input[name="cf-turnstile-response"]') ? indivForm.querySelector('input[name="cf-turnstile-response"]').value : turnstile.getResponse() || '').trim();
-              if (turnstileToken) break;
+              return ((wElem ? turnstile.getResponse(wElem) : '') || turnstile.getResponse() || '').trim();
+            } catch (_) {
+              return '';
             }
           }
-        }
-
-        if (!turnstileToken) {
-          alert('セキュリティ認証の完了をお待ちいただくか、通信環境をご確認の上もう一度お試しください。');
-          btn.disabled = false;
-          btn.innerHTML = origHtml;
-          return;
+          return '';
+        };
+        var turnstileToken = readIndivTurnstileToken();
+        if (!turnstileToken && typeof turnstile !== 'undefined') {
+          for (var i = 0; i < 10; i++) {
+            await new Promise(function(resolve) { setTimeout(resolve, 100); });
+            turnstileToken = readIndivTurnstileToken();
+            if (turnstileToken) break;
+          }
         }
 
         var formData = {

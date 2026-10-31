@@ -100,7 +100,8 @@ description: おかもし公式サイトの2大絶対ルール（デザインシ
 
 ```bash
 python3 scripts/build.py --skip-images   # Tailwind 再ビルド（css/style.min.css）＋ SSG
-npm run quality-gate                      # 品質ゲート（1つでも FAIL なら exit 1）
+npm run quality-gate:smart                # スマート品質ゲート（変更ファイル自動検知＋@critical-forms常時実行）
+# または全件フルスイート強制実行: npm run quality-gate
 ```
 
 | # | 検査 | 内容 |
@@ -108,11 +109,15 @@ npm run quality-gate                      # 品質ゲート（1つでも FAIL �
 | 1 | セキュリティ | APIキー・シークレットの直書き（分割難読化含む）、`.env` / `.dev.vars` 混入、非公開ファイルの公開露出（`_redirects` 未遮断） |
 | 2 | ゴミ・リンク切れ | `undefined` `null` `NaN` `[object Object]` `【★画像挿入` `TODO` `読み込み中…` の表示、内部リンク切れ |
 | 3 | 実ブラウザ描画 | Playwright で PC 1280px / iPhone 375px。`pageerror`・`console.error` ゼロ、会場一覧・記事本文・画像の描画、横スクロールなし、会場名の省略なし＆`※`注釈スタイル |
-| 4 | SEO・一貫性 | `<title>`、description、OGP、`alt`、`<h1>`は1つ、見出し階層の飛びなし、許可外カラーなし、TypeScript型チェック |
+| 4 | SEO・一貫性 | `<title>`、description、OGP、`alt`、`<h1>`は1つ、見出し階層の飛びなし、許可外カラーなし、コントラスト比（>=3.0）、TypeScript型チェック |
+| 5 | **フォーム死活監視（`@critical-forms`）** | **いかなる軽微な修正時でも毎回100%実行**：① `/contact/`（個人・団体両タブの送信完了画面視認性・学年選択肢表記）、② `/apply/`（必須バリデーション、会場受験×カード決済、自宅受験×コンビニ決済の送信完了画面 `/apply/success` 視認性・コントラスト比） |
 
+### スマート品質ゲート（`scripts/smart-quality-gate.mjs`）と物理ロック
+- **高速モード（FAST MODE）**: 特定ページの軽微な文言・記事修正のみの場合、「修正した該当ページのデザインルール・コントラスト・レイアウト・リンク切れ検査」＋「`@critical-forms`（フォーム2種の全パターン送信＆完了画面検査）」のみを実行し、無関係な他ページの走査を省いて高速化しつつフォーム2種の安全確認を100%担保する。
+- **フルモード（FULL MODE）**: 共通CSS（`css/`）・共通JS（`js/`）・`functions/`・フォーム関連（`apply/`・`contact/`）・テスト・設定ファイルを1行でも変更した場合は、全ページのフルデザイン検査＋`@critical-forms` を含む全60テストを強制実行する。
+- **物理ロック**: `git push` 時は `.githooks/pre-push` および `.git/hooks/pre-push` が自動で `scripts/smart-quality-gate.mjs` を実行し、1項目でも FAIL ならプッシュ自体をシステム的にブロックする。`--no-verify` での回避は禁止。
 - **FAIL した場合はユーザーに報告する前に自己修復**し、再実行して PASS させてから報告する。修復できない場合は、FAIL 内容と原因をそのまま正直に報告する（PASS と偽らない）。
 - テストやチェックを**緩めて通すこと（閾値変更・除外追加・テスト削除）は禁止**。正当な理由で除外が必要な場合は `tests/e2e/known-issues.json` に理由付きで追加し、ユーザーに明示的に報告する。
-- `git push` 時は `.githooks/pre-push` が自動で品質ゲートを実行し、FAIL ならプッシュをブロックする。`--no-verify` での回避は禁止。
 
 ### セキュリティ必須事項
 - APIキー・シークレットはコードに直書きしない（フォールバック値としての直書きも禁止）。サーバー側は Cloudflare Pages の環境変数、GAS はスクリプトプロパティを使う。

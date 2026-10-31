@@ -11,9 +11,12 @@
     "check": "npm run typecheck && npm run build:functions",
     "dev": "wrangler pages dev . --compatibility-date=2025-01-01",
     "quality-gate": "node scripts/quality-gate/run.mjs",
+    "quality-gate:smart": "node scripts/smart-quality-gate.mjs",
+    "quality-gate:full": "node scripts/smart-quality-gate.mjs --full",
     "qg:static": "node scripts/quality-gate/static-checks.mjs",
     "qg:e2e": "playwright test -c playwright.config.mjs",
-    "prepare": "git config core.hooksPath .githooks || true"
+    "qg:forms": "playwright test -c playwright.config.mjs --grep @critical-forms",
+    "prepare": "git config core.hooksPath .githooks && cp .githooks/pre-push .git/hooks/pre-push && chmod +x .githooks/pre-push .git/hooks/pre-push || true"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250214.0",

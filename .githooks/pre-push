@@ -1,13 +1,28 @@
 #!/bin/sh
-# git push 前に品質ゲートを強制実行し、1項目でも FAIL ならプッシュをブロックする。
-# 有効化: npm install（prepare スクリプトが core.hooksPath=.githooks を設定）
-#         または手動で `git config core.hooksPath .githooks`
+# git push 前にスマート品質ゲート（scripts/smart-quality-gate.mjs）を強制実行し、
+# 1項目でも FAIL ならプッシュをシステム的にブロックする物理ロック。
+# 有効化: npm install（prepare スクリプトが core.hooksPath=.githooks および .git/hooks/pre-push を設定）
 # ※ `git push --no-verify` による回避は運用ルール（GEMINI.md 絶対ルール②）で禁止。
 
-echo "🔒 pre-push: 品質ゲート（npm run quality-gate）を実行します…"
-if ! npm run --silent quality-gate; then
+# pre-push の標準入力 (<local ref> <local sha> <remote ref> <remote sha>) からプッシュ対象差分ファイルを収集
+PUSH_FILES=""
+ZERO_SHA="0000000000000000000000000000000000000000"
+while read local_ref local_sha remote_ref remote_sha; do
+  if [ -n "$local_sha" ] && [ "$local_sha" != "$ZERO_SHA" ]; then
+    if [ -n "$remote_sha" ] && [ "$remote_sha" != "$ZERO_SHA" ]; then
+      DIFF_OUT=$(git diff --name-only "$remote_sha".."$local_sha" 2>/dev/null || true)
+      if [ -n "$DIFF_OUT" ]; then
+        PUSH_FILES="${PUSH_FILES}
+${DIFF_OUT}"
+      fi
+    fi
+  fi
+done
+
+echo "🔒 pre-push: スマート品質ゲート（node scripts/smart-quality-gate.mjs）を実行します…"
+if ! QG_PUSH_FILES="$PUSH_FILES" node scripts/smart-quality-gate.mjs; then
   echo ""
-  echo "❌ 品質ゲートが FAIL しました。プッシュを中止します。"
+  echo "❌ 品質ゲートが FAIL しました。プッシュをシステム的にブロックしました。"
   echo "   上記レポートの FAIL 項目を修正し、再度 git push してください。"
   exit 1
 fi

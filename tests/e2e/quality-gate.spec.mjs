@@ -226,6 +226,183 @@ for (const pg of PAGES) {
   });
 }
 
+// ---- [3] お問い合わせフォーム（/contact/）のインタラクション・送信完了画面・学年プルダウン表記検査
+test('お問い合わせフォーム（/contact/）: 学年プルダウン表記＆送信完了画面の視認性検査', async ({ page }) => {
+  const errors = await setupPage(page);
+
+  // 外部スクリプト遮断環境向けに Turnstile オブジェクトをモック
+  await page.addInitScript(() => {
+    window.turnstile = {
+      getResponse: () => 'mock-turnstile-token',
+      execute: () => {},
+      reset: () => {},
+    };
+  });
+
+  // /api/contact をモック（実際に外部へメール送信せず 200 OK を返す）
+  const submittedPayloads = [];
+  await page.route('**/api/contact', async (route) => {
+    const req = route.request();
+    if (req.method() === 'POST') {
+      submittedPayloads.push(req.postDataJSON());
+      return route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ ok: true, message: 'お問い合わせを受け付けました。' }),
+      });
+    }
+    return route.continue();
+  });
+
+  // 要素の可視性・テキスト非空・背景色とのコントラスト比（非透明・非同化）を検証するヘルパー
+  const verifyReadableStyle = async (locator, label) => {
+    await expect(locator, `${label} が表示されていること`).toBeVisible();
+    const textContent = (await locator.innerText()).trim();
+    expect(textContent.length, `${label} のテキストが空でないこと`).toBeGreaterThan(0);
+
+    const styleCheck = await locator.evaluate((el) => {
+      const parseRgba = (str) => {
+        const m = str && str.match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)(?:\s*[,/]\s*([\d.]+))?\s*\)/i);
+        if (!m) return null;
+        return { r: Number(m[1]), g: Number(m[2]), b: Number(m[3]), a: m[4] !== undefined ? Number(m[4]) : 1 };
+      };
+      const luminance = ({ r, g, b }) => {
+        const toLinear = (c) => {
+          const s = c / 255;
+          return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
+        };
+        return 0.2126 * toLinear(r) + 0.7152 * toLinear(g) + 0.0722 * toLinear(b);
+      };
+
+      const cs = getComputedStyle(el);
+      const opacity = parseFloat(cs.opacity || '1');
+      const fg = parseRgba(cs.color);
+
+      // 祖先要素をたどって実効背景色を取得（すべて透明なら白背景）
+      let bg = { r: 255, g: 255, b: 255, a: 1 };
+      for (let cur = el; cur && cur !== document.documentElement; cur = cur.parentElement) {
+        const parsed = parseRgba(getComputedStyle(cur).backgroundColor);
+        if (parsed && parsed.a > 0.1) {
+          bg = parsed;
+          break;
+        }
+      }
+
+      const l1 = fg ? luminance(fg) : 0;
+      const l2 = luminance(bg);
+      const contrast = (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+
+      return {
+        opacity,
+        fgAlpha: fg ? fg.a : 0,
+        fgColor: cs.color,
+        bgColor: `rgb(${bg.r}, ${bg.g}, ${bg.b})`,
+        contrast: Number(contrast.toFixed(2)),
+      };
+    });
+
+    expect(styleCheck.opacity, `${label} の opacity が透明でないこと`).toBeGreaterThan(0.5);
+    expect(styleCheck.fgAlpha, `${label} の文字色 alpha が透明でないこと`).toBeGreaterThan(0.5);
+    expect(
+      styleCheck.contrast,
+      `${label} の文字色(${styleCheck.fgColor})が背景色(${styleCheck.bgColor})と同化していないこと`
+    ).toBeGreaterThanOrEqual(3.0);
+  };
+
+  await page.goto('/contact/', { waitUntil: 'domcontentloaded' });
+  await page.evaluate(() => document.fonts?.ready).catch(() => {});
+
+  // ----------------------------------------------------------------
+  // 1. 「個人申込の方」タブ：学年プルダウン選択肢の表記テスト＆フォーム送信
+  // ----------------------------------------------------------------
+  await page.locator('#tab-btn-individual').click();
+  await expect(page.locator('#container-individual')).toBeVisible();
+
+  const gradeOptions = await page.locator('#student-grade option:not([disabled])').evaluateAll((opts) =>
+    opts.map((o) => ({ value: o.value, label: o.textContent.trim() }))
+  );
+  expect(gradeOptions, '学年プルダウンの選択肢が指定のシンプル表記であること').toEqual([
+    { value: '中学3年生', label: '中学3年生' },
+    { value: '中学2年生', label: '中学2年生' },
+    { value: '中学1年生', label: '中学1年生' },
+    { value: '小学6年生', label: '小学6年生' },
+    { value: 'その他', label: 'その他' },
+  ]);
+  for (const opt of gradeOptions) {
+    expect(opt.label, '学年選択肢に不要なカッコ書きが含まれていないこと').not.toMatch(/[（(]/);
+  }
+
+  // 個人フォーム入力 → 送信
+  await page.locator('#indiv-name').fill('岡山 花子');
+  await page.locator('#indiv-kana').fill('オカヤマ ハナコ');
+  await page.locator('#student-name').fill('岡山 太郎');
+  await page.locator('#student-grade').selectOption('中学3年生');
+  await page.locator('#indiv-email').fill('test-indiv@example.com');
+  await page.locator('#indiv-tel').fill('090-0000-0000');
+  await page.locator('#indiv-type').selectOption('個人受験のお申込み方法について');
+  await page.locator('#indiv-message').fill('個人申込のテストお問い合わせです。');
+  await page.locator('#privacy-agree-indiv').check();
+  await page.locator('#submit-btn-indiv').click();
+
+  // 個人フォーム送信後の完了画面検証
+  await expect(page.locator('#individual-contact-form')).toBeHidden();
+  const completeIndiv = page.locator('#complete-msg-indiv');
+  await expect(completeIndiv).toBeVisible();
+
+  const indivHeading = completeIndiv.locator('h2');
+  const indivBody = completeIndiv.locator('p');
+  const indivBtn = completeIndiv.locator('a');
+
+  await expect(indivHeading).toHaveText('お問い合わせを受け付けました');
+  await expect(indivBody).toContainText('お問い合わせいただきありがとうございます。');
+  await expect(indivBody).toContainText('ご入力いただいたメールアドレス宛に自動返信メール（控え）をお送りいたしました。');
+  await expect(indivBtn).toContainText('トップページへ戻る');
+
+  await verifyReadableStyle(indivHeading, '個人タブ完了画面の見出し');
+  await verifyReadableStyle(indivBody, '個人タブ完了画面の本文');
+  await verifyReadableStyle(indivBtn, '個人タブ完了画面の導線ボタン');
+
+  // ----------------------------------------------------------------
+  // 2. 「塾・学校関係者様」タブ：フォーム送信＆完了画面テスト
+  // ----------------------------------------------------------------
+  await page.locator('#tab-btn-organization').click();
+  await expect(page.locator('#container-organization')).toBeVisible();
+
+  await page.locator('#org-name').fill('テスト学習塾');
+  await page.locator('#org-branch').fill('岡山駅前校');
+  await page.locator('#org-contact-name').fill('岡山 太郎');
+  await page.locator('#org-contact-kana').fill('オカヤマ タロウ');
+  await page.locator('#org-email').fill('test-org@example.com');
+  await page.locator('#org-tel').fill('086-000-0000');
+  await page.locator('#org-type').selectOption('模試導入のご検討・ご相談');
+  await page.locator('#org-message').fill('塾・学校関係者様のテストお問い合わせです。');
+  await page.locator('#privacy-agree-org').check();
+  await page.locator('#submit-btn-org').click();
+
+  // 塾・学校関係者様フォーム送信後の完了画面検証
+  await expect(page.locator('#org-contact-form')).toBeHidden();
+  const completeOrg = page.locator('#complete-msg-org');
+  await expect(completeOrg).toBeVisible();
+
+  const orgHeading = completeOrg.locator('h2');
+  const orgBody = completeOrg.locator('p');
+  const orgBtn = completeOrg.locator('a');
+
+  await expect(orgHeading).toHaveText('お問い合わせを受け付けました');
+  await expect(orgBody).toContainText('お問い合わせいただきありがとうございます。');
+  await expect(orgBody).toContainText('ご入力いただいたメールアドレス宛に自動返信メール（控え）をお送りいたしました。');
+  await expect(orgBtn).toContainText('トップページへ戻る');
+
+  await verifyReadableStyle(orgHeading, '塾・学校タブ完了画面の見出し');
+  await verifyReadableStyle(orgBody, '塾・学校タブ完了画面の本文');
+  await verifyReadableStyle(orgBtn, '塾・学校タブ完了画面の導線ボタン');
+
+  // APIモックが2回（individual / organization）正しく呼ばれたこと＆エラーゼロを確認
+  expect(submittedPayloads.map((p) => p.type)).toEqual(['individual', 'organization']);
+  expect(submittedPayloads[0].grade).toBe('中学3年生');
+  expect(errors, 'フォーム送信中に pageerror / console.error が発生しています').toEqual([]);
+});
+
 // ---- [2] 内部リンク切れ検査（全ページの href / src を収集して HTTP ステータスを確認）
 test('内部リンク切れゼロ', async ({ request }, testInfo) => {
   test.skip(testInfo.project.name !== 'pc-1280', 'PCプロジェクトのみで実行');

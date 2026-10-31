@@ -62,13 +62,26 @@ export const getResendApiKey = (env: Env | undefined): { key: string; source: st
 };
 
 /**
- * 送信元（From）アドレスを取得（環境変数 RESEND_FROM_EMAIL / FROM_EMAIL を最優先）
+ * 送信元（From）アドレスを取得（環境変数 RESEND_FROM_EMAIL / FROM_EMAIL を参照）
+ * ※ onboarding@resend.dev 等の resend.dev ドメインが設定されていると、Resendの制限により
+ *   アカウント所有者以外の一般ユーザー（申込者・問い合わせ者本人）へ自動返信メールが送信できないため、
+ *   自動的に本番ドメイン DEFAULT_FROM_EMAIL ("岡山県統一模擬試験 <info@okayama-moshi.com>") を使用する。
  */
 export const getFromEmail = (env: Env | undefined): string => {
   if (!env) return DEFAULT_FROM_EMAIL;
   const anyEnv = env as Record<string, any>;
   const val = anyEnv.RESEND_FROM_EMAIL || anyEnv.FROM_EMAIL;
-  return typeof val === "string" && val.trim() !== "" ? val.trim() : DEFAULT_FROM_EMAIL;
+  if (typeof val === "string" && val.trim() !== "") {
+    const trimmed = val.trim();
+    if (trimmed.toLowerCase().includes("resend.dev")) {
+      console.warn(
+        `[env] RESEND_FROM_EMAIL ('${trimmed}') uses resend.dev test domain which blocks sending to external recipients. Falling back to '${DEFAULT_FROM_EMAIL}'.`
+      );
+      return DEFAULT_FROM_EMAIL;
+    }
+    return trimmed;
+  }
+  return DEFAULT_FROM_EMAIL;
 };
 
 /**

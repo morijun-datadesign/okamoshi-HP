@@ -369,6 +369,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
         return jsonResponse({ received: true, gas: gasResult, retry: true }, 500);
       }
       let adminMailId: string | null = null;
+      let applicantMailId: string | null = null;
       let updateMailError: string | null = null;
 
       if (!apiKey) {
@@ -403,7 +404,7 @@ ${examsListText}
 通知日時: ${jstReceivedAt}
 `.trim(),
             },
-            `${LOG}[update]`
+            `${LOG}[update-admin]`
           );
           adminMailId = mailRes.id || null;
           if (!mailRes.ok) {
@@ -414,6 +415,61 @@ ${examsListText}
           updateMailError = err?.message || String(err);
           console.error(`${LOG} Exception while sending status update email:`, err);
         }
+
+        // コンビニ入金完了時は申込者本人宛てにも入金確認・受付確定メールを送信
+        if (ledgerStatus === LEDGER_STATUS.PAID && !isAlreadyPaidByOther && emailVal) {
+          try {
+            const paidUserRes = await sendResendEmail(
+              apiKey,
+              {
+                from: fromEmail,
+                to: [emailVal],
+                reply_to: adminEmail,
+                subject: "【岡山県統一模擬試験】コンビニ決済のご入金を確認いたしました",
+                text: `
+${parentName ? parentName + " 様\n\n" : ""}岡山県統一模擬試験（おかもし）へのお申し込み、誠にありがとうございます。
+コンビニエンスストアでのお支払い（ご入金）を確認いたしましたので、以下の内容でお申し込みが確定いたしました。
+
+--------------------------------------------------
+■ お申し込み模試:
+${examsListText}
+■ 合計金額: ￥${Number(amountVal).toLocaleString()} (税込)
+■ 決済方法: ${paymentMethodLabel}
+■ 決済状況: お支払い完了（受付確定）
+--------------------------------------------------
+【ご登録内容】
+■ 生徒氏名: ${studentFullName} 様 (${studentKana})
+■ 学年: ${grade}
+■ 学校名: ${schoolName}
+■ お届け先住所: 〒${postalCodeVal} ${fullAddress}
+■ お電話番号: ${phoneVal}
+■ メールアドレス: ${emailVal}
+--------------------------------------------------
+
+【今後のスケジュール・受験票のお届け】
+・会場受験：試験日の約1週間前に受験票をご自宅宛てにお届けします。
+・自宅受験：試験日の約1週間前に問題冊子・解答用紙一式をご自宅宛てにお届けします。
+
+--------------------------------------------------
+岡山県統一模擬試験実行委員会（中央教育研究所株式会社）
+TEL : 082-227-3999（平日 10:00〜18:00）
+MAIL: info@okayama-moshi.com
+Web : https://okayama-moshi.com
+--------------------------------------------------
+`.trim(),
+              },
+              `${LOG}[update-user]`
+            );
+            applicantMailId = paidUserRes.id || null;
+            if (!paidUserRes.ok) {
+              updateMailError = updateMailError
+                ? `${updateMailError}; user: ${paidUserRes.error || `HTTP ${paidUserRes.status}`}`
+                : `user: ${paidUserRes.error || `HTTP ${paidUserRes.status}`}`;
+            }
+          } catch (uErr: any) {
+            console.error(`${LOG} Exception while sending konbini paid user email:`, uErr);
+          }
+        }
       }
       return jsonResponse({
         received: true,
@@ -423,6 +479,7 @@ ${examsListText}
         gas: gasResult,
         resend: {
           admin_mail_id: adminMailId,
+          applicant_mail_id: applicantMailId,
           hasApiKey: !!apiKey,
           apiKeyPrefix: apiKey ? apiKey.trim().slice(0, 5) : "",
           applicantEmail: emailVal || "",

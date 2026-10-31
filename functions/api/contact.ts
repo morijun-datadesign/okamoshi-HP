@@ -1,6 +1,6 @@
 import {
   Env,
-  DEFAULT_FROM_EMAIL,
+  DEFAULT_ADMIN_EMAIL,
   readEnv,
   getResendApiKey,
   getFromEmail,
@@ -47,6 +47,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
     const isOrg = body.type === "organization";
     const typeLabel = isOrg ? "塾・学校関係者様" : "個人・一般生";
+    const userEmail = typeof body.email === "string" ? body.email.trim() : "";
     const subject = `【お問い合わせ】${typeLabel}：${body.name || "お名前なし"} 様`;
 
     // 本文の生成（管理者通知用）
@@ -63,7 +64,7 @@ ${
 ■ 学年: ${body.grade || "未選択"}`
 }
 ■ ご担当者/保護者氏名: ${body.name || "未入力"} (${body.phonetic || "未入力"})
-■ メールアドレス: ${body.email || "未入力"}
+■ メールアドレス: ${userEmail || "未入力"}
 ■ 電話番号: ${body.phone || "未入力"}
 --------------------------------------------------
 ■ お問い合わせ内容:
@@ -79,7 +80,7 @@ ${body.message || "なし"}
       {
         from: fromEmail,
         to: adminEmails,
-        reply_to: body.email || undefined,
+        reply_to: userEmail || undefined,
         subject,
         text: textContent,
       },
@@ -98,8 +99,12 @@ ${body.message || "なし"}
       );
     }
 
-    // 4. ユーザー宛自動返信メール（メールアドレスが入力されている場合）
-    if (body.email) {
+    // 4. ユーザー（問い合わせ者本人）宛て自動返信メール
+    // ※Cloudflare Workers では return 後に未待機の Promise が強制終了されるため、必ず await して送信完了を確認する
+    let userMailId: string | null = null;
+    let userMailError: string | null = null;
+
+    if (userEmail) {
       const userSubject = "【岡山県統一模擬試験】お問い合わせを受け付けました";
       const userTextContent = `
 ${body.name ? body.name + " 様\n\n" : ""}岡山県統一模擬試験（おかもし）へのお問い合わせありがとうございます。
@@ -117,7 +122,7 @@ ${
 ■ 学年: ${body.grade || "未選択"}`
 }
 ■ 氏名: ${body.name || "未入力"} (${body.phonetic || "未入力"})
-■ メールアドレス: ${body.email || "未入力"}
+■ メールアドレス: ${userEmail}
 ■ 電話番号: ${body.phone || "未入力"}
 --------------------------------------------------
 ■ お問い合わせ内容:
@@ -136,22 +141,35 @@ Web : https://okayama-moshi.com
 --------------------------------------------------
 `.trim();
 
-      sendResendEmail(
+      const userMailRes = await sendResendEmail(
         apiKey,
         {
           from: fromEmail,
-          to: [body.email],
-          reply_to: adminEmails[0] || DEFAULT_FROM_EMAIL,
+          to: [userEmail],
+          reply_to: adminEmails[0] || DEFAULT_ADMIN_EMAIL,
           subject: userSubject,
           text: userTextContent,
         },
         "[functions/api/contact/user]"
-      ).catch((err) => {
-        console.warn("User auto-reply failed (non-fatal):", err);
-      });
+      );
+
+      if (userMailRes.ok) {
+        userMailId = userMailRes.id || null;
+      } else {
+        userMailError = userMailRes.error || `HTTP ${userMailRes.status}`;
+        console.error("Resend API Error (User Auto-Reply):", userMailRes.status, userMailRes.error);
+      }
     }
 
-    return jsonResponse({ success: true, message: "送信完了" });
+    return jsonResponse({
+      success: true,
+      message: "送信完了",
+      resend: {
+        admin_mail_id: adminMailRes.id || null,
+        user_mail_id: userMailId,
+        user_mail_error: userMailError,
+      },
+    });
   } catch (error: any) {
     console.error("Function Internal Error:", error);
     return errorResponse(error.message || "Server Error", 500);

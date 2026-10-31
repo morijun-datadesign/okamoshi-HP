@@ -1,4 +1,4 @@
 {
   "_comment": "品質ゲートで「警告」扱いにする既知の課題。解消したら必ずここから削除すること（恒久的な除外リストにしない）。",
-  "emptyArticleBodies": ["10140831-2"]
+  "emptyArticleBodies": []
 }

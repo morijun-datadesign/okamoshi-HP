@@ -32,7 +32,7 @@ def main():
     html = re.sub(r'href="images/', 'href="/images/', html)
     html = re.sub(r'href="news\.html"', 'href="/news.html"', html)
     html = re.sub(r'href="index\.html', 'href="/index.html', html)
-    html = re.sub(r'href="apply\.html"', 'href="/apply.html"', html)
+    html = re.sub(r'href="apply\.html"', 'href="/apply"', html)
     html = re.sub(r'href="schools\.html"', 'href="/schools.html"', html)
     html = re.sub(r'href="schools_PC\.html"', 'href="/schools.html"', html)
     html = re.sub(r'href="privacy\.html"', 'href="/privacy.html"', html)

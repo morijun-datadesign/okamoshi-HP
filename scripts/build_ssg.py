@@ -224,7 +224,7 @@ def format_article_content(raw_html):
     </div>
     <span class="material-symbols-outlined text-emerald-700 text-lg group-hover:translate-x-1 transition-transform shrink-0">arrow_forward</span>
   </a>
-  <a href="/apply.html" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-200 py-3 px-4 rounded-lg flex justify-between items-center transition-all group font-bold shadow-2xs no-underline cursor-pointer">
+  <a href="/apply" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-200 py-3 px-4 rounded-lg flex justify-between items-center transition-all group font-bold shadow-2xs no-underline cursor-pointer">
     <div class="flex items-center gap-2.5 min-w-0">
       <span class="w-8 h-8 rounded-md bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
         <span class="material-symbols-outlined text-[20px]">how_to_reg</span>
@@ -512,7 +512,7 @@ def build_article_detail_page(article, all_articles, template_html, exam_guides)
     html = re.sub(r'src="hero-banner\.jpg"', 'src="/hero-banner.jpg"', html)
     html = re.sub(r'href="news\.html"', 'href="/news.html"', html)
     html = re.sub(r'href="index\.html', 'href="/index.html', html)
-    html = re.sub(r'href="apply\.html"', 'href="/apply.html"', html)
+    html = re.sub(r'href="apply\.html"', 'href="/apply"', html)
     html = re.sub(r'href="schools\.html"', 'href="/schools.html"', html)
     html = re.sub(r'href="schools_PC\.html"', 'href="/schools.html"', html)
     html = re.sub(r'href="privacy\.html"', 'href="/privacy.html"', html)

@@ -236,10 +236,10 @@
           </button>
           <div id="nav-contact-dropdown" class="hidden group-hover:block absolute right-0 top-full mt-2 w-52 rounded-lg bg-surface-container-lowest border border-outline-variant/30 shadow-xl p-2 z-50 transition-all duration-200 before:content-[''] before:absolute before:-top-2 before:left-0 before:w-full before:h-2">
             <div class="space-y-1">
-              <a href="/contact/organization/index.html" data-path="contact-partner" onclick="handleContactNavClick(event, '/contact/organization/')" class="block px-3 py-2.5 rounded-lg hover:bg-surface-container-low transition-colors text-left group/item cursor-pointer">
+              <a href="/contact/organization" data-path="contact-partner" onclick="handleContactNavClick(event, '/contact/organization/')" class="block px-3 py-2.5 rounded-lg hover:bg-surface-container-low transition-colors text-left group/item cursor-pointer">
                 <span class="text-base font-bold text-on-surface group-hover/item:text-primary transition-colors">塾・学校関係者様</span>
               </a>
-              <a href="/contact/individual/index.html" data-path="contact" onclick="handleContactNavClick(event, '/contact/individual/')" class="block px-3 py-2.5 rounded-lg hover:bg-surface-container-low transition-colors text-left group/item cursor-pointer">
+              <a href="/contact/individual" data-path="contact" onclick="handleContactNavClick(event, '/contact/individual/')" class="block px-3 py-2.5 rounded-lg hover:bg-surface-container-low transition-colors text-left group/item cursor-pointer">
                 <span class="text-base font-bold text-on-surface group-hover/item:text-primary transition-colors">個人申込の方</span>
               </a>
             </div>
@@ -312,13 +312,13 @@
           <div class="px-1 text-sm font-bold text-on-surface-variant tracking-wider">お問い合わせ</div>
           <div class="space-y-2">
             <!-- 塾・学校関係者様 -->
-            <a href="/contact/organization/index.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-lg border border-surface-container bg-surface-container-lowest hover:bg-surface-container-low font-bold text-base text-on-surface shadow-xs transition-colors">
+            <a href="/contact/organization" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-lg border border-surface-container bg-surface-container-lowest hover:bg-surface-container-low font-bold text-base text-on-surface shadow-xs transition-colors">
               <span>塾・学校関係者様</span>
               <span class="material-symbols-outlined text-base text-on-surface-variant">arrow_forward</span>
             </a>
 
             <!-- 個人申込の方 -->
-            <a href="/contact/individual/index.html" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-lg border border-surface-container bg-surface-container-lowest hover:bg-surface-container-low font-bold text-base text-on-surface shadow-xs transition-colors">
+            <a href="/contact/individual" onclick="closeMobileMenu()" class="flex items-center justify-between px-4 py-3.5 rounded-lg border border-surface-container bg-surface-container-lowest hover:bg-surface-container-low font-bold text-base text-on-surface shadow-xs transition-colors">
               <span>個人申込の方</span>
               <span class="material-symbols-outlined text-base text-on-surface-variant">arrow_forward</span>
             </a>
@@ -928,35 +928,6 @@
             </a>
           </article>
 
-          <!-- 記事カード (10140831-2) -->
-          <article class="bg-slate-50 rounded-lg border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all mb-3 overflow-hidden cursor-pointer group block" data-category="更新情報">
-            <a href="/news/10140831-2/" class="flex items-center justify-between p-4 sm:p-5 gap-3 sm:gap-4 w-full">
-              <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 flex-1 min-w-0">
-                <div class="flex items-center gap-2.5 shrink-0">
-                  <span class="flex items-center gap-1.5 text-xs text-slate-500 font-medium shrink-0">
-                    <span class="material-symbols-outlined text-[15px] text-slate-400">calendar_today</span>
-                    <span class="tabular-nums">2024.08.30</span>
-                  </span>
-                  
-                  <span class="px-2.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-100 text-slate-700 border border-slate-200/60 shrink-0 shadow-2xs">
-                    更新情報
-                  </span>
-                </div>
-                <h2 class="font-bold text-[15px] sm:text-base text-slate-900 group-hover:text-brand-green transition-colors flex-1 leading-snug break-words">
-                  おかもし志望校記入用紙　記入の仕方
-                </h2>
-              </div>
-              <div class="flex items-center gap-2 shrink-0">
-                <span class="text-xs font-bold text-slate-500 group-hover:text-brand-green transition-colors hidden md:inline">詳細を読む</span>
-                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white border border-slate-200 group-hover:bg-emerald-50 flex items-center justify-center text-slate-400 group-hover:text-brand-green transition-colors shrink-0 group-hover:translate-x-0.5">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
-                  </svg>
-                </div>
-              </div>
-            </a>
-          </article>
-
           <!-- 記事カード (okayama-highschoolexam_tokubetsu_1) -->
           <article class="bg-slate-50 rounded-lg border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all mb-3 overflow-hidden cursor-pointer group block" data-category="高校入試情報">
             <a href="/news/okayama-highschoolexam_tokubetsu_1/" class="flex items-center justify-between p-4 sm:p-5 gap-3 sm:gap-4 w-full">
@@ -1145,11 +1116,11 @@
               <span>お問い合わせ</span>
             </div>
             <div class="flex flex-wrap sm:flex-nowrap gap-2 min-w-0">
-              <a class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg font-bold text-xs transition-all text-center shadow-xs border border-zinc-500 bg-zinc-500/50 hover:bg-zinc-500 text-white hover:text-white whitespace-nowrap" href="/contact/organization/index.html">
+              <a class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg font-bold text-xs transition-all text-center shadow-xs border border-zinc-500 bg-zinc-500/50 hover:bg-zinc-500 text-white hover:text-white whitespace-nowrap" href="/contact/organization">
                 <span class="material-symbols-outlined text-base text-emerald-400">corporate_fare</span>
                 <span>塾・学校関係者様</span>
               </a>
-              <a class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg font-bold text-xs transition-all text-center shadow-xs border border-zinc-500 bg-zinc-500/50 hover:bg-zinc-500 text-white hover:text-white whitespace-nowrap" href="/contact/individual/index.html">
+              <a class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg font-bold text-xs transition-all text-center shadow-xs border border-zinc-500 bg-zinc-500/50 hover:bg-zinc-500 text-white hover:text-white whitespace-nowrap" href="/contact/individual">
                 <span class="material-symbols-outlined text-base text-emerald-400">mail</span>
                 <span>個人申込の方</span>
               </a>

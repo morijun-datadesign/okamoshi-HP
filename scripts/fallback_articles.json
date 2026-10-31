@@ -316,25 +316,6 @@
     ]
   },
   {
-    "id": "10140831-2",
-    "createdAt": "2026-10-30T09:58:06.270Z",
-    "updatedAt": "2026-10-31T01:44:18.664Z",
-    "publishedAt": "2024-08-30T00:00:00.000Z",
-    "revisedAt": "2026-10-31T01:44:18.664Z",
-    "title": "おかもし志望校記入用紙　記入の仕方",
-    "category": {
-      "id": "508lep4cmp",
-      "createdAt": "2026-09-23T04:56:58.933Z",
-      "updatedAt": "2026-09-23T04:56:58.933Z",
-      "publishedAt": "2026-09-23T04:56:58.933Z",
-      "revisedAt": "2026-09-23T04:56:58.933Z",
-      "name": "更新情報"
-    },
-    "targetGrade": [
-      "全学年"
-    ]
-  },
-  {
     "id": "okayama-highschoolexam_tokubetsu_1",
     "createdAt": "2026-10-30T09:58:06.270Z",
     "updatedAt": "2026-10-31T01:44:26.928Z",

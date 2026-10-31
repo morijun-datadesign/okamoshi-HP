@@ -119,7 +119,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     // 2. success_url / cancel_url
     const origin = new URL(context.request.url).origin;
     const successUrl = `${origin}/apply/success?session_id={CHECKOUT_SESSION_ID}`;
-    const cancelUrl = `${origin}/apply.html`;
+    const cancelUrl = `${origin}/apply`;
 
     // 3. パラメータ抽出と正規化
     const existingMeta = body.metadata || {};

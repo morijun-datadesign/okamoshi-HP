@@ -22,6 +22,7 @@ const PAGES = [
   { path: '/news', name: 'お知らせ一覧', articleList: true },
   { path: '/blog.html', name: 'お知らせ・受験情報（blog）' },
   { path: '/apply', name: '申込フォーム' },
+  { path: '/apply/success', name: '申込完了（サンクス画面）' },
   { path: '/schools', name: '実施塾一覧' },
   { path: '/contact', name: 'お問い合わせ' },
   { path: '/contact/individual', name: 'お問い合わせ（個人）' },
@@ -226,6 +227,61 @@ for (const pg of PAGES) {
   });
 }
 
+// 要素の可視性・テキスト非空・背景色とのコントラスト比（非透明・非同化）を検証する共通ヘルパー
+async function verifyReadableStyle(locator, label) {
+  await expect(locator, `${label} が表示されていること`).toBeVisible();
+  const textContent = (await locator.innerText()).trim();
+  expect(textContent.length, `${label} のテキストが空でないこと`).toBeGreaterThan(0);
+
+  const styleCheck = await locator.evaluate((el) => {
+    const parseRgba = (str) => {
+      const m = str && str.match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)(?:\s*[,/]\s*([\d.]+))?\s*\)/i);
+      if (!m) return null;
+      return { r: Number(m[1]), g: Number(m[2]), b: Number(m[3]), a: m[4] !== undefined ? Number(m[4]) : 1 };
+    };
+    const luminance = ({ r, g, b }) => {
+      const toLinear = (c) => {
+        const s = c / 255;
+        return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
+      };
+      return 0.2126 * toLinear(r) + 0.7152 * toLinear(g) + 0.0722 * toLinear(b);
+    };
+
+    const cs = getComputedStyle(el);
+    const opacity = parseFloat(cs.opacity || '1');
+    const fg = parseRgba(cs.color);
+
+    // 祖先要素をたどって実効背景色を取得（すべて透明なら白背景）
+    let bg = { r: 255, g: 255, b: 255, a: 1 };
+    for (let cur = el; cur && cur !== document.documentElement; cur = cur.parentElement) {
+      const parsed = parseRgba(getComputedStyle(cur).backgroundColor);
+      if (parsed && parsed.a > 0.1) {
+        bg = parsed;
+        break;
+      }
+    }
+
+    const l1 = fg ? luminance(fg) : 0;
+    const l2 = luminance(bg);
+    const contrast = (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+
+    return {
+      opacity,
+      fgAlpha: fg ? fg.a : 0,
+      fgColor: cs.color,
+      bgColor: `rgb(${bg.r}, ${bg.g}, ${bg.b})`,
+      contrast: Number(contrast.toFixed(2)),
+    };
+  });
+
+  expect(styleCheck.opacity, `${label} の opacity が透明でないこと`).toBeGreaterThan(0.5);
+  expect(styleCheck.fgAlpha, `${label} の文字色 alpha が透明でないこと`).toBeGreaterThan(0.5);
+  expect(
+    styleCheck.contrast,
+    `${label} の文字色(${styleCheck.fgColor})が背景色(${styleCheck.bgColor})と同化していないこと`
+  ).toBeGreaterThanOrEqual(3.0);
+}
+
 // ---- [3] お問い合わせフォーム（/contact/）のインタラクション・送信完了画面・学年プルダウン表記検査
 test('お問い合わせフォーム（/contact/）: 学年プルダウン表記＆送信完了画面の視認性検査', async ({ page }) => {
   const errors = await setupPage(page);
@@ -253,61 +309,6 @@ test('お問い合わせフォーム（/contact/）: 学年プルダウン表記
     }
     return route.continue();
   });
-
-  // 要素の可視性・テキスト非空・背景色とのコントラスト比（非透明・非同化）を検証するヘルパー
-  const verifyReadableStyle = async (locator, label) => {
-    await expect(locator, `${label} が表示されていること`).toBeVisible();
-    const textContent = (await locator.innerText()).trim();
-    expect(textContent.length, `${label} のテキストが空でないこと`).toBeGreaterThan(0);
-
-    const styleCheck = await locator.evaluate((el) => {
-      const parseRgba = (str) => {
-        const m = str && str.match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)(?:\s*[,/]\s*([\d.]+))?\s*\)/i);
-        if (!m) return null;
-        return { r: Number(m[1]), g: Number(m[2]), b: Number(m[3]), a: m[4] !== undefined ? Number(m[4]) : 1 };
-      };
-      const luminance = ({ r, g, b }) => {
-        const toLinear = (c) => {
-          const s = c / 255;
-          return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
-        };
-        return 0.2126 * toLinear(r) + 0.7152 * toLinear(g) + 0.0722 * toLinear(b);
-      };
-
-      const cs = getComputedStyle(el);
-      const opacity = parseFloat(cs.opacity || '1');
-      const fg = parseRgba(cs.color);
-
-      // 祖先要素をたどって実効背景色を取得（すべて透明なら白背景）
-      let bg = { r: 255, g: 255, b: 255, a: 1 };
-      for (let cur = el; cur && cur !== document.documentElement; cur = cur.parentElement) {
-        const parsed = parseRgba(getComputedStyle(cur).backgroundColor);
-        if (parsed && parsed.a > 0.1) {
-          bg = parsed;
-          break;
-        }
-      }
-
-      const l1 = fg ? luminance(fg) : 0;
-      const l2 = luminance(bg);
-      const contrast = (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
-
-      return {
-        opacity,
-        fgAlpha: fg ? fg.a : 0,
-        fgColor: cs.color,
-        bgColor: `rgb(${bg.r}, ${bg.g}, ${bg.b})`,
-        contrast: Number(contrast.toFixed(2)),
-      };
-    });
-
-    expect(styleCheck.opacity, `${label} の opacity が透明でないこと`).toBeGreaterThan(0.5);
-    expect(styleCheck.fgAlpha, `${label} の文字色 alpha が透明でないこと`).toBeGreaterThan(0.5);
-    expect(
-      styleCheck.contrast,
-      `${label} の文字色(${styleCheck.fgColor})が背景色(${styleCheck.bgColor})と同化していないこと`
-    ).toBeGreaterThanOrEqual(3.0);
-  };
 
   await page.goto('/contact/', { waitUntil: 'domcontentloaded' });
   await page.evaluate(() => document.fonts?.ready).catch(() => {});
@@ -401,6 +402,213 @@ test('お問い合わせフォーム（/contact/）: 学年プルダウン表記
   expect(submittedPayloads.map((p) => p.type)).toEqual(['individual', 'organization']);
   expect(submittedPayloads[0].grade).toBe('中学3年生');
   expect(errors, 'フォーム送信中に pageerror / console.error が発生しています').toEqual([]);
+});
+
+// ---- [3] お申し込みフォーム（/apply/）の選択肢・決済UI・送信＆完了画面（/apply/success）視認性検査
+test('お申し込みフォーム（/apply/）: 選択肢・決済UIの動的表示＆送信完了画面（/apply/success）視認性検査', async ({ page }) => {
+  const errors = await setupPage(page);
+
+  // 外部スクリプト遮断環境向けに Turnstile オブジェクトをモック
+  await page.addInitScript(() => {
+    window.turnstile = {
+      getResponse: () => 'mock-turnstile-token',
+      execute: () => {},
+      reset: () => {},
+    };
+  });
+
+  // /api/create-checkout-session と /api/apply をモック（Stripe課金や外部メール送信を発生させない）
+  const checkoutRequests = [];
+  const applyRequests = [];
+
+  await page.route('**/api/create-checkout-session', async (route) => {
+    const req = route.request();
+    if (req.method() === 'POST') {
+      const payload = req.postDataJSON();
+      checkoutRequests.push(payload);
+      const origin = new URL(req.url()).origin;
+      const mockSessionId = 'cs_test_e2e_apply_001';
+      return route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          success: true,
+          session_id: mockSessionId,
+          url: `${origin}/apply/success?session_id=${mockSessionId}`,
+        }),
+      });
+    }
+    return route.continue();
+  });
+
+  await page.route('**/api/apply', async (route) => {
+    const req = route.request();
+    if (req.method() === 'POST') {
+      applyRequests.push(req.postDataJSON());
+      return route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ ok: true, message: 'お申し込みを受け付けました。' }),
+      });
+    }
+    return route.continue();
+  });
+
+  await page.goto('/apply/', { waitUntil: 'domcontentloaded' });
+  await page.evaluate(() => document.fonts?.ready).catch(() => {});
+
+  // ----------------------------------------------------------------
+  // 1. 学年ボタン群の表記検証（不要なカッコ書きや旧表記がないこと）
+  // ----------------------------------------------------------------
+  const gradeButtons = await page.locator('#gradeButtonGroup button').evaluateAll((btns) =>
+    btns.map((b) => ({ id: b.id, text: b.textContent.trim() }))
+  );
+  expect(gradeButtons, '学年選択ボタンの表記がシンプルで統一されていること').toEqual([
+    { id: 'grade-btn-sho6', text: '小6' },
+    { id: 'grade-btn-chu1', text: '中1' },
+    { id: 'grade-btn-chu2', text: '中2' },
+    { id: 'grade-btn-chu3', text: '中3' },
+  ]);
+  for (const btn of gradeButtons) {
+    expect(btn.text, '学年選択ボタンに不要なカッコ書きが含まれていないこと').not.toMatch(/[（(]/);
+  }
+
+  // ----------------------------------------------------------------
+  // 2. 必須項目バリデーション（学年未選択 → 模試未選択での送信ブロック）
+  // ----------------------------------------------------------------
+  const submitBtn = page.locator('#submitApplyBtn');
+  await expect(submitBtn, '初期状態（規約未同意）では送信ボタンが disabled であること').toBeDisabled();
+
+  await page.locator('#agreeTerms').check();
+  await expect(submitBtn, '規約同意後は送信ボタンが enabled になること').toBeEnabled();
+
+  await submitBtn.click();
+  await expect(page.locator('#formErrorMessage')).toBeVisible();
+  await expect(page.locator('#formErrorMessageText')).toContainText('学年をお選びください');
+
+  // ----------------------------------------------------------------
+  // 3. 学年・模試・会場セレクトボックスの動的連動検証
+  // ----------------------------------------------------------------
+  // 小6 → 中3 の切り替えで模試カードが動的に切り替わることを確認
+  await page.locator('#grade-btn-sho6').click();
+  await expect(page.locator('#examOptionGroup')).toContainText('岡山県適性検査対策模試');
+
+  await page.locator('#grade-btn-chu3').click();
+  await expect(page.locator('#examOptionGroup')).toContainText('岡山県統一模擬試験');
+
+  // 学年選択済み・模試未選択の状態で送信すると模試選択エラーが出ること
+  await submitBtn.click();
+  await expect(page.locator('#formErrorMessage')).toBeVisible();
+  await expect(page.locator('#formErrorMessageText')).toContainText('受験を希望する模試を1つ以上選択してください');
+
+  const examCheckbox = page.locator('#check-r12');
+  const venueSelect = page.locator('#venue-r12');
+  const venueDisplay = page.locator('#venue-display-r12');
+
+  await expect(venueSelect, '模試チェック前は会場セレクトが disabled であること').toBeDisabled();
+  await examCheckbox.check();
+  await expect(venueSelect, '模試チェック後は会場セレクトが enabled になること').toBeEnabled();
+
+  // 会場セレクトボックスの選択肢確認
+  const venueOptions = await venueSelect.locator('option:not([disabled])').evaluateAll((opts) =>
+    opts.map((o) => ({ value: o.value, label: o.textContent.trim() }))
+  );
+  expect(venueOptions.length, '会場選択肢が複数存在すること').toBeGreaterThanOrEqual(3);
+  expect(venueOptions.map((v) => v.value)).toEqual(expect.arrayContaining(['venue_okayama', 'venue_tsuyama', 'home']));
+
+  // 会場を選択すると表示ラベルとサマリー金額が即時更新されること
+  await venueSelect.selectOption('venue_okayama');
+  await expect(venueDisplay).toContainText('岡山会場（山陽学園中学校・高等学校）');
+  await expect(page.locator('#summarySelectedCount')).toHaveText('1回分選択中');
+  await expect(page.locator('#summaryTotalAmount')).toHaveText('¥5,500');
+
+  // 模試選択済み・受験生氏名未入力でのバリデーション確認
+  await submitBtn.click();
+  await expect(page.locator('#formErrorMessage')).toBeVisible();
+  await expect(page.locator('#formErrorMessageText')).toContainText('生徒氏名（漢字）を入力してください');
+
+  // ----------------------------------------------------------------
+  // 4. 支払い方法（コンビニ決済 / クレジットカード決済）選択UIの動的検証
+  // ----------------------------------------------------------------
+  const konbiniRadio = page.locator('input[name="payment_method"][value="convenience_store"]');
+  const cardRadio = page.locator('input[name="payment_method"][value="credit_card"]');
+
+  await konbiniRadio.check();
+  await expect(page.locator('#convenienceWarningPanel')).toBeVisible();
+  await expect(page.locator('#convenienceAgreeContainer')).toBeVisible();
+  await expect(submitBtn, 'コンビニ決済選択時は期限同意チェックまで送信ボタンが disabled になること').toBeDisabled();
+
+  await page.locator('#agreeConvenienceTerms').check();
+  await expect(submitBtn, 'コンビニ期限同意チェック後は送信ボタンが enabled になること').toBeEnabled();
+
+  // クレジットカード決済に切り替え
+  await cardRadio.check();
+  await expect(page.locator('#convenienceWarningPanel')).toBeHidden();
+  await expect(page.locator('#convenienceAgreeContainer')).toBeHidden();
+  await expect(page.locator('#summaryPaymentMethod')).toContainText('クレジットカード決済');
+  await expect(submitBtn).toBeEnabled();
+
+  // ----------------------------------------------------------------
+  // 5. 全必須項目の入力 → 送信 → 完了画面（/apply/success）の視認性検査
+  // ----------------------------------------------------------------
+  await page.locator('#studentLastName').fill('岡山');
+  await page.locator('#studentFirstName').fill('太郎');
+  await page.locator('#studentKanaLastName').fill('オカヤマ');
+  await page.locator('#studentKanaFirstName').fill('タロウ');
+  await page.locator('input[name="gender"][value="male"]').check();
+  await page.locator('#currentSchool').fill('岡山市立操南中学校');
+
+  await page.locator('#parentLastName').fill('岡山');
+  await page.locator('#parentFirstName').fill('花子');
+  await page.locator('#parentKanaLastName').fill('オカヤマ');
+  await page.locator('#parentKanaFirstName').fill('ハナコ');
+  await page.locator('#parentEmail').fill('apply-test@example.com');
+  await page.locator('#parentEmailConfirm').fill('apply-test@example.com');
+  await page.locator('#parentTel').fill('09012345678');
+  await page.locator('#postalCode').fill('700-0822');
+  await page.locator('#addressLine1').fill('岡山県岡山市北区表町');
+  await page.locator('#addressLine2').fill('1丁目5-1');
+  await page.locator('#addressLine3').fill('岡山教育ビル 3F');
+  await page.locator('#remarks').fill('E2Eテスト送信です。');
+
+  // フォーム送信を実行し、/apply/success への遷移を待機
+  await Promise.all([
+    page.waitForURL('**/apply/success**', { timeout: 10000 }),
+    submitBtn.click(),
+  ]);
+  await page.evaluate(() => document.fonts?.ready).catch(() => {});
+
+  // 完了画面（/apply/success）の見出し・本文・導線ボタンの可視性＆コントラスト検査
+  const successHeading = page.locator('main h1');
+  const successLead = page.locator('main h1 + p');
+  const successScheduleHeading = page.locator('main h2');
+  const backHomeBtn = page.locator('main a[href="/index.html"]').first();
+  const scheduleBtn = page.locator('main a[href="/index.html#schedule-table"]');
+
+  await expect(successHeading).toHaveText('お申し込みを受け付けました');
+  await expect(successLead).toContainText('岡山県統一模擬試験（おかもし）へのお申し込み、誠にありがとうございます。');
+  await expect(successLead).toContainText('ご入力いただいたメールアドレス宛に、お申し込み完了通知メールをお送りいたしました。');
+  await expect(backHomeBtn).toContainText('トップページへ戻る');
+  await expect(scheduleBtn).toContainText('年間日程を確認する');
+
+  await verifyReadableStyle(successHeading, '申込完了画面の見出し(h1)');
+  await verifyReadableStyle(successLead, '申込完了画面のリード本文');
+  await verifyReadableStyle(successScheduleHeading, '申込完了画面のスケジュール見出し(h2)');
+  await verifyReadableStyle(backHomeBtn, '申込完了画面の「トップページへ戻る」ボタン');
+  await verifyReadableStyle(scheduleBtn, '申込完了画面の「年間日程を確認する」ボタン');
+
+  // バックエンドAPI（/api/create-checkout-session および /api/apply）への送信ペイロード検証
+  expect(checkoutRequests.length, '/api/create-checkout-session が1回呼ばれていること').toBe(1);
+  expect(checkoutRequests[0].grade).toBe('中学3年生');
+  expect(checkoutRequests[0].student_name).toBe('岡山 太郎');
+  expect(checkoutRequests[0].amount).toBe(5500);
+  expect(checkoutRequests[0].payment_method).toBe('card');
+
+  await expect.poll(() => applyRequests.length, { message: '/api/apply が完了画面で呼ばれること', timeout: 5000 }).toBe(1);
+  expect(applyRequests[0].session_id).toBe('cs_test_e2e_apply_001');
+  expect(applyRequests[0].student_name).toBe('岡山 太郎');
+
+  expect(errors, 'お申し込み操作・完了画面遷移中に pageerror / console.error が発生しています').toEqual([]);
 });
 
 // ---- [2] 内部リンク切れ検査（全ページの href / src を収集して HTTP ステータスを確認）

@@ -14,8 +14,8 @@ description: おかもし公式サイトの2大絶対ルール（デザインシ
 
 - 思考プロセス（Scratchpad）、作業計画（Goal）、アクションログ、ファイル操作の解説、および会話の応答はすべて日本語で行う（内部的な思考や要約ステップでも英語を使わない）。
 - 本番環境: Cloudflare Pages（プロジェクト `okamoshi-hp`、`main` ブランチ、`https://okayama-moshi.com`、公開ディレクトリはリポジトリ直下 `.`）。
-- プレビュー環境: `feature-idea-b` ブランチ（`https://feature-idea-b.okamoshi-hp.pages.dev`）。
-  - **本番・プレビュー環境の整合性維持ルール**: サイト修正時はまずプレビュー環境（`feature-idea-b`）で確認するため、常に本番（`main`）とプレビュー（`feature-idea-b`）の両方で同じ最新状態・同じ環境変数が動くように整合性を保つこと。
+- プレビュー環境: `feature/idea-b` ブランチ（Cloudflare Pages エイリアスURL: `https://feature-idea-b.okamoshi-hp.pages.dev`）。
+  - **本番・プレビュー環境の整合性維持ルール**: サイト修正時はまずプレビュー環境（`feature/idea-b` ブランチ → `https://feature-idea-b.okamoshi-hp.pages.dev`）で確認するため、常に本番（`main`）とプレビュー（`feature/idea-b`）の両方で同じ最新状態・同じ環境変数が動くように整合性を保つこと。
   - **GAS 同期先の保護ルール**: `gas/sync-exam-guides.js` および `gas/sync-cram-schools.js` の同期先配列（`API_URLS`：本番URL `https://okayama-moshi.com/api/admin/...` ＋ プレビューURL `https://feature-idea-b.okamoshi-hp.pages.dev/api/admin/...`）は、本番とプレビュー双方のD1を常に同一状態に保つため**絶対に片方を削らないこと**。
 
 ---

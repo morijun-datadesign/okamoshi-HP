@@ -3951,12 +3951,12 @@ ${returnMethodNote}
         tag: "3枚目: 学力分析表",
         label: "学力分析表",
         badge: "小問別学力分析表",
-        imageAvif: "/images/3-carousel-3.avif?v=20261101",
-        imageWebp: "/images/3-carousel-3.webp?v=20261101",
+        imageAvif: null,
+        imageWebp: null,
         imageFallback: "/images/3-carousel-3.jpg?v=20261101",
         alt: "学力診断シート 小問単位の学力分析表",
-        width: 467,
-        height: 725,
+        width: 450,
+        height: 720,
         singleSection: {
           title: "小問別学力分析表",
           body: "「どの問題を落としたのか」を小問単位で完全可視化。全体正答率と自分の〇×を突き合わせることで、「全員が解けた基本問題のミス」や「記述問題の部分点」まで明確になり、次に取り組むべき復習テーマが一目で分かります。"
@@ -4022,8 +4022,8 @@ ${returnMethodNote}
             <div class="order-1 lg:order-2 w-full lg:flex-1 lg:min-w-0 flex flex-col items-center justify-center p-1.5 sm:p-2 lg:p-2 bg-slate-50/80 lg:overflow-hidden shrink-0 lg:shrink">
               <div class="w-full h-full flex items-center justify-center max-w-full">
                 <picture class="w-full lg:w-auto h-full flex items-center justify-center max-w-full">
-                  <source type="image/avif" srcset="${slide.imageAvif}">
-                  <source type="image/webp" srcset="${slide.imageWebp}">
+                  ${slide.imageAvif ? `<source type="image/avif" srcset="${slide.imageAvif}">` : ""}
+                  ${slide.imageWebp ? `<source type="image/webp" srcset="${slide.imageWebp}">` : ""}
                   <img 
                     src="${slide.imageFallback || slide.imageWebp}" 
                     alt="${slide.alt}" 

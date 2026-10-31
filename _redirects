@@ -77,6 +77,8 @@
 /.antigravity/*           /404.html           200
 /.idx/*                   /404.html           200
 /.gitignore               /404.html           200
+/.dev.vars                /404.html           200
+/.env*                    /404.html           200
 /GEMINI.md                /404.html           200
 /AGENTS.md                /404.html           200
 /cram_schools.csv         /404.html           200

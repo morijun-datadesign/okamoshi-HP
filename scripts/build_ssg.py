@@ -19,9 +19,29 @@ from datetime import datetime
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# 環境変数からAPIキーを取得（リポジトリ内へのハードコードは排除）
-MICROCMS_API_KEY = os.environ.get("MICROCMS_API_KEY", "")
-MICROCMS_SERVICE_DOMAIN = os.environ.get("MICROCMS_SERVICE_DOMAIN", "okamoshi-blog")
+def load_env_key(name, default=""):
+    val = os.environ.get(name, "").strip()
+    if val:
+        return val
+    for fname in (".dev.vars", ".env"):
+        fpath = os.path.join(BASE_DIR, fname)
+        if os.path.exists(fpath):
+            try:
+                with open(fpath, "r", encoding="utf-8") as f:
+                    for line in f:
+                        line = line.strip()
+                        if not line or line.startswith("#") or "=" not in line:
+                            continue
+                        k, v = line.split("=", 1)
+                        if k.strip() == name:
+                            return v.strip().strip("'\"")
+            except Exception:
+                pass
+    return default
+
+# 環境変数（またはローカル .dev.vars / .env）からAPIキーを取得（リポジトリ内へのハードコードは排除）
+MICROCMS_API_KEY = load_env_key("MICROCMS_API_KEY", "")
+MICROCMS_SERVICE_DOMAIN = load_env_key("MICROCMS_SERVICE_DOMAIN", "okamoshi-blog")
 MICROCMS_ENDPOINT = "blogs"
 
 def parse_article_display_date(article):
@@ -71,8 +91,16 @@ def fetch_microcms_articles():
         with urllib.request.urlopen(req, timeout=10) as res:
             data = json.loads(res.read().decode("utf-8"))
             contents = data.get("contents", [])
+            published_items = [c for c in contents if c.get("publishedAt")]
+            if published_items:
+                fb_path = os.path.join(BASE_DIR, "scripts", "fallback_articles.json")
+                try:
+                    with open(fb_path, "w", encoding="utf-8") as f:
+                        json.dump(published_items, f, ensure_ascii=False, indent=2)
+                except Exception:
+                    pass
             print(f"Successfully fetched {len(contents)} articles from microCMS.")
-            return sort_articles_by_display_date(contents)
+            return sort_articles_by_display_date(published_items or contents)
     except Exception as e:
         print(f"Warning: Failed to fetch from microCMS ({e}). Using local fallback articles.")
         return sort_articles_by_display_date(get_fallback_articles())
@@ -165,6 +193,73 @@ def get_category_info(category_obj, title=""):
 
     return cat_name, badge_class
 
+def build_mp4_video_player_html(video_url):
+    """microCMS本文内の .mp4 URL を操作コントロール付き <video> プレイヤーHTMLに変換"""
+    safe_url = str(video_url).strip()
+    return (
+        '<div style="text-align: center; margin: 1.5rem 0;">'
+        f'<video controls playsinline preload="metadata" style="width: 100%; max-width: 360px; border-radius: 12px; display: block; margin: 0 auto; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" src="{safe_url}"></video>'
+        '</div>'
+    )
+
+def convert_mp4_embeds(content):
+    """
+    microCMS本文内の .mp4 リンクタグ、プレーンURL、または iframe 埋め込みを
+    自動的に <video controls> プレイヤーに変換する
+    """
+    if not content or ".mp4" not in content.lower():
+        return content
+
+    mp4_url_pat = r'(https?://[^\s"\'<>]+\.mp4(?:\?[^\s"\'<>]*)?)'
+
+    # 1. <p> で囲まれた <a href="...mp4">...</a>
+    content = re.sub(
+        rf'<p[^>]*>\s*<a\s+[^>]*href=["\']{mp4_url_pat}["\'][^>]*>.*?</a>\s*</p>',
+        lambda m: build_mp4_video_player_html(m.group(1)),
+        content,
+        flags=re.IGNORECASE | re.DOTALL,
+    )
+
+    # 2. <p> で囲まれた <iframe src="...mp4">...</iframe> または単体の <iframe>
+    content = re.sub(
+        rf'<p[^>]*>\s*<iframe\s+[^>]*src=["\']{mp4_url_pat}["\'][^>]*>.*?</iframe>\s*</p>',
+        lambda m: build_mp4_video_player_html(m.group(1)),
+        content,
+        flags=re.IGNORECASE | re.DOTALL,
+    )
+    content = re.sub(
+        rf'<iframe\s+[^>]*src=["\']{mp4_url_pat}["\'][^>]*>.*?</iframe>',
+        lambda m: build_mp4_video_player_html(m.group(1)),
+        content,
+        flags=re.IGNORECASE | re.DOTALL,
+    )
+
+    # 3. 単体の <a href="...mp4">...</a>
+    content = re.sub(
+        rf'<a\s+[^>]*href=["\']{mp4_url_pat}["\'][^>]*>.*?</a>',
+        lambda m: build_mp4_video_player_html(m.group(1)),
+        content,
+        flags=re.IGNORECASE | re.DOTALL,
+    )
+
+    # 4. <p> 内のプレーン .mp4 URL（段落全体がURLのみの場合）
+    content = re.sub(
+        rf'<p[^>]*>\s*{mp4_url_pat}\s*</p>',
+        lambda m: build_mp4_video_player_html(m.group(1)),
+        content,
+        flags=re.IGNORECASE | re.DOTALL,
+    )
+
+    # 5. その他のテキスト中にあるプレーン .mp4 URL（既に src="..." や href="..." 属性内にあるものは除外）
+    content = re.sub(
+        rf'(?<![="\']){mp4_url_pat}',
+        lambda m: build_mp4_video_player_html(m.group(1)),
+        content,
+        flags=re.IGNORECASE,
+    )
+
+    return content
+
 def format_article_content(raw_html):
     """
     本文HTMLの事前整形
@@ -203,6 +298,9 @@ def format_article_content(raw_html):
         r'<a \1href="\2"\4>\2</a>\3',
         content
     )
+
+    # 2.6. microCMS本文内の .mp4 リンク・プレーンURL・iframe を <video controls> プレイヤーへ自動変換
+    content = convert_mp4_embeds(content)
 
     # 3. 案内リンク（「おかもし日程一覧」「おかもし詳細・お申し込み」）のボタングリッドカード化
     has_schedule = bool(re.search(r'おかもし日程一覧', content))

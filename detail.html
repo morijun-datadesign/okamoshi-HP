@@ -2051,7 +2051,10 @@
       const contentBody = document.getElementById('entry-content-body');
       if (contentBody) {
         if (post.content) {
-          contentBody.innerHTML = post.content;
+          contentBody.innerHTML = typeof convertMp4EmbedsHtml === 'function' ? convertMp4EmbedsHtml(post.content) : post.content;
+          if (typeof normalizeMp4Elements === 'function') {
+            normalizeMp4Elements(contentBody);
+          }
           // microCMS出力の空段落 (<p></p>, <p><br></p>, 空白のみのp) を除去
           contentBody.querySelectorAll('p').forEach(p => {
             if (!p.textContent.trim() && (!p.children.length || (p.children.length === 1 && p.children[0].tagName === 'BR'))) {
@@ -2535,6 +2538,65 @@
       window.location.href = '/index.html?tab=' + tabKey + '#next-exam';
     }
   }
+
+  function buildMp4VideoPlayerHtml(videoUrl) {
+    var safeUrl = String(videoUrl || '').trim().replace(/"/g, '&quot;');
+    return '<div style="text-align: center; margin: 1.5rem 0;"><video controls playsinline preload="metadata" style="width: 100%; max-width: 360px; border-radius: 12px; display: block; margin: 0 auto; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" src="' + safeUrl + '"></video></div>';
+  }
+
+  function convertMp4EmbedsHtml(rawHtml) {
+    if (!rawHtml || !/\.mp4/i.test(rawHtml)) return rawHtml || '';
+    var html = String(rawHtml);
+    html = html.replace(/<p[^>]*>\s*<a\s+[^>]*href=["'](https?:\/\/[^\s"'<>]+\.mp4(?:\?[^\s"'<>]*)?)["'][^>]*>[\s\S]*?<\/a>\s*<\/p>/gi, function(_, url) {
+      return buildMp4VideoPlayerHtml(url);
+    });
+    html = html.replace(/<p[^>]*>\s*<iframe\s+[^>]*src=["'](https?:\/\/[^\s"'<>]+\.mp4(?:\?[^\s"'<>]*)?)["'][^>]*>[\s\S]*?<\/iframe>\s*<\/p>/gi, function(_, url) {
+      return buildMp4VideoPlayerHtml(url);
+    });
+    html = html.replace(/<iframe\s+[^>]*src=["'](https?:\/\/[^\s"'<>]+\.mp4(?:\?[^\s"'<>]*)?)["'][^>]*>[\s\S]*?<\/iframe>/gi, function(_, url) {
+      return buildMp4VideoPlayerHtml(url);
+    });
+    html = html.replace(/<a\s+[^>]*href=["'](https?:\/\/[^\s"'<>]+\.mp4(?:\?[^\s"'<>]*)?)["'][^>]*>[\s\S]*?<\/a>/gi, function(_, url) {
+      return buildMp4VideoPlayerHtml(url);
+    });
+    html = html.replace(/<p[^>]*>\s*(https?:\/\/[^\s"'<>]+\.mp4(?:\?[^\s"'<>]*)?)\s*<\/p>/gi, function(_, url) {
+      return buildMp4VideoPlayerHtml(url);
+    });
+    return html;
+  }
+
+  function normalizeMp4Elements(container) {
+    if (!container) return;
+    var links = Array.from(container.querySelectorAll('a[href*=".mp4"], iframe[src*=".mp4"]'));
+    links.forEach(function(el) {
+      var rawUrl = el.getAttribute('href') || el.getAttribute('src') || '';
+      if (!/^https?:\/\/[^\s"'<>]+\.mp4(?:\?[^\s"'<>]*)?$/i.test(rawUrl.trim())) return;
+      var wrapper = document.createElement('div');
+      wrapper.innerHTML = buildMp4VideoPlayerHtml(rawUrl.trim());
+      var videoBox = wrapper.firstElementChild;
+      if (!videoBox) return;
+      var parent = el.parentElement;
+      if (parent && parent.tagName === 'P' && parent.textContent.trim() === el.textContent.trim() && parent.children.length === 1) {
+        parent.replaceWith(videoBox);
+      } else {
+        el.replaceWith(videoBox);
+      }
+    });
+    Array.from(container.querySelectorAll('p')).forEach(function(p) {
+      if (p.children.length > 0) return;
+      var txt = p.textContent.trim();
+      if (/^https?:\/\/[^\s"'<>]+\.mp4(?:\?[^\s"'<>]*)?$/i.test(txt)) {
+        var wrapper = document.createElement('div');
+        wrapper.innerHTML = buildMp4VideoPlayerHtml(txt);
+        if (wrapper.firstElementChild) p.replaceWith(wrapper.firstElementChild);
+      }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    var bodyEl = document.getElementById('entry-content-body');
+    if (bodyEl) normalizeMp4Elements(bodyEl);
+  });
 </script>
 <script defer src="/js/floating-cta.js"></script>
 <script defer src="/js/sidebar-exam-widget.js"></script>

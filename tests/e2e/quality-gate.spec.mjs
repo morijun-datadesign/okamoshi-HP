@@ -235,6 +235,13 @@ for (const pg of ACTIVE_PAGES) {
       } else {
         expect(body.len, '記事本文が描画されていません').toBeGreaterThan(200);
       }
+      // 本文内の .mp4 リンクがすべて <video controls> プレイヤーに変換されていること
+      await expect(page.locator('#entry-content-body a[href*=".mp4"]'), '未変換の .mp4 リンクが残っていないこと').toHaveCount(0);
+      if (pg.article === 'ynvbigkqcq') {
+        const articleVideo = page.locator('#entry-content-body video[controls]');
+        await expect(articleVideo, '記事本文内に <video controls> プレイヤーが描画されていること').toBeVisible();
+        await expect(articleVideo).toHaveAttribute('src', 'https://pub-ba61870bbe1442af87f84c258e756736.r2.dev/apply-guide.mp4');
+      }
     }
 
     // ---- [4] SEO・アクセシビリティ（PCプロジェクトのみで実施）

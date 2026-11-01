@@ -198,7 +198,10 @@ def main():
       const contentBody = document.getElementById('entry-content-body');
       if (contentBody) {
         if (post.content) {
-          contentBody.innerHTML = post.content;
+          contentBody.innerHTML = typeof convertMp4EmbedsHtml === 'function' ? convertMp4EmbedsHtml(post.content) : post.content;
+          if (typeof normalizeMp4Elements === 'function') {
+            normalizeMp4Elements(contentBody);
+          }
           contentBody.querySelectorAll('p').forEach(p => {
             if (!p.textContent.trim() && (!p.children.length || (p.children.length === 1 && p.children[0].tagName === 'BR'))) {
               p.remove();

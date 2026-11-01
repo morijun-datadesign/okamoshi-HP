@@ -809,7 +809,7 @@
                 </ul>
               </div>
 
-              <!-- ⑦ 申込エリア（「〇月号をWEBで申し込む >」ボタン ＋ 注釈） -->
+              <!-- ⑦ 申込エリア（「〇月号をWEBで申し込む >」ボタン ＋ 注釈 ＋ 手順動画モーダルボタン） -->
               <div class="order-3 lg:order-2 bg-slate-50 p-4 sm:p-5 rounded-xl border border-slate-200/90 shadow-2xs">
                 <div id="cta-container" class="space-y-2">
                   <!-- お申し込みボタン（JSで動的生成） -->
@@ -821,6 +821,17 @@
                   <p class="text-[11px] sm:text-xs text-slate-500 text-center font-medium mt-2">
                     ※お申込みフォーム内で今後の回をまとめて選択可能です
                   </p>
+                </div>
+                <!-- お申し込み手順解説動画モーダル起動ボタン（ピル型サブボタン） -->
+                <div class="mt-3 pt-2.5 border-t border-slate-200/80 flex justify-center">
+                  <button
+                    type="button"
+                    id="open-apply-guide-video-btn"
+                    onclick="openApplyGuideVideoModal()"
+                    class="w-full sm:w-auto max-w-full inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-full bg-white hover:bg-emerald-50 text-emerald-950 border border-slate-300 hover:border-emerald-700 text-xs sm:text-[13px] font-bold shadow-2xs transition-all cursor-pointer active:scale-[0.99]"
+                  >
+                    <span>▶ 初めての方へ：お申し込み手順を動画で見る（3分）</span>
+                  </button>
                 </div>
               </div>
 
@@ -4423,6 +4434,113 @@ ${returnMethodNote}
       </button>
     </div>
   </div>
+
+  <!-- =========================================================================
+       お申し込み手順解説動画モーダル（Cloudflare R2 配信・その場再生）
+       ========================================================================= -->
+  <div
+    id="apply-guide-video-modal"
+    class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/70 backdrop-blur-xs p-4"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="apply-guide-video-modal-title"
+    onclick="handleApplyGuideModalBackdropClick(event)"
+  >
+    <div
+      id="apply-guide-video-modal-panel"
+      class="relative w-full max-w-md bg-white rounded-lg border border-slate-200 shadow-xl overflow-hidden"
+      onclick="event.stopPropagation()"
+    >
+      <div class="flex items-center justify-between px-4 py-3 bg-slate-50 border-b border-slate-200">
+        <div class="flex items-center gap-2 min-w-0">
+          <span class="w-1.5 h-4 bg-brand-green rounded-full inline-block shrink-0"></span>
+          <p id="apply-guide-video-modal-title" class="text-xs sm:text-sm font-bold text-emerald-950">
+            お申し込み手順を動画で見る（3分）
+          </p>
+        </div>
+        <button
+          type="button"
+          id="close-apply-guide-video-btn"
+          onclick="closeApplyGuideVideoModal()"
+          class="p-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-200/70 rounded-md transition-colors cursor-pointer shrink-0"
+          aria-label="閉じる"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+      <div class="p-3 sm:p-4 bg-slate-900 flex items-center justify-center">
+        <video
+          id="apply-guide-modal-video"
+          controls
+          playsinline
+          preload="metadata"
+          src="https://pub-ba61870bbe1442af87f84c258e756736.r2.dev/apply-guide.mp4"
+          class="w-full max-h-[70vh] rounded-md bg-slate-900"
+        ></video>
+      </div>
+      <div class="px-4 py-2.5 bg-white border-t border-slate-200 flex items-center justify-between gap-2">
+        <span class="text-[11px] sm:text-xs text-slate-600 font-medium">※音声付きで手順をご案内します</span>
+        <button
+          type="button"
+          id="close-apply-guide-video-footer-btn"
+          onclick="closeApplyGuideVideoModal()"
+          class="px-3.5 py-1.5 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-colors cursor-pointer"
+        >
+          閉じる
+        </button>
+      </div>
+    </div>
+  </div>
+  <script>
+    function openApplyGuideVideoModal() {
+      var modal = document.getElementById('apply-guide-video-modal');
+      var video = document.getElementById('apply-guide-modal-video');
+      if (!modal) return;
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.body.classList.add('overflow-hidden');
+      if (video && typeof video.play === 'function') {
+        try {
+          var playPromise = video.play();
+          if (playPromise && typeof playPromise.catch === 'function') {
+            playPromise.catch(function () {});
+          }
+        } catch (e) {}
+      }
+    }
+    function closeApplyGuideVideoModal() {
+      var modal = document.getElementById('apply-guide-video-modal');
+      var video = document.getElementById('apply-guide-modal-video');
+      if (video && typeof video.pause === 'function') {
+        try {
+          video.pause();
+        } catch (e) {}
+      }
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+      document.body.classList.remove('overflow-hidden');
+    }
+    function handleApplyGuideModalBackdropClick(event) {
+      if (event && event.target && event.target.id === 'apply-guide-video-modal') {
+        closeApplyGuideVideoModal();
+      }
+    }
+    window.openApplyGuideVideoModal = openApplyGuideVideoModal;
+    window.closeApplyGuideVideoModal = closeApplyGuideVideoModal;
+    window.handleApplyGuideModalBackdropClick = handleApplyGuideModalBackdropClick;
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        var modal = document.getElementById('apply-guide-video-modal');
+        if (modal && !modal.classList.contains('hidden')) {
+          closeApplyGuideVideoModal();
+        }
+      }
+    });
+  </script>
 
   <script defer src="/js/floating-cta.js"></script>
 </body>

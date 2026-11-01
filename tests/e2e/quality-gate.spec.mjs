@@ -204,6 +204,21 @@ for (const pg of ACTIVE_PAGES) {
       expect(venue.ratio).toBeLessThan(0.9);
       expect(venue.color, '※注釈の色は text-slate-500').toBe('rgb(100, 116, 139)');
       expect(venue.truncated, '会場名が1行省略（ellipsis）されています').toBe(false);
+
+      // 申込ボタン直下のお申し込み手順解説動画モーダルの開閉検証
+      const guideBtn = page.locator('#open-apply-guide-video-btn');
+      await expect(guideBtn, 'お申し込み手順動画ボタンが表示されていること').toBeVisible();
+      await expect(guideBtn).toContainText('初めての方へ：お申し込み手順を動画で見る（3分）');
+      const guideModal = page.locator('#apply-guide-video-modal');
+      await expect(guideModal).toBeHidden();
+      await guideBtn.click();
+      await expect(guideModal, '動画ボタンクリックでモーダルが開くこと').toBeVisible();
+      const modalVideo = page.locator('#apply-guide-modal-video');
+      await expect(modalVideo).toHaveAttribute('src', 'https://pub-ba61870bbe1442af87f84c258e756736.r2.dev/apply-guide.mp4');
+      await page.locator('#close-apply-guide-video-btn').click();
+      await expect(guideModal, '閉じるボタンでモーダルが非表示になること').toBeHidden();
+      const isModalVideoPaused = await modalVideo.evaluate((v) => v.paused);
+      expect(isModalVideoPaused, 'モーダルを閉じた際に video.pause() が実行されていること').toBe(true);
     }
 
     if (pg.articleList) {
@@ -510,6 +525,22 @@ test(
     for (const sz of applyTurnstileSizes) {
       expect(['compact', 'flexible', 'normal'], 'Turnstile の data-size が有効な値であること').toContain(sz);
     }
+
+    // ----------------------------------------------------------------
+    // 0. 最上部の操作手順解説動画アコーディオンの開閉・再生停止検証
+    // ----------------------------------------------------------------
+    const videoAccordion = page.locator('#apply-guide-video-accordion');
+    await expect(videoAccordion, '操作手順動画アコーディオンが表示されていること').toBeVisible();
+    const videoAccordionSummary = videoAccordion.locator('summary');
+    await expect(videoAccordionSummary).toContainText('入力方法で迷ったら：操作手順を動画で見る（3分）');
+    await videoAccordionSummary.click();
+    await expect(videoAccordion).toHaveAttribute('open', '');
+    const formGuideVideo = page.locator('#apply-form-guide-video');
+    await expect(formGuideVideo).toBeVisible();
+    await expect(formGuideVideo).toHaveAttribute('src', 'https://pub-ba61870bbe1442af87f84c258e756736.r2.dev/apply-guide.mp4');
+    await videoAccordionSummary.click();
+    const isFormVideoPaused = await formGuideVideo.evaluate((v) => v.paused);
+    expect(isFormVideoPaused, 'アコーディオンを閉じた際に video.pause() が実行されていること').toBe(true);
 
     // ----------------------------------------------------------------
     // 1. 学年ボタン群の表記検証（不要なカッコ書きや旧表記がないこと）

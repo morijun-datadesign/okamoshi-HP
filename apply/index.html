@@ -634,6 +634,22 @@
 
         <div class="flex flex-col gap-6">
 
+          <!-- 初めての方・入力方法で迷った方向け：操作手順解説動画アコーディオン -->
+          <details id="apply-guide-video-accordion" class="group bg-white rounded-lg border border-slate-200/90 hover:border-slate-300 overflow-hidden shadow-2xs transition-all" ontoggle="if(!this.open){var v=document.getElementById('apply-form-guide-video');if(v&&typeof v.pause==='function'){v.pause();}}">
+            <summary class="flex justify-between items-center p-3.5 sm:p-4 font-bold text-slate-800 cursor-pointer list-none select-none bg-white hover:bg-slate-50 transition-colors">
+              <span class="text-xs sm:text-sm md:text-base font-bold text-slate-800 group-hover:text-emerald-950 transition-colors">▶ 入力方法で迷ったら：操作手順を動画で見る（3分）</span>
+              <span class="w-7 h-7 bg-brand-green group-hover:bg-emerald-800 rounded-full flex items-center justify-center shrink-0 shadow-2xs transition-colors">
+                <svg class="w-4 h-4 text-white transition-transform duration-200 group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+              </span>
+            </summary>
+            <div class="p-3.5 sm:p-4 bg-slate-50/70 border-t border-slate-200">
+              <p class="text-xs sm:text-sm text-slate-600 mb-3 leading-relaxed">このページを開いたまま手順動画をご確認いただけます（再生中・閉じたあとも入力中の内容は消えません）。</p>
+              <div class="w-full max-w-[360px] mx-auto bg-slate-900 rounded-lg overflow-hidden shadow-xs">
+                <video id="apply-form-guide-video" class="w-full max-h-[68vh] mx-auto block" controls playsinline preload="metadata" src="https://pub-ba61870bbe1442af87f84c258e756736.r2.dev/apply-guide.mp4"></video>
+              </div>
+            </div>
+          </details>
+
           <!-- ========================================== -->
           <!-- SECTION 1: 希望模試・受験形式の選択         -->
           <!-- ========================================== -->

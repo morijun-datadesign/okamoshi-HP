@@ -2,8 +2,8 @@
  * 保護者向け「お申し込みフォーム入力〜クレジットカード決済・コンビニ決済完了までの操作手順動画」自動撮影スクリプト
  *
  * 出力物（manual_video_assets/ 配下）:
- *  - full_manual.mp4         : 通しで録画した全体動画（780x1688 / H.264 MP4 / 30fps）
- *  - scene_01.mp4〜scene_08.mp4 : Google Vidsのスライド（シーン）ごとに分割した動画
+ *  - full_manual.mp4         : オープニング（scene_00）＋全ステップを通しで結合した全体動画（780x1688 / H.264 MP4 / 30fps）
+ *  - scene_00.mp4〜scene_08.mp4 : オープニング（scene_00）および Google Vids のスライド（シーン）ごとに分割した動画
  *  - google_vids_script.md   : 各シーンの実測秒数に合わせたGoogle Vidsコピペ用ナレーション台本
  */
 import http from 'node:http';
@@ -73,6 +73,296 @@ function startStaticServer() {
       resolve({ server, baseUrl: `http://127.0.0.1:${addr.port}` });
     });
   });
+}
+
+function buildOpeningTitleHtml() {
+  return `<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>岡山県統一模擬試験 お申し込み手順ガイド</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@500;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; -webkit-font-smoothing: antialiased; margin: 0; padding: 0; }
+    html, body {
+      width: 390px;
+      height: 844px;
+      overflow: hidden;
+      font-family: "Noto Sans JP", "Hiragino Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(165deg, #0d3123 0%, #134230 48%, #1f6b51 100%);
+      color: #ffffff;
+      position: relative;
+    }
+    .bg-decor-top {
+      position: absolute;
+      top: -90px;
+      right: -80px;
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(251, 191, 36, 0.20) 0%, rgba(251, 191, 36, 0) 70%);
+      pointer-events: none;
+    }
+    .bg-decor-bottom {
+      position: absolute;
+      bottom: -110px;
+      left: -90px;
+      width: 310px;
+      height: 310px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(235, 244, 240, 0.14) 0%, rgba(235, 244, 240, 0) 70%);
+      pointer-events: none;
+    }
+    .frame-border {
+      position: absolute;
+      inset: 14px;
+      border: 1.5px solid rgba(253, 230, 138, 0.32);
+      border-radius: 16px;
+      pointer-events: none;
+    }
+    .container {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      padding: 46px 24px 36px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      text-align: center;
+    }
+    @keyframes fadeUpGentle {
+      0% { opacity: 0; transform: translateY(14px) scale(0.985); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .fade-item {
+      opacity: 0;
+      animation: fadeUpGentle 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    .delay-1 { animation-delay: 0.12s; }
+    .delay-2 { animation-delay: 0.45s; }
+    .delay-3 { animation-delay: 0.95s; }
+    .delay-4 { animation-delay: 1.35s; }
+    .delay-5 { animation-delay: 1.75s; }
+    .delay-6 { animation-delay: 2.15s; }
+
+    .top-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      margin-top: 8px;
+    }
+    .logo-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.96);
+      color: #134230;
+      padding: 8px 18px;
+      border-radius: 999px;
+      border: 2px solid #f59e0b;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22);
+      font-size: 13.5px;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      margin-bottom: 24px;
+    }
+    .logo-mark {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      background: #134230;
+      color: #fde68a;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 900;
+    }
+    .title-card {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.10);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1.5px solid rgba(253, 230, 138, 0.42);
+      border-radius: 14px;
+      padding: 24px 16px 22px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.22);
+    }
+    .title-kicker {
+      display: inline-block;
+      background: linear-gradient(90deg, #fef3c7 0%, #fde68a 100%);
+      color: #78350f;
+      font-size: 13px;
+      font-weight: 900;
+      padding: 4px 14px;
+      border-radius: 999px;
+      margin-bottom: 12px;
+      letter-spacing: 0.04em;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .main-title {
+      font-size: 25px;
+      font-weight: 900;
+      line-height: 1.38;
+      color: #ffffff;
+      letter-spacing: 0.02em;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.28);
+    }
+    .main-title .gold-accent {
+      color: #fde68a;
+      display: block;
+      font-size: 21px;
+      margin-bottom: 4px;
+    }
+    .gold-divider {
+      width: 68px;
+      height: 3px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(253,230,138,0.2), #fbbf24, rgba(253,230,138,0.2));
+      margin: 14px auto 0;
+    }
+
+    .points-section {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 13px;
+      margin: 8px 0;
+    }
+    .point-badge {
+      width: 100%;
+      background: #ffffff;
+      color: #1e293b;
+      border-radius: 12px;
+      padding: 14px 15px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-align: left;
+      border-left: 5px solid #d97706;
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.20);
+    }
+    .point-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: #ebf4f0;
+      border: 1.5px solid #a7f3d0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .point-text-wrap {
+      flex: 1;
+      min-width: 0;
+    }
+    .point-label {
+      font-size: 10.5px;
+      font-weight: 800;
+      color: #b45309;
+      letter-spacing: 0.04em;
+      margin-bottom: 2px;
+    }
+    .point-title {
+      font-size: 13.8px;
+      font-weight: 800;
+      color: #134230;
+      line-height: 1.35;
+    }
+
+    .bottom-section {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .start-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(15, 23, 42, 0.45);
+      border: 1px solid rgba(253, 230, 138, 0.45);
+      color: #fef3c7;
+      padding: 8px 18px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+    .org-caption {
+      font-size: 11px;
+      color: rgba(235, 244, 240, 0.82);
+      font-weight: 500;
+      letter-spacing: 0.04em;
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-decor-top"></div>
+  <div class="bg-decor-bottom"></div>
+  <div class="frame-border"></div>
+
+  <div class="container">
+    <div class="top-section">
+      <div class="logo-badge fade-item delay-1">
+        <span class="logo-mark">岡</span>
+        <span>岡山県統一模擬試験（おかもし）</span>
+      </div>
+
+      <div class="title-card fade-item delay-2">
+        <span class="title-kicker">Webお申し込み 公式ガイド</span>
+        <h1 class="main-title">
+          <span class="gold-accent">スマートフォンから簡単3分！</span>
+          お申し込み手順ガイド
+        </h1>
+        <div class="gold-divider"></div>
+      </div>
+    </div>
+
+    <div class="points-section">
+      <div class="point-badge fade-item delay-3">
+        <div class="point-icon">📱</div>
+        <div class="point-text-wrap">
+          <div class="point-label">POINT 01 ／ カンタン入力サポート</div>
+          <div class="point-title">郵便番号・学校名もカンタン自動入力</div>
+        </div>
+      </div>
+
+      <div class="point-badge fade-item delay-4">
+        <div class="point-icon">🔒</div>
+        <div class="point-text-wrap">
+          <div class="point-label">POINT 02 ／ 国際最高水準セキュリティ</div>
+          <div class="point-title">カード情報は当事務局に一切残りません</div>
+        </div>
+      </div>
+
+      <div class="point-badge fade-item delay-5">
+        <div class="point-icon">💳</div>
+        <div class="point-text-wrap">
+          <div class="point-label">POINT 03 ／ 選べるお支払い方法</div>
+          <div class="point-title">クレジットカード・Apple Pay・Google Pay・コンビニ決済対応</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-section fade-item delay-6">
+      <div class="start-pill">
+        <span>これより画面に沿って手順をご案内いたします</span>
+      </div>
+      <div class="org-caption">岡山県統一模擬試験 実行委員会</div>
+    </div>
+  </div>
+</body>
+</html>`;
 }
 
 function buildStripeCheckoutHtml({ email }) {
@@ -732,9 +1022,10 @@ function getVideoDurationSec(ffmpegBin, filePath) {
   return 0;
 }
 
-// 各シーンのナレーション台本（STEP 1〜STEP 8：カード決済手順に続けてコンビニ決済手順を解説する構成）
+// 各シーンのナレーション台本（シーン00 オープニング ＋ STEP 1〜STEP 8）
 const NARRATION_TEMPLATES = {
-  1: '岡山県統一模擬試験の、お申し込み手順をご案内いたします。まずは、お子様の学年をタップし、ご希望の模試にチェックを入れます。チェックを入れると、すぐ下の会場欄が案内表示に変わりますので、ご希望の会場、または自宅受験をお選びください。',
+  0: '岡山県統一模擬試験の、簡単・安全なお申し込み手順をご案内いたします。',
+  1: 'まずは、お子様の学年をタップし、ご希望の模試にチェックを入れます。複数の回をまとめてお申し込みいただくことも可能です。チェックを入れると、すぐ下の会場欄が案内表示に変わりますので、ご希望の会場、または自宅受験をお選びください。',
   2: '次に、お子様の情報を入力いたします。お名前とフリガナを入力し、性別を選択してください。フリガナは、ひらがなで入力しても自動でカタカナに変換されますのでご安心ください。続いて、中学校名です。学校名の一部を入力すると候補が表示されますので、タップするだけで簡単に入力いただけます。県外の学校も、上のボタンから検索できます。',
   3: '続いて、保護者様のご連絡先を入力いたします。お名前とフリガナに続けて、お申し込み完了メールを受け取るメールアドレスを、打ち間違い防止のため2回入力いたします。キャリアメールをご利用の方は、受信設定もあわせてご確認ください。最後に、お電話番号を入力します。ハイフンあり・なしや、全角数字が混ざっていても、自動で整えられますのでご安心ください。',
   4: '次に、受験票や成績表のお届け先を入力いたします。郵便番号を7桁入力すると、ボタンを押すことなく自動で町名まで入力され、そのまま次の番地欄へカーソルが移動します。続けて、丁目や番地、建物名をご入力ください。もし郵便番号の桁数が足りない場合や、存在しない番号を入力された場合も、その場ですぐにお知らせしますので、打ち間違いの心配もございません。',
@@ -744,11 +1035,198 @@ const NARRATION_TEMPLATES = {
   8: 'これでお申し込みは完了です。ご登録のメールアドレス宛に完了通知メールが届きますのでご確認ください。なお、次回以降のお申し込み時には、今回ご入力いただいた基本情報が自動で反映されますので、さらに簡単にお手続きいただけます。',
 };
 
+const SCENE_METADATA = [
+  {
+    num: 0,
+    file: 'scene_00.mp4',
+    caption:
+      'オープニング：スマートフォンから簡単3分！ お申し込み手順ガイド（郵便番号・学校名自動入力 ／ カード情報非保持 ／ 各種決済対応）',
+    motion:
+      'おかもしのブランドカラー（深いグリーン・白・ゴールドアクセント）のタイトル画面に、上部ロゴバッジ「岡山県統一模擬試験（おかもし）」、メインタイトル「スマートフォンから簡単3分！ お申し込み手順ガイド」、3つの安心ポイントバッジ（「📱 郵便番号・学校名もカンタン自動入力」「🔒 カード情報は当事務局に一切残りません」「💳 クレジットカード・Apple Pay・Google Pay・コンビニ決済対応」）が順にふわっと上品にフェードイン表示',
+    charCountOverride: 27,
+  },
+  {
+    num: 1,
+    file: 'scene_01.mp4',
+    caption: 'STEP 1：模試と受験会場の選択（お子様の学年を選び、受験する模試と会場を選択します）',
+    motion:
+      'お申し込みフォームを開き、学年「中3」をタップ →「12月号 岡山県統一模擬試験」にチェック → 会場欄が淡い赤色の案内表示に変わった状態を1.5秒表示 →「岡山会場（山陽学園中学校・高等学校）」を選択して白背景に変化',
+  },
+  {
+    num: 2,
+    file: 'scene_02.mp4',
+    caption: 'STEP 2：受験生（お子様）情報の入力（フリガナはひらがなでも自動変換・学校名は候補からタップ選択できます）',
+    motion:
+      'お子様の氏名「岡山 太郎」、フリガナ「オカヤマ タロウ」、性別「男子」を選択 →「岡山県内 / 県外・全国」タブを1.5秒ハイライト → 在籍校欄に「操南」の2文字を入力 → 候補「岡山市立操南中学校 (岡山県)」を1.5秒表示後にタップして確定',
+  },
+  {
+    num: 3,
+    file: 'scene_03.mp4',
+    caption: 'STEP 3：保護者様のご連絡先の入力（※電話番号はハイフンあり・なし、全角でも自動で整えられます）',
+    motion:
+      '保護者氏名「岡山 花子」、フリガナ「オカヤマ ハナコ」、メールアドレス（確認用含む2回）、日中連絡先の電話番号を入力',
+  },
+  {
+    num: 4,
+    file: 'scene_04.mp4',
+    caption:
+      'STEP 4：ご住所（お届け先）の入力（※桁数不足や存在しない郵便番号、番地の抜けがある場合はその場でお知らせします）',
+    motion:
+      '郵便番号「7000822」を7桁入力 → ボタン操作なしで「岡山県岡山市北区表町」が緑色に光って自動反映＆緑色メッセージ表示＆番地欄へ自動フォーカス移動（2秒表示） → 番地「1丁目5-1」と建物名「岡山教育ビル3F」を入力',
+  },
+  {
+    num: 5,
+    file: 'scene_05.mp4',
+    caption: 'STEP 5：お支払い方法の選択（クレジットカード決済を選択 ➔ 同意チェック ➔ 安全接続）',
+    motion:
+      'お支払い方法エリアで「コンビニ決済」も選べることを1.5秒ハイライト紹介 →「クレジットカード決済」を選択 → お申し込みサマリー（￥5,500）を確認 → 同意欄にチェックを入れてボタンがオレンジ色に変化 → タップして二重送信防止オーバーレイ（「決済画面へ安全に接続しています…」）を約1.5秒表示後に決済画面へ遷移',
+  },
+  {
+    num: 6,
+    file: 'scene_06.mp4',
+    caption:
+      'STEP 6：Stripe 安全決済・カード情報の入力（当事務局にカード番号は一切残らず、Apple Pay / Google Pay にも対応）',
+    motion:
+      '前半約7秒間で「🔒 当事務局にカード番号は一切保存されません」バッジと「Apple Pay / Google Pay ワンタップ決済ボタン」を順にハイライト表示 → カード番号「4242 4242 4242 4242」、有効期限「12/28」、CVC「123」、カード名義人「HANAKO OKAYAMA」を入力し「￥5,500 を支払う」をタップして決済完了',
+  },
+  {
+    num: 7,
+    file: 'scene_07.mp4',
+    caption:
+      'STEP 7：コンビニ決済でお申し込みされる場合の手順（お支払い期限の確認 ➔ 確認欄・同意欄チェック ➔ 受付番号メール案内）',
+    motion:
+      'お支払い方法選択画面に戻り、①「コンビニ決済」を選択 ➔ ② 表示される黄色い「お支払い期限」パネルと確認チェックボックスに赤枠ハイライトを当ててチェック ➔ ③ 規約同意欄にもチェックを入れてオレンジ色の申込ボタンをタップ ➔ ④ 完了画面にて「お申し込み完了後、ご登録のメールアドレス宛にコンビニでのお支払い手順・受付番号が届きます」の図解カードと案内パネルを表示',
+  },
+  {
+    num: 8,
+    file: 'scene_08.mp4',
+    caption:
+      'STEP 8：お申し込み完了・メールのご確認（次回以降のお申し込み時は、今回の基本情報が自動で反映されます）',
+    motion:
+      'お申し込み完了画面（「お申し込みを受け付けました」）と完了通知メール案内を表示し、今後のスケジュール案内まで滑らかにスクロールして表示',
+  },
+];
+
 // 全シーンが「1秒あたり 3.8〜4.0 文字」の中央値（約 3.9 文字/秒）にピタッと収まるよう目標秒数を算出
 function getTargetDurationForScene(sceneNum, charsPerSecTarget = 3.90) {
+  if (sceneNum === 0) return 7.0; // オープニングは約7秒（27文字 / 7.0秒 ≒ 3.9文字/秒）
   const text = NARRATION_TEMPLATES[sceneNum] || '';
   const charCount = text.replace(/[、。]/g, '').length;
   return Number((charCount / charsPerSecTarget).toFixed(2));
+}
+
+function writeGoogleVidsScriptMd(scenes, fullDurationSec) {
+  let md = `# 岡山県統一模擬試験（おかもし）お申し込み手順動画 ナレーション台本（Google Vids用）
+
+- **全体動画ファイル**: \`manual_video_assets/full_manual.mp4\`（総尺：約 ${fullDurationSec.toFixed(1)} 秒 ／ スマホ縦画面 780×1688px 高解像度）
+- **対象視聴者**: 中学生・小学生のお子様を持つ保護者様（40代中心）
+- **読み上げ速度基準**: 1秒あたり 3.8〜4.0 文字（Google Vids の AI 音声ナレーションで自然・丁寧に聞き取れる速度）
+- **構成**: 冒頭オープニング（\`scene_00.mp4\`：約7秒）＋ フォーム入力（STEP 1〜4）＋ クレジットカード決済手順（STEP 5〜6）＋ コンビニ決済手順（STEP 7）＋ お申し込み完了確認（STEP 8）
+
+---
+
+`;
+
+  for (const sc of scenes) {
+    const meta = SCENE_METADATA.find((m) => m.num === sc.num) || sc;
+    const scriptText = NARRATION_TEMPLATES[sc.num];
+    const charCount = meta.charCountOverride || scriptText.replace(/[、。]/g, '').length;
+    const charsPerSec = (charCount / sc.durationSec).toFixed(1);
+    const titleLabel =
+      sc.num === 0
+        ? `シーン 00（オープニング）：\`${sc.file}\`（${sc.durationSec.toFixed(1)}秒）`
+        : `シーン ${String(sc.num).padStart(2, '0')}：\`${sc.file}\`（${sc.durationSec.toFixed(1)}秒）`;
+    md += `## ${titleLabel}
+
+- **シーン番号・対応動画ファイル名（秒数）**: シーン ${String(sc.num).padStart(2, '0')} ／ \`${sc.file}\`（${sc.durationSec.toFixed(1)}秒）
+- **画面内の動き・表示テロップ**:
+  - **表示テロップ**: 「${meta.caption}」
+  - **画面内の動き**: ${meta.motion}
+- **文字数・読み上げペース目安**: ${charCount}文字（約 ${charsPerSec} 文字/秒）
+
+### 【Google Vidsコピペ用ナレーション原稿】
+\`\`\`text
+${scriptText}
+\`\`\`
+
+---
+
+`;
+  }
+
+  const scriptMdPath = path.join(OUT_DIR, 'google_vids_script.md');
+  fs.writeFileSync(scriptMdPath, md, 'utf8');
+  console.log(`[Video Recorder] Generated ${scriptMdPath}`);
+}
+
+async function recordOpeningSceneOnly(ffmpegBin, baseUrl) {
+  const openingUrl = `${baseUrl}/__opening_title_demo`;
+  const browser = await chromium.launch({ headless: true });
+  const context = await browser.newContext({
+    viewport: { width: 390, height: 844 },
+    deviceScaleFactor: 2,
+    locale: 'ja-JP',
+    recordVideo: {
+      dir: TMP_VIDEO_DIR,
+      size: { width: 780, height: 1688 },
+    },
+  });
+
+  const startMs = performance.now();
+  const page = await context.newPage();
+  await page.route(openingUrl, async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'text/html; charset=utf-8',
+      body: buildOpeningTitleHtml(),
+    });
+  });
+
+  await page.goto(openingUrl, { waitUntil: 'domcontentloaded' });
+  await page.evaluate(() => document.fonts?.ready).catch(() => {});
+
+  // ページ描画完了後にしっかり 7.2秒待機し、先頭の白フレームを除いて 7.0秒ぴったりに切り出す
+  await page.waitForTimeout(7250);
+
+  const videoObj = page.video();
+  await page.close();
+  await context.close();
+  await browser.close();
+
+  const rawOpeningWebm = await videoObj.path();
+  const scene00Path = path.join(OUT_DIR, 'scene_00.mp4');
+  execFileSync(
+    ffmpegBin,
+    [
+      '-y',
+      '-ss',
+      '0.15',
+      '-t',
+      '7.0',
+      '-i',
+      rawOpeningWebm,
+      '-vf',
+      'crop=390:844:0:0,scale=780:1688:flags=lanczos',
+      '-c:v',
+      'libx264',
+      '-preset',
+      'fast',
+      '-crf',
+      '18',
+      '-pix_fmt',
+      'yuv420p',
+      '-r',
+      '30',
+      '-movflags',
+      '+faststart',
+      scene00Path,
+    ],
+    { stdio: 'ignore' }
+  );
+
+  const d0 = getVideoDurationSec(ffmpegBin, scene00Path) || 7.0;
+  console.log(`[Video Recorder] Generated scene_00.mp4: ${d0.toFixed(1)}s`);
+  return scene00Path;
 }
 
 async function main() {
@@ -758,6 +1236,79 @@ async function main() {
 
   const { server, baseUrl } = await startStaticServer();
   console.log(`[Video Recorder] Static server started at ${baseUrl}`);
+
+  const forceFullRecord = process.argv.includes('--full-record');
+  const existingStepsReady =
+    !forceFullRecord &&
+    [1, 2, 3, 4, 5, 6, 7, 8].every((n) =>
+      fs.existsSync(path.join(OUT_DIR, `scene_${String(n).padStart(2, '0')}.mp4`))
+    );
+
+  // 1. オープニング（scene_00.mp4：約7秒）を生成
+  await recordOpeningSceneOnly(ffmpegBin, baseUrl);
+
+  if (existingStepsReady) {
+    server.close();
+    const allScenes = [];
+    for (let n = 0; n <= 8; n++) {
+      const file = `scene_${String(n).padStart(2, '0')}.mp4`;
+      const scenePath = path.join(OUT_DIR, file);
+      const dur = getVideoDurationSec(ffmpegBin, scenePath) || getTargetDurationForScene(n);
+      const meta = SCENE_METADATA.find((m) => m.num === n);
+      allScenes.push({
+        num: n,
+        file,
+        durationSec: Number(dur.toFixed(1)),
+        caption: meta.caption,
+        motion: meta.motion,
+      });
+    }
+
+    // scene_00.mp4 + scene_01.mp4〜scene_08.mp4 を先頭から結合して full_manual.mp4 を生成
+    const concatListPath = path.join(TMP_VIDEO_DIR, 'concat_list.txt');
+    const concatContent = allScenes
+      .map((sc) => `file '${path.join(OUT_DIR, sc.file).replace(/'/g, "'\\''")}'`)
+      .join('\n');
+    fs.writeFileSync(concatListPath, concatContent, 'utf8');
+
+    const fullMp4Path = path.join(OUT_DIR, 'full_manual.mp4');
+    console.log('[Video Recorder] Concatenating scene_00.mp4 + scene_01..08.mp4 into full_manual.mp4...');
+    execFileSync(
+      ffmpegBin,
+      [
+        '-y',
+        '-f',
+        'concat',
+        '-safe',
+        '0',
+        '-i',
+        concatListPath,
+        '-c:v',
+        'libx264',
+        '-preset',
+        'fast',
+        '-crf',
+        '18',
+        '-pix_fmt',
+        'yuv420p',
+        '-r',
+        '30',
+        '-movflags',
+        '+faststart',
+        fullMp4Path,
+      ],
+      { stdio: 'ignore' }
+    );
+
+    const actualFullDuration =
+      getVideoDurationSec(ffmpegBin, fullMp4Path) ||
+      allScenes.reduce((acc, s) => acc + s.durationSec, 0);
+    console.log(`[Video Recorder] full_manual.mp4 duration: ${actualFullDuration.toFixed(2)}s`);
+
+    writeGoogleVidsScriptMd(allScenes, actualFullDuration);
+    fs.rmSync(TMP_VIDEO_DIR, { recursive: true, force: true });
+    return;
+  }
 
   const randomSuffix = Math.floor(1000 + Math.random() * 9000);
   const testEmail = `parent.test.${randomSuffix}@example.com`;
@@ -1577,43 +2128,59 @@ async function main() {
     );
   }
 
-  // 3. 実測秒数に合わせた Google Vids 用ナレーション台本（1秒あたり 3.8〜4.0 文字厳守）を生成
-  let md = `# 岡山県統一模擬試験（おかもし）お申し込み手順動画 ナレーション台本（Google Vids用）
+  // scene_00.mp4 を先頭に結合して full_manual.mp4 を更新
+  const scene00Path = path.join(OUT_DIR, 'scene_00.mp4');
+  const d0 = getVideoDurationSec(ffmpegBin, scene00Path) || 7.0;
+  const meta0 = SCENE_METADATA.find((m) => m.num === 0);
+  const allScenes = [
+    {
+      num: 0,
+      file: 'scene_00.mp4',
+      durationSec: Number(d0.toFixed(1)),
+      caption: meta0.caption,
+      motion: meta0.motion,
+    },
+    ...scenes,
+  ];
 
-- **全体動画ファイル**: \`manual_video_assets/full_manual.mp4\`（総尺：約 ${actualFullDuration.toFixed(1)} 秒 ／ スマホ縦画面 780×1688px 高解像度）
-- **対象視聴者**: 中学生・小学生のお子様を持つ保護者様（40代中心）
-- **読み上げ速度基準**: 1秒あたり 3.8〜4.0 文字（Google Vids の AI 音声ナレーションで自然・丁寧に聞き取れる速度）
-- **構成**: クレジットカード決済（Apple Pay / Google Pay 含む）の手順（STEP 5〜6）に続けて、コンビニ決済の手順（STEP 7）とお申し込み完了確認（STEP 8）を収録
+  const concatListPath = path.join(TMP_VIDEO_DIR, 'concat_list.txt');
+  const concatContent = allScenes
+    .map((sc) => `file '${path.join(OUT_DIR, sc.file).replace(/'/g, "'\\''")}'`)
+    .join('\n');
+  fs.writeFileSync(concatListPath, concatContent, 'utf8');
 
----
+  execFileSync(
+    ffmpegBin,
+    [
+      '-y',
+      '-f',
+      'concat',
+      '-safe',
+      '0',
+      '-i',
+      concatListPath,
+      '-c:v',
+      'libx264',
+      '-preset',
+      'fast',
+      '-crf',
+      '18',
+      '-pix_fmt',
+      'yuv420p',
+      '-r',
+      '30',
+      '-movflags',
+      '+faststart',
+      fullMp4Path,
+    ],
+    { stdio: 'ignore' }
+  );
 
-`;
+  const combinedFullDuration =
+    getVideoDurationSec(ffmpegBin, fullMp4Path) ||
+    allScenes.reduce((acc, s) => acc + s.durationSec, 0);
 
-  for (const sc of scenes) {
-    const scriptText = NARRATION_TEMPLATES[sc.num];
-    const charCount = scriptText.replace(/[、。]/g, '').length;
-    const charsPerSec = (charCount / sc.durationSec).toFixed(1);
-    md += `## シーン ${String(sc.num).padStart(2, '0')}：\`${sc.file}\`（${sc.durationSec.toFixed(1)}秒）
-
-- **シーン番号・対応動画ファイル名（秒数）**: シーン ${String(sc.num).padStart(2, '0')} ／ \`${sc.file}\`（${sc.durationSec.toFixed(1)}秒）
-- **画面内の動き・表示テロップ**:
-  - **表示テロップ**: 「${sc.caption}」
-  - **画面内の動き**: ${sc.motion}
-- **文字数・読み上げペース目安**: ${charCount}文字（約 ${charsPerSec} 文字/秒）
-
-### 【Google Vidsコピペ用ナレーション原稿】
-\`\`\`text
-${scriptText}
-\`\`\`
-
----
-
-`;
-  }
-
-  const scriptMdPath = path.join(OUT_DIR, 'google_vids_script.md');
-  fs.writeFileSync(scriptMdPath, md, 'utf8');
-  console.log(`[Video Recorder] Generated ${scriptMdPath}`);
+  writeGoogleVidsScriptMd(allScenes, combinedFullDuration);
 
   // 一時ディレクトリのクリーンアップ
   fs.rmSync(TMP_VIDEO_DIR, { recursive: true, force: true });

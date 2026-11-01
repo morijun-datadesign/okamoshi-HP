@@ -150,7 +150,12 @@ function resolveGatePlan(changedFiles) {
       targetPaths.add('/news');
     } else if (file === 'blog.html') {
       targetPaths.add('/blog.html');
-    } else if (file === 'schools.html' || file === 'schools/index.html') {
+    } else if (
+      file === 'schools.html' ||
+      file === 'schools/index.html' ||
+      file === 'cram_schools.csv' ||
+      file === 'db/seed/cram_schools.sql'
+    ) {
       targetPaths.add('/schools');
     } else if (file === 'tokushoho.html' || file === 'tokushoho/index.html') {
       targetPaths.add('/tokushoho');
@@ -183,6 +188,24 @@ function resolveGatePlan(changedFiles) {
 
 const changedFiles = detectChangedFiles();
 const plan = resolveGatePlan(changedFiles);
+
+/**
+ * 塾一覧のデータ・ページ・同期スクリプト等が変更されたか判定
+ */
+const JUKU_RELATED_PATTERNS = [
+  /^cram_schools\.csv$/,
+  /^db\/seed\/cram_schools\.sql$/,
+  /^schools(\.html|\/index\.html)$/,
+  /^functions\/api\/(admin\/sync-)?cram-schools\.ts$/,
+  /^gas\/sync-cram-schools\.js$/,
+  /^scripts\/(generate_cram_schools_seed|export_cram_schools)\.py$/,
+  /^scripts\/check-juku-urls\.mjs$/,
+];
+const hasJukuRelatedChange = changedFiles.some((file) =>
+  JUKU_RELATED_PATTERNS.some((re) => re.test(file))
+);
+// 本番 main プッシュ時（FULLモード）または塾一覧関連ファイルが変更された時は塾URL全件チェックを実行
+const shouldCheckJukuUrls = plan.mode === 'FULL' || hasJukuRelatedChange;
 
 const modeBannerLabel =
   plan.mode === 'PREVIEW'
@@ -225,6 +248,15 @@ const steps = [
     env: process.env,
   },
 ];
+
+if (shouldCheckJukuUrls) {
+  steps.push({
+    name: '実施塾一覧（取扱塾・教室マスタ）公式サイトURL全件チェック',
+    cmd: 'node',
+    args: ['scripts/check-juku-urls.mjs'],
+    env: process.env,
+  });
+}
 
 if (plan.mode !== 'PREVIEW') {
   steps.push({

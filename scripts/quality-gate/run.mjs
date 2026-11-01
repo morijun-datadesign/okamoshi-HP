@@ -15,6 +15,7 @@ const steps = [
   { name: '静的検査（シークレット/露出ファイル/プレースホルダー/カラーパレット）', cmd: 'node', args: ['scripts/quality-gate/static-checks.mjs'] },
   { name: 'AI常駐ルールファイルの同期（GEMINI.md → .cursorrules 等）', cmd: 'node', args: ['scripts/sync-ai-rules.mjs', '--check'] },
   { name: 'TypeScript 型チェック（Pages Functions）', cmd: 'npx', args: ['--no-install', 'tsc', '--noEmit'] },
+  { name: '実施塾一覧（取扱塾・教室マスタ）公式サイトURL全件チェック', cmd: 'node', args: ['scripts/check-juku-urls.mjs'] },
   { name: 'Playwright 実ブラウザ検査（PC 1280px / SP 375px）', cmd: 'npx', args: ['--no-install', 'playwright', 'test', '-c', 'playwright.config.mjs'] },
 ];
 

@@ -1,3 +1,6 @@
+import fs from 'node:fs';
+import path from 'node:path';
+
 /**
  * /api/exam-guides（Cloudflare D1）のレスポンスを再現するテスト用フィクスチャ
  * - 津山会場の「複数会場＋改行＋※注釈」ケースを含め、会場名表示の回帰テストに使用する
@@ -94,10 +97,53 @@ export const examGuidesFixture = {
   flat: { schedules: [], venues: [], timetables: [], scopes: [] },
 };
 
-export const cramSchoolsFixture = {
-  success: true,
-  districts: {
-    okayama: { name: '岡山学区', count: 1, schools: [{ id: 1, area_id: 'okayama', area_name: '岡山学区', name: 'テスト塾 岡山校', website_url: '', phone_number: '086-000-0000', sort_order: 1 }] },
-  },
-  schools: [{ id: 1, area_id: 'okayama', area_name: '岡山学区', name: 'テスト塾 岡山校', website_url: '', phone_number: '086-000-0000', sort_order: 1 }],
-};
+function buildCramSchoolsFixture() {
+  try {
+    const csvPath = path.join(process.cwd(), 'cram_schools.csv');
+    if (fs.existsSync(csvPath)) {
+      const raw = fs.readFileSync(csvPath, 'utf8').replace(/^\uFEFF/, '');
+      const lines = raw.split(/\r?\n/).filter((l) => l.trim().length > 0);
+      const schools = [];
+      const districts = {};
+      for (let i = 1; i < lines.length; i++) {
+        const cols = lines[i].split(',');
+        if (cols.length < 3) continue;
+        const row = {
+          id: i,
+          display_order: Number(cols[5]) || i,
+          area_id: (cols[0] || '').trim(),
+          area_name: (cols[1] || '').trim(),
+          name: (cols[2] || '').trim(),
+          website_url: (cols[3] || '').trim() || null,
+          phone_number: (cols[4] || '').trim() || null,
+        };
+        if (!row.name) continue;
+        schools.push(row);
+        if (!districts[row.area_id]) {
+          districts[row.area_id] = { name: row.area_name, count: 0, schools: [] };
+        }
+        districts[row.area_id].count++;
+        districts[row.area_id].schools.push(row);
+      }
+      if (schools.length > 0) {
+        return { success: true, total: schools.length, districts, schools };
+      }
+    }
+  } catch {
+    /* fallback below */
+  }
+  return {
+    success: true,
+    total: 1,
+    districts: {
+      'okayama-east': {
+        name: '岡山・東備学区',
+        count: 1,
+        schools: [{ id: 1, display_order: 1, area_id: 'okayama-east', area_name: '岡山・東備学区', name: 'テスト塾 岡山校', website_url: '', phone_number: '086-000-0000' }],
+      },
+    },
+    schools: [{ id: 1, display_order: 1, area_id: 'okayama-east', area_name: '岡山・東備学区', name: 'テスト塾 岡山校', website_url: '', phone_number: '086-000-0000' }],
+  };
+}
+
+export const cramSchoolsFixture = buildCramSchoolsFixture();

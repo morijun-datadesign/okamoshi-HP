@@ -17,6 +17,7 @@
     "qg:static": "node scripts/quality-gate/static-checks.mjs",
     "qg:e2e": "playwright test -c playwright.config.mjs",
     "qg:forms": "playwright test -c playwright.config.mjs --grep @critical-forms",
+    "check:juku-urls": "node scripts/check-juku-urls.mjs",
     "prepare": "git config core.hooksPath .githooks && cp .githooks/pre-push .git/hooks/pre-push && chmod +x .githooks/pre-push .git/hooks/pre-push || true"
   },
   "devDependencies": {

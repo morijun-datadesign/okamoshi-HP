@@ -198,7 +198,7 @@ def build_mp4_video_player_html(video_url):
     safe_url = str(video_url).strip()
     return (
         '<div style="text-align: center; margin: 1.5rem 0;">'
-        f'<video controls playsinline preload="metadata" style="width: 100%; max-width: 360px; border-radius: 12px; display: block; margin: 0 auto; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" src="{safe_url}"></video>'
+        f'<video controls playsinline preload="none" style="width: 100%; max-width: 360px; border-radius: 12px; display: block; margin: 0 auto; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" src="{safe_url}"></video>'
         '</div>'
     )
 

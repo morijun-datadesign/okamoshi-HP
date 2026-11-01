@@ -19,11 +19,13 @@
   <meta property="og:site_name" content="岡山県統一模擬試験（おかもし）">
   <meta name="twitter:card" content="summary_large_image">
   <!-- Google Tag Manager -->
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  <script>
+(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
   j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-KHHZXKJR');</script>
+  })(window,document,'script','dataLayer','GTM-KHHZXKJR');
+</script>
   <!-- End Google Tag Manager -->
 
   <!-- Microsoft Clarity -->
@@ -33,13 +35,13 @@
         t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "z5nnqjwyks");
-  </script>
+</script>
 
   <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,alternate_email,analytics,apartment,arrow_back,arrow_downward,arrow_forward,article,assignment_turned_in,business_center,calendar_month,calendar_today,call,campaign,check_circle,chevron_left,chevron_right,close,contact_support,content_copy,corporate_fare,credit_card,credit_score,delete_outline,description,devices,edit_document,edit_note,error,event,event_busy,expand_more,fact_check,fax,format_quote,grid_view,groups,handshake,health_and_safety,history_edu,home,how_to_reg,info,insights,inventory_2,language,library_books,local_convenience_store,location_city,location_on,lock,mail,meeting_room,menu,notifications_active,open_in_new,person,phone_in_talk,photo_camera,policy,print,priority_high,progress_activity,public,receipt_long,refresh,rule,schedule,school,search,search_off,send,shield,storefront,storm,sync,terminal,timeline,verified,visibility,warning,wifi_off,zoom_in&display=block" rel="stylesheet">
 
   
   <!-- Tailwind CSS CDN -->
@@ -140,7 +142,7 @@
         }
       }
     };
-  </script>
+</script>
 
 
   <!-- JSON-LD 構造化データ -->
@@ -190,6 +192,10 @@
     background: transparent !important;
   }
 </style>
+  <style id="perf-cls-composited-fix">
+    .material-symbols-outlined{font-family:"Material Symbols Outlined";font-weight:normal;font-style:normal;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;word-wrap:normal;direction:ltr;-webkit-font-smoothing:antialiased;width:1em;height:1em;overflow:hidden;vertical-align:middle}
+    .transition-all{transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,transform!important}
+  </style>
 </head>
 <body class="bg-[#F1F5F9] font-body-md text-body-md text-on-surface antialiased min-h-screen flex flex-col justify-between selection:bg-primary/20 selection:text-primary pt-16 sm:pt-[4.5rem]">
 
@@ -352,7 +358,6 @@
           if (btn) btn.setAttribute("aria-expanded", "true");
         }
       }
-
       function closeMobileMenu() {
         var drawer = document.getElementById("mobile-menu-drawer");
         var backdrop = document.getElementById("mobile-menu-backdrop");
@@ -366,7 +371,6 @@
           if (btn) btn.setAttribute("aria-expanded", "false");
         }
       }
-
       function toggleMobileExamAccordion() {
         var menu = document.getElementById("mobile-exam-menu");
         var chevron = document.getElementById("mobile-exam-chevron");
@@ -383,8 +387,6 @@
           if (btn) btn.setAttribute("aria-expanded", "true");
         }
       }
-
-      // モバイルメニュー内のアコーディオン展開時、展開部分がドロワー下部の固定CTAに隠れないよう自動スクロール
       function revealMobileMenuSection(target) {
         if (!target) return;
         var scroller = document.getElementById("mobile-menu-scroll") || target.closest(".overflow-y-auto");
@@ -393,18 +395,15 @@
           var sRect = scroller.getBoundingClientRect();
           var tRect = target.getBoundingClientRect();
           var visibleBottom = sRect.bottom;
-          // ドロワー下部の固定CTA（お申し込みはこちら）がスクロール領域に重なる場合はその上端を表示下限とする
           var footer = scroller.nextElementSibling;
           if (footer) visibleBottom = Math.min(visibleBottom, footer.getBoundingClientRect().top);
           var delta = tRect.bottom - (visibleBottom - 16);
           if (delta <= 0) return;
-          // セクション見出しが上に見切れない範囲でスクロール
           var maxDelta = tRect.top - sRect.top - 8;
           if (maxDelta <= 0) return;
           scroller.scrollTo({ top: scroller.scrollTop + Math.min(delta, maxDelta), behavior: "smooth" });
         });
       }
-
       function toggleMobileContactAccordion() {
         var menu = document.getElementById("mobile-contact-menu");
         var chevron = document.getElementById("mobile-contact-chevron");
@@ -422,7 +421,6 @@
           revealMobileMenuSection(menu.parentElement);
         }
       }
-
       function selectMobileNavExamTab(tabKey) {
         closeMobileMenu();
         var targetElem = document.getElementById("next-exam");
@@ -443,7 +441,6 @@
         }
         window.location.href = "/index.html?grade=" + tabKey + "#next-exam";
       }
-
       function updateStudentVoicesVisibility(tabKey) {
         var studentVoices = document.getElementById("student-voices");
         if (studentVoices) {
@@ -455,7 +452,6 @@
         }
       }
       window.updateStudentVoicesVisibility = updateStudentVoicesVisibility;
-
       function initExamTabFromUrl() {
         try {
           var params = new URLSearchParams(window.location.search);
@@ -491,22 +487,19 @@
           }
         } catch (e) {}
       }
-
       window.addEventListener("DOMContentLoaded", initExamTabFromUrl);
       window.addEventListener("load", initExamTabFromUrl);
-
       window.addEventListener("resize", function() {
         if (window.innerWidth >= 1024) {
           closeMobileMenu();
         }
       });
-
       document.addEventListener("keydown", function(e) {
         if (e.key === "Escape") {
           closeMobileMenu();
         }
       });
-    </script>
+</script>
 
   <main class="flex-1 w-full flex flex-col items-center">
     <div class="w-full max-w-7xl bg-white flex-1 min-h-full px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-8 sm:pb-10 flex flex-col justify-between">
@@ -1072,7 +1065,7 @@
         });
       });
     });
-  </script>
+</script>
   </main>
 
   <!-- Unified Footer -->
@@ -1188,7 +1181,6 @@
       if (btn) btn.setAttribute('aria-expanded', 'true');
     }
   }
-
   function closeNextExamDropdown() {
     var dropdown = document.getElementById('nav-next-exam-dropdown');
     var chevron = document.getElementById('nav-next-exam-chevron');
@@ -1199,7 +1191,6 @@
       if (btn) btn.setAttribute('aria-expanded', 'false');
     }
   }
-
   function toggleContactDropdown(event) {
     if (event) event.stopPropagation();
     closeNextExamDropdown();
@@ -1214,7 +1205,6 @@
       if (btn) btn.setAttribute('aria-expanded', 'true');
     }
   }
-
   function closeContactDropdown() {
     var container = document.getElementById('nav-contact-container');
     var btn = document.getElementById('nav-contact-btn');
@@ -1223,7 +1213,6 @@
       if (btn) btn.setAttribute('aria-expanded', 'false');
     }
   }
-
   function handleContactNavClick(event, url) {
     if (event) {
       event.preventDefault();
@@ -1232,7 +1221,6 @@
     closeContactDropdown();
     window.location.href = url;
   }
-
   document.addEventListener('click', function(e) {
     var examContainer = document.getElementById('nav-next-exam-container');
     if (examContainer && !examContainer.contains(e.target)) {
@@ -1243,7 +1231,6 @@
       closeContactDropdown();
     }
   });
-
   function selectNavExamTab(tabKey) {
     closeNextExamDropdown();
     if (typeof switchExamTab === 'function') {

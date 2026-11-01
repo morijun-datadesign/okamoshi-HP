@@ -4,4 +4,5 @@
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=()
   Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
-  Content-Security-Policy: media-src 'self' https://*.r2.dev https://media.okayama-moshi.com;
+  Cross-Origin-Opener-Policy: same-origin-allow-popups
+  Content-Security-Policy: object-src 'none'; base-uri 'self'; media-src 'self' https://*.r2.dev https://media.okayama-moshi.com;

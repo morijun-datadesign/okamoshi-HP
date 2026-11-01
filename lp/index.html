@@ -19,11 +19,13 @@
   <meta property="og:site_name" content="岡山県統一模擬試験（おかもし）">
   <meta name="twitter:card" content="summary_large_image">
   <!-- Google Tag Manager -->
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  <script>
+(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
   j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-KHHZXKJR');</script>
+  })(window,document,'script','dataLayer','GTM-KHHZXKJR');
+</script>
   <!-- End Google Tag Manager -->
 
   <!-- Microsoft Clarity -->
@@ -33,7 +35,7 @@
         t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "z5nnqjwyks");
-  </script>
+</script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -42,7 +44,7 @@
   <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
   <link rel="dns-prefetch" href="https://images.microcms-assets.io">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+JP:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,alternate_email,analytics,apartment,arrow_back,arrow_downward,arrow_forward,article,assignment_turned_in,business_center,calendar_month,calendar_today,call,campaign,check_circle,chevron_left,chevron_right,close,contact_support,content_copy,corporate_fare,credit_card,credit_score,delete_outline,description,devices,edit_document,edit_note,error,event,event_busy,expand_more,fact_check,fax,format_quote,grid_view,groups,handshake,health_and_safety,history_edu,home,how_to_reg,info,insights,inventory_2,language,library_books,local_convenience_store,location_city,location_on,lock,mail,meeting_room,menu,notifications_active,open_in_new,person,phone_in_talk,photo_camera,policy,print,priority_high,progress_activity,public,receipt_long,refresh,rule,schedule,school,search,search_off,send,shield,storefront,storm,sync,terminal,timeline,verified,visibility,warning,wifi_off,zoom_in&display=block" rel="stylesheet">
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -62,7 +64,6 @@
               homeBrown: '#4A4031',   // 自宅受験用の落ち着いたブラウン
               grayBg: '#F1F5F9'
             },
-            // 現行サイト流儀・DESIGN.mdのトークン完全整合
             primary: '#134230',
             'primary-container': '#2D5A46',
             'primary-fixed': '#EBF4F0',
@@ -99,7 +100,7 @@
         }
       }
     };
-  </script>
+</script>
 
   <style>
     html, body {
@@ -202,7 +203,6 @@
       transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
                   transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
                   background-color 0.25s ease,
-                  box-shadow 0.25s ease,
                   border-color 0.25s ease;
       will-change: transform, opacity;
       user-select: none;
@@ -241,7 +241,6 @@
       border: 1px solid rgba(255, 255, 255, 0.65); /* border border-white/50 */
       box-shadow: 0 10px 25px -3px rgba(15, 23, 42, 0.14), 0 4px 10px -2px rgba(15, 23, 42, 0.06), 0 0 0 1px rgba(226, 232, 240, 0.6); /* shadow-lg くっきり浮き出る微細なドロップシャドウ */
       transition: background-color 0.25s ease,
-                  box-shadow 0.25s ease,
                   border-color 0.25s ease,
                   transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
                   opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -263,7 +262,6 @@
       border: 1px solid #e2e8f0; /* border-slate-200 */
       box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
       transition: background-color 0.25s ease,
-                  box-shadow 0.25s ease,
                   border-color 0.25s ease;
     }
 
@@ -318,6 +316,10 @@
         bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
       }
     }
+  </style>
+  <style id="perf-cls-composited-fix">
+    .material-symbols-outlined{font-family:"Material Symbols Outlined";font-weight:normal;font-style:normal;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;word-wrap:normal;direction:ltr;-webkit-font-smoothing:antialiased;width:1em;height:1em;overflow:hidden;vertical-align:middle}
+    .transition-all{transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,transform!important}
   </style>
 </head>
 
@@ -1870,19 +1872,18 @@
   <script defer src="/js/microcms-config.js"></script>
   <script src="/js/venue-format.js"></script>
   <script>
-    // 模試データモデル（examData）
     let examData = {
       c3: {
         gradeName: "中学3年生",
         examName: "岡山県統一模擬試験",
         price: "5,500円",
         rounds: [
-          { 
+          {
             monthName: "3月号",
             monthNum: 3,
-            deadline: "2026年4月6日(月) 23:59まで", 
-            status: "finished", 
-            statusText: "終了", 
+            deadline: "2026年4月6日(月) 23:59まで",
+            status: "finished",
+            statusText: "終了",
             scopeList: [
               { subject: "国語", topics: ["中1・中2全範囲", "現代文", "古文", "文法総合"] },
               { subject: "数学", topics: ["数と式", "一次関数", "平行と合同", "確率・資料の活用"] },
@@ -1896,12 +1897,12 @@
               { badge: "自宅受験", school: "", date: "2026年4月4日(土)〜4月19日(日)" }
             ]
           },
-          { 
+          {
             monthName: "6月号",
             monthNum: 6,
-            deadline: "2026年6月22日(月) 23:59まで", 
-            status: "finished", 
-            statusText: "終了", 
+            deadline: "2026年6月22日(月) 23:59まで",
+            status: "finished",
+            statusText: "終了",
             scopeList: [
               { subject: "国語", topics: ["論説文", "小説", "古典の基礎", "漢字・語句"] },
               { subject: "数学", topics: ["式の展開と因数分解", "平方根", "中1・中2の復習"] },
@@ -1914,12 +1915,12 @@
               { badge: "自宅受験", school: "", date: "2026年6月20日(土)〜7月5日(日)" }
             ]
           },
-          { 
+          {
             monthName: "8月号",
             monthNum: 8,
-            deadline: "2026年8月10日(月) 23:59まで", 
-            status: "finished", 
-            statusText: "終了", 
+            deadline: "2026年8月10日(月) 23:59まで",
+            status: "finished",
+            statusText: "終了",
             scopeList: [
               { subject: "国語", topics: ["論説的文章", "文学的文章", "古文", "作文・表現"] },
               { subject: "数学", topics: ["二次方程式の計算と応用", "関数 y=ax²の基礎", "図形の復習"] },
@@ -1932,12 +1933,12 @@
               { badge: "自宅受験", school: "", date: "2026年8月8日(土)〜8月23日(日)" }
             ]
           },
-          { 
+          {
             monthName: "10月号",
             monthNum: 10,
-            deadline: "2026年10月5日(月) 23:59まで", 
-            status: "active", 
-            statusText: "受付中", 
+            deadline: "2026年10月5日(月) 23:59まで",
+            status: "active",
+            statusText: "受付中",
             scopeList: [
               { subject: "国語", topics: ["論説文", "古文", "小説", "文法"] },
               { subject: "数学", topics: ["二次方程式", "関数y=ax²", "相似の基礎"] },
@@ -2001,12 +2002,12 @@
               }
             ]
           },
-          { 
+          {
             monthName: "12月号",
             monthNum: 12,
-            deadline: "2026年12月14日(月) 23:59まで", 
-            status: "open", 
-            statusText: "申込可", 
+            deadline: "2026年12月14日(月) 23:59まで",
+            status: "open",
+            statusText: "申込可",
             scopeList: [
               { subject: "国語", topics: ["高校入試本番レベル総合", "論説文", "古文", "作文"] },
               { subject: "数学", topics: ["相似な図形", "円周角の定理", "三平方の定理の基礎"] },
@@ -2027,12 +2028,12 @@
         examName: "岡山県統一模擬試験",
         price: "4,400円",
         rounds: [
-          { 
+          {
             monthName: "3月号",
             monthNum: 3,
-            deadline: "2026年4月6日(月) 23:59まで", 
-            status: "finished", 
-            statusText: "終了", 
+            deadline: "2026年4月6日(月) 23:59まで",
+            status: "finished",
+            statusText: "終了",
             scopeList: [
               { subject: "国語", topics: ["中1全範囲", "文学的文章", "説明的文章", "文法総合"] },
               { subject: "数学", topics: ["中1全範囲", "正の数・負の数", "文字と式", "方程式"] },
@@ -2045,12 +2046,12 @@
               { badge: "自宅受験", school: "", date: "2026年4月4日(土)〜4月19日(日)" }
             ]
           },
-          { 
+          {
             monthName: "8月号",
             monthNum: 8,
-            deadline: "2026年8月10日(月)", 
-            status: "finished", 
-            statusText: "終了", 
+            deadline: "2026年8月10日(月)",
+            status: "finished",
+            statusText: "終了",
             scopeList: [
               { subject: "国語", topics: ["中1全範囲", "中2 1学期の履修範囲"] },
               { subject: "数学", topics: ["式の計算", "連立方程式の計算"] },
@@ -2063,12 +2064,12 @@
               { badge: "自宅受験", school: "", date: "2026年8月8日(土)〜8月23日(日)" }
             ]
           },
-          { 
+          {
             monthName: "12月号",
             monthNum: 12,
-            deadline: "2026年11月10日(火) 23:59まで", 
-            status: "active", 
-            statusText: "受付中", 
+            deadline: "2026年11月10日(火) 23:59まで",
+            status: "active",
+            statusText: "受付中",
             scopeList: [
               { subject: "国語", topics: ["説明文", "文学的文章", "文法（動詞の活用）", "古文の基礎"] },
               { subject: "数学", topics: ["連立方程式の応用", "一次関数のグラフと式", "平行線と角"] },
@@ -2120,12 +2121,12 @@
         examName: "岡山県統一模擬試験",
         price: "4,400円",
         rounds: [
-          { 
+          {
             monthName: "3月号",
             monthNum: 3,
-            deadline: "2026年4月6日(月) 23:59まで", 
-            status: "finished", 
-            statusText: "終了", 
+            deadline: "2026年4月6日(月) 23:59まで",
+            status: "finished",
+            statusText: "終了",
             scopeList: [
               { subject: "国語", topics: ["小6全範囲", "中学準備基礎読解", "漢字・言葉のきまり"] },
               { subject: "数学", topics: ["小学校の算数総合", "分数・小数の計算", "割合・比", "平面・空間図形"] },
@@ -2138,12 +2139,12 @@
               { badge: "自宅受験", school: "", date: "2026年4月4日(土)〜4月19日(日)" }
             ]
           },
-          { 
+          {
             monthName: "8月号",
             monthNum: 8,
-            deadline: "2026年8月10日(月)", 
-            status: "finished", 
-            statusText: "終了", 
+            deadline: "2026年8月10日(月)",
+            status: "finished",
+            statusText: "終了",
             scopeList: [
               { subject: "国語", topics: ["中1 1学期履修範囲", "指示語・接続語", "漢字"] },
               { subject: "数学", topics: ["正の数・負の数", "文字と式"] },
@@ -2156,12 +2157,12 @@
               { badge: "自宅受験", school: "", date: "2026年8月8日(土)〜8月23日(日)" }
             ]
           },
-          { 
+          {
             monthName: "12月号",
             monthNum: 12,
-            deadline: "2026年11月10日(火) 23:59まで", 
-            status: "active", 
-            statusText: "受付中", 
+            deadline: "2026年11月10日(火) 23:59まで",
+            status: "active",
+            statusText: "受付中",
             scopeList: [
               { subject: "国語", topics: ["論説文", "物語", "言葉の単位・品詞", "古典の入り口"] },
               { subject: "数学", topics: ["方程式の計算と応用", "比例と反比例のグラフと基礎"] },
@@ -2213,12 +2214,12 @@
         examName: "岡山県適性検査対策模試",
         price: "5,500円",
         rounds: [
-          { 
+          {
             monthName: "6月号",
             monthNum: 6,
-            deadline: "2026年6月1日(月) 23:59まで", 
-            status: "finished", 
-            statusText: "終了", 
+            deadline: "2026年6月1日(月) 23:59まで",
+            status: "finished",
+            statusText: "終了",
             scopeList: [
               { subject: "適性I", topics: ["自然科学・算数的思考", "規則性の発見", "グラフの読み取り"] },
               { subject: "適性II", topics: ["文章読解", "要約記述", "自分の考えの論理的表現（作文）"] }
@@ -2228,12 +2229,12 @@
               { badge: "自宅受験", school: "", date: "2026年5月30日(土)〜6月14日(日)" }
             ]
           },
-          { 
+          {
             monthName: "9月号",
             monthNum: 9,
-            deadline: "2026年9月21日(月) 23:59まで", 
-            status: "finished", 
-            statusText: "終了", 
+            deadline: "2026年9月21日(月) 23:59まで",
+            status: "finished",
+            statusText: "終了",
             scopeList: [
               { subject: "適性I", topics: ["理科的実験思考", "条件整理・推理", "割合・比の活用"] },
               { subject: "適性II", topics: ["長文読解", "会話文からの課題抽出", "400字作文"] }
@@ -2243,12 +2244,12 @@
               { badge: "自宅受験", school: "", date: "2026年9月19日(土)〜10月4日(日)" }
             ]
           },
-          { 
+          {
             monthName: "10月号",
             monthNum: 10,
-            deadline: "2026年10月13日(火) 23:59まで", 
-            status: "active", 
-            statusText: "受付中", 
+            deadline: "2026年10月13日(火) 23:59まで",
+            status: "active",
+            statusText: "受付中",
             scopeList: [
               { subject: "適性I", topics: ["操山・大安寺・天城傾向演習", "数理的処理", "自然科学の総合考察記述"] },
               { subject: "適性II", topics: ["資料読み取り記述", "多角的な視点での論述", "本番形式長文作文"] }
@@ -2306,14 +2307,6 @@
         ]
       }
     };
-
-    // ==========================================
-    // 模試日程・会場データ（Cloudflare D1 /api/exam-guides から動的取得）
-    //   ※トップページ（index.html）と同一データソース。
-    //   ※ブラウザから microCMS へ直接アクセスする旧実装は APIキーが公開されるため廃止。
-    //   取得失敗時は上記の静的 examData をそのまま表示（フォールバック）。
-    // ==========================================
-    // 申込締切を過ぎた回かどうか（"YYYY-MM-DD HH:mm" / "YYYY年M月D日 HH:mm" 双方に対応）
     function isRoundExpired(round) {
       if (!round) return false;
       if (round.status === 'finished') return true;
@@ -2323,17 +2316,13 @@
       const dl = new Date(+m[1], +m[2] - 1, +m[3], m[4] ? +m[4] : 23, m[5] ? +m[5] : 59, 59, 999);
       return Date.now() > dl.getTime();
     }
-
     async function initExamGuidesFromD1() {
       try {
         const res = await fetch('/api/exam-guides');
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const data = await res.json();
         if (!data || !data.success || !data.grades) return;
-
         examData = data.grades;
-
-        // URLパラメータで指定された月号を優先。なければ受付中（締切前）の回を選択
         try {
           const params = new URLSearchParams(window.location.search);
           const mParam = params.get('month');
@@ -2351,31 +2340,22 @@
           if (idx === -1) idx = Math.max(0, curRounds.length - 1);
           currentRoundIndex = idx;
         } catch (e) {}
-
         renderRoundTabs();
         renderCard();
       } catch (err) {
         console.warn('[lp] exam-guides fetch failed, using static fallback:', err);
       }
     }
-
     window.initExamGuidesFromD1 = initExamGuidesFromD1;
     window.initExamGuidesFromMicroCMS = initExamGuidesFromD1; // 後方互換用エイリアス
-
     let currentGrade = 'c3';
     let currentRoundIndex = 3; // デフォルトで中3は10月号（index 3）
     let currentVenueIndex = 0;
-
-    // 学年選択（模試日程・出題範囲・申込 ＆ 選ばれる3つの理由の双方向完全連動）
     function selectGrade(gradeKey, syncFeatures = true) {
       const normalized = (gradeKey === 'chu3') ? 'c3' : (gradeKey === 'chu2') ? 'c2' : (gradeKey === 'chu1') ? 'c1' : (gradeKey === 'sho6' || gradeKey === 'e6') ? 'p6' : gradeKey;
       currentGrade = normalized;
-      
-      // 切り替え前のカード位置を記録（CLSおよび画面揺れの防止）
       const anchorEl = document.getElementById('card-container') || document.getElementById('schedule-selector');
       const rectBefore = anchorEl ? anchorEl.getBoundingClientRect() : null;
-
-      // 申し込みエリアの学年タブのスタイル同期
       document.querySelectorAll('.grade-btn').forEach(btn => {
         if (btn.dataset.grade === normalized) {
           btn.className = "grade-btn py-2 text-xs sm:text-sm font-bold rounded-lg transition-all bg-emerald-800 text-white border border-emerald-800 shadow-sm flex items-center justify-center cursor-pointer";
@@ -2383,13 +2363,9 @@
           btn.className = "grade-btn py-2 text-xs sm:text-sm font-bold rounded-lg transition-all bg-white text-slate-700 border border-slate-300/80 shadow-2xs hover:bg-slate-50 hover:border-emerald-600 hover:-translate-y-0.5 flex items-center justify-center cursor-pointer";
         }
       });
-
-      // 「選ばれる3つの理由」セクションの学年ボタンおよび3パネルを完全同期連動
       if (syncFeatures && typeof switchFeatureGrade === 'function') {
         switchFeatureGrade(normalized, false);
       }
-
-      // 「おかもしを受験された生徒さんからの声」セクションの学年連動表示制御
       const studentVoices = document.getElementById('student-voices');
       if (studentVoices) {
         if (normalized === 'p6') {
@@ -2398,37 +2374,27 @@
           studentVoices.classList.remove('hidden');
         }
       }
-
-      // スマホ追従CTAバーの表示判定更新
       if (typeof checkFloatingCtaVisibility === 'function') {
         checkFloatingCtaVisibility();
       }
-
-      // 「最新のお知らせ（NEWS）」の学年連動フィルタリング描画
       if (typeof updateNewsByGrade === 'function') {
         updateNewsByGrade(normalized);
       }
-
-      // スマホ版学年セレクトボックスの値同期
       const spGradeSelect = document.getElementById('sp-grade-select');
       if (spGradeSelect && spGradeSelect.value !== normalized) {
         spGradeSelect.value = normalized;
       }
-
       const examInfo = examData[normalized];
       if (examInfo && Array.isArray(examInfo.rounds)) {
         const rounds = examInfo.rounds;
         let targetIndex = rounds.findIndex(r => r.status === 'active');
         if (targetIndex === -1) targetIndex = rounds.findIndex(r => r.status === 'open');
         if (targetIndex === -1) targetIndex = Math.max(0, rounds.length - 1);
-
         currentRoundIndex = targetIndex;
         currentVenueIndex = 0;
         renderRoundTabs();
         renderCard();
       }
-
-      // 切り替えによる画面外コンテンツ（セクション①など）の高さ変動に伴う画面スクロールのズレを完全相殺
       if (rectBefore && anchorEl) {
         const rectAfter = anchorEl.getBoundingClientRect();
         const diff = rectAfter.top - rectBefore.top;
@@ -2437,8 +2403,6 @@
         }
       }
     }
-
-    // SP版月号セレクト変更時のハンドラー
     function handleSpRoundSelect(indexStr) {
       const idx = parseInt(indexStr, 10);
       if (isNaN(idx)) return;
@@ -2448,18 +2412,13 @@
       renderCard();
     }
     window.handleSpRoundSelect = handleSpRoundSelect;
-
     function handleActionRoundSelect(indexStr) {
       handleSpRoundSelect(indexStr);
     }
     window.handleActionRoundSelect = handleActionRoundSelect;
-
-    // 実施回（○月号）タブの動的レンダリング
     function renderRoundTabs() {
       const data = examData[currentGrade];
       const rounds = (data && Array.isArray(data.rounds)) ? data.rounds : [];
-
-      // スマホ版月号セレクトボックスの動的更新
       const spRoundSelect = document.getElementById('sp-round-select');
       if (spRoundSelect) {
         spRoundSelect.innerHTML = rounds.map((r, idx) => {
@@ -2472,8 +2431,6 @@
         }).join('');
         spRoundSelect.value = currentRoundIndex;
       }
-
-      // アクションエリア内月号セレクトボックスの動的更新
       const actionRoundSelect = document.getElementById('action-round-select');
       if (actionRoundSelect) {
         actionRoundSelect.innerHTML = rounds.map((r, idx) => {
@@ -2486,8 +2443,6 @@
         }).join('');
         actionRoundSelect.value = currentRoundIndex;
       }
-
-      // スマホ版カスタム表示UI（テキスト＋バッジ）の動的更新
       const currentRound = rounds[currentRoundIndex] || rounds[0];
       const monthTextEl = document.getElementById('sp-round-month-text');
       const badgeEl = document.getElementById('sp-round-badge');
@@ -2507,16 +2462,13 @@
           badgeEl.className = 'bg-slate-100 text-slate-400 text-xs font-medium px-2 py-0.5 rounded-full border border-slate-200 whitespace-nowrap';
         }
       }
-
       const container = document.getElementById('round-tabs');
       if (!container) return;
       container.innerHTML = '';
-
       rounds.forEach((r, idx) => {
         const isSelected = idx === currentRoundIndex;
         const btn = document.createElement('button');
         btn.type = 'button';
-        
         let statusBadge = '';
         if (r.status === 'active') {
           statusBadge = `<span class="text-[9px] px-1.5 py-0.5 rounded-full ${isSelected ? 'bg-white text-emerald-900' : 'bg-emerald-100 text-emerald-900'} font-bold">受付中</span>`;
@@ -2527,13 +2479,11 @@
         } else {
           statusBadge = `<span class="text-[9px] px-1.5 py-0.5 rounded-full ${isSelected ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-700'} font-medium">終了</span>`;
         }
-
         btn.className = `shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all border cursor-pointer ${
-          isSelected 
-            ? 'bg-emerald-800 text-white border-emerald-800 shadow-sm' 
+          isSelected
+            ? 'bg-emerald-800 text-white border-emerald-800 shadow-sm'
             : 'bg-white text-slate-700 border-slate-300 hover:border-slate-400 hover:bg-white/90 shadow-2xs'
         }`;
-
         btn.innerHTML = `<span>${r.monthName}</span> ${statusBadge}`;
         btn.onclick = () => {
           currentRoundIndex = idx;
@@ -2541,12 +2491,9 @@
           renderRoundTabs();
           renderCard();
         };
-
         container.appendChild(btn);
       });
     }
-
-    // 出題範囲のレンダリング（科目バッジ＋1行横スクロール）
     function renderScopeList(scopeList) {
       const container = document.getElementById('scope-list-container');
       if (!container) return;
@@ -2554,7 +2501,6 @@
         container.innerHTML = '<p class="text-xs sm:text-sm text-slate-500">出題範囲の詳細は準備中です。</p>';
         return;
       }
-
       container.innerHTML = scopeList.map(item => `
         <div class="flex items-center gap-2.5 sm:gap-3 bg-white rounded-lg p-2.5 border border-slate-200/80 shadow-xs overflow-hidden">
           <div class="shrink-0 w-14 sm:w-16 text-center py-1.5 rounded-lg text-xs sm:text-sm font-bold bg-slate-200 text-slate-800 tracking-wide border border-slate-300/60 shadow-2xs">
@@ -2570,10 +2516,6 @@
         </div>
       `).join('');
     }
-
-    // escapeHtml / formatVenuePlaceHtml は /js/venue-format.js で共通定義
-
-    // 実施日程リストのレンダリング
     function renderScheduleList(venuesList) {
       const container = document.getElementById('schedule-list');
       if (!container) return;
@@ -2581,11 +2523,9 @@
         container.innerHTML = '<p class="text-xs sm:text-sm text-slate-500">日程詳細は未定です。</p>';
         return;
       }
-
       container.innerHTML = venuesList.map((item, idx) => {
         const isHome = item.badge.includes('自宅');
         const placeText = isHome ? (item.school && item.school !== 'ご自宅' ? item.school : '全国どこからでも') : (item.school || '');
-
         return `
           <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-1.5 sm:gap-4 ${idx !== 0 ? 'pt-3 sm:pt-3.5 border-t border-slate-100' : ''}">
             <div class="flex items-start gap-2 sm:gap-2.5 min-w-0 flex-1">
@@ -2597,7 +2537,6 @@
                 </div>
               ` : ''}
             </div>
-            
             <div class="text-sm sm:text-base font-bold text-[#8B3A18] tracking-tight shrink-0 sm:text-right leading-snug sm:leading-normal">
               ${escapeHtml(item.date)}
             </div>
@@ -2605,13 +2544,10 @@
         `;
       }).join('');
     }
-
-    // 任意の日付文字列から「YYYY年M月D日(曜)」を正確に抽出・生成する関数
     function extractJapaneseDateOnly(val) {
       if (!val) return '';
       const clean = String(val).trim();
       if (!clean) return '';
-      // 既に "YYYY年M月D日(曜)" または "YYYY年M月D日" が含まれているか
       const mJp = clean.match(/(\d{4}年\d{1,2}月\d{1,2}日(?:\([日月火水木金土]\))?)/);
       if (mJp) {
         let jpDate = mJp[1];
@@ -2628,7 +2564,6 @@
         }
         return jpDate;
       }
-      // "YYYY/MM/DD" または "YYYY-MM-DD" 形式
       const mIso = clean.match(/(\d{4})[/-](\d{1,2})[/-](\d{1,2})/);
       if (mIso) {
         const y = parseInt(mIso[1], 10);
@@ -2640,8 +2575,6 @@
       }
       return '';
     }
-
-    // 自宅受験答案返送締切日の表示フォーマット整形（例: "2027/01/14" -> "2027年1月14日(木) 必着"）
     function formatHomeReturnDeadline(rawVal) {
       if (!rawVal) return '';
       const clean = String(rawVal).trim();
@@ -2661,13 +2594,10 @@
       }
       return `${clean} 必着`;
     }
-
-    // 会場詳細タイムラインのレンダリング
     function renderVenueDetails(r) {
       const venueTabsContainer = document.getElementById('venue-tabs');
       const venueDetailContainer = document.getElementById('venue-detail-content');
       if (!venueTabsContainer || !venueDetailContainer) return;
-      
       const venueList = r.venueDetails || (r.venuesList ? r.venuesList.map(v => ({
         id: v.badge,
         name: v.badge,
@@ -2683,15 +2613,14 @@
         notice: v.notice || v.notes || v.caution || v.attention || null,
         home_return_deadline: v.home_return_deadline || v.deadline_home || r.home_return_deadline || r.homeReturnDeadline || null
       })) : []);
-
       venueTabsContainer.innerHTML = '';
       venueList.forEach((venue, vIdx) => {
         const isSelected = vIdx === currentVenueIndex;
         const vBtn = document.createElement('button');
         vBtn.type = 'button';
         vBtn.className = `flex-1 sm:flex-none text-center px-4 py-2 sm:px-5 sm:py-2 rounded-lg text-sm sm:text-base font-bold whitespace-nowrap transition-all duration-200 cursor-pointer select-none ${
-          isSelected 
-            ? 'bg-emerald-800 text-white shadow-sm ring-1 ring-emerald-900/10' 
+          isSelected
+            ? 'bg-emerald-800 text-white shadow-sm ring-1 ring-emerald-900/10'
             : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
         }`;
         vBtn.textContent = venue.name;
@@ -2701,15 +2630,12 @@
         };
         venueTabsContainer.appendChild(vBtn);
       });
-
       const activeVenue = venueList[currentVenueIndex] || venueList[0];
       if (!activeVenue) {
         venueDetailContainer.innerHTML = '<p class="text-sm text-slate-500">詳細はありません。</p>';
         return;
       }
-      
       const isHome = activeVenue.id === 'home' || activeVenue.name.includes('自宅');
-
       let scheduleHtml = '';
       if (activeVenue.schedule && activeVenue.schedule.length > 0) {
         scheduleHtml = `
@@ -2732,7 +2658,6 @@
           </div>
         `;
       }
-
       let itemsHtml = '';
       if (activeVenue.items) {
         const rawItems = activeVenue.items.trim();
@@ -2750,14 +2675,12 @@
           `;
         }
       }
-
       const venueBadgeText = isHome ? '自宅受験' : activeVenue.name.replace(/^🏠\s*/, '').trim();
       const placeName = isHome ? '全国どこからでも' : (activeVenue.place || '').trim();
       let examDateText = activeVenue.examDate;
       if (isHome) {
         examDateText = examDateText.replace(/(\d+)月(\d+)日/g, '$1/$2').replace(/\s*〜\s*/g, '〜');
       }
-
       let noticeHtml = '';
       const rawNotice = (activeVenue.notice || activeVenue.notes || activeVenue.caution || activeVenue.attention || '').trim();
       if (rawNotice) {
@@ -2768,16 +2691,12 @@
           </div>
         `;
       }
-
-      // 自宅受験の学年判定
       const isJuniorHigh = currentGrade === 'c1' || currentGrade === 'c2' || currentGrade === 'c3';
       const isPrimary6 = currentGrade === 'p6';
       const isJuniorHome = isJuniorHigh && isHome;
       const isPrimaryHome = isPrimary6 && isHome;
-
       let stepsHtml = '';
       if (isJuniorHome || isPrimaryHome) {
-        // 1. 問題一式のお届け（発送日）
         const rawTicketShipping =
           activeVenue.ticketShippingDateJp ||
           activeVenue.ticketShippingDate ||
@@ -2790,12 +2709,10 @@
         const homeTicketText = ticketDateJp
           ? `${ticketDateJp}頃に問題一式をご自宅へ発送`
           : '試験日の約5日前頃に問題一式をご自宅へ発送';
-
         // 2. お届けするもの（中1〜中3 vs 小6）
         const itemsText = isPrimaryHome
           ? `問題用紙・解答用紙、解答例と解説\n志望校カード、バーコードシート\n答案整理表、返送用シール、付録 : Road To Victory`
           : `問題用紙・解答用紙、解答解説集、英語リスニング用CD\n志望校記入用紙、志望校コード表、バーコードシート\n答案整理表、返送用シール`;
-
         // 4. 答案のご返送
         const rawHomeReturn =
           activeVenue.homeReturnDeadlineJp ||
@@ -2815,7 +2732,6 @@
         const returnMethodNote = isPrimaryHome
           ? 'レターパックなど追跡できる方法でご送付ください。'
           : 'レターパックライトなど追跡できる方法でご送付ください。';
-
         // 5. 成績表のご返却予定
         const rawResultShipping =
           activeVenue.resultShippingDateJp ||
@@ -2829,7 +2745,6 @@
         const homeReportText = resultDateJp
           ? `${resultDateJp}発送予定`
           : (activeVenue.reportDispatch || '試験実施の約10日後発送予定');
-
         stepsHtml = `
           <!-- ① 問題一式のお届け（発送日） -->
           <div class="space-y-1.5">
@@ -2839,7 +2754,6 @@
             </div>
             <p class="text-sm sm:text-base text-slate-700 pl-8 font-medium leading-relaxed">${homeTicketText}</p>
           </div>
-
           <!-- ② お届けするもの -->
           <div class="space-y-1.5">
             <div class="flex items-center gap-2">
@@ -2850,7 +2764,6 @@
               <div class="text-sm sm:text-base text-slate-700 leading-relaxed font-medium whitespace-pre-line">${itemsText}</div>
             </div>
           </div>
-
           <!-- ③ 受験方法・時間割 -->
           <div class="space-y-1.5">
             <div class="flex items-center gap-2">
@@ -2862,7 +2775,6 @@
 詳細は、問題用紙同封の実施方法をご確認ください。</div>
             </div>
           </div>
-
           <!-- ④ 答案のご返送 -->
           <div class="space-y-1.5">
             <div class="flex items-center gap-2">
@@ -2875,7 +2787,6 @@ ${returnMethodNote}
 送料はお客様負担となりますことあらかじめご了承ください。</div>
             </div>
           </div>
-
           <!-- ⑤ 成績表のご返却予定 -->
           <div class="space-y-1.5">
             <div class="flex items-center gap-2">
@@ -2886,7 +2797,6 @@ ${returnMethodNote}
           </div>
         `;
       } else {
-        // 会場受験、および小6自宅受験（既存ロジックを完全維持）
         const rawHomeReturn =
           activeVenue.homeReturnDeadline ||
           activeVenue.home_return_deadline ||
@@ -2896,7 +2806,6 @@ ${returnMethodNote}
           r.homeReturnDeadlineRaw ||
           '';
         const formattedHomeReturn = formatHomeReturnDeadline(rawHomeReturn);
-
         stepsHtml = `
           <!-- ① 受験票等の発送 -->
           <div class="space-y-1.5">
@@ -2906,7 +2815,6 @@ ${returnMethodNote}
             </div>
             <p class="text-sm sm:text-base text-slate-700 pl-8 font-medium leading-relaxed">${activeVenue.ticketDispatch}</p>
           </div>
-
           <!-- ② 当日持参物 -->
           <div class="space-y-1.5">
             <div class="flex items-center gap-2">
@@ -2917,7 +2825,6 @@ ${returnMethodNote}
               ${itemsHtml}
             </div>
           </div>
-
           <!-- ③ 時間割 -->
           <div class="space-y-1.5">
             <div class="flex items-center gap-2">
@@ -2928,7 +2835,6 @@ ${returnMethodNote}
               ${scheduleHtml}
             </div>
           </div>
-
           ${isHome ? `
           <!-- ④ 答案用紙の返送締切（自宅受験のみ） -->
           <div class="space-y-1.5">
@@ -2942,7 +2848,6 @@ ${returnMethodNote}
             </div>
           </div>
           ` : ''}
-
           <!-- 成績表のご返却予定 -->
           <div class="space-y-1.5">
             <div class="flex items-center gap-2">
@@ -2953,7 +2858,6 @@ ${returnMethodNote}
           </div>
         `;
       }
-
       venueDetailContainer.innerHTML = `
         <div class="pb-3 border-b border-slate-200">
           <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1.5 sm:gap-4">
@@ -2967,26 +2871,19 @@ ${returnMethodNote}
           </div>
           ${noticeHtml}
         </div>
-
         <div class="space-y-5 pt-1.5">
           ${stepsHtml}
         </div>
       `;
     }
-
-    // 締切日時の2行並列型表示（クレジットカード決済 ＆ コンビニ決済）
     function formatDeadlineDisplayParallel(round) {
       if (!round) return '準備中（近日公開予定）';
       const raw = round.applyDeadlineRaw || round.deadline || '';
       if (!raw) return '準備中（近日公開予定）';
-
-      // 日時文字列のパース（YYYY-MM-DD HH:mm または YYYY年MM月DD日 等）
       const clean = String(raw).trim();
       let y, mon, d, h = 23, min = 59;
-
       const mIso = clean.match(/(\d{4})[/-](\d{1,2})[/-](\d{1,2})(?:\s+(\d{1,2}):(\d{1,2}))?/);
       const mJp = clean.match(/(\d{4})年(\d{1,2})月(\d{1,2})日(?:\([^)]*\))?(?:\s*(\d{1,2}):(\d{1,2}))?/);
-
       if (mIso) {
         y = parseInt(mIso[1], 10);
         mon = parseInt(mIso[2], 10);
@@ -3005,35 +2902,26 @@ ${returnMethodNote}
         }
         return round.deadline || clean;
       }
-
       const days = ['日', '月', '火', '水', '木', '金', '土'];
-
-      // クレジットカード決済締切日時
       const cardDeadlineDate = new Date(y, mon - 1, d, h, min, 59, 999);
       const cardW = days[cardDeadlineDate.getDay()];
       const cardTimeStr = `${String(h).padStart(2, '0')}:${String(min).padStart(2, '0')}`;
       const cardDeadlineText = `${y}年${mon}月${d}日(${cardW}) ${cardTimeStr}まで`;
-
-      // コンビニ決済締切日: 3日前 23:59
       const konbiniDeadlineDate = new Date(y, mon - 1, d - 3, 23, 59, 59, 999);
       const konbiniY = konbiniDeadlineDate.getFullYear();
       const konbiniM = konbiniDeadlineDate.getMonth() + 1;
       const konbiniD = konbiniDeadlineDate.getDate();
       const konbiniW = days[konbiniDeadlineDate.getDay()];
       const konbiniDeadlineText = `${konbiniY}年${konbiniM}月${konbiniD}日(${konbiniW}) 23:59まで`;
-
       const now = new Date();
       const isCardExpired = round.status === 'finished' || now.getTime() > cardDeadlineDate.getTime();
       const isKonbiniExpired = isCardExpired || now.getTime() > konbiniDeadlineDate.getTime();
-
       const cardText = isCardExpired
         ? '<span class="text-rose-600 font-bold">受付終了</span>'
         : `<span class="text-slate-900">${cardDeadlineText}</span>`;
-
       const konbiniText = isKonbiniExpired
         ? '<span class="text-rose-600 font-bold">受付終了</span>'
         : `<span class="text-slate-900">${konbiniDeadlineText}</span>`;
-
       return `
         <div class="space-y-1 text-xs sm:text-sm font-bold text-slate-800 leading-snug">
           <div class="flex items-center gap-1 flex-wrap">
@@ -3047,20 +2935,16 @@ ${returnMethodNote}
         </div>
       `;
     }
-
-    // カード詳細全体のレンダリング
     function renderCard() {
       const data = examData[currentGrade];
       if (!data || !Array.isArray(data.rounds) || data.rounds.length === 0) return;
       const r = data.rounds[currentRoundIndex] || data.rounds[0];
-
       const cardTitle = document.getElementById('card-title');
       const cardPrice = document.getElementById('card-price');
       const cardDeadline = document.getElementById('card-deadline');
       const badgeGrade = document.getElementById('badge-grade');
       const badgeMonth = document.getElementById('badge-month');
       const badge = document.getElementById('badge-status');
-
       const gradeShortNames = {
         c3: '中3',
         c2: '中2',
@@ -3073,7 +2957,6 @@ ${returnMethodNote}
       };
       if (badgeGrade) badgeGrade.textContent = gradeShortNames[currentGrade] || data.gradeName || '中3';
       if (badgeMonth) badgeMonth.textContent = r.monthName || '';
-
       let examTitle = data.examName;
       if (currentGrade === 'p6' || currentGrade === 'sho6' || currentGrade === 's6') {
         examTitle = '岡山県適性検査対策模試';
@@ -3081,7 +2964,6 @@ ${returnMethodNote}
         examTitle = '岡山県統一模擬試験';
       }
       if (cardTitle) cardTitle.textContent = examTitle;
-
       if (cardPrice) {
         let priceText = '5,500円';
         if (data && data.price) {
@@ -3105,14 +2987,10 @@ ${returnMethodNote}
           cardDeadline.classList.add('text-slate-900');
         }
       }
-
       renderScopeList(r.scopeList);
       renderScheduleList(r.venuesList);
       renderVenueDetails(r);
-
       const ctaContainer = document.getElementById('cta-container');
-
-      // 下部固定バー連動（全学年・月号共通の汎用表記を維持）
       const floatBadge = document.getElementById('floating-status-badge');
       const floatDesc = document.getElementById('floating-desc');
       if (floatBadge && floatDesc) {
@@ -3120,14 +2998,12 @@ ${returnMethodNote}
         floatBadge.className = 'inline-block text-[9px] font-bold text-emerald-900 bg-emerald-100 border border-emerald-300 px-1.5 py-0.5 rounded';
         floatDesc.textContent = '岡山県統一模擬試験（おかもし）';
       }
-
       if (ctaContainer) {
         if (r.status === 'finished') {
           if (badge) {
             badge.className = "inline-flex items-center px-2.5 py-0.5 sm:py-1 rounded-md text-xs sm:text-sm font-bold bg-slate-100 text-slate-500 border border-slate-200";
             badge.textContent = "受付終了";
           }
-
           ctaContainer.innerHTML = `
             <button disabled class="w-full py-4 px-6 rounded-lg bg-slate-200 text-slate-400 font-bold text-sm sm:text-base cursor-not-allowed">
               ${r.monthName}の受付は終了しました
@@ -3141,7 +3017,6 @@ ${returnMethodNote}
             badge.className = "inline-flex items-center px-2.5 py-0.5 sm:py-1 rounded-md text-xs sm:text-sm font-bold bg-slate-100 text-slate-600 border border-slate-300";
             badge.textContent = "準備中";
           }
-
           ctaContainer.innerHTML = `
             <button disabled class="w-full py-4 px-6 rounded-lg bg-slate-100 text-slate-400 border border-slate-200 font-bold text-sm sm:text-base cursor-not-allowed">
               ${r.monthName}は現在準備中です
@@ -3155,7 +3030,6 @@ ${returnMethodNote}
             badge.className = "inline-flex items-center px-2.5 py-0.5 sm:py-1 rounded-md text-xs sm:text-sm font-bold bg-emerald-100 text-emerald-900 border border-emerald-300";
             badge.textContent = r.status === 'active' ? '受付中' : '申込可';
           }
-
           const gradeParamMap = {
             c3: '中3',
             c2: '中2',
@@ -3167,7 +3041,6 @@ ${returnMethodNote}
             sho6: '小6'
           };
           const gradeParamVal = gradeParamMap[currentGrade] || '中3';
-
           ctaContainer.innerHTML = `
             <a href="/apply?grade=${encodeURIComponent(gradeParamVal)}&month=${r.monthNum}" id="card-cta-btn" class="w-full py-4 px-6 rounded-lg bg-orange-700 hover:bg-orange-800 text-white font-bold text-base sm:text-lg flex items-center justify-center gap-2 shadow-lg shadow-orange-700/25 hover:shadow-orange-700/35 active:scale-[0.98] transition-all hover:-translate-y-0.5">
               <span>${r.monthName}をWEBで申し込む</span>
@@ -3180,24 +3053,19 @@ ${returnMethodNote}
         }
       }
     }
-
-    // Features（選ばれる3つの理由）カルーセル制御
     function scrollFeaturesCarousel(direction) {
       const carousel = document.getElementById('features-carousel');
       if (!carousel) return;
       const cards = carousel.querySelectorAll('.features-card');
       if (cards.length === 0) return;
-
       const card = cards[0];
       const cardRect = card.getBoundingClientRect();
       const style = window.getComputedStyle(carousel);
       const gap = parseFloat(style.gap) || (window.innerWidth >= 768 ? 32 : 16);
       const scrollStep = cardRect.width + gap;
-
       carousel.scrollBy({ left: scrollStep * direction, behavior: 'smooth' });
     }
     window.scrollFeaturesCarousel = scrollFeaturesCarousel;
-
     function goToFeaturesCard(index) {
       const carousel = document.getElementById('features-carousel');
       if (!carousel) return;
@@ -3207,20 +3075,15 @@ ${returnMethodNote}
       }
     }
     window.goToFeaturesCard = goToFeaturesCard;
-
     function updateFeaturesCarouselState() {
       const carousel = document.getElementById('features-carousel');
       if (!carousel) return;
-
       const scrollLeft = carousel.scrollLeft;
       const maxScrollLeft = carousel.scrollWidth - carousel.clientWidth;
       const cards = carousel.querySelectorAll('.features-card');
       if (cards.length === 0) return;
-
-      // カルーセル中央位置との距離比較でアクティブカードを特定
       const carouselRect = carousel.getBoundingClientRect();
       const carouselCenterX = carouselRect.left + carouselRect.width / 2;
-
       let activeIndex = 0;
       let minDistance = Infinity;
       cards.forEach((c, idx) => {
@@ -3232,8 +3095,6 @@ ${returnMethodNote}
           activeIndex = idx;
         }
       });
-
-      // アクティブカードの控えめな差別化（枠線の太さは変えず、上品に枠線色と影を整える）
       cards.forEach((c, idx) => {
         if (idx === activeIndex) {
           c.classList.add('border-slate-300', 'shadow-md');
@@ -3243,8 +3104,6 @@ ${returnMethodNote}
           c.classList.add('border-slate-200/80', 'shadow-sm');
         }
       });
-
-      // Apple風ドットインジケーター（アクティブ時は細長いカプセル型）
       const dotsContainer = document.getElementById('features-dots');
       if (dotsContainer) {
         const dots = dotsContainer.children;
@@ -3257,11 +3116,8 @@ ${returnMethodNote}
           }
         }
       }
-
-      // 左右矢印ボタンの活性・非活性状態（PCおよびApple風フローティングバー両方）
       const isAtStart = scrollLeft <= 15;
       const isAtEnd = scrollLeft >= maxScrollLeft - 15;
-
       const updateBtn = (btn, isDisabled) => {
         if (!btn) return;
         btn.disabled = isDisabled;
@@ -3271,58 +3127,40 @@ ${returnMethodNote}
           btn.classList.remove('opacity-30', 'cursor-not-allowed', 'pointer-events-none');
         }
       };
-
       updateBtn(document.getElementById('features-prev-btn'), isAtStart);
       updateBtn(document.getElementById('features-next-btn'), isAtEnd);
       updateBtn(document.getElementById('features-sp-prev-btn'), isAtStart);
       updateBtn(document.getElementById('features-sp-next-btn'), isAtEnd);
     }
-
-    // =========================================================================
-    // 「選ばれる3つの理由」カルーセル操作バー スクロール出現・吸着アニメーション制御
-    // =========================================================================
     let isFeaturesNavTicking = false;
     let cachedFloatingBottom = 20;
-
     function updateFeaturesNavPosition() {
       const carousel = document.getElementById('features-carousel');
       const container = document.getElementById('features-nav-container');
       const bar = document.getElementById('features-nav-bar');
       if (!carousel || !container || !bar) return;
-
       const carouselRect = carousel.getBoundingClientRect();
       const containerRect = container.getBoundingClientRect();
       const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
-
-      // 操作バーの高さと底面余白
       const barHeight = bar.offsetHeight || 42;
       const computedStyle = window.getComputedStyle(bar);
       const rawBottom = parseFloat(computedStyle.bottom);
       if (!isNaN(rawBottom) && rawBottom > 0) {
         cachedFloatingBottom = rawBottom;
       }
-
-      // 定位置吸着ライン：コンテナの上端が浮遊バーの上端位置に達したか
       const dockThreshold = viewportHeight - cachedFloatingBottom - barHeight;
-
       if (containerRect.top <= dockThreshold) {
-        // 【所定位置へ吸着（定位置固定）】
-        // スクロール進行に伴い、カード直下の定位置プレースホルダーにピタッと吸着
         bar.classList.remove('is-hidden', 'is-floating');
         bar.classList.add('is-docked');
       } else if (carouselRect.top < viewportHeight - 50 && carouselRect.bottom > 80) {
-        // 【カルーセル進入時（オーバーレイ浮遊表示）】
-        // カルーセルカードが画面に入り始めた段階で、画面下部に fixed + 半透明でふんわりフェードイン
         bar.classList.remove('is-hidden', 'is-docked');
         bar.classList.add('is-floating');
       } else {
-        // 【非表示】カルーセル進入前または完全に画面外へ通過
         bar.classList.remove('is-floating', 'is-docked');
         bar.classList.add('is-hidden');
       }
     }
     window.updateFeaturesNavPosition = updateFeaturesNavPosition;
-
     function onFeaturesNavScroll() {
       if (!isFeaturesNavTicking) {
         window.requestAnimationFrame(() => {
@@ -3332,18 +3170,12 @@ ${returnMethodNote}
         isFeaturesNavTicking = true;
       }
     }
-
     function initFeaturesNavScroll() {
       window.addEventListener('scroll', onFeaturesNavScroll, { passive: true });
       window.addEventListener('resize', onFeaturesNavScroll, { passive: true });
       updateFeaturesNavPosition();
     }
     window.initFeaturesNavScroll = initFeaturesNavScroll;
-
-
-    // =========================================================================
-    // 「選ばれる3つの理由」CARD 01 & CARD 02 学年別切り替えロジック
-    // =========================================================================
     const featureCard1Data = {
       c3: {
         badge: "中3生",
@@ -3388,7 +3220,6 @@ ${returnMethodNote}
         height: 768
       }
     };
-
     const featureCard2Data = {
       c3: {
         pointLabel: "",
@@ -3421,10 +3252,8 @@ ${returnMethodNote}
                 </div>
               </div>
             </div>
-
             <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-xs space-y-2">
               <div class="text-[11px] font-bold text-slate-600 mb-1">公立高校 志望校判定結果（内申点＋当日点総合判定）</div>
-              
               <div class="flex items-center justify-between p-2.5 rounded-lg bg-emerald-50/70 border border-emerald-100">
                 <div>
                   <span class="text-[10px] font-bold text-brand-green">第1志望</span>
@@ -3436,7 +3265,6 @@ ${returnMethodNote}
                   <span class="text-[10px] text-brand-green font-bold block mt-0.5">安全圏 (+14点)</span>
                 </div>
               </div>
-
               <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 border border-slate-200/70">
                 <div>
                   <span class="text-[10px] font-bold text-slate-600">第2志望</span>
@@ -3449,7 +3277,6 @@ ${returnMethodNote}
                 </div>
               </div>
             </div>
-
             <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-xs">
               <div class="text-[11px] font-bold text-slate-600 mb-2">教科別診断・弱点単元カルテ</div>
               <div class="space-y-2 text-[11px]">
@@ -3497,10 +3324,8 @@ ${returnMethodNote}
                 </div>
               </div>
             </div>
-
             <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-xs space-y-2">
               <div class="text-[11px] font-bold text-slate-600 mb-1">志望校目安判定（現時点での学力到達水準）</div>
-              
               <div class="flex items-center justify-between p-2.5 rounded-lg bg-emerald-50/70 border border-emerald-100">
                 <div>
                   <span class="text-[10px] font-bold text-brand-green">志望校目安 1</span>
@@ -3512,7 +3337,6 @@ ${returnMethodNote}
                   <span class="text-[10px] text-brand-green font-bold block mt-0.5">合格圏 (+8点)</span>
                 </div>
               </div>
-
               <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 border border-slate-200/70">
                 <div>
                   <span class="text-[10px] font-bold text-slate-600">志望校目安 2</span>
@@ -3525,7 +3349,6 @@ ${returnMethodNote}
                 </div>
               </div>
             </div>
-
             <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-xs">
               <div class="text-[11px] font-bold text-slate-600 mb-2">中1・2総復習優先単元カルテ</div>
               <div class="space-y-2 text-[11px]">
@@ -3574,10 +3397,8 @@ ${returnMethodNote}
                 </div>
               </div>
             </div>
-
             <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-xs space-y-2">
               <div class="text-[11px] font-bold text-slate-600 mb-1">公立中高一貫校 志望校判定結果</div>
-              
               <div class="flex items-center justify-between p-2.5 rounded-lg bg-amber-50/70 border border-amber-200/80">
                 <div>
                   <span class="text-[10px] font-bold text-amber-800">第1志望</span>
@@ -3589,7 +3410,6 @@ ${returnMethodNote}
                   <span class="text-[10px] text-amber-800 font-bold block mt-0.5">合格圏 (+6点)</span>
                 </div>
               </div>
-
               <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 border border-slate-200/70">
                 <div>
                   <span class="text-[10px] font-bold text-slate-600">第2志望</span>
@@ -3602,7 +3422,6 @@ ${returnMethodNote}
                 </div>
               </div>
             </div>
-
             <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-xs">
               <div class="text-[11px] font-bold text-slate-600 mb-2">作文・論述添削 プロ講評カルテ</div>
               <div class="space-y-2 text-[11px]">
@@ -3620,7 +3439,6 @@ ${returnMethodNote}
         }
       }
     };
-
     const featureCard3Data = {
       c3: {
         pointLabel: "",
@@ -3662,19 +3480,14 @@ ${returnMethodNote}
         height: 768
       }
     };
-
     let selectedFeatureGrade = 'c3';
     let currentCard1Grade = 'c3';
     let currentCard2Grade = 'c3';
     let currentCard3Grade = 'c3';
     let currentModalGrade = 'c3';
-
-    // 「選ばれる3つの理由」全3パネル一括切り替え関数（4ボタン同期 ＆ コンテンツマッピング ＆ 双方向連動）
     function switchFeatureGrade(grade, syncSchedule = false) {
       const normalized = (grade === 'chu3') ? 'c3' : (grade === 'chu2') ? 'c2' : (grade === 'chu1') ? 'c1' : (grade === 'sho6') ? 'p6' : grade;
       selectedFeatureGrade = normalized;
-
-      // ヘッダーの切り替えボタングループ（中3 / 中2 / 中1 / 小6）のスタイル同期
       ['c3', 'c2', 'c1', 'p6'].forEach(g => {
         const btn = document.getElementById(`feature-pill-${g}`);
         if (!btn) return;
@@ -3684,38 +3497,26 @@ ${returnMethodNote}
           btn.className = 'px-3.5 sm:px-5 py-2.5 text-sm sm:text-base font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900 cursor-pointer';
         }
       });
-
-      // コンテンツマッピング：
-      // 中3(c3) ➔ c3用コンテンツ
-      // 中2(c2) または 中1(c1) ➔ 共通の c12（中1・2用）コンテンツ
-      // 小6(p6) ➔ p6用コンテンツ
       let contentGrade = 'c3';
       if (normalized === 'c2' || normalized === 'c1' || normalized === 'c12') {
         contentGrade = 'c12';
       } else if (normalized === 'p6') {
         contentGrade = 'p6';
       }
-
-      // 全3パネルを一括連動
       switchCard1Grade(contentGrade);
       switchCard2Grade(contentGrade);
       switchCard3Grade(contentGrade);
-
-      // 下部の申し込みエリアとも双方向同期
       if (syncSchedule && typeof selectGrade === 'function' && currentGrade !== normalized) {
         selectGrade(normalized, false);
       }
-
       if (typeof updateFeaturesNavPosition === 'function') {
         updateFeaturesNavPosition();
       }
     }
-
     function switchCard1Grade(grade) {
       currentCard1Grade = grade;
       const data = featureCard1Data[grade] || featureCard1Data.c12;
       if (!data) return;
-
       const pointLabel = document.getElementById('card1-point-label');
       if (pointLabel) {
         pointLabel.textContent = data.pointLabel || '';
@@ -3725,10 +3526,8 @@ ${returnMethodNote}
           pointLabel.classList.add('hidden');
         }
       }
-
       const titleText = document.getElementById('card1-title-text');
       if (titleText) titleText.textContent = data.title;
-
       const subtitle = document.getElementById('card1-subtitle');
       if (subtitle) {
         subtitle.textContent = data.sub || '';
@@ -3738,18 +3537,13 @@ ${returnMethodNote}
           subtitle.classList.add('hidden');
         }
       }
-
       const desc = document.getElementById('card1-desc');
       if (desc) desc.textContent = data.desc;
-
       const featuresContainer = document.getElementById('card1-features-container');
       if (featuresContainer) featuresContainer.innerHTML = data.featuresHtml || '';
-
-      // 画像エリア（WebP / AVIF）の切り替え
       const previewSourceAvif = document.getElementById('card1-preview-source-avif');
       const previewSourceWebp = document.getElementById('card1-preview-source-webp');
       const previewImg = document.getElementById('card1-preview-img');
-
       if (previewSourceAvif && data.imageAvif) previewSourceAvif.srcset = data.imageAvif;
       if (previewSourceWebp && data.imageWebp) previewSourceWebp.srcset = data.imageWebp;
       if (previewImg) {
@@ -3759,13 +3553,11 @@ ${returnMethodNote}
         if (data.height) previewImg.setAttribute('height', data.height);
       }
     }
-
     function switchCard2Grade(grade) {
       currentCard2Grade = grade;
       currentModalGrade = grade;
       const data = featureCard2Data[grade] || featureCard2Data.c12;
       if (!data) return;
-
       const highlightBadge = document.getElementById('card2-highlight-badge');
       if (highlightBadge) {
         if (data.highlightBadge === false) {
@@ -3774,7 +3566,6 @@ ${returnMethodNote}
           highlightBadge.classList.remove('hidden');
         }
       }
-
       const pointLabel = document.getElementById('card2-point-label');
       if (pointLabel) {
         pointLabel.textContent = data.pointLabel || '';
@@ -3784,10 +3575,8 @@ ${returnMethodNote}
           pointLabel.classList.add('hidden');
         }
       }
-
       const titleText = document.getElementById('card2-title-text');
       if (titleText) titleText.textContent = data.title;
-
       const subtitle = document.getElementById('card2-subtitle');
       if (subtitle) {
         subtitle.textContent = data.sub || '';
@@ -3797,29 +3586,22 @@ ${returnMethodNote}
           subtitle.classList.add('hidden');
         }
       }
-
       const desc = document.getElementById('card2-desc');
       if (desc) desc.textContent = data.desc;
-
       const minikarteContainer = document.getElementById('card2-minikarte-container');
       if (minikarteContainer) minikarteContainer.innerHTML = data.miniKarteHtml || '';
-
-      // 画像エリア（WebP / AVIF）およびモーダルトリガーの切り替え
       const previewWrapper = document.getElementById('card2-preview-wrapper');
       const previewSourceAvif = document.getElementById('card2-preview-source-avif');
       const previewSourceWebp = document.getElementById('card2-preview-source-webp');
       const previewImg = document.getElementById('card2-preview-img');
       const previewBadge = document.getElementById('card2-preview-badge');
-
       if (previewSourceAvif && data.imageAvif) previewSourceAvif.srcset = data.imageAvif;
       if (previewSourceWebp && data.imageWebp) previewSourceWebp.srcset = data.imageWebp;
       if (previewImg) {
         if (data.imageWebp) previewImg.src = data.imageWebp;
         if (data.imageAlt) previewImg.alt = data.imageAlt;
       }
-
       if (data.hasModal) {
-        // 中3: モーダル有効（拡大して見るボタン表示・クリック可能）
         if (previewWrapper) {
           previewWrapper.onclick = () => openReportModal('c3');
           previewWrapper.classList.add('cursor-pointer', 'group');
@@ -3832,7 +3614,6 @@ ${returnMethodNote}
           previewBadge.classList.remove('hidden');
         }
       } else {
-        // 中1・中2・小6: モーダルなし（拡大して見るボタン非表示・クリック無効化）
         if (previewWrapper) {
           previewWrapper.onclick = null;
           previewWrapper.classList.remove('cursor-pointer', 'group');
@@ -3846,12 +3627,10 @@ ${returnMethodNote}
         }
       }
     }
-
     function switchCard3Grade(grade) {
       currentCard3Grade = grade;
       const data = featureCard3Data[grade] || featureCard3Data.c12;
       if (!data) return;
-
       const pointLabel = document.getElementById('card3-point-label');
       if (pointLabel) {
         pointLabel.textContent = data.pointLabel || '';
@@ -3861,10 +3640,8 @@ ${returnMethodNote}
           pointLabel.classList.add('hidden');
         }
       }
-
       const titleText = document.getElementById('card3-title-text');
       if (titleText) titleText.innerHTML = data.title;
-
       const subtitle = document.getElementById('card3-subtitle');
       if (subtitle) {
         subtitle.textContent = data.sub || '';
@@ -3874,18 +3651,13 @@ ${returnMethodNote}
           subtitle.classList.add('hidden');
         }
       }
-
       const desc = document.getElementById('card3-desc');
       if (desc) desc.textContent = data.desc;
-
       const featuresContainer = document.getElementById('card3-features-container');
       if (featuresContainer) featuresContainer.innerHTML = data.featuresHtml || '';
-
-      // 画像エリア（WebP / AVIF）の切り替え
       const previewSourceAvif = document.getElementById('card3-preview-source-avif');
       const previewSourceWebp = document.getElementById('card3-preview-source-webp');
       const previewImg = document.getElementById('card3-preview-img');
-
       if (previewSourceAvif && data.imageAvif) previewSourceAvif.srcset = data.imageAvif;
       if (previewSourceWebp && data.imageWebp) previewSourceWebp.srcset = data.imageWebp;
       if (previewImg) {
@@ -3895,10 +3667,6 @@ ${returnMethodNote}
         if (data.height) previewImg.setAttribute('height', data.height);
       }
     }
-
-    // =========================================================================
-    // 成績表（学力診断シート）詳細解説モーダルスライダー制御
-    // =========================================================================
     const REPORT_SLIDES = [
       {
         tag: "1枚目: 総合成績・単元別・推移",
@@ -3977,16 +3745,13 @@ ${returnMethodNote}
         }
       }
     ];
-
     let currentReportSlide = 0;
     let reportTouchStartX = 0;
     let reportTouchEndX = 0;
-
     function renderReportSlides() {
       const track = document.getElementById("report-slider-track");
       const dotsContainer = document.getElementById("report-slider-dots");
       if (!track || !dotsContainer) return;
-
       track.innerHTML = REPORT_SLIDES.map((slide, idx) => {
         return `
           <div class="report-slide w-full h-full shrink-0 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden overscroll-contain select-none" style="-webkit-overflow-scrolling: touch;">
@@ -3998,7 +3763,6 @@ ${returnMethodNote}
                   <span>${slide.badge || slide.label}</span>
                 </span>
               </div>
-
               <div class="flex flex-col gap-2 sm:gap-2.5 w-full text-left">
                 ${slide.sections ? slide.sections.map(sec => `
                   <div class="bg-white rounded-lg p-2 sm:p-2.5 lg:p-2.5 border border-slate-200/80 shadow-2xs">
@@ -4013,7 +3777,6 @@ ${returnMethodNote}
                     </p>
                   </div>
                 `).join("") : ""}
-
                 ${slide.singleSection ? `
                   <div class="bg-white rounded-lg p-3 sm:p-4 border border-slate-200/80 shadow-2xs">
                     <div class="flex items-center gap-2 mb-1.5">
@@ -4031,16 +3794,15 @@ ${returnMethodNote}
                 ` : ""}
               </div>
             </div>
-
             <!-- 右カラム（PC時）/ 上部（スマホ時）：学力診断シート画像エリア -->
             <div class="order-1 lg:order-2 w-full lg:flex-1 lg:min-w-0 flex flex-col items-center justify-center p-1.5 sm:p-2 lg:p-2 bg-slate-50/80 lg:overflow-hidden shrink-0 lg:shrink">
               <div class="w-full h-full flex items-center justify-center max-w-full">
                 <picture class="w-full lg:w-auto h-full flex items-center justify-center max-w-full">
                   ${slide.imageAvif ? `<source type="image/avif" srcset="${slide.imageAvif}">` : ""}
                   ${slide.imageWebp ? `<source type="image/webp" srcset="${slide.imageWebp}">` : ""}
-                  <img 
-                    src="${slide.imageFallback || slide.imageWebp}" 
-                    alt="${slide.alt}" 
+                  <img
+                    src="${slide.imageFallback || slide.imageWebp}"
+                    alt="${slide.alt}"
                     class="w-auto h-auto lg:h-full max-h-[42vh] sm:max-h-[48vh] lg:max-h-[80vh] xl:max-h-[82vh] max-w-full object-contain mx-auto rounded-lg shadow-sm border border-slate-200/90 bg-white block p-1"
                     width="${slide.width}"
                     height="${slide.height}"
@@ -4053,44 +3815,35 @@ ${returnMethodNote}
           </div>
         `;
       }).join("");
-
       dotsContainer.innerHTML = REPORT_SLIDES.map((slide, idx) => `
         <button type="button" onclick="goToReportSlide(${idx})" aria-label="解説スライド${idx + 1}（${slide.label}）へ" class="report-slider-dot min-w-[32px] min-h-[32px] p-2 flex items-center justify-center cursor-pointer">
           <span class="dot-inner ${idx === 0 ? "w-5 h-2 bg-emerald-800" : "w-2 h-2 bg-slate-300 hover:bg-slate-400"} rounded-full transition-all duration-300"></span>
         </button>
       `).join("");
-
       initReportSwipe();
       updateReportSlideUI();
     }
-
     function updateReportSlideUI() {
       const track = document.getElementById("report-slider-track");
       const counter = document.getElementById("report-slider-counter");
       const prevBtn = document.getElementById("report-slider-prev-btn");
       const nextBtn = document.getElementById("report-slider-next-btn");
       const dots = document.querySelectorAll(".report-slider-dot .dot-inner");
-
       if (track) {
         track.style.transform = `translateX(-${currentReportSlide * 100}%)`;
       }
-
-      // スライド切り替え時に縦スクロール（スライド本体および解説エリア）を最上部にリセット
       document.querySelectorAll('.report-slide, .report-slide-scroll-area').forEach(el => {
         el.scrollTop = 0;
       });
-
       if (counter) {
         counter.textContent = `${currentReportSlide + 1} / ${REPORT_SLIDES.length}`;
       }
-
       if (prevBtn) {
         prevBtn.disabled = currentReportSlide === 0;
       }
       if (nextBtn) {
         nextBtn.disabled = currentReportSlide === REPORT_SLIDES.length - 1;
       }
-
       dots.forEach((dot, idx) => {
         if (idx === currentReportSlide) {
           dot.className = "dot-inner w-5 h-2 bg-emerald-800 rounded-full transition-all duration-300 shadow-2xs";
@@ -4099,36 +3852,30 @@ ${returnMethodNote}
         }
       });
     }
-
     function goToReportSlide(index) {
       if (index < 0 || index >= REPORT_SLIDES.length) return;
       currentReportSlide = index;
       updateReportSlideUI();
     }
-
     function prevReportSlide() {
       if (currentReportSlide > 0) {
         currentReportSlide--;
         updateReportSlideUI();
       }
     }
-
     function nextReportSlide() {
       if (currentReportSlide < REPORT_SLIDES.length - 1) {
         currentReportSlide++;
         updateReportSlideUI();
       }
     }
-
     function initReportSwipe() {
       const track = document.getElementById("report-slider-track");
       if (!track || track._swipeInitialized) return;
       track._swipeInitialized = true;
-
       track.addEventListener("touchstart", (e) => {
         reportTouchStartX = e.changedTouches[0].screenX;
       }, { passive: true });
-
       track.addEventListener("touchend", (e) => {
         reportTouchEndX = e.changedTouches[0].screenX;
         const diff = reportTouchStartX - reportTouchEndX;
@@ -4141,39 +3888,26 @@ ${returnMethodNote}
         }
       }, { passive: true });
     }
-
     function openReportModal(grade) {
-      // 中3（c3または引数なし）のみモーダルを表示し、中1・中2・小6等は表示しない
       if (grade && grade !== 'c3') return;
-
       const modal = document.getElementById("report-modal");
       if (!modal) return;
-
       renderReportSlides();
       currentReportSlide = 0;
       updateReportSlideUI();
-
-      // 背面スクロールロック
       document.documentElement.style.overflow = "hidden";
       document.body.style.overflow = "hidden";
-
       modal.classList.remove("hidden");
     }
-
     function closeReportModal() {
       const modal = document.getElementById("report-modal");
       if (modal) modal.classList.add("hidden");
-
-      // スクロール復帰
       document.documentElement.style.overflow = "";
       document.body.style.overflow = "";
     }
-
-    // キーボード操作（Escapeで閉じる、左右キーでスライド移動）
     document.addEventListener("keydown", function(e) {
       const modal = document.getElementById("report-modal");
       if (!modal || modal.classList.contains("hidden")) return;
-
       if (e.key === "Escape") {
         closeReportModal();
       } else if (e.key === "ArrowLeft") {
@@ -4182,8 +3916,6 @@ ${returnMethodNote}
         nextReportSlide();
       }
     });
-
-    // グローバル公開
     window.selectGrade = selectGrade;
     window.renderRoundTabs = renderRoundTabs;
     window.renderCard = renderCard;
@@ -4196,8 +3928,6 @@ ${returnMethodNote}
     window.prevReportSlide = prevReportSlide;
     window.nextReportSlide = nextReportSlide;
     window.goToReportSlide = goToReportSlide;
-
-    // 共通ヘッダー制御ロジック
     function toggleNextExamDropdown(event) {
       if (event) event.stopPropagation();
       closeContactDropdown();
@@ -4216,7 +3946,6 @@ ${returnMethodNote}
         if (btn) btn.setAttribute('aria-expanded', 'true');
       }
     }
-
     function closeNextExamDropdown() {
       const dropdown = document.getElementById('nav-next-exam-dropdown');
       const chevron = document.getElementById('nav-next-exam-chevron');
@@ -4227,7 +3956,6 @@ ${returnMethodNote}
         if (btn) btn.setAttribute('aria-expanded', 'false');
       }
     }
-
     function toggleContactDropdown(event) {
       if (event) event.stopPropagation();
       closeNextExamDropdown();
@@ -4242,14 +3970,12 @@ ${returnMethodNote}
         if (btn) btn.setAttribute('aria-expanded', 'true');
       }
     }
-
     function closeContactDropdown() {
       const container = document.getElementById('nav-contact-container');
       const btn = document.getElementById('nav-contact-btn');
       if (container) container.classList.remove('is-open');
       if (btn) btn.setAttribute('aria-expanded', 'false');
     }
-
     document.addEventListener('click', (e) => {
       if (!e.target.closest('#nav-next-exam-container')) {
         closeNextExamDropdown();
@@ -4258,7 +3984,6 @@ ${returnMethodNote}
         closeContactDropdown();
       }
     });
-
     window.selectNavExamTab = function(tabKey) {
       closeNextExamDropdown();
       let gradeKey = 'c3';
@@ -4266,14 +3991,12 @@ ${returnMethodNote}
       else if (tabKey === 'chu2' || tabKey === 'c2') gradeKey = 'c2';
       else if (tabKey === 'chu1' || tabKey === 'c1') gradeKey = 'c1';
       else if (tabKey === 'sho6' || tabKey === 'p6') gradeKey = 'p6';
-
       selectGrade(gradeKey);
       const target = document.getElementById('schedule-selector');
       if (target) {
         target.scrollIntoView({ behavior: 'smooth' });
       }
     };
-
     window.handleNavExamGuideClick = function(event, targetId) {
       closeNextExamDropdown();
       const effectiveId = (targetId === 'about' ? 'features' : targetId);
@@ -4287,17 +4010,14 @@ ${returnMethodNote}
         } catch(e) {}
       }
     };
-
     window.handleMobileNavExamGuideClick = function(event, targetId) {
       closeMobileMenu();
       window.handleNavExamGuideClick(event, targetId);
     };
-
     window.selectMobileNavExamTab = function(tabKey) {
       closeMobileMenu();
       window.selectNavExamTab(tabKey);
     };
-
     function openMobileMenu() {
       const drawer = document.getElementById("mobile-menu-drawer");
       const backdrop = document.getElementById("mobile-menu-backdrop");
@@ -4311,7 +4031,6 @@ ${returnMethodNote}
         if (btn) btn.setAttribute("aria-expanded", "true");
       }
     }
-
     function closeMobileMenu() {
       const drawer = document.getElementById("mobile-menu-drawer");
       const backdrop = document.getElementById("mobile-menu-backdrop");
@@ -4325,7 +4044,6 @@ ${returnMethodNote}
         if (btn) btn.setAttribute("aria-expanded", "false");
       }
     }
-
     function toggleMobileExamAccordion() {
       const menu = document.getElementById("mobile-exam-menu");
       const chevron = document.getElementById("mobile-exam-chevron");
@@ -4340,8 +4058,6 @@ ${returnMethodNote}
         }
       }
     }
-
-    // モバイルメニュー内のアコーディオン展開時、展開部分がドロワー下部の固定CTAに隠れないよう自動スクロール
     function revealMobileMenuSection(target) {
       if (!target) return;
       var scroller = document.getElementById("mobile-menu-scroll") || target.closest(".overflow-y-auto");
@@ -4350,18 +4066,15 @@ ${returnMethodNote}
         var sRect = scroller.getBoundingClientRect();
         var tRect = target.getBoundingClientRect();
         var visibleBottom = sRect.bottom;
-        // ドロワー下部の固定CTA（お申し込みはこちら）がスクロール領域に重なる場合はその上端を表示下限とする
         var footer = scroller.nextElementSibling;
         if (footer) visibleBottom = Math.min(visibleBottom, footer.getBoundingClientRect().top);
         var delta = tRect.bottom - (visibleBottom - 16);
         if (delta <= 0) return;
-        // セクション見出しが上に見切れない範囲でスクロール
         var maxDelta = tRect.top - sRect.top - 8;
         if (maxDelta <= 0) return;
         scroller.scrollTo({ top: scroller.scrollTop + Math.min(delta, maxDelta), behavior: "smooth" });
       });
     }
-
     function toggleMobileContactAccordion() {
       const menu = document.getElementById("mobile-contact-menu");
       const chevron = document.getElementById("mobile-contact-chevron");
@@ -4377,13 +4090,7 @@ ${returnMethodNote}
         }
       }
     }
-
-    // =========================================================================
-    // microCMS 連動：最新のお知らせ（NEWS）学年別動的フィルタリング
-    // =========================================================================
     let allNewsArticles = [];
-
-    // 静的フォールバックデータ（microCMS未設定時・オフライン時・通信障害時に即時表示）
     const FALLBACK_NEWS_LIST = [
       {
         id: "leoodvgmoet",
@@ -4428,7 +4135,6 @@ ${returnMethodNote}
         targetGrade: ["小6生"]
       }
     ];
-
     function formatNewsDate(isoStr) {
       if (!isoStr) return '';
       const d = new Date(isoStr);
@@ -4440,7 +4146,6 @@ ${returnMethodNote}
       const day = String(d.getDate()).padStart(2, '0');
       return `${y}.${m}.${day}`;
     }
-
     function isNewNewsArticle(publishedAt) {
       if (!publishedAt) return false;
       let pubTime = new Date(publishedAt).getTime();
@@ -4455,7 +4160,6 @@ ${returnMethodNote}
       const diffDays = (now - pubTime) / (1000 * 60 * 60 * 24);
       return diffDays >= -1 && diffDays <= 14;
     }
-
     function getNewsBadgeInfo(category, title) {
       let catName = 'お知らせ';
       if (typeof category === 'object' && category !== null && category.name) {
@@ -4463,7 +4167,6 @@ ${returnMethodNote}
       } else if (typeof category === 'string' && category) {
         catName = category;
       }
-
       let badgeClass = 'bg-[#fef3c7] text-[#92400e] border border-[#fde68a]';
       if (catName.includes('重要') || (title && title.includes('重要'))) {
         badgeClass = 'bg-red-50 text-red-700 border border-red-200/60';
@@ -4476,10 +4179,8 @@ ${returnMethodNote}
       } else if (catName.includes('トピックス') || catName.includes('更新')) {
         badgeClass = 'bg-slate-100 text-slate-700 border border-slate-200/60';
       }
-
       return { catName, badgeClass };
     }
-
     function isArticleMatchGrade(post, gradeKey) {
       let grades = post.targetGrade || [];
       if (typeof grades === 'string') {
@@ -4488,41 +4189,27 @@ ${returnMethodNote}
       if (!Array.isArray(grades) || grades.length === 0) {
         return true;
       }
-
-      // 1. microCMSの対象学年に「全学年」が含まれる記事は全学年タブで表示
       const hasAllGrades = grades.some(g => typeof g === 'string' && (g === '全学年' || g.includes('全学年') || g.includes('全')));
       if (hasAllGrades) return true;
-
       // 2. 学年タブごとのフィルタ条件
       if (gradeKey === 'p6' || gradeKey === 'sho6') {
-        // 「小6」タブ選択時：microCMSの対象学年に「全学年」または「小6生」（または「小学生」）が含まれる記事
         return grades.some(g => typeof g === 'string' && (g.includes('小6') || g.includes('小学生') || g.includes('小6生') || g.includes('適性検査')));
       } else {
-        // 「中3」「中2」「中1」タブ選択時：microCMSの対象学年に「全学年」または「中学生」が含まれる記事
         return grades.some(g => typeof g === 'string' && (g.includes('中学生') || g.includes('中3') || g.includes('中2') || g.includes('中1') || g.includes('中学')));
       }
     }
-
     function updateNewsByGrade(gradeKey) {
       const container = document.getElementById('latest-news-list');
       if (!container) return;
-
       const sourceArticles = (allNewsArticles && allNewsArticles.length > 0) ? allNewsArticles : FALLBACK_NEWS_LIST;
-
-      // 対象学年でフィルタリング
       const filtered = sourceArticles.filter(post => isArticleMatchGrade(post, gradeKey));
-
-      // 降順ソート (表示公開日: publishedAt > date > createdAt、同日は id 順)
       filtered.sort((a, b) => {
         const da = new Date(a.publishedAt || a.date || a.createdAt || 0).getTime();
         const db = new Date(b.publishedAt || b.date || b.createdAt || 0).getTime();
         if (db !== da) return db - da;
         return String(b.id || '').localeCompare(String(a.id || ''));
       });
-
-      // 最新の3件〜5件（デザイン枠に収まる3件）を抽出
       const displayPosts = filtered.slice(0, 3);
-
       if (displayPosts.length === 0) {
         container.innerHTML = `
           <div class="p-6 sm:p-8 text-center text-slate-500 text-xs sm:text-sm">
@@ -4531,7 +4218,6 @@ ${returnMethodNote}
         `;
         return;
       }
-
       container.innerHTML = displayPosts.map(post => {
         const rawDate = post.publishedAt || post.date || post.createdAt;
         const pubDate = formatNewsDate(rawDate);
@@ -4541,7 +4227,6 @@ ${returnMethodNote}
           ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#c85a32] text-white shadow-xs shrink-0 tracking-tight leading-none text-center">NEW</span>`
           : '';
         const detailUrl = `/news/${encodeURIComponent(post.id)}/` // `detail.html?id=${encodeURIComponent(post.id)}`;
-
         return `
           <article class="bg-slate-50 rounded-lg border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all mb-3 overflow-hidden cursor-pointer group block">
             <a href="${detailUrl}" class="flex items-center justify-between p-4 sm:p-5 gap-3 sm:gap-4 w-full">
@@ -4557,13 +4242,11 @@ ${returnMethodNote}
                     ${catName}
                   </span>
                 </div>
-
                 <!-- 記事タイトル -->
                 <h3 class="font-bold text-[15px] sm:text-base text-slate-900 group-hover:text-brand-green transition-colors flex-1 leading-snug break-words">
                   ${post.title || '無題のお知らせ'}
                 </h3>
               </div>
-
               <!-- 右端アクション: FAQと同調した矢印ボタン -->
               <div class="flex items-center gap-2 shrink-0">
                 <span class="text-xs font-bold text-slate-500 group-hover:text-brand-green transition-colors hidden md:inline">詳細を読む</span>
@@ -4578,19 +4261,13 @@ ${returnMethodNote}
         `;
       }).join('');
     }
-
     async function initLatestNews() {
       allNewsArticles = [{"id": "ynvbigkqcq", "title": "岡山県統一模擬試験 公式Webサイトをリニューアルいたしました", "publishedAt": "2026-11-01T15:00:00.000Z", "category": null, "targetGrade": ["全学年"]}, {"id": "s9o093uhf", "title": "小6生対象 岡山県適性検査対策模試 10月号", "publishedAt": "2026-09-26T04:22:24.556Z", "category": {"id": "jttb2w0l9ua", "createdAt": "2026-09-23T05:32:20.539Z", "updatedAt": "2026-09-23T05:32:20.539Z", "publishedAt": "2026-09-23T05:32:20.539Z", "revisedAt": "2026-09-23T05:32:20.539Z", "name": "模試活用法"}, "targetGrade": ["小6生"]}, {"id": "20260914-1", "title": "【8月号結果】岡山5校を志望校とした受験生が計1100名を超えました！", "publishedAt": "2026-09-14T00:00:00.000Z", "category": {"id": "508lep4cmp", "createdAt": "2026-09-23T04:56:58.933Z", "updatedAt": "2026-09-23T04:56:58.933Z", "publishedAt": "2026-09-23T04:56:58.933Z", "revisedAt": "2026-09-23T04:56:58.933Z", "name": "更新情報"}, "targetGrade": ["全学年"]}, {"id": "b055d-p_k7", "title": "【岡山県の高校受験】合格への近道はここにある！「おかもし」が受験生から支持される理由", "publishedAt": "2026-07-30T00:00:00.000Z", "category": {"id": "jttb2w0l9ua", "createdAt": "2026-09-23T05:32:20.539Z", "updatedAt": "2026-09-23T05:32:20.539Z", "publishedAt": "2026-09-23T05:32:20.539Z", "revisedAt": "2026-09-23T05:32:20.539Z", "name": "模試活用法"}, "targetGrade": ["中学生"]}, {"id": "20260721_1", "title": "おかもし　会場受験のススメ　〜「しんどい」の先に志望校合格があります〜", "publishedAt": "2026-07-21T00:00:00.000Z", "category": {"id": "508lep4cmp", "createdAt": "2026-09-23T04:56:58.933Z", "updatedAt": "2026-09-23T04:56:58.933Z", "publishedAt": "2026-09-23T04:56:58.933Z", "revisedAt": "2026-09-23T04:56:58.933Z", "name": "更新情報"}, "targetGrade": ["全学年"]}, {"id": "if8frequgg", "title": "不安や焦りを力に変える！中学生のための学力UPメンタル＆学習アプローチ", "publishedAt": "2026-04-01T05:34:00.000Z", "category": null, "targetGrade": ["全学年"]}, {"id": "column-7", "title": "勉強のコツ完全ガイド｜テスト前でも慌てない！成績アップの方法", "publishedAt": "2025-07-04T00:00:00.000Z", "category": {"id": "jttb2w0l9ua", "createdAt": "2026-09-23T05:32:20.539Z", "updatedAt": "2026-09-23T05:32:20.539Z", "publishedAt": "2026-09-23T05:32:20.539Z", "revisedAt": "2026-09-23T05:32:20.539Z", "name": "模試活用法"}, "targetGrade": ["全学年"]}, {"id": "column-6", "title": "成績が上がる！高校受験生必見の時間管理術と集中力アップ法", "publishedAt": "2025-02-26T00:00:00.000Z", "category": {"id": "jttb2w0l9ua", "createdAt": "2026-09-23T05:32:20.539Z", "updatedAt": "2026-09-23T05:32:20.539Z", "publishedAt": "2026-09-23T05:32:20.539Z", "revisedAt": "2026-09-23T05:32:20.539Z", "name": "模試活用法"}, "targetGrade": ["全学年"]}, {"id": "column-5", "title": "志望校の決め方に悩む中学生のみなさんへ！自信を持って、自分にぴったりな高校を見つけよう", "publishedAt": "2024-12-03T00:00:00.000Z", "category": {"id": "jttb2w0l9ua", "createdAt": "2026-09-23T05:32:20.539Z", "updatedAt": "2026-09-23T05:32:20.539Z", "publishedAt": "2026-09-23T05:32:20.539Z", "revisedAt": "2026-09-23T05:32:20.539Z", "name": "模試活用法"}, "targetGrade": ["中学生"]}, {"id": "column-4", "title": "友達と勉強する?一人で勉強する?高校受験を乗り越えるにはどちらが正解?", "publishedAt": "2024-11-26T00:00:00.000Z", "category": {"id": "jttb2w0l9ua", "createdAt": "2026-09-23T05:32:20.539Z", "updatedAt": "2026-09-23T05:32:20.539Z", "publishedAt": "2026-09-23T05:32:20.539Z", "revisedAt": "2026-09-23T05:32:20.539Z", "name": "模試活用法"}, "targetGrade": ["全学年"]}, {"id": "column-3", "title": "受験勉強のモチベーションUP術 ！ 中学生に聞いてほしい合格への近道", "publishedAt": "2024-11-19T00:00:00.000Z", "category": {"id": "jttb2w0l9ua", "createdAt": "2026-09-23T05:32:20.539Z", "updatedAt": "2026-09-23T05:32:20.539Z", "publishedAt": "2026-09-23T05:32:20.539Z", "revisedAt": "2026-09-23T05:32:20.539Z", "name": "模試活用法"}, "targetGrade": ["中学生"]}, {"id": "column-2", "title": "中学生必見！勉強のやる気が出ない時こそチャンス！焦りと不安を解消する方法", "publishedAt": "2024-11-08T00:00:00.000Z", "category": {"id": "jttb2w0l9ua", "createdAt": "2026-09-23T05:32:20.539Z", "updatedAt": "2026-09-23T05:32:20.539Z", "publishedAt": "2026-09-23T05:32:20.539Z", "revisedAt": "2026-09-23T05:32:20.539Z", "name": "模試活用法"}, "targetGrade": ["中学生"]}, {"id": "column", "title": "志望校が決まらなくても大丈夫！中学生のための高校選び応援ガイド", "publishedAt": "2024-11-08T00:00:00.000Z", "category": {"id": "pk_1pp08tt", "createdAt": "2026-09-23T04:56:59.311Z", "updatedAt": "2026-10-12T07:55:48.702Z", "publishedAt": "2026-09-23T04:56:59.311Z", "revisedAt": "2026-10-12T07:55:48.702Z", "name": "高校入試情報"}, "targetGrade": ["中学生"]}, {"id": "202408101-2", "title": "おかもしで高校合格をつかむ！ あなただけの合格戦略を立てよう", "publishedAt": "2024-08-30T00:00:00.000Z", "category": {"id": "jttb2w0l9ua", "createdAt": "2026-09-23T05:32:20.539Z", "updatedAt": "2026-09-23T05:32:20.539Z", "publishedAt": "2026-09-23T05:32:20.539Z", "revisedAt": "2026-09-23T05:32:20.539Z", "name": "模試活用法"}, "targetGrade": ["全学年"]}, {"id": "okayama-highschoolexam_tokubetsu_1", "title": "岡山県立高校入試制度　特別入学者選抜とは", "publishedAt": "2024-07-31T00:00:00.000Z", "category": {"id": "pk_1pp08tt", "createdAt": "2026-09-23T04:56:59.311Z", "updatedAt": "2026-10-12T07:55:48.702Z", "publishedAt": "2026-09-23T04:56:59.311Z", "revisedAt": "2026-10-12T07:55:48.702Z", "name": "高校入試情報"}, "targetGrade": ["全学年"]}];
       // 静的HTMLで既に最新3件が表示されているため、学年タブの連動のみ実行（通信ゼロ）
       updateNewsByGrade(currentGrade);
     }
-
     window.updateNewsByGrade = updateNewsByGrade;
     window.initLatestNews = initLatestNews;
-
-    // ==========================================
-    // よくあるご質問（FAQ）全9件データモデル & 動的レンダリング
-    // ==========================================
     const faqData = [
       {
         q: "1回でも受験できますか？（途中からでも受験できますか？）",
@@ -4629,11 +4306,9 @@ ${returnMethodNote}
         a: "原則として、受験料のご返金を伴うキャンセルは受け付けておりません。予めご了承ください。"
       }
     ];
-
     function renderFaq() {
       const container = document.getElementById('faq-list');
       if (!container) return;
-
       container.innerHTML = faqData.map((item) => `
         <details class="group bg-white rounded-lg shadow-sm hover:shadow-md border border-slate-200/80 mb-3 overflow-hidden transition-all duration-200">
           <summary class="flex justify-between items-center p-4 sm:p-5 font-bold text-slate-800 cursor-pointer list-none select-none text-sm sm:text-base group-hover:text-brand-green transition-colors gap-3 bg-white hover:bg-slate-50/50">
@@ -4662,11 +4337,8 @@ ${returnMethodNote}
         </details>
       `).join('');
     }
-
     window.faqData = faqData;
     window.renderFaq = renderFaq;
-
-    // ディープリンク（URLパラメータ & ハッシュ連動機能）
     function initDeepLink() {
       let targetGrade = null;
       let targetMonth = null;
@@ -4674,7 +4346,6 @@ ${returnMethodNote}
         const params = new URLSearchParams(window.location.search);
         const g = params.get('grade');
         const m = params.get('month');
-
         if (g) {
           const gDecoded = decodeURIComponent(g).trim().toLowerCase();
           if (['chu3', 'c3', '3', '中3', '中３'].includes(gDecoded) || gDecoded.includes('中3') || gDecoded.includes('中３')) targetGrade = 'c3';
@@ -4682,7 +4353,6 @@ ${returnMethodNote}
           else if (['chu1', 'c1', '1', '中1', '中１'].includes(gDecoded) || gDecoded.includes('中1') || gDecoded.includes('中１')) targetGrade = 'c1';
           else if (['sho6', 'p6', 'e6', 's6', '6', '小6', '小６'].includes(gDecoded) || gDecoded.includes('小6') || gDecoded.includes('小６')) targetGrade = 'p6';
         }
-
         if (m) {
           const numMatch = m.match(/(\d+)/);
           if (numMatch) {
@@ -4690,11 +4360,9 @@ ${returnMethodNote}
           }
         }
       } catch (e) {}
-
       if (targetGrade) {
         selectGrade(targetGrade);
       }
-
       if (targetMonth) {
         const currentData = examData[currentGrade];
         if (currentData && Array.isArray(currentData.rounds)) {
@@ -4707,8 +4375,6 @@ ${returnMethodNote}
           }
         }
       }
-
-      // スクロール処理（#schedule-selector または monthパラメータが存在する場合）
       const hasHash = window.location.hash === '#schedule-selector' || window.location.hash === '#next-exam';
       const hasMonthParam = Boolean(targetMonth);
       if (hasHash || hasMonthParam) {
@@ -4720,40 +4386,27 @@ ${returnMethodNote}
         }
       }
     }
-
     window.initDeepLink = initDeepLink;
     window.addEventListener('hashchange', initDeepLink);
     window.addEventListener('popstate', initDeepLink);
-
-    // =======================================================================
-    // スマホ用 追従申し込みボタン（Sticky CTA）動的表示制御
-    // =======================================================================
     function checkFloatingCtaVisibility() {
       const ctaBar = document.getElementById('floating-cta-bar');
       if (!ctaBar) return;
-
       const scheduleSec = document.getElementById('schedule-selector');
       const studentVoicesSec = document.getElementById('student-voices');
       const vpHeight = window.innerHeight || document.documentElement.clientHeight;
-
-      // 1. 出現トリガーセクションの特定（生徒の声セクション、非表示時は日程選択の次セクション）
       let triggerSec = studentVoicesSec;
       if (!triggerSec || triggerSec.classList.contains('hidden') || triggerSec.offsetHeight === 0) {
         triggerSec = scheduleSec ? scheduleSec.nextElementSibling : null;
       }
-
       // 2. まだ「生徒の声（検討・共感ゾーン）」に到達していない場合は非表示
       let hasReachedTrigger = false;
       if (triggerSec) {
         const triggerRect = triggerSec.getBoundingClientRect();
-        // セクション上部が画面内に入ってきた時（画面下部から20%以内）
         if (triggerRect.top <= vpHeight * 0.85) {
           hasReachedTrigger = true;
         }
       }
-
-      // 3. 「模試日程・出題範囲・申し込み（#schedule-selector）」エリア内にいる場合は非表示
-      // （熟読・検討中、またはすでに画面内に申込ボタンが存在するため重複防止）
       let isInsideSchedule = false;
       if (scheduleSec) {
         const schedRect = scheduleSec.getBoundingClientRect();
@@ -4761,7 +4414,6 @@ ${returnMethodNote}
           isInsideSchedule = true;
         }
       }
-
       // 4. お申し込みフォーム（サマリー含む）エリア内（もし存在する場合）
       let isInsideApply = false;
       const applyContainers = document.querySelectorAll('#apply-form, [data-section="apply-summary"]');
@@ -4771,10 +4423,7 @@ ${returnMethodNote}
           isInsideApply = true;
         }
       });
-
-      // 表示判定: 生徒の声以降に到達しており、かつ模試詳細エリア・申込フォーム内にいないこと
       const shouldShow = hasReachedTrigger && !isInsideSchedule && !isInsideApply;
-
       if (shouldShow) {
         ctaBar.classList.remove('translate-y-full', 'opacity-0', 'pointer-events-none');
         ctaBar.classList.add('translate-y-0', 'opacity-100', 'pointer-events-auto');
@@ -4784,30 +4433,22 @@ ${returnMethodNote}
       }
     }
     window.checkFloatingCtaVisibility = checkFloatingCtaVisibility;
-
     function initFloatingCtaVisibility() {
       window.addEventListener('scroll', checkFloatingCtaVisibility, { passive: true });
       window.addEventListener('resize', checkFloatingCtaVisibility, { passive: true });
-
       const scheduleSec = document.getElementById('schedule-selector');
       const studentVoicesSec = document.getElementById('student-voices');
-
       if ('IntersectionObserver' in window) {
         const observer = new IntersectionObserver(() => {
           checkFloatingCtaVisibility();
         }, {
           threshold: [0, 0.2, 0.5, 0.8, 1.0]
         });
-
         if (scheduleSec) observer.observe(scheduleSec);
         if (studentVoicesSec) observer.observe(studentVoicesSec);
       }
-
-      // 初期実行
       checkFloatingCtaVisibility();
     }
-
-    // 初期化 & 各種コンポーネント初期化
     window.addEventListener('DOMContentLoaded', () => {
       let initialGrade = 'c3';
       try {
@@ -4821,39 +4462,22 @@ ${returnMethodNote}
           else if (['sho6', 'p6', 'e6', 's6', '6', '小6', '小６'].includes(gDecoded) || gDecoded.includes('小6') || gDecoded.includes('小６')) initialGrade = 'p6';
         }
       } catch (e) {}
-
       selectGrade(initialGrade);
-
-      // 「選ばれる3つの理由」全3パネル一括初期化
       const featureInitGrade = (initialGrade === 'p6') ? 'p6' : (initialGrade === 'c1' || initialGrade === 'c2') ? 'c12' : 'c3';
       switchFeatureGrade(featureInitGrade);
-
-      // Features カルーセルの初期化・スクロール監視
       const featuresCarousel = document.getElementById('features-carousel');
       if (featuresCarousel) {
         featuresCarousel.addEventListener('scroll', updateFeaturesCarouselState, { passive: true });
         updateFeaturesCarouselState();
       }
-
-      // カルーセル操作バー（前後矢印・ドット）のスクロール出現・吸着初期化
       initFeaturesNavScroll();
-
-      // スマホ用 追従申し込みボタン動的制御の初期化
       initFloatingCtaVisibility();
-
-      // ディープリンク（?grade=...&month=...#schedule-selector）連動実行
       initDeepLink();
-
-      // microCMS お知らせの動的取得と初期学年フィルタ適用
       initLatestNews();
-
-      // microCMS 模試日程・会場動的データの取得
       initExamGuidesFromD1();
-
-      // よくあるご質問（FAQ）の動的レンダリング
       renderFaq();
     });
-  </script>
+</script>
 
   <!-- =========================================================================
        お申し込み手順解説動画モーダル（Cloudflare R2 配信・その場再生）
@@ -4895,8 +4519,8 @@ ${returnMethodNote}
           id="apply-guide-modal-video"
           controls
           playsinline
-          preload="metadata"
-          src="https://pub-ba61870bbe1442af87f84c258e756736.r2.dev/apply-guide.mp4"
+          preload="none"
+          data-src="https://pub-ba61870bbe1442af87f84c258e756736.r2.dev/apply-guide.mp4"
           class="w-full max-h-[70vh] rounded-md bg-slate-900"
         ></video>
       </div>
@@ -4921,13 +4545,20 @@ ${returnMethodNote}
       modal.classList.remove('hidden');
       modal.classList.add('flex');
       document.body.classList.add('overflow-hidden');
-      if (video && typeof video.play === 'function') {
-        try {
-          var playPromise = video.play();
-          if (playPromise && typeof playPromise.catch === 'function') {
-            playPromise.catch(function () {});
-          }
-        } catch (e) {}
+      if (video) {
+        var dataSrc = video.getAttribute('data-src');
+        if (dataSrc && !video.getAttribute('src')) {
+          video.setAttribute('src', dataSrc);
+          if (typeof video.load === 'function') video.load();
+        }
+        if (typeof video.play === 'function') {
+          try {
+            var playPromise = video.play();
+            if (playPromise && typeof playPromise.catch === 'function') {
+              playPromise.catch(function () {});
+            }
+          } catch (e) {}
+        }
       }
     }
     function closeApplyGuideVideoModal() {
@@ -4960,7 +4591,7 @@ ${returnMethodNote}
         }
       }
     });
-  </script>
+</script>
   <script defer src="/js/floating-cta.js"></script>
 </body>
 </html>

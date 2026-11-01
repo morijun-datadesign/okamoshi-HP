@@ -19,11 +19,13 @@
   <meta property="og:site_name" content="岡山県統一模擬試験（おかもし）">
   <meta name="twitter:card" content="summary_large_image">
   <!-- Google Tag Manager -->
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  <script>
+(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
   j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-KHHZXKJR');</script>
+  })(window,document,'script','dataLayer','GTM-KHHZXKJR');
+</script>
   <!-- End Google Tag Manager -->
 
   <!-- Microsoft Clarity -->
@@ -33,13 +35,13 @@
         t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "z5nnqjwyks");
-  </script>
+</script>
 
   <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,alternate_email,analytics,apartment,arrow_back,arrow_downward,arrow_forward,article,assignment_turned_in,business_center,calendar_month,calendar_today,call,campaign,check_circle,chevron_left,chevron_right,close,contact_support,content_copy,corporate_fare,credit_card,credit_score,delete_outline,description,devices,edit_document,edit_note,error,event,event_busy,expand_more,fact_check,fax,format_quote,grid_view,groups,handshake,health_and_safety,history_edu,home,how_to_reg,info,insights,inventory_2,language,library_books,local_convenience_store,location_city,location_on,lock,mail,meeting_room,menu,notifications_active,open_in_new,person,phone_in_talk,photo_camera,policy,print,priority_high,progress_activity,public,receipt_long,refresh,rule,schedule,school,search,search_off,send,shield,storefront,storm,sync,terminal,timeline,verified,visibility,warning,wifi_off,zoom_in&display=block" rel="stylesheet">
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -139,7 +141,7 @@
         }
       }
     };
-  </script>
+</script>
 
   <!-- JSON-LD 構造化データ -->
   <script type="application/ld+json">
@@ -296,6 +298,10 @@
       font-weight: 800 !important;
       box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08) !important;
     }
+  </style>
+  <style id="perf-cls-composited-fix">
+    .material-symbols-outlined{font-family:"Material Symbols Outlined";font-weight:normal;font-style:normal;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;word-wrap:normal;direction:ltr;-webkit-font-smoothing:antialiased;width:1em;height:1em;overflow:hidden;vertical-align:middle}
+    .transition-all{transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,transform!important}
   </style>
 </head>
 <body class="bg-[#F1F5F9] font-body-md text-body-md text-on-surface antialiased min-h-screen flex flex-col justify-between selection:bg-primary/20 selection:text-primary pt-16 sm:pt-[4.5rem]">
@@ -460,7 +466,6 @@
           if (btn) btn.setAttribute("aria-expanded", "true");
         }
       }
-
       function closeMobileMenu() {
         var drawer = document.getElementById("mobile-menu-drawer");
         var backdrop = document.getElementById("mobile-menu-backdrop");
@@ -474,7 +479,6 @@
           if (btn) btn.setAttribute("aria-expanded", "false");
         }
       }
-
       function toggleMobileExamAccordion() {
         var menu = document.getElementById("mobile-exam-menu");
         var chevron = document.getElementById("mobile-exam-chevron");
@@ -491,8 +495,6 @@
           if (btn) btn.setAttribute("aria-expanded", "true");
         }
       }
-
-      // モバイルメニュー内のアコーディオン展開時、展開部分がドロワー下部の固定CTAに隠れないよう自動スクロール
       function revealMobileMenuSection(target) {
         if (!target) return;
         var scroller = document.getElementById("mobile-menu-scroll") || target.closest(".overflow-y-auto");
@@ -501,18 +503,15 @@
           var sRect = scroller.getBoundingClientRect();
           var tRect = target.getBoundingClientRect();
           var visibleBottom = sRect.bottom;
-          // ドロワー下部の固定CTA（お申し込みはこちら）がスクロール領域に重なる場合はその上端を表示下限とする
           var footer = scroller.nextElementSibling;
           if (footer) visibleBottom = Math.min(visibleBottom, footer.getBoundingClientRect().top);
           var delta = tRect.bottom - (visibleBottom - 16);
           if (delta <= 0) return;
-          // セクション見出しが上に見切れない範囲でスクロール
           var maxDelta = tRect.top - sRect.top - 8;
           if (maxDelta <= 0) return;
           scroller.scrollTo({ top: scroller.scrollTop + Math.min(delta, maxDelta), behavior: "smooth" });
         });
       }
-
       function toggleMobileContactAccordion() {
         var menu = document.getElementById("mobile-contact-menu");
         var chevron = document.getElementById("mobile-contact-chevron");
@@ -530,7 +529,6 @@
           revealMobileMenuSection(menu.parentElement);
         }
       }
-
       function selectMobileNavExamTab(tabKey) {
         closeMobileMenu();
         var targetElem = document.getElementById("next-exam");
@@ -551,7 +549,6 @@
         }
         window.location.href = "/index.html?grade=" + tabKey + "#next-exam";
       }
-
       function updateStudentVoicesVisibility(tabKey) {
         var studentVoices = document.getElementById("student-voices");
         if (studentVoices) {
@@ -563,7 +560,6 @@
         }
       }
       window.updateStudentVoicesVisibility = updateStudentVoicesVisibility;
-
       function initExamTabFromUrl() {
         try {
           var params = new URLSearchParams(window.location.search);
@@ -599,22 +595,19 @@
           }
         } catch (e) {}
       }
-
       window.addEventListener("DOMContentLoaded", initExamTabFromUrl);
       window.addEventListener("load", initExamTabFromUrl);
-
       window.addEventListener("resize", function() {
         if (window.innerWidth >= 1024) {
           closeMobileMenu();
         }
       });
-
       document.addEventListener("keydown", function(e) {
         if (e.key === "Escape") {
           closeMobileMenu();
         }
       });
-    </script>
+</script>
 
   <main class="flex-1 w-full min-w-0 flex flex-col items-center">
     <!-- 1280px Central Canvas Wrapper -->
@@ -1044,7 +1037,6 @@
   <!-- Complete Integrated Interactive Script for Schools Directory & Header -->
   <script>
     (function() {
-      // 1. 文字列正規化関数（全角半角・カタカナひらがな・大文字小文字の差異を吸収）
       function normalizeStr(str) {
         if (!str) return '';
         return str
@@ -1058,7 +1050,6 @@
           })
           .replace(/[\s\-_・]/g, '');
       }
-
       // 2. 学区ごとのテーブルとバッジ要素
       const districtConfigs = [
         { areaId: 'area-okayama', tableId: 'tableOkayama', badgeId: 'badge-okayama', total: 0 },
@@ -1066,14 +1057,11 @@
         { areaId: 'area-mimasaka', tableId: 'tableMimasaka', badgeId: 'badge-mimasaka', total: 0 },
         { areaId: 'area-seibi', tableId: 'tableSeibi', badgeId: 'badge-seibi', total: 0 }
       ];
-
       const searchInput = document.getElementById('jukuSearch');
       const clearBtn = document.getElementById('clearSearchBtn');
-
       function filterSchools() {
         const rawQuery = searchInput ? searchInput.value.trim() : '';
         const normQuery = normalizeStr(rawQuery);
-
         if (clearBtn) {
           if (rawQuery.length > 0) {
             clearBtn.classList.remove('hidden');
@@ -1081,21 +1069,17 @@
             clearBtn.classList.add('hidden');
           }
         }
-
         districtConfigs.forEach(function(cfg) {
           const tbody = document.getElementById(cfg.tableId);
           const badge = document.getElementById(cfg.badgeId);
           if (!tbody) return;
-
           const rows = tbody.querySelectorAll('.juku-row');
           const noResultRow = tbody.querySelector('.no-results-row');
           let visibleCount = 0;
-
           rows.forEach(function(row) {
             const name = row.getAttribute('data-name') || row.children[0].textContent;
             const tel = row.getAttribute('data-tel') || row.children[1].textContent;
             const normText = normalizeStr(name + ' ' + tel);
-
             if (!normQuery || normText.includes(normQuery)) {
               row.style.display = '';
               visibleCount++;
@@ -1103,8 +1087,6 @@
               row.style.display = 'none';
             }
           });
-
-          // 該当なし行の表示制御
           if (noResultRow) {
             if (visibleCount === 0 && normQuery.length > 0) {
               noResultRow.classList.remove('hidden');
@@ -1112,8 +1094,6 @@
               noResultRow.classList.add('hidden');
             }
           }
-
-          // バッジの件数更新
           if (badge) {
             if (normQuery.length > 0) {
               badge.textContent = visibleCount;
@@ -1129,11 +1109,9 @@
           }
         });
       }
-
       if (searchInput) {
         searchInput.addEventListener('input', filterSchools);
       }
-
       if (clearBtn) {
         clearBtn.addEventListener('click', function() {
           if (searchInput) {
@@ -1143,16 +1121,11 @@
           }
         });
       }
-
-      // 3. 学区タブ スムーズスクロール & アクティブ連動（iOSタップ対応）
       const navBtns = document.querySelectorAll('.district-nav-btn');
       const sections = districtConfigs.map(function(c) {
         return document.getElementById(c.areaId);
       }).filter(Boolean);
-
       let currentActiveDistrict = 'area-okayama';
-
-      // タブボタンを横スクロールコンテナ内の中央へスムーズ移動
       function scrollActiveTabIntoView(targetBtn) {
         if (!targetBtn) return;
         const tabsContainer = document.getElementById('districtTabs');
@@ -1162,23 +1135,19 @@
           } catch (e) {}
           return;
         }
-
         const containerRect = tabsContainer.getBoundingClientRect();
         const btnRect = targetBtn.getBoundingClientRect();
         const scrollOffset = (btnRect.left + btnRect.width / 2) - (containerRect.left + containerRect.width / 2);
-
         if (Math.abs(scrollOffset) > 2) {
           tabsContainer.scrollBy({ left: scrollOffset, behavior: 'smooth' });
         }
       }
-
       function setActiveTab(targetId, shouldScroll) {
         if (!targetId) return;
         if (typeof shouldScroll === 'undefined') shouldScroll = true;
         const isChanged = (currentActiveDistrict !== targetId);
         currentActiveDistrict = targetId;
         let activeBtn = null;
-
         navBtns.forEach(function(btn) {
           const isTarget = btn.getAttribute('data-target') === targetId || btn.getAttribute('href') === '#' + targetId;
           const badge = btn.querySelector('.count-badge');
@@ -1205,19 +1174,13 @@
             }
           }
         });
-
-        // 学区が切り替わった場合、アクティブボタンを可視領域の中央へスムーズに横スクロール
         if (shouldScroll && isChanged && activeBtn) {
           scrollActiveTabIntoView(activeBtn);
         }
       }
-
-      // 初期アクティブ状態の確実な適用（初回ロード時はスクロール抑制）
       setActiveTab('area-okayama', false);
-
       let isClickScrolling = false;
       let scrollEndDebounce = null;
-
       function getTargetScrollTop(targetEl) {
         const header = document.querySelector('header');
         const anchorBar = document.getElementById('district-anchor');
@@ -1225,20 +1188,16 @@
         const rect = targetEl.getBoundingClientRect();
         return window.pageYOffset + rect.top - totalOffset;
       }
-
       function updateActiveTabOnScroll() {
-        // ページ最下部付近に達した場合は最後のセクションをアクティブにする
         if ((window.innerHeight + window.pageYOffset) >= document.documentElement.scrollHeight - 60) {
           if (sections.length > 0) {
             setActiveTab(sections[sections.length - 1].id, true);
             return;
           }
         }
-
         const header = document.querySelector('header');
         const anchorBar = document.getElementById('district-anchor');
         const offsetThreshold = (header ? header.offsetHeight : 64) + (anchorBar ? anchorBar.offsetHeight : 54) + 40;
-
         for (let i = sections.length - 1; i >= 0; i--) {
           const sec = sections[i];
           if (sec) {
@@ -1250,7 +1209,6 @@
           }
         }
       }
-
       function handleTabClick(btn, e) {
         if (e) {
           e.preventDefault();
@@ -1259,44 +1217,34 @@
         const targetId = btn.getAttribute('data-target') || (btn.getAttribute('href') || '').replace('#', '');
         const targetEl = document.getElementById(targetId);
         if (!targetId || !targetEl) return;
-
-        // 1. 即座にアクティブ状態（UI）を更新 & タブを画面中央へスムーズ移動
         setActiveTab(targetId, true);
         scrollActiveTabIntoView(btn);
-
         // 2. ページ縦スクロールとスクロールリスナーのロック制御
         isClickScrolling = true;
         if (scrollEndDebounce) clearTimeout(scrollEndDebounce);
         scrollEndDebounce = setTimeout(function() {
           isClickScrolling = false;
         }, 1200);
-
         const targetTop = getTargetScrollTop(targetEl);
         window.scrollTo({
           top: targetTop,
           behavior: 'smooth'
         });
       }
-
       navBtns.forEach(function(btn) {
         btn.addEventListener('click', function(e) {
           handleTabClick(btn, e);
         });
       });
-
-      // ユーザーが手動で画面タッチした場合はスクロールロックを即座に解除
       window.addEventListener('touchstart', function() {
         if (isClickScrolling) {
           isClickScrolling = false;
           if (scrollEndDebounce) clearTimeout(scrollEndDebounce);
         }
       }, { passive: true });
-
-      // スクロール位置に応じた自動タブハイライト
       let scrollTimeout;
       window.addEventListener('scroll', function() {
         if (isClickScrolling) {
-          // クリック移動中：スクロールが停止するまでロックを維持し、停止150ms後に解除
           if (scrollEndDebounce) clearTimeout(scrollEndDebounce);
           scrollEndDebounce = setTimeout(function() {
             isClickScrolling = false;
@@ -1307,7 +1255,6 @@
         if (scrollTimeout) cancelAnimationFrame(scrollTimeout);
         scrollTimeout = requestAnimationFrame(updateActiveTabOnScroll);
       }, { passive: true });
-
       // 4. Cloudflare D1 からの動的取得 & 描画一本化 (/api/cram-schools)
       function escapeHtml(str) {
         if (!str) return '';
@@ -1318,7 +1265,6 @@
           .replace(/"/g, '&quot;')
           .replace(/'/g, '&#039;');
       }
-
       function renderLoadingState() {
         const loadingHtml = '<tr class="loading-row">' +
           '<td colspan="2" class="py-12 px-4 text-center">' +
@@ -1328,7 +1274,6 @@
           '</div>' +
           '</td>' +
           '</tr>';
-
         districtConfigs.forEach(function(cfg) {
           const tbody = document.getElementById(cfg.tableId);
           if (tbody) {
@@ -1341,7 +1286,6 @@
           }
         });
       }
-
       function renderErrorState() {
         const errorHtml = '<tr class="error-row bg-surface-container-lowest">' +
           '<td colspan="2" class="py-12 px-4 text-center">' +
@@ -1355,7 +1299,6 @@
           '</div>' +
           '</td>' +
           '</tr>';
-
         districtConfigs.forEach(function(cfg) {
           const tbody = document.getElementById(cfg.tableId);
           if (tbody) {
@@ -1367,34 +1310,29 @@
             badge.classList.add('opacity-40');
           }
         });
-
         document.querySelectorAll('.retry-fetch-btn').forEach(function(btn) {
           btn.onclick = function() {
             loadCramSchoolsFromD1();
           };
         });
       }
-
       function renderDynamicSchools(data) {
         if (!data || !data.success || !Array.isArray(data.schools)) {
           renderErrorState();
           return;
         }
-
         const areaToTable = {
           'okayama-east': { tableId: 'tableOkayama', badgeId: 'badge-okayama', cfgIndex: 0 },
           'kurashiki': { tableId: 'tableKurashiki', badgeId: 'badge-kurashiki', cfgIndex: 1 },
           'mimasaka': { tableId: 'tableMimasaka', badgeId: 'badge-mimasaka', cfgIndex: 2 },
           'seibi': { tableId: 'tableSeibi', badgeId: 'badge-seibi', cfgIndex: 3 }
         };
-
         const grouped = {
           'okayama-east': [],
           'kurashiki': [],
           'mimasaka': [],
           'seibi': []
         };
-
         data.schools.forEach(function(s) {
           const area = s.area_id || 'okayama-east';
           if (grouped[area]) {
@@ -1403,15 +1341,12 @@
             grouped['okayama-east'].push(s);
           }
         });
-
         Object.keys(areaToTable).forEach(function(areaKey) {
           const info = areaToTable[areaKey];
           const tbody = document.getElementById(info.tableId);
           const badge = document.getElementById(info.badgeId);
           const list = grouped[areaKey] || [];
           if (!tbody) return;
-
-          // districtConfigs の total とバッジを更新
           if (districtConfigs[info.cfgIndex]) {
             districtConfigs[info.cfgIndex].total = list.length;
           }
@@ -1419,7 +1354,6 @@
             badge.setAttribute('data-total', list.length);
             badge.textContent = list.length;
           }
-
           let html = '';
           if (list.length === 0) {
             html += '<tr class="bg-surface-container-lowest">' +
@@ -1437,7 +1371,6 @@
               const nameEsc = escapeHtml(s.name);
               const telEsc = escapeHtml(s.phone_number || '');
               const cleanTel = (s.phone_number || '').replace(/[^0-9]/g, '');
-
               let nameHtml = '';
               if (s.website_url && s.website_url.trim() !== '') {
                 const urlEsc = escapeHtml(s.website_url.trim());
@@ -1448,7 +1381,6 @@
               } else {
                 nameHtml = '<span class="text-on-surface font-normal">' + nameEsc + '</span>';
               }
-
               let telHtml = '';
               if (s.phone_number && s.phone_number.trim() !== '') {
                 telHtml = '<a class="hover:text-primary transition-colors inline-flex items-center gap-1.5 text-on-surface-variant font-mono" href="tel:' + cleanTel + '" title="' + nameEsc + ' に電話をかける">' +
@@ -1458,15 +1390,12 @@
               } else {
                 telHtml = '<span class="text-outline text-body-sm">-</span>';
               }
-
               html += '<tr class="' + stripeClass + 'hover:bg-primary-fixed/20 transition-colors juku-row" data-name="' + nameEsc + '" data-tel="' + telEsc + '">' +
                 '<td class="py-space-sm px-space-md">' + nameHtml + '</td>' +
                 '<td class="py-space-sm px-space-md font-mono text-on-surface-variant">' + telHtml + '</td>' +
                 '</tr>';
             });
           }
-
-          // 検索0件用プレースホルダー行
           html += '<tr class="hidden no-results-row bg-surface-container-lowest">' +
             '<td colspan="2" class="py-10 px-4 text-center text-on-surface-variant">' +
             '<div class="inline-flex flex-col items-center justify-center gap-1.5 text-sm text-outline">' +
@@ -1475,14 +1404,10 @@
             '</div>' +
             '</td>' +
             '</tr>';
-
           tbody.innerHTML = html;
         });
-
-        // 検索フィルターを再適用
         filterSchools();
       }
-
       function loadCramSchoolsFromD1() {
         renderLoadingState();
         fetch('/api/cram-schools')
@@ -1498,16 +1423,12 @@
             renderErrorState();
           });
       }
-
       window.loadCramSchoolsFromD1 = loadCramSchoolsFromD1;
-
-      // 初回ロード時に D1 から最新データをフェッチ
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', loadCramSchoolsFromD1);
       } else {
         loadCramSchoolsFromD1();
       }
-
       // 5. ヘッダーナビゲーション用ドロップダウン制御
       window.toggleNextExamDropdown = function(event) {
         if (event) event.stopPropagation();
@@ -1527,7 +1448,6 @@
           if (btn) btn.setAttribute('aria-expanded', 'true');
         }
       };
-
       window.closeNextExamDropdown = function() {
         const dropdown = document.getElementById('nav-next-exam-dropdown');
         const chevron = document.getElementById('nav-next-exam-chevron');
@@ -1538,7 +1458,6 @@
           if (btn) btn.setAttribute('aria-expanded', 'false');
         }
       };
-
       window.toggleContactDropdown = function(event) {
         if (event) event.stopPropagation();
         closeNextExamDropdown();
@@ -1553,7 +1472,6 @@
           if (btn) btn.setAttribute('aria-expanded', 'true');
         }
       };
-
       window.closeContactDropdown = function() {
         const container = document.getElementById('nav-contact-container');
         const btn = document.getElementById('nav-contact-btn');
@@ -1562,7 +1480,6 @@
           if (btn) btn.setAttribute('aria-expanded', 'false');
         }
       };
-
       window.toggleMobileMenu = function() {
         const menu = document.getElementById('mobile-menu');
         const icon = document.getElementById('mobile-menu-icon');
@@ -1576,12 +1493,9 @@
           if (icon) icon.textContent = 'menu';
         }
       };
-
       window.selectNavExamTab = function(grade) {
         window.location.href = '/index.html#next-exam';
       };
-
-      // 外側クリックでドロップダウンを閉じる
       document.addEventListener('click', function(e) {
         const examContainer = document.getElementById('nav-next-exam-container');
         if (examContainer && !examContainer.contains(e.target)) {
@@ -1593,7 +1507,7 @@
         }
       });
     })();
-  </script>
+</script>
 <script id="header-navigation-script">
   function toggleNextExamDropdown(event) {
     if (event) event.stopPropagation();
@@ -1613,7 +1527,6 @@
       if (btn) btn.setAttribute('aria-expanded', 'true');
     }
   }
-
   function closeNextExamDropdown() {
     var dropdown = document.getElementById('nav-next-exam-dropdown');
     var chevron = document.getElementById('nav-next-exam-chevron');
@@ -1624,7 +1537,6 @@
       if (btn) btn.setAttribute('aria-expanded', 'false');
     }
   }
-
   function toggleContactDropdown(event) {
     if (event) event.stopPropagation();
     closeNextExamDropdown();
@@ -1639,7 +1551,6 @@
       if (btn) btn.setAttribute('aria-expanded', 'true');
     }
   }
-
   function closeContactDropdown() {
     var container = document.getElementById('nav-contact-container');
     var btn = document.getElementById('nav-contact-btn');
@@ -1648,7 +1559,6 @@
       if (btn) btn.setAttribute('aria-expanded', 'false');
     }
   }
-
   document.addEventListener('click', function(e) {
     var examContainer = document.getElementById('nav-next-exam-container');
     if (examContainer && !examContainer.contains(e.target)) {
@@ -1659,7 +1569,6 @@
       closeContactDropdown();
     }
   });
-
   function selectNavExamTab(tabKey) {
     closeNextExamDropdown();
     if (typeof switchExamTab === 'function') {

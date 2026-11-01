@@ -19,11 +19,13 @@
   <meta property="og:site_name" content="岡山県統一模擬試験（おかもし）">
   <meta name="twitter:card" content="summary_large_image">
   <!-- Google Tag Manager -->
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  <script>
+(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
   j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-KHHZXKJR');</script>
+  })(window,document,'script','dataLayer','GTM-KHHZXKJR');
+</script>
   <!-- End Google Tag Manager -->
 
   <!-- Microsoft Clarity -->
@@ -33,7 +35,7 @@
         t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "z5nnqjwyks");
-  </script>
+</script>
 
   <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -44,7 +46,7 @@
   <link rel="dns-prefetch" href="https://okamoshi-blog.microcms.io">
   <link rel="dns-prefetch" href="https://images.microcms-assets.io">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,alternate_email,analytics,apartment,arrow_back,arrow_downward,arrow_forward,article,assignment_turned_in,business_center,calendar_month,calendar_today,call,campaign,check_circle,chevron_left,chevron_right,close,contact_support,content_copy,corporate_fare,credit_card,credit_score,delete_outline,description,devices,edit_document,edit_note,error,event,event_busy,expand_more,fact_check,fax,format_quote,grid_view,groups,handshake,health_and_safety,history_edu,home,how_to_reg,info,insights,inventory_2,language,library_books,local_convenience_store,location_city,location_on,lock,mail,meeting_room,menu,notifications_active,open_in_new,person,phone_in_talk,photo_camera,policy,print,priority_high,progress_activity,public,receipt_long,refresh,rule,schedule,school,search,search_off,send,shield,storefront,storm,sync,terminal,timeline,verified,visibility,warning,wifi_off,zoom_in&display=block" rel="stylesheet">
 
   
   <!-- Tailwind CSS CDN -->
@@ -145,7 +147,7 @@
         }
       }
     };
-  </script>
+</script>
 
 
   <!-- JSON-LD 構造化データ (BlogPosting) -->
@@ -848,7 +850,7 @@
       text-decoration: none !important;
       border: 1px solid transparent !important;
       box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1) !important; /* shadow-md */
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important; /* hover:bg-emerald-800 transition-all duration-200 */
+      transition: color 0.2s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important; /* hover:bg-emerald-800 transition-all duration-200 */
       cursor: pointer !important;
       text-align: center !important;
       box-sizing: border-box !important;
@@ -1075,6 +1077,10 @@
     background: transparent !important;
   }
 </style>
+  <style id="perf-cls-composited-fix">
+    .material-symbols-outlined{font-family:"Material Symbols Outlined";font-weight:normal;font-style:normal;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;word-wrap:normal;direction:ltr;-webkit-font-smoothing:antialiased;width:1em;height:1em;overflow:hidden;vertical-align:middle}
+    .transition-all{transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,transform!important}
+  </style>
 </head>
 <body class="bg-[#F1F5F9] font-body-md text-body-md text-on-surface antialiased min-h-screen flex flex-col justify-between selection:bg-primary/20 selection:text-primary pt-16 sm:pt-[4.5rem]">
 
@@ -1239,7 +1245,6 @@
           if (btn) btn.setAttribute("aria-expanded", "true");
         }
       }
-
       function closeMobileMenu() {
         var drawer = document.getElementById("mobile-menu-drawer");
         var backdrop = document.getElementById("mobile-menu-backdrop");
@@ -1253,7 +1258,6 @@
           if (btn) btn.setAttribute("aria-expanded", "false");
         }
       }
-
       function toggleMobileExamAccordion() {
         var menu = document.getElementById("mobile-exam-menu");
         var chevron = document.getElementById("mobile-exam-chevron");
@@ -1270,8 +1274,6 @@
           if (btn) btn.setAttribute("aria-expanded", "true");
         }
       }
-
-      // モバイルメニュー内のアコーディオン展開時、展開部分がドロワー下部の固定CTAに隠れないよう自動スクロール
       function revealMobileMenuSection(target) {
         if (!target) return;
         var scroller = document.getElementById("mobile-menu-scroll") || target.closest(".overflow-y-auto");
@@ -1280,18 +1282,15 @@
           var sRect = scroller.getBoundingClientRect();
           var tRect = target.getBoundingClientRect();
           var visibleBottom = sRect.bottom;
-          // ドロワー下部の固定CTA（お申し込みはこちら）がスクロール領域に重なる場合はその上端を表示下限とする
           var footer = scroller.nextElementSibling;
           if (footer) visibleBottom = Math.min(visibleBottom, footer.getBoundingClientRect().top);
           var delta = tRect.bottom - (visibleBottom - 16);
           if (delta <= 0) return;
-          // セクション見出しが上に見切れない範囲でスクロール
           var maxDelta = tRect.top - sRect.top - 8;
           if (maxDelta <= 0) return;
           scroller.scrollTo({ top: scroller.scrollTop + Math.min(delta, maxDelta), behavior: "smooth" });
         });
       }
-
       function toggleMobileContactAccordion() {
         var menu = document.getElementById("mobile-contact-menu");
         var chevron = document.getElementById("mobile-contact-chevron");
@@ -1309,7 +1308,6 @@
           revealMobileMenuSection(menu.parentElement);
         }
       }
-
       function selectMobileNavExamTab(tabKey) {
         closeMobileMenu();
         var targetElem = document.getElementById("next-exam");
@@ -1330,7 +1328,6 @@
         }
         window.location.href = "/index.html?grade=" + tabKey + "#next-exam";
       }
-
       function updateStudentVoicesVisibility(tabKey) {
         var studentVoices = document.getElementById("student-voices");
         if (studentVoices) {
@@ -1342,7 +1339,6 @@
         }
       }
       window.updateStudentVoicesVisibility = updateStudentVoicesVisibility;
-
       function initExamTabFromUrl() {
         try {
           var params = new URLSearchParams(window.location.search);
@@ -1378,22 +1374,19 @@
           }
         } catch (e) {}
       }
-
       window.addEventListener("DOMContentLoaded", initExamTabFromUrl);
       window.addEventListener("load", initExamTabFromUrl);
-
       window.addEventListener("resize", function() {
         if (window.innerWidth >= 1024) {
           closeMobileMenu();
         }
       });
-
       document.addEventListener("keydown", function(e) {
         if (e.key === "Escape") {
           closeMobileMenu();
         }
       });
-    </script>
+</script>
 
   <main class="flex-1 w-full flex flex-col items-center">
     <div class="w-full max-w-7xl bg-white flex-1 min-h-full px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-12 sm:pb-16 flex flex-col justify-between">
@@ -1854,7 +1847,6 @@
       } catch (e) {}
       return new Date();
     }
-
     function getTestDateString() {
       if (typeof window.getTestDateString === 'function' && window.getTestDateString !== getTestDateString) {
         return window.getTestDateString();
@@ -1865,7 +1857,6 @@
       } catch (e) {}
       return null;
     }
-
     function parseDeadlineString(str) {
       if (!str) return null;
       if (/^\d{4}-\d{2}-\d{2}/.test(str)) {
@@ -1948,7 +1939,6 @@
         description: '偏差値や判定記号に一喜一憂するだけで終わらせない。大問・小問別の正答率マトリクスを用いた「復習すべき優先単元のあぶり出し方」を専門指導員がレクチャー。',
         eyecatch: { url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAmRNjkULsUOOKOzy90r7eDwSXDMu-2gxIid5tcWUT0Xt6aAmHtd5ArtgY23QLNFpbjzZZY2k1BZiD0FbcKBX3QTs8vKeWS0rqspoNs57V1cHZv3tG2_A8XeTFw4fOfla41IbtEu7J8a7Z_lvjMoM2il6wPFzmXjEbet5m6yCiwA4NWN6-adJPizN6QKWfaJmPANae6igs-A-kzIitvqZ8FTamMUx_LZMjfItiqpNnVexGUi9ytOcPA' }
       },
-      // microCMS 実記事フォールバック（API障害時の保険）
       'b055d-p_k7': {
         title: '【岡山県の高校受験】合格への近道はここにある！「おかもし」が受験生から支持される理由',
         category: '模試活用法',
@@ -1977,27 +1967,18 @@
         eyecatch: { url: '' }
       }
     };
-
-    // microCMS コールアウト要素 (.box-fact, .box-action, .box-warning) の正規化
-    // Shift+Enter (<br>) によるタグ分割や連続段落を1つの装飾カードに統合
     function normalizeCalloutBoxes(container) {
       if (!container) return;
       const boxClasses = ['box-fact', 'box-action', 'box-warning', 'point-box', 'attention-box', 'info-box'];
-
       boxClasses.forEach(cls => {
-        // 1. <p> や <div> 内の <span class="box-..."> などのインライン要素を親ブロックごと装飾コンテナへ昇格
         const spans = Array.from(container.querySelectorAll(`span.${cls}`));
         spans.forEach(span => {
           const parent = span.parentElement;
           if (!parent || parent === container) return;
-
-          // 親が既にいずれかのコールアウトコンテナなら span のクラスを解除
           if (boxClasses.some(c => parent.classList.contains(c))) {
             span.classList.remove(cls);
             return;
           }
-
-          // 親が段落 <p> または <div> の場合
           if (parent.tagName.toLowerCase() === 'p' || parent.tagName.toLowerCase() === 'div') {
             const hasOtherBoxClass = boxClasses.filter(c => c !== cls).some(c => parent.querySelector(`.${c}`));
             if (!hasOtherBoxClass) {
@@ -2006,7 +1987,6 @@
               while (parent.firstChild) {
                 newDiv.appendChild(parent.firstChild);
               }
-              // 新しいコンテナ内の同一クラスを解除
               newDiv.querySelectorAll(`.${cls}`).forEach(child => child.classList.remove(cls));
               if (parent.parentNode) {
                 parent.parentNode.replaceChild(newDiv, parent);
@@ -2014,15 +1994,12 @@
             }
           }
         });
-
         // 2. 連続する同一クラスのコールアウトコンテナ（<div class="box-..."> が連続する場合）を1つに統合
         const boxes = Array.from(container.querySelectorAll(`div.${cls}, p.${cls}`));
         for (let i = 0; i < boxes.length; i++) {
           const curr = boxes[i];
           if (!curr || !curr.parentNode) continue;
-
           let next = curr.nextElementSibling;
-          // 間の空要素や空白テキストをスキップ・除去
           while (next && (
             (next.tagName.toLowerCase() === 'p' && !next.textContent.trim()) ||
             (next.nodeType === 3 && !next.textContent.trim())
@@ -2031,7 +2008,6 @@
             next = next.nextElementSibling;
             emptyEl.remove();
           }
-
           if (next && next.classList.contains(cls)) {
             const br = document.createElement('br');
             curr.appendChild(br);
@@ -2044,12 +2020,9 @@
         }
       });
     }
-
-    // 3. 本文内の <h2> <h3> を自動走査してIDを付与する関数（目次表示は廃止）
     function generateTableOfContents() {
       const contentBody = document.getElementById('entry-content-body');
       if (!contentBody) return;
-
       const headings = contentBody.querySelectorAll('h2, h3');
       headings.forEach((heading, index) => {
         if (!heading.id) {
@@ -2057,32 +2030,24 @@
         }
       });
     }
-
     // 4. メタタグ・JSON-LDの動的更新
     function updatePageMetadata(post) {
       if (!post) return;
       const title = post.title + ' | 岡山県統一模擬試験（おかもし）';
       document.title = title;
-
       const breadcrumbTitle = document.getElementById('breadcrumb-current-title');
       if (breadcrumbTitle) breadcrumbTitle.textContent = post.title;
-
       const pageDesc = post.description || post.title;
       const descMeta = document.querySelector('meta[name="description"]');
       if (descMeta) descMeta.setAttribute('content', pageDesc);
-
       const ogTitle = document.querySelector('meta[property="og:title"]');
       if (ogTitle) ogTitle.setAttribute('content', title);
-
       const ogDesc = document.querySelector('meta[property="og:description"]');
       if (ogDesc) ogDesc.setAttribute('content', pageDesc);
-
       if (post.eyecatch && post.eyecatch.url) {
         const ogImg = document.querySelector('meta[property="og:image"]');
         if (ogImg) ogImg.setAttribute('content', post.eyecatch.url);
       }
-
-      // JSON-LD 更新
       const jsonLd = document.getElementById('jsonld-article');
       if (jsonLd) {
         const articleData = {
@@ -2106,8 +2071,6 @@
         jsonLd.textContent = JSON.stringify(articleData, null, 2);
       }
     }
-
-    // 画像プリロード関数（ブラウザへの読み込み完了まで待機しチラつき・Hydration Flashを防止）
     function preloadImage(src) {
       return new Promise((resolve) => {
         if (!src) return resolve(false);
@@ -2122,12 +2085,9 @@
         img.onload = () => done(true);
         img.onerror = () => done(false);
         img.src = src;
-        // 低速回線でもユーザーを待たせすぎない安全弁タイマー (1200ms)
         setTimeout(() => done(false), 1200);
       });
     }
-
-    // 記事コンテンツのフェードイン表示制御（スケルトンUIからのスムーズな切り替え）
     function showArticleContent() {
       const skeletonEl = document.getElementById('article-skeleton');
       const contentWrapper = document.getElementById('article-content-wrapper');
@@ -2139,14 +2099,11 @@
         contentWrapper.classList.remove('opacity-0');
       }
     }
-
     // 5. 記事本文・メタの画面反映
     async function renderPostDetail(post) {
       if (!post) return;
-
       const titleEl = document.getElementById('article-title');
       if (titleEl) titleEl.textContent = post.title;
-
       const leadEl = document.getElementById('article-lead');
       if (leadEl) {
         if (post.description) {
@@ -2156,27 +2113,21 @@
           leadEl.style.display = 'none';
         }
       }
-
       const catBadge = document.getElementById('article-category-badge');
       if (catBadge) {
         const catName = post.category ? (post.category.name || post.category) : 'お知らせ';
         catBadge.innerHTML = `<span class="material-symbols-outlined text-[13px]">school</span><span>${catName}</span>`;
       }
-
       const pubEl = document.getElementById('article-published-date');
       const pubDate = post.publishedAt || post.createdAt;
       if (pubEl && pubDate) {
         pubEl.textContent = new Date(pubDate).toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '.');
       }
-
-      // アイキャッチ画像のチラつき防止＆ロード待機
       const heroContainer = document.getElementById('article-hero-container');
       const heroImg = document.getElementById('article-hero-img');
       const heroTag = document.getElementById('article-hero-tag');
-
       if (heroContainer && heroImg) {
         if (post.eyecatch && post.eyecatch.url) {
-          // 画像がブラウザで完全にロードされるまで待機（一瞬のチラつき・旧画像・白枠を防止）
           await preloadImage(post.eyecatch.url);
           heroImg.src = post.eyecatch.url;
           heroImg.alt = post.title || 'ブログアイキャッチ';
@@ -2187,13 +2138,10 @@
             heroTag.textContent = catName;
           }
         } else {
-          // アイキャッチ画像が無い記事はコンテナ枠を非表示にして無駄な空白を防ぐ
           heroContainer.classList.add('hidden');
           heroImg.src = '';
         }
       }
-
-      // 本文HTMLの反映（リッチエディタのHTMLタグを流し込み）
       const contentBody = document.getElementById('entry-content-body');
       if (contentBody) {
         if (post.content) {
@@ -2201,22 +2149,15 @@
           if (typeof normalizeMp4Elements === 'function') {
             normalizeMp4Elements(contentBody);
           }
-          // microCMS出力の空段落 (<p></p>, <p><br></p>, 空白のみのp) を除去
           contentBody.querySelectorAll('p').forEach(p => {
             if (!p.textContent.trim() && (!p.children.length || (p.children.length === 1 && p.children[0].tagName === 'BR'))) {
               p.remove();
             }
           });
-
-          // microCMS コールアウトボックス (.box-fact, .box-action, .box-warning) の正規化
-          // Shift+Enter (<br>) によるタグ分割を1つの装飾ボックスに統合
           normalizeCalloutBoxes(contentBody);
-
-          // 記事末尾の案内リンク（おかもし日程一覧・申込等）のボタンカード化
           const candidates = Array.from(contentBody.querySelectorAll('p, a, li, div'));
           let scheduleTarget = null;
           let applyTarget = null;
-
           for (const el of candidates) {
             const rawText = el.textContent.trim().replace(/\s+/g, '');
             if (rawText === 'おかもし日程一覧' || rawText === 'おかもし日程一覧を見る') {
@@ -2227,11 +2168,9 @@
               if (!applyTarget) applyTarget = target;
             }
           }
-
           if (scheduleTarget || applyTarget) {
             const btnContainer = document.createElement('div');
             btnContainer.className = 'not-prose my-6 grid grid-cols-1 sm:grid-cols-2 gap-3.5';
-
             if (scheduleTarget) {
               const scheduleLink = scheduleTarget.querySelector('a')?.getAttribute('href') || 'index.html#schedule';
               const scheduleCard = document.createElement('a');
@@ -2248,7 +2187,6 @@
               `;
               btnContainer.appendChild(scheduleCard);
             }
-
             if (applyTarget) {
               const applyLink = applyTarget.querySelector('a')?.getAttribute('href') || '/apply';
               const applyCard = document.createElement('a');
@@ -2265,7 +2203,6 @@
               `;
               btnContainer.appendChild(applyCard);
             }
-
             const insertRef = scheduleTarget || applyTarget;
             if (insertRef && insertRef.parentNode) {
               insertRef.parentNode.insertBefore(btnContainer, insertRef);
@@ -2274,7 +2211,6 @@
             if (applyTarget && applyTarget.parentNode) applyTarget.remove();
           }
         } else {
-          // フォールバック時: 本文なしの場合は焼き込み本文を隠してプレースホルダー表示
           contentBody.innerHTML = `
             <section class="flex flex-col gap-space-md">
               <p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
@@ -2288,23 +2224,14 @@
           `;
         }
       }
-
-      // 目次の再生成
       generateTableOfContents();
-      // メタタグ更新
       updatePageMetadata(post);
-
-      // 全データおよびアイキャッチ画像の準備が完了したタイミングでスケルトンを消してフェードイン表示
       showArticleContent();
     }
-
-    // 6. microCMS から記事詳細を取得
     async function loadArticleDetail() {
       const params = new URLSearchParams(window.location.search);
       const articleId = params.get('id');
       const draftKey = params.get('draftKey');
-
-      // 下書きプレビュー時は検索エンジンにインデックスされないよう noindex を付与
       if (draftKey) {
         let robotsMeta = document.querySelector('meta[name="robots"]');
         if (!robotsMeta) {
@@ -2314,12 +2241,10 @@
         }
         robotsMeta.content = 'noindex, nofollow';
       }
-
       const hasMicroCMSConfig = MICROCMS_CONFIG.serviceDomain &&
                                 MICROCMS_CONFIG.serviceDomain !== 'YOUR_SERVICE_DOMAIN' &&
                                 MICROCMS_CONFIG.apiKey &&
                                 MICROCMS_CONFIG.apiKey !== 'YOUR_API_KEY';
-
       if (articleId && hasMicroCMSConfig) {
         try {
           let url = `https://${MICROCMS_CONFIG.serviceDomain}.microcms.io/api/v1/${MICROCMS_CONFIG.endpoint}/${articleId}`;
@@ -2332,8 +2257,6 @@
           if (res.ok) {
             const post = await res.json();
             await renderPostDetail(post);
-
-            // 下書きプレビュー時はヘッダーにバッジを表示
             if (draftKey) {
               const badgesContainer = document.getElementById('article-badges-container');
               if (badgesContainer && !document.getElementById('article-draft-badge')) {
@@ -2344,7 +2267,6 @@
                 badgesContainer.appendChild(previewBadge);
               }
             }
-
             loadRelatedArticles(post, articleId);
             return;
           }
@@ -2352,14 +2274,11 @@
           console.warn('microCMS detail fetch failed, falling back:', err);
         }
       }
-
-      // フォールバック処理
       if (articleId && DETAIL_FALLBACK_POSTS[articleId]) {
         const post = DETAIL_FALLBACK_POSTS[articleId];
         await renderPostDetail(post);
         loadRelatedArticles(post, articleId);
       } else if (articleId) {
-        // IDはあるがフォールバックにも存在しない場合（404表示）
         const skeletonEl = document.getElementById('article-skeleton');
         if (skeletonEl) skeletonEl.style.display = 'none';
         const contentWrapper = document.getElementById('article-content-wrapper');
@@ -2376,7 +2295,6 @@
         if (titleEl) titleEl.textContent = '記事が見つかりませんでした';
         loadRelatedArticles(null, articleId);
       } else {
-        // ID未指定：デフォルト記事をレンダリングしてフェードイン
         const defaultPost = DETAIL_FALLBACK_POSTS['leoodvgmoet'] || Object.values(DETAIL_FALLBACK_POSTS)[0];
         if (defaultPost) {
           await renderPostDetail(defaultPost);
@@ -2386,20 +2304,16 @@
         }
       }
     }
-
     // 関連記事の動的取得と描画 (microCMS API連動)
     async function loadRelatedArticles(currentPost, currentArticleId) {
       const section = document.getElementById('related-articles-section');
       const grid = document.getElementById('related-articles-grid');
       if (!section || !grid) return;
-
       const domain = (typeof MICROCMS_CONFIG !== 'undefined' && MICROCMS_CONFIG.serviceDomain) || 'okamoshi-blog';
       const apiKey = (typeof MICROCMS_CONFIG !== 'undefined' && MICROCMS_CONFIG.apiKey) || '';
       const endpoint = (typeof MICROCMS_CONFIG !== 'undefined' && MICROCMS_CONFIG.endpoint) || 'blogs';
-
       const hasMicroCMS = domain && domain !== 'YOUR_SERVICE_DOMAIN' && apiKey && apiKey !== 'YOUR_API_KEY';
       let relatedPosts = [];
-
       let categoryId = null;
       if (currentPost && currentPost.category) {
         if (typeof currentPost.category === 'object' && currentPost.category.id) {
@@ -2408,9 +2322,7 @@
           categoryId = currentPost.category;
         }
       }
-
       if (hasMicroCMS) {
-        // 1. 同カテゴリの記事を取得
         if (categoryId) {
           try {
             const catUrl = `https://${domain}.microcms.io/api/v1/${endpoint}?filters=category[equals]${encodeURIComponent(categoryId)}&orders=-publishedAt&limit=5`;
@@ -2425,7 +2337,6 @@
             console.warn('Failed to fetch category related posts:', e);
           }
         }
-
         // 2. 3件未満の場合は、カテゴリ指定を外して全記事から最新順で補填取得
         if (relatedPosts.length < 3) {
           try {
@@ -2448,8 +2359,6 @@
           }
         }
       }
-
-      // 3. microCMSで0件の場合、モック・フォールバック記事から補填
       if (relatedPosts.length === 0 && typeof DETAIL_FALLBACK_POSTS !== 'undefined') {
         const fallbackKeys = Object.keys(DETAIL_FALLBACK_POSTS);
         for (const key of fallbackKeys) {
@@ -2465,14 +2374,10 @@
           if (relatedPosts.length >= 3) break;
         }
       }
-
-      // 該当記事が1件もない場合は関連記事エリア全体を非表示
       if (relatedPosts.length === 0) {
         section.style.display = 'none';
         return;
       }
-
-      // NEWバッジ判定（現在日時から10日以内）
       function isNewArticle(dateString) {
         if (!dateString) return false;
         let pubDate = new Date(dateString);
@@ -2488,8 +2393,6 @@
         const diffDays = diffMs / (1000 * 60 * 60 * 24);
         return diffDays >= -1 && diffDays <= 10;
       }
-
-      // カテゴリに応じたバッジスタイル決定
       function getCategoryBadgeClass(categoryText, fallbackClass) {
         if (fallbackClass) return fallbackClass;
         if (!categoryText) return 'bg-surface-container-high text-on-surface-variant';
@@ -2504,7 +2407,6 @@
         }
         return 'bg-primary-container text-on-primary-container';
       }
-
       const cardsHtml = relatedPosts.slice(0, 3).map(item => {
         const categoryName = (item.category && item.category.name) || (typeof item.category === 'string' ? item.category : '模試情報');
         let badgeCls = 'bg-[#e8f5ee] text-[#134230] border border-[#a1d1b8]';
@@ -2517,11 +2419,9 @@
         const publishedDate = formatArticleDate(rawDate);
         const isNew = isNewArticle(rawDate);
         const detailHref = `/news/${encodeURIComponent(item.id)}/`;
-
-        const newBadgeHtml = isNew 
-          ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#c85a32] text-white shadow-xs shrink-0 tracking-tight leading-none text-center">NEW</span>` 
+        const newBadgeHtml = isNew
+          ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#c85a32] text-white shadow-xs shrink-0 tracking-tight leading-none text-center">NEW</span>`
           : '';
-
         return `
           <!-- 記事カード (${item.id}) -->
           <article class="bg-slate-50 rounded-lg border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all mb-3 overflow-hidden cursor-pointer group block" data-category="${categoryName}">
@@ -2553,11 +2453,9 @@
           </article>
         `;
       }).join('');
-
       grid.innerHTML = cardsHtml;
       section.style.display = '';
     }
-
     function formatArticleDate(dateStr) {
       if (!dateStr) return '';
       try {
@@ -2571,8 +2469,6 @@
         return String(dateStr).substring(0, 10).replace(/-/g, '.');
       }
     }
-
-    // 7. ヘッダードロップダウン & SPメニュー
     function toggleNextExamDropdown(event) {
       event.stopPropagation();
       const dropdown = document.getElementById('nav-next-exam-dropdown');
@@ -2582,7 +2478,6 @@
       dropdown.classList.toggle('hidden', isOpen);
       if (chevron) chevron.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
     }
-
     function toggleMobileMenu() {
       const menu = document.getElementById('mobile-menu');
       const icon = document.getElementById('mobile-menu-icon');
@@ -2591,11 +2486,9 @@
       menu.classList.toggle('hidden', isOpen);
       if (icon) icon.textContent = isOpen ? 'menu' : 'close';
     }
-
     function selectNavExamTab(examId) {
       window.location.href = `/index.html#exam-tabs-section`;
     }
-
     document.addEventListener('click', function(e) {
       const container = document.getElementById('nav-next-exam-container');
       const dropdown = document.getElementById('nav-next-exam-dropdown');
@@ -2605,7 +2498,7 @@
         if (chevron) chevron.style.transform = 'rotate(0deg)';
       }
     });
-  </script>
+</script>
 <script id="header-navigation-script">
   function toggleNextExamDropdown(event) {
     if (event) event.stopPropagation();
@@ -2625,7 +2518,6 @@
       if (btn) btn.setAttribute('aria-expanded', 'true');
     }
   }
-
   function closeNextExamDropdown() {
     var dropdown = document.getElementById('nav-next-exam-dropdown');
     var chevron = document.getElementById('nav-next-exam-chevron');
@@ -2636,7 +2528,6 @@
       if (btn) btn.setAttribute('aria-expanded', 'false');
     }
   }
-
   function toggleContactDropdown(event) {
     if (event) event.stopPropagation();
     closeNextExamDropdown();
@@ -2651,7 +2542,6 @@
       if (btn) btn.setAttribute('aria-expanded', 'true');
     }
   }
-
   function closeContactDropdown() {
     var container = document.getElementById('nav-contact-container');
     var btn = document.getElementById('nav-contact-btn');
@@ -2660,7 +2550,6 @@
       if (btn) btn.setAttribute('aria-expanded', 'false');
     }
   }
-
   document.addEventListener('click', function(e) {
     var examContainer = document.getElementById('nav-next-exam-container');
     if (examContainer && !examContainer.contains(e.target)) {
@@ -2671,7 +2560,6 @@
       closeContactDropdown();
     }
   });
-
   function selectNavExamTab(tabKey) {
     closeNextExamDropdown();
     if (typeof switchExamTab === 'function') {
@@ -2684,12 +2572,10 @@
       window.location.href = '/index.html?tab=' + tabKey + '#next-exam';
     }
   }
-
   function buildMp4VideoPlayerHtml(videoUrl) {
     var safeUrl = String(videoUrl || '').trim().replace(/"/g, '&quot;');
-    return '<div style="text-align: center; margin: 1.5rem 0;"><video controls playsinline preload="metadata" style="width: 100%; max-width: 360px; border-radius: 12px; display: block; margin: 0 auto; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" src="' + safeUrl + '"></video></div>';
+    return '<div style="text-align: center; margin: 1.5rem 0;"><video controls playsinline preload="none" style="width: 100%; max-width: 360px; border-radius: 12px; display: block; margin: 0 auto; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" src="' + safeUrl + '"></video></div>';
   }
-
   function convertMp4EmbedsHtml(rawHtml) {
     if (!rawHtml || !/\.mp4/i.test(rawHtml)) return rawHtml || '';
     var html = String(rawHtml);
@@ -2710,7 +2596,6 @@
     });
     return html;
   }
-
   function normalizeMp4Elements(container) {
     if (!container) return;
     var links = Array.from(container.querySelectorAll('a[href*=".mp4"], iframe[src*=".mp4"]'));
@@ -2738,7 +2623,6 @@
       }
     });
   }
-
   document.addEventListener('DOMContentLoaded', function() {
     var bodyEl = document.getElementById('entry-content-body');
     if (bodyEl) normalizeMp4Elements(bodyEl);

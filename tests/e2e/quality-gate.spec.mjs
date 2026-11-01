@@ -591,13 +591,75 @@ test(
     await expect(page.locator('#formErrorMessageText')).toContainText('学年をお選びください');
 
     // ----------------------------------------------------------------
-    // 3. 学年・模試・会場セレクトボックスの動的連動検証
+    // 3. 学年・模試・会場セレクトボックスの動的連動検証 ＆ 在籍小中学校名ラベル・プレースホルダー統一検証
     // ----------------------------------------------------------------
+    const schoolLabel = page.locator('label[for="currentSchool"]');
+    const schoolInput = page.locator('#currentSchool');
+    const EXPECTED_SCHOOL_PLACEHOLDER = '在籍校を入力（学校名を入力すると候補が表示されます）';
+
+    // 初期状態（学年選択前）
+    await expect(schoolLabel, '初期状態でラベルが「在籍小中学校名」であること').toHaveText('在籍小中学校名');
+    await expect(schoolInput, '初期状態でプレースホルダーが統一文言であること').toHaveAttribute('placeholder', EXPECTED_SCHOOL_PLACEHOLDER);
+
     await page.locator('#grade-btn-sho6').click();
     await expect(page.locator('#examOptionGroup')).toContainText('岡山県適性検査対策模試');
+    await expect(schoolLabel, '小6選択時もラベルが「在籍小中学校名」で固定されていること').toHaveText('在籍小中学校名');
+    await expect(schoolInput, '小6選択時もプレースホルダーが統一文言であること').toHaveAttribute('placeholder', EXPECTED_SCHOOL_PLACEHOLDER);
 
     await page.locator('#grade-btn-chu3').click();
     await expect(page.locator('#examOptionGroup')).toContainText('岡山県統一模擬試験');
+    await expect(schoolLabel, '中3選択時もラベルが「在籍小中学校名」で固定されていること').toHaveText('在籍小中学校名');
+    await expect(schoolInput, '中3選択時もプレースホルダーが統一文言であること').toHaveAttribute('placeholder', EXPECTED_SCHOOL_PLACEHOLDER);
+
+    // スマホ・PCでの在籍小中学校名ヘッダーレイアウト＆プレースホルダー文字切れゼロ検証
+    const schoolLayoutMetrics = await page.evaluate(() => {
+      const labelEl = document.querySelector('label[for="currentSchool"]');
+      const badgeEl = labelEl?.parentElement?.querySelector('span');
+      const scopeEl = document.getElementById('schoolScopeContainer');
+      const inputEl = document.getElementById('currentSchool');
+      if (!labelEl || !badgeEl || !scopeEl || !inputEl) return null;
+
+      const labelRect = labelEl.getBoundingClientRect();
+      const badgeRect = badgeEl.getBoundingClientRect();
+      const scopeRect = scopeEl.getBoundingClientRect();
+      const inputRect = inputEl.getBoundingClientRect();
+      const vw = document.documentElement.clientWidth;
+
+      const inputCs = getComputedStyle(inputEl);
+      const phCs = getComputedStyle(inputEl, '::placeholder');
+      const padL = parseFloat(inputCs.paddingLeft) || 0;
+      const padR = parseFloat(inputCs.paddingRight) || 0;
+      const availableInnerWidth = inputEl.clientWidth - padL - padR;
+
+      const phFontSize = phCs.fontSize && parseFloat(phCs.fontSize) > 0 ? phCs.fontSize : inputCs.fontSize;
+      const phFontFamily = phCs.fontFamily || inputCs.fontFamily;
+      const phFontWeight = phCs.fontWeight || inputCs.fontWeight;
+      const letterSpacingPx = parseFloat(phCs.letterSpacing) || 0;
+      const text = inputEl.getAttribute('placeholder') || '';
+
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      ctx.font = `${phFontWeight} ${phFontSize} ${phFontFamily}`;
+      const rawTextWidth = ctx.measureText(text).width + letterSpacingPx * Math.max(0, text.length - 1);
+
+      return {
+        vw,
+        sameRow: Math.abs(labelRect.top - scopeRect.top) < 16,
+        noOverlap: badgeRect.right <= scopeRect.left + 1,
+        withinViewport: scopeRect.right <= vw - 8 && inputRect.right <= vw - 8,
+        availableInnerWidth: Math.round(availableInnerWidth * 10) / 10,
+        placeholderTextWidth: Math.round(rawTextWidth * 10) / 10,
+        phFontSize,
+      };
+    });
+    expect(schoolLayoutMetrics).not.toBeNull();
+    expect(schoolLayoutMetrics.sameRow, '「在籍小中学校名」「必須」「岡山県内 / 県外・全国」が1行に美しく収まっていること').toBe(true);
+    expect(schoolLayoutMetrics.noOverlap, '「必須」バッジと「岡山県内 / 県外・全国」タブが重なっていないこと').toBe(true);
+    expect(schoolLayoutMetrics.withinViewport, '要素が画面幅内に収まっていること').toBe(true);
+    expect(
+      schoolLayoutMetrics.placeholderTextWidth,
+      `プレースホルダー全文（${schoolLayoutMetrics.placeholderTextWidth}px）が入力欄内側幅（${schoolLayoutMetrics.availableInnerWidth}px）に切れずに収まっていること`
+    ).toBeLessThanOrEqual(schoolLayoutMetrics.availableInnerWidth);
 
     // 学年選択済み・模試未選択の状態で送信すると模試選択エラーが出ること
     await submitBtn.click();

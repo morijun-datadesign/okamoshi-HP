@@ -256,6 +256,9 @@ for (const pg of ACTIVE_PAGES) {
           jumps: [...new Set(jumps)],
           noAlt: [...document.images].filter((i) => !i.hasAttribute('alt')).map((i) => i.getAttribute('src')),
           lang: document.documentElement.lang,
+          faviconSvg: document.querySelector('link[rel="icon"][type="image/svg+xml"]')?.getAttribute('href') || '',
+          faviconPng: document.querySelector('link[rel="icon"][type="image/png"][sizes="32x32"]')?.getAttribute('href') || '',
+          appleTouchIcon: document.querySelector('link[rel="apple-touch-icon"][sizes="180x180"]')?.getAttribute('href') || '',
         };
       });
       expect(seo.title, '<title>').not.toBe('');
@@ -264,6 +267,9 @@ for (const pg of ACTIVE_PAGES) {
       expect(seo.ogDescription, 'og:description').not.toBe('');
       expect(seo.ogImage, 'og:image').not.toBe('');
       expect(seo.lang, '<html lang>').toBe('ja');
+      expect(seo.faviconSvg, 'SVGファビコン設定').toBe('/favicon.svg');
+      expect(seo.faviconPng, '32x32 PNGファビコン設定').toBe('/favicon-32x32.png');
+      expect(seo.appleTouchIcon, 'apple-touch-icon設定').toBe('/apple-touch-icon.png');
       expect(seo.h1, '表示中の <h1> はページに1つ').toBe(1);
       expect(seo.jumps, '見出し階層の飛び（例: h2→h4）').toEqual([]);
       expect(seo.noAlt, 'alt 属性のない画像').toEqual([]);
@@ -787,7 +793,7 @@ test(
 test('内部リンク切れゼロ', async ({ request }, testInfo) => {
   test.skip(testInfo.project.name !== 'pc-1280', 'PCプロジェクトのみで実行');
   test.skip(ACTIVE_PAGES.length === 0, 'ページ検査対象なし');
-  const targets = new Map();
+  const targets = new Map([['/favicon.ico', '/']]);
   for (const pg of ACTIVE_PAGES) {
     const resp = await request.get(pg.path);
     const basePath = new URL(resp.url()).pathname; // /contact → /contact/ のようなリダイレクト後のURLを基準に相対リンクを解決

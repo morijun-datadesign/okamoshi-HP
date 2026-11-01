@@ -321,6 +321,20 @@ def html_escape(text):
         return ""
     return str(text).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;").replace("'", "&#39;")
 
+FAVICON_BLOCK = """  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">"""
+
+def ensure_favicon_links(html):
+    """<head> 内にファビコン定義が含まれていない場合は </title> の直後に挿入する"""
+    if 'href="/favicon.svg"' in html:
+        return html
+    if '</title>' in html:
+        return html.replace('</title>', f'</title>\n{FAVICON_BLOCK}', 1)
+    if '<head>' in html:
+        return html.replace('<head>', f'<head>\n{FAVICON_BLOCK}', 1)
+    return html
+
 def render_sidebar_exam_widget(exam_guides=None):
     """サイドバー模試ウィジェットの静的HTML事前生成"""
     target_configs = [
@@ -616,7 +630,7 @@ def build_article_detail_page(article, all_articles, template_html, exam_guides)
     html = re.sub(r'<script defer src="/?js/microcms-config\.js"></script>', '', html)
     html = re.sub(r'<script>\s*// 2\. モック記事データ.*?</script>', '', html, flags=re.DOTALL)
 
-    return html
+    return ensure_favicon_links(html)
 
 def update_top_page(articles, rel_path="index.html"):
     """トップページ（index.html）/ LP（lp/index.html）の最新お知らせ枠を事前レンダリング & クライアントfetch廃止"""
@@ -677,6 +691,7 @@ def update_top_page(articles, rel_path="index.html"):
         content = init_func_pattern.sub(replacement_init, content)
         print(f"Replaced {rel_path} client fetch with inline SSG article data.")
 
+    content = ensure_favicon_links(content)
     with open(index_path, "w", encoding="utf-8") as f:
         f.write(content)
 
@@ -722,6 +737,7 @@ def update_news_index_page(articles):
         content = script_block_reg.sub('', content)
         print("Removed client fetch script and API keys from news.html.")
 
+    content = ensure_favicon_links(content)
     # news.html を書き出し
     with open(news_path, "w", encoding="utf-8") as f:
         f.write(content)

@@ -60,7 +60,7 @@ for (const f of allFiles) {
 // Cloudflare Pages は "." 全体を公開するため、公開不要なファイルは _redirects で 404 遮断されている必要がある
 const PUBLIC = [
   /\.html$/, /^css\/style\.min\.css$/, /^js\/.+\.js$/, /^images\//, /^robots\.txt$/, /^sitemap\.xml$/,
-  /^og-image\.jpg$/, /^hero-banner\.jpg$/, /^_redirects$/, /^_headers$/, /^favicon\./,
+  /^og-image\.jpg$/, /^hero-banner\.jpg$/, /^_redirects$/, /^_headers$/, /^favicon\./, /^favicon-32x32\.png$/, /^apple-touch-icon\.png$/,
 ];
 const redirectRules = fs.readFileSync('_redirects', 'utf8').split('\n')
   .map((l) => l.trim()).filter((l) => l && !l.startsWith('#'))

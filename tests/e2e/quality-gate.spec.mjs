@@ -889,3 +889,38 @@ test('内部リンク切れゼロ', async ({ request }, testInfo) => {
   }
   expect(brokenLinks, `リンク切れ（全 ${targets.size} 件中）`).toEqual([]);
 });
+
+// ---- 旧サイト（旧WordPress等）URLの301リダイレクト＆404.htmlからトップページ(/)への即時自動転送検査
+test('旧サイトURLの301リダイレクト＆未定義URLからトップページ(/)への自動転送', async ({ page, request }, testInfo) => {
+  test.skip(testInfo.project.name !== 'pc-1280', 'PCプロジェクトのみで実行');
+
+  // 1. _redirects に定義された旧WordPress等のパターンが 301 で / へリダイレクトされること
+  const legacyRedirectPaths = [
+    '/2024/05/old-post/',
+    '/category/news/',
+    '/tag/exam/',
+    '/wp-admin/',
+    '/wp-login.php',
+    '/feed/',
+    '/school-list/try-hirajima',
+  ];
+  for (const oldPath of legacyRedirectPaths) {
+    const res = await request.get(oldPath, { maxRedirects: 0 });
+    expect(res.status(), `${oldPath} が 301 リダイレクトを返すこと`).toBe(301);
+    expect(res.headers()['location'], `${oldPath} の Location ヘッダーが / であること`).toBe('/');
+  }
+
+  // 2. 404.html の中身に meta refresh・window.location.replace('/')・リニューアル案内文言が含まれていること
+  const notFoundRes = await request.get('/non-existent-legacy-page-xyz', { maxRedirects: 0 });
+  expect(notFoundRes.status(), '未定義URLのHTTPステータスは404であること').toBe(404);
+  const notFoundHtml = await notFoundRes.text();
+  expect(notFoundHtml).toContain('<meta http-equiv="refresh" content="0; url=/">');
+  expect(notFoundHtml).toContain("window.location.replace('/')");
+  expect(notFoundHtml).toContain('公式サイトをリニューアルしました。トップページへ移動します…');
+
+  // 3. 実ブラウザで存在しない旧URLにアクセスした際、即座にトップページ (/) へ自動転送されること
+  await setupPage(page);
+  await page.goto('/old-unknown-bookmark-url-12345', { waitUntil: 'domcontentloaded' });
+  await page.waitForURL((u) => u.pathname === '/' || u.pathname === '/index.html', { timeout: 5000 });
+  expect(new URL(page.url()).pathname).toBe('/');
+});

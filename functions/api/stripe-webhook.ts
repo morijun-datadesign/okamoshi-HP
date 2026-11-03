@@ -9,7 +9,13 @@ import {
   getAdminEmail,
 } from "../_shared/env";
 import { jsonResponse } from "../_shared/http";
-import { ExamRecord, recordsFromMetadata, detectExamType, getExamBrandTitle } from "../_shared/exam";
+import {
+  ExamRecord,
+  recordsFromMetadata,
+  extractExamNamesFromMetadata,
+  detectExamType,
+  getExamBrandTitle,
+} from "../_shared/exam";
 import { fetchCheckoutSession, fetchPaymentIntent, verifyStripeWebhookSignature, checkRecentPaidSession } from "../_shared/stripe";
 import { sendResendEmail } from "../_shared/resend";
 import { extractKonbiniInfo, KonbiniInfo, EMPTY_KONBINI, formatJst } from "../_shared/konbini";
@@ -26,7 +32,8 @@ const LEDGER_STATUS = {
 const EVENT_COMPLETED = "checkout.session.completed";
 const EVENT_ASYNC_SUCCEEDED = "checkout.session.async_payment_succeeded";
 const EVENT_ASYNC_FAILED = "checkout.session.async_payment_failed";
-const HANDLED_EVENTS = [EVENT_COMPLETED, EVENT_ASYNC_SUCCEEDED, EVENT_ASYNC_FAILED];
+const EVENT_EXPIRED = "checkout.session.expired";
+const HANDLED_EVENTS = [EVENT_COMPLETED, EVENT_ASYNC_SUCCEEDED, EVENT_ASYNC_FAILED, EVENT_EXPIRED];
 
 export const onRequestPost: PagesFunction<Env> = async (context) => {
   try {
@@ -140,10 +147,15 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
         return jsonResponse({ received: true, ignored: "session_not_paid" });
       }
     } else {
+      // EVENT_ASYNC_FAILED または EVENT_EXPIRED
+      if (!isKonbini) {
+        console.log(`${LOG} ${eventType} for non-konbini session ${sessionId}. Ignored.`);
+        return jsonResponse({ received: true, ignored: "non_konbini_expired" });
+      }
       action = "update";
       ledgerStatus = LEDGER_STATUS.EXPIRED;
       if (sessionPaymentStatus === "paid") {
-        console.warn(`${LOG} async_payment_failed but session ${sessionId} is paid. Ignored.`);
+        console.warn(`${LOG} ${eventType} but session ${sessionId} is paid. Ignored.`);
         return jsonResponse({ received: true, ignored: "session_already_paid" });
       }
     }
@@ -206,17 +218,36 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const examNameVal = String(metadata.exam_name || "岡山県統一模擬試験").trim();
     const remarksVal = String(metadata.remarks || "").trim().slice(0, 300);
 
-    // 4-2. 重複決済ガード（コンビニ支払期限切れ時、同一生徒または同一メールで直近7日以内に決済完了があるか確認）
+    // 1模試＝1レコード
+    const parsedRecords = recordsFromMetadata(metadata);
+    const examRecords: ExamRecord[] = parsedRecords.length > 0
+      ? parsedRecords
+      : [{ id: "", label: examNameVal, issue: "", title: examNameVal, venue: venueName, price: amountVal, date: "" }];
+    const targetExamNames = extractExamNamesFromMetadata(metadata, examNameVal);
+    const examType = detectExamType(examRecords, examNameVal, grade, String(metadata.exam_type || ""));
+    const examBrandTitle = getExamBrandTitle(examType);
+    const subjectPrefix = examType === "tekisei" ? "【岡山県適性検査対策模試】" : "【岡山県統一模擬試験】";
+
+    // 4-2. 重複決済ガード（コンビニ支払期限切れ時、「同一生徒 ＋ 同一メールアドレス ＋ 同一の対象模試」で別セッションの paid があるか確認）
+    // ※ 複数模試の同時申込セッションが期限切れになった場合は、含まれるすべての模試が別セッションで paid の場合のみ true となる
     let isAlreadyPaidByOther = false;
     let otherPaidSessionId = "";
-    if (eventType === EVENT_ASYNC_FAILED) {
+    if (ledgerStatus === LEDGER_STATUS.EXPIRED) {
       try {
-        const checkRes = await checkRecentPaidSession(emailVal, studentFullName, stripeSecretKey, sessionId, 7, LOG);
+        const checkRes = await checkRecentPaidSession(
+          emailVal,
+          studentFullName,
+          targetExamNames,
+          stripeSecretKey,
+          sessionId,
+          14,
+          LOG
+        );
         if (checkRes.hasPaid) {
           isAlreadyPaidByOther = true;
           otherPaidSessionId = checkRes.matchedSessionId || "";
           console.log(
-            `${LOG} [DuplicateGuard] Detected recent paid session (${otherPaidSessionId}) for student="${studentFullName}" email="${emailVal}". Skipping EXPIRED ledger update.`
+            `${LOG} [DuplicateGuard] Detected paid session(s) (${otherPaidSessionId}) for student="${studentFullName}" email="${emailVal}" exams="${targetExamNames.join(" / ")}". Applicant expired email will be skipped (GAS status update to EXPIRED will still proceed).`
           );
         }
       } catch (checkErr) {
@@ -224,88 +255,71 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       }
     }
 
-    // 1模試＝1レコード
-    const parsedRecords = recordsFromMetadata(metadata);
-    const examRecords: ExamRecord[] = parsedRecords.length > 0
-      ? parsedRecords
-      : [{ id: "", label: examNameVal, issue: "", title: examNameVal, venue: venueName, price: amountVal, date: "" }];
-    const examType = detectExamType(examRecords, examNameVal, grade, String(metadata.exam_type || ""));
-    const examBrandTitle = getExamBrandTitle(examType);
-    const subjectPrefix = examType === "tekisei" ? "【岡山県適性検査対策模試】" : "【岡山県統一模擬試験】";
-
     // 5. GAS へ送信
+    // ※ 別セッションで paid が確認された場合（isAlreadyPaidByOther === true）でも、
+    //    GAS側の updateStatus_ は session_id 完全一致で該当行のみを「期限切れ」に更新し、
+    //    放置された古いコンビニ申込の行が台帳上で「未入金」のまま残るのを防ぐため、スキップせず必ず実行する。
     let gasResult: Record<string, any> = {};
     let gasOk = false;
 
-    if (isAlreadyPaidByOther) {
-      gasOk = true;
-      gasResult = {
-        status: "skipped",
-        message: `別決済（セッション: ${otherPaidSessionId}）にて決済完了済みのため台帳更新をスキップしました`,
-      };
-      console.log(`${LOG} GAS forward skipped: already paid in other session ${otherPaidSessionId}`);
-    } else {
-      const gasPayload = {
-        action,
-        token: gasSecret || undefined,
-        event_type: eventType,
-        event_id: String(event?.id || ""),
-        session_id: sessionId,
-        payment_status: ledgerStatus,
-        payment_method: paymentMethodVal,
-        payment_method_label: paymentMethodLabel,
-        received_at: jstReceivedAt,
-        konbini_customer_number: konbini.customerNumber,
-        konbini_confirmation_number: konbini.confirmationNumber,
-        konbini_voucher_url: konbini.voucherUrl,
-        konbini_expires_at: konbini.expiresAt,
-        student_name: studentFullName,
-        student_kana: studentKana,
-        grade,
-        school_name: schoolName,
-        parent_name: parentName,
-        parent_kana: parentKana,
-        email: emailVal,
-        phone: phoneVal,
-        postal_code: postalCodeVal,
-        prefecture: prefVal,
-        city: cityVal,
-        address_line1: addr1Val,
-        address_line2: addr2Val,
-        address: fullAddress,
-        remarks: remarksVal,
-        total_amount: amountVal,
-        records: examRecords.map((r) => ({
-          exam_id: r.id,
-          exam_name: r.label,
-          venue_name: r.venue,
-          price: r.price,
-          issue_name: r.issue,
-          exam_date: r.date,
-        })),
-      };
+    const gasPayload = {
+      action,
+      token: gasSecret || undefined,
+      event_type: eventType,
+      event_id: String(event?.id || ""),
+      session_id: sessionId,
+      payment_status: ledgerStatus,
+      payment_method: paymentMethodVal,
+      payment_method_label: paymentMethodLabel,
+      received_at: jstReceivedAt,
+      konbini_customer_number: konbini.customerNumber,
+      konbini_confirmation_number: konbini.confirmationNumber,
+      konbini_voucher_url: konbini.voucherUrl,
+      konbini_expires_at: konbini.expiresAt,
+      student_name: studentFullName,
+      student_kana: studentKana,
+      grade,
+      school_name: schoolName,
+      parent_name: parentName,
+      parent_kana: parentKana,
+      email: emailVal,
+      phone: phoneVal,
+      postal_code: postalCodeVal,
+      prefecture: prefVal,
+      city: cityVal,
+      address_line1: addr1Val,
+      address_line2: addr2Val,
+      address: fullAddress,
+      remarks: remarksVal,
+      total_amount: amountVal,
+      records: examRecords.map((r) => ({
+        exam_id: r.id,
+        exam_name: r.label,
+        venue_name: r.venue,
+        price: r.price,
+        issue_name: r.issue,
+        exam_date: r.date,
+      })),
+    };
 
-      try {
-        console.log(`${LOG} Forwarding to GAS: action=${action} status=${ledgerStatus} records=${examRecords.length} session=${sessionId}`);
-        const gasRes = await fetch(gasUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json", "User-Agent": "Okamoshi-StripeWebhook/1.0" },
-          body: JSON.stringify(gasPayload),
-          redirect: "follow",
-        });
-        gasResult = ((await gasRes.json().catch(() => null)) as Record<string, any>) || { status: "error", message: `non-JSON response (HTTP ${gasRes.status})` };
-        gasOk = gasRes.ok && gasResult.status === "success";
-        if (!gasOk) console.error(`${LOG} GAS error:`, gasRes.status, JSON.stringify(gasResult));
-      } catch (gErr) {
-        gasResult = { status: "error", message: String(gErr) };
-        console.error(`${LOG} GAS request failed:`, gErr);
-      }
+    try {
+      console.log(`${LOG} Forwarding to GAS: action=${action} status=${ledgerStatus} records=${examRecords.length} session=${sessionId}`);
+      const gasRes = await fetch(gasUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "User-Agent": "Okamoshi-StripeWebhook/1.0" },
+        body: JSON.stringify(gasPayload),
+        redirect: "follow",
+      });
+      gasResult = ((await gasRes.json().catch(() => null)) as Record<string, any>) || { status: "error", message: `non-JSON response (HTTP ${gasRes.status})` };
+      gasOk = gasRes.ok && gasResult.status === "success";
+      if (!gasOk) console.error(`${LOG} GAS error:`, gasRes.status, JSON.stringify(gasResult));
+    } catch (gErr) {
+      gasResult = { status: "error", message: String(gErr) };
+      console.error(`${LOG} GAS request failed:`, gErr);
     }
 
     const gasSummary = gasOk
-      ? (isAlreadyPaidByOther
-          ? `スキップ（※別セッション ${otherPaidSessionId} にて決済完了済みのため台帳更新をスキップ）`
-          : `連携成功（${action === "create" ? `作成 ${gasResult.created ?? 0} 行${gasResult.skipped ? "・登録済みのためスキップ" : ""}` : `更新 ${gasResult.updated ?? 0} 行${gasResult.fallback_created ? "・該当行が無いため新規作成" : ""}`}）`)
+      ? `連携成功（${action === "create" ? `作成 ${gasResult.created ?? 0} 行${gasResult.skipped ? "・登録済みのためスキップ" : ""}` : `更新 ${gasResult.updated ?? 0} 行${gasResult.fallback_created ? "・該当行が無いため新規作成" : ""}`}）`
       : `エラー（${gasResult.message || "不明"}）`;
 
     const examsListText = examRecords
@@ -325,10 +339,10 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
         console.error(`${LOG} [CRITICAL] RESEND_API_KEY is not configured; cannot send status update email.`);
       } else {
         const label = isAlreadyPaidByOther
-          ? "コンビニ支払期限切れ（※別決済完了済のためスキップ）"
+          ? "コンビニ支払期限切れ（※別決済完了済のためメール送信スキップ）"
           : (ledgerStatus === LEDGER_STATUS.PAID ? "コンビニ入金完了" : "コンビニ支払期限切れ");
         const extraNote = isAlreadyPaidByOther
-          ? `\n※【自動判定ガード】同一生徒・メールアドレスにて、直近別セッション（ID: ${otherPaidSessionId}）での決済完了（paid）が確認されたため、台帳のステータス上書き（EXPIRED化）はスキップされました。\n`
+          ? `\n※【自動判定ガード】同一生徒・同一メールアドレス・同一対象模試にて、直近別セッション（ID: ${otherPaidSessionId}）での決済完了（paid）が確認されたため、保護者宛の期限切れメール送信はスキップされました（台帳の該当セッション行は「期限切れ」に更新済みです）。\n`
           : "";
         try {
           const mailRes = await sendResendEmail(
@@ -344,7 +358,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 ■ お申し込み模試:
 ${examsListText}
 ■ 合計金額: ￥${Number(amountVal).toLocaleString()} (税込)
-■ 決済ステータス: ${isAlreadyPaidByOther ? "paid (別セッション完了済)" : ledgerStatus}
+■ 決済ステータス: ${isAlreadyPaidByOther ? `${ledgerStatus}（※別セッションにて paid 完了済）` : ledgerStatus}
 ■ 決済セッションID: ${sessionId}${otherPaidSessionId ? `\n■ 有効決済セッションID: ${otherPaidSessionId}` : ""}
 ■ 生徒氏名: ${studentFullName} / 保護者氏名: ${parentName}
 ■ 連絡先: ${emailVal} / ${phoneVal}
@@ -366,7 +380,7 @@ ${examsListText}
         }
 
         // コンビニ入金完了時は申込者本人宛てにも入金確認・受付確定メールを送信
-        if (ledgerStatus === LEDGER_STATUS.PAID && !isAlreadyPaidByOther && emailVal) {
+        if (ledgerStatus === LEDGER_STATUS.PAID && emailVal) {
           try {
             const paidUserRes = await sendResendEmail(
               apiKey,
@@ -418,12 +432,68 @@ Web : https://okayama-moshi.com
           } catch (uErr: any) {
             console.error(`${LOG} Exception while sending konbini paid user email:`, uErr);
           }
+        } else if (ledgerStatus === LEDGER_STATUS.EXPIRED && emailVal) {
+          // コンビニ支払期限切れ時：別セッションですべての対象模試が決済完了済みの場合は保護者宛メール送信をスキップ
+          if (isAlreadyPaidByOther) {
+            console.log(
+              `${LOG} [DuplicateGuard] Skipped applicant expired email for ${emailVal} (already paid in session(s): ${otherPaidSessionId})`
+            );
+          } else {
+            try {
+              const expiredUserRes = await sendResendEmail(
+                apiKey,
+                {
+                  from: fromEmail,
+                  to: [emailVal],
+                  reply_to: adminEmail,
+                  subject: `${subjectPrefix}コンビニ決済のお支払い期限切れのお知らせ`,
+                  text: `
+${parentName ? parentName + " 様\n\n" : ""}${examBrandTitle}へのお申し込みについてご案内いたします。
+コンビニエンスストアでのお支払い期限までに決済が確認できなかったため、以下の内容のお申し込みは自動キャンセル（期限切れ）となりました。
+
+--------------------------------------------------
+■ 対象のお申し込み模試:
+${examsListText}
+■ 合計金額: ￥${Number(amountVal).toLocaleString()} (税込)
+■ 決済方法: ${paymentMethodLabel}
+■ 決済状況: お支払い期限切れ（自動キャンセル）
+--------------------------------------------------
+【ご登録内容】
+■ 生徒氏名: ${studentFullName} 様 (${studentKana})
+■ 学年: ${grade}
+■ 学校名: ${schoolName}
+--------------------------------------------------
+
+受験をご希望の場合は、お手数ですが公式サイトのお申し込みフォームより再度お手続きをお願いいたします。
+※すでにお支払い済み、または別のお申し込みにて決済完了されている場合は、本メールと行き違いとなっておりますのでご容赦ください。
+
+--------------------------------------------------
+岡山県統一模擬試験実行委員会（中央教育研究所株式会社）
+TEL : 082-227-3999（平日 10:00〜18:00）
+MAIL: info@okayama-moshi.com
+Web : https://okayama-moshi.com
+--------------------------------------------------
+`.trim(),
+                },
+                `${LOG}[update-user-expired]`
+              );
+              applicantMailId = expiredUserRes.id || null;
+              if (!expiredUserRes.ok) {
+                updateMailError = updateMailError
+                  ? `${updateMailError}; user: ${expiredUserRes.error || `HTTP ${expiredUserRes.status}`}`
+                  : `user: ${expiredUserRes.error || `HTTP ${expiredUserRes.status}`}`;
+              }
+            } catch (uErr: any) {
+              console.error(`${LOG} Exception while sending konbini expired user email:`, uErr);
+            }
+          }
         }
       }
       return jsonResponse({
         received: true,
         action,
-        status: isAlreadyPaidByOther ? "skipped_already_paid" : ledgerStatus,
+        status: ledgerStatus,
+        applicant_email_skipped_already_paid: isAlreadyPaidByOther || undefined,
         other_paid_session_id: otherPaidSessionId || undefined,
         gas: gasResult,
         resend: {
@@ -432,7 +502,11 @@ Web : https://okayama-moshi.com
           hasApiKey: !!apiKey,
           apiKeyPrefix: apiKey ? apiKey.trim().slice(0, 5) : "",
           applicantEmail: emailVal || "",
-          skipReason: !apiKey ? "RESEND_API_KEY is not configured" : null,
+          skipReason: !apiKey
+            ? "RESEND_API_KEY is not configured"
+            : isAlreadyPaidByOther
+              ? `Already paid in session(s): ${otherPaidSessionId}`
+              : null,
           error: updateMailError,
         },
       });

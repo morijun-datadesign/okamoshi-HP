@@ -1,6 +1,7 @@
 /**
  * Stripe API 共通クライアント
  */
+import { extractExamNamesFromMetadata, normalizeExamName } from "./exam";
 
 export const fetchCheckoutSession = async (
   sessionId: string,
@@ -49,20 +50,33 @@ export const fetchPaymentIntent = async (
 };
 
 /**
- * 直近（7日以内）に同一メールアドレスまたは生徒氏名でステータスが「paid」のセッションが存在するかチェックする
+ * コンビニ支払期限切れ時、直近（デフォルト14日以内）に
+ * 「同一生徒 ＋ 同一メールアドレス ＋ 同一の対象模試（複数同時申込時は含まれるすべての模試）」で
+ * ステータスが「paid」の別セッションが存在するかチェックする
  */
 export const checkRecentPaidSession = async (
   email: string,
   studentName: string,
+  targetExamNames: string[],
   secretKey: string,
   excludeSessionId: string,
-  days = 7,
+  days = 14,
   logPrefix = "[stripe]"
 ): Promise<{ hasPaid: boolean; matchedSessionId?: string }> => {
-  if (!secretKey || (!email && !studentName)) return { hasPaid: false };
+  const normEmail = String(email || "").toLowerCase().trim();
+  const normName = String(studentName || "").normalize("NFKC").replace(/\s+/g, "").trim();
+  const requiredExams = Array.from(
+    new Set((targetExamNames || []).map((n) => normalizeExamName(n)).filter(Boolean))
+  );
+
+  // 「同一生徒 ＋ 同一メールアドレス ＋ 対象模試」のすべてが揃っていない場合はスキップ判定しない
+  if (!secretKey || !normEmail || !normName || requiredExams.length === 0) {
+    return { hasPaid: false };
+  }
+
   try {
     const sinceTimestamp = Math.floor((Date.now() - days * 86400 * 1000) / 1000);
-    const url = `https://api.stripe.com/v1/checkout/sessions?limit=50&created[gte]=${sinceTimestamp}&status=complete`;
+    const url = `https://api.stripe.com/v1/checkout/sessions?limit=100&created[gte]=${sinceTimestamp}&status=complete`;
     const res = await fetch(url, {
       headers: { Authorization: `Bearer ${secretKey}` },
     });
@@ -73,25 +87,48 @@ export const checkRecentPaidSession = async (
     const data = (await res.json()) as { data?: Array<Record<string, any>> };
     const sessions = data.data || [];
 
-    const normEmail = email.toLowerCase().trim();
-    const normName = studentName.replace(/\s+/g, "").trim();
+    const paidExamSet = new Set<string>();
+    const matchedSessionIds: string[] = [];
 
     for (const s of sessions) {
       if (s.id === excludeSessionId) continue;
       if (s.payment_status !== "paid") continue;
 
-      const sEmail = String(s.customer_details?.email || s.customer_email || s.metadata?.email || "").toLowerCase().trim();
-      const sName = String(s.metadata?.student_name || s.client_reference_id || "").replace(/\s+/g, "").trim();
+      const sEmail = String(s.customer_details?.email || s.customer_email || s.metadata?.email || "")
+        .toLowerCase()
+        .trim();
+      const sName = String(s.metadata?.student_name || s.client_reference_id || "")
+        .normalize("NFKC")
+        .replace(/\s+/g, "")
+        .trim();
 
-      if (normEmail && sEmail === normEmail) {
-        console.log(`${logPrefix} Found paid session for email ${email}: session_id=${s.id}`);
-        return { hasPaid: true, matchedSessionId: s.id };
+      // 「同一生徒 ＋ 同一メールアドレス」の両方が一致するセッションのみ対象
+      if (sEmail !== normEmail || sName !== normName) continue;
+
+      const sExamNames = extractExamNamesFromMetadata(s.metadata);
+      let matchedInThisSession = false;
+      for (const exName of sExamNames) {
+        const normEx = normalizeExamName(exName);
+        if (normEx && requiredExams.includes(normEx)) {
+          paidExamSet.add(normEx);
+          matchedInThisSession = true;
+        }
       }
-      if (normName && sName === normName) {
-        console.log(`${logPrefix} Found paid session for student ${studentName}: session_id=${s.id}`);
-        return { hasPaid: true, matchedSessionId: s.id };
+      if (matchedInThisSession && s.id && !matchedSessionIds.includes(String(s.id))) {
+        matchedSessionIds.push(String(s.id));
       }
     }
+
+    // 期限切れセッションに含まれるすべての対象模試が別セッションで paid になっている場合のみ true
+    const allExamsPaid = requiredExams.every((reqEx) => paidExamSet.has(reqEx));
+    if (allExamsPaid) {
+      const joinedIds = matchedSessionIds.join(", ");
+      console.log(
+        `${logPrefix} Found paid session(s) covering all target exams (${targetExamNames.join(" / ")}) for student="${studentName}" email="${email}": session_id=${joinedIds}`
+      );
+      return { hasPaid: true, matchedSessionId: joinedIds };
+    }
+
     return { hasPaid: false };
   } catch (err) {
     console.warn(`${logPrefix} Error checking recent paid sessions:`, err);

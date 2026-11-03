@@ -93,6 +93,39 @@ export const recordsFromMetadata = (metadata: Record<string, any> | undefined): 
   return records;
 };
 
+/**
+ * 模試名の比較用正規化（NFKC正規化＋空白除去）
+ */
+export const normalizeExamName = (name: string): string =>
+  String(name || "")
+    .normalize("NFKC")
+    .replace(/\s+/g, "")
+    .trim();
+
+/**
+ * Stripe session.metadata（およびフォールバックの exam_name 文字列）から
+ * 対象模試名（exam_name / label）の配列を抽出する（複数同時申込対応）
+ */
+export const extractExamNamesFromMetadata = (
+  metadata: Record<string, any> | undefined,
+  fallbackExamName = ""
+): string[] => {
+  const records = recordsFromMetadata(metadata);
+  if (records.length > 0) {
+    const names = records
+      .map((r) => String(r.label || r.title || "").trim())
+      .filter(Boolean);
+    if (names.length > 0) return Array.from(new Set(names));
+  }
+  const raw = String(metadata?.exam_name || fallbackExamName || "").trim();
+  if (!raw) return [];
+  const splitNames = raw
+    .split(/\s*\/\s*/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+  return Array.from(new Set(splitNames));
+};
+
 export type ExamType = "touitsu" | "tekisei" | "both";
 
 /**

@@ -131,3 +131,11 @@
 /information/*            /                   301
 /topics                   /                   301
 /topics/*                 /                   301
+/touitsu-moshi            /                   301
+/touitsu-moshi/*          /                   301
+/tekisei-moshi            /                   301
+/tekisei-moshi/*          /                   301
+/test-touitsu             /                   301
+/test-touitsu/*           /                   301
+/touitsu_tag              /                   301
+/touitsu_tag/*            /                   301

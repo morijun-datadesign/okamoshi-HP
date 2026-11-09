@@ -903,6 +903,11 @@ test('旧サイトURLの301リダイレクト＆未定義URLからトップペ�
     '/wp-login.php',
     '/feed/',
     '/school-list/try-hirajima',
+    '/touitsu-moshi/',
+    '/tekisei-moshi/',
+    '/test-touitsu/',
+    '/touitsu_tag/junior-3/',
+    '/touitsu_tag/junior-2/',
   ];
   for (const oldPath of legacyRedirectPaths) {
     const res = await request.get(oldPath, { maxRedirects: 0 });

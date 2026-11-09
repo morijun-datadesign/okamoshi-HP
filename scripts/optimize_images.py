@@ -82,6 +82,17 @@ def optimize():
                     if has_sips:
                         avif_out = os.path.join(img_dir, f"{base}.avif")
                         subprocess.run(["sips", "-s", "format", "avif", webp_out, "--out", avif_out], capture_output=True)
+                # スマホ表示向けの軽量版 (幅640px) を生成
+                if key in ("3_top", "2-top", "6-top"):
+                    w, h = im.size
+                    sp_w = 640
+                    sp_h = int(h * (sp_w / w))
+                    resized_sp = im.resize((sp_w, sp_h), Image.Resampling.LANCZOS)
+                    sp_webp_out = os.path.join(img_dir, f"{key}-sp.webp")
+                    resized_sp.save(sp_webp_out, "WEBP", quality=75, method=6)
+                    if has_sips:
+                        sp_avif_out = os.path.join(img_dir, f"{key}-sp.avif")
+                        subprocess.run(["sips", "-s", "format", "avif", sp_webp_out, "--out", sp_avif_out], capture_output=True)
 
     # 4. 中3成績表拡大モーダル（カルーセル 3枚）画像
     carousel_items = [

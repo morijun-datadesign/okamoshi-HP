@@ -43,8 +43,13 @@
   <link rel="dns-prefetch" href="https://fonts.gstatic.com">
   <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
   <link rel="dns-prefetch" href="https://images.microcms-assets.io">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+JP:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,alternate_email,analytics,apartment,arrow_back,arrow_downward,arrow_forward,article,assignment_turned_in,business_center,calendar_month,calendar_today,call,campaign,check_circle,chevron_left,chevron_right,close,contact_support,content_copy,corporate_fare,credit_card,credit_score,delete_outline,description,devices,edit_document,edit_note,error,event,event_busy,expand_more,fact_check,fax,format_quote,grid_view,groups,handshake,health_and_safety,history_edu,home,how_to_reg,info,insights,inventory_2,language,library_books,local_convenience_store,location_city,location_on,lock,mail,meeting_room,menu,notifications_active,open_in_new,person,phone_in_talk,photo_camera,policy,print,priority_high,progress_activity,public,receipt_long,refresh,rule,schedule,school,search,search_off,send,shield,storefront,storm,sync,terminal,timeline,verified,visibility,warning,wifi_off,zoom_in&display=block" rel="stylesheet">
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+JP:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+JP:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,alternate_email,analytics,apartment,arrow_back,arrow_downward,arrow_forward,article,assignment_turned_in,business_center,calendar_month,calendar_today,call,campaign,check_circle,chevron_left,chevron_right,close,contact_support,content_copy,corporate_fare,credit_card,credit_score,delete_outline,description,devices,edit_document,edit_note,error,event,event_busy,expand_more,fact_check,fax,format_quote,grid_view,groups,handshake,health_and_safety,history_edu,home,how_to_reg,info,insights,inventory_2,language,library_books,local_convenience_store,location_city,location_on,lock,mail,meeting_room,menu,notifications_active,open_in_new,person,phone_in_talk,photo_camera,policy,print,priority_high,progress_activity,public,receipt_long,refresh,rule,schedule,school,search,search_off,send,shield,storefront,storm,sync,terminal,timeline,verified,visibility,warning,wifi_off,zoom_in&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+JP:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,alternate_email,analytics,apartment,arrow_back,arrow_downward,arrow_forward,article,assignment_turned_in,business_center,calendar_month,calendar_today,call,campaign,check_circle,chevron_left,chevron_right,close,contact_support,content_copy,corporate_fare,credit_card,credit_score,delete_outline,description,devices,edit_document,edit_note,error,event,event_busy,expand_more,fact_check,fax,format_quote,grid_view,groups,handshake,health_and_safety,history_edu,home,how_to_reg,info,insights,inventory_2,language,library_books,local_convenience_store,location_city,location_on,lock,mail,meeting_room,menu,notifications_active,open_in_new,person,phone_in_talk,photo_camera,policy,print,priority_high,progress_activity,public,receipt_long,refresh,rule,schedule,school,search,search_off,send,shield,storefront,storm,sync,terminal,timeline,verified,visibility,warning,wifi_off,zoom_in&display=swap" rel="stylesheet">
+  </noscript>
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -640,10 +645,10 @@
         <div class="flex items-center justify-between md:justify-end gap-3 shrink-0 w-full md:w-auto">
           <!-- 3パネル一括学年切り替えスイッチ（中3 / 中2 / 中1 / 小6 の4学年完全統一） -->
           <div class="flex items-center gap-1.5 bg-slate-100 p-1.5 rounded-xl border border-slate-200/80 shadow-2xs" role="tablist" aria-label="選ばれる理由 学年一括切り替え">
-            <button type="button" onclick="selectGrade('c3')" id="feature-pill-c3" class="px-3.5 sm:px-5 py-2.5 text-sm sm:text-base font-bold rounded-lg transition-all bg-emerald-800 text-white shadow-xs cursor-pointer">中3</button>
-            <button type="button" onclick="selectGrade('c2')" id="feature-pill-c2" class="px-3.5 sm:px-5 py-2.5 text-sm sm:text-base font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900 cursor-pointer">中2</button>
-            <button type="button" onclick="selectGrade('c1')" id="feature-pill-c1" class="px-3.5 sm:px-5 py-2.5 text-sm sm:text-base font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900 cursor-pointer">中1</button>
-            <button type="button" onclick="selectGrade('p6')" id="feature-pill-p6" class="px-3.5 sm:px-5 py-2.5 text-sm sm:text-base font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900 cursor-pointer">小6</button>
+            <button type="button" onclick="selectGrade('c3')" id="feature-pill-c3" class="px-3.5 sm:px-5 py-2.5 text-sm sm:text-base font-bold rounded-lg transition-transform bg-emerald-800 text-white shadow-xs cursor-pointer">中3</button>
+            <button type="button" onclick="selectGrade('c2')" id="feature-pill-c2" class="px-3.5 sm:px-5 py-2.5 text-sm sm:text-base font-bold rounded-lg transition-transform text-slate-600 hover:text-slate-900 cursor-pointer">中2</button>
+            <button type="button" onclick="selectGrade('c1')" id="feature-pill-c1" class="px-3.5 sm:px-5 py-2.5 text-sm sm:text-base font-bold rounded-lg transition-transform text-slate-600 hover:text-slate-900 cursor-pointer">中1</button>
+            <button type="button" onclick="selectGrade('p6')" id="feature-pill-p6" class="px-3.5 sm:px-5 py-2.5 text-sm sm:text-base font-bold rounded-lg transition-transform text-slate-600 hover:text-slate-900 cursor-pointer">小6</button>
           </div>
 
           <!-- PC用 左右ナビゲーション矢印ボタン（＜ ＞） -->
@@ -755,15 +760,17 @@
           <div id="card2-preview-wrapper" onclick="openReportModal('c3')" class="w-full md:col-span-7 flex flex-col justify-center order-1 md:order-2 cursor-pointer group" role="button" tabindex="0" aria-label="学力診断シートを拡大して見る">
             <div id="card2-preview-container" class="relative w-full flex items-center justify-center overflow-hidden">
               <picture class="w-full h-auto block">
-                <source id="card2-preview-source-avif" type="image/avif" srcset="/images/3_top.avif">
-                <source id="card2-preview-source-webp" type="image/webp" srcset="/images/3_top.webp">
+                <source id="card2-preview-source-avif" type="image/avif" srcset="/images/3_top-sp.avif 640w, /images/3_top.avif 1024w" sizes="(max-width: 767px) 285px, 520px">
+                <source id="card2-preview-source-webp" type="image/webp" srcset="/images/3_top-sp.webp 640w, /images/3_top.webp 1024w" sizes="(max-width: 767px) 285px, 520px">
                 <img 
                   id="card2-preview-img"
-                  src="/images/3_top.webp" 
+                  src="/images/3_top-sp.webp" 
+                  srcset="/images/3_top-sp.webp 640w, /images/3_top.webp 1024w"
+                  sizes="(max-width: 767px) 285px, 520px"
                   alt="おかもし成績表サンプル（学力診断シート）" 
                   class="w-full h-auto object-contain rounded-lg block"
-                  width="1024"
-                  height="768"
+                  width="640"
+                  height="480"
                   loading="lazy"
                   decoding="async"
                 />
@@ -3227,71 +3234,11 @@ ${returnMethodNote}
         sub: "",
         desc: "岡山県立高校の選抜制度（当日点＋内申点の総合評価）に対応し、特別入試、一般入試も合否可能性を判定します。また、私立、国立高校の判定にも対応しています。",
         miniKarteHtml: "",
-        imageAvif: "/images/3_top.avif",
-        imageWebp: "/images/3_top.webp",
+        imageAvif: "/images/3_top-sp.avif 640w, /images/3_top.avif 1024w",
+        imageWebp: "/images/3_top-sp.webp 640w, /images/3_top.webp 1024w",
+        imageSrc: "/images/3_top-sp.webp",
         imageAlt: "おかもし中3成績表サンプル（学力診断シート）",
-        hasModal: true,
-        modal: {
-          title: "中3生｜学力診断シート（成績カルテ）見本",
-          desc: "試験後にお届けする個人カルテです。単なる点数や偏差値だけでなく、志望校合格までの具体的な「あと何点」や優先して克服すべき単元がひと目で分かります。",
-          bodyHtml: `
-            <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-xs">
-              <div class="text-[11px] font-bold text-slate-600 mb-2">総合学力データ（5教科合計）</div>
-              <div class="grid grid-cols-3 gap-2 text-center">
-                <div class="border-r border-slate-100">
-                  <span class="text-[10px] text-slate-600 block">総合得点</span>
-                  <span class="text-base font-bold text-slate-900">388<span class="text-xs font-normal"> / 500</span></span>
-                </div>
-                <div class="border-r border-slate-100">
-                  <span class="text-[10px] text-slate-600 block">総合偏差値</span>
-                  <span class="text-base font-bold text-brand-green">64.8</span>
-                </div>
-                <div>
-                  <span class="text-[10px] text-slate-600 block">県内総合順位</span>
-                  <span class="text-base font-bold text-slate-900">142<span class="text-xs font-normal"> / 2,180人</span></span>
-                </div>
-              </div>
-            </div>
-            <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-xs space-y-2">
-              <div class="text-[11px] font-bold text-slate-600 mb-1">公立高校 志望校判定結果（内申点＋当日点総合判定）</div>
-              <div class="flex items-center justify-between p-2.5 rounded-lg bg-emerald-50/70 border border-emerald-100">
-                <div>
-                  <span class="text-[10px] font-bold text-brand-green">第1志望</span>
-                  <div class="text-xs sm:text-sm font-bold text-slate-800">岡山朝日高等学校（普通科）</div>
-                  <span class="text-[10px] text-slate-600">志望者内 28位 / 342人</span>
-                </div>
-                <div class="text-right">
-                  <span class="px-2.5 py-0.5 rounded bg-brand-green text-white font-bold text-xs">A 判定</span>
-                  <span class="text-[10px] text-brand-green font-bold block mt-0.5">安全圏 (+14点)</span>
-                </div>
-              </div>
-              <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 border border-slate-200/70">
-                <div>
-                  <span class="text-[10px] font-bold text-slate-600">第2志望</span>
-                  <div class="text-xs sm:text-sm font-bold text-slate-800">岡山操山高等学校（普通科）</div>
-                  <span class="text-[10px] text-slate-600">志望者内 15位 / 290人</span>
-                </div>
-                <div class="text-right">
-                  <span class="px-2.5 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-300 font-bold text-xs">A 判定</span>
-                  <span class="text-[10px] text-slate-600 font-bold block mt-0.5">安全圏 (+28点)</span>
-                </div>
-              </div>
-            </div>
-            <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-xs">
-              <div class="text-[11px] font-bold text-slate-600 mb-2">教科別診断・弱点単元カルテ</div>
-              <div class="space-y-2 text-[11px]">
-                <div class="flex items-start gap-2.5">
-                  <span class="w-12 text-center py-0.5 rounded bg-brand-green text-white font-bold text-[10px] shrink-0">数学</span>
-                  <p class="text-slate-700 leading-relaxed">「関数 y=ax²」の配点が高い応用問での失点が見られます。基礎計算は満点のため、グラフの交点座標と面積を求める複合問題を集中的に演習しましょう。</p>
-                </div>
-                <div class="flex items-start gap-2.5 pt-1.5 border-t border-slate-100">
-                  <span class="w-12 text-center py-0.5 rounded bg-brand-green text-white font-bold text-[10px] shrink-0">英語</span>
-                  <p class="text-slate-700 leading-relaxed">文法・対話文は高得点。後半の「条件英作文（自由英作文）」で語数不足の減点があります。指定語句を活用した3文構成の練習が有効です。</p>
-                </div>
-              </div>
-            </div>
-          `
-        }
+        hasModal: true
       },
       c12: {
         pointLabel: "",
@@ -3299,71 +3246,11 @@ ${returnMethodNote}
         sub: "",
         desc: "教科書レベルの定着度を県内受験者と比較。中1・2のうちに克服しておくべき優先復習単元を具体的に提示し、日々の学習や定期テスト対策へ直結させます。また志望校判定により、今の学力での到達点も計測できます。",
         miniKarteHtml: "",
-        imageAvif: "/images/2-top.avif",
-        imageWebp: "/images/2-top.webp",
+        imageAvif: "/images/2-top-sp.avif 640w, /images/2-top.avif 1024w",
+        imageWebp: "/images/2-top-sp.webp 640w, /images/2-top.webp 1024w",
+        imageSrc: "/images/2-top-sp.webp",
         imageAlt: "おかもし中1・2成績カルテサンプル",
-        hasModal: false,
-        modal: {
-          title: "中1・2生｜学力診断シート（成績カルテ）見本",
-          desc: "教科書の基礎から応用まで、単元ごとの定着度を県内平均と比較。現時点での到達度と、高校入試に向けた「つまずき単元」がひと目で分かります。",
-          bodyHtml: `
-            <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-xs">
-              <div class="text-[11px] font-bold text-slate-600 mb-2">総合学力到達度データ</div>
-              <div class="grid grid-cols-3 gap-2 text-center">
-                <div class="border-r border-slate-100">
-                  <span class="text-[10px] text-slate-600 block">到達度ランク</span>
-                  <span class="text-base font-bold text-brand-green">S ランク<span class="text-xs font-normal"> (上位10%)</span></span>
-                </div>
-                <div class="border-r border-slate-100">
-                  <span class="text-[10px] text-slate-600 block">県平均比較</span>
-                  <span class="text-base font-bold text-brand-green">+32点</span>
-                </div>
-                <div>
-                  <span class="text-[10px] text-slate-600 block">県内総合順位</span>
-                  <span class="text-base font-bold text-slate-900">215<span class="text-xs font-normal"> / 1,640人</span></span>
-                </div>
-              </div>
-            </div>
-            <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-xs space-y-2">
-              <div class="text-[11px] font-bold text-slate-600 mb-1">志望校目安判定（現時点での学力到達水準）</div>
-              <div class="flex items-center justify-between p-2.5 rounded-lg bg-emerald-50/70 border border-emerald-100">
-                <div>
-                  <span class="text-[10px] font-bold text-brand-green">志望校目安 1</span>
-                  <div class="text-xs sm:text-sm font-bold text-slate-800">岡山操山高等学校（普通科）</div>
-                  <span class="text-[10px] text-slate-600">志望者内 42位 / 280人</span>
-                </div>
-                <div class="text-right">
-                  <span class="px-2.5 py-0.5 rounded bg-brand-green text-white font-bold text-xs">B 判定</span>
-                  <span class="text-[10px] text-brand-green font-bold block mt-0.5">合格圏 (+8点)</span>
-                </div>
-              </div>
-              <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 border border-slate-200/70">
-                <div>
-                  <span class="text-[10px] font-bold text-slate-600">志望校目安 2</span>
-                  <div class="text-xs sm:text-sm font-bold text-slate-800">岡山芳泉高等学校（普通科）</div>
-                  <span class="text-[10px] text-slate-600">志望者内 25位 / 240人</span>
-                </div>
-                <div class="text-right">
-                  <span class="px-2.5 py-0.5 rounded bg-brand-green text-white font-bold text-xs">A 判定</span>
-                  <span class="text-[10px] text-brand-green font-bold block mt-0.5">安全圏 (+22点)</span>
-                </div>
-              </div>
-            </div>
-            <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-xs">
-              <div class="text-[11px] font-bold text-slate-600 mb-2">中1・2総復習優先単元カルテ</div>
-              <div class="space-y-2 text-[11px]">
-                <div class="flex items-start gap-2.5">
-                  <span class="w-12 text-center py-0.5 rounded bg-brand-green text-white font-bold text-[10px] shrink-0">数学</span>
-                  <p class="text-slate-700 leading-relaxed">「一次方程式・連立方程式の文章題」で立式のミスが見られます。数量関係を図や表に整理してから方程式を立てる基本手順を再確認しましょう。</p>
-                </div>
-                <div class="flex items-start gap-2.5 pt-1.5 border-t border-slate-100">
-                  <span class="w-12 text-center py-0.5 rounded bg-brand-green text-white font-bold text-[10px] shrink-0">国語</span>
-                  <p class="text-slate-700 leading-relaxed">説明的文章の読解は高得点。古文の基礎知識（歴史的仮名遣い・主語の把握）に課題があります。教科書の短文音読と現代語訳の確認が効果的です。</p>
-                </div>
-              </div>
-            </div>
-          `
-        }
+        hasModal: false
       },
       p6: {
         highlightBadge: false,
@@ -3372,71 +3259,11 @@ ${returnMethodNote}
         sub: "",
         desc: "適性検査I、適性検査II、総合判定それぞれの偏差値、順位をデジタルに可視化。\n小問一つ一つの正誤まで網羅。弱点が一目でわかります。\n志望校は2校まで選択でき、合格可能性を判定します。",
         miniKarteHtml: "",
-        imageAvif: "/images/6-top.avif",
-        imageWebp: "/images/6-top.webp",
+        imageAvif: "/images/6-top-sp.avif 640w, /images/6-top.avif 1024w",
+        imageWebp: "/images/6-top-sp.webp 640w, /images/6-top.webp 1024w",
+        imageSrc: "/images/6-top-sp.webp",
         imageAlt: "おかもし小6適性検査判定カルテサンプル",
-        hasModal: false,
-        modal: {
-          title: "小6生｜公立中高一貫適性検査対策模試 学力診断シート見本",
-          desc: "岡山県立中高一貫3校（操山・大安寺・天城）の適性検査I・IIおよび作文の得点バランスと、プロ添削者による記述講評を詳細にフィードバックします。",
-          bodyHtml: `
-            <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-xs">
-              <div class="text-[11px] font-bold text-slate-600 mb-2">適性検査 得点バランス（200点満点）</div>
-              <div class="grid grid-cols-3 gap-2 text-center">
-                <div class="border-r border-slate-100">
-                  <span class="text-[10px] text-slate-600 block">総合得点</span>
-                  <span class="text-base font-bold text-slate-900">148<span class="text-xs font-normal"> / 200</span></span>
-                </div>
-                <div class="border-r border-slate-100">
-                  <span class="text-[10px] text-slate-600 block">総合偏差値</span>
-                  <span class="text-base font-bold text-brand-green">58.4</span>
-                </div>
-                <div>
-                  <span class="text-[10px] text-slate-600 block">県立3校志望者内</span>
-                  <span class="text-base font-bold text-slate-900">68<span class="text-xs font-normal"> / 420人</span></span>
-                </div>
-              </div>
-            </div>
-            <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-xs space-y-2">
-              <div class="text-[11px] font-bold text-slate-600 mb-1">公立中高一貫校 志望校判定結果</div>
-              <div class="flex items-center justify-between p-2.5 rounded-lg bg-amber-50/70 border border-amber-200/80">
-                <div>
-                  <span class="text-[10px] font-bold text-amber-800">第1志望</span>
-                  <div class="text-xs sm:text-sm font-bold text-slate-800">岡山県立操山中学校</div>
-                  <span class="text-[10px] text-slate-600">志望者内 35位 / 185人</span>
-                </div>
-                <div class="text-right">
-                  <span class="px-2.5 py-0.5 rounded bg-amber-600 text-white font-bold text-xs">B 判定</span>
-                  <span class="text-[10px] text-amber-800 font-bold block mt-0.5">合格圏 (+6点)</span>
-                </div>
-              </div>
-              <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 border border-slate-200/70">
-                <div>
-                  <span class="text-[10px] font-bold text-slate-600">第2志望</span>
-                  <div class="text-xs sm:text-sm font-bold text-slate-800">岡山県立大安寺中等教育学校</div>
-                  <span class="text-[10px] text-slate-600">志望者内 22位 / 140人</span>
-                </div>
-                <div class="text-right">
-                  <span class="px-2.5 py-0.5 rounded bg-amber-700 text-white font-bold text-xs">B 判定</span>
-                  <span class="text-[10px] text-slate-600 font-bold block mt-0.5">合格圏 (+4点)</span>
-                </div>
-              </div>
-            </div>
-            <div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-xs">
-              <div class="text-[11px] font-bold text-slate-600 mb-2">作文・論述添削 プロ講評カルテ</div>
-              <div class="space-y-2 text-[11px]">
-                <div class="flex items-start gap-2.5">
-                  <span class="w-16 text-center py-0.5 rounded bg-amber-600 text-white font-bold text-[10px] shrink-0">作文添削</span>
-                  <p class="text-slate-700 leading-relaxed">全体の段落構成（導入・体験・まとめ）は大変良好です。ただし第2段落において「指定された字数制限（300字以上400字以内）」に対し、語句の重複による減点が見られます。接続詞の推敲を意識しましょう。</p>
-                </div>
-                <div class="flex items-start gap-2.5 pt-1.5 border-t border-slate-100">
-                  <span class="w-16 text-center py-0.5 rounded bg-brand-green text-white font-bold text-[10px] shrink-0">適性II</span>
-                  <p class="text-slate-700 leading-relaxed">複数資料の読み取り問題において、グラフの単位確認のミスがありました。数値を引用して記述する際は、必ず軸ラベルと単位を再照合する習慣をつけましょう。</p>
-                </div>
-              </div>
-            </div>
-          `
-        }
+        hasModal: false
       }
     };
     const featureCard3Data = {
@@ -3491,11 +3318,10 @@ ${returnMethodNote}
       ['c3', 'c2', 'c1', 'p6'].forEach(g => {
         const btn = document.getElementById(`feature-pill-${g}`);
         if (!btn) return;
-        if (g === normalized) {
-          btn.className = 'px-3.5 sm:px-5 py-2.5 text-sm sm:text-base font-bold rounded-lg transition-all bg-emerald-800 text-white shadow-xs cursor-pointer';
-        } else {
-          btn.className = 'px-3.5 sm:px-5 py-2.5 text-sm sm:text-base font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900 cursor-pointer';
-        }
+        const targetClass = (g === normalized)
+          ? 'px-3.5 sm:px-5 py-2.5 text-sm sm:text-base font-bold rounded-lg transition-transform bg-emerald-800 text-white shadow-xs cursor-pointer'
+          : 'px-3.5 sm:px-5 py-2.5 text-sm sm:text-base font-bold rounded-lg transition-transform text-slate-600 hover:text-slate-900 cursor-pointer';
+        if (btn.className !== targetClass) btn.className = targetClass;
       });
       let contentGrade = 'c3';
       if (normalized === 'c2' || normalized === 'c1' || normalized === 'c12') {
@@ -3598,7 +3424,9 @@ ${returnMethodNote}
       if (previewSourceAvif && data.imageAvif) previewSourceAvif.srcset = data.imageAvif;
       if (previewSourceWebp && data.imageWebp) previewSourceWebp.srcset = data.imageWebp;
       if (previewImg) {
-        if (data.imageWebp) previewImg.src = data.imageWebp;
+        const targetSrc = data.imageSrc || data.imageWebp;
+        if (data.imageWebp) previewImg.srcset = data.imageWebp;
+        if (targetSrc) previewImg.src = targetSrc;
         if (data.imageAlt) previewImg.alt = data.imageAlt;
       }
       if (data.hasModal) {
@@ -4261,11 +4089,7 @@ ${returnMethodNote}
         `;
       }).join('');
     }
-    async function initLatestNews() {
-      allNewsArticles = [{"id": "ynvbigkqcq", "title": "岡山県統一模擬試験 公式Webサイトをリニューアルいたしました", "publishedAt": "2026-11-01T15:00:00.000Z", "category": {"id": "508lep4cmp", "createdAt": "2026-09-23T04:56:58.933Z", "updatedAt": "2026-09-23T04:56:58.933Z", "publishedAt": "2026-09-23T04:56:58.933Z", "revisedAt": "2026-09-23T04:56:58.933Z", "name": "更新情報"}, "targetGrade": ["全学年"]}, {"id": "20260914-1", "title": "【8月号結果】岡山5校を志望校とした受験生が計1100名を超えました！", "publishedAt": "2026-09-14T00:00:00.000Z", "category": {"id": "j0w8tt1h7u", "createdAt": "2026-11-01T08:28:33.779Z", "updatedAt": "2026-11-01T08:28:33.779Z", "publishedAt": "2026-11-01T08:28:33.779Z", "revisedAt": "2026-11-01T08:28:33.779Z", "name": "おかもし情報"}, "targetGrade": ["中学生"]}, {"id": "b055d-p_k7", "title": "【岡山県の高校受験】合格への近道はここにある！「おかもし」が受験生から支持される理由", "publishedAt": "2026-07-30T00:00:00.000Z", "category": {"id": "jttb2w0l9ua", "createdAt": "2026-09-23T05:32:20.539Z", "updatedAt": "2026-09-23T05:32:20.539Z", "publishedAt": "2026-09-23T05:32:20.539Z", "revisedAt": "2026-09-23T05:32:20.539Z", "name": "模試活用法"}, "targetGrade": ["中学生"]}, {"id": "20260721_1", "title": "おかもし　会場受験のススメ　〜「しんどい」の先に志望校合格があります〜", "publishedAt": "2026-07-21T00:00:00.000Z", "category": {"id": "j0w8tt1h7u", "createdAt": "2026-11-01T08:28:33.779Z", "updatedAt": "2026-11-01T08:28:33.779Z", "publishedAt": "2026-11-01T08:28:33.779Z", "revisedAt": "2026-11-01T08:28:33.779Z", "name": "おかもし情報"}, "targetGrade": ["中学生"]}, {"id": "column-7", "title": "勉強のコツ完全ガイド｜テスト前でも慌てない！成績アップの方法", "publishedAt": "2025-07-04T00:00:00.000Z", "category": {"id": "o03ocy3_5f", "createdAt": "2026-11-01T08:29:40.401Z", "updatedAt": "2026-11-01T08:29:40.401Z", "publishedAt": "2026-11-01T08:29:40.401Z", "revisedAt": "2026-11-01T08:29:40.401Z", "name": "学習コラム"}, "targetGrade": ["全学年"]}, {"id": "column-6", "title": "成績が上がる！高校受験生必見の時間管理術と集中力アップ法", "publishedAt": "2025-02-26T00:00:00.000Z", "category": {"id": "o03ocy3_5f", "createdAt": "2026-11-01T08:29:40.401Z", "updatedAt": "2026-11-01T08:29:40.401Z", "publishedAt": "2026-11-01T08:29:40.401Z", "revisedAt": "2026-11-01T08:29:40.401Z", "name": "学習コラム"}, "targetGrade": ["全学年"]}, {"id": "column-5", "title": "志望校の決め方に悩む中学生のみなさんへ！自信を持って、自分にぴったりな高校を見つけよう", "publishedAt": "2024-12-03T00:00:00.000Z", "category": {"id": "o03ocy3_5f", "createdAt": "2026-11-01T08:29:40.401Z", "updatedAt": "2026-11-01T08:29:40.401Z", "publishedAt": "2026-11-01T08:29:40.401Z", "revisedAt": "2026-11-01T08:29:40.401Z", "name": "学習コラム"}, "targetGrade": ["中学生"]}, {"id": "column-4", "title": "友達と勉強する?一人で勉強する?高校受験を乗り越えるにはどちらが正解?", "publishedAt": "2024-11-26T00:00:00.000Z", "category": {"id": "o03ocy3_5f", "createdAt": "2026-11-01T08:29:40.401Z", "updatedAt": "2026-11-01T08:29:40.401Z", "publishedAt": "2026-11-01T08:29:40.401Z", "revisedAt": "2026-11-01T08:29:40.401Z", "name": "学習コラム"}, "targetGrade": ["中学生"]}, {"id": "column-3", "title": "受験勉強のモチベーションUP術 ！ 中学生に聞いてほしい合格への近道", "publishedAt": "2024-11-19T00:00:00.000Z", "category": {"id": "o03ocy3_5f", "createdAt": "2026-11-01T08:29:40.401Z", "updatedAt": "2026-11-01T08:29:40.401Z", "publishedAt": "2026-11-01T08:29:40.401Z", "revisedAt": "2026-11-01T08:29:40.401Z", "name": "学習コラム"}, "targetGrade": ["中学生"]}, {"id": "column-2", "title": "中学生必見！勉強のやる気が出ない時こそチャンス！焦りと不安を解消する方法", "publishedAt": "2024-11-08T00:00:00.000Z", "category": {"id": "o03ocy3_5f", "createdAt": "2026-11-01T08:29:40.401Z", "updatedAt": "2026-11-01T08:29:40.401Z", "publishedAt": "2026-11-01T08:29:40.401Z", "revisedAt": "2026-11-01T08:29:40.401Z", "name": "学習コラム"}, "targetGrade": ["中学生"]}, {"id": "column", "title": "志望校が決まらなくても大丈夫！中学生のための高校選び応援ガイド", "publishedAt": "2024-11-08T00:00:00.000Z", "category": {"id": "o03ocy3_5f", "createdAt": "2026-11-01T08:29:40.401Z", "updatedAt": "2026-11-01T08:29:40.401Z", "publishedAt": "2026-11-01T08:29:40.401Z", "revisedAt": "2026-11-01T08:29:40.401Z", "name": "学習コラム"}, "targetGrade": ["中学生"]}, {"id": "202408101-2", "title": "おかもしで高校合格をつかむ！ あなただけの合格戦略を立てよう", "publishedAt": "2024-08-30T00:00:00.000Z", "category": {"id": "jttb2w0l9ua", "createdAt": "2026-09-23T05:32:20.539Z", "updatedAt": "2026-09-23T05:32:20.539Z", "publishedAt": "2026-09-23T05:32:20.539Z", "revisedAt": "2026-09-23T05:32:20.539Z", "name": "模試活用法"}, "targetGrade": ["中学生"]}];
-      // 静的HTMLで既に最新3件が表示されているため、学年タブの連動のみ実行（通信ゼロ）
-      updateNewsByGrade(currentGrade);
-    }
+    async function initLatestNews(){allNewsArticles=[{"id":"ynvbigkqcq","title":"岡山県統一模擬試験 公式Webサイトをリニューアルいたしました","publishedAt":"2026-11-01T15:00:00.000Z","category":{"name":"更新情報"},"targetGrade":["全学年"]},{"id":"20260914-1","title":"【8月号結果】岡山5校を志望校とした受験生が計1100名を超えました！","publishedAt":"2026-09-14T00:00:00.000Z","category":{"name":"おかもし情報"},"targetGrade":["中学生"]},{"id":"b055d-p_k7","title":"【岡山県の高校受験】合格への近道はここにある！「おかもし」が受験生から支持される理由","publishedAt":"2026-07-30T00:00:00.000Z","category":{"name":"模試活用法"},"targetGrade":["中学生"]},{"id":"20260721_1","title":"おかもし　会場受験のススメ　〜「しんどい」の先に志望校合格があります〜","publishedAt":"2026-07-21T00:00:00.000Z","category":{"name":"おかもし情報"},"targetGrade":["中学生"]},{"id":"column-7","title":"勉強のコツ完全ガイド｜テスト前でも慌てない！成績アップの方法","publishedAt":"2025-07-04T00:00:00.000Z","category":{"name":"学習コラム"},"targetGrade":["全学年"]},{"id":"column-6","title":"成績が上がる！高校受験生必見の時間管理術と集中力アップ法","publishedAt":"2025-02-26T00:00:00.000Z","category":{"name":"学習コラム"},"targetGrade":["全学年"]},{"id":"column-5","title":"志望校の決め方に悩む中学生のみなさんへ！自信を持って、自分にぴったりな高校を見つけよう","publishedAt":"2024-12-03T00:00:00.000Z","category":{"name":"学習コラム"},"targetGrade":["中学生"]},{"id":"column-4","title":"友達と勉強する?一人で勉強する?高校受験を乗り越えるにはどちらが正解?","publishedAt":"2024-11-26T00:00:00.000Z","category":{"name":"学習コラム"},"targetGrade":["中学生"]},{"id":"column-3","title":"受験勉強のモチベーションUP術 ！ 中学生に聞いてほしい合格への近道","publishedAt":"2024-11-19T00:00:00.000Z","category":{"name":"学習コラム"},"targetGrade":["中学生"]},{"id":"column-2","title":"中学生必見！勉強のやる気が出ない時こそチャンス！焦りと不安を解消する方法","publishedAt":"2024-11-08T00:00:00.000Z","category":{"name":"学習コラム"},"targetGrade":["中学生"]},{"id":"column","title":"志望校が決まらなくても大丈夫！中学生のための高校選び応援ガイド","publishedAt":"2024-11-08T00:00:00.000Z","category":{"name":"学習コラム"},"targetGrade":["中学生"]},{"id":"202408101-2","title":"おかもしで高校合格をつかむ！ あなただけの合格戦略を立てよう","publishedAt":"2024-08-30T00:00:00.000Z","category":{"name":"模試活用法"},"targetGrade":["中学生"]}];updateNewsByGrade(currentGrade)}
     window.updateNewsByGrade = updateNewsByGrade;
     window.initLatestNews = initLatestNews;
     const faqData = [

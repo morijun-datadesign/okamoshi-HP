@@ -76,7 +76,7 @@
     if (!ctaBar && document.body) {
       ctaBar = document.createElement('div');
       ctaBar.id = 'floating-cta-bar';
-      ctaBar.className = 'fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/90 p-3 md:hidden shadow-[0_-4px_20px_rgba(0,0,0,0.08)] transition-all duration-300 ease-out transform translate-y-full opacity-0 pointer-events-none';
+      ctaBar.className = 'fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/90 p-3 md:hidden shadow-[0_-4px_20px_rgba(0,0,0,0.08)] transition-transform duration-300 ease-out transform translate-y-full opacity-0 pointer-events-none';
       
       // ルート相対または階層に応じたリンク先パス（絶対パス化）
       const targetLink = isTopPage ? '#schedule-selector' : '/index.html#schedule-selector';
@@ -87,7 +87,7 @@
             <span id="floating-status-badge" class="inline-block text-[9px] font-bold text-emerald-900 bg-emerald-100 border border-emerald-300 px-1.5 py-0.5 rounded">次回模試 受付中</span>
             <div id="floating-desc" class="text-xs font-bold text-slate-800 leading-tight truncate">岡山県統一模擬試験（おかもし）</div>
           </div>
-          <a href="${targetLink}" class="py-2.5 px-5 rounded-lg bg-orange-700 hover:bg-orange-800 text-white text-xs font-bold shadow-md shadow-orange-700/25 active:scale-95 transition-all flex items-center gap-1.5 shrink-0">
+          <a href="${targetLink}" class="py-2.5 px-5 rounded-lg bg-orange-700 hover:bg-orange-800 text-white text-xs font-bold shadow-md shadow-orange-700/25 active:scale-95 transition-transform flex items-center gap-1.5 shrink-0">
             <span>模試に申し込む</span>
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
           </a>
@@ -100,16 +100,26 @@
 
   // 4. 表示・非表示のアニメーション制御
   function showCta(ctaBar) {
-    ctaBar.classList.remove('translate-y-full', 'opacity-0', 'pointer-events-none');
-    ctaBar.classList.add('translate-y-0', 'opacity-100', 'pointer-events-auto');
+    if (ctaBar.classList.contains('translate-y-full')) {
+      ctaBar.classList.remove('translate-y-full', 'opacity-0', 'pointer-events-none');
+      ctaBar.classList.add('translate-y-0', 'opacity-100', 'pointer-events-auto');
+    }
   }
 
   function hideCta(ctaBar) {
-    ctaBar.classList.remove('translate-y-0', 'opacity-100', 'pointer-events-auto');
-    ctaBar.classList.add('translate-y-full', 'opacity-0', 'pointer-events-none');
+    if (!ctaBar.classList.contains('translate-y-full')) {
+      ctaBar.classList.remove('translate-y-0', 'opacity-100', 'pointer-events-auto');
+      ctaBar.classList.add('translate-y-full', 'opacity-0', 'pointer-events-none');
+    }
+  }
+
+  // トップページ等でインライン制御が既に存在する場合は二重登録・強制リフローを回避
+  if (typeof window.checkFloatingCtaVisibility === 'function') {
+    return;
   }
 
   // 5. スクロール位置・セクションに応じた動的表示判定
+  let isTicking = false;
   function updateFloatingCtaVisibility() {
     const ctaBar = getOrCreateCtaBar();
     if (!ctaBar) return;
@@ -118,25 +128,19 @@
     const scrollY = window.scrollY || window.pageYOffset;
 
     if (isTopPage) {
-      // -------------------------------------------------------------
-      // 【トップページの制御】
-      // 1. ページ上部〜「3つの特徴」〜「模試の詳細・日程選択」エリア：非表示
-      // 2. 「生徒の声（体験談）」セクション以降：スッとスライドイン表示
-      // 3. お申し込みフォームや日程選択エリア内：非表示
-      // -------------------------------------------------------------
       const scheduleSec = document.getElementById('schedule-selector');
       const studentVoicesSec = document.getElementById('student-voices');
 
       // 出現トリガーセクション（生徒の声、非表示時は後続要素）
       let triggerSec = studentVoicesSec;
-      if (!triggerSec || triggerSec.classList.contains('hidden') || triggerSec.offsetHeight === 0) {
+      if (!triggerSec || triggerSec.classList.contains('hidden')) {
         triggerSec = scheduleSec ? scheduleSec.nextElementSibling : null;
       }
 
       let hasReachedTrigger = false;
       if (triggerSec) {
         const triggerRect = triggerSec.getBoundingClientRect();
-        if (triggerRect.top <= vpHeight * 0.85) {
+        if (triggerRect.height > 0 && triggerRect.top <= vpHeight * 0.85) {
           hasReachedTrigger = true;
         }
       }
@@ -153,12 +157,13 @@
       // お申し込みフォーム・サマリーエリア内にいるか
       let isInsideApply = false;
       const applyContainers = document.querySelectorAll('#apply-form, [data-section="apply-summary"]');
-      applyContainers.forEach(el => {
-        const rect = el.getBoundingClientRect();
+      for (let i = 0; i < applyContainers.length; i++) {
+        const rect = applyContainers[i].getBoundingClientRect();
         if (rect.top < vpHeight && rect.bottom > 0) {
           isInsideApply = true;
+          break;
         }
-      });
+      }
 
       const shouldShow = hasReachedTrigger && !isInsideSchedule && !isInsideApply;
 
@@ -169,15 +174,21 @@
       }
 
     } else {
-      // -------------------------------------------------------------
-      // 【お知らせ・詳細／実施塾一覧の制御】
-      // スクロール開始（ヘッダー・ファーストビュー通過後）でスッとスライドイン表示
-      // -------------------------------------------------------------
       if (scrollY > 160) {
         showCta(ctaBar);
       } else {
         hideCta(ctaBar);
       }
+    }
+  }
+
+  function onScrollOrResize() {
+    if (!isTicking) {
+      window.requestAnimationFrame(() => {
+        updateFloatingCtaVisibility();
+        isTicking = false;
+      });
+      isTicking = true;
     }
   }
 
@@ -187,15 +198,15 @@
   // イベントリスナー設定
   function init() {
     getOrCreateCtaBar();
-    window.addEventListener('scroll', updateFloatingCtaVisibility, { passive: true });
-    window.addEventListener('resize', updateFloatingCtaVisibility, { passive: true });
+    window.addEventListener('scroll', onScrollOrResize, { passive: true });
+    window.addEventListener('resize', onScrollOrResize, { passive: true });
 
     // IntersectionObserver のサポート
     if ('IntersectionObserver' in window && isTopPage) {
       const scheduleSec = document.getElementById('schedule-selector');
       const studentVoicesSec = document.getElementById('student-voices');
       const observer = new IntersectionObserver(() => {
-        updateFloatingCtaVisibility();
+        onScrollOrResize();
       }, {
         threshold: [0, 0.2, 0.5, 0.8, 1.0]
       });
@@ -204,7 +215,7 @@
       if (studentVoicesSec) observer.observe(studentVoicesSec);
     }
 
-    updateFloatingCtaVisibility();
+    window.requestAnimationFrame(updateFloatingCtaVisibility);
   }
 
   if (document.readyState === 'loading') {

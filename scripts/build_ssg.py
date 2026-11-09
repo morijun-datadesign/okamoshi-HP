@@ -762,14 +762,14 @@ def update_top_page(articles, rel_path="index.html"):
             content = reg.sub(f'\\1\n{cards_html}\n        \\2', content)
             print(f"Updated {rel_path} #latest-news-list via regex.")
 
-    # 全記事データをインライン埋め込みし、クライアントfetchを廃止
+    # 全記事データをインライン埋め込みし、クライアントfetchを廃止（不要なメタデータを省いて軽量化）
     articles_json = json.dumps([{
         "id": a.get("id"),
         "title": a.get("title"),
         "publishedAt": a.get("publishedAt") or a.get("createdAt"),
-        "category": a.get("category"),
+        "category": {"name": a.get("category", {}).get("name")} if isinstance(a.get("category"), dict) and a.get("category", {}).get("name") else a.get("category"),
         "targetGrade": a.get("targetGrade")
-    } for a in articles], ensure_ascii=False)
+    } for a in articles], ensure_ascii=False, separators=(',', ':'))
 
     # detailUrl の更新: 'detail.html?id=' -> '/news/'
     content = content.replace(
@@ -778,12 +778,8 @@ def update_top_page(articles, rel_path="index.html"):
     )
 
     # initLatestNews() の fetch 処理とAPIキーを安全に除去し、インライン静的データで初期化
-    init_func_pattern = re.compile(r'async function initLatestNews\(\)\s*\{.*?updateNewsByGrade\(currentGrade\);\s*\}', re.DOTALL)
-    replacement_init = f'''async function initLatestNews() {{
-      allNewsArticles = {articles_json};
-      // 静的HTMLで既に最新3件が表示されているため、学年タブの連動のみ実行（通信ゼロ）
-      updateNewsByGrade(currentGrade);
-    }}'''
+    init_func_pattern = re.compile(r'async\s+function\s+initLatestNews\s*\(\)\s*\{[^}]*allNewsArticles\s*=.*?updateNewsByGrade\(currentGrade\);?\s*\}', re.DOTALL)
+    replacement_init = f'async function initLatestNews(){{allNewsArticles={articles_json};updateNewsByGrade(currentGrade)}}'
 
     if init_func_pattern.search(content):
         content = init_func_pattern.sub(replacement_init, content)

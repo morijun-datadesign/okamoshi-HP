@@ -121,7 +121,7 @@
   // 5. スクロール位置・セクションに応じた動的表示判定
   let isTicking = false;
   function updateFloatingCtaVisibility() {
-    const ctaBar = getOrCreateCtaBar();
+    const ctaBar = document.getElementById('floating-cta-bar') || getOrCreateCtaBar();
     if (!ctaBar) return;
 
     const vpHeight = window.innerHeight || document.documentElement.clientHeight;

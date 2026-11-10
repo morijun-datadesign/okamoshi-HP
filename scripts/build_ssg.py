@@ -778,8 +778,8 @@ def update_top_page(articles, rel_path="index.html"):
     )
 
     # initLatestNews() の fetch 処理とAPIキーを安全に除去し、インライン静的データで初期化
-    init_func_pattern = re.compile(r'async\s+function\s+initLatestNews\s*\(\)\s*\{[^}]*allNewsArticles\s*=.*?updateNewsByGrade\(currentGrade\);?\s*\}', re.DOTALL)
-    replacement_init = f'async function initLatestNews(){{allNewsArticles={articles_json};updateNewsByGrade(currentGrade)}}'
+    init_func_pattern = re.compile(r'async\s+function\s+initLatestNews\s*\([^)]*\)\s*\{[^}]*allNewsArticles\s*=.*?updateNewsByGrade\(currentGrade\);?\s*\}', re.DOTALL)
+    replacement_init = f'async function initLatestNews(isInitial=!1){{allNewsArticles={articles_json};const container=document.getElementById("latest-news-list");if(isInitial&&currentGrade!=="p6"&&container&&container.children.length>=3)return;updateNewsByGrade(currentGrade)}}'
 
     if init_func_pattern.search(content):
         content = init_func_pattern.sub(replacement_init, content)

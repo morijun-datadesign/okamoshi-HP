@@ -42,12 +42,11 @@
   <link rel="dns-prefetch" href="https://fonts.gstatic.com">
   <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
   <link rel="dns-prefetch" href="https://images.microcms-assets.io">
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+JP:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700&display=swap">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+JP:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,alternate_email,analytics,apartment,arrow_back,arrow_downward,arrow_forward,article,assignment_turned_in,business_center,calendar_month,calendar_today,call,campaign,check_circle,chevron_left,chevron_right,close,contact_support,content_copy,corporate_fare,credit_card,credit_score,delete_outline,description,devices,edit_document,edit_note,error,event,event_busy,expand_more,fact_check,fax,format_quote,grid_view,groups,handshake,health_and_safety,history_edu,home,how_to_reg,info,insights,inventory_2,language,library_books,local_convenience_store,location_city,location_on,lock,mail,meeting_room,menu,notifications_active,open_in_new,person,phone_in_talk,photo_camera,policy,print,priority_high,progress_activity,public,receipt_long,refresh,rule,schedule,school,search,search_off,send,shield,storefront,storm,sync,terminal,timeline,verified,visibility,warning,wifi_off,zoom_in&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Plus+Jakarta+Sans:wght@700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=analytics,arrow_forward,calendar_month,calendar_today,chevron_right,contact_support,corporate_fare,edit_document,expand_more,fact_check,format_quote,history_edu,how_to_reg,location_city,mail,menu,open_in_new,photo_camera,school,zoom_in&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
   <noscript>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+JP:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=account_balance,alternate_email,analytics,apartment,arrow_back,arrow_downward,arrow_forward,article,assignment_turned_in,business_center,calendar_month,calendar_today,call,campaign,check_circle,chevron_left,chevron_right,close,contact_support,content_copy,corporate_fare,credit_card,credit_score,delete_outline,description,devices,edit_document,edit_note,error,event,event_busy,expand_more,fact_check,fax,format_quote,grid_view,groups,handshake,health_and_safety,history_edu,home,how_to_reg,info,insights,inventory_2,language,library_books,local_convenience_store,location_city,location_on,lock,mail,meeting_room,menu,notifications_active,open_in_new,person,phone_in_talk,photo_camera,policy,print,priority_high,progress_activity,public,receipt_long,refresh,rule,schedule,school,search,search_off,send,shield,storefront,storm,sync,terminal,timeline,verified,visibility,warning,wifi_off,zoom_in&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Plus+Jakarta+Sans:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=analytics,arrow_forward,calendar_month,calendar_today,chevron_right,contact_support,corporate_fare,edit_document,expand_more,fact_check,format_quote,history_edu,how_to_reg,location_city,mail,menu,open_in_new,photo_camera,school,zoom_in&display=swap" rel="stylesheet">
   </noscript>
 
   <!-- Tailwind CSS CDN -->
@@ -972,7 +971,12 @@
             <div class="flex items-start gap-3 sm:gap-4 pt-2.5 sm:pt-2 border-t border-slate-200/80">
               <span class="w-24 sm:w-28 text-xs sm:text-sm font-bold text-slate-500 whitespace-nowrap shrink-0 pt-0.5">お申し込み締切</span>
               <div class="flex-1 min-w-0">
-                <div id="card-deadline" class="text-xs sm:text-sm font-bold text-slate-900 tracking-tight">読み込み中...</div>
+                <div id="card-deadline" class="text-xs sm:text-sm font-bold text-slate-900 tracking-tight">
+                  <div class="space-y-1.5 py-0.5" aria-hidden="true">
+                    <div class="h-3.5 w-56 max-w-full rounded bg-slate-200/80 animate-pulse"></div>
+                    <div class="h-3.5 w-52 max-w-full rounded bg-slate-200/80 animate-pulse"></div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -989,7 +993,20 @@
                   <span class="w-1.5 h-5 bg-brand-green rounded-full inline-block shrink-0"></span>
                   <h4 class="section-title text-base sm:text-lg font-bold text-emerald-950 tracking-tight" style="color: #064e3b !important;">実施日程・会場</h4>
                 </div>
-                <div id="schedule-list" class="space-y-3.5"></div>
+                <div id="schedule-list" class="space-y-3.5">
+                  <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-1.5 sm:gap-4" aria-hidden="true">
+                    <div class="h-5 w-48 max-w-full rounded bg-slate-100 animate-pulse"></div>
+                    <div class="h-5 w-28 rounded bg-slate-100 animate-pulse"></div>
+                  </div>
+                  <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-1.5 sm:gap-4 pt-3 sm:pt-3.5 border-t border-slate-100" aria-hidden="true">
+                    <div class="h-5 w-52 max-w-full rounded bg-slate-100 animate-pulse"></div>
+                    <div class="h-5 w-28 rounded bg-slate-100 animate-pulse"></div>
+                  </div>
+                  <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-1.5 sm:gap-4 pt-3 sm:pt-3.5 border-t border-slate-100" aria-hidden="true">
+                    <div class="h-5 w-44 max-w-full rounded bg-slate-100 animate-pulse"></div>
+                    <div class="h-5 w-36 rounded bg-slate-100 animate-pulse"></div>
+                  </div>
+                </div>
               </div>
 
               <!-- アコーディオン（出題範囲 ＆ 実施詳細） -->
@@ -2319,7 +2336,7 @@
     }
     async function initExamGuidesFromD1() {
       try {
-        const res = await fetch('/api/exam-guides');
+        const res = await fetch('/api/exam-guides', { priority: 'low' });
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const data = await res.json();
         if (!data || !data.success || !data.grades) return;
@@ -2341,8 +2358,10 @@
           if (idx === -1) idx = Math.max(0, curRounds.length - 1);
           currentRoundIndex = idx;
         } catch (e) {}
-        renderRoundTabs();
-        renderCard();
+        window.requestAnimationFrame(() => {
+          renderRoundTabs();
+          renderCard();
+        });
       } catch (err) {
         console.warn('[lp] exam-guides fetch failed, using static fallback:', err);
       }
@@ -2352,10 +2371,10 @@
     let currentGrade = 'c3';
     let currentRoundIndex = 3; // デフォルトで中3は10月号（index 3）
     let currentVenueIndex = 0;
-    function selectGrade(gradeKey, syncFeatures = true) {
+    function selectGrade(gradeKey, syncFeatures = true, isInitial = false) {
       const normalized = (gradeKey === 'chu3') ? 'c3' : (gradeKey === 'chu2') ? 'c2' : (gradeKey === 'chu1') ? 'c1' : (gradeKey === 'sho6' || gradeKey === 'e6') ? 'p6' : gradeKey;
       currentGrade = normalized;
-      const anchorEl = document.getElementById('card-container') || document.getElementById('schedule-selector');
+      const anchorEl = isInitial ? null : (document.getElementById('card-container') || document.getElementById('schedule-selector'));
       const rectBefore = anchorEl ? anchorEl.getBoundingClientRect() : null;
       document.querySelectorAll('.grade-btn').forEach(btn => {
         if (btn.dataset.grade === normalized) {
@@ -2375,10 +2394,10 @@
           studentVoices.classList.remove('hidden');
         }
       }
-      if (typeof checkFloatingCtaVisibility === 'function') {
-        checkFloatingCtaVisibility();
+      if (!isInitial && typeof checkFloatingCtaVisibility === 'function') {
+        window.requestAnimationFrame(checkFloatingCtaVisibility);
       }
-      if (typeof updateNewsByGrade === 'function') {
+      if ((!isInitial || normalized !== 'c3') && typeof updateNewsByGrade === 'function') {
         updateNewsByGrade(normalized);
       }
       const spGradeSelect = document.getElementById('sp-grade-select');
@@ -2397,11 +2416,13 @@
         renderCard();
       }
       if (rectBefore && anchorEl) {
-        const rectAfter = anchorEl.getBoundingClientRect();
-        const diff = rectAfter.top - rectBefore.top;
-        if (Math.abs(diff) > 1) {
-          window.scrollBy(0, diff);
-        }
+        window.requestAnimationFrame(() => {
+          const rectAfter = anchorEl.getBoundingClientRect();
+          const diff = rectAfter.top - rectBefore.top;
+          if (Math.abs(diff) > 1) {
+            window.scrollBy(0, diff);
+          }
+        });
       }
     }
     function handleSpRoundSelect(indexStr) {
@@ -3076,13 +3097,14 @@ ${returnMethodNote}
       }
     }
     window.goToFeaturesCard = goToFeaturesCard;
-    function updateFeaturesCarouselState() {
+    let isFeaturesCarouselTicking = false;
+    function measureFeaturesCarouselState() {
       const carousel = document.getElementById('features-carousel');
-      if (!carousel) return;
+      if (!carousel) return null;
+      const cards = carousel.querySelectorAll('.features-card');
+      if (cards.length === 0) return null;
       const scrollLeft = carousel.scrollLeft;
       const maxScrollLeft = carousel.scrollWidth - carousel.clientWidth;
-      const cards = carousel.querySelectorAll('.features-card');
-      if (cards.length === 0) return;
       const carouselRect = carousel.getBoundingClientRect();
       const carouselCenterX = carouselRect.left + carouselRect.width / 2;
       let activeIndex = 0;
@@ -3096,6 +3118,16 @@ ${returnMethodNote}
           activeIndex = idx;
         }
       });
+      return {
+        cards,
+        activeIndex,
+        isAtStart: scrollLeft <= 15,
+        isAtEnd: scrollLeft >= maxScrollLeft - 15
+      };
+    }
+    function applyFeaturesCarouselState(state) {
+      if (!state) return;
+      const { cards, activeIndex, isAtStart, isAtEnd } = state;
       cards.forEach((c, idx) => {
         if (idx === activeIndex) {
           c.classList.add('border-slate-300', 'shadow-md');
@@ -3117,8 +3149,6 @@ ${returnMethodNote}
           }
         }
       }
-      const isAtStart = scrollLeft <= 15;
-      const isAtEnd = scrollLeft >= maxScrollLeft - 15;
       const updateBtn = (btn, isDisabled) => {
         if (!btn) return;
         btn.disabled = isDisabled;
@@ -3133,33 +3163,54 @@ ${returnMethodNote}
       updateBtn(document.getElementById('features-sp-prev-btn'), isAtStart);
       updateBtn(document.getElementById('features-sp-next-btn'), isAtEnd);
     }
+    function updateFeaturesCarouselState() {
+      applyFeaturesCarouselState(measureFeaturesCarouselState());
+    }
+    function onFeaturesCarouselScroll() {
+      if (!isFeaturesCarouselTicking) {
+        window.requestAnimationFrame(() => {
+          updateFeaturesCarouselState();
+          isFeaturesCarouselTicking = false;
+        });
+        isFeaturesCarouselTicking = true;
+      }
+    }
     let isFeaturesNavTicking = false;
     let cachedFloatingBottom = 20;
-    function updateFeaturesNavPosition() {
+    function measureFeaturesNavPosition() {
       const carousel = document.getElementById('features-carousel');
       const container = document.getElementById('features-nav-container');
       const bar = document.getElementById('features-nav-bar');
-      if (!carousel || !container || !bar) return;
+      if (!carousel || !container || !bar) return null;
       const carouselRect = carousel.getBoundingClientRect();
       const containerRect = container.getBoundingClientRect();
       const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
-      const barHeight = bar.offsetHeight || 42;
-      const computedStyle = window.getComputedStyle(bar);
-      const rawBottom = parseFloat(computedStyle.bottom);
-      if (!isNaN(rawBottom) && rawBottom > 0) {
-        cachedFloatingBottom = rawBottom;
-      }
+      const barHeight = containerRect.height || 44;
       const dockThreshold = viewportHeight - cachedFloatingBottom - barHeight;
+      let mode = 'is-hidden';
       if (containerRect.top <= dockThreshold) {
+        mode = 'is-docked';
+      } else if (carouselRect.top < viewportHeight - 50 && carouselRect.bottom > 80) {
+        mode = 'is-floating';
+      }
+      return { bar, mode };
+    }
+    function applyFeaturesNavPosition(state) {
+      if (!state) return;
+      const { bar, mode } = state;
+      if (mode === 'is-docked') {
         bar.classList.remove('is-hidden', 'is-floating');
         bar.classList.add('is-docked');
-      } else if (carouselRect.top < viewportHeight - 50 && carouselRect.bottom > 80) {
+      } else if (mode === 'is-floating') {
         bar.classList.remove('is-hidden', 'is-docked');
         bar.classList.add('is-floating');
       } else {
         bar.classList.remove('is-floating', 'is-docked');
         bar.classList.add('is-hidden');
       }
+    }
+    function updateFeaturesNavPosition() {
+      applyFeaturesNavPosition(measureFeaturesNavPosition());
     }
     window.updateFeaturesNavPosition = updateFeaturesNavPosition;
     function onFeaturesNavScroll() {
@@ -3171,10 +3222,12 @@ ${returnMethodNote}
         isFeaturesNavTicking = true;
       }
     }
-    function initFeaturesNavScroll() {
+    function initFeaturesNavScroll(skipInitialMeasure = false) {
       window.addEventListener('scroll', onFeaturesNavScroll, { passive: true });
       window.addEventListener('resize', onFeaturesNavScroll, { passive: true });
-      updateFeaturesNavPosition();
+      if (!skipInitialMeasure) {
+        window.requestAnimationFrame(updateFeaturesNavPosition);
+      }
     }
     window.initFeaturesNavScroll = initFeaturesNavScroll;
     const featureCard1Data = {
@@ -4083,7 +4136,7 @@ ${returnMethodNote}
         `;
       }).join('');
     }
-    async function initLatestNews(){allNewsArticles=[{"id":"ynvbigkqcq","title":"岡山県統一模擬試験 公式Webサイトをリニューアルいたしました","publishedAt":"2026-11-01T15:00:00.000Z","category":{"name":"更新情報"},"targetGrade":["全学年"]},{"id":"20260914-1","title":"【8月号結果】岡山5校を志望校とした受験生が計1100名を超えました！","publishedAt":"2026-09-14T00:00:00.000Z","category":{"name":"おかもし情報"},"targetGrade":["中学生"]},{"id":"b055d-p_k7","title":"【岡山県の高校受験】合格への近道はここにある！「おかもし」が受験生から支持される理由","publishedAt":"2026-07-30T00:00:00.000Z","category":{"name":"模試活用法"},"targetGrade":["中学生"]},{"id":"20260721_1","title":"おかもし　会場受験のススメ　〜「しんどい」の先に志望校合格があります〜","publishedAt":"2026-07-21T00:00:00.000Z","category":{"name":"おかもし情報"},"targetGrade":["中学生"]},{"id":"column-7","title":"勉強のコツ完全ガイド｜テスト前でも慌てない！成績アップの方法","publishedAt":"2025-07-04T00:00:00.000Z","category":{"name":"学習コラム"},"targetGrade":["全学年"]},{"id":"column-6","title":"成績が上がる！高校受験生必見の時間管理術と集中力アップ法","publishedAt":"2025-02-26T00:00:00.000Z","category":{"name":"学習コラム"},"targetGrade":["全学年"]},{"id":"column-5","title":"志望校の決め方に悩む中学生のみなさんへ！自信を持って、自分にぴったりな高校を見つけよう","publishedAt":"2024-12-03T00:00:00.000Z","category":{"name":"学習コラム"},"targetGrade":["中学生"]},{"id":"column-4","title":"友達と勉強する?一人で勉強する?高校受験を乗り越えるにはどちらが正解?","publishedAt":"2024-11-26T00:00:00.000Z","category":{"name":"学習コラム"},"targetGrade":["中学生"]},{"id":"column-3","title":"受験勉強のモチベーションUP術 ！ 中学生に聞いてほしい合格への近道","publishedAt":"2024-11-19T00:00:00.000Z","category":{"name":"学習コラム"},"targetGrade":["中学生"]},{"id":"column-2","title":"中学生必見！勉強のやる気が出ない時こそチャンス！焦りと不安を解消する方法","publishedAt":"2024-11-08T00:00:00.000Z","category":{"name":"学習コラム"},"targetGrade":["中学生"]},{"id":"column","title":"志望校が決まらなくても大丈夫！中学生のための高校選び応援ガイド","publishedAt":"2024-11-08T00:00:00.000Z","category":{"name":"学習コラム"},"targetGrade":["中学生"]},{"id":"202408101-2","title":"おかもしで高校合格をつかむ！ あなただけの合格戦略を立てよう","publishedAt":"2024-08-30T00:00:00.000Z","category":{"name":"模試活用法"},"targetGrade":["中学生"]}];updateNewsByGrade(currentGrade)}
+    async function initLatestNews(isInitial=!1){allNewsArticles=[{"id":"ynvbigkqcq","title":"岡山県統一模擬試験 公式Webサイトをリニューアルいたしました","publishedAt":"2026-11-01T15:00:00.000Z","category":{"name":"更新情報"},"targetGrade":["全学年"]},{"id":"20260914-1","title":"【8月号結果】岡山5校を志望校とした受験生が計1100名を超えました！","publishedAt":"2026-09-14T00:00:00.000Z","category":{"name":"おかもし情報"},"targetGrade":["中学生"]},{"id":"b055d-p_k7","title":"【岡山県の高校受験】合格への近道はここにある！「おかもし」が受験生から支持される理由","publishedAt":"2026-07-30T00:00:00.000Z","category":{"name":"模試活用法"},"targetGrade":["中学生"]},{"id":"20260721_1","title":"おかもし　会場受験のススメ　〜「しんどい」の先に志望校合格があります〜","publishedAt":"2026-07-21T00:00:00.000Z","category":{"name":"おかもし情報"},"targetGrade":["中学生"]},{"id":"column-7","title":"勉強のコツ完全ガイド｜テスト前でも慌てない！成績アップの方法","publishedAt":"2025-07-04T00:00:00.000Z","category":{"name":"学習コラム"},"targetGrade":["全学年"]},{"id":"column-6","title":"成績が上がる！高校受験生必見の時間管理術と集中力アップ法","publishedAt":"2025-02-26T00:00:00.000Z","category":{"name":"学習コラム"},"targetGrade":["全学年"]},{"id":"column-5","title":"志望校の決め方に悩む中学生のみなさんへ！自信を持って、自分にぴったりな高校を見つけよう","publishedAt":"2024-12-03T00:00:00.000Z","category":{"name":"学習コラム"},"targetGrade":["中学生"]},{"id":"column-4","title":"友達と勉強する?一人で勉強する?高校受験を乗り越えるにはどちらが正解?","publishedAt":"2024-11-26T00:00:00.000Z","category":{"name":"学習コラム"},"targetGrade":["中学生"]},{"id":"column-3","title":"受験勉強のモチベーションUP術 ！ 中学生に聞いてほしい合格への近道","publishedAt":"2024-11-19T00:00:00.000Z","category":{"name":"学習コラム"},"targetGrade":["中学生"]},{"id":"column-2","title":"中学生必見！勉強のやる気が出ない時こそチャンス！焦りと不安を解消する方法","publishedAt":"2024-11-08T00:00:00.000Z","category":{"name":"学習コラム"},"targetGrade":["中学生"]},{"id":"column","title":"志望校が決まらなくても大丈夫！中学生のための高校選び応援ガイド","publishedAt":"2024-11-08T00:00:00.000Z","category":{"name":"学習コラム"},"targetGrade":["中学生"]},{"id":"202408101-2","title":"おかもしで高校合格をつかむ！ あなただけの合格戦略を立てよう","publishedAt":"2024-08-30T00:00:00.000Z","category":{"name":"模試活用法"},"targetGrade":["中学生"]}];const container=document.getElementById("latest-news-list");if(isInitial&&currentGrade!=="p6"&&container&&container.children.length>=3)return;updateNewsByGrade(currentGrade)}
     window.updateNewsByGrade = updateNewsByGrade;
     window.initLatestNews = initLatestNews;
     const faqData = [
@@ -4207,21 +4260,21 @@ ${returnMethodNote}
     window.initDeepLink = initDeepLink;
     window.addEventListener('hashchange', initDeepLink);
     window.addEventListener('popstate', initDeepLink);
-    function checkFloatingCtaVisibility() {
+    let isFloatingCtaTicking = false;
+    function measureFloatingCtaVisibility() {
       const ctaBar = document.getElementById('floating-cta-bar');
-      if (!ctaBar) return;
+      if (!ctaBar) return null;
       const scheduleSec = document.getElementById('schedule-selector');
       const studentVoicesSec = document.getElementById('student-voices');
       const vpHeight = window.innerHeight || document.documentElement.clientHeight;
       let triggerSec = studentVoicesSec;
-      if (!triggerSec || triggerSec.classList.contains('hidden') || triggerSec.offsetHeight === 0) {
+      if (!triggerSec || triggerSec.classList.contains('hidden')) {
         triggerSec = scheduleSec ? scheduleSec.nextElementSibling : null;
       }
-      // 2. まだ「生徒の声（検討・共感ゾーン）」に到達していない場合は非表示
       let hasReachedTrigger = false;
       if (triggerSec) {
         const triggerRect = triggerSec.getBoundingClientRect();
-        if (triggerRect.top <= vpHeight * 0.85) {
+        if (triggerRect.height > 0 && triggerRect.top <= vpHeight * 0.85) {
           hasReachedTrigger = true;
         }
       }
@@ -4232,40 +4285,73 @@ ${returnMethodNote}
           isInsideSchedule = true;
         }
       }
-      // 4. お申し込みフォーム（サマリー含む）エリア内（もし存在する場合）
       let isInsideApply = false;
       const applyContainers = document.querySelectorAll('#apply-form, [data-section="apply-summary"]');
-      applyContainers.forEach(el => {
-        const rect = el.getBoundingClientRect();
+      for (let i = 0; i < applyContainers.length; i++) {
+        const rect = applyContainers[i].getBoundingClientRect();
         if (rect.top < vpHeight && rect.bottom > 0) {
           isInsideApply = true;
+          break;
         }
-      });
-      const shouldShow = hasReachedTrigger && !isInsideSchedule && !isInsideApply;
+      }
+      return {
+        ctaBar,
+        shouldShow: hasReachedTrigger && !isInsideSchedule && !isInsideApply
+      };
+    }
+    function applyFloatingCtaVisibility(state) {
+      if (!state) return;
+      const { ctaBar, shouldShow } = state;
       if (shouldShow) {
-        ctaBar.classList.remove('translate-y-full', 'opacity-0', 'pointer-events-none');
-        ctaBar.classList.add('translate-y-0', 'opacity-100', 'pointer-events-auto');
+        if (ctaBar.classList.contains('translate-y-full')) {
+          ctaBar.classList.remove('translate-y-full', 'opacity-0', 'pointer-events-none');
+          ctaBar.classList.add('translate-y-0', 'opacity-100', 'pointer-events-auto');
+        }
       } else {
-        ctaBar.classList.remove('translate-y-0', 'opacity-100', 'pointer-events-auto');
-        ctaBar.classList.add('translate-y-full', 'opacity-0', 'pointer-events-none');
+        if (!ctaBar.classList.contains('translate-y-full')) {
+          ctaBar.classList.remove('translate-y-0', 'opacity-100', 'pointer-events-auto');
+          ctaBar.classList.add('translate-y-full', 'opacity-0', 'pointer-events-none');
+        }
+      }
+    }
+    function checkFloatingCtaVisibility() {
+      applyFloatingCtaVisibility(measureFloatingCtaVisibility());
+    }
+    function onFloatingCtaScroll() {
+      if (!isFloatingCtaTicking) {
+        window.requestAnimationFrame(() => {
+          checkFloatingCtaVisibility();
+          isFloatingCtaTicking = false;
+        });
+        isFloatingCtaTicking = true;
       }
     }
     window.checkFloatingCtaVisibility = checkFloatingCtaVisibility;
-    function initFloatingCtaVisibility() {
-      window.addEventListener('scroll', checkFloatingCtaVisibility, { passive: true });
-      window.addEventListener('resize', checkFloatingCtaVisibility, { passive: true });
+    function batchMeasureAndUpdateUI() {
+      const cState = measureFeaturesCarouselState();
+      const nState = measureFeaturesNavPosition();
+      const fState = measureFloatingCtaVisibility();
+      applyFeaturesCarouselState(cState);
+      applyFeaturesNavPosition(nState);
+      applyFloatingCtaVisibility(fState);
+    }
+    function initFloatingCtaVisibility(skipInitialMeasure = false) {
+      window.addEventListener('scroll', onFloatingCtaScroll, { passive: true });
+      window.addEventListener('resize', onFloatingCtaScroll, { passive: true });
       const scheduleSec = document.getElementById('schedule-selector');
       const studentVoicesSec = document.getElementById('student-voices');
       if ('IntersectionObserver' in window) {
         const observer = new IntersectionObserver(() => {
-          checkFloatingCtaVisibility();
+          onFloatingCtaScroll();
         }, {
           threshold: [0, 0.2, 0.5, 0.8, 1.0]
         });
         if (scheduleSec) observer.observe(scheduleSec);
         if (studentVoicesSec) observer.observe(studentVoicesSec);
       }
-      checkFloatingCtaVisibility();
+      if (!skipInitialMeasure) {
+        window.requestAnimationFrame(checkFloatingCtaVisibility);
+      }
     }
     window.addEventListener('DOMContentLoaded', () => {
       let initialGrade = 'c3';
@@ -4280,20 +4366,23 @@ ${returnMethodNote}
           else if (['sho6', 'p6', 'e6', 's6', '6', '小6', '小６'].includes(gDecoded) || gDecoded.includes('小6') || gDecoded.includes('小６')) initialGrade = 'p6';
         }
       } catch (e) {}
-      selectGrade(initialGrade);
+      selectGrade(initialGrade, true, true);
       const featureInitGrade = (initialGrade === 'p6') ? 'p6' : (initialGrade === 'c1' || initialGrade === 'c2') ? 'c12' : 'c3';
       switchFeatureGrade(featureInitGrade);
       const featuresCarousel = document.getElementById('features-carousel');
       if (featuresCarousel) {
-        featuresCarousel.addEventListener('scroll', updateFeaturesCarouselState, { passive: true });
-        updateFeaturesCarouselState();
+        featuresCarousel.addEventListener('scroll', onFeaturesCarouselScroll, { passive: true });
       }
-      initFeaturesNavScroll();
-      initFloatingCtaVisibility();
-      initDeepLink();
-      initLatestNews();
-      initExamGuidesFromD1();
+      initFeaturesNavScroll(true);
+      initFloatingCtaVisibility(true);
+      initLatestNews(true);
       renderFaq();
+      window.requestAnimationFrame(() => {
+        batchMeasureAndUpdateUI();
+        initDeepLink();
+        const ric = window.requestIdleCallback || ((cb) => setTimeout(cb, 50));
+        ric(() => initExamGuidesFromD1(), { timeout: 300 });
+      });
     });
 </script>
 

@@ -138,17 +138,24 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     schedQuery += ` ORDER BY sort_order ASC, id ASC;`;
 
     const schedStmt = schedBinds.length > 0 ? env.DB.prepare(schedQuery).bind(...schedBinds) : env.DB.prepare(schedQuery);
-    const schedulesRes = await schedStmt.all<ScheduleRow>();
-    const schedules = schedulesRes.results || [];
+    const venuesStmt = env.DB.prepare(`SELECT * FROM exam_venues ORDER BY sort_order ASC, id ASC;`);
+    const timetablesStmt = env.DB.prepare(`SELECT * FROM exam_timetables ORDER BY sort_order ASC, id ASC;`);
+    const scopesStmt = env.DB.prepare(`SELECT * FROM exam_scopes ORDER BY sort_order ASC, id ASC;`);
 
-    const venuesRes = await env.DB.prepare(`SELECT * FROM exam_venues ORDER BY sort_order ASC, id ASC;`).all<VenueRow>();
-    const venues = venuesRes.results || [];
+    const [schedulesRes, venuesRes, timetablesRes, scopesRes] =
+      typeof env.DB.batch === "function"
+        ? await env.DB.batch< any >([schedStmt, venuesStmt, timetablesStmt, scopesStmt])
+        : await Promise.all([
+            schedStmt.all<ScheduleRow>(),
+            venuesStmt.all<VenueRow>(),
+            timetablesStmt.all<TimetableRow>(),
+            scopesStmt.all<ScopeRow>(),
+          ]);
 
-    const timetablesRes = await env.DB.prepare(`SELECT * FROM exam_timetables ORDER BY sort_order ASC, id ASC;`).all<TimetableRow>();
-    const timetables = timetablesRes.results || [];
-
-    const scopesRes = await env.DB.prepare(`SELECT * FROM exam_scopes ORDER BY sort_order ASC, id ASC;`).all<ScopeRow>();
-    const scopes = scopesRes.results || [];
+    const schedules = (schedulesRes.results || []) as ScheduleRow[];
+    const venues = (venuesRes.results || []) as VenueRow[];
+    const timetables = (timetablesRes.results || []) as TimetableRow[];
+    const scopes = (scopesRes.results || []) as ScopeRow[];
 
     // 2. timetables を venue_id ごとにグループ化
     const timetablesByVenue: Record<string, { label: string; time: string }[]> = {};
@@ -361,23 +368,28 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
       grades[gKey].rounds.sort((a: any, b: any) => a.monthNum - b.monthNum);
     }
 
+    const includeFlat = url.searchParams.get("flat") === "1";
+    const payload: Record<string, any> = {
+      success: true,
+      grades,
+    };
+    if (includeFlat) {
+      payload.flat = {
+        schedules,
+        venues,
+        timetables,
+        scopes,
+      };
+    }
+
     return new Response(
-      JSON.stringify({
-        success: true,
-        grades,
-        flat: {
-          schedules,
-          venues,
-          timetables,
-          scopes,
-        },
-      }),
+      JSON.stringify(payload),
       {
         status: 200,
         headers: {
           "Content-Type": "application/json; charset=utf-8",
-          // CDNエッジキャッシュ 60秒
-          "Cache-Control": "public, max-age=60, s-maxage=60",
+          // CDNエッジキャッシュ 300秒 + stale-while-revalidate 24時間
+          "Cache-Control": "public, max-age=60, s-maxage=300, stale-while-revalidate=86400",
           "X-Content-Type-Options": "nosniff",
         },
       }

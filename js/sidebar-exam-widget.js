@@ -100,7 +100,7 @@
 
     let gradesData = null;
     try {
-      const res = await fetch('/api/exam-guides?_t=' + Date.now());
+      const res = await fetch('/api/exam-guides', { priority: 'low' });
       if (res.ok) {
         const data = await res.json();
         if (data && data.success && data.grades) {
@@ -256,9 +256,16 @@
     container.innerHTML = renderedCards.join('\n');
   }
 
+  function scheduleSidebarUpdate() {
+    var ric = window.requestIdleCallback || function (cb) { return setTimeout(cb, 50); };
+    ric(function () {
+      updateSidebarExamWidget();
+    }, { timeout: 500 });
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', updateSidebarExamWidget);
+    document.addEventListener('DOMContentLoaded', scheduleSidebarUpdate);
   } else {
-    updateSidebarExamWidget();
+    scheduleSidebarUpdate();
   }
 })();

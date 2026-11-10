@@ -28,13 +28,15 @@
   </script>
 
   <!-- Microsoft Clarity -->
-  <script type="text/javascript">
-    (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "z5nnqjwyks");
-</script>
+  <script>
+    /* Microsoft Clarity: GA4(GT-NBJ63L9J)は即時実行のまま、Clarityのみ load 完了後のアイドル時に遅延ロード */
+    (function(c,l,a,r,i){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      function load(){var t=l.createElement(r),y=l.getElementsByTagName(r)[0];t.async=1;t.src="https://www.clarity.ms/tag/"+i;y.parentNode.insertBefore(t,y);}
+      function idle(){(c.requestIdleCallback||function(cb){return setTimeout(cb,1)})(load,{timeout:3000});}
+      if(l.readyState==="complete"){idle();}else{c.addEventListener("load",idle,{once:true});}
+    })(window,document,"clarity","script","z5nnqjwyks");
+  </script>
 
   <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1821,7 +1823,7 @@
   <!-- ==================================================== -->
   <!-- microCMS 記事詳細取得 & 目次（TOC）自動生成 スクリプト -->
   <!-- ==================================================== -->
-  <script src="/js/common-date.js"></script>
+  <script src="/js/common-date.js" defer></script>
   
 <script>
     function getCurrentDate() {

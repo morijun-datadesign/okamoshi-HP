@@ -24,12 +24,14 @@
   </script>
 
   <!-- Microsoft Clarity -->
-  <script type="text/javascript">
-    (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "z5nnqjwyks");
+  <script>
+    /* Microsoft Clarity: GA4(GT-NBJ63L9J)は即時実行のまま、Clarityのみ load 完了後のアイドル時に遅延ロード */
+    (function(c,l,a,r,i){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      function load(){var t=l.createElement(r),y=l.getElementsByTagName(r)[0];t.async=1;t.src="https://www.clarity.ms/tag/"+i;y.parentNode.insertBefore(t,y);}
+      function idle(){(c.requestIdleCallback||function(cb){return setTimeout(cb,1)})(load,{timeout:3000});}
+      if(l.readyState==="complete"){idle();}else{c.addEventListener("load",idle,{once:true});}
+    })(window,document,"clarity","script","z5nnqjwyks");
   </script>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>

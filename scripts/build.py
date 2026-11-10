@@ -5,6 +5,7 @@
 - 画像の最適化・WebP/AVIFリサイズ生成
 """
 import os
+import re
 import sys
 import subprocess
 import urllib.request
@@ -91,6 +92,54 @@ def build_ssg():
     if os.path.exists(ssg_script):
         subprocess.run([sys.executable, ssg_script], cwd=BASE_DIR, check=True)
 
+# ---------------------------------------------------------------------------
+# レンダリングブロックCSS解消: トップページに css/style.min.css をインライン展開
+#   - <link rel="stylesheet" href="/css/style.min.css"> を <style> に置換（マーカーで冪等化）
+#   - Tailwind の content スキャンにインラインCSS自体が拾われないよう、
+#     CSSビルド前に一旦 <link> へ戻し、ビルド後に再インライン化する
+# ---------------------------------------------------------------------------
+INLINE_CSS_PAGES = ["index.html"]
+CSS_LINK_TAG = '<link rel="stylesheet" href="/css/style.min.css">'
+INLINE_CSS_START = "<!-- INLINE_CSS:style.min.css START -->"
+INLINE_CSS_END = "<!-- INLINE_CSS:style.min.css END -->"
+INLINE_CSS_RE = re.compile(re.escape(INLINE_CSS_START) + r".*?" + re.escape(INLINE_CSS_END), re.DOTALL)
+
+def restore_css_links():
+    for rel in INLINE_CSS_PAGES:
+        path = os.path.join(BASE_DIR, rel)
+        if not os.path.exists(path):
+            continue
+        with open(path, "r", encoding="utf-8") as f:
+            content = f.read()
+        new_content = INLINE_CSS_RE.sub(lambda _m: CSS_LINK_TAG, content)
+        if new_content != content:
+            with open(path, "w", encoding="utf-8") as f:
+                f.write(new_content)
+
+def inline_css_into_pages():
+    css_path = os.path.join(BASE_DIR, "css", "style.min.css")
+    with open(css_path, "r", encoding="utf-8") as f:
+        css = f.read().strip()
+    if "</style" in css.lower():
+        raise RuntimeError("style.min.css contains '</style' — refusing to inline")
+    block = f'{INLINE_CSS_START}<style id="inline-style-min-css">{css}</style>{INLINE_CSS_END}'
+    for rel in INLINE_CSS_PAGES:
+        path = os.path.join(BASE_DIR, rel)
+        if not os.path.exists(path):
+            continue
+        with open(path, "r", encoding="utf-8") as f:
+            content = f.read()
+        if INLINE_CSS_RE.search(content):
+            new_content = INLINE_CSS_RE.sub(lambda _m: block, content)
+        elif CSS_LINK_TAG in content:
+            new_content = content.replace(CSS_LINK_TAG, block, 1)
+        else:
+            print(f"Warning: {rel} に style.min.css の参照が見つからないためインライン化をスキップしました")
+            continue
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(new_content)
+        print(f"Inlined css/style.min.css into {rel} ({len(css) / 1024:.1f} KB)")
+
 def main():
     args = sys.argv[1:]
     if "--ssg-only" in args:
@@ -100,10 +149,12 @@ def main():
         return
 
     print("=== okamoshi Production Build Started ===")
+    restore_css_links()
     build_css()
     if "--skip-images" not in args:
         optimize_images()
     build_ssg()
+    inline_css_into_pages()
     print("=== okamoshi Production Build Finished Successfully ===")
 
 if __name__ == "__main__":

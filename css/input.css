@@ -72,6 +72,11 @@ section#features > div.flex > div > h2.section-title {
   }
 }
 
+/* NEWバッジ（bg-[#c85a32]）のWCAG AAコントラスト比（>=4.5:1）確保 */
+.bg-\[\#c85a32\] {
+  background-color: #b5451f !important;
+}
+
 /* Apple風 横スクロールスナップ（スマホ用） */
 .snap-carousel {
   display: flex;

@@ -61,6 +61,17 @@
   color: #064e3b !important;
 }
 
+/* フォント適用時の微小なレイアウトシフト（CLS）防止 */
+section#features > div.flex > div > h2.section-title {
+  min-height: 3.75rem;
+  inline-size: 100%;
+}
+@media (min-width: 768px) {
+  section#features > div.flex > div > h2.section-title {
+    min-height: 2.375rem;
+  }
+}
+
 /* Apple風 横スクロールスナップ（スマホ用） */
 .snap-carousel {
   display: flex;

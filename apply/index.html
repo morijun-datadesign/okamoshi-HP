@@ -19,30 +19,63 @@
   <meta property="og:image" content="https://okayama-moshi.com/og-image.jpg">
   <meta property="og:site_name" content="岡山県統一模擬試験（おかもし）">
   <meta name="twitter:card" content="summary_large_image">
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=GT-NBJ63L9J"></script>
+  <!-- Google tag (gtag.js) & Microsoft Clarity 遅延ロード（TBT 0ms・初期メインスレッド負荷ゼロ化） -->
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'GT-NBJ63L9J');
-  </script>
-
-  <!-- Microsoft Clarity -->
-  <script>
-    /* Microsoft Clarity: GA4(GT-NBJ63L9J)は即時実行のまま、Clarityのみ load 完了後のアイドル時に遅延ロード */
-    (function(c,l,a,r,i){
-      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-      function load(){var t=l.createElement(r),y=l.getElementsByTagName(r)[0];t.async=1;t.src="https://www.clarity.ms/tag/"+i;y.parentNode.insertBefore(t,y);}
-      function idle(){(c.requestIdleCallback||function(cb){return setTimeout(cb,1)})(load,{timeout:3000});}
-      if(l.readyState==="complete"){idle();}else{c.addEventListener("load",idle,{once:true});}
-    })(window,document,"clarity","script","z5nnqjwyks");
+    window.clarity = window.clarity || function(){(window.clarity.q = window.clarity.q || []).push(arguments);};
+    (function() {
+      var analyticsLoaded = false;
+      var fontsLoaded = false;
+      function loadFonts() {
+        if (fontsLoaded) return;
+        fontsLoaded = true;
+        var f = document.getElementById('google-fonts-sans');
+        if (f && f.getAttribute('data-href') && !f.getAttribute('href')) {
+          f.setAttribute('href', f.getAttribute('data-href'));
+        }
+      }
+      function loadAnalytics() {
+        loadFonts();
+        if (analyticsLoaded) return;
+        analyticsLoaded = true;
+        var g = document.createElement('script');
+        g.async = true;
+        g.src = 'https://www.googletagmanager.com/gtag/js?id=GT-NBJ63L9J';
+        document.head.appendChild(g);
+        var c = document.createElement('script');
+        c.async = true;
+        c.src = 'https://www.clarity.ms/tag/z5nnqjwyks';
+        document.head.appendChild(c);
+      }
+      function scheduleIdleLoad() {
+        var ric = window.requestIdleCallback || function(cb) { return setTimeout(cb, 1); };
+        setTimeout(function() {
+          ric(loadAnalytics, { timeout: 2000 });
+        }, 3500);
+      }
+      ['scroll', 'pointerdown', 'keydown', 'touchstart'].forEach(function(ev) {
+        window.addEventListener(ev, function() {
+          var ric = window.requestIdleCallback || function(cb) { return setTimeout(cb, 1); };
+          ric(loadAnalytics, { timeout: 1000 });
+        }, { once: true, passive: true });
+      });
+      if (document.readyState === 'complete') {
+        scheduleIdleLoad();
+      } else {
+        window.addEventListener('DOMContentLoaded', function() {
+          window.addEventListener('load', scheduleIdleLoad, { once: true });
+        }, { once: true });
+      }
+    })();
   </script>
 
   <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Plus+Jakarta+Sans:wght@700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <link id="google-fonts-sans" data-href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Plus+Jakarta+Sans:wght@700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=apartment,arrow_forward,check_circle,chevron_right,close,contact_support,corporate_fare,credit_card,credit_score,delete_outline,devices,edit_document,error,event_busy,expand_more,history_edu,info,inventory_2,lock,mail,menu,open_in_new,photo_camera,receipt_long,school,shield,storefront&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
   <noscript>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Plus+Jakarta+Sans:wght@700&display=swap" rel="stylesheet">

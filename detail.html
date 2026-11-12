@@ -897,6 +897,38 @@
       padding: 0 !important;
     }
 
+    /* 箇条書き (<li> / <ul> / <ol>) の中で装飾ボックス (.box-fact 等) が使われた際、黒丸 (•) が箱の外に飛び出さないよう list-style: none に調整 */
+    .entry-content li:has(.box-fact, .box-action, .box-warning, .point-box, .attention-box, .info-box),
+    .blog-body li:has(.box-fact, .box-action, .box-warning, .point-box, .attention-box, .info-box),
+    .prose li:has(.box-fact, .box-action, .box-warning, .point-box, .attention-box, .info-box),
+    .entry-content li.has-callout-box,
+    .blog-body li.has-callout-box,
+    .prose li.has-callout-box {
+      list-style: none !important;
+      list-style-type: none !important;
+      margin-left: 0 !important;
+      padding-left: 0 !important;
+    }
+    .entry-content li:has(.box-fact, .box-action, .box-warning, .point-box, .attention-box, .info-box)::marker,
+    .blog-body li:has(.box-fact, .box-action, .box-warning, .point-box, .attention-box, .info-box)::marker,
+    .prose li:has(.box-fact, .box-action, .box-warning, .point-box, .attention-box, .info-box)::marker,
+    .entry-content li.has-callout-box::marker {
+      content: none !important;
+      display: none !important;
+    }
+    .entry-content ul:has(> li > .box-fact, > li > .box-action, > li > .box-warning, > li > .point-box, > li > .attention-box, > li > .info-box, > li.has-callout-box),
+    .entry-content ol:has(> li > .box-fact, > li > .box-action, > li > .box-warning, > li > .point-box, > li > .attention-box, > li > .info-box, > li.has-callout-box),
+    .blog-body ul:has(> li > .box-fact, > li > .box-action, > li > .box-warning, > li > .point-box, > li > .attention-box, > li > .info-box, > li.has-callout-box),
+    .blog-body ol:has(> li > .box-fact, > li > .box-action, > li > .box-warning, > li > .point-box, > li > .attention-box, > li > .info-box, > li.has-callout-box),
+    .prose ul:has(> li > .box-fact, > li > .box-action, > li > .box-warning, > li > .point-box, > li > .attention-box, > li > .info-box, > li.has-callout-box),
+    .prose ol:has(> li > .box-fact, > li > .box-action, > li > .box-warning, > li > .point-box, > li > .attention-box, > li > .info-box, > li.has-callout-box),
+    .entry-content ul.has-callout-box,
+    .entry-content ol.has-callout-box {
+      list-style: none !important;
+      list-style-type: none !important;
+      padding-left: 0 !important;
+    }
+
     /* ==================================================== */
     /* microCMS リッチエディタ用カスタム文字装飾 (.text-point-red, .text-brand-green, .marker-yellow) */
     /* ==================================================== */
@@ -2077,6 +2109,20 @@
             i--; // マージ後に次も同一クラスが続く可能性があるため再チェック
           }
         }
+
+        // 3. 箇条書き (<li>) 内に装飾ボックスが含まれる場合、黒丸 (•) が飛び出さないようクラス＆スタイル付与
+        Array.from(container.querySelectorAll(`li`)).forEach(li => {
+          if (li.querySelector(`.${cls}`)) {
+            li.classList.add('has-callout-box');
+            li.style.listStyle = 'none';
+            li.style.paddingLeft = '0';
+            if (li.parentElement && (li.parentElement.tagName === 'UL' || li.parentElement.tagName === 'OL')) {
+              li.parentElement.classList.add('has-callout-box');
+              li.parentElement.style.listStyle = 'none';
+              li.parentElement.style.paddingLeft = '0';
+            }
+          }
+        });
       });
     }
     function generateTableOfContents() {
@@ -2673,14 +2719,20 @@
       s = s.replace(emptyBoxRe, '');
     }
 
-    // 3. 同じボックス系クラスを持つ <span> が <br> または空白を挟んで連続している場合、1つの <span class="box-..."> にマージ
+    // 空span除去の結果として空になった <li></li> や <p></p> を除去（連続マージを妨げないため）
+    s = s.replace(/<li[^>]*>\s*(?:<p[^>]*>\s*(?:<br\s*\/?>|&nbsp;|\s)*<\/p>|<br\s*\/?>|&nbsp;|\s)*<\/li>/gi, '');
+    s = s.replace(/<p[^>]*>\s*(?:<br\s*\/?>|&nbsp;|\s)*<\/p>/gi, '');
+
+    // 3. 同じボックス系クラスを持つ <span> が <br>、空白、</li><li>、</p><p> を挟んで連続している場合、1つの <span class="box-..."> に自動結合
     var mergeAdjRe = new RegExp('<span\\s+class=["\'](' + boxClsPat + ')["\']\\s*>(' + boxInnerPat + ')<\\/span>(\\s*)<span\\s+class=["\']\\1["\']\\s*>(' + boxInnerPat + ')<\\/span>', 'gi');
-    var mergeBrRe = new RegExp('<span\\s+class=["\'](' + boxClsPat + ')["\']\\s*>(' + boxInnerPat + ')<\\/span>\\s*(?:<br\\s*\\/?>\\s*)+<span\\s+class=["\']\\1["\']\\s*>(' + boxInnerPat + ')<\\/span>', 'gi');
+    var mergeSepRe = new RegExp('<span\\s+class=["\'](' + boxClsPat + ')["\']\\s*>(' + boxInnerPat + ')<\\/span>\\s*(?:(?:<br\\s*\\/?>\\s*)+|(?:<\\/p>\\s*)?<\\/li>\\s*<li[^>]*>(?:\\s*<p[^>]*>)?|<\\/p>\\s*(?:<br\\s*\\/?>|\\s)*<p[^>]*>)\\s*<span\\s+class=["\']\\1["\']\\s*>(' + boxInnerPat + ')<\\/span>', 'gi');
+    var singleListBoxRe = new RegExp('<(?:ul|ol)[^>]*>\\s*<li[^>]*>\\s*(?:<p[^>]*>\\s*)?(<span\\s+class=["\'](?:' + boxClsPat + ')["\']\\s*>' + boxInnerPat + '<\\/span>)(?:\\s*<\\/p>)?\\s*<\\/li>\\s*<\\/(?:ul|ol)>', 'gi');
     changed = true;
     while (changed) {
       var prev2 = s;
       s = s.replace(mergeAdjRe, '<span class="$1">$2$3$4</span>');
-      s = s.replace(mergeBrRe, '<span class="$1">$2<br>$3</span>');
+      s = s.replace(mergeSepRe, '<span class="$1">$2<br>$3</span>');
+      s = s.replace(singleListBoxRe, '<p>$1</p>');
       changed = (s !== prev2);
     }
 

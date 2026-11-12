@@ -321,3 +321,26 @@ details[open] summary svg {
   padding: 0 2px !important;
 }
 
+/* 箇条書き (<li> / <ul> / <ol>) の中で装飾ボックス (.box-fact 等) が使われた際、黒丸 (•) が箱の外に飛び出さないよう list-style: none に調整 */
+.entry-content li:has(.box-fact, .box-action, .box-warning, .point-box, .attention-box, .info-box),
+.blog-body li:has(.box-fact, .box-action, .box-warning, .point-box, .attention-box, .info-box),
+.prose li:has(.box-fact, .box-action, .box-warning, .point-box, .attention-box, .info-box),
+.entry-content li.has-callout-box,
+.blog-body li.has-callout-box,
+.prose li.has-callout-box {
+  list-style: none !important;
+  list-style-type: none !important;
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+}
+.entry-content ul:has(> li > .box-fact, > li > .box-action, > li > .box-warning, > li > .point-box, > li > .attention-box, > li > .info-box, > li.has-callout-box),
+.entry-content ol:has(> li > .box-fact, > li > .box-action, > li > .box-warning, > li > .point-box, > li > .attention-box, > li > .info-box, > li.has-callout-box),
+.blog-body ul:has(> li > .box-fact, > li > .box-action, > li > .box-warning, > li > .point-box, > li > .attention-box, > li > .info-box, > li.has-callout-box),
+.blog-body ol:has(> li > .box-fact, > li > .box-action, > li > .box-warning, > li > .point-box, > li > .attention-box, > li > .info-box, > li.has-callout-box),
+.prose ul:has(> li > .box-fact, > li > .box-action, > li > .box-warning, > li > .point-box, > li > .attention-box, > li > .info-box, > li.has-callout-box),
+.prose ol:has(> li > .box-fact, > li > .box-action, > li > .box-warning, > li > .point-box, > li > .attention-box, > li > .info-box, > li.has-callout-box) {
+  list-style: none !important;
+  list-style-type: none !important;
+  padding-left: 0 !important;
+}
+

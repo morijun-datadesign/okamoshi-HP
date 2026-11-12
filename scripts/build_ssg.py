@@ -325,20 +325,29 @@ def normalize_box_spans_html(raw_html):
     while empty_box_pat.search(s):
         s = empty_box_pat.sub('', s)
 
-    # 3. 同じボックス系クラスを持つ <span> が <br> または空白を挟んで連続している場合、1つの <span class="box-..."> にマージ
+    # 空span除去の結果として空になった <li></li> や <p></p> を除去（連続マージを妨げないため）
+    s = re.sub(r'<li[^>]*>\s*(?:<p[^>]*>\s*(?:<br\s*/?>|&nbsp;|\s)*</p>|<br\s*/?>|&nbsp;|\s)*</li>', '', s, flags=re.IGNORECASE)
+    s = re.sub(r'<p[^>]*>\s*(?:<br\s*/?>|&nbsp;|\s)*</p>', '', s, flags=re.IGNORECASE)
+
+    # 3. 同じボックス系クラスを持つ <span> が <br>、空白、</li><li>、</p><p> を挟んで連続している場合、1つの <span class="box-..."> にマージ
     merge_adj_pat = re.compile(
         rf'<span\s+class=["\']({BOX_CLS_PAT})["\']\s*>({BOX_INNER_PAT})</span>(\s*)<span\s+class=["\']\1["\']\s*>({BOX_INNER_PAT})</span>',
         flags=re.IGNORECASE,
     )
-    merge_br_pat = re.compile(
-        rf'<span\s+class=["\']({BOX_CLS_PAT})["\']\s*>({BOX_INNER_PAT})</span>\s*(?:<br\s*/?>\s*)+<span\s+class=["\']\1["\']\s*>({BOX_INNER_PAT})</span>',
+    merge_sep_pat = re.compile(
+        rf'<span\s+class=["\']({BOX_CLS_PAT})["\']\s*>({BOX_INNER_PAT})</span>\s*(?:(?:<br\s*/?>\s*)+|(?:</p>\s*)?</li>\s*<li[^>]*>(?:\s*<p[^>]*>)?|</p>\s*(?:<br\s*/?>|\s)*<p[^>]*>)\s*<span\s+class=["\']\1["\']\s*>({BOX_INNER_PAT})</span>',
+        flags=re.IGNORECASE,
+    )
+    single_list_box_pat = re.compile(
+        rf'<(?:ul|ol)[^>]*>\s*<li[^>]*>\s*(?:<p[^>]*>\s*)?(<span\s+class=["\'](?:{BOX_CLS_PAT})["\']\s*>{BOX_INNER_PAT}</span>)(?:\s*</p>)?\s*</li>\s*</(?:ul|ol)>',
         flags=re.IGNORECASE,
     )
     changed = True
     while changed:
         prev = s
         s = merge_adj_pat.sub(lambda m: f'<span class="{m.group(1)}">{m.group(2)}{m.group(3)}{m.group(4)}</span>', s)
-        s = merge_br_pat.sub(lambda m: f'<span class="{m.group(1)}">{m.group(2)}<br>{m.group(3)}</span>', s)
+        s = merge_sep_pat.sub(lambda m: f'<span class="{m.group(1)}">{m.group(2)}<br>{m.group(3)}</span>', s)
+        s = single_list_box_pat.sub(r'<p>\1</p>', s)
         changed = (s != prev)
 
     # 4. ボックス <span> の先頭・末尾に残った余分な <br> を除去

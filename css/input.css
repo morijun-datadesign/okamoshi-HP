@@ -344,3 +344,101 @@ details[open] summary svg {
   padding-left: 0 !important;
 }
 
+/* 同種装飾ボックスが連続した場合の視覚結合フォールバック */
+.box-fact,
+.box-action,
+.box-warning,
+.point-box,
+.attention-box,
+.info-box {
+  display: block !important;
+}
+
+.entry-content :is(strong, b, em, i, u, span:not(.box-fact):not(.box-action):not(.box-warning):not(.point-box):not(.attention-box):not(.info-box)):has(> :is(.box-fact, .box-action, .box-warning, .point-box, .attention-box, .info-box)) {
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+span.box-fact + br:has(+ span.box-fact),
+span.box-action + br:has(+ span.box-action),
+span.box-warning + br:has(+ span.box-warning),
+.entry-content .box-fact + br:has(+ .box-fact),
+.entry-content .box-action + br:has(+ .box-action),
+.entry-content .box-warning + br:has(+ .box-warning),
+.entry-content :has(.box-fact) + br:has(+ :has(.box-fact)),
+.entry-content :has(.box-action) + br:has(+ :has(.box-action)),
+.entry-content :has(.box-warning) + br:has(+ :has(.box-warning)) {
+  display: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.entry-content p:has(.box-fact):has(+ p:has(.box-fact)),
+.entry-content p:has(.box-action):has(+ p:has(.box-action)),
+.entry-content p:has(.box-warning):has(+ p:has(.box-warning)),
+.entry-content li:has(.box-fact):has(+ li:has(.box-fact)),
+.entry-content li:has(.box-action):has(+ li:has(.box-action)),
+.entry-content li:has(.box-warning):has(+ li:has(.box-warning)) {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.entry-content p:has(.box-fact) + p:has(.box-fact),
+.entry-content p:has(.box-action) + p:has(.box-action),
+.entry-content p:has(.box-warning) + p:has(.box-warning),
+.entry-content li:has(.box-fact) + li:has(.box-fact),
+.entry-content li:has(.box-action) + li:has(.box-action),
+.entry-content li:has(.box-warning) + li:has(.box-warning) {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+.entry-content .box-fact:has(+ .box-fact),
+.entry-content .box-action:has(+ .box-action),
+.entry-content .box-warning:has(+ .box-warning),
+.entry-content .box-fact:has(+ br + .box-fact),
+.entry-content .box-action:has(+ br + .box-action),
+.entry-content .box-warning:has(+ br + .box-warning),
+.entry-content :has(> .box-fact):has(+ :has(> .box-fact)) > .box-fact,
+.entry-content :has(> .box-action):has(+ :has(> .box-action)) > .box-action,
+.entry-content :has(> .box-warning):has(+ :has(> .box-warning)) > .box-warning,
+.entry-content :has(> .box-fact):has(+ br + :has(> .box-fact)) > .box-fact,
+.entry-content :has(> .box-action):has(+ br + :has(> .box-action)) > .box-action,
+.entry-content :has(> .box-warning):has(+ br + :has(> .box-warning)) > .box-warning,
+.entry-content p:has(.box-fact):has(+ p:has(.box-fact)) .box-fact,
+.entry-content p:has(.box-action):has(+ p:has(.box-action)) .box-action,
+.entry-content p:has(.box-warning):has(+ p:has(.box-warning)) .box-warning,
+.entry-content li:has(.box-fact):has(+ li:has(.box-fact)) .box-fact,
+.entry-content li:has(.box-action):has(+ li:has(.box-action)) .box-action,
+.entry-content li:has(.box-warning):has(+ li:has(.box-warning)) .box-warning {
+  margin-bottom: 0 !important;
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+  padding-bottom: 4px !important;
+}
+
+.entry-content .box-fact + .box-fact,
+.entry-content .box-action + .box-action,
+.entry-content .box-warning + .box-warning,
+.entry-content .box-fact + br + .box-fact,
+.entry-content .box-action + br + .box-action,
+.entry-content .box-warning + br + .box-warning,
+.entry-content :has(> .box-fact) + :has(> .box-fact) > .box-fact,
+.entry-content :has(> .box-action) + :has(> .box-action) > .box-action,
+.entry-content :has(> .box-warning) + :has(> .box-warning) > .box-warning,
+.entry-content :has(> .box-fact) + br + :has(> .box-fact) > .box-fact,
+.entry-content :has(> .box-action) + br + :has(> .box-action) > .box-action,
+.entry-content :has(> .box-warning) + br + :has(> .box-warning) > .box-warning,
+.entry-content p:has(.box-fact) + p:has(.box-fact) .box-fact,
+.entry-content p:has(.box-action) + p:has(.box-action) .box-action,
+.entry-content p:has(.box-warning) + p:has(.box-warning) .box-warning,
+.entry-content li:has(.box-fact) + li:has(.box-fact) .box-fact,
+.entry-content li:has(.box-action) + li:has(.box-action) .box-action,
+.entry-content li:has(.box-warning) + li:has(.box-warning) .box-warning {
+  margin-top: 0 !important;
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+  padding-top: 4px !important;
+}
+

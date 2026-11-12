@@ -301,35 +301,19 @@ def normalize_box_spans_html(raw_html):
         flags=re.IGNORECASE,
     )
 
-    # 1b. <strong> / <b> / <em> や文字装飾 <span> がボックス <span> の外側を包んでいる場合、ボックス <span> を最外層へ反転
+    # 2. インライン反転・空span除去・連続マージを一体ループで収束するまで実行
     unwrap_inline_pat = re.compile(
-        rf'<(strong|b|em|i|u)>\s*<span\s+class=["\']({BOX_CLS_PAT})["\']\s*>({BOX_INNER_PAT})</span>\s*</\1>',
+        rf'<(strong|b|em|i|u|s|mark|small|sub|sup|font)(\s+[^>]*)?>\s*<span\s+class=["\']({BOX_CLS_PAT})["\']\s*>({BOX_INNER_PAT})</span>\s*</\1>',
         flags=re.IGNORECASE,
     )
-    unwrap_deco_pat = re.compile(
-        rf'<span\s+class=["\']((?:text-point-red|text-brand-green|marker-yellow)(?:\s+(?:text-point-red|text-brand-green|marker-yellow))*)["\']\s*>\s*<span\s+class=["\']({BOX_CLS_PAT})["\']\s*>({BOX_INNER_PAT})</span>\s*</span>',
+    unwrap_span_attr_pat = re.compile(
+        rf'<span(\s+(?![^>]*\b{BOX_CLS_PAT}\b)[^>]*)>\s*<span\s+class=["\']({BOX_CLS_PAT})["\']\s*>({BOX_INNER_PAT})</span>\s*</span>',
         flags=re.IGNORECASE,
     )
-    changed = True
-    while changed:
-        prev = s
-        s = unwrap_inline_pat.sub(lambda m: f'<span class="{m.group(2)}"><{m.group(1)}>{m.group(3)}</{m.group(1)}></span>', s)
-        s = unwrap_deco_pat.sub(lambda m: f'<span class="{m.group(2)}"><span class="{m.group(1)}">{m.group(3)}</span></span>', s)
-        changed = (s != prev)
-
-    # 2. 空っぽの <span class="box-..."></span>（空白・&nbsp;・<br>・空タグのみ含む）と直後の不要な <br> を除去
     empty_box_pat = re.compile(
         rf'<span\s+class=["\']({BOX_CLS_PAT})["\']\s*>(?:\s|&nbsp;|<br\s*/?>|<(?:strong|b|em|i|u|span)[^>]*>\s*</(?:strong|b|em|i|u|span)>)*</span>\s*(?:<br\s*/?>\s*)*',
         flags=re.IGNORECASE,
     )
-    while empty_box_pat.search(s):
-        s = empty_box_pat.sub('', s)
-
-    # 空span除去の結果として空になった <li></li> や <p></p> を除去（連続マージを妨げないため）
-    s = re.sub(r'<li[^>]*>\s*(?:<p[^>]*>\s*(?:<br\s*/?>|&nbsp;|\s)*</p>|<br\s*/?>|&nbsp;|\s)*</li>', '', s, flags=re.IGNORECASE)
-    s = re.sub(r'<p[^>]*>\s*(?:<br\s*/?>|&nbsp;|\s)*</p>', '', s, flags=re.IGNORECASE)
-
-    # 3. 同じボックス系クラスを持つ <span> が <br>、空白、</li><li>、</p><p> を挟んで連続している場合、1つの <span class="box-..."> にマージ
     merge_adj_pat = re.compile(
         rf'<span\s+class=["\']({BOX_CLS_PAT})["\']\s*>({BOX_INNER_PAT})</span>(\s*)<span\s+class=["\']\1["\']\s*>({BOX_INNER_PAT})</span>',
         flags=re.IGNORECASE,
@@ -342,9 +326,17 @@ def normalize_box_spans_html(raw_html):
         rf'<(?:ul|ol)[^>]*>\s*<li[^>]*>\s*(?:<p[^>]*>\s*)?(<span\s+class=["\'](?:{BOX_CLS_PAT})["\']\s*>{BOX_INNER_PAT}</span>)(?:\s*</p>)?\s*</li>\s*</(?:ul|ol)>',
         flags=re.IGNORECASE,
     )
+
     changed = True
-    while changed:
+    iter_count = 0
+    while changed and iter_count < 15:
+        iter_count += 1
         prev = s
+        s = empty_box_pat.sub('', s)
+        s = re.sub(r'<li[^>]*>\s*(?:<p[^>]*>\s*(?:<br\s*/?>|&nbsp;|\s)*</p>|<br\s*/?>|&nbsp;|\s)*</li>', '', s, flags=re.IGNORECASE)
+        s = re.sub(r'<p[^>]*>\s*(?:<br\s*/?>|&nbsp;|\s)*</p>', '', s, flags=re.IGNORECASE)
+        s = unwrap_inline_pat.sub(lambda m: f'<span class="{m.group(3)}"><{m.group(1)}{m.group(2) or ""}>{m.group(4)}</{m.group(1)}></span>', s)
+        s = unwrap_span_attr_pat.sub(lambda m: f'<span class="{m.group(2)}"><span{m.group(1)}>{m.group(3)}</span></span>', s)
         s = merge_adj_pat.sub(lambda m: f'<span class="{m.group(1)}">{m.group(2)}{m.group(3)}{m.group(4)}</span>', s)
         s = merge_sep_pat.sub(lambda m: f'<span class="{m.group(1)}">{m.group(2)}<br>{m.group(3)}</span>', s)
         s = single_list_box_pat.sub(r'<p>\1</p>', s)

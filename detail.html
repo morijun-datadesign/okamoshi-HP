@@ -861,10 +861,40 @@
     .entry-content .info-box + .info-box,
     .entry-content .box-fact + .box-fact,
     .entry-content .box-action + .box-action,
-    .entry-content .box-warning + .box-warning {
+    .entry-content .box-warning + .box-warning,
+    .entry-content .point-box + br + .point-box,
+    .entry-content .attention-box + br + .attention-box,
+    .entry-content .info-box + br + .info-box,
+    .entry-content .box-fact + br + .box-fact,
+    .entry-content .box-action + br + .box-action,
+    .entry-content .box-warning + br + .box-warning {
       margin-top: -1.5rem !important; /* 直前ボックスの下マージンと相殺 */
       padding-top: 0.25rem !important;
       border-top-right-radius: 0 !important;
+    }
+
+    /* 空っぽのボックス <span> と直後の不要な <br>、および連続ボックス間の <br> を非表示化 */
+    .entry-content span.point-box:empty,
+    .entry-content span.attention-box:empty,
+    .entry-content span.info-box:empty,
+    .entry-content span.box-fact:empty,
+    .entry-content span.box-action:empty,
+    .entry-content span.box-warning:empty,
+    .entry-content span.point-box:empty + br,
+    .entry-content span.attention-box:empty + br,
+    .entry-content span.info-box:empty + br,
+    .entry-content span.box-fact:empty + br,
+    .entry-content span.box-action:empty + br,
+    .entry-content span.box-warning:empty + br,
+    .entry-content .point-box + br:has(+ .point-box),
+    .entry-content .attention-box + br:has(+ .attention-box),
+    .entry-content .info-box + br:has(+ .info-box),
+    .entry-content .box-fact + br:has(+ .box-fact),
+    .entry-content .box-action + br:has(+ .box-action),
+    .entry-content .box-warning + br:has(+ .box-warning) {
+      display: none !important;
+      margin: 0 !important;
+      padding: 0 !important;
     }
 
     /* ==================================================== */
@@ -1950,8 +1980,56 @@
     };
     function normalizeCalloutBoxes(container) {
       if (!container) return;
+      if (typeof normalizeBoxSpansHtml === 'function') {
+        const cleaned = normalizeBoxSpansHtml(container.innerHTML);
+        if (cleaned !== container.innerHTML) {
+          container.innerHTML = cleaned;
+        }
+      }
       const boxClasses = ['box-fact', 'box-action', 'box-warning', 'point-box', 'attention-box', 'info-box'];
       boxClasses.forEach(cls => {
+        // 0. 空の <span class="box-..."> と直後の不要な <br> を除去
+        Array.from(container.querySelectorAll(`span.${cls}`)).forEach(span => {
+          const text = (span.textContent || '').replace(/\u00a0/g, '').trim();
+          if (!text && !span.querySelector('img, video, iframe')) {
+            let next = span.nextSibling;
+            while (next && ((next.nodeType === 3 && !next.textContent.trim()) || (next.nodeType === 1 && next.tagName === 'BR'))) {
+              const toRemove = next;
+              next = next.nextSibling;
+              toRemove.remove();
+            }
+            span.remove();
+          }
+        });
+
+        // 0.5. 同じ親要素内で <br> や空白のみを挟んで連続する同一クラスの <span class="box-..."> を1つに結合
+        const rawSpans = Array.from(container.querySelectorAll(`span.${cls}`));
+        for (let i = 0; i < rawSpans.length; i++) {
+          const curr = rawSpans[i];
+          if (!curr || !curr.parentNode) continue;
+          let probe = curr.nextSibling;
+          const betweenNodes = [];
+          let hasBr = false;
+          while (probe && (
+            (probe.nodeType === 3 && !probe.textContent.replace(/\u00a0/g, '').trim()) ||
+            (probe.nodeType === 1 && probe.tagName === 'BR')
+          )) {
+            if (probe.nodeType === 1 && probe.tagName === 'BR') hasBr = true;
+            betweenNodes.push(probe);
+            probe = probe.nextSibling;
+          }
+          if (probe && probe.nodeType === 1 && probe.tagName === 'SPAN' && probe.classList.contains(cls)) {
+            betweenNodes.forEach(n => n.remove());
+            if (hasBr) curr.appendChild(document.createElement('br'));
+            while (probe.firstChild) {
+              curr.appendChild(probe.firstChild);
+            }
+            probe.remove();
+            i--; // 3個以上連続している場合も続けてマージ
+          }
+        }
+
+        // 1. <p> または <div> 内の <span class="box-..."> を <div class="box-..."> へ正規化
         const spans = Array.from(container.querySelectorAll(`span.${cls}`));
         spans.forEach(span => {
           const parent = span.parentElement;
@@ -1982,7 +2060,7 @@
           if (!curr || !curr.parentNode) continue;
           let next = curr.nextElementSibling;
           while (next && (
-            (next.tagName.toLowerCase() === 'p' && !next.textContent.trim()) ||
+            ((next.tagName.toLowerCase() === 'p' || next.tagName.toLowerCase() === 'br') && !next.textContent.trim()) ||
             (next.nodeType === 3 && !next.textContent.trim())
           )) {
             const emptyEl = next;
@@ -2126,7 +2204,9 @@
       const contentBody = document.getElementById('entry-content-body');
       if (contentBody) {
         if (post.content) {
-          contentBody.innerHTML = typeof convertMp4EmbedsHtml === 'function' ? convertMp4EmbedsHtml(post.content) : post.content;
+          let htmlContent = typeof normalizeBoxSpansHtml === 'function' ? normalizeBoxSpansHtml(post.content) : post.content;
+          htmlContent = typeof convertMp4EmbedsHtml === 'function' ? convertMp4EmbedsHtml(htmlContent) : htmlContent;
+          contentBody.innerHTML = htmlContent;
           if (typeof normalizeMp4Elements === 'function') {
             normalizeMp4Elements(contentBody);
           }
@@ -2552,6 +2632,65 @@
     } else {
       window.location.href = '/index.html?tab=' + tabKey + '#next-exam';
     }
+  }
+  function normalizeBoxSpansHtml(rawHtml) {
+    if (!rawHtml) return '';
+    var s = String(rawHtml);
+    var boxClsPat = '(?:box-(?:fact|action|warning)|(?:point|attention|info)-box)';
+    var innerSpanPat = '<span\\b[^>]*>(?:(?!<span\\b|</span\\b)[\\s\\S]|<span\\b[^>]*>(?:(?!<span\\b|</span\\b)[\\s\\S])*<\\/span>)*<\\/span>';
+    var boxInnerPat = '(?:(?!<span\\b|</span\\b)[\\s\\S]|' + innerSpanPat + ')*';
+
+    // 0. 空の文字装飾 <span> を除去
+    s = s.replace(/<span\s+class=["'](?:text-point-red|text-brand-green|marker-yellow)["']\s*>(?:\s|&nbsp;)*<\/span>/gi, '');
+
+    // 1. 同一 <span> にボックス系classと文字装飾classが同時付与されている場合、外側=ボックス / 内側=文字装飾に分離
+    var mixedRe = new RegExp('<span\\s+class=["\']([^"\']*\\b' + boxClsPat + '\\b[^"\']*)["\']\\s*>(' + boxInnerPat + ')<\\/span>', 'gi');
+    var singleBoxRe = new RegExp('^' + boxClsPat + '$', 'i');
+    s = s.replace(mixedRe, function(full, clsAttr, inner) {
+      var classes = clsAttr.trim().split(/\s+/);
+      var boxC = classes.filter(function(c) { return singleBoxRe.test(c); });
+      var otherC = classes.filter(function(c) { return !singleBoxRe.test(c); });
+      if (boxC.length > 0 && otherC.length > 0) {
+        return '<span class="' + boxC[0] + '"><span class="' + otherC.join(' ') + '">' + inner + '</span></span>';
+      }
+      return full;
+    });
+
+    // 1b. <strong> / <b> / <em> や文字装飾 <span> がボックス <span> の外側を包んでいる場合、ボックス <span> を最外層へ反転
+    var unwrapInlineRe = new RegExp('<(strong|b|em|i|u)>\\s*<span\\s+class=["\'](' + boxClsPat + ')["\']\\s*>(' + boxInnerPat + ')<\\/span>\\s*<\\/\\1>', 'gi');
+    var unwrapDecoRe = new RegExp('<span\\s+class=["\']((?:text-point-red|text-brand-green|marker-yellow)(?:\\s+(?:text-point-red|text-brand-green|marker-yellow))*)["\']\\s*>\\s*<span\\s+class=["\'](' + boxClsPat + ')["\']\\s*>(' + boxInnerPat + ')<\\/span>\\s*<\\/span>', 'gi');
+    var changed = true;
+    while (changed) {
+      var prev = s;
+      s = s.replace(unwrapInlineRe, '<span class="$2"><$1>$3</$1></span>');
+      s = s.replace(unwrapDecoRe, '<span class="$2"><span class="$1">$3</span></span>');
+      changed = (s !== prev);
+    }
+
+    // 2. 空っぽの <span class="box-..."></span>（空白・&nbsp;・<br>・空タグのみ含む）と直後の不要な <br> を除去
+    var emptyBoxRe = new RegExp('<span\\s+class=["\'](' + boxClsPat + ')["\']\\s*>(?:\\s|&nbsp;|<br\\s*\\/?>|<(?:strong|b|em|i|u|span)[^>]*>\\s*<\\/(?:strong|b|em|i|u|span)>)*<\\/span>\\s*(?:<br\\s*\\/?>\\s*)*', 'gi');
+    while (emptyBoxRe.test(s)) {
+      s = s.replace(emptyBoxRe, '');
+    }
+
+    // 3. 同じボックス系クラスを持つ <span> が <br> または空白を挟んで連続している場合、1つの <span class="box-..."> にマージ
+    var mergeAdjRe = new RegExp('<span\\s+class=["\'](' + boxClsPat + ')["\']\\s*>(' + boxInnerPat + ')<\\/span>(\\s*)<span\\s+class=["\']\\1["\']\\s*>(' + boxInnerPat + ')<\\/span>', 'gi');
+    var mergeBrRe = new RegExp('<span\\s+class=["\'](' + boxClsPat + ')["\']\\s*>(' + boxInnerPat + ')<\\/span>\\s*(?:<br\\s*\\/?>\\s*)+<span\\s+class=["\']\\1["\']\\s*>(' + boxInnerPat + ')<\\/span>', 'gi');
+    changed = true;
+    while (changed) {
+      var prev2 = s;
+      s = s.replace(mergeAdjRe, '<span class="$1">$2$3$4</span>');
+      s = s.replace(mergeBrRe, '<span class="$1">$2<br>$3</span>');
+      changed = (s !== prev2);
+    }
+
+    // 4. ボックス <span> の先頭・末尾に残った余分な <br> を除去
+    var leadBrRe = new RegExp('<span\\s+class=["\'](' + boxClsPat + ')["\']\\s*>(?:\\s*<br\\s*\\/?>\\s*)+', 'gi');
+    var trailBrRe = new RegExp('(<span\\s+class=["\'](?:' + boxClsPat + ')["\']\\s*>' + boxInnerPat + '?)(?:\\s*<br\\s*\\/?>\\s*)+<\\/span>', 'gi');
+    s = s.replace(leadBrRe, '<span class="$1">');
+    s = s.replace(trailBrRe, '$1</span>');
+
+    return s;
   }
   function buildMp4VideoPlayerHtml(videoUrl) {
     var safeUrl = String(videoUrl || '').trim().replace(/"/g, '&quot;');

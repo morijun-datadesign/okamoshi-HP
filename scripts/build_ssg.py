@@ -260,9 +260,107 @@ def convert_mp4_embeds(content):
 
     return content
 
+BOX_CLS_PAT = r'(?:box-(?:fact|action|warning)|(?:point|attention|info)-box)'
+INNER_SPAN_PAT = r'<span\b[^>]*>(?:(?!<span\b|</span\b)[\s\S]|<span\b[^>]*>(?:(?!<span\b|</span\b)[\s\S])*</span>)*</span>'
+BOX_INNER_PAT = rf'(?:(?!<span\b|</span\b)[\s\S]|{INNER_SPAN_PAT})*'
+
+def normalize_box_spans_html(raw_html):
+    """
+    microCMS リッチエディタで複数行（Shift+Enter の <br> 等）にボックス系カスタムclass
+    (box-fact, box-action, box-warning 等) を適用した際に発生する <span> 分裂・空 <span> を自動結合・除去する。
+    """
+    if not raw_html:
+        return ""
+
+    s = raw_html
+
+    # 0. 空の文字装飾 <span> を除去
+    s = re.sub(
+        r'<span\s+class=["\'](?:text-point-red|text-brand-green|marker-yellow)["\']\s*>(?:\s|&nbsp;)*</span>',
+        '',
+        s,
+        flags=re.IGNORECASE,
+    )
+
+    # 1. 同一 <span> にボックス系classと文字装飾classが同時付与されている場合、外側=ボックス / 内側=文字装飾に分離
+    def split_mixed_classes(m):
+        cls_attr = m.group(1)
+        inner = m.group(2)
+        classes = cls_attr.split()
+        box_c = [c for c in classes if re.fullmatch(BOX_CLS_PAT, c, flags=re.IGNORECASE)]
+        other_c = [c for c in classes if not re.fullmatch(BOX_CLS_PAT, c, flags=re.IGNORECASE)]
+        if box_c and other_c:
+            other_str = " ".join(other_c)
+            return f'<span class="{box_c[0]}"><span class="{other_str}">{inner}</span></span>'
+        return m.group(0)
+
+    s = re.sub(
+        rf'<span\s+class=["\']([^"\']*\b{BOX_CLS_PAT}\b[^"\']*)["\']\s*>({BOX_INNER_PAT})</span>',
+        split_mixed_classes,
+        s,
+        flags=re.IGNORECASE,
+    )
+
+    # 1b. <strong> / <b> / <em> や文字装飾 <span> がボックス <span> の外側を包んでいる場合、ボックス <span> を最外層へ反転
+    unwrap_inline_pat = re.compile(
+        rf'<(strong|b|em|i|u)>\s*<span\s+class=["\']({BOX_CLS_PAT})["\']\s*>({BOX_INNER_PAT})</span>\s*</\1>',
+        flags=re.IGNORECASE,
+    )
+    unwrap_deco_pat = re.compile(
+        rf'<span\s+class=["\']((?:text-point-red|text-brand-green|marker-yellow)(?:\s+(?:text-point-red|text-brand-green|marker-yellow))*)["\']\s*>\s*<span\s+class=["\']({BOX_CLS_PAT})["\']\s*>({BOX_INNER_PAT})</span>\s*</span>',
+        flags=re.IGNORECASE,
+    )
+    changed = True
+    while changed:
+        prev = s
+        s = unwrap_inline_pat.sub(lambda m: f'<span class="{m.group(2)}"><{m.group(1)}>{m.group(3)}</{m.group(1)}></span>', s)
+        s = unwrap_deco_pat.sub(lambda m: f'<span class="{m.group(2)}"><span class="{m.group(1)}">{m.group(3)}</span></span>', s)
+        changed = (s != prev)
+
+    # 2. 空っぽの <span class="box-..."></span>（空白・&nbsp;・<br>・空タグのみ含む）と直後の不要な <br> を除去
+    empty_box_pat = re.compile(
+        rf'<span\s+class=["\']({BOX_CLS_PAT})["\']\s*>(?:\s|&nbsp;|<br\s*/?>|<(?:strong|b|em|i|u|span)[^>]*>\s*</(?:strong|b|em|i|u|span)>)*</span>\s*(?:<br\s*/?>\s*)*',
+        flags=re.IGNORECASE,
+    )
+    while empty_box_pat.search(s):
+        s = empty_box_pat.sub('', s)
+
+    # 3. 同じボックス系クラスを持つ <span> が <br> または空白を挟んで連続している場合、1つの <span class="box-..."> にマージ
+    merge_adj_pat = re.compile(
+        rf'<span\s+class=["\']({BOX_CLS_PAT})["\']\s*>({BOX_INNER_PAT})</span>(\s*)<span\s+class=["\']\1["\']\s*>({BOX_INNER_PAT})</span>',
+        flags=re.IGNORECASE,
+    )
+    merge_br_pat = re.compile(
+        rf'<span\s+class=["\']({BOX_CLS_PAT})["\']\s*>({BOX_INNER_PAT})</span>\s*(?:<br\s*/?>\s*)+<span\s+class=["\']\1["\']\s*>({BOX_INNER_PAT})</span>',
+        flags=re.IGNORECASE,
+    )
+    changed = True
+    while changed:
+        prev = s
+        s = merge_adj_pat.sub(lambda m: f'<span class="{m.group(1)}">{m.group(2)}{m.group(3)}{m.group(4)}</span>', s)
+        s = merge_br_pat.sub(lambda m: f'<span class="{m.group(1)}">{m.group(2)}<br>{m.group(3)}</span>', s)
+        changed = (s != prev)
+
+    # 4. ボックス <span> の先頭・末尾に残った余分な <br> を除去
+    s = re.sub(
+        rf'<span\s+class=["\']({BOX_CLS_PAT})["\']\s*>(?:\s*<br\s*/?>\s*)+',
+        lambda m: f'<span class="{m.group(1)}">',
+        s,
+        flags=re.IGNORECASE,
+    )
+    s = re.sub(
+        rf'(<span\s+class=["\'](?:{BOX_CLS_PAT})["\']\s*>{BOX_INNER_PAT}?)(?:\s*<br\s*/?>\s*)+</span>',
+        lambda m: f'{m.group(1)}</span>',
+        s,
+        flags=re.IGNORECASE,
+    )
+
+    return s
+
 def format_article_content(raw_html):
     """
     本文HTMLの事前整形
+    - 分裂したボックス系 <span> の自動結合・空 <span> 除去
     - 空段落の除去
     - コールアウト要素 (.box-fact, .box-action, .box-warning) の正規化
     - 案内リンク「おかもし日程一覧」「おかもし詳細・お申し込み」の2カラムボタングリッド化
@@ -271,7 +369,7 @@ def format_article_content(raw_html):
     if not raw_html:
         return "", []
 
-    content = raw_html
+    content = normalize_box_spans_html(raw_html)
 
     # 1. 空段落の除去 (<p></p>, <p><br></p>, 空白のみのp)
     content = re.sub(r'<p>\s*(?:<br\s*/?>|&nbsp;|\s)*</p>', '', content, flags=re.IGNORECASE)
@@ -283,14 +381,31 @@ def format_article_content(raw_html):
     def normalize_p_tag(match):
         p_tag_full = match.group(0)
         p_content = match.group(1)
-        for bcls in supported_boxes:
-            span_pattern = rf'<span\s+class=["\']?(?:[^"\']*\s+)?{re.escape(bcls)}(?:\s+[^"\']*)?["\']?>(.*?)</span>'
-            if re.search(span_pattern, p_content, flags=re.IGNORECASE | re.DOTALL):
-                clean_inner = re.sub(span_pattern, r'\1', p_content, flags=re.IGNORECASE | re.DOTALL)
+        present_boxes = [
+            bcls for bcls in supported_boxes
+            if re.search(rf'<span\s+class=["\']?(?:[^"\']*\s+)?{re.escape(bcls)}(?:\s+[^"\']*)?["\']?\s*>', p_content, flags=re.IGNORECASE)
+        ]
+        if len(present_boxes) == 1:
+            bcls = present_boxes[0]
+            span_pattern = rf'<span\s+class=["\']?(?:[^"\']*\s+)?{re.escape(bcls)}(?:\s+[^"\']*)?["\']?\s*>({BOX_INNER_PAT})</span>'
+            # 段落全体がボックスspan（＋前後の空白/brのみ）で構成されている場合は <div class="box-..."><p>...</p></div> へ昇格
+            stripped_outside = re.sub(span_pattern, '', p_content, flags=re.IGNORECASE).strip()
+            stripped_outside = re.sub(r'^(?:<br\s*/?>|\s|&nbsp;)+$', '', stripped_outside, flags=re.IGNORECASE)
+            if not stripped_outside:
+                clean_inner = re.sub(span_pattern, r'\1', p_content, flags=re.IGNORECASE)
+                clean_inner = re.sub(r'^(?:\s*<br\s*/?>\s*)+|(?:\s*<br\s*/?>\s*)+$', '', clean_inner, flags=re.IGNORECASE)
                 return f'<div class="{bcls}"><p>{clean_inner}</p></div>'
         return p_tag_full
 
     content = re.sub(r'<p(?:\s+[^>]*)?>(.*?)</p>', normalize_p_tag, content, flags=re.DOTALL | re.IGNORECASE)
+
+    # 2.2. 連続する同一クラスの <div class="box-..."><p>...</p></div> を1つのボックスに統合
+    merge_div_box_pat = re.compile(
+        rf'<div\s+class=["\']({BOX_CLS_PAT})["\']>\s*(<p>[\s\S]*?</p>)\s*</div>\s*<div\s+class=["\']\1["\']>\s*(<p>[\s\S]*?</p>)\s*</div>',
+        flags=re.IGNORECASE,
+    )
+    while merge_div_box_pat.search(content):
+        content = merge_div_box_pat.sub(lambda m: f'<div class="{m.group(1)}">{m.group(2)}{m.group(3)}</div>', content)
 
     # 2.5. リンク文字列の巻き込み補正（例: <a href="https://okayama-moshi.com）への再登録...">）
     content = re.sub(

@@ -198,7 +198,9 @@ def main():
       const contentBody = document.getElementById('entry-content-body');
       if (contentBody) {
         if (post.content) {
-          contentBody.innerHTML = typeof convertMp4EmbedsHtml === 'function' ? convertMp4EmbedsHtml(post.content) : post.content;
+          let htmlContent = typeof normalizeBoxSpansHtml === 'function' ? normalizeBoxSpansHtml(post.content) : post.content;
+          htmlContent = typeof convertMp4EmbedsHtml === 'function' ? convertMp4EmbedsHtml(htmlContent) : htmlContent;
+          contentBody.innerHTML = htmlContent;
           if (typeof normalizeMp4Elements === 'function') {
             normalizeMp4Elements(contentBody);
           }

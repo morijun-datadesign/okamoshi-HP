@@ -344,7 +344,7 @@ details[open] summary svg {
   padding-left: 0 !important;
 }
 
-/* 同種装飾ボックスが連続した場合の視覚結合フォールバック */
+/* 同種装飾ボックスが連続した場合の視覚結合フォールバック・下余白引き締め */
 .box-fact,
 .box-action,
 .box-warning,
@@ -352,6 +352,20 @@ details[open] summary svg {
 .attention-box,
 .info-box {
   display: block !important;
+  margin-top: 1rem !important;
+  margin-bottom: 10px !important;
+}
+
+/* ボックス直後の要素（段落・テキスト等）の上余白を引き締め、すぐ下の説明文と自然な距離感で繋げる */
+.entry-content :is(.box-fact, .box-action, .box-warning, .point-box, .attention-box, .info-box) + *,
+.entry-content :is(p, div):has(> :is(.box-fact, .box-action, .box-warning, .point-box, .attention-box, .info-box):last-child) + * {
+  margin-top: 10px !important;
+}
+
+/* ボックス内部の <br> は確実に改行として機能させる（非表示化を防止） */
+.entry-content :is(.box-fact, .box-action, .box-warning, .point-box, .attention-box, .info-box) br {
+  display: inline !important;
+  content: normal !important;
 }
 
 .entry-content :is(strong, b, em, i, u, span:not(.box-fact):not(.box-action):not(.box-warning):not(.point-box):not(.attention-box):not(.info-box)):has(> :is(.box-fact, .box-action, .box-warning, .point-box, .attention-box, .info-box)) {
@@ -360,15 +374,17 @@ details[open] summary svg {
   padding: 0 !important;
 }
 
+/* ボックス直後に残った余分な <br> や、連続するボックス間の <br> のみ非表示にする（ボックス内部の <br> には干渉しない） */
 span.box-fact + br:has(+ span.box-fact),
 span.box-action + br:has(+ span.box-action),
 span.box-warning + br:has(+ span.box-warning),
-.entry-content .box-fact + br:has(+ .box-fact),
-.entry-content .box-action + br:has(+ .box-action),
-.entry-content .box-warning + br:has(+ .box-warning),
-.entry-content :has(.box-fact) + br:has(+ :has(.box-fact)),
-.entry-content :has(.box-action) + br:has(+ :has(.box-action)),
-.entry-content :has(.box-warning) + br:has(+ :has(.box-warning)) {
+.entry-content .box-fact + br,
+.entry-content .box-action + br,
+.entry-content .box-warning + br,
+.entry-content .point-box + br,
+.entry-content .attention-box + br,
+.entry-content .info-box + br,
+.entry-content :is(.box-fact, .box-action, .box-warning, .point-box, .attention-box, .info-box) + br + br {
   display: none !important;
   margin: 0 !important;
   padding: 0 !important;

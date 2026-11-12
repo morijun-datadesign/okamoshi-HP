@@ -543,8 +543,8 @@
       width: 100% !important;
       box-sizing: border-box !important;
       padding: 1.125rem 1.25rem !important; /* 内側余白: 上下18px, 左右20px */
-      margin-top: 1.5rem !important;        /* 外側余白: 上24px */
-      margin-bottom: 1.5rem !important;     /* 外側余白: 下24px */
+      margin-top: 1rem !important;          /* 外側余白: 上16px */
+      margin-bottom: 10px !important;       /* 外側余白: 下10px（直後の説明文と自然な距離感で繋げる） */
       border-radius: 0 0.5rem 0.5rem 0 !important; /* 右側のみ角丸 (8px) */
       border-top: none !important;
       border-right: none !important;
@@ -878,40 +878,43 @@
       padding: 0 !important;
     }
 
-    /* 空っぽのボックス <span> と直後の不要な <br>、および連続する同種ボックス間の <br> を完全に非表示化 */
+    /* 空っぽのボックス <span> と、ボックス外側の直後に残った不要な <br> を非表示化（※ボックス内部の <br> には絶対に干渉させない） */
     .entry-content span.point-box:empty,
     .entry-content span.attention-box:empty,
     .entry-content span.info-box:empty,
     .entry-content span.box-fact:empty,
     .entry-content span.box-action:empty,
     .entry-content span.box-warning:empty,
-    .entry-content span.point-box:empty + br,
-    .entry-content span.attention-box:empty + br,
-    .entry-content span.info-box:empty + br,
-    .entry-content span.box-fact:empty + br,
-    .entry-content span.box-action:empty + br,
-    .entry-content span.box-warning:empty + br,
+    .entry-content :is(.point-box, .attention-box, .info-box, .box-fact, .box-action, .box-warning) + br,
+    .entry-content :is(.point-box, .attention-box, .info-box, .box-fact, .box-action, .box-warning) + br + br,
     span.box-fact + br:has(+ span.box-fact),
     span.box-action + br:has(+ span.box-action),
-    span.box-warning + br:has(+ span.box-warning),
-    .entry-content .point-box + br:has(+ .point-box),
-    .entry-content .attention-box + br:has(+ .attention-box),
-    .entry-content .info-box + br:has(+ .info-box),
-    .entry-content .box-fact + br:has(+ .box-fact),
-    .entry-content .box-action + br:has(+ .box-action),
-    .entry-content .box-warning + br:has(+ .box-warning),
-    .entry-content .box-fact + br:has(+ :has(.box-fact)),
-    .entry-content .box-action + br:has(+ :has(.box-action)),
-    .entry-content .box-warning + br:has(+ :has(.box-warning)),
-    .entry-content :has(.box-fact) + br:has(+ .box-fact),
-    .entry-content :has(.box-action) + br:has(+ .box-action),
-    .entry-content :has(.box-warning) + br:has(+ .box-warning),
-    .entry-content :has(.box-fact) + br:has(+ :has(.box-fact)),
-    .entry-content :has(.box-action) + br:has(+ :has(.box-action)),
-    .entry-content :has(.box-warning) + br:has(+ :has(.box-warning)) {
+    span.box-warning + br:has(+ span.box-warning) {
       display: none !important;
       margin: 0 !important;
       padding: 0 !important;
+    }
+
+    /* ボックス内部の <br> は必ず改行として機能させる（最優先） */
+    .entry-content :is(.point-box, .attention-box, .info-box, .box-fact, .box-action, .box-warning) br,
+    .blog-body :is(.point-box, .attention-box, .info-box, .box-fact, .box-action, .box-warning) br,
+    .prose :is(.point-box, .attention-box, .info-box, .box-fact, .box-action, .box-warning) br {
+      display: inline !important;
+      content: normal !important;
+    }
+
+    /* ボックス直後の段落・テキストとの間隔を 10px に引き締め、すぐ下の説明文と自然な距離感で繋げる */
+    .entry-content :is(.point-box, .attention-box, .info-box, .box-fact, .box-action, .box-warning) + :not(.point-box):not(.attention-box):not(.info-box):not(.box-fact):not(.box-action):not(.box-warning):not(h1):not(h2):not(h3),
+    .blog-body :is(.point-box, .attention-box, .info-box, .box-fact, .box-action, .box-warning) + :not(.point-box):not(.attention-box):not(.info-box):not(.box-fact):not(.box-action):not(.box-warning):not(h1):not(h2):not(h3),
+    .prose :is(.point-box, .attention-box, .info-box, .box-fact, .box-action, .box-warning) + :not(.point-box):not(.attention-box):not(.info-box):not(.box-fact):not(.box-action):not(.box-warning):not(h1):not(h2):not(h3),
+    .entry-content p:has(> :is(.point-box, .attention-box, .info-box, .box-fact, .box-action, .box-warning):last-child) {
+      margin-bottom: 10px !important;
+    }
+    .entry-content :is(.point-box, .attention-box, .info-box, .box-fact, .box-action, .box-warning) + p,
+    .blog-body :is(.point-box, .attention-box, .info-box, .box-fact, .box-action, .box-warning) + p,
+    .prose :is(.point-box, .attention-box, .info-box, .box-fact, .box-action, .box-warning) + p,
+    .entry-content p:has(> :is(.point-box, .attention-box, .info-box, .box-fact, .box-action, .box-warning):last-child) + p {
+      margin-top: 10px !important;
     }
 
     /* 連続するボックスを含む親段落 <p> / <li> の外マージンをゼロ化 */
@@ -2703,11 +2706,12 @@
       return full;
     });
 
-    // 2. インライン反転・空span除去・連続マージを一体ループで収束するまで実行
-    var unwrapInlineRe = new RegExp('<(strong|b|em|i|u|s|mark|small|sub|sup|font)(\\s+[^>]*)?>\\s*<span\\s+class=["\'](' + boxClsPat + ')["\']\\s*>(' + boxInnerPat + ')<\\/span>\\s*<\\/\\1>', 'gi');
-    var unwrapSpanAttrRe = new RegExp('<span(\\s+(?![^>]*\\b' + boxClsPat + '\\b)[^>]*)>\\s*<span\\s+class=["\'](' + boxClsPat + ')["\']\\s*>(' + boxInnerPat + ')<\\/span>\\s*<\\/span>', 'gi');
-    var emptyBoxRe = new RegExp('<span\\s+class=["\'](' + boxClsPat + ')["\']\\s*>(?:\\s|&nbsp;|<br\\s*\\/?>|<(?:strong|b|em|i|u|span)[^>]*>\\s*<\\/(?:strong|b|em|i|u|span)>)*<\\/span>\\s*(?:<br\\s*\\/?>\\s*)*', 'gi');
-    var mergeAdjRe = new RegExp('<span\\s+class=["\'](' + boxClsPat + ')["\']\\s*>(' + boxInnerPat + ')<\\/span>(\\s*)<span\\s+class=["\']\\1["\']\\s*>(' + boxInnerPat + ')<\\/span>', 'gi');
+    // 2. インライン反転・空span/空タグ除去・連続マージ（必ず <br> を1つ挟む）を一体ループで収束するまで実行
+    var unwrapInlineRe = new RegExp('<(strong|b|em|i|u|s|mark|small|sub|sup|font)(\\s+[^>]*)?>\\s*<span\\s+class=["\'](' + boxClsPat + ')["\']\\s*>(' + boxInnerPat + ')<\\/span>(?:\\s*<br\\s*\\/?>)*\\s*<\\/\\1>', 'gi');
+    var unwrapSpanAttrRe = new RegExp('<span(\\s+(?![^>]*\\b' + boxClsPat + '\\b)[^>]*)>\\s*<span\\s+class=["\'](' + boxClsPat + ')["\']\\s*>(' + boxInnerPat + ')<\\/span>(?:\\s*<br\\s*\\/?>)*\\s*<\\/span>', 'gi');
+    var emptyBoxRe = new RegExp('<span\\s+class=["\'](' + boxClsPat + ')["\']\\s*>(?:\\s|&nbsp;|<br\\s*\\/?>|<(?:strong|b|em|i|u|span)[^>]*>(?:\\s|&nbsp;|<br\\s*\\/?>)*<\\/(?:strong|b|em|i|u|span)>)*<\\/span>\\s*(?:<br\\s*\\/?>\\s*)*', 'gi');
+    var emptyInlineRe = /<(strong|b|em|i|u|span)\b[^>]*>(?:\s|&nbsp;|<br\s*\/?>)*<\/\1>/gi;
+    var mergeAdjRe = new RegExp('<span\\s+class=["\'](' + boxClsPat + ')["\']\\s*>(' + boxInnerPat + ')<\\/span>\\s*<span\\s+class=["\']\\1["\']\\s*>(' + boxInnerPat + ')<\\/span>', 'gi');
     var mergeSepRe = new RegExp('<span\\s+class=["\'](' + boxClsPat + ')["\']\\s*>(' + boxInnerPat + ')<\\/span>\\s*(?:(?:<br\\s*\\/?>\\s*)+|(?:<\\/p>\\s*)?<\\/li>\\s*<li[^>]*>(?:\\s*<p[^>]*>)?|<\\/p>\\s*(?:<br\\s*\\/?>|\\s)*<p[^>]*>)\\s*<span\\s+class=["\']\\1["\']\\s*>(' + boxInnerPat + ')<\\/span>', 'gi');
     var singleListBoxRe = new RegExp('<(?:ul|ol)[^>]*>\\s*<li[^>]*>\\s*(?:<p[^>]*>\\s*)?(<span\\s+class=["\'](?:' + boxClsPat + ')["\']\\s*>' + boxInnerPat + '<\\/span>)(?:\\s*<\\/p>)?\\s*<\\/li>\\s*<\\/(?:ul|ol)>', 'gi');
 
@@ -2717,36 +2721,40 @@
       iter++;
       var prev = s;
       s = s.replace(emptyBoxRe, '');
+      s = s.replace(emptyInlineRe, '');
       s = s.replace(/<li[^>]*>\s*(?:<p[^>]*>\s*(?:<br\s*\/?>|&nbsp;|\s)*<\/p>|<br\s*\/?>|&nbsp;|\s)*<\/li>/gi, '');
       s = s.replace(/<p[^>]*>\s*(?:<br\s*\/?>|&nbsp;|\s)*<\/p>/gi, '');
       s = s.replace(unwrapInlineRe, '<span class="$3"><$1$2>$4</$1></span>');
       s = s.replace(unwrapSpanAttrRe, '<span class="$2"><span$1>$3</span></span>');
-      s = s.replace(mergeAdjRe, '<span class="$1">$2$3$4</span>');
+      s = s.replace(mergeAdjRe, '<span class="$1">$2<br>$3</span>');
       s = s.replace(mergeSepRe, '<span class="$1">$2<br>$3</span>');
       s = s.replace(singleListBoxRe, '<p>$1</p>');
       changed = (s !== prev);
     }
 
-    // 4. ボックス <span> の先頭・末尾に残った余分な <br> を除去
+    // 4. ボックス <span> の先頭・末尾に残った余分な <br>、およびボックス直後に連続する余分な <br> を除去
     var leadBrRe = new RegExp('<span\\s+class=["\'](' + boxClsPat + ')["\']\\s*>(?:\\s*<br\\s*\\/?>\\s*)+', 'gi');
     var trailBrRe = new RegExp('(<span\\s+class=["\'](?:' + boxClsPat + ')["\']\\s*>' + boxInnerPat + '?)(?:\\s*<br\\s*\\/?>\\s*)+<\\/span>', 'gi');
+    var afterBoxBrRe = new RegExp('(<span\\s+class=["\'](?:' + boxClsPat + ')["\']\\s*>' + boxInnerPat + '<\\/span>)(?:\\s*<br\\s*\\/?>\\s*)+', 'gi');
     s = s.replace(leadBrRe, '<span class="$1">');
     s = s.replace(trailBrRe, '$1</span>');
+    s = s.replace(afterBoxBrRe, '$1');
 
     return s;
   }
 
   window.runNormalizeCalloutBoxes = function(container) {
     if (!container) return;
-    if (typeof normalizeBoxSpansHtml === 'function') {
+    var boxClasses = ['box-fact', 'box-action', 'box-warning', 'point-box', 'attention-box', 'info-box'];
+    var boxSelector = boxClasses.map(function(c) { return '.' + c; }).join(', ');
+    var inlineTags = { STRONG: 1, B: 1, EM: 1, I: 1, U: 1, S: 1, SPAN: 1, FONT: 1, SMALL: 1, SUB: 1, SUP: 1, MARK: 1 };
+
+    if (typeof normalizeBoxSpansHtml === 'function' && !container.querySelector('div.box-fact, div.box-action, div.box-warning, div.point-box, div.attention-box, div.info-box')) {
       var cleaned = normalizeBoxSpansHtml(container.innerHTML);
       if (cleaned !== container.innerHTML) {
         container.innerHTML = cleaned;
       }
     }
-    var boxClasses = ['box-fact', 'box-action', 'box-warning', 'point-box', 'attention-box', 'info-box'];
-    var boxSelector = boxClasses.map(function(c) { return '.' + c; }).join(', ');
-    var inlineTags = { STRONG: 1, B: 1, EM: 1, I: 1, U: 1, S: 1, SPAN: 1, FONT: 1, SMALL: 1, SUB: 1, SUP: 1, MARK: 1 };
 
     function getBoxClass(el) {
       if (!el || el.nodeType !== 1 || !el.classList) return null;
@@ -2800,6 +2808,29 @@
       }
     }
 
+    function removeAllEmptyInlineAndBlockTags() {
+      var changedEmpty = true;
+      var emptyGuard = 0;
+      while (changedEmpty && emptyGuard < 10) {
+        changedEmpty = false;
+        emptyGuard++;
+        Array.from(container.querySelectorAll('strong, b, em, i, u, s, span, p, li')).forEach(function(el) {
+          if (isNodeVisuallyEmpty(el)) {
+            var next = el.nextSibling;
+            if (getBoxClass(el)) {
+              while (next && ((next.nodeType === 3 && !next.textContent.replace(/\u00a0/g, '').trim()) || (next.nodeType === 1 && next.tagName === 'BR'))) {
+                var toRem = next;
+                next = next.nextSibling;
+                toRem.remove();
+              }
+            }
+            el.remove();
+            changedEmpty = true;
+          }
+        });
+      }
+    }
+
     // Step 1: 同一要素にボックスクラスと他のクラス（.text-point-red等）またはインラインstyleが混在している場合、内側の <span> に分離
     Array.from(container.querySelectorAll(boxSelector)).forEach(function(el) {
       var boxCls = getBoxClass(el);
@@ -2823,27 +2854,8 @@
       }
     });
 
-    // Step 2: 空っぽのボックス要素と直後の不要な <br> を削除
-    Array.from(container.querySelectorAll(boxSelector)).forEach(function(el) {
-      if (isNodeVisuallyEmpty(el)) {
-        var target = el;
-        while (target.parentElement && target.parentElement !== container && inlineTags[target.parentElement.tagName] && isNodeVisuallyEmpty(target.parentElement)) {
-          target = target.parentElement;
-        }
-        var next = target.nextSibling;
-        while (next && (
-          (next.nodeType === 3 && !next.textContent.replace(/\u00a0/g, '').trim()) ||
-          (next.nodeType === 1 && next.tagName === 'BR')
-        )) {
-          var toRemove = next;
-          next = next.nextSibling;
-          toRemove.remove();
-        }
-        var parent = target.parentElement;
-        target.remove();
-        if (parent && parent !== container) removeEmptyAncestors(parent);
-      }
-    });
+    // Step 2: 空っぽのボックス要素や空インライン要素（<strong></strong> 等）と直後の不要な <br> を削除
+    removeAllEmptyInlineAndBlockTags();
 
     // Step 3: インライン要素（<strong>, <span style="..."> 等）の内側にあるボックス要素を外側へ引き上げ（反転）＆同一親内マージ
     var hoisted = true;
@@ -2852,7 +2864,7 @@
       hoisted = false;
       guard++;
 
-      // 3a. 同一親内で空白や <br> を挟んで隣接する同種ボックス要素をマージ
+      // 3a. 同一親内で空白や <br> を挟んで隣接する同種ボックス要素をマージ（必ず間に <br> を1つ挟む）
       boxClasses.forEach(function(cls) {
         var list = Array.from(container.querySelectorAll('.' + cls));
         for (var i = 0; i < list.length; i++) {
@@ -2860,28 +2872,16 @@
           if (!curr || !curr.parentNode) continue;
           var probe = curr.nextSibling;
           var between = [];
-          var hasBr = false;
-          var hasSpace = false;
-          while (probe && (
-            (probe.nodeType === 3 && !probe.textContent.replace(/\u00a0/g, '').trim()) ||
-            (probe.nodeType === 1 && probe.tagName === 'BR')
-          )) {
-            if (probe.nodeType === 1 && probe.tagName === 'BR') hasBr = true;
-            if (probe.nodeType === 3 && probe.textContent.length > 0) hasSpace = true;
+          while (probe && isNodeVisuallyEmpty(probe)) {
             between.push(probe);
             probe = probe.nextSibling;
           }
           if (probe && probe.nodeType === 1 && probe.classList && probe.classList.contains(cls)) {
-            var isBlockPair = (curr.tagName === 'DIV' || curr.tagName === 'P' || probe.tagName === 'DIV' || probe.tagName === 'P');
             between.forEach(function(n) { n.remove(); });
-            if (hasBr || isBlockPair) {
-              trimLeadingAndTrailingBr(curr);
-              trimLeadingAndTrailingBr(probe);
-              if (curr.childNodes.length > 0 && probe.childNodes.length > 0) {
-                curr.appendChild(document.createElement('br'));
-              }
-            } else if (hasSpace) {
-              curr.appendChild(document.createTextNode(' '));
+            trimLeadingAndTrailingBr(curr);
+            trimLeadingAndTrailingBr(probe);
+            if (curr.childNodes.length > 0 && probe.childNodes.length > 0) {
+              curr.appendChild(document.createElement('br'));
             }
             while (probe.firstChild) {
               curr.appendChild(probe.firstChild);
@@ -2905,12 +2905,23 @@
         });
         if (!otherSignificant && parent.parentNode) {
           while (boxEl.previousSibling) {
-            parent.parentNode.insertBefore(boxEl.previousSibling, parent);
+            var prevSib = boxEl.previousSibling;
+            if (isNodeVisuallyEmpty(prevSib)) {
+              prevSib.remove();
+            } else {
+              parent.parentNode.insertBefore(prevSib, parent);
+            }
           }
           while (boxEl.nextSibling) {
-            parent.parentNode.insertBefore(boxEl.nextSibling, parent.nextSibling);
+            var nextSib = boxEl.nextSibling;
+            if (isNodeVisuallyEmpty(nextSib)) {
+              nextSib.remove();
+            } else {
+              parent.parentNode.insertBefore(nextSib, parent.nextSibling);
+            }
           }
           var innerWrap = parent.cloneNode(false);
+          trimLeadingAndTrailingBr(boxEl);
           while (boxEl.firstChild) {
             innerWrap.appendChild(boxEl.firstChild);
           }
@@ -2921,7 +2932,7 @@
       });
     }
 
-    // Step 4: Range走査により、空白・<br>・<strong>・<span style>・連続する <p> / <li> を跨いで実質的に連続している同種ボックスを1つに完全結合
+    // Step 4: Range走査により、空白・<br>・<strong>・<span style>・連続する <p> / <li> を跨いで実質的に連続している同種ボックスを必ず <br> 区切りで1つに結合
     function getTopLevelBoxes() {
       return Array.from(container.querySelectorAll(boxSelector)).filter(function(el) {
         var p = el.parentElement;
@@ -2934,6 +2945,7 @@
     }
 
     function extractBoxContentWithInlineStyles(boxEl) {
+      trimLeadingAndTrailingBr(boxEl);
       var frag = document.createDocumentFragment();
       while (boxEl.firstChild) {
         frag.appendChild(boxEl.firstChild);
@@ -2970,7 +2982,7 @@
       for (var j = 0; j < topBoxes.length - 1; j++) {
         var box1 = topBoxes[j];
         var box2 = topBoxes[j + 1];
-        if (!box1.isConnected || !box2.isConnected) continue;
+        if (!container.contains(box1) || !container.contains(box2)) continue;
         var cls1 = getBoxClass(box1);
         var cls2 = getBoxClass(box2);
         if (!cls1 || cls1 !== cls2) continue;
@@ -2982,43 +2994,20 @@
         var betweenFrag = range.cloneContents();
         var hasBlocker = betweenFrag.querySelector && betweenFrag.querySelector('img, video, iframe, table, hr, h1, h2, h3, h4, h5, h6');
         if (betweenText === '' && !hasBlocker) {
-          var hasBrBetween = !!(betweenFrag.querySelector && betweenFrag.querySelector('br'));
-          var block1 = box1.closest ? box1.closest('p, li, div, blockquote, td, th') : null;
-          var block2 = box2.closest ? box2.closest('p, li, div, blockquote, td, th') : null;
-          var needLineBreak = hasBrBetween || (block1 !== block2) || box1.tagName === 'DIV' || box2.tagName === 'DIV';
-          var rawBetween = range.toString();
+          // まず box1 と box2 の間にあった <br> や空タグを Range から一括削除
+          range.deleteContents();
 
           if (box1.parentElement && box1.parentElement !== container && inlineTags[box1.parentElement.tagName] && !getBoxClass(box1.parentElement)) {
             var wrapped1 = extractBoxContentWithInlineStyles(box1);
             box1.appendChild(wrapped1);
           }
-          if (needLineBreak) {
-            trimLeadingAndTrailingBr(box1);
-            trimLeadingAndTrailingBr(box2);
-          }
+          trimLeadingAndTrailingBr(box1);
 
           var content2 = extractBoxContentWithInlineStyles(box2);
           if (box1.childNodes.length > 0 && content2.childNodes.length > 0) {
-            if (needLineBreak) {
-              box1.appendChild(document.createElement('br'));
-            } else if (rawBetween.length > 0) {
-              box1.appendChild(document.createTextNode(' '));
-            }
+            box1.appendChild(document.createElement('br'));
           }
           box1.appendChild(content2);
-
-          var cleanRange = document.createRange();
-          cleanRange.setStartAfter(box1);
-          cleanRange.setEndBefore(box2);
-          var common = cleanRange.commonAncestorContainer;
-          if (common.nodeType !== 1) common = common.parentElement;
-          if (common) {
-            Array.from(common.querySelectorAll('br')).forEach(function(br) {
-              if (cleanRange.intersectsNode(br) && !box1.contains(br) && !box2.contains(br)) {
-                br.remove();
-              }
-            });
-          }
 
           var box2Parent = box2.parentElement;
           box2.remove();
@@ -3031,7 +3020,7 @@
       }
     }
 
-    // Step 5: すべてのボックス要素を <div class="box-...">（ブロック要素）へ正規化し、前後の不要な <br> を掃除
+    // Step 5: すべてのボックス要素を <div class="box-...">（ブロック要素）へ正規化
     getTopLevelBoxes().forEach(function(boxEl) {
       var cls = getBoxClass(boxEl);
       if (!cls) return;
@@ -3072,7 +3061,33 @@
       }
     });
 
-    // Step 6: 箇条書き (<li>) 内に装飾ボックスが含まれる場合、黒丸 (•) を非表示化
+    // Step 6: 結合後に残った空タグ（<strong></strong> 等）と、ボックス直前・直後に連続する余分な <br> を完全に削除
+    removeAllEmptyInlineAndBlockTags();
+    Array.from(container.querySelectorAll(boxSelector)).forEach(function(boxEl) {
+      while (boxEl.previousSibling && (
+        (boxEl.previousSibling.nodeType === 3 && !boxEl.previousSibling.textContent.replace(/\u00a0/g, '').trim()) ||
+        (boxEl.previousSibling.nodeType === 1 && (boxEl.previousSibling.tagName === 'BR' || isNodeVisuallyEmpty(boxEl.previousSibling)))
+      )) {
+        boxEl.previousSibling.remove();
+      }
+      while (boxEl.nextSibling && (
+        (boxEl.nextSibling.nodeType === 3 && !boxEl.nextSibling.textContent.replace(/\u00a0/g, '').trim()) ||
+        (boxEl.nextSibling.nodeType === 1 && (boxEl.nextSibling.tagName === 'BR' || isNodeVisuallyEmpty(boxEl.nextSibling)))
+      )) {
+        boxEl.nextSibling.remove();
+      }
+      var p = boxEl.parentElement;
+      if (p && p !== container) {
+        while (p.nextSibling && (
+          (p.nextSibling.nodeType === 3 && !p.nextSibling.textContent.replace(/\u00a0/g, '').trim()) ||
+          (p.nextSibling.nodeType === 1 && (p.nextSibling.tagName === 'BR' || isNodeVisuallyEmpty(p.nextSibling)))
+        )) {
+          p.nextSibling.remove();
+        }
+      }
+    });
+
+    // Step 7: 箇条書き (<li>) 内に装飾ボックスが含まれる場合、黒丸 (•) を非表示化
     Array.from(container.querySelectorAll('li')).forEach(function(li) {
       if (li.querySelector(boxSelector)) {
         li.classList.add('has-callout-box');

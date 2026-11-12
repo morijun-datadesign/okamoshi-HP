@@ -314,8 +314,12 @@ def normalize_box_spans_html(raw_html):
         rf'<span\s+class=["\']({BOX_CLS_PAT})["\']\s*>(?:\s|&nbsp;|<br\s*/?>|<(?:strong|b|em|i|u|span)[^>]*>\s*</(?:strong|b|em|i|u|span)>)*</span>\s*(?:<br\s*/?>\s*)*',
         flags=re.IGNORECASE,
     )
+    empty_inline_pat = re.compile(
+        r'<(strong|b|em|i|u|s|mark|small|sub|sup|font|span)(\s+[^>]*)?>\s*(?:<br\s*/?>|\s|&nbsp;)*</\1>',
+        flags=re.IGNORECASE,
+    )
     merge_adj_pat = re.compile(
-        rf'<span\s+class=["\']({BOX_CLS_PAT})["\']\s*>({BOX_INNER_PAT})</span>(\s*)<span\s+class=["\']\1["\']\s*>({BOX_INNER_PAT})</span>',
+        rf'<span\s+class=["\']({BOX_CLS_PAT})["\']\s*>({BOX_INNER_PAT})</span>\s*<span\s+class=["\']\1["\']\s*>({BOX_INNER_PAT})</span>',
         flags=re.IGNORECASE,
     )
     merge_sep_pat = re.compile(
@@ -333,16 +337,18 @@ def normalize_box_spans_html(raw_html):
         iter_count += 1
         prev = s
         s = empty_box_pat.sub('', s)
+        s = empty_inline_pat.sub('', s)
         s = re.sub(r'<li[^>]*>\s*(?:<p[^>]*>\s*(?:<br\s*/?>|&nbsp;|\s)*</p>|<br\s*/?>|&nbsp;|\s)*</li>', '', s, flags=re.IGNORECASE)
         s = re.sub(r'<p[^>]*>\s*(?:<br\s*/?>|&nbsp;|\s)*</p>', '', s, flags=re.IGNORECASE)
         s = unwrap_inline_pat.sub(lambda m: f'<span class="{m.group(3)}"><{m.group(1)}{m.group(2) or ""}>{m.group(4)}</{m.group(1)}></span>', s)
         s = unwrap_span_attr_pat.sub(lambda m: f'<span class="{m.group(2)}"><span{m.group(1)}>{m.group(3)}</span></span>', s)
-        s = merge_adj_pat.sub(lambda m: f'<span class="{m.group(1)}">{m.group(2)}{m.group(3)}{m.group(4)}</span>', s)
+        # 複数の .box-fact 等を1つに結合する際は、必ず要素と要素の間に <br> を1つ挟んで2行になるように結合
+        s = merge_adj_pat.sub(lambda m: f'<span class="{m.group(1)}">{m.group(2)}<br>{m.group(3)}</span>', s)
         s = merge_sep_pat.sub(lambda m: f'<span class="{m.group(1)}">{m.group(2)}<br>{m.group(3)}</span>', s)
         s = single_list_box_pat.sub(r'<p>\1</p>', s)
         changed = (s != prev)
 
-    # 4. ボックス <span> の先頭・末尾に残った余分な <br> を除去
+    # 4. ボックス <span> の先頭・末尾に残った余分な <br> および直後の余分な <br> を除去
     s = re.sub(
         rf'<span\s+class=["\']({BOX_CLS_PAT})["\']\s*>(?:\s*<br\s*/?>\s*)+',
         lambda m: f'<span class="{m.group(1)}">',
@@ -352,6 +358,12 @@ def normalize_box_spans_html(raw_html):
     s = re.sub(
         rf'(<span\s+class=["\'](?:{BOX_CLS_PAT})["\']\s*>{BOX_INNER_PAT}?)(?:\s*<br\s*/?>\s*)+</span>',
         lambda m: f'{m.group(1)}</span>',
+        s,
+        flags=re.IGNORECASE,
+    )
+    s = re.sub(
+        rf'(<span\s+class=["\'](?:{BOX_CLS_PAT})["\']\s*>{BOX_INNER_PAT}</span>)(?:\s*<br\s*/?>\s*)+',
+        lambda m: f'{m.group(1)}',
         s,
         flags=re.IGNORECASE,
     )

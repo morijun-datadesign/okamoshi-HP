@@ -584,7 +584,19 @@ test('Stripe checkRecentPaidSession: 100件超ページネーション（Phase 1
 
 test('GAS apply-ledger.gs updateStatus_: バッチ読み書き最適化 ＆ paid上書き禁止保護', () => {
   const gsCode = fs.readFileSync(path.join(ROOT, 'gas/apply-ledger.gs'), 'utf8');
+  const loggedErrors = [];
+  let flushCount = 0;
   const ctx = vm.createContext({
+    console: {
+      log: () => {},
+      warn: () => {},
+      error: (...args) => loggedErrors.push(args),
+    },
+    SpreadsheetApp: {
+      flush: () => {
+        flushCount++;
+      },
+    },
     PropertiesService: { getScriptProperties: () => ({ getProperty: () => null }) },
     LockService: { getScriptLock: () => ({ waitLock() {}, releaseLock() {} }) },
     ContentService: { createTextOutput: (t) => ({ setMimeType: () => t }), MimeType: { JSON: 'JSON' } },
@@ -729,6 +741,83 @@ test('GAS apply-ledger.gs updateStatus_: バッチ読み書き最適化 ＆ paid
   assert.equal(capturedUnsubEvents.length, 1);
   assert.equal(capturedUnsubEvents[0], unsubEvent);
   assert.equal(unsubRes, mockUnsubOutput);
+
+  // createRows_ -> MemberIdManager.gs 連携（assignMemberIdsForRows_ & formatJapanesePhone_）テスト
+  // 1) formatJapanesePhone_ が定義されている場合、buildRow_ の R列(index 17)が先頭「'」付き整形番号になること
+  ctx.formatJapanesePhone_ = (val) => {
+    const digits = String(val || '').replace(/[^0-9]/g, '');
+    if (digits === '09012345678') return '090-1234-5678';
+    return String(val || '');
+  };
+  const formattedRow = ctx.buildRow_(
+    { session_id: 'cs_gas_phone_1', phone: '09012345678', payment_status: 'paid' },
+    { issue_name: '12月号', exam_name: '12月号（岡山県統一模擬試験）', venue_name: '岡山会場(岡山商科大学)', price: 5500 }
+  );
+  assert.equal(formattedRow[17], "'090-1234-5678", '電話番号がハイフン付きテキスト形式で保護されること');
+
+  // 2) assignMemberIdsForRows_ の正常呼び出し確認（2行追加時に [5, 6] が渡ること）
+  const assignCalls = [];
+  ctx.assignMemberIdsForRows_ = (targetSheet, rowNumbers) => {
+    assignCalls.push({ targetSheet, rowNumbers });
+  };
+  let createdRows2 = null;
+  const mockCreateSheet2 = {
+    getLastRow: () => 4,
+    getRange(startRow, startCol, numRows, numCols) {
+      return {
+        getValues: () => [
+          ['cs_existing_1'],
+          ['cs_existing_2'],
+          ['cs_existing_3'],
+        ],
+        setValues: (rows) => {
+          createdRows2 = { startRow, startCol, numRows, numCols, rows };
+        },
+      };
+    },
+  };
+  const prevFlush = flushCount;
+  const createOkRes = ctx.createRows_(mockCreateSheet2, {
+    session_id: 'cs_create_hook_ok',
+    payment_status: 'paid',
+    phone: '09012345678',
+    records: [
+      { issue_name: '10月号', exam_name: '10月号（岡山県統一模擬試験）', venue_name: '岡山会場（山陽学園）', price: 5500 },
+      { issue_name: '12月号', exam_name: '12月号（岡山県統一模擬試験）', venue_name: '倉敷会場（作陽学園）', price: 5500 },
+    ],
+  });
+  assert.deepEqual(JSON.parse(JSON.stringify(createOkRes)), { status: 'success', action: 'create', created: 2 });
+  assert.equal(createdRows2.startRow, 5);
+  assert.equal(createdRows2.rows.length, 2);
+  assert.equal(flushCount, prevFlush + 1, 'assignMemberIdsForRows_ 実行前に SpreadsheetApp.flush() が呼ばれること');
+  assert.equal(assignCalls.length, 1);
+  assert.equal(assignCalls[0].targetSheet, mockCreateSheet2);
+  assert.deepEqual(JSON.parse(JSON.stringify(assignCalls[0].rowNumbers)), [5, 6]);
+
+  // 3) assignMemberIdsForRows_ が Gemini API タイムアウト等で例外を投げても、createRows_自体は成功すること
+  ctx.assignMemberIdsForRows_ = () => {
+    throw new Error('Gemini API timeout');
+  };
+  let createdRowsErr = null;
+  const mockCreateSheetErr = {
+    getLastRow: () => 10,
+    getRange(startRow, startCol, numRows, numCols) {
+      return {
+        getValues: () => [],
+        setValues: (rows) => {
+          createdRowsErr = { startRow, startCol, numRows, numCols, rows };
+        },
+      };
+    },
+  };
+  const createFailSafeRes = ctx.createRows_(mockCreateSheetErr, {
+    session_id: 'cs_create_hook_timeout',
+    payment_status: '未入金',
+    records: [{ issue_name: '12月号', exam_name: '12月号（岡山県統一模擬試験）', venue_name: '津山会場', price: 5500 }],
+  });
+  assert.deepEqual(JSON.parse(JSON.stringify(createFailSafeRes)), { status: 'success', action: 'create', created: 1 });
+  assert.equal(createdRowsErr.rows.length, 1, '例外時でも台帳行の書き込み自体は完了していること');
+  assert.equal(loggedErrors.length, 1, '例外は console.error に記録されること');
 });
 
 test('exam.ts 短縮表記正規化: normalizeVenueShortName / normalizeIssueShortName / records生成', async () => {

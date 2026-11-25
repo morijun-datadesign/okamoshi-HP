@@ -7,6 +7,9 @@
  *   - records（模試ごとの配列）をループし、1模試＝1行で追記する
  *   - C列（対象模試）は月号のみ（例: 12月号）、D列（受験会場）は会場区分名のみ（例: 倉敷会場 / 自宅受験）へ
  *     stripParens_() により全角・半角括弧とその中身を除去して書き込む（二重ガード）
+ *   - 電話番号は MemberIdManager.gs の formatJapanesePhone_() があれば自動整形して先頭0落ちを防止する
+ *   - 行追記直後に MemberIdManager.gs の assignMemberIdsForRows_(sheet, addedRowNumbers) を
+ *     存在チェック＆try-catch 安全ガード付きで呼び出し、Z〜AB列（会員No・採番ステータス・AI判定メモ）を自動採番する
  *   - 同じセッションIDの行が既にある場合は追記しない（Stripe の再送対策）
  *
  * ■ action: "update"（checkout.session.async_payment_succeeded / async_payment_failed / expired）
@@ -14,6 +17,10 @@
  *   - 「paid」の行を「期限切れ」等で上書きしない保護（paid 上書き禁止）を維持した上で、
  *     対象セルのみを getRangeList(...).setValue(...) 1回でバッチ更新する（1セル単位の getValue/setValue ループ排除）
  *   - 該当行が無い場合は、送られてきた全項目で新規作成する（フォールバック）
+ *
+ * ■ doGet(e)（Web アプリ GET リクエスト）
+ *   - `?action=unsubscribe` 時は MailSender.gs の handleUnsubscribeGet_(e) へ委譲し、ワンクリック配信停止を処理する
+ *   - 通常アクセス時は稼働確認 JSON を返却する
  *
  * ■ スクリプトプロパティ（[プロジェクトの設定] → [スクリプト プロパティ]）
  *   SHARED_SECRET  : Cloudflare の環境変数 GAS_SHARED_SECRET と同じ値。設定時はトークンを照合する（推奨）
@@ -171,7 +178,8 @@ function buildRow_(data, record) {
   row[COL.PARENT_NAME - 1] = str_(data.parent_name);
   row[COL.PARENT_KANA - 1] = str_(data.parent_kana);
   row[COL.EMAIL - 1] = str_(data.email);
-  row[COL.PHONE - 1] = text_(data.phone);
+  var phoneVal = typeof formatJapanesePhone_ === 'function' ? formatJapanesePhone_(data.phone) : data.phone;
+  row[COL.PHONE - 1] = text_(phoneVal);
   row[COL.POSTAL - 1] = text_(data.postal_code);
 
   var pref = str_(data.prefecture || data.pref);
@@ -221,7 +229,26 @@ function createRows_(sheet, data) {
     : [{ exam_name: data.exam_name, venue_name: data.venue_name, price: data.amount }];
 
   var rows = records.map(function (record) { return buildRow_(data, record || {}); });
-  sheet.getRange(sheet.getLastRow() + 1, 1, rows.length, NUM_COLS).setValues(rows);
+  var startRow = sheet.getLastRow() + 1;
+  sheet.getRange(startRow, 1, rows.length, NUM_COLS).setValues(rows);
+
+  // 新規追加行に対して MemberIdManager.gs の AI名寄せ・自動採番（Z〜AB列）を実行
+  // ※ 万一 Gemini API タイムアウト等が発生しても台帳追記自体は絶対にエラーにしない安全設計
+  if (typeof assignMemberIdsForRows_ === 'function') {
+    var addedRowNumbers = [];
+    for (var i = 0; i < rows.length; i++) {
+      addedRowNumbers.push(startRow + i);
+    }
+    try {
+      if (typeof SpreadsheetApp !== 'undefined' && typeof SpreadsheetApp.flush === 'function') {
+        SpreadsheetApp.flush();
+      }
+      assignMemberIdsForRows_(sheet, addedRowNumbers);
+    } catch (assignErr) {
+      console.error('[apply-ledger] assignMemberIdsForRows_ failed (rows were created safely):', assignErr);
+    }
+  }
+
   return { status: 'success', action: 'create', created: rows.length };
 }
 

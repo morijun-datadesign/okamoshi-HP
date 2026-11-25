@@ -81,54 +81,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=arrow_back,arrow_forward,call,check_circle,chevron_right,close,contact_support,corporate_fare,edit_document,expand_more,history_edu,home,lock,mail,menu,open_in_new,person,phone_in_talk,photo_camera,progress_activity,school,send,shield&display=swap" rel="stylesheet">
   </noscript>
 
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Tailwind CSS (ビルド済み静的CSS) -->
+  <link rel="stylesheet" href="/css/style.min.css">
   <!-- Cloudflare Turnstile -->
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-  <script id="tailwind-config">
-    tailwind.config = {
-      theme: {
-        extend: {
-        borderRadius: {
-          'none': '0px',
-          'sm': '4px',
-          'DEFAULT': '6px',
-          'md': '6px',
-          'lg': '8px',
-          'xl': '8px',
-          '2xl': '8px',
-          '3xl': '8px',
-          'full': '9999px',
-        },
-          colors: {
-            primary: '#134230',
-            'primary-container': '#2d5a46',
-            'primary-fixed': '#bceed3',
-            'primary-fixed-dim': '#a1d1b8',
-            'on-primary-fixed-variant': '#224f3c',
-            secondary: '#a23e18',
-            'secondary-container': '#fe8357',
-            'on-secondary-container': '#6f2000',
-            'on-surface': '#1b1c1c',
-            'on-surface-variant': '#414944',
-            "surface": "#FFFFFF",
-            'surface-container-lowest': '#ffffff',
-            "surface-container-low": "#F1F5F9",
-            "surface-container": "#E2E8F0",
-            "surface-container-high": "#E2E8F0",
-            "surface-container-highest": "#CBD5E1",
-            outline: '#717973',
-            "outline-variant": "#E2E8F0",
-            error: '#ba1a1a',
-            'on-error': '#ffffff'
-          },
-          fontFamily: {
-            sans: ['"Noto Sans JP"', '"Plus Jakarta Sans"', 'sans-serif'],
-          }
-        }
-      }
-    };
-</script>
 <style>
     html, body {
       max-width: 100%;

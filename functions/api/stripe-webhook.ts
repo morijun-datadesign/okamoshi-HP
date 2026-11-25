@@ -19,6 +19,7 @@ import {
 import { fetchCheckoutSession, fetchPaymentIntent, verifyStripeWebhookSignature, checkRecentPaidSession } from "../_shared/stripe";
 import { sendResendEmail } from "../_shared/resend";
 import { extractKonbiniInfo, KonbiniInfo, EMPTY_KONBINI, formatJst } from "../_shared/konbini";
+import { dispatchInitialApplicationEmails } from "../_shared/apply-initial-mail";
 
 const LOG = "[functions/api/stripe-webhook]";
 
@@ -335,6 +336,13 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       let applicantMailId: string | null = null;
       let updateMailError: string | null = null;
 
+      const ledgerStatusSlug =
+        ledgerStatus === LEDGER_STATUS.PAID
+          ? "paid"
+          : ledgerStatus === LEDGER_STATUS.EXPIRED
+            ? "expired"
+            : "unpaid";
+
       if (!apiKey) {
         console.error(`${LOG} [CRITICAL] RESEND_API_KEY is not configured; cannot send status update email.`);
       } else {
@@ -367,7 +375,8 @@ ${examsListText}
 通知日時: ${jstReceivedAt}
 `.trim(),
             },
-            `${LOG}[update-admin]`
+            `${LOG}[update-admin]`,
+            { idempotencyKey: `apply-update-${ledgerStatusSlug}-admin:${sessionId}` }
           );
           adminMailId = mailRes.id || null;
           if (!mailRes.ok) {
@@ -421,7 +430,8 @@ Web : https://okayama-moshi.com
 --------------------------------------------------
 `.trim(),
               },
-              `${LOG}[update-user]`
+              `${LOG}[update-user]`,
+              { idempotencyKey: `apply-update-${ledgerStatusSlug}-user:${sessionId}` }
             );
             applicantMailId = paidUserRes.id || null;
             if (!paidUserRes.ok) {
@@ -475,7 +485,8 @@ Web : https://okayama-moshi.com
 --------------------------------------------------
 `.trim(),
                 },
-                `${LOG}[update-user-expired]`
+                `${LOG}[update-user-expired]`,
+                { idempotencyKey: `apply-update-${ledgerStatusSlug}-user:${sessionId}` }
               );
               applicantMailId = expiredUserRes.id || null;
               if (!expiredUserRes.ok) {
@@ -512,185 +523,36 @@ Web : https://okayama-moshi.com
       });
     }
 
-    // 7. 申込完了イベント：管理者・申込者へメール送信
-    const isUnpaidKonbini = ledgerStatus === LEDGER_STATUS.UNPAID;
-    const konbiniAdminBlock = isUnpaidKonbini
-      ? `
-■ お客様番号: ${konbini.customerNumber || "取得できませんでした"}
-■ 確認番号: ${konbini.confirmationNumber || "取得できませんでした"}
-■ 払込票URL: ${konbini.voucherUrl || "取得できませんでした"}
-■ 支払期限: ${konbini.expiresAt || "不明"}`
-      : "";
-    const konbiniUserBlock = isUnpaidKonbini
-      ? `
-【コンビニでのお支払いについて】
-以下の内容で、お近くのコンビニエンスストアにてお支払いください。
-■ お支払い期限: ${konbini.expiresAt || "払込票に記載の期限"}
-${konbini.customerNumber ? `■ お客様番号: ${konbini.customerNumber}\n` : ""}${konbini.confirmationNumber ? `■ 確認番号: ${konbini.confirmationNumber}\n` : ""}${konbini.voucherUrl ? `■ 払込票（お支払い方法の詳細）: ${konbini.voucherUrl}\n` : ""}
-期限までにお支払いが確認できない場合、お申し込みは自動キャンセルとなります。
-お支払いの確認後、受付が確定いたします。
---------------------------------------------------
-`
-      : "";
-
-    let applicantMailId: string | null = null;
-    let adminMailId: string | null = null;
-
-    const adminSubject = isUnpaidKonbini
-      ? `【個人申込受付・未入金（コンビニ）】${studentFullName} 様 (${grade})：${examNameVal}`
-      : `【個人申込受付 (Webhook)】${studentFullName} 様 (${grade})：${examNameVal}`;
-    const adminText = `
-【岡山県統一模擬試験 Webhookより${isUnpaidKonbini ? "コンビニ決済の申込（未入金）" : "決済完了"}が検知されました】
---------------------------------------------------
-■ お申し込み模試:
-${examsListText}
-■ 合計金額: ￥${Number(amountVal).toLocaleString()} (税込)
-■ 決済ステータス: ${ledgerStatus}
-■ 決済方法: ${paymentMethodLabel}
-■ 決済セッションID: ${sessionId}${konbiniAdminBlock}
---------------------------------------------------
-【生徒情報】
-■ 生徒氏名: ${studentFullName} (${studentKana || "未入力"})
-■ 学年: ${grade || "未入力"}
-■ 在籍校: ${schoolName || "未入力"}
-
-【保護者・連絡先情報】
-■ 保護者氏名: ${parentName || "未入力"}
-■ メールアドレス: ${emailVal || "未入力"}
-■ 電話番号: ${phoneVal || "未入力"}
-■ 住所: 〒${postalCodeVal} ${fullAddress}${remarksVal ? `\n■ 連絡事項・ご要望:\n${remarksVal}` : ""}
---------------------------------------------------
-■ スプレッドシート連携 (GAS): ${gasSummary}
-受付日時: ${jstReceivedAt}
-`.trim();
-
-    const userSubject = `${subjectPrefix}お申し込みを受け付けました`;
-    const userText = `
-${parentName ? parentName + " 様\n\n" : ""}${examBrandTitle}へのお申し込み、誠にありがとうございます。
-以下の内容でお申し込みを受け付けいたしました。
-
---------------------------------------------------
-■ お申し込み模試:
-${examsListText}
-■ 合計金額: ￥${Number(amountVal).toLocaleString()} (税込)
-■ 決済方法: ${paymentMethodLabel}
-■ 決済状況: ${isUnpaidKonbini ? "お支払い待ち（コンビニでのお支払い後に確定）" : "お支払い完了"}
---------------------------------------------------
-${konbiniUserBlock}
-【ご登録内容】
-■ 生徒氏名: ${studentFullName} 様 (${studentKana})
-■ 学年: ${grade}
-■ 学校名: ${schoolName}
-■ お届け先住所: 〒${postalCodeVal} ${fullAddress}
-■ お電話番号: ${phoneVal}
-■ メールアドレス: ${emailVal}${remarksVal ? `\n■ 連絡事項・ご要望:\n${remarksVal}` : ""}
---------------------------------------------------
-
-【今後のスケジュール・受験票のお届け】
-・会場受験：試験日の約1週間前に受験票をご自宅宛てにお届けします。
-・自宅受験：試験日の約1週間前に問題冊子・解答用紙一式をご自宅宛てにお届けします。
-
---------------------------------------------------
-岡山県統一模擬試験実行委員会（中央教育研究所株式会社）
-TEL : 082-227-3999（平日 10:00〜18:00）
-MAIL: info@okayama-moshi.com
-Web : https://okayama-moshi.com
---------------------------------------------------
-`.trim();
-
-    let mailErrors: { admin?: string; user?: string } = {};
-    let skipReason: string | null = null;
-
-    const hasApiKey = !!apiKey && apiKey.trim().length > 0;
-    const apiKeyPrefix = hasApiKey ? apiKey.trim().slice(0, 5) : "";
-    const applicantEmail = emailVal || "";
-
-    console.log(`${LOG} [Pre-Mail-Check] Mail dispatch diagnostic:`, {
-      hasApiKey,
-      apiKeyPrefix,
-      applicantEmail,
-      adminEmail,
-      fromEmail,
-      ledgerStatus,
+    // 7. 申込完了イベント：D1 冪等性ロック付き共通モジュールで管理者・申込者へ初回メール送信
+    const dispatch = await dispatchInitialApplicationEmails({
+      env,
+      sessionId,
+      source: "stripe_webhook",
+      stripeSession: session,
+      stripeSecretKey,
+      preExtractedKonbini: konbini,
     });
-
-    if (!hasApiKey) {
-      skipReason = "RESEND_API_KEY is not configured or empty";
-      console.error(`${LOG} [CRITICAL] Email dispatch skipped: ${skipReason}`);
-    } else {
-      // A. 管理者宛て ジャーナル通知メール
-      try {
-        console.log(`${LOG} Sending admin journal email to ${adminEmail}...`);
-        const adminRes = await sendResendEmail(
-          apiKey,
-          {
-            from: fromEmail,
-            to: [adminEmail],
-            reply_to: applicantEmail || undefined,
-            subject: adminSubject,
-            text: adminText,
-          },
-          `${LOG}[admin]`
-        );
-        adminMailId = adminRes.id || null;
-        if (!adminRes.ok) {
-          mailErrors.admin = adminRes.error || `HTTP ${adminRes.status}`;
-          console.error(`${LOG} Admin email delivery failed:`, adminRes.error, "status:", adminRes.status);
-        } else {
-          console.log(`${LOG} Admin email delivered successfully: id=${adminMailId}`);
-        }
-      } catch (err: any) {
-        mailErrors.admin = err?.message || String(err);
-        console.error(`${LOG} Exception occurred while sending admin email:`, err);
-      }
-
-      // B. 申込者宛て サンクスメール
-      if (applicantEmail) {
-        try {
-          console.log(`${LOG} Sending applicant confirmation email to ${applicantEmail}...${gasResult.skipped ? " (ledger row already existed)" : ""}`);
-          const userRes = await sendResendEmail(
-            apiKey,
-            {
-              from: fromEmail,
-              to: [applicantEmail],
-              reply_to: adminEmail,
-              subject: userSubject,
-              text: userText,
-            },
-            `${LOG}[user]`
-          );
-          applicantMailId = userRes.id || null;
-          if (!userRes.ok) {
-            mailErrors.user = userRes.error || `HTTP ${userRes.status}`;
-            console.error(`${LOG} Applicant email delivery failed to ${applicantEmail}:`, userRes.error, "status:", userRes.status);
-          } else {
-            console.log(`${LOG} Applicant confirmation email delivered successfully to ${applicantEmail}: id=${applicantMailId}`);
-          }
-        } catch (err: any) {
-          mailErrors.user = err?.message || String(err);
-          console.error(`${LOG} Exception occurred while sending applicant email:`, err);
-        }
-      } else {
-        skipReason = "Applicant email address is missing/empty";
-        console.warn(`${LOG} Applicant email is missing; skipped sending user confirmation email.`);
-      }
-    }
 
     return jsonResponse({
       received: true,
       action,
       status: ledgerStatus,
+      already_sent: dispatch.alreadySent,
+      in_progress: dispatch.inProgress || undefined,
+      dispatch_source: dispatch.dispatchSource,
       gas: gasResult,
       resend: {
-        admin_mail_id: adminMailId,
-        applicant_mail_id: applicantMailId,
-        hasApiKey,
-        apiKeyPrefix,
-        applicantEmail,
-        skipReason: skipReason || (mailErrors.admin || mailErrors.user ? "Delivery failed with error" : null),
-        errors: Object.keys(mailErrors).length > 0 ? mailErrors : undefined,
-        from_email: fromEmail,
-        admin_email: adminEmail,
+        already_sent: dispatch.alreadySent,
+        dispatch_source: dispatch.dispatchSource,
+        admin_mail_id: dispatch.adminMailId,
+        applicant_mail_id: dispatch.applicantMailId,
+        hasApiKey: dispatch.hasApiKey,
+        apiKeyPrefix: dispatch.apiKeyPrefix,
+        applicantEmail: dispatch.applicantEmail,
+        skipReason: dispatch.skipReason,
+        errors: dispatch.mailErrors,
+        from_email: dispatch.fromEmail,
+        admin_email: dispatch.adminEmail,
       },
     });
   } catch (error: any) {

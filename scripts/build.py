@@ -150,10 +150,10 @@ def main():
 
     print("=== okamoshi Production Build Started ===")
     restore_css_links()
-    build_css()
     if "--skip-images" not in args:
         optimize_images()
     build_ssg()
+    build_css()
     inline_css_into_pages()
     print("=== okamoshi Production Build Finished Successfully ===")
 

@@ -1,0 +1,12 @@
+{
+  "projectKey": "okayama-moshi",
+  "clientName": "岡山県統一模擬試験",
+  "displayPrefix": "[本番運用]",
+  "displayName": "[本番運用] 岡山県統一模擬試験（okayama-moshi）",
+  "productionUrl": "https://okayama-moshi.com/",
+  "previewUrl": "https://feature-idea-b.okamoshi-hp.pages.dev/",
+  "disableConsoleArchiveLookup": true,
+  "webUrls": [
+    "https://okayama-moshi.com/"
+  ]
+}

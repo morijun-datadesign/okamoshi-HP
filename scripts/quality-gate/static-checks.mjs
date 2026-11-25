@@ -89,6 +89,7 @@ const GARBAGE = [
 ];
 for (const f of htmlFiles) {
   const raw = read(f);
+  if (/cdn\.tailwindcss\.com/i.test(raw)) fail('perf/tailwind-cdn', f, 'Tailwind Play CDN（cdn.tailwindcss.com）が残存しています。/css/style.min.css を使用してください');
   if (/【★画像挿入/.test(raw)) fail('garbage/placeholder', f, '未置換の画像プレースホルダー（HTMLソース内）');
   const text = visibleText(raw);
   for (const g of GARBAGE) {
@@ -122,7 +123,7 @@ for (const f of designFiles) {
 // ---------------------------------------------------------------- レポート
 const byCheck = {};
 for (const r of results) (byCheck[r.check] ||= []).push(r);
-const CHECKS = ['security/secret', 'security/forbidden-file', 'security/exposed-file', 'garbage/placeholder', 'garbage/visible-text', 'design/forbidden-color', 'design/unregistered-hex'];
+const CHECKS = ['security/secret', 'security/forbidden-file', 'security/exposed-file', 'perf/tailwind-cdn', 'garbage/placeholder', 'garbage/visible-text', 'design/forbidden-color', 'design/unregistered-hex'];
 console.log(`\n[静的検査] 対象ファイル ${allFiles.length} 件（テキスト ${textFiles.length} / HTML ${htmlFiles.length}）`);
 for (const c of CHECKS) {
   const list = byCheck[c] || [];

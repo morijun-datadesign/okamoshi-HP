@@ -29,3 +29,6 @@ playwright-report/
 
 # Google Vids用 操作手順動画の生成バイナリ（※台本と撮影スクリプトのみGit管理）
 manual_video_assets/*.mp4
+
+# Gemini Notebook 自動生成バンドル（※マスターMDとnotebook-state.jsonのみ管理）
+docs/notebook-bundle/

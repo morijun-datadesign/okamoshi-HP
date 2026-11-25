@@ -73,7 +73,6 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
   <link id="google-fonts-sans" data-href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Plus+Jakarta+Sans:wght@700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=analytics,arrow_forward,calendar_month,calendar_today,chevron_right,contact_support,corporate_fare,edit_document,expand_more,fact_check,format_quote,history_edu,how_to_reg,location_city,mail,menu,open_in_new,photo_camera,school,zoom_in&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
   <noscript>
@@ -81,61 +80,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=analytics,arrow_forward,calendar_month,calendar_today,chevron_right,contact_support,corporate_fare,edit_document,expand_more,fact_check,format_quote,history_edu,how_to_reg,location_city,mail,menu,open_in_new,photo_camera,school,zoom_in&display=swap" rel="stylesheet">
   </noscript>
 
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <script>
-    tailwind.config = {
-      darkMode: "class",
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              green: '#134230',       // おかもし伝統のディープグリーン
-              greenDark: '#0A261B',   // ホバー用ダークグリーン
-              greenLight: '#EBF4F0',  // 爽やかな淡いグリーン背景
-              greenAccent: '#1F6B51', // ボタン・強調用の中間グリーン
-              dateBrown: '#8B3A18',   // 日程表示用のアクセントブラウン
-              homeBrown: '#4A4031',   // 自宅受験用の落ち着いたブラウン
-              grayBg: '#F1F5F9'
-            },
-            primary: '#134230',
-            'primary-container': '#2D5A46',
-            'primary-fixed': '#EBF4F0',
-            'on-primary-fixed-variant': '#134230',
-            'on-primary': '#FFFFFF',
-            secondary: '#f97316',     // orange-500（お申し込みボタン専用）
-            'secondary-container': '#ea580c', // orange-600
-            'on-secondary': '#FFFFFF',
-            surface: '#FFFFFF',
-            'on-surface': '#1E293B',
-            'on-surface-variant': '#64748B',
-            'surface-container-low': '#F8FAFC',
-            'surface-container': '#F1F5F9',
-            'surface-container-high': '#E2E8F0',
-            'surface-container-highest': '#CBD5E1',
-            'surface-container-lowest': '#FFFFFF',
-            'outline-variant': '#E2E8F0'
-          },
-          fontFamily: {
-            sans: ['"Noto Sans JP"', '"Hiragino Kaku Gothic ProN"', 'Meiryo', 'sans-serif'],
-            headline: ['"Plus Jakarta Sans"', '"Noto Sans JP"', '"Hiragino Kaku Gothic ProN"', 'sans-serif']
-          },
-          borderRadius: {
-            'none': '0px',
-            'sm': '4px',
-            'DEFAULT': '6px',
-            'md': '6px',
-            'lg': '8px',
-            'xl': '8px',
-            '2xl': '8px',
-            '3xl': '8px',
-            'full': '9999px',
-          }
-        }
-      }
-    };
-</script>
+  <!-- Tailwind CSS (ビルド済み静的CSS) -->
+  <link rel="stylesheet" href="/css/style.min.css">
 
   <style>
     html, body {
@@ -1318,7 +1264,7 @@
                     <span class="material-symbols-outlined text-[15px] text-slate-400">calendar_today</span>
                     <span class="tabular-nums">2026.11.01</span>
                   </span>
-                  <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#c85a32] text-white shadow-xs shrink-0 tracking-tight leading-none text-center">NEW</span>
+                  
                   <span class="px-2.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-100 text-slate-700 border border-slate-200/60 shrink-0 shadow-2xs">
                     更新情報
                   </span>

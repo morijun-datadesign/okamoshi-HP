@@ -7,9 +7,10 @@
  *   - records（模試ごとの配列）をループし、1模試＝1行で追記する
  *   - 同じセッションIDの行が既にある場合は追記しない（Stripe の再送対策）
  *
- * ■ action: "update"（checkout.session.async_payment_succeeded / async_payment_failed）
- *   - セッションIDが一致するすべての行の「決済ステータス」(F列) を更新する
- *   - 「paid」の行を「期限切れ」で上書きすることはしない
+ * ■ action: "update"（checkout.session.async_payment_succeeded / async_payment_failed / expired）
+ *   - B列〜F列を1回の getValues() で一括取得し、セッションID一致行の「決済ステータス」(F列) を抽出
+ *   - 「paid」の行を「期限切れ」等で上書きしない保護（paid 上書き禁止）を維持した上で、
+ *     対象セルのみを getRangeList(...).setValue(...) 1回でバッチ更新する（1セル単位の getValue/setValue ループ排除）
  *   - 該当行が無い場合は、送られてきた全項目で新規作成する（フォールバック）
  *
  * ■ スクリプトプロパティ（[プロジェクトの設定] → [スクリプト プロパティ]）
@@ -17,9 +18,13 @@
  *   SHEET_NAME     : 台帳のシート名。未設定時は先頭のシート
  *   SPREADSHEET_ID : 任意。未設定時はこのスクリプトが紐づくスプレッドシート
  *
- * ■ 反映手順
- *   このコードを Apps Script に貼り付け → [デプロイ] → [デプロイを管理] → 既存デプロイを編集し
- *   「新バージョン」で再デプロイ（URL を変えないため、新規デプロイではなく既存デプロイを更新する）
+ * ■ Apps Script への反映手順（最新・必須）
+ *   1. スプレッドシートの [拡張機能] → [Apps Script] を開き、本ファイル全文を貼り付けて保存（Ctrl/Cmd + S）
+ *   2. 右上の [デプロイ] → [デプロイを管理] を開く
+ *   3. 現在本番稼働中の「ウェブアプリ」デプロイ右上の鉛筆アイコン（編集）をクリック
+ *   4. 「バージョン」プルダウンから「新バージョン」を選択（※説明欄に「updateStatus_ バッチ最適化」等を記入）
+ *   5. [デプロイ] をクリックして反映完了
+ *   ※ Web アプリ URL を変更しないため、絶対に [新しいデプロイ] ではなく既存デプロイの編集で更新すること。
  */
 
 var COL = {
@@ -203,13 +208,52 @@ function createRows_(sheet, data) {
   return { status: 'success', action: 'create', created: rows.length };
 }
 
+/** 1始まりの列番号を A1 記法の列記号（例: 6 -> 'F'）に変換 */
+function colToLetter_(colIndex) {
+  var col = Number(colIndex);
+  var letter = '';
+  while (col > 0) {
+    var rem = (col - 1) % 26;
+    letter = String.fromCharCode(65 + rem) + letter;
+    col = Math.floor((col - 1) / 26);
+  }
+  return letter;
+}
+
 function updateStatus_(sheet, data) {
   var sessionId = str_(data.session_id);
   var newStatus = str_(data.payment_status);
   if (!sessionId || !newStatus) return { status: 'error', message: 'session_id and payment_status are required' };
 
-  var rows = findRowsBySession_(sheet, sessionId);
-  if (rows.length === 0) {
+  var lastRow = sheet.getLastRow();
+  var matched = 0;
+  var updated = 0;
+  var skipped = 0;
+  var updateA1List = [];
+
+  if (lastRow >= 2) {
+    // B列（セッションID）〜F列（決済ステータス）を1回の API 呼び出しで一括取得
+    var spanCols = COL.STATUS - COL.SESSION_ID + 1;
+    var statusOffset = COL.STATUS - COL.SESSION_ID;
+    var statusColLetter = colToLetter_(COL.STATUS);
+    var values = sheet.getRange(2, COL.SESSION_ID, lastRow - 1, spanCols).getValues();
+
+    for (var i = 0; i < values.length; i++) {
+      if (str_(values[i][0]) !== sessionId) continue;
+      matched++;
+      var current = str_(values[i][statusOffset]);
+      if (current === newStatus) continue;
+      // 入金済みの行は「期限切れ」等で上書きしない（イベントの到着順が前後した場合の保護）
+      if (current === STATUS_PAID && newStatus !== STATUS_PAID) {
+        skipped++;
+        continue;
+      }
+      updateA1List.push(statusColLetter + (i + 2));
+      updated++;
+    }
+  }
+
+  if (matched === 0) {
     // 申込時の create が届いていない場合のフォールバック：受け取った内容で新規作成
     if (Array.isArray(data.records) && data.records.length > 0) {
       var created = createRows_(sheet, data);
@@ -220,21 +264,12 @@ function updateStatus_(sheet, data) {
     return { status: 'error', message: 'no rows found for session_id', session_id: sessionId };
   }
 
-  var updated = 0;
-  var skipped = 0;
-  for (var i = 0; i < rows.length; i++) {
-    var cell = sheet.getRange(rows[i], COL.STATUS);
-    var current = str_(cell.getValue());
-    if (current === newStatus) continue;
-    // 入金済みの行は「期限切れ」等で上書きしない（イベントの到着順が前後した場合の保護）
-    if (current === STATUS_PAID && newStatus !== STATUS_PAID) {
-      skipped++;
-      continue;
-    }
-    cell.setValue(newStatus);
-    updated++;
+  // 更新が必要なセルのみを1回のバッチ書き込みで更新（他行の数式やセル書式には触れない）
+  if (updateA1List.length > 0) {
+    sheet.getRangeList(updateA1List).setValue(newStatus);
   }
-  return { status: 'success', action: 'update', matched: rows.length, updated: updated, skipped: skipped };
+
+  return { status: 'success', action: 'update', matched: matched, updated: updated, skipped: skipped };
 }
 
 function json_(obj) {

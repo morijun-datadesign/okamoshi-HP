@@ -20,6 +20,10 @@ export interface SendMailResult {
   error?: string;
 }
 
+export interface SendResendOptions {
+  idempotencyKey?: string;
+}
+
 const sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms));
 
 let lastSendTimestamp = 0;
@@ -28,7 +32,8 @@ const MIN_INTERVAL_MS = 600;
 export const sendResendEmail = async (
   apiKey: string,
   payload: ResendMailPayload,
-  logPrefix = "[resend]"
+  logPrefix = "[resend]",
+  options?: SendResendOptions
 ): Promise<SendMailResult> => {
   if (!apiKey) {
     console.error(`${logPrefix} [CRITICAL] RESEND_API_KEY is not configured; cannot send email.`);
@@ -44,16 +49,23 @@ export const sendResendEmail = async (
   const toList = Array.isArray(payload.to) ? payload.to.join(", ") : payload.to;
   console.log(`${logPrefix} Attempting email delivery: to=[${toList}], from=[${payload.from}], subject=[${payload.subject}]`);
 
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${apiKey}`,
+    "Content-Type": "application/json",
+  };
+  if (options?.idempotencyKey && options.idempotencyKey.trim() !== "") {
+    // HTTP ヘッダーに非 ASCII 文字が含まれると fetch が例外を起こすため印字可能 ASCII のみに正規化
+    const safeKey = options.idempotencyKey.trim().replace(/[^\x21-\x7E]/g, "_").slice(0, 256);
+    if (safeKey) headers["Idempotency-Key"] = safeKey;
+  }
+
   const maxAttempts = 3;
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
       lastSendTimestamp = Date.now();
       const res = await fetch("https://api.resend.com/emails", {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-          "Content-Type": "application/json",
-        },
+        headers,
         body: JSON.stringify(payload),
       });
 

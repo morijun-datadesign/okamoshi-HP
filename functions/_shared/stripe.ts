@@ -49,10 +49,82 @@ export const fetchPaymentIntent = async (
   }
 };
 
+interface PaginatedSessionScanOptions {
+  customerEmail?: string;
+  maxPages: number;
+  logPrefix?: string;
+}
+
+const listCompletedSessionsPaginated = async (
+  secretKey: string,
+  sinceTimestamp: number,
+  options: PaginatedSessionScanOptions,
+  onSession: (session: Record<string, any>) => boolean
+): Promise<{ stoppedEarly: boolean; truncated: boolean }> => {
+  const logPrefix = options.logPrefix || "[stripe]";
+  let startingAfter = "";
+  const seenPageCursors = new Set<string>();
+
+  for (let page = 0; page < options.maxPages; page++) {
+    const params = new URLSearchParams({
+      limit: "100",
+      "created[gte]": String(sinceTimestamp),
+      status: "complete",
+    });
+    if (options.customerEmail) {
+      params.set("customer_details[email]", options.customerEmail);
+    }
+    if (startingAfter) {
+      params.set("starting_after", startingAfter);
+    }
+
+    const url = `https://api.stripe.com/v1/checkout/sessions?${params.toString()}`;
+    const res = await fetch(url, {
+      headers: { Authorization: `Bearer ${secretKey}` },
+    });
+    if (!res.ok) {
+      console.warn(
+        `${logPrefix} listCompletedSessionsPaginated error (page=${page + 1}, emailFilter=${Boolean(options.customerEmail)}): HTTP ${res.status}`
+      );
+      return { stoppedEarly: false, truncated: false };
+    }
+
+    const data = (await res.json()) as {
+      data?: Array<Record<string, any>>;
+      has_more?: boolean;
+    };
+    const sessions = Array.isArray(data.data) ? data.data : [];
+    for (const s of sessions) {
+      if (onSession(s)) {
+        return { stoppedEarly: true, truncated: false };
+      }
+    }
+
+    if (!data.has_more || sessions.length === 0) {
+      return { stoppedEarly: false, truncated: false };
+    }
+
+    const lastId = String(sessions[sessions.length - 1]?.id || "");
+    if (!lastId || seenPageCursors.has(lastId)) {
+      console.warn(`${logPrefix} Pagination cursor stalled at "${lastId}"; stopping scan.`);
+      return { stoppedEarly: false, truncated: false };
+    }
+    seenPageCursors.add(lastId);
+    startingAfter = lastId;
+  }
+
+  return { stoppedEarly: false, truncated: true };
+};
+
 /**
  * コンビニ支払期限切れ時、直近（デフォルト14日以内）に
  * 「同一生徒 ＋ 同一メールアドレス ＋ 同一の対象模試（複数同時申込時は含まれるすべての模試）」で
  * ステータスが「paid」の別セッションが存在するかチェックする
+ *
+ * 【100件上限対策】
+ * Phase 1: customer_details[email] 絞り込み + ページネーションで高速捕捉
+ * Phase 2: 上記で見つからない場合（大文字/小文字差異・metadata.email のみ一致等）、
+ *          has_more + starting_after による全ページ走査（最大20ページ=2,000件）で100%確実に捕捉する
  */
 export const checkRecentPaidSession = async (
   email: string,
@@ -63,7 +135,8 @@ export const checkRecentPaidSession = async (
   days = 14,
   logPrefix = "[stripe]"
 ): Promise<{ hasPaid: boolean; matchedSessionId?: string }> => {
-  const normEmail = String(email || "").toLowerCase().trim();
+  const rawEmail = String(email || "").trim();
+  const normEmail = rawEmail.toLowerCase();
   const normName = String(studentName || "").normalize("NFKC").replace(/\s+/g, "").trim();
   const requiredExams = Array.from(
     new Set((targetExamNames || []).map((n) => normalizeExamName(n)).filter(Boolean))
@@ -76,23 +149,17 @@ export const checkRecentPaidSession = async (
 
   try {
     const sinceTimestamp = Math.floor((Date.now() - days * 86400 * 1000) / 1000);
-    const url = `https://api.stripe.com/v1/checkout/sessions?limit=100&created[gte]=${sinceTimestamp}&status=complete`;
-    const res = await fetch(url, {
-      headers: { Authorization: `Bearer ${secretKey}` },
-    });
-    if (!res.ok) {
-      console.warn(`${logPrefix} checkRecentPaidSession fetch error: HTTP ${res.status}`);
-      return { hasPaid: false };
-    }
-    const data = (await res.json()) as { data?: Array<Record<string, any>> };
-    const sessions = data.data || [];
-
     const paidExamSet = new Set<string>();
     const matchedSessionIds: string[] = [];
+    const seenSessionIds = new Set<string>();
 
-    for (const s of sessions) {
-      if (s.id === excludeSessionId) continue;
-      if (s.payment_status !== "paid") continue;
+    const evaluateSession = (s: Record<string, any>): boolean => {
+      const sid = String(s?.id || "");
+      if (sid) {
+        if (sid === excludeSessionId || seenSessionIds.has(sid)) return false;
+        seenSessionIds.add(sid);
+      }
+      if (s?.payment_status !== "paid") return false;
 
       const sEmail = String(s.customer_details?.email || s.customer_email || s.metadata?.email || "")
         .toLowerCase()
@@ -103,7 +170,7 @@ export const checkRecentPaidSession = async (
         .trim();
 
       // 「同一生徒 ＋ 同一メールアドレス」の両方が一致するセッションのみ対象
-      if (sEmail !== normEmail || sName !== normName) continue;
+      if (sEmail !== normEmail || sName !== normName) return false;
 
       const sExamNames = extractExamNamesFromMetadata(s.metadata);
       let matchedInThisSession = false;
@@ -114,19 +181,50 @@ export const checkRecentPaidSession = async (
           matchedInThisSession = true;
         }
       }
-      if (matchedInThisSession && s.id && !matchedSessionIds.includes(String(s.id))) {
-        matchedSessionIds.push(String(s.id));
+      if (matchedInThisSession && sid && !matchedSessionIds.includes(sid)) {
+        matchedSessionIds.push(sid);
+      }
+
+      return requiredExams.every((reqEx) => paidExamSet.has(reqEx));
+    };
+
+    // Phase 1: customer_details[email] 絞り込みによる高速検索（最大5ページ）
+    const emailCandidates = Array.from(new Set([rawEmail, normEmail].filter(Boolean)));
+    for (const candidateEmail of emailCandidates) {
+      const p1 = await listCompletedSessionsPaginated(
+        secretKey,
+        sinceTimestamp,
+        { customerEmail: candidateEmail, maxPages: 5, logPrefix },
+        evaluateSession
+      );
+      if (p1.stoppedEarly) {
+        const joinedIds = matchedSessionIds.join(", ");
+        console.log(
+          `${logPrefix} Found paid session(s) via email filter covering all target exams (${targetExamNames.join(" / ")}) for student="${studentName}" email="${email}": session_id=${joinedIds}`
+        );
+        return { hasPaid: true, matchedSessionId: joinedIds };
       }
     }
 
-    // 期限切れセッションに含まれるすべての対象模試が別セッションで paid になっている場合のみ true
-    const allExamsPaid = requiredExams.every((reqEx) => paidExamSet.has(reqEx));
-    if (allExamsPaid) {
+    // Phase 2: 100件上限突破・完全網羅フォールバック（has_more + starting_after、最大20ページ=2,000件）
+    const MAX_FALLBACK_PAGES = 20;
+    const p2 = await listCompletedSessionsPaginated(
+      secretKey,
+      sinceTimestamp,
+      { maxPages: MAX_FALLBACK_PAGES, logPrefix },
+      evaluateSession
+    );
+    if (p2.stoppedEarly) {
       const joinedIds = matchedSessionIds.join(", ");
       console.log(
-        `${logPrefix} Found paid session(s) covering all target exams (${targetExamNames.join(" / ")}) for student="${studentName}" email="${email}": session_id=${joinedIds}`
+        `${logPrefix} Found paid session(s) via paginated scan covering all target exams (${targetExamNames.join(" / ")}) for student="${studentName}" email="${email}": session_id=${joinedIds}`
       );
       return { hasPaid: true, matchedSessionId: joinedIds };
+    }
+    if (p2.truncated) {
+      console.warn(
+        `${logPrefix} checkRecentPaidSession reached page limit (${MAX_FALLBACK_PAGES} pages) while scanning sessions since=${sinceTimestamp}.`
+      );
     }
 
     return { hasPaid: false };

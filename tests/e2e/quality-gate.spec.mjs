@@ -43,8 +43,8 @@ const ACTIVE_PAGES = TARGET_PATHS_SET !== null
   : PAGES;
 
 // 描画に必須の外部リソースのみ許可（計測タグ GTM / Clarity 等は遮断）
-// ※ cdn.tailwindcss.com は 32 ページが依存している Tailwind Play CDN（本番非推奨。将来 css/style.min.css へ移行予定）
-const ALLOW_HOSTS = new Set(['fonts.googleapis.com', 'fonts.gstatic.com', 'images.microcms-assets.io', 'cdn.tailwindcss.com']);
+// ※ 全ページ /css/style.min.css（ビルド済み静的CSS）へ移行済みのため Tailwind Play CDN は禁止
+const ALLOW_HOSTS = new Set(['fonts.googleapis.com', 'fonts.gstatic.com', 'images.microcms-assets.io']);
 
 async function setupPage(page) {
   const errors = [];
@@ -119,6 +119,12 @@ for (const pg of ACTIVE_PAGES) {
 
     // ---- [3] コンソールエラー / ページエラー ゼロ
     expect(errors, 'pageerror / console.error が発生しています').toEqual([]);
+
+    // ---- [4] Tailwind Play CDN ゼロ強制（全ページ /css/style.min.css 統一）
+    expect(
+      await page.locator('script[src*="cdn.tailwindcss.com"], link[href*="cdn.tailwindcss.com"]').count(),
+      'Tailwind Play CDN（cdn.tailwindcss.com）が残存しています'
+    ).toBe(0);
 
     // ---- [2] ゴミ文字列・未解決プレースホルダー・読み込み中のまま停止
     const text = await page.evaluate(() => document.body.innerText);

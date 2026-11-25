@@ -141,7 +141,7 @@ flowchart LR
 1. `/apply/`（`apply/index.html`）が `/api/exam-guides` を取得し、学年（小6・中1・中2・中3）ごとの受付中模試と選択可能会場を動的構築する。入力途中の情報は `localStorage` に自動保存され再訪問時に復元される。
 2. 郵便番号7桁（全角・ハイフン自動正規化）入力で `/api/address` を呼び出して都道府県・市区町村・町域を自動補完し、在籍校欄では `/api/schools` から全国・岡山県優先で学校名サジェストを提供する。
 3. コンビニ決済の締切は「申込締切日の 3 日前 23:59:59」と定義されており、フロント側 UI 制御に加え、サーバー側 `create-checkout-session.ts` でも D1 (`exam_schedules.apply_deadline`) と payload を照合して締切超過のコンビニ決済を HTTP 400 で二重拒否する。
-4. `create-checkout-session.ts` はクライアント送信金額を信用せず `OFFICIAL_EXAM_PRICE = 5500` 円 × 模試数で金額を強制計算し、1 模試＝1 レコードの JSON を `metadata.exam_1..N` に格納、Stripe Customer を事前作成して `card` または `konbini` の Checkout Session URL を返却する。
+4. `create-checkout-session.ts` はクライアント送信金額を信用せず `OFFICIAL_EXAM_PRICE = 5500` 円 × 模試数で金額を強制計算し、1 模試＝1 レコードの JSON を `metadata.exam_1..N` に格納、Stripe Customer を事前作成して `card` または `konbini` の Checkout Session URL を返却する。あわせてフロントエンド（`js/apply-form.js` の `extractVenueTypeShort`）とサーバー共通モジュール（`functions/_shared/exam.ts` の `normalizeVenueShortName` / `normalizeIssueShortName`）により、Stripe `metadata`（`venue_type`, `issue_name`）および `metadata.exam_1..N`（`issue`, `venue`, `venue_type`）へ短縮表記を正規化格納する（Checkout 画面 `description` およびメール本文用 `label` には分かりやすさのため施設名・模試名称を維持）。
 
 ### 6.2 Stripe Webhook 処理 ＆ 冪等メール配信 ＆ 重複決済ガード ＆ 台帳連携
 1. **初回受付メール冪等性機構 (`functions/_shared/apply-initial-mail.ts` + `apply_initial_emails`)**:
@@ -152,7 +152,7 @@ flowchart LR
    - **旧サイト決済除外ガード (`LegacySiteGuard`)**: 同一 Stripe 本番アカウントを共有する旧サイト経由の決済を `success_url` と `metadata`（`source === "okamoshi_apply"` 等）で識別し、新サイト以外のイベントは一切メール/GAS 連携せず 200 で無視する。
    - **イベント分岐**: `checkout.session.completed` は `action: "create"`（`paid` またはコンビニ `未入金`＋共通初回メール送信）、`async_payment_succeeded` は `action: "update"`（`paid` 更新＋入金確認メール送信）、`async_payment_failed` / `expired` はコンビニのみ `action: "update"`（`期限切れ` 更新）。`update` 系メールにも ASCII の `Idempotency-Key` を付与。
    - **コンビニ期限切れ時の重複決済ガード (`checkRecentPaidSession`)**: 直近 14 日以内に「同一生徒名（NFKC 正規化）＋ 同一メールアドレス ＋ 期限切れセッションに含まれる**全対象模試**」が別セッションで `paid` になっているかを Stripe API で照合する。100 件上限突破対策として **Phase 1（`customer_details[email]` 絞り込み最大 5 ページ）＋ Phase 2（`has_more` / `starting_after` 全件ページネーション最大 20 ページ＝2,000 件）** の2段階走査を実装。すべて決済済みなら保護者宛期限切れメールのみスキップし、GAS 台帳の該当古い行は `期限切れ` へ正しく更新する。
-   - **GAS 台帳連携 (`gas/apply-ledger.gs`)**: `LockService.getScriptLock()` により同時実行競合を排他制御し、1 模試＝1 行・25 列（A〜Y列）で記録する。`updateStatus_` は B〜F 列の 1 回 `getValues()` 読み取りと `getRangeList(...).setValue(...)` による 1 回バッチ書き込みへ最適化され、`paid` 行の `期限切れ` 上書き禁止保護を高速に実行する。
+   - **GAS 台帳連携 (`gas/apply-ledger.gs`)**: `LockService.getScriptLock()` により同時実行競合を排他制御し、1 模試＝1 行・25 列（A〜Y列）で記録する。`stripe-webhook.ts` および `apply-ledger.gs`（`stripParens_()`）の多層ガードにより、台帳 C列（対象模試）＝月号のみ（例：`12月号`）、D列（受験会場）＝会場区分名のみ（例：`倉敷会場` / `自宅受験`）の短縮表記へ統一（通知メール本文の `r.label` は維持）。さらに `buildRow_` の R列に `formatJapanesePhone_()` 電話番号整形、`createRows_` 書き込み直後に `SpreadsheetApp.flush()` ＋ `assignMemberIdsForRows_()` 自動採番フック（`try-catch` 安全ガード付きで Gemini API 遅延時も台帳追記は確実に成功）、`doGet(e)` に `?action=unsubscribe` 時の `MailSender.gs` `handleUnsubscribeGet_(e)` 委譲を統合。`updateStatus_` は B〜F 列 1 回 `getValues()` ＋ `getRangeList(...).setValue(...)` 1 回バッチ書き込みで `paid` 行保護を高速実行する。
 
 ### 6.3 お問い合わせフロー (`contact/` + `functions/api/contact.ts`)
 - `/contact/`（タブ切替：個人・団体）、`/contact/individual/`、`/contact/organization/` の 3 ルートを用意。
@@ -170,14 +170,14 @@ flowchart LR
 
 | ファイル | 台帳上の役割 | 主な機能・メニュー / トリガー・関連シート |
 | :--- | :--- | :--- |
-| `gas/apply-ledger.gs`（=`コード.gs`） | 申込受付 Web アプリ | `doPost` / `doGet` により Stripe Webhook から A〜Y 列（25列）へ `create` / `update` を排他実行（`updateStatus_` バッチ最適化済み） |
+| `gas/apply-ledger.gs`（=`コード.gs`） | 申込受付 Web アプリ | `doPost` により Stripe Webhook から A〜Y 列（25列）へ `create` / `update` を排他実行。C/D 列 `stripParens_` 短縮正規化、`formatJapanesePhone_` 電話番号整形、`createRows_` の `assignMemberIdsForRows_` 安全自動採番フック（Z〜AB列）、`doGet(e)` の `?action=unsubscribe`（`MailSender.gs` `handleUnsubscribeGet_` 委譲）、`updateStatus_` バッチ最適化を統合 |
 | `gas/MailSender.gs` | メール一斉・スケジュール配信 ＆ 配信停止 | メニュー `📧 おかもしメール配信`、`processScheduledEmailsCron`（毎朝9時台定時）、Resend Batch API（`BATCH_SIZE=80`）、`未申込:〇〇` 横断抽出、`handleUnsubscribeGet_(e)` ワンクリック停止。シート: `メール配信作成`, `メールテンプレート保管庫`, `配信スケジュール`, `配信ログ`, `配信停止リスト`, `過去受験者` |
 | `gas/MemberIdManager.gs` | 会員No（受験番号）名寄せ・採番 ＆ 電話整形 | メニュー `🔢 受験番号・データ統合`（`onOpenTriggerForMember`）、`今年度_旧シート` 統合、Z〜AE 列（31列拡張）への Gemini 名寄せ＆MAX+1 採番、電話番号先頭0補完・ハイフン整形 |
 | `gas/alignPastExamineesSheet.gs` | 過去受験者タブ 31 列整形 | 旧 25 列の `過去受験者` タブを `過去受験者_旧バックアップ`（非表示）へ退避後に `main` と同一 31 列構成へ変換 |
 | `gas/MarketingReport.gs` | 日次マーケティング速報（Google Chat） | `runDailyMarketingReport`（`setupDailyMorningTrigger` により毎朝 6:37 JST、503時は12分間隔×最大3回自動リトライ）、`testRunDailyMarketingReportNow`。`main` + `模試基本情報`/`模試マスター` + GA4 + Search Console + Clarity（6hキャッシュ）を Gemini 3系（`gemini-3.5-flash-lite` 等）で分析し Google Chat へ投稿 |
 
 - **運用・保守上の留意点**:
-  1. `MailSender.gs` の `handleUnsubscribeGet_(e)`（ワンクリック配信停止）は Web アプリの `doGet(e)` から呼び出される前提のため、本番の `コード.gs`（`apply-ledger.gs`）を更新する際は、本番環境で `doGet(e)` の `action === 'unsubscribe'` 分岐（および自動採番フック等がある場合）が欠落しないよう注意すること。
+  1. `doGet(e)` の `?action=unsubscribe` 委譲（`MailSender.gs` `handleUnsubscribeGet_(e)`）および `createRows_` の `assignMemberIdsForRows_` / `formatJapanesePhone_` 連携は `gas/apply-ledger.gs` へ統合済み。本番スプレッドシートの `コード.gs` 反映時は Web アプリ URL 維持のため必ず既存デプロイの「新バージョン」編集で更新すること。
   2. `alignPastExamineesSheet()` 関数は `MailSender.gs`（L94〜235）と `alignPastExamineesSheet.gs`（L5〜151）の双方に重複定義されているため、修正時は片方のみの更新にならないよう留意すること（GAS 仕様上は後から読み込まれた定義で上書きされる）。
 
 ---
@@ -204,3 +204,4 @@ flowchart LR
 - **[ADR-010] 2026-11-25 | Gemini Notebook 本番運用マスター台帳整備 ＆ 公開遮断**: `_redirects` へ `/docs/* /404.html 200` を追加し、`[本番運用] 岡山県統一模擬試験（okayama-moshi）` ノートブックへ全仕様・コード（機密除外済）のゼロ矛盾同期を実施。
 - **[ADR-011] 2026-11-25 | 決済・メール冪等性/100件上限対策/GASバッチ最適化 ＆ 全ページ Tailwind Play CDN 脱却**: D1 `apply_initial_emails` テーブル（`migrations/0005`）＋ Resend `Idempotency-Key` による初回受付メールの未達・重複ゼロ化、`checkRecentPaidSession` の `customer_details[email]`＋最大2,000件ページネーション走査、`gas/apply-ledger.gs` `updateStatus_` のバッチ読み書き最適化、全31 HTML からの `cdn.tailwindcss.com` 撤去と `/css/style.min.css` 統一、`js/apply-form.js` / `js/apply-success.js` / `js/schools-search.js` 外部モジュール化、および品質ゲート CDN ゼロ強制・バックエンド単体テスト（`tests/unit/backend-hardening.test.mjs`）を追加。
 - **[ADR-012] 2026-11-25 | 受付台帳スプレッドシート追加 GAS 4ファイルのリポジトリ一元管理 ＆ Gemini Notebook 完全同期**: `gas/MailSender.gs`, `gas/MemberIdManager.gs`, `gas/alignPastExamineesSheet.gs`, `gas/MarketingReport.gs` を Git 管理下へ取り込み、`00_ACTIVE_MASTER_SPEC.md` および `06_実装コードバンドル_FullStack_HTML_JS_Functions.md` に全文収録してゼロ矛盾ローテーション同期を実施。
+- **[ADR-013] 2026-11-25 | 受付台帳C/D列短縮正規化（3層ガード）・GAS自動採番＆配信停止統合・外部塾URL一時タイムアウト耐性強化**: `functions/_shared/exam.ts`（`normalizeVenueShortName` / `normalizeIssueShortName`）・`js/apply-form.js`・`create-checkout-session.ts`・`stripe-webhook.ts`・`gas/apply-ledger.gs`（`stripParens_`）の多層ガードで台帳 C列＝月号のみ・D列＝会場区分名のみへ統一（メール本文 `r.label` は維持）。あわせて `gas/apply-ledger.gs` へ `doGet(e)` の `handleUnsubscribeGet_(e)` 委譲と `createRows_` からの `assignMemberIdsForRows_` 安全呼び出し（`try-catch`＋`SpreadsheetApp.flush`）・`formatJapanesePhone_` 連携を統合。また `scripts/check-juku-urls.mjs` で外部サーバー一時タイムアウト/502〜504のみ WARN 扱い（404/DNS失効/パーキング化等の明確なリンク切れ NG 検知は厳格維持）へ強化。

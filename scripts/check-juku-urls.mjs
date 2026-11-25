@@ -877,15 +877,42 @@ async function main() {
     const issues = [];
 
     // ① リンク切れ検知（HTTP 404/500、タイムアウト、DNSエラー等）
+    // ※ 明確なリンク切れ（404/4xx・DNS失効・パーキング化・証明書エラー・リダイレクト超過・自社URL誤設定）は厳格に NG_BROKEN を維持し、
+    //    外部サーバーの一時的なタイムアウト／接続遮断／502-504 のみ WARN 扱いにして本番デプロイの恒久ブロックを防ぐ。
+    const TRANSIENT_NET_CODES = new Set([
+      'ETIMEDOUT',
+      'UND_ERR_CONNECT_TIMEOUT',
+      'UND_ERR_HEADERS_TIMEOUT',
+      'UND_ERR_BODY_TIMEOUT',
+      'ABORT_ERR',
+      'ECONNRESET',
+      'ECONNREFUSED',
+      'UND_ERR_SOCKET',
+    ]);
+    const isTransientTimeoutOrNet =
+      !school.url.includes('okayama-moshi.com') &&
+      !fetchRes.isExpiredDomain &&
+      (
+        TRANSIENT_NET_CODES.has(String(fetchRes.errorCode || '').toUpperCase()) ||
+        String(fetchRes.error || '').includes('接続タイムアウト') ||
+        [502, 503, 504].includes(fetchRes.status)
+      );
+
     if (!fetchRes.ok) {
-      category = 'NG_BROKEN';
-      if (fetchRes.status > 0) {
-        issues.push(`HTTPエラー (${fetchRes.status})`);
+      if (isTransientTimeoutOrNet) {
+        category = 'WARN';
+        const reasonDetail = fetchRes.status > 0 ? `HTTP ${fetchRes.status}` : fetchRes.error;
+        issues.push(`外部サーバー一時応答遅延/タイムアウト (${reasonDetail}) ※一時障害の可能性・要目視確認`);
       } else {
-        issues.push(`接続エラー (${fetchRes.error})`);
-      }
-      if (school.url.includes('okayama-moshi.com')) {
-        issues.push(`公式サイトURLにおかもし自身のURL（${school.url}）が誤って設定されています`);
+        category = 'NG_BROKEN';
+        if (fetchRes.status > 0) {
+          issues.push(`HTTPエラー (${fetchRes.status})`);
+        } else {
+          issues.push(`接続エラー (${fetchRes.error})`);
+        }
+        if (school.url.includes('okayama-moshi.com')) {
+          issues.push(`公式サイトURLにおかもし自身のURL（${school.url}）が誤って設定されています`);
+        }
       }
     } else {
       // ② 別ページへの強制転送検知
@@ -959,11 +986,11 @@ async function main() {
   }
 
   if (warnList.length > 0) {
-    console.log('⚠️  【要確認：リダイレクト・タイトル表記ゆれ等の注意一覧】');
+    console.log('⚠️  【要確認：リダイレクト・タイトル表記ゆれ・外部一時タイムアウト等の注意一覧】');
     for (const item of warnList) {
       console.log(`  ▲ [${item.areaName}] #${item.order} ${item.name}`);
       console.log(`    ・設定URL      : ${item.url}`);
-      console.log(`    ・最終到達URL  : ${item.finalUrl} (HTTP ${item.httpStatus})`);
+      console.log(`    ・最終到達URL  : ${item.finalUrl} (HTTP ${item.httpStatus || 'TIMEOUT/ERR'})`);
       console.log(`    ・ページTitle  : ${item.title || '(なし)'}`);
       console.log(`    ・確認事項     : ${item.issues.join(' / ')}\n`);
     }
@@ -1027,7 +1054,11 @@ async function main() {
     console.error(`❌ 塾URLチェック FAIL: ${ngList.length} 件のURLに問題が見つかりました。修正してから再度実行してください。\n`);
     process.exit(1);
   } else {
-    console.log('✅ 塾URLチェック完了\n');
+    if (warnList.length > 0) {
+      console.log(`✅ 塾URLチェック完了（⚠️ 警告 ${warnList.length} 件あり・要目視確認）\n`);
+    } else {
+      console.log('✅ 塾URLチェック完了\n');
+    }
     process.exit(0);
   }
 }

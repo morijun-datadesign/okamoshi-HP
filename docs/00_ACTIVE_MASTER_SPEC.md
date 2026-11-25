@@ -36,7 +36,7 @@
 | **決済** | Stripe Checkout & Webhooks (`POST /v1/checkout/sessions`, `/v1/customers`) | クレジットカード決済 ＆ コンビニ決済（払込期限・店舗別払込番号対応）。サーバー側正規定価 `5,500円` 強制・HMAC-SHA256 署名検証・API再照会 |
 | **メール配信** | Resend API (`https://api.resend.com/emails`) | `functions/_shared/resend.ts` で 600ms インターバル制御＋ 429/5xx 最大3回自動リトライ。管理者宛通知・申込者サンクス・入金確定・期限切れ・お問い合わせ自動返信を送信 |
 | **ボット対策** | Cloudflare Turnstile (`https://challenges.cloudflare.com/turnstile/v0/siteverify`) | `cf-turnstile`（`data-size="flexible"`, `data-appearance="interaction-only"`）を申込フォーム・お問い合わせフォームに組込み、サーバー側 `verifyTurnstile()` で検証 |
-| **CMS / 台帳連携** | microCMS (`okamoshi-blog`) ＆ Google Apps Script (`gas/`) | Google スプレッドシートから D1 への洗い替え同期（模試案内・実施塾一覧）、および Stripe Webhook からの受付台帳スプレッドシート 25 列自動追記/更新 |
+| **CMS / 台帳連携** | microCMS (`okamoshi-blog`) ＆ Google Apps Script (`gas/`) | Google スプレッドシートから D1 への洗い替え同期（模試案内・実施塾一覧）、Stripe Webhook からの受付台帳スプレッドシート 25 列自動追記/更新（`apply-ledger.gs`）、および台帳上の運用 GAS 4本（`MailSender.gs`: Resend Batch一斉/スケジュール配信＆オプトアウト、`MemberIdManager.gs`: Gemini AI名寄せ自動採番＆電話番号整形、`alignPastExamineesSheet.gs`: 過去受験者31列整形、`MarketingReport.gs`: GA4/GSC/Clarity/台帳集計＋Gemini 3系分析の日次Google Chat速報） |
 | **動画・メディア** | Cloudflare R2 (`pub-ba61870bbe1442af87f84c258e756736.r2.dev`) ＆ `scripts/optimize_images.py` | 申込手順解説動画 `apply-guide.mp4` の遅延ロード再生、PIL + macOS `sips` による AVIF/WebP 最適化 |
 | **計測** | Google Analytics 4 (`GT-NBJ63L9J` / `G-QCFQWJHMQD`) ＆ Microsoft Clarity (`z5nnqjwyks`) | `requestIdleCallback` ＋初回操作イベントによる完全遅延ロード（初期メインスレッド TBT 0ms 化） |
 | **品質ゲート / CI** | Playwright E2E ＋ 静的検査 ＋ TypeScript ＋ GitHub Actions | `scripts/smart-quality-gate.mjs`（PREVIEW / FAST / FULL 3モード）、Git `pre-push` フック物理ロック、`.github/workflows/ci.yml` |
@@ -106,6 +106,18 @@
 | `gas/apply-ledger.gs` | `SHEET_NAME` / `SPREADSHEET_ID` | 台帳出力先シート・スプレッドシート指定（任意） |
 | `gas/sync-exam-guides.js` | `SYNC_SECRET` | `EXAM_GUIDES_SYNC_SECRET` と一致必須 |
 | `gas/sync-cram-schools.js` | `SYNC_SECRET` | `CRAM_SCHOOLS_SYNC_SECRET` と一致必須 |
+| `gas/MailSender.gs` | `RESEND_API_KEY` | Resend 単発・Batch API（`/emails/batch`）メール配信用 API キー |
+| `gas/MailSender.gs` | `SHARED_SECRET` / `WEBAPP_URL` | ワンクリック配信停止リンクの SHA-256 署名ソルトおよび Web アプリベース URL（未設定時自動取得） |
+| `gas/MailSender.gs` | `SHEET_NAME` / `SPREADSHEET_ID` | 台帳シート名（既定 `main`）・スプレッドシート ID（任意） |
+| `gas/MemberIdManager.gs` | `GEMINI_API_KEY` | 受験番号（会員No）名寄せ判定用 Gemini API キー（未設定時は `⚠️要確認` フォールバック） |
+| `gas/MemberIdManager.gs` | `SHEET_NAME` / `SPREADSHEET_ID` | `apply-ledger.gs` の `getSheet_()` 経由で参照 |
+| `gas/alignPastExamineesSheet.gs` | （なし） | アクティブスプレッドシートの `main` / `過去受験者` タブを直接参照 |
+| `gas/MarketingReport.gs` | `GA4_PROPERTY_ID` | GA4 Data API (`AnalyticsData.Properties.runReport`) 対象プロパティ ID |
+| `gas/MarketingReport.gs` | `SEARCH_CONSOLE_SITE_URL` | Google Search Console REST API 対象サイト URL |
+| `gas/MarketingReport.gs` | `CLARITY_API_TOKEN` | Microsoft Clarity Data Export API v1 トークン（任意・未設定時スキップ、6時間キャッシュ） |
+| `gas/MarketingReport.gs` | `GEMINI_API_KEY` | 日次マーケティング分析用 Gemini API キー（`x-goog-api-key` ヘッダー送信、3系カスケード） |
+| `gas/MarketingReport.gs` | `GOOGLE_CHAT_WEBHOOK_URL` | 日次速報の Google Chat 投稿先 Incoming Webhook URL |
+| `gas/MarketingReport.gs` | `SHEET_NAME` / `DAILY_REPORT_LAST_SENT_DATE` / `DAILY_REPORT_RETRY_COUNT` | 台帳シート名（既定 `main`）および二重送信ガード・503リトライ回数管理（自動更新） |
 
 ---
 
@@ -153,6 +165,21 @@ flowchart LR
 - `python3 scripts/build.py [--skip-images]` 実行時、`index.html` のインライン CSS マーカーを一旦 `<link>` に戻し、`build_ssg.py` で記事生成・トップ/LP/お知らせ/サイトマップ/プレビュー更新を行った後、Tailwind CLI (`bin/tailwindcss`) で全 HTML・`js/**/*.js` をスキャンして `css/style.min.css` をビルドし、最後に `index.html` へ `style.min.css` を再インライン化する。
 - 本文中の `.mp4` リンク/プレーンURLは `<video controls preload="none">` プレイヤーへ自動変換され、カスタム装飾ボックス（`.box-fact`, `.box-action`, `.box-warning` 等）は同一段落内1改行マージと空行分割を正規化する。
 
+### 6.6 受付台帳スプレッドシート運用 GAS 群 (`gas/`)
+受付台帳スプレッドシートの Apps Script プロジェクトは以下 5 ファイルで構成される（`sync-exam-guides.js`・`sync-cram-schools.js` は別スプレッドシート側で稼働）：
+
+| ファイル | 台帳上の役割 | 主な機能・メニュー / トリガー・関連シート |
+| :--- | :--- | :--- |
+| `gas/apply-ledger.gs`（=`コード.gs`） | 申込受付 Web アプリ | `doPost` / `doGet` により Stripe Webhook から A〜Y 列（25列）へ `create` / `update` を排他実行（`updateStatus_` バッチ最適化済み） |
+| `gas/MailSender.gs` | メール一斉・スケジュール配信 ＆ 配信停止 | メニュー `📧 おかもしメール配信`、`processScheduledEmailsCron`（毎朝9時台定時）、Resend Batch API（`BATCH_SIZE=80`）、`未申込:〇〇` 横断抽出、`handleUnsubscribeGet_(e)` ワンクリック停止。シート: `メール配信作成`, `メールテンプレート保管庫`, `配信スケジュール`, `配信ログ`, `配信停止リスト`, `過去受験者` |
+| `gas/MemberIdManager.gs` | 会員No（受験番号）名寄せ・採番 ＆ 電話整形 | メニュー `🔢 受験番号・データ統合`（`onOpenTriggerForMember`）、`今年度_旧シート` 統合、Z〜AE 列（31列拡張）への Gemini 名寄せ＆MAX+1 採番、電話番号先頭0補完・ハイフン整形 |
+| `gas/alignPastExamineesSheet.gs` | 過去受験者タブ 31 列整形 | 旧 25 列の `過去受験者` タブを `過去受験者_旧バックアップ`（非表示）へ退避後に `main` と同一 31 列構成へ変換 |
+| `gas/MarketingReport.gs` | 日次マーケティング速報（Google Chat） | `runDailyMarketingReport`（`setupDailyMorningTrigger` により毎朝 6:37 JST、503時は12分間隔×最大3回自動リトライ）、`testRunDailyMarketingReportNow`。`main` + `模試基本情報`/`模試マスター` + GA4 + Search Console + Clarity（6hキャッシュ）を Gemini 3系（`gemini-3.5-flash-lite` 等）で分析し Google Chat へ投稿 |
+
+- **運用・保守上の留意点**:
+  1. `MailSender.gs` の `handleUnsubscribeGet_(e)`（ワンクリック配信停止）は Web アプリの `doGet(e)` から呼び出される前提のため、本番の `コード.gs`（`apply-ledger.gs`）を更新する際は、本番環境で `doGet(e)` の `action === 'unsubscribe'` 分岐（および自動採番フック等がある場合）が欠落しないよう注意すること。
+  2. `alignPastExamineesSheet()` 関数は `MailSender.gs`（L94〜235）と `alignPastExamineesSheet.gs`（L5〜151）の双方に重複定義されているため、修正時は片方のみの更新にならないよう留意すること（GAS 仕様上は後から読み込まれた定義で上書きされる）。
+
 ---
 
 ## 7. デザインシステム ＆ 運用絶対ルール（`GEMINI.md` 準拠要約）
@@ -176,3 +203,4 @@ flowchart LR
 - **[ADR-009] 2026-11-12 | microCMS リッチエディタ装飾ボックス＆カスタムクラス正規化**: `.text-point-red` / `.text-brand-green` / `.marker-yellow` 追加と、単一 Shift+Enter 結合・段落/空行分離の両立を SSG と下書きプレビュー双方に実装。
 - **[ADR-010] 2026-11-25 | Gemini Notebook 本番運用マスター台帳整備 ＆ 公開遮断**: `_redirects` へ `/docs/* /404.html 200` を追加し、`[本番運用] 岡山県統一模擬試験（okayama-moshi）` ノートブックへ全仕様・コード（機密除外済）のゼロ矛盾同期を実施。
 - **[ADR-011] 2026-11-25 | 決済・メール冪等性/100件上限対策/GASバッチ最適化 ＆ 全ページ Tailwind Play CDN 脱却**: D1 `apply_initial_emails` テーブル（`migrations/0005`）＋ Resend `Idempotency-Key` による初回受付メールの未達・重複ゼロ化、`checkRecentPaidSession` の `customer_details[email]`＋最大2,000件ページネーション走査、`gas/apply-ledger.gs` `updateStatus_` のバッチ読み書き最適化、全31 HTML からの `cdn.tailwindcss.com` 撤去と `/css/style.min.css` 統一、`js/apply-form.js` / `js/apply-success.js` / `js/schools-search.js` 外部モジュール化、および品質ゲート CDN ゼロ強制・バックエンド単体テスト（`tests/unit/backend-hardening.test.mjs`）を追加。
+- **[ADR-012] 2026-11-25 | 受付台帳スプレッドシート追加 GAS 4ファイルのリポジトリ一元管理 ＆ Gemini Notebook 完全同期**: `gas/MailSender.gs`, `gas/MemberIdManager.gs`, `gas/alignPastExamineesSheet.gs`, `gas/MarketingReport.gs` を Git 管理下へ取り込み、`00_ACTIVE_MASTER_SPEC.md` および `06_実装コードバンドル_FullStack_HTML_JS_Functions.md` に全文収録してゼロ矛盾ローテーション同期を実施。

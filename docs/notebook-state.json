@@ -1,8 +1,8 @@
 {
   "schemaVersion": "1.0",
   "displayName": "[本番運用] 岡山県統一模擬試験（okayama-moshi）",
-  "notebookId": "notebooks/fa28e236-162c-43e8-a624-e73049fab067",
-  "notebook_id": "notebooks/fa28e236-162c-43e8-a624-e73049fab067",
+  "notebookId": "notebooks/f91ac792-c6ed-4d57-b5b5-9ff179c11c5f",
+  "notebook_id": "notebooks/f91ac792-c6ed-4d57-b5b5-9ff179c11c5f",
   "availableMcpTools": [
     "create_notebook",
     "get_notebook",
@@ -13,21 +13,21 @@
     "list_sources"
   ],
   "syncMethod": "zero_contradiction_rotate+create_source",
-  "lastSyncAt": "2026-11-25T06:07:05.546Z",
+  "lastSyncAt": "2026-11-25T06:24:07.282Z",
   "sources": {
     "00_ACTIVE_MASTER_SPEC.md": {
       "title": "00_ACTIVE_MASTER_SPEC.md",
-      "sourceName": "notebooks/fa28e236-162c-43e8-a624-e73049fab067/sources/4fe2bd49-4a0f-4786-872d-1200ed3e08bb",
-      "sourceId": "4fe2bd49-4a0f-4786-872d-1200ed3e08bb",
+      "sourceName": "notebooks/f91ac792-c6ed-4d57-b5b5-9ff179c11c5f/sources/e22ebe9f-d924-4b4d-b251-fe5c28829852",
+      "sourceId": "e22ebe9f-d924-4b4d-b251-fe5c28829852",
       "state": "ACTIVE",
-      "bytes": 26326,
-      "sha256": "8717da10619d7a9372c5ccacd158f77c8e8f69358e6b6c4ce027afce4476bdce",
+      "bytes": 31851,
+      "sha256": "d87a83431d2f8c0ead423401785198b7002ee3c660a04c39b251f15a276501e9",
       "url": null
     },
     "01_Phase0_市場競合ディープリサーチ.md": {
       "title": "01_Phase0_市場競合ディープリサーチ.md",
-      "sourceName": "notebooks/fa28e236-162c-43e8-a624-e73049fab067/sources/eff4cb40-dff4-417a-b498-c942c8e92249",
-      "sourceId": "eff4cb40-dff4-417a-b498-c942c8e92249",
+      "sourceName": "notebooks/f91ac792-c6ed-4d57-b5b5-9ff179c11c5f/sources/4e7af1ae-11be-43c8-a295-18ac50577ac8",
+      "sourceId": "4e7af1ae-11be-43c8-a295-18ac50577ac8",
       "state": "ACTIVE",
       "bytes": 4933,
       "sha256": "c3507eabd861b91d8a1db0105cb4849bbec4abae76847eeed7bd0d022875f803",
@@ -35,8 +35,8 @@
     },
     "02_Stage1_現行サイト技術診断_SWOT_AISAS.md": {
       "title": "02_Stage1_現行サイト技術診断_SWOT_AISAS.md",
-      "sourceName": "notebooks/fa28e236-162c-43e8-a624-e73049fab067/sources/2a1e41e0-eac1-45f2-be65-fc312efed3f1",
-      "sourceId": "2a1e41e0-eac1-45f2-be65-fc312efed3f1",
+      "sourceName": "notebooks/f91ac792-c6ed-4d57-b5b5-9ff179c11c5f/sources/d53cbe96-4a88-425b-a0fb-78285fd136b2",
+      "sourceId": "d53cbe96-4a88-425b-a0fb-78285fd136b2",
       "state": "ACTIVE",
       "bytes": 11005,
       "sha256": "e5f345d3a2cf7cd7cd8e86b6d7a227bd4067d241017ec8ab0a29d2190294540c",
@@ -44,8 +44,8 @@
     },
     "03_確定サイト設計書_デザインDNA_光学プロファイル.md": {
       "title": "03_確定サイト設計書_デザインDNA_光学プロファイル.md",
-      "sourceName": "notebooks/fa28e236-162c-43e8-a624-e73049fab067/sources/bed3a99f-e843-42ce-91bb-a2bcee1f12c1",
-      "sourceId": "bed3a99f-e843-42ce-91bb-a2bcee1f12c1",
+      "sourceName": "notebooks/f91ac792-c6ed-4d57-b5b5-9ff179c11c5f/sources/b7ba0248-9b59-4a68-bcd2-9089039cc28b",
+      "sourceId": "b7ba0248-9b59-4a68-bcd2-9089039cc28b",
       "state": "ACTIVE",
       "bytes": 13221,
       "sha256": "c77c106463876eb2d039792f7186f9a260ce3e8677423aa4c8b72eddd8492a0c",
@@ -53,8 +53,8 @@
     },
     "04_画像スロット台帳_生成プロンプト一覧.md": {
       "title": "04_画像スロット台帳_生成プロンプト一覧.md",
-      "sourceName": "notebooks/fa28e236-162c-43e8-a624-e73049fab067/sources/9685e629-e786-4706-b3e1-4168d7b9f800",
-      "sourceId": "9685e629-e786-4706-b3e1-4168d7b9f800",
+      "sourceName": "notebooks/f91ac792-c6ed-4d57-b5b5-9ff179c11c5f/sources/407006e9-db14-4144-b39c-4a9df4822da4",
+      "sourceId": "407006e9-db14-4144-b39c-4a9df4822da4",
       "state": "ACTIVE",
       "bytes": 8219,
       "sha256": "21b5c2a48be42f5359ae0881cbe326e692344886d7de749336ec90319993e8f6",
@@ -62,8 +62,8 @@
     },
     "05_最終品質監査_本番URL_提案書サマリー.md": {
       "title": "05_最終品質監査_本番URL_提案書サマリー.md",
-      "sourceName": "notebooks/fa28e236-162c-43e8-a624-e73049fab067/sources/b5d8c957-dcdc-49b0-bd5c-2ac7a4c1eea1",
-      "sourceId": "b5d8c957-dcdc-49b0-bd5c-2ac7a4c1eea1",
+      "sourceName": "notebooks/f91ac792-c6ed-4d57-b5b5-9ff179c11c5f/sources/db590901-426e-441f-8ca2-545fa12df9fe",
+      "sourceId": "db590901-426e-441f-8ca2-545fa12df9fe",
       "state": "ACTIVE",
       "bytes": 10023,
       "sha256": "0f57fc612d56a0357bb588ada290c2326577867b317e1e863e339590e7028671",
@@ -71,17 +71,17 @@
     },
     "06_実装コードバンドル_FullStack_HTML_JS_Functions.md": {
       "title": "06_実装コードバンドル_FullStack_HTML_JS_Functions.md",
-      "sourceName": "notebooks/fa28e236-162c-43e8-a624-e73049fab067/sources/eca1600d-8a23-4fe5-b327-44f924519b06",
-      "sourceId": "eca1600d-8a23-4fe5-b327-44f924519b06",
+      "sourceName": "notebooks/f91ac792-c6ed-4d57-b5b5-9ff179c11c5f/sources/05174a5c-60f4-4207-8676-0a1945db4f3a",
+      "sourceId": "05174a5c-60f4-4207-8676-0a1945db4f3a",
       "state": "ACTIVE",
-      "bytes": 946480,
-      "sha256": "63929cfc4ef512f48e5ad6e9834acf153b011ddb976705f062cc5ab65cbdd39a",
+      "bytes": 946814,
+      "sha256": "2436616adb7c76e518a7e4f688f9d7e819f9510c16c17055634b427fd21b4f85",
       "url": null
     },
     "WEB_okayama-moshi.com": {
       "title": "WEB_okayama-moshi.com",
-      "sourceName": "notebooks/fa28e236-162c-43e8-a624-e73049fab067/sources/e489a72a-0786-4936-808b-49c3173d4249",
-      "sourceId": "e489a72a-0786-4936-808b-49c3173d4249",
+      "sourceName": "notebooks/f91ac792-c6ed-4d57-b5b5-9ff179c11c5f/sources/f245a917-f912-417b-8813-b42031e391d3",
+      "sourceId": "f245a917-f912-417b-8813-b42031e391d3",
       "state": "ACTIVE",
       "bytes": 0,
       "sha256": "72082e66ab1293800697c7b711884753f66a94a2f62fcacd804a659bac2ed316",
@@ -95,6 +95,12 @@
     {
       "notebook_id": "notebooks/bc57ff9e-1def-4863-9ef1-cddfa7713536",
       "archived_at": "2026-11-25T06:06:24.059Z",
+      "original_display_name": "[本番運用] 岡山県統一模擬試験（okayama-moshi）",
+      "archived_as": "🗄️ [ARCHIVE 2026-11-25] [本番運用] 岡山県統一模擬試験（okayama-moshi）"
+    },
+    {
+      "notebook_id": "notebooks/fa28e236-162c-43e8-a624-e73049fab067",
+      "archived_at": "2026-11-25T06:23:29.998Z",
       "original_display_name": "[本番運用] 岡山県統一模擬試験（okayama-moshi）",
       "archived_as": "🗄️ [ARCHIVE 2026-11-25] [本番運用] 岡山県統一模擬試験（okayama-moshi）"
     }

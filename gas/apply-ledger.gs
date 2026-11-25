@@ -96,8 +96,11 @@ function doPost(e) {
   }
 }
 
-/** 動作確認用（ブラウザで URL を開くと応答を返す） */
-function doGet() {
+/** 動作確認用（ブラウザで URL を開くと応答を返す。?action=unsubscribe 時は MailSender.gs の配信停止処理へ委譲） */
+function doGet(e) {
+  if (e && e.parameter && e.parameter.action === 'unsubscribe' && typeof handleUnsubscribeGet_ === 'function') {
+    return handleUnsubscribeGet_(e);
+  }
   return json_({ status: 'success', message: 'okamoshi apply ledger is running' });
 }
 

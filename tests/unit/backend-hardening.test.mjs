@@ -702,6 +702,33 @@ test('GAS apply-ledger.gs updateStatus_: バッチ読み書き最適化 ＆ paid
   );
   assert.equal(rowOkayama[2], '12月号');
   assert.equal(rowOkayama[3], '岡山会場');
+
+  // doGet(e) 動作確認 ＆ ?action=unsubscribe -> handleUnsubscribeGet_(e) 連携テスト
+  assert.deepEqual(JSON.parse(ctx.doGet()), {
+    status: 'success',
+    message: 'okamoshi apply ledger is running',
+  });
+  assert.deepEqual(JSON.parse(ctx.doGet({ parameter: {} })), {
+    status: 'success',
+    message: 'okamoshi apply ledger is running',
+  });
+  // handleUnsubscribeGet_ 未定義時も例外なく稼働確認 JSON にフォールバックすること
+  assert.deepEqual(JSON.parse(ctx.doGet({ parameter: { action: 'unsubscribe' } })), {
+    status: 'success',
+    message: 'okamoshi apply ledger is running',
+  });
+  // handleUnsubscribeGet_ 定義時は ?action=unsubscribe で委譲されること
+  const capturedUnsubEvents = [];
+  const mockUnsubOutput = { type: 'HtmlOutput', content: 'unsubscribed-ok' };
+  ctx.handleUnsubscribeGet_ = (ev) => {
+    capturedUnsubEvents.push(ev);
+    return mockUnsubOutput;
+  };
+  const unsubEvent = { parameter: { action: 'unsubscribe', e: 'parent@example.com', s: 'sig123' } };
+  const unsubRes = ctx.doGet(unsubEvent);
+  assert.equal(capturedUnsubEvents.length, 1);
+  assert.equal(capturedUnsubEvents[0], unsubEvent);
+  assert.equal(unsubRes, mockUnsubOutput);
 });
 
 test('exam.ts 短縮表記正規化: normalizeVenueShortName / normalizeIssueShortName / records生成', async () => {

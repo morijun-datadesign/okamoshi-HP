@@ -138,7 +138,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const parentName = String(body.parent_name || body.guardian_name || existingMeta.parent_name || "").trim();
     const parentKana = String(body.parent_kana || existingMeta.parent_kana || "").trim();
 
-    // 3-0. 在籍小中学校名のサーバーサイド厳格バリデーション（オートフィル誤爆・人名一致・不正書式ブロック）
+    // 3-0. 在籍小中学校名のサーバーサイドバリデーション（空欄およびオートフィル誤爆による人名一致をブロック、自由入力は許容）
     const schoolValidation = validateSchoolName(schoolName, {
       studentName,
       studentLastName: typeof body.student_last_name === "string" ? body.student_last_name : undefined,
@@ -159,7 +159,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
         {
           success: false,
           code: schoolValidation.code,
-          message: schoolValidation.message || "正しい学校名（〇〇中学校・〇〇小学校など）をご入力ください。",
+          message: schoolValidation.message || "在籍小中学校名をご確認のうえ、再度ご入力ください。",
         },
         400
       );

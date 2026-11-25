@@ -1,7 +1,7 @@
 /**
  * 申込フォーム入力ガード共通モジュール（サーバーサイド検証・正規化）
  *
- * - 在籍小中学校名のオートフィル誤爆（生徒名・保護者名の一致）および不正書式の検証
+ * - 在籍小中学校名のオートフィル誤爆（生徒名・保護者名の一致）の検証（自由入力・略称は許容）
  * - 住所（町名・丁目・番地）における都道府県・市区町村・町名の重複自動クレンジング
  */
 
@@ -20,16 +20,13 @@ export interface PersonNameFields {
   parentKanaFirstName?: string;
 }
 
-export type SchoolValidationCode = "empty" | "matches_person_name" | "invalid_school_format";
+export type SchoolValidationCode = "empty" | "matches_person_name";
 
 export interface SchoolValidationResult {
   valid: boolean;
   code?: SchoolValidationCode;
   message?: string;
 }
-
-const SCHOOL_NAME_KEYWORD_RE =
-  /(小|中|高|学|校|園|義務|教育|支援|附属|付属|中等|分校|インター|ホームスクール|フリースクール|school|academy|elementary|junior|high)/i;
 
 /**
  * NFKC正規化および全角・半角空白除去を行う
@@ -102,7 +99,7 @@ export const collectPersonNameTokens = (names: PersonNameFields): Set<string> =>
 };
 
 /**
- * 在籍小中学校名の厳格バリデーション
+ * 在籍小中学校名のバリデーション（空欄および生徒・保護者の氏名・フリガナ一致のみブロック、略称・候補外などの自由入力は許容）
  */
 export const validateSchoolName = (
   schoolNameRaw: string,
@@ -123,14 +120,6 @@ export const validateSchoolName = (
       valid: false,
       code: "matches_person_name",
       message: "在籍校欄にお名前が入力されています。在籍されている小・中学校名をご入力ください。",
-    };
-  }
-
-  if (!SCHOOL_NAME_KEYWORD_RE.test(compact)) {
-    return {
-      valid: false,
-      code: "invalid_school_format",
-      message: "正しい学校名（〇〇中学校・〇〇小学校など）をご入力ください。",
     };
   }
 

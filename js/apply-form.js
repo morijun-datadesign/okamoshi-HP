@@ -1934,8 +1934,6 @@
       }
       hideSchoolSuggestions();
     }
-    const SCHOOL_NAME_KEYWORD_RE =
-      /(小|中|高|学|校|園|義務|教育|支援|附属|付属|中等|分校|インター|ホームスクール|フリースクール|school|academy|elementary|junior|high)/i;
     const PERSON_NAME_FIELD_IDS = [
       'studentLastName', 'studentFirstName',
       'studentKanaLastName', 'studentKanaFirstName',
@@ -1991,13 +1989,6 @@
           valid: false,
           code: 'matches_person_name',
           message: '在籍校欄にお名前が入力されています。在籍されている小・中学校名をご入力ください。'
-        };
-      }
-      if (!SCHOOL_NAME_KEYWORD_RE.test(compact)) {
-        return {
-          valid: false,
-          code: 'invalid_school_format',
-          message: '正しい学校名（〇〇中学校・〇〇小学校など）をご入力ください。'
         };
       }
       return { valid: true };

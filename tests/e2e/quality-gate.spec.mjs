@@ -804,14 +804,9 @@ test(
     await expect(page.locator('#formErrorMessageText')).toContainText('在籍校欄にお名前が入力されています。在籍されている小・中学校名をご入力ください。');
     await expect(page.locator('#currentSchoolError')).toBeVisible();
 
-    // 学校形式でない文字列でブロックされること
-    await schoolInput.fill('あああ');
-    await submitBtn.click();
-    await expect(page.locator('#formErrorMessage')).toBeVisible();
-    await expect(page.locator('#formErrorMessageText')).toContainText('正しい学校名（〇〇中学校・〇〇小学校など）をご入力ください。');
-
-    // 有効な学校名を入力後、オートフィルによる無断上書きが起きた場合に元の学校名へ復元されること
-    await schoolInput.fill('岡山市立操南中学校');
+    // 学校キーワードを含まない略称・自由入力（「操山」）はエラーにならず許容され、
+    // その後オートフィル誤爆が起きた際も直前の自由入力「操山」へ自動復元されること
+    await schoolInput.fill('操山');
     await schoolInput.blur();
     await expect(page.locator('#currentSchoolError')).toBeHidden();
     await page.evaluate(() => {
@@ -822,7 +817,12 @@ test(
         p.dispatchEvent(new Event('change', { bubbles: true }));
       }
     });
-    await expect(schoolInput, 'オートフィル誤爆時は直前の有効な学校名へ自動復元されること').toHaveValue('岡山市立操南中学校');
+    await expect(schoolInput, 'オートフィル誤爆時は直前の有効な自由入力（略称）へ自動復元されること').toHaveValue('操山');
+
+    // テスト送信用の正式学校名に戻す
+    await schoolInput.fill('岡山市立操南中学校');
+    await schoolInput.blur();
+    await expect(page.locator('#currentSchoolError')).toBeHidden();
 
     // (f) 「丁目・番地・号」欄への重複町名入力が blur 時に整理され、送信ペイロードの addr1 に重複が残らないこと
     const addr2Input = page.locator('#addressLine2');

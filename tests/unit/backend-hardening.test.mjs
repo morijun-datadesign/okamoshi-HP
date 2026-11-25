@@ -1013,11 +1013,11 @@ test('create-checkout-session.ts ＆ stripe-webhook.ts: 短縮名メタデータ
   }
 });
 
-test('form-guards.ts & create-checkout-session.ts: 在籍校名オートフィル誤爆防止・人名一致ブロック・形式検証', async () => {
+test('form-guards.ts & create-checkout-session.ts: 在籍校名オートフィル誤爆防止・人名一致ブロック・自由入力許容検証', async () => {
   const guardsMod = await bundleAndImportTs('functions/_shared/form-guards.ts', tmpDir, 'form_guards');
   const checkoutMod = await bundleAndImportTs('functions/api/create-checkout-session.ts', tmpDir, 'checkout_school_guard');
 
-  // 1. 人名一致ブロック（保護者名・生徒名・フリガナ・ひらがな・フルネーム・学校キーワード含有の名前）
+  // 1. 空欄・人名一致ブロック（保護者名・生徒名・フリガナ・ひらがな・フルネーム・学校キーワード含有の名前）
   const names = {
     studentLastName: '岡山',
     studentFirstName: '太郎',
@@ -1028,13 +1028,19 @@ test('form-guards.ts & create-checkout-session.ts: 在籍校名オートフィ�
     parentKanaLastName: 'オカヤマ',
     parentKanaFirstName: 'クミ',
   };
+  for (const emptyVal of ['', '   ', '　']) {
+    const res = guardsMod.validateSchoolName(emptyVal, names);
+    assert.equal(res.valid, false, '空欄はブロックされること');
+    assert.equal(res.code, 'empty');
+    assert.equal(res.message, '在籍小中学校名を入力してください。');
+  }
   for (const wrongSchool of ['久美', 'クミ', 'くみ', '岡山久美', '岡山 久美', '太郎', 'タロウ', 'オカヤマ']) {
     const res = guardsMod.validateSchoolName(wrongSchool, names);
     assert.equal(res.valid, false, `${wrongSchool} はブロックされること`);
     assert.equal(res.code, 'matches_person_name');
     assert.equal(res.message, '在籍校欄にお名前が入力されています。在籍されている小・中学校名をご入力ください。');
   }
-  // 保護者名「エリナ」「幸代」「小百合」等（小百合は「小」を含むが人名優先でブロック）
+  // 保護者名「エリナ」「幸代」「小百合」等（小百合は「小」を含むが人名一致でブロック）
   for (const parentFirst of ['エリナ', '幸代', '小百合']) {
     const res = guardsMod.validateSchoolName(parentFirst, { parentName: `山田 ${parentFirst}` });
     assert.equal(res.valid, false);
@@ -1042,15 +1048,13 @@ test('form-guards.ts & create-checkout-session.ts: 在籍校名オートフィ�
     assert.equal(res.message, '在籍校欄にお名前が入力されています。在籍されている小・中学校名をご入力ください。');
   }
 
-  // 2. 学校名形式チェック（人名と別文字でも学校キーワードを含まない文字列を拒否）
-  for (const invalidFormat of ['エリナ', '久美', 'あああ', 'テスト文字列']) {
-    const res = guardsMod.validateSchoolName(invalidFormat, { studentName: '佐藤 健', parentName: '佐藤 陽子' });
-    assert.equal(res.valid, false, `${invalidFormat} は形式エラーでブロックされること`);
-    assert.equal(res.code, 'invalid_school_format');
-    assert.equal(res.message, '正しい学校名（〇〇中学校・〇〇小学校など）をご入力ください。');
+  // 2. 学校キーワードを含まない略称・候補外の自由入力も、氏名に一致しない限りすべて許可されること
+  for (const freeInput of ['操山', 'さくらフリースクール', '海外インターナショナル', '新設テスト', 'Sannomiya']) {
+    const res = guardsMod.validateSchoolName(freeInput, { studentName: '佐藤 健', parentName: '佐藤 陽子' });
+    assert.equal(res.valid, true, `${freeInput} は自由入力として許可されること`);
   }
 
-  // 3. 正当な学校名の許可
+  // 3. 正式な学校名の許可
   for (const okSchool of [
     '岡山市立操山中学校',
     '奈義町立奈義中学校',
@@ -1063,7 +1067,7 @@ test('form-guards.ts & create-checkout-session.ts: 在籍校名オートフィ�
     assert.equal(res.valid, true, `${okSchool} は許可されること`);
   }
 
-  // 4. create-checkout-session.ts エンドポイント HTTP 400 ガード確認
+  // 4. create-checkout-session.ts エンドポイント検証（空欄・人名一致は HTTP 400、略称等の自由入力は HTTP 200）
   const originalFetch = globalThis.fetch;
   try {
     let stripeCalled = 0;
@@ -1103,6 +1107,17 @@ test('form-guards.ts & create-checkout-session.ts: 在籍校名オートフィ�
         }),
       });
 
+    // 空欄で送信 -> 400 + Stripe API 未呼出
+    const resEmpty = await checkoutMod.onRequestPost({
+      request: makeReq('', '岡山 幸代'),
+      env: { STRIPE_SECRET_KEY: 'test-stripe-secret', TURNSTILE_SECRET_KEY: 'test-turnstile-secret' },
+    });
+    assert.equal(resEmpty.status, 400);
+    const jsonEmpty = await resEmpty.json();
+    assert.equal(jsonEmpty.success, false);
+    assert.equal(jsonEmpty.code, 'empty');
+    assert.equal(jsonEmpty.message, '在籍小中学校名を入力してください。');
+
     // 保護者名「久美」で送信 -> 400 + Stripe API 未呼出
     const resNameMatch = await checkoutMod.onRequestPost({
       request: makeReq('久美', '岡山 久美'),
@@ -1113,20 +1128,16 @@ test('form-guards.ts & create-checkout-session.ts: 在籍校名オートフィ�
     assert.equal(jsonNameMatch.success, false);
     assert.equal(jsonNameMatch.code, 'matches_person_name');
     assert.equal(jsonNameMatch.message, '在籍校欄にお名前が入力されています。在籍されている小・中学校名をご入力ください。');
+    assert.equal(stripeCalled, 0, '空欄・人名一致では Stripe API を呼ばないこと');
 
-    // 不正文字列「あああ」で送信 -> 400 + Stripe API 未呼出
-    const resBadFormat = await checkoutMod.onRequestPost({
-      request: makeReq('あああ', '岡山 幸代'),
+    // 学校キーワードを含まない略称・自由入力「操山」で送信 -> 200 許可
+    const resFreeInput = await checkoutMod.onRequestPost({
+      request: makeReq('操山', '岡山 幸代'),
       env: { STRIPE_SECRET_KEY: 'test-stripe-secret', TURNSTILE_SECRET_KEY: 'test-turnstile-secret' },
     });
-    assert.equal(resBadFormat.status, 400);
-    const jsonBadFormat = await resBadFormat.json();
-    assert.equal(jsonBadFormat.success, false);
-    assert.equal(jsonBadFormat.code, 'invalid_school_format');
-    assert.equal(jsonBadFormat.message, '正しい学校名（〇〇中学校・〇〇小学校など）をご入力ください。');
-    assert.equal(stripeCalled, 0, '不正な学校名では Stripe API を呼ばないこと');
+    assert.equal(resFreeInput.status, 200);
 
-    // 正当な学校名「美咲町立柵原学園」-> 200
+    // 正式名称「美咲町立柵原学園」-> 200 許可
     const resValid = await checkoutMod.onRequestPost({
       request: makeReq('美咲町立柵原学園', '岡山 幸代'),
       env: { STRIPE_SECRET_KEY: 'test-stripe-secret', TURNSTILE_SECRET_KEY: 'test-turnstile-secret' },

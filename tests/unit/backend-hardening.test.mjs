@@ -278,7 +278,11 @@ test('初回受付メール冪等性: /api/apply と stripe-webhook の同時着
       assert.equal(applyRes.status, 200);
       assert.equal(webhookRes.status, 200);
       assert.equal(gasCalls.length, 1, 'GAS create は Webhook から1回実行されること');
+      assert.equal(gasCalls[0].records[0].exam_name, '12月号', 'GAS C列(exam_name)は月号のみになること');
+      assert.equal(gasCalls[0].records[0].venue_name, '岡山会場', 'GAS D列(venue_name)は会場区分名のみになること');
       assert.equal(resendCalls.length, 2, '管理者1通＋申込者1通の計2通のみ送信されること');
+      const sentUserMail = resendCalls.find((c) => c.payload.to.includes('parent@example.com'));
+      assert.match(sentUserMail.payload.text, /12月号（岡山県統一模擬試験）/, 'メール本文は従来の label を維持すること');
       assert.notEqual(
         applyJson.already_sent,
         webhookJson.already_sent,
@@ -654,7 +658,7 @@ test('GAS apply-ledger.gs updateStatus_: バッチ読み書き最適化 ＆ paid
   assert.equal(grid[5][5], '期限切れ');
   assert.equal(grid[7][5], 'paid', 'paid 行 F9 は上書きされないこと');
 
-  // 該当行0件時のフォールバック新規作成も正常動作すること
+  // 該当行0件時のフォールバック新規作成も正常動作すること（C列・D列の括弧除去二重ガード含む）
   let fallbackRowsWritten = null;
   const emptyMockSheet = {
     getLastRow: () => 1,
@@ -662,7 +666,7 @@ test('GAS apply-ledger.gs updateStatus_: バッチ読み書き最適化 ＆ paid
       return {
         getValues: () => [],
         setValues: (rows) => {
-          fallbackRowsWritten = { startRow, startCol, numRows, numCols, count: rows.length };
+          fallbackRowsWritten = { startRow, startCol, numRows, numCols, count: rows.length, rows };
         },
       };
     },
@@ -670,10 +674,224 @@ test('GAS apply-ledger.gs updateStatus_: バッチ読み書き最適化 ＆ paid
   const fallbackRes = ctx.updateStatus_(emptyMockSheet, {
     session_id: 'cs_missing_fallback',
     payment_status: 'paid',
-    records: [{ exam_name: '12月号（岡山県統一模擬試験）', venue_name: '岡山会場', price: 5500 }],
+    records: [{ exam_name: '12月号（岡山県統一模擬試験）', venue_name: '岡山会場(岡山商科大学)', price: 5500 }],
   });
   assert.equal(fallbackRes.status, 'success');
   assert.equal(fallbackRes.fallback_created, true);
   assert.equal(fallbackRes.created, 1);
   assert.equal(fallbackRowsWritten.count, 1);
+  assert.equal(fallbackRowsWritten.rows[0][2], '12月号');
+  assert.equal(fallbackRowsWritten.rows[0][3], '岡山会場');
+
+  // stripParens_ / buildRow_ 直接テスト
+  assert.equal(ctx.stripParens_('12月号(岡山県統一模擬試験)'), '12月号');
+  assert.equal(ctx.stripParens_('12月号（岡山県統一模擬試験）'), '12月号');
+  assert.equal(ctx.stripParens_('倉敷会場（作陽学園高等学校）'), '倉敷会場');
+  assert.equal(ctx.stripParens_('岡山会場(岡山商科大学)'), '岡山会場');
+
+  const rowKurashiki = ctx.buildRow_(
+    { session_id: 'cs_gas_guard_1', payment_status: 'paid' },
+    { exam_name: '12月号(岡山県統一模擬試験)', venue_name: '倉敷会場(作陽学園高等学校)', price: 5500 }
+  );
+  assert.equal(rowKurashiki[2], '12月号', 'C列は月号のみになること');
+  assert.equal(rowKurashiki[3], '倉敷会場', 'D列は会場区分名のみになること');
+
+  const rowOkayama = ctx.buildRow_(
+    { session_id: 'cs_gas_guard_2', payment_status: 'paid' },
+    { issue_name: '12月号', exam_name: '12月号（岡山県統一模擬試験）', venue_name: '岡山会場(岡山商科大学)', price: 5500 }
+  );
+  assert.equal(rowOkayama[2], '12月号');
+  assert.equal(rowOkayama[3], '岡山会場');
+});
+
+test('exam.ts 短縮表記正規化: normalizeVenueShortName / normalizeIssueShortName / records生成', async () => {
+  const examMod = await bundleAndImportTs('functions/_shared/exam.ts', tmpDir, 'exam');
+
+  // normalizeVenueShortName
+  assert.equal(examMod.normalizeVenueShortName('倉敷会場（作陽学園高等学校）'), '倉敷会場');
+  assert.equal(examMod.normalizeVenueShortName('倉敷会場(作陽学園高等学校)'), '倉敷会場');
+  assert.equal(examMod.normalizeVenueShortName('岡山会場(岡山商科大学)'), '岡山会場');
+  assert.equal(examMod.normalizeVenueShortName('津山会場（会場未定）'), '津山会場');
+  assert.equal(examMod.normalizeVenueShortName('自宅受験（問題冊子郵送・期日内答案返送）'), '自宅受験');
+  assert.equal(examMod.normalizeVenueShortName('venue_kurashiki'), '倉敷会場');
+  assert.equal(examMod.normalizeVenueShortName('home'), '自宅受験');
+
+  // normalizeIssueShortName
+  assert.equal(examMod.normalizeIssueShortName('12月号（岡山県統一模擬試験）'), '12月号');
+  assert.equal(examMod.normalizeIssueShortName('12月号(岡山県統一模擬試験)'), '12月号');
+  assert.equal(examMod.normalizeIssueShortName('12月号', '12月号（岡山県統一模擬試験）', 'c3_12'), '12月号');
+  assert.equal(examMod.normalizeIssueShortName('', '12月号（岡山県統一模擬試験）', 'c3_12'), '12月号');
+  assert.equal(examMod.normalizeIssueShortName('12月'), '12月号');
+  assert.equal(examMod.normalizeIssueShortName('', '', 'c3_12'), '12月号');
+
+  // recordsFromExams
+  const recsFromExams = examMod.recordsFromExams([
+    {
+      id: 'c3_12',
+      title: '岡山県統一模擬試験',
+      issue_name: '12月号',
+      venue_name: '倉敷会場（作陽学園高等学校）',
+      venue_type: '倉敷会場',
+      price: 5500,
+      exam_date: '2026年12月26日(土)',
+    },
+  ]);
+  assert.equal(recsFromExams.length, 1);
+  assert.equal(recsFromExams[0].issue, '12月号');
+  assert.equal(recsFromExams[0].venue, '倉敷会場');
+  assert.equal(recsFromExams[0].label, '12月号（岡山県統一模擬試験）');
+
+  // recordsFromMetadata
+  const recsFromMeta = examMod.recordsFromMetadata({
+    exam_1: JSON.stringify({
+      id: 'c3_12',
+      label: '12月号(岡山県統一模擬試験)',
+      issue: '',
+      title: '岡山県統一模擬試験',
+      venue: '岡山会場(岡山商科大学)',
+      price: 5500,
+      date: '2026年12月26日(土)',
+    }),
+  });
+  assert.equal(recsFromMeta.length, 1);
+  assert.equal(recsFromMeta[0].issue, '12月号');
+  assert.equal(recsFromMeta[0].venue, '岡山会場');
+  assert.equal(recsFromMeta[0].label, '12月号(岡山県統一模擬試験)');
+});
+
+test('create-checkout-session.ts ＆ stripe-webhook.ts: 短縮名メタデータ格納とGAS連携・メール文面維持', async () => {
+  const checkoutMod = await bundleAndImportTs('functions/api/create-checkout-session.ts', tmpDir, 'checkout');
+  const webhookMod = await bundleAndImportTs('functions/api/stripe-webhook.ts', tmpDir, 'webhook_short');
+  const originalFetch = globalThis.fetch;
+
+  try {
+    // 1. create-checkout-session.ts が metadata に短縮 venue_type / issue_name / exam_1 を格納すること
+    let capturedSessionParams = null;
+    globalThis.fetch = async (url, init = {}) => {
+      const u = String(url);
+      if (u.includes('turnstile/v0/siteverify')) {
+        return new Response(JSON.stringify({ success: true }), { status: 200 });
+      }
+      if (u === 'https://api.stripe.com/v1/customers') {
+        return new Response(JSON.stringify({ id: 'cus_unit_001' }), { status: 200 });
+      }
+      if (u === 'https://api.stripe.com/v1/checkout/sessions') {
+        capturedSessionParams = new URLSearchParams(String(init.body || ''));
+        return new Response(
+          JSON.stringify({ id: 'cs_checkout_unit_001', url: 'https://checkout.stripe.com/test/cs_checkout_unit_001' }),
+          { status: 200 }
+        );
+      }
+      throw new Error(`Unexpected fetch: ${u}`);
+    };
+
+    const checkoutReq = new Request('https://okayama-moshi.com/api/create-checkout-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        student_name: '岡山 太郎',
+        grade: '中学3年生',
+        parent_name: '岡山 花子',
+        email: 'parent@example.com',
+        phone: '09012345678',
+        venue_name: '倉敷会場（作陽学園高等学校）',
+        venue_type: '倉敷会場',
+        payment_method: 'card',
+        'cf-turnstile-response': 'mock-token',
+        exams: [
+          {
+            id: 'c3_12',
+            title: '岡山県統一模擬試験',
+            issue_name: '12月号',
+            venue: 'venue_kurashiki',
+            venue_name: '倉敷会場（作陽学園高等学校）',
+            venue_type: '倉敷会場',
+            price: 5500,
+            exam_date: '2026年12月26日(土)',
+          },
+        ],
+      }),
+    });
+    const checkoutRes = await checkoutMod.onRequestPost({
+      request: checkoutReq,
+      env: { STRIPE_SECRET_KEY: 'test-stripe-secret', TURNSTILE_SECRET_KEY: 'test-turnstile-secret' },
+    });
+    assert.equal(checkoutRes.status, 200);
+    assert.ok(capturedSessionParams);
+    assert.equal(capturedSessionParams.get('metadata[venue_type]'), '倉敷会場');
+    assert.equal(capturedSessionParams.get('metadata[issue_name]'), '12月号');
+    const exam1Json = JSON.parse(capturedSessionParams.get('metadata[exam_1]'));
+    assert.equal(exam1Json.issue, '12月号');
+    assert.equal(exam1Json.venue, '倉敷会場');
+    assert.equal(exam1Json.venue_type, '倉敷会場');
+    assert.equal(exam1Json.label, '12月号（岡山県統一模擬試験）');
+
+    // 2. stripe-webhook.ts が旧形式（括弧付き）メタデータを受け取っても GAS には短縮名のみ送り、メールには label を残すこと
+    const db = createMockD1();
+    const gasCalls = [];
+    const resendCalls = [];
+    const legacyBracketSession = buildStripeSession('cs_unit_short_gas_005', {
+      metadata: {
+        ...buildStripeSession('cs_unit_short_gas_005').metadata,
+        venue_name: '倉敷会場(作陽学園高等学校)',
+        exam_name: '12月号(岡山県統一模擬試験)',
+        exam_1: JSON.stringify({
+          id: 'c3_12',
+          label: '12月号(岡山県統一模擬試験)',
+          issue: '',
+          title: '岡山県統一模擬試験',
+          venue: '倉敷会場(作陽学園高等学校)',
+          price: 5500,
+          date: '2026年12月26日(土)',
+        }),
+      },
+    });
+
+    globalThis.fetch = async (url, init = {}) => {
+      const u = String(url);
+      if (u.startsWith('https://api.stripe.com/v1/checkout/sessions/')) {
+        return new Response(JSON.stringify(legacyBracketSession), { status: 200 });
+      }
+      if (u === 'https://api.resend.com/emails') {
+        resendCalls.push(JSON.parse(init.body));
+        return new Response(JSON.stringify({ id: `mail_s_${resendCalls.length}` }), { status: 200 });
+      }
+      if (u.includes('script.google.com')) {
+        gasCalls.push(JSON.parse(init.body));
+        return new Response(JSON.stringify({ status: 'success', created: 1 }), { status: 200 });
+      }
+      throw new Error(`Unexpected fetch: ${u}`);
+    };
+
+    const webhookReq = new Request('https://okayama-moshi.com/api/stripe-webhook', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: 'evt_unit_short_005',
+        type: 'checkout.session.completed',
+        data: { object: { id: 'cs_unit_short_gas_005' } },
+      }),
+    });
+    const webhookRes = await webhookMod.onRequestPost({
+      request: webhookReq,
+      env: {
+        DB: db,
+        STRIPE_SECRET_KEY: 'test-stripe-secret',
+        RESEND_API_KEY: 'test-resend-secret',
+        GAS_APPLY_URL: 'https://script.google.com/macros/s/test/exec',
+        GAS_SHARED_SECRET: 'test-gas-secret',
+      },
+    });
+    assert.equal(webhookRes.status, 200);
+    assert.equal(gasCalls.length, 1);
+    assert.equal(gasCalls[0].records[0].exam_name, '12月号');
+    assert.equal(gasCalls[0].records[0].venue_name, '倉敷会場');
+    assert.equal(gasCalls[0].records[0].issue_name, '12月号');
+    assert.equal(resendCalls.length, 2);
+    for (const mail of resendCalls) {
+      assert.match(mail.text, /12月号\(岡山県統一模擬試験\)/, '通知メール本文には従来の label が維持されること');
+    }
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
 });

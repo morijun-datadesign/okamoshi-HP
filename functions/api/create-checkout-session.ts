@@ -1,7 +1,7 @@
 import { Env, readEnv } from "../_shared/env";
 import { jsonResponse } from "../_shared/http";
 import { verifyTurnstile } from "../_shared/turnstile";
-import { formatExamLabel, detectExamType } from "../_shared/exam";
+import { formatExamLabel, detectExamType, normalizeVenueShortName, normalizeIssueShortName } from "../_shared/exam";
 
 /** 国内電話番号（例: 090-1234-5678）を E.164 形式（+819012345678）へ変換する。変換できない場合は空文字。 */
 const toE164JP = (raw: string): string => {
@@ -20,7 +20,7 @@ interface CheckoutLineItem {
   unitAmount: number;
   productMetadata: Record<string, string>;
   /** Webhook / スプレッドシート用の1模試＝1レコード情報（session.metadata[exam_N] に JSON で保存） */
-  record: { id: string; label: string; issue: string; title: string; venue: string; price: number; date: string };
+  record: { id: string; label: string; issue: string; title: string; venue: string; venue_type: string; price: number; date: string };
 }
 
 /** 岡山県統一模擬試験・適性検査対策模試の正規定価（税込） */
@@ -41,13 +41,16 @@ const buildExamLineItems = (exams: unknown): CheckoutLineItem[] => {
     const unitAmount = OFFICIAL_EXAM_PRICE;
 
     const title = String(e.title || e.exam_name || "岡山県統一模擬試験").trim();
-    const venue = String(e.venue_name || e.venueLabel || e.venue || "").trim();
+    const rawVenue = String(e.venue_name || e.venueLabel || e.venue || "").trim();
+    const venueShort = normalizeVenueShortName(String(e.venue_type || rawVenue || ""));
     const examDate = String(e.exam_date || e.examDate || "").trim();
     const examId = e.id !== undefined && e.id !== null ? String(e.id) : "";
-    const { issue, label } = formatExamLabel(e.issue_name || e.issueName || "", title, examId);
+    const { issue: formattedIssue, label } = formatExamLabel(e.issue_name || e.issueName || "", title, examId);
+    const issueShort = normalizeIssueShortName(formattedIssue, label, examId);
 
     const name = label.slice(0, 250);
-    const description = [venue ? `会場: ${venue}` : "", examDate ? `試験日: ${examDate}` : ""]
+    const displayVenue = rawVenue || venueShort;
+    const description = [displayVenue ? `会場: ${displayVenue}` : "", examDate ? `試験日: ${examDate}` : ""]
       .filter(Boolean)
       .join(" / ");
 
@@ -55,17 +58,21 @@ const buildExamLineItems = (exams: unknown): CheckoutLineItem[] => {
     if (examId) productMetadata.exam_id = examId.slice(0, 500);
     productMetadata.exam_title = title.slice(0, 500);
     productMetadata.exam_label = label.slice(0, 500);
-    if (issue) productMetadata.issue_name = issue.slice(0, 500);
-    if (venue) productMetadata.venue_name = venue.slice(0, 500);
+    if (issueShort) productMetadata.issue_name = issueShort.slice(0, 500);
+    if (venueShort) {
+      productMetadata.venue_type = venueShort.slice(0, 500);
+      productMetadata.venue_name = venueShort.slice(0, 500);
+    }
     if (examDate) productMetadata.exam_date = examDate.slice(0, 500);
 
     // 各フィールドを短く制限し、JSON 全体が Stripe metadata の上限（500文字）に収まるようにする
     const record = {
       id: examId.slice(0, 60),
       label: label.slice(0, 80),
-      issue: issue.slice(0, 20),
+      issue: issueShort.slice(0, 20),
       title: title.slice(0, 60),
-      venue: venue.slice(0, 120),
+      venue: venueShort.slice(0, 120),
+      venue_type: venueShort.slice(0, 40),
       price: unitAmount,
       date: examDate.slice(0, 60),
     };
@@ -129,7 +136,22 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const schoolName = String(body.school_name || body.student_school || body.school || existingMeta.school_name || existingMeta.school || "").trim();
     const parentName = String(body.parent_name || body.guardian_name || existingMeta.parent_name || "").trim();
     const parentKana = String(body.parent_kana || existingMeta.parent_kana || "").trim();
-    const venueName = String(body.venue_name || body.venue || body.venueName || (Array.isArray(body.exams) && body.exams[0]?.venue_name) || (Array.isArray(body.exams) && body.exams[0]?.venue) || existingMeta.venue_name || existingMeta.venue || "会場未指定").trim();
+    const venueName =
+      normalizeVenueShortName(
+        String(
+          body.venue_type ||
+            (Array.isArray(body.exams) && body.exams[0]?.venue_type) ||
+            existingMeta.venue_type ||
+            body.venue_name ||
+            body.venue ||
+            body.venueName ||
+            (Array.isArray(body.exams) && body.exams[0]?.venue_name) ||
+            (Array.isArray(body.exams) && body.exams[0]?.venue) ||
+            existingMeta.venue_name ||
+            existingMeta.venue ||
+            ""
+        ).trim()
+      ) || "会場未指定";
     const declaredAmount = Math.round(Number(body.amount || body.total_amount || existingMeta.amount || existingMeta.total_amount || 0)) || OFFICIAL_EXAM_PRICE;
     const phone = String(body.phone || existingMeta.phone || "").trim();
     const email = String(body.email || body.customer_email || existingMeta.email || "").trim();
@@ -216,6 +238,10 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const examNameWithIssue = examLineItems.length > 0
       ? examLineItems.map((item) => item.record.label).join(" / ")
       : examName;
+    const issueNameSummary = examLineItems
+      .map((item) => item.record.issue)
+      .filter(Boolean)
+      .join(" / ");
     const examType = detectExamType(
       examLineItems.map((item) => item.record),
       examNameWithIssue,
@@ -246,7 +272,9 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       address1: addr1,
       address2: addr2,
       address: address,
+      venue_type: venueName,
       venue_name: venueName,
+      issue_name: issueNameSummary,
       exam_name: examNameWithIssue,
       payment_method: paymentMethod,
       amount: String(amountVal),

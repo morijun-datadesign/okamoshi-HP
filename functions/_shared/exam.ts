@@ -13,6 +13,81 @@ export interface ExamRecord {
 }
 
 /**
+ * 全角括弧（...）および半角括弧(...)とその中身を除去してトリムする
+ */
+const stripParentheticals = (raw: string): string => {
+  let s = String(raw || "").trim();
+  if (!s) return "";
+  let prev = "";
+  while (s !== prev) {
+    prev = s;
+    s = s.replace(/[（(][^（）()]*[）)]/g, "");
+  }
+  return s.replace(/[（(][^）)]*$/, "").trim();
+};
+
+/**
+ * 受験会場の短縮名（会場区分名のみ・括弧/施設名なし）を返す
+ * 例: 「倉敷会場（作陽学園高等学校）」 -> 「倉敷会場」、「自宅受験（問題冊子郵送...）」 -> 「自宅受験」
+ */
+export const normalizeVenueShortName = (rawVenue: string): string => {
+  const original = String(rawVenue || "").trim();
+  if (!original) return "";
+
+  const codeMap: Record<string, string> = {
+    venue_okayama: "岡山会場",
+    venue_kurashiki: "倉敷会場",
+    venue_tsuyama: "津山会場",
+    home: "自宅受験",
+  };
+  const lower = original.toLowerCase();
+  if (codeMap[lower]) return codeMap[lower];
+
+  const cleaned = stripParentheticals(original)
+    .replace(/[\r\n].*$/s, "")
+    .replace(/\s*※.*$/, "")
+    .trim();
+
+  return cleaned || original;
+};
+
+/**
+ * 対象模試の月号短縮表記（例: 「12月号」）を返す
+ * issueRaw を優先し、存在しない場合は labelOrExamNameRaw の括弧除去や idRaw の末尾数字から補完する
+ */
+export const normalizeIssueShortName = (
+  issueRaw: string,
+  labelOrExamNameRaw = "",
+  idRaw = ""
+): string => {
+  const extractIssueCandidate = (raw: string): string => {
+    const stripped = stripParentheticals(raw)
+      .replace(/[０-９]/g, (ch) => String.fromCharCode(ch.charCodeAt(0) - 0xfee0))
+      .trim();
+    if (!stripped || stripped === "月号不明") return "";
+
+    const exactMonth = stripped.match(/^(\d{1,2})\s*月号?$/);
+    if (exactMonth) return `${Number(exactMonth[1])}月号`;
+
+    const embeddedIssue = stripped.match(/(\d{1,2})\s*月号/);
+    if (embeddedIssue) return `${Number(embeddedIssue[1])}月号`;
+
+    return stripped;
+  };
+
+  const fromIssue = extractIssueCandidate(issueRaw);
+  if (fromIssue) return fromIssue;
+
+  const fromLabel = extractIssueCandidate(labelOrExamNameRaw);
+  if (fromLabel) return fromLabel;
+
+  const idMatch = String(idRaw || "").match(/_(\d{1,2})$/);
+  if (idMatch) return `${Number(idMatch[1])}月号`;
+
+  return stripParentheticals(issueRaw || labelOrExamNameRaw);
+};
+
+/**
  * 月号ラベルを生成する（例: 「10月号（岡山県統一模擬試験）」）
  * 月号が取れない場合は「月号不明」を明示。括弧の多重ネストを防止。
  */
@@ -45,12 +120,13 @@ export const recordsFromExams = (exams: unknown): ExamRecord[] => {
     if (!item || typeof item !== "object") continue;
     const e = item as Record<string, any>;
     const title = String(e.title || e.exam_name || "岡山県統一模擬試験").trim();
-    const venue = String(e.venue_name || e.venueLabel || e.venue || "").trim();
+    const venue = normalizeVenueShortName(String(e.venue_type || e.venue_name || e.venueLabel || e.venue || "").trim());
     const date = String(e.exam_date || e.examDate || "").trim();
     const id = e.id !== undefined && e.id !== null ? String(e.id) : "";
     const issueRaw = String(e.issue_name || e.issueName || "").trim();
     const price = Math.round(Number(e.price)) || 0;
-    const { issue, label } = formatExamLabel(issueRaw, title, id);
+    const { issue: formattedIssue, label } = formatExamLabel(issueRaw, title, id);
+    const issue = normalizeIssueShortName(formattedIssue, label, id);
     records.push({
       id,
       label,
@@ -76,12 +152,16 @@ export const recordsFromMetadata = (metadata: Record<string, any> | undefined): 
     try {
       const parsed = typeof raw === "string" ? JSON.parse(raw) : raw;
       if (parsed && typeof parsed === "object") {
+        const id = String(parsed.id || "");
+        const label = String(parsed.label || "");
+        const issue = normalizeIssueShortName(String(parsed.issue || parsed.issue_name || ""), label, id);
+        const venue = normalizeVenueShortName(String(parsed.venue_type || parsed.venue || parsed.venue_name || ""));
         records.push({
-          id: String(parsed.id || ""),
-          label: String(parsed.label || ""),
-          issue: String(parsed.issue || ""),
+          id,
+          label,
+          issue,
           title: String(parsed.title || ""),
-          venue: String(parsed.venue || ""),
+          venue,
           price: Number(parsed.price) || 0,
           date: String(parsed.date || ""),
         });

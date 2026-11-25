@@ -15,6 +15,8 @@ import {
   extractExamNamesFromMetadata,
   detectExamType,
   getExamBrandTitle,
+  normalizeVenueShortName,
+  normalizeIssueShortName,
 } from "../_shared/exam";
 import { fetchCheckoutSession, fetchPaymentIntent, verifyStripeWebhookSignature, checkRecentPaidSession } from "../_shared/stripe";
 import { sendResendEmail } from "../_shared/resend";
@@ -190,7 +192,9 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const schoolName = String(metadata.school_name || metadata.school || metadata.student_school || "").trim();
     const parentName = String(metadata.parent_name || metadata.guardian_name || customerDetails.name || "").trim();
     const parentKana = String(metadata.parent_kana || "").trim();
-    const venueName = String(metadata.venue_name || metadata.venue || "会場未指定").trim();
+    const venueName =
+      normalizeVenueShortName(String(metadata.venue_type || metadata.venue_name || metadata.venue || "").trim()) ||
+      "会場未指定";
     const amountVal = Number(session.amount_total || metadata.amount || metadata.total_amount || 0);
     const emailVal = String(customerDetails.email || session.customer_email || metadata.email || "").trim();
     const phoneVal = String(metadata.phone || customerDetails.phone || "").trim();
@@ -221,9 +225,10 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
     // 1模試＝1レコード
     const parsedRecords = recordsFromMetadata(metadata);
+    const fallbackIssue = normalizeIssueShortName(String(metadata.issue_name || ""), examNameVal, "");
     const examRecords: ExamRecord[] = parsedRecords.length > 0
       ? parsedRecords
-      : [{ id: "", label: examNameVal, issue: "", title: examNameVal, venue: venueName, price: amountVal, date: "" }];
+      : [{ id: "", label: examNameVal, issue: fallbackIssue, title: examNameVal, venue: venueName, price: amountVal, date: "" }];
     const targetExamNames = extractExamNamesFromMetadata(metadata, examNameVal);
     const examType = detectExamType(examRecords, examNameVal, grade, String(metadata.exam_type || ""));
     const examBrandTitle = getExamBrandTitle(examType);
@@ -293,14 +298,18 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       address: fullAddress,
       remarks: remarksVal,
       total_amount: amountVal,
-      records: examRecords.map((r) => ({
-        exam_id: r.id,
-        exam_name: r.label,
-        venue_name: r.venue,
-        price: r.price,
-        issue_name: r.issue,
-        exam_date: r.date,
-      })),
+      records: examRecords.map((r) => {
+        const shortIssue = normalizeIssueShortName(r.issue, r.label, r.id);
+        const shortVenue = normalizeVenueShortName(r.venue || venueName);
+        return {
+          exam_id: r.id,
+          exam_name: shortIssue,
+          venue_name: shortVenue,
+          price: r.price,
+          issue_name: shortIssue,
+          exam_date: r.date,
+        };
+      }),
     };
 
     try {

@@ -5,6 +5,8 @@
  *
  * ■ action: "create"（Stripe checkout.session.completed）
  *   - records（模試ごとの配列）をループし、1模試＝1行で追記する
+ *   - C列（対象模試）は月号のみ（例: 12月号）、D列（受験会場）は会場区分名のみ（例: 倉敷会場 / 自宅受験）へ
+ *     stripParens_() により全角・半角括弧とその中身を除去して書き込む（二重ガード）
  *   - 同じセッションIDの行が既にある場合は追記しない（Stripe の再送対策）
  *
  * ■ action: "update"（checkout.session.async_payment_succeeded / async_payment_failed / expired）
@@ -132,6 +134,18 @@ function str_(value) {
   return value === undefined || value === null ? '' : String(value).trim();
 }
 
+/** 全角・半角括弧（...）/ (...) とその中身を除去してトリムする（台帳C列・D列の短縮表記保護） */
+function stripParens_(value) {
+  var s = str_(value);
+  if (!s) return '';
+  var prev = '';
+  while (s !== prev) {
+    prev = s;
+    s = s.replace(/[（(][^（）()]*[）)]/g, '');
+  }
+  return s.replace(/[（(][^）)]*$/, '').trim();
+}
+
 function buildRow_(data, record) {
   var row = new Array(NUM_COLS);
   for (var i = 0; i < NUM_COLS; i++) row[i] = '';
@@ -139,8 +153,8 @@ function buildRow_(data, record) {
 
   row[COL.RECEIVED_AT - 1] = str_(data.received_at);
   row[COL.SESSION_ID - 1] = str_(data.session_id);
-  row[COL.EXAM - 1] = str_(record.exam_name);
-  row[COL.VENUE - 1] = str_(record.venue_name);
+  row[COL.EXAM - 1] = stripParens_(record.issue_name || record.exam_name);
+  row[COL.VENUE - 1] = stripParens_(record.venue_name);
   row[COL.PRICE - 1] = isFinite(price) && price > 0 ? price : '';
   row[COL.STATUS - 1] = str_(data.payment_status);
   row[COL.METHOD - 1] = str_(data.payment_method_label || data.payment_method);

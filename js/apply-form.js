@@ -370,6 +370,26 @@
       return fallbackExamDate || '実施日未定';
     }
     /**
+     * 会場ラベル・区分から括弧付き施設名等を除いた短縮区分名（「岡山会場」「倉敷会場」「津山会場」「自宅受験」）を抽出
+     */
+    function extractVenueTypeShort(rawLabel, rawType) {
+      const stripParens = (val) => String(val || '')
+        .replace(/^🏠\s*/, '')
+        .replace(/[（(][^（）()]*[）)]/g, '')
+        .replace(/[（(][^）)]*$/, '')
+        .trim();
+      const fromType = stripParens(rawType);
+      if (fromType && fromType !== '会場') return fromType;
+      const fromLabel = stripParens(rawLabel);
+      if (fromLabel) return fromLabel;
+      const raw = String(rawType || rawLabel || '').trim().toLowerCase();
+      if (raw === 'venue_okayama') return '岡山会場';
+      if (raw === 'venue_kurashiki') return '倉敷会場';
+      if (raw === 'venue_tsuyama') return '津山会場';
+      if (raw === 'home') return '自宅受験';
+      return '';
+    }
+    /**
      * D1 の round データ（venuesList または venueDetails）から会場選択肢を動的生成
      * スプレッドシート（venues）に設定された会場名・会場区分を動的に反映
      */
@@ -396,14 +416,16 @@
           if (!venues.some(item => item.label === label)) {
             venues.push({
               value: valKey,
-              label: label
+              label: label,
+              venueType: extractVenueTypeShort(label, typeName)
             });
           }
         });
       }
       venues.push({
         value: 'home',
-        label: '自宅受験（問題冊子郵送・期日内答案返送）'
+        label: '自宅受験（問題冊子郵送・期日内答案返送）',
+        venueType: '自宅受験'
       });
       if (venues.length === 1 && fallbackVenues && fallbackVenues.length > 0) {
         return fallbackVenues;
@@ -437,7 +459,8 @@
             if (!venues.some(v => v.label === label)) {
               venues.push({
                 value: valKey,
-                label: label
+                label: label,
+                venueType: extractVenueTypeShort(label, typeName)
               });
             }
           }
@@ -445,7 +468,8 @@
       }
       venues.push({
         value: 'home',
-        label: '自宅受験（問題冊子郵送・期日内答案返送）'
+        label: '自宅受験（問題冊子郵送・期日内答案返送）',
+        venueType: '自宅受験'
       });
       if (venues.length === 1 && fallbackVenues && fallbackVenues.length > 0) {
         return fallbackVenues;
@@ -682,13 +706,14 @@
           selectedExamsState[exam.id] = {
             ...exam,
             venue: '',
-            venueLabel: ''
+            venueLabel: '',
+            venueType: ''
           };
         }
         const venueOptionsHtml = [
           `<option value="" selected disabled class="text-rose-500 font-normal">選択してください</option>`,
           ...(exam.venues || []).map(v => `
-            <option value="${v.value}" class="text-slate-900 font-normal">${v.label}</option>
+            <option value="${v.value}" data-venue-type="${v.venueType || extractVenueTypeShort(v.label, '')}" class="text-slate-900 font-normal">${v.label}</option>
           `)
         ].join('');
         const cardClasses = isChecked
@@ -790,10 +815,12 @@
         const venueVal = venueSelect ? venueSelect.value : '';
         const venueOpt = (venueSelect && venueSelect.selectedIndex > 0) ? venueSelect.options[venueSelect.selectedIndex] : null;
         const venueText = venueOpt ? venueOpt.text : '';
+        const venueTypeVal = venueOpt ? (venueOpt.getAttribute('data-venue-type') || extractVenueTypeShort(venueText, venueVal)) : '';
         selectedExamsState[examId] = {
           ...examData,
           venue: venueVal,
-          venueLabel: venueText
+          venueLabel: venueText,
+          venueType: venueTypeVal
         };
         if (card) {
           card.classList.remove('bg-white', 'border-slate-300', 'border-slate-200/80', 'bg-surface-container-lowest', 'border-outline-variant/30');
@@ -883,8 +910,10 @@
       if (selectedExamsState[examId]) {
         const val = selectElem.value;
         const opt = selectElem.selectedIndex > 0 ? selectElem.options[selectElem.selectedIndex] : null;
+        const textVal = opt ? opt.text : '';
         selectedExamsState[examId].venue = val;
-        selectedExamsState[examId].venueLabel = opt ? opt.text : '';
+        selectedExamsState[examId].venueLabel = textVal;
+        selectedExamsState[examId].venueType = opt ? (opt.getAttribute('data-venue-type') || extractVenueTypeShort(textVal, val)) : '';
         if (val) {
           selectElem.classList.remove('apply-input-error', '!border-red-500', '!ring-2', '!ring-red-200');
           if (typeof clearFormError === 'function') clearFormError();
@@ -2422,6 +2451,8 @@ if (!parentKanaLastName || !parentKanaFirstName) {
         const { pref, city, addr1, addr2 } = parseJapaneseAddress(prefecture, addressLine1, addressLine2, addressLine3);
         const fullAddressString = [pref, city, addr1, addr2].filter(Boolean).join(' ');
         const firstVenueName = selectedExams[0]?.venueLabel || selectedExams[0]?.venue || '会場未指定';
+        const firstVenueType = selectedExams[0]?.venueType || extractVenueTypeShort(firstVenueName, selectedExams[0]?.venue) || '';
+        const issueNameStr = selectedExams.map(exam => exam.issueName || '').filter(Boolean).join(' / ');
         const isKonbini = (paymentMethod === 'convenience_store');
         const selectedPaymentMethod = isKonbini ? 'konbini' : 'card';
         const paymentMethodTypes = [selectedPaymentMethod];
@@ -2439,6 +2470,8 @@ if (!parentKanaLastName || !parentKanaFirstName) {
           school_name: currentSchool || '',
           parent_name: `${parentLastName} ${parentFirstName}`,
           venue_name: firstVenueName,
+          venue_type: firstVenueType,
+          issue_name: issueNameStr,
           amount: String(totalAmount),
           exam_name: examNameStr,
           exam_type: examType,
@@ -2471,8 +2504,10 @@ if (!parentKanaLastName || !parentKanaFirstName) {
           received_at: '', // 決済完了時にJST日時を付与
           session_id: '',  // 決済完了時にStripeセッションIDを付与
           exam_name: examNameStr,
+          issue_name: issueNameStr,
           exam_type: examType,
           venue_name: firstVenueName,
+          venue_type: firstVenueType,
           amount: totalAmount,
           payment_status: isKonbini ? 'unpaid' : 'paid',
           payment_method: selectedPaymentMethod,
@@ -2536,6 +2571,7 @@ if (!parentKanaLastName || !parentKanaFirstName) {
             price: exam.price,
             venue: exam.venue,
             venue_name: exam.venueLabel,
+            venue_type: exam.venueType || extractVenueTypeShort(exam.venueLabel, exam.venue),
             exam_date: exam.examDate
           }))
         };

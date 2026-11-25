@@ -1,7 +1,7 @@
 /**
  * 岡山県統一模擬試験（おかもし）
  * 日次マーケティング速報自動生成・Google Chat通知スクリプト
- * 【Gemini 3系対応・503高負荷対策・ヘッダー認証・テスト強制実行付き完成版】
+ * 【締切日数動的解決・昨年同時期実数比較・GA4マルチ期間＆人気ページ/CVR・GSC急伸クエリ対応版】
  */
 
 // 現行のGemini 3系モデル＋公式最新エイリアス（思考レベルをlowに固定して6分タイムアウトと503を防止）
@@ -17,6 +17,44 @@ const RETRY_SETTINGS = {
   PROP_RETRY_COUNT: 'DAILY_REPORT_RETRY_COUNT',
   PROP_LAST_SENT: 'DAILY_REPORT_LAST_SENT_DATE'
 };
+
+const REPORT_DEFAULTS = {
+  EXAM_GUIDES_API_URL: 'https://okayama-moshi.com/api/exam-guides?flat=1',
+  MAIN_SHEET_NAME: 'main',
+  PAST_SHEET_NAME: '過去受験者',
+  KONBINI_OFFSET_DAYS: 3,
+  // API・模試マスターの双方が取得不能な場合の最終フォールバック日程表
+  FALLBACK_SCHEDULES: [
+    {
+      monthNum: 12,
+      targetExamMonth: '12月号',
+      cardDeadline: '2026-12-14',
+      examDates: [
+        { venue: '倉敷', date: '2026-12-26' },
+        { venue: '岡山', date: '2026-12-27' },
+        { venue: '津山', date: '2027-01-09' }
+      ]
+    },
+    {
+      monthNum: 10,
+      targetExamMonth: '10月号',
+      cardDeadline: '2026-10-16',
+      examDates: [
+        { venue: '津山', date: '2026-10-25' },
+        { venue: '岡山', date: '2026-11-01' }
+      ]
+    }
+  ],
+  BENCHMARK_TARGETS: {
+    '中3': 250,
+    '中2': 55,
+    '中1': 39,
+    '小6': 0
+  }
+};
+
+const GRADE_KEYS = ['中3', '中2', '中1', '小6', 'その他'];
+const VENUE_KEYS = ['岡山', '倉敷', '津山', '自宅', 'その他'];
 
 /**
  * ★【手動テスト用】プルダウンからこれを選んで「実行」すると、
@@ -68,12 +106,11 @@ function setupDailyMorningTrigger() {
  * キャッシュと送信済みフラグをすべて手動リセットしたい場合のみ実行
  */
 function clearClarityCache() {
-  const yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1);
-  const targetDateStr = Utilities.formatDate(yesterday, 'Asia/Tokyo', 'yyyy-MM-dd');
+  const targetDateStr = getYesterdayYmdJst_();
   const cache = CacheService.getScriptCache();
   cache.remove('CLARITY_SUMMARY_' + targetDateStr);
   cache.remove('FULL_RAW_DATA_' + targetDateStr);
+  cache.remove('FULL_RAW_DATA_V2_' + targetDateStr);
   PropertiesService.getScriptProperties().deleteProperty(RETRY_SETTINGS.PROP_LAST_SENT);
   console.log('キャッシュと本日送信済みフラグをクリアしました。');
 }
@@ -98,14 +135,12 @@ function executeMarketingReport_(isScheduledRetry) {
     const clarityApiToken = props.CLARITY_API_TOKEN;
     const geminiApiKey = props.GEMINI_API_KEY;
     const chatWebhookUrl = props.GOOGLE_CHAT_WEBHOOK_URL;
-    const mainSheetName = props.SHEET_NAME || 'main';
+    const mainSheetName = props.SHEET_NAME || REPORT_DEFAULTS.MAIN_SHEET_NAME;
 
     clearRetryTriggers_();
 
     // 対象日（昨日）の生成
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    const targetDateStr = Utilities.formatDate(yesterday, 'Asia/Tokyo', 'yyyy-MM-dd');
+    const targetDateStr = getYesterdayYmdJst_();
 
     // すでに本日分の配信が完了していればスキップ（二重送信ガード）
     if (scriptProps.getProperty(RETRY_SETTINGS.PROP_LAST_SENT) === targetDateStr) {
@@ -122,7 +157,7 @@ function executeMarketingReport_(isScheduledRetry) {
 
     // キャッシュ済み集計データがあれば復元（リトライ時や連続テスト時の高速化＆API枠保護）
     const cache = CacheService.getScriptCache();
-    const fullCacheKey = 'FULL_RAW_DATA_' + targetDateStr;
+    const fullCacheKey = 'FULL_RAW_DATA_V2_' + targetDateStr;
     let rawData = null;
 
     const cachedRaw = cache.get(fullCacheKey);
@@ -132,12 +167,12 @@ function executeMarketingReport_(isScheduledRetry) {
     }
 
     if (!rawData) {
-      console.log('▶ 2. 申込台帳および模試マスターの集計開始...');
-      const examSummary = getNextExamAndOrderSummary(mainSheetName, targetDateStr);
+      console.log('▶ 2. 申込台帳・過去データ・模試マスターの集計開始...');
+      const examSummary = getNextExamAndOrderSummary(mainSheetName, targetDateStr, props);
       console.log('▶ 2. 集計完了: ' + JSON.stringify(examSummary));
 
       console.log('▶ 3. GA4データ取得開始...');
-      const ga4Data = getGA4Summary(ga4PropertyId, targetDateStr);
+      const ga4Data = getGA4Summary(ga4PropertyId, targetDateStr, examSummary);
       console.log('▶ 3. GA4データ取得完了: ' + JSON.stringify(ga4Data));
 
       console.log('▶ 4. Search Consoleデータ取得開始...');
@@ -163,7 +198,7 @@ function executeMarketingReport_(isScheduledRetry) {
       }
     }
 
-    // 5. Gemini によるマーケティング分析 & 着地推測
+    // 6. Gemini による高密度マーケティング分析
     console.log('▶ 6. Gemini 分析リクエスト送信中...');
     try {
       const analysisReport = generateGeminiAnalysis(geminiApiKey, rawData);
@@ -201,97 +236,581 @@ function executeMarketingReport_(isScheduledRetry) {
 }
 
 // -------------------------------------------------------------
-// スプレッドシート集計ロジック
+// 日付・数値ユーティリティ（JST厳密計算）
 // -------------------------------------------------------------
-function getNextExamAndOrderSummary(mainSheetName, targetDateStr) {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
+function getYesterdayYmdJst_() {
+  const d = new Date();
+  d.setDate(d.getDate() - 1);
+  return formatDateJst_(d);
+}
 
-  let masterSheet = ss.getSheetByName('模試基本情報') || ss.getSheetByName('模試マスター');
-  let targetExamMonth = '12月号';
-  let deadlineStr = '2026-12-14';
-  let daysLeft = 35;
+function formatDateJst_(dateObj) {
+  if (typeof Utilities !== 'undefined' && Utilities && typeof Utilities.formatDate === 'function') {
+    return Utilities.formatDate(dateObj, 'Asia/Tokyo', 'yyyy-MM-dd');
+  }
+  const jst = new Date(dateObj.getTime() + 9 * 60 * 60 * 1000);
+  const y = jst.getUTCFullYear();
+  const m = String(jst.getUTCMonth() + 1).padStart(2, '0');
+  const d = String(jst.getUTCDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
 
-  if (masterSheet) {
-    const masterData = masterSheet.getDataRange().getValues();
-    const now = new Date();
-    for (let i = 1; i < masterData.length; i++) {
-      const month = String(masterData[i][1] || '');
-      const rawDeadline = masterData[i][8];
-      if (rawDeadline) {
-        const deadline = new Date(rawDeadline);
-        if (deadline > now) {
-          targetExamMonth = month;
-          deadlineStr = Utilities.formatDate(deadline, 'Asia/Tokyo', 'yyyy-MM-dd');
-          daysLeft = Math.max(0, Math.ceil((deadline - now) / (1000 * 60 * 60 * 24)));
-          break;
-        }
-      }
+function parseDateToYmdJst_(raw, fallbackYear) {
+  if (raw === null || raw === undefined || raw === '') return '';
+  if (raw instanceof Date) {
+    if (isNaN(raw.getTime())) return '';
+    return formatDateJst_(raw);
+  }
+  const str = String(raw).trim();
+  if (!str) return '';
+
+  // タイムゾーン付き ISO8601（例: 2026-12-26T15:00:00.000Z）は JST (+09:00) に変換
+  if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d+)?)?(Z|[+-]\d{2}:?\d{2})$/i.test(str)) {
+    const parsed = new Date(str);
+    if (!isNaN(parsed.getTime())) {
+      return formatDateJst_(parsed);
     }
   }
 
-  const mainSheet = ss.getSheetByName(mainSheetName);
-  if (!mainSheet) {
-    throw new Error(`シート「${mainSheetName}」が見つかりません。`);
+  // ローカル表記 YYYY-MM-DD / YYYY/MM/DD（時刻付き含む）
+  const ymdMatch = str.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/);
+  if (ymdMatch) {
+    return (
+      ymdMatch[1] +
+      '-' +
+      String(Number(ymdMatch[2])).padStart(2, '0') +
+      '-' +
+      String(Number(ymdMatch[3])).padStart(2, '0')
+    );
   }
 
-  const values = mainSheet.getDataRange().getValues();
-  const colDate = 0;   // A列: 受付日時
-  const colExam = 2;   // C列: 対象模試
-  const colStatus = 5; // F列: 決済ステータス
-  const colGrade = 12; // M列: 学年
+  // 和暦・日本語表記 YYYY年M月D日
+  const jpMatch = str.match(/(\d{4})年\s*(\d{1,2})月\s*(\d{1,2})日/);
+  if (jpMatch) {
+    return (
+      jpMatch[1] +
+      '-' +
+      String(Number(jpMatch[2])).padStart(2, '0') +
+      '-' +
+      String(Number(jpMatch[3])).padStart(2, '0')
+    );
+  }
 
-  let yesterdayNewCount = 0;
-  let yesterdayPaidCount = 0;
-  let currentExamPaid = 0;
-  let gradeCounts = { '中3': 0, '中2': 0, '中1': 0, 'その他': 0 };
+  // 年省略 M月D日
+  const mdMatch = str.match(/(\d{1,2})月\s*(\d{1,2})日/);
+  if (mdMatch && fallbackYear) {
+    return (
+      String(fallbackYear) +
+      '-' +
+      String(Number(mdMatch[1])).padStart(2, '0') +
+      '-' +
+      String(Number(mdMatch[2])).padStart(2, '0')
+    );
+  }
 
-  const examKeyword = targetExamMonth.replace('号', '');
+  const parsed = new Date(str);
+  if (!isNaN(parsed.getTime())) {
+    return formatDateJst_(parsed);
+  }
+  return '';
+}
 
-  for (let i = 1; i < values.length; i++) {
-    const row = values[i];
-    const rawDate = row[colDate];
-    const examName = String(row[colExam] || '');
-    const status = String(row[colStatus] || '').trim().toLowerCase();
-    const grade = String(row[colGrade] || '');
+function parseYmdParts_(ymd) {
+  const m = String(ymd || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!m) return null;
+  return { y: Number(m[1]), m: Number(m[2]), d: Number(m[3]) };
+}
 
-    if (rawDate) {
-      let rowDateStr = '';
-      if (rawDate instanceof Date) {
-        rowDateStr = Utilities.formatDate(rawDate, 'Asia/Tokyo', 'yyyy-MM-dd');
-      } else {
-        rowDateStr = String(rawDate).substring(0, 10);
-      }
+function addDaysYmd_(ymd, deltaDays) {
+  const p = parseYmdParts_(ymd);
+  if (!p) return '';
+  const dt = new Date(Date.UTC(p.y, p.m - 1, p.d, 12, 0, 0) + Number(deltaDays) * 86400000);
+  return (
+    dt.getUTCFullYear() +
+    '-' +
+    String(dt.getUTCMonth() + 1).padStart(2, '0') +
+    '-' +
+    String(dt.getUTCDate()).padStart(2, '0')
+  );
+}
 
-      if (rowDateStr === targetDateStr) {
-        yesterdayNewCount++;
-        if (status === 'paid') {
-          yesterdayPaidCount++;
-        }
+function shiftYearYmd_(ymd, deltaYears) {
+  const p = parseYmdParts_(ymd);
+  if (!p) return '';
+  const targetYear = p.y + Number(deltaYears);
+  const dt = new Date(Date.UTC(targetYear, p.m - 1, p.d, 12, 0, 0));
+  // うるう年 2/29 → 平年 3/1 ズレを 2/28 へ丸める
+  if (dt.getUTCMonth() !== p.m - 1) {
+    dt.setUTCDate(0);
+  }
+  return (
+    dt.getUTCFullYear() +
+    '-' +
+    String(dt.getUTCMonth() + 1).padStart(2, '0') +
+    '-' +
+    String(dt.getUTCDate()).padStart(2, '0')
+  );
+}
+
+function diffDaysYmd_(fromYmd, toYmd) {
+  const a = parseYmdParts_(fromYmd);
+  const b = parseYmdParts_(toYmd);
+  if (!a || !b) return 0;
+  const aMs = Date.UTC(a.y, a.m - 1, a.d, 12, 0, 0);
+  const bMs = Date.UTC(b.y, b.m - 1, b.d, 12, 0, 0);
+  return Math.round((bMs - aMs) / 86400000);
+}
+
+function round1_(num) {
+  return Math.round(Number(num || 0) * 10) / 10;
+}
+
+function calcPctChange_(current, previous) {
+  const cur = Number(current || 0);
+  const prev = Number(previous || 0);
+  if (prev <= 0) return null;
+  return round1_(((cur - prev) / prev) * 100);
+}
+
+function calcYoyPct_(current, previous) {
+  const cur = Number(current || 0);
+  const prev = Number(previous || 0);
+  if (prev <= 0) return null;
+  return round1_((cur / prev) * 100);
+}
+
+function formatSignedInt_(n) {
+  const val = Number(n || 0);
+  return (val > 0 ? '+' : '') + val;
+}
+
+function formatSignedPct_(pct) {
+  if (pct === null || pct === undefined || isNaN(pct)) return '—';
+  const v = Number(pct);
+  return (v > 0 ? '+' : '') + v.toFixed(1) + '%';
+}
+
+function formatShortMd_(ymd) {
+  const p = parseYmdParts_(ymd);
+  if (!p) return String(ymd || '');
+  return `${p.m}/${p.d}`;
+}
+
+// -------------------------------------------------------------
+// 正規化・分類ヘルパー
+// -------------------------------------------------------------
+function normalizeGradeKey_(raw) {
+  const s = String(raw || '').trim();
+  if (!s) return 'その他';
+  if (/中\s*3|中学\s*3|c3|3年/i.test(s)) return '中3';
+  if (/中\s*2|中学\s*2|c2|2年/i.test(s)) return '中2';
+  if (/中\s*1|中学\s*1|c1|1年/i.test(s)) return '中1';
+  if (/小\s*6|小学\s*6|p6|e6|6年|適性/i.test(s)) return '小6';
+  return 'その他';
+}
+
+function normalizeVenueKey_(raw) {
+  const s = String(raw || '').trim();
+  if (!s) return 'その他';
+  if (s.indexOf('岡山') !== -1) return '岡山';
+  if (s.indexOf('倉敷') !== -1) return '倉敷';
+  if (s.indexOf('津山') !== -1) return '津山';
+  if (s.indexOf('自宅') !== -1) return '自宅';
+  return 'その他';
+}
+
+function normalizeExamMonthNum_(raw) {
+  const str = String(raw || '')
+    .replace(/[０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0xfee0))
+    .trim();
+  const m = str.match(/(\d{1,2})/);
+  return m ? Number(m[1]) : null;
+}
+
+function classifyPaymentStatus_(raw) {
+  const s = String(raw || '').trim().toLowerCase();
+  if (!s) return 'other';
+  if (s === 'paid' || s === '入金済' || s === '入金済み' || s === '支払済') return 'paid';
+  if (s.indexOf('キャンセル') !== -1 || s.indexOf('cancel') !== -1 || s === '期限切れ' || s === 'expired' || s === '失敗') {
+    return 'canceled';
+  }
+  if (s.indexOf('未入金') !== -1 || s.indexOf('unpaid') !== -1 || s.indexOf('pending') !== -1 || s.indexOf('待ち') !== -1) {
+    return 'unpaid';
+  }
+  // 過去シート等で入金日（例: 2025/12/01）が入っている場合は paid 扱い
+  if (/^\d{4}[\/\-]\d{1,2}[\/\-]\d{1,2}/.test(s) || /^\d{1,2}[\/\-]\d{1,2}$/.test(s)) {
+    return 'paid';
+  }
+  return 'other';
+}
+
+function createCounterMap_(keys) {
+  const obj = {};
+  keys.forEach(k => {
+    obj[k] = 0;
+  });
+  return obj;
+}
+
+function buildHeaderIndexMap_(headers) {
+  const map = {};
+  (headers || []).forEach((h, idx) => {
+    const raw = String(h || '').trim();
+    if (!raw) return;
+    map[raw] = idx;
+    const compact = raw.replace(/[\s\u3000\r\n\t]+/g, '');
+    if (compact) map[compact] = idx;
+  });
+  return map;
+}
+
+function findColIndex_(headerMap, candidates, fallbackIdx) {
+  for (let i = 0; i < candidates.length; i++) {
+    const key = candidates[i];
+    if (headerMap[key] !== undefined) return headerMap[key];
+  }
+  return fallbackIdx;
+}
+
+// -------------------------------------------------------------
+// 次回模試の正確な締切・実施日・残り日数の3段解決
+// -------------------------------------------------------------
+function resolveTargetExamInfo_(ss, targetDateStr, props) {
+  const refDateStr = parseDateToYmdJst_(targetDateStr) || formatDateJst_(new Date());
+  const refParts = parseYmdParts_(refDateStr);
+  const fallbackYear = refParts ? refParts.y : new Date().getFullYear();
+
+  let picked = null;
+
+  // 優先①: 本番 API (/api/exam-guides?flat=1) から D1 正本データを取得
+  try {
+    const apiUrl = (props && props.EXAM_GUIDES_API_URL) || REPORT_DEFAULTS.EXAM_GUIDES_API_URL;
+    if (apiUrl && typeof UrlFetchApp !== 'undefined' && UrlFetchApp) {
+      const res = UrlFetchApp.fetch(apiUrl, {
+        method: 'get',
+        headers: { Accept: 'application/json' },
+        muteHttpExceptions: true
+      });
+      if (res.getResponseCode() === 200) {
+        const json = JSON.parse(res.getContentText() || '{}');
+        picked = extractExamFromApiPayload_(json, refDateStr, fallbackYear);
       }
     }
+  } catch (apiErr) {
+    console.warn('模試マスタAPI取得スキップ（シート/フォールバックへ移行）: ' + apiErr.message);
+  }
 
-    if (examName.indexOf(examKeyword) !== -1 && status === 'paid') {
-      currentExamPaid++;
-      if (grade.indexOf('3') !== -1) {
-        gradeCounts['中3']++;
-      } else if (grade.indexOf('2') !== -1) {
-        gradeCounts['中2']++;
-      } else if (grade.indexOf('1') !== -1) {
-        gradeCounts['中1']++;
-      } else {
-        gradeCounts['その他']++;
+  // 優先②: 同一スプレッドシート内の模試基本情報 / schedules / 模試マスターをヘッダー名で動的解決
+  if (!picked && ss) {
+    try {
+      picked = extractExamFromSpreadsheet_(ss, refDateStr, fallbackYear);
+    } catch (sheetErr) {
+      console.warn('模試マスターシート読込スキップ: ' + sheetErr.message);
+    }
+  }
+
+  // 優先③: フォールバック日程表（ここでも残り日数は必ず refDateStr との差分で動的算出）
+  if (!picked) {
+    const candidates = REPORT_DEFAULTS.FALLBACK_SCHEDULES
+      .filter(s => s.cardDeadline >= refDateStr)
+      .sort((a, b) => a.cardDeadline.localeCompare(b.cardDeadline));
+    const chosen = candidates[0] || REPORT_DEFAULTS.FALLBACK_SCHEDULES[0];
+    picked = {
+      targetExamMonth: chosen.targetExamMonth,
+      monthNum: chosen.monthNum,
+      cardDeadline: chosen.cardDeadline,
+      examDates: chosen.examDates.slice(),
+      source: 'fallback'
+    };
+  }
+
+  const cardDeadline = picked.cardDeadline;
+  const konbiniDeadline = addDaysYmd_(cardDeadline, -REPORT_DEFAULTS.KONBINI_OFFSET_DAYS);
+  const daysLeftCard = Math.max(0, diffDaysYmd_(refDateStr, cardDeadline));
+  const daysLeftKonbini = Math.max(0, diffDaysYmd_(refDateStr, konbiniDeadline));
+
+  const sortedExamDates = (picked.examDates || [])
+    .filter(item => item && item.date)
+    .sort((a, b) => a.date.localeCompare(b.date));
+  const earliestExamDate = sortedExamDates.length > 0 ? sortedExamDates[0].date : null;
+  const daysLeftExam = earliestExamDate ? Math.max(0, diffDaysYmd_(refDateStr, earliestExamDate)) : null;
+
+  return {
+    targetExamMonth: picked.targetExamMonth,
+    monthNum: picked.monthNum,
+    cardDeadline: cardDeadline,
+    konbiniDeadline: konbiniDeadline,
+    daysLeftCard: daysLeftCard,
+    daysLeftKonbini: daysLeftKonbini,
+    examDates: sortedExamDates,
+    earliestExamDate: earliestExamDate,
+    daysLeftExam: daysLeftExam,
+    deadlineSource: picked.source,
+    // 後方互換フィールド
+    deadline: cardDeadline,
+    daysLeft: daysLeftCard
+  };
+}
+
+function extractExamFromApiPayload_(json, refDateStr, fallbackYear) {
+  if (!json || !json.success) return null;
+
+  // flat=1 レスポンス優先
+  if (json.flat && Array.isArray(json.flat.schedules) && json.flat.schedules.length > 0) {
+    const valid = json.flat.schedules
+      .map(s => {
+        const ymd = parseDateToYmdJst_(s.apply_deadline, fallbackYear);
+        const monthNum = normalizeExamMonthNum_(s.issue_name || s.id);
+        return { raw: s, cardDeadline: ymd, monthNum: monthNum };
+      })
+      .filter(item => item.cardDeadline && item.cardDeadline >= refDateStr)
+      .sort((a, b) => {
+        const cmp = a.cardDeadline.localeCompare(b.cardDeadline);
+        if (cmp !== 0) return cmp;
+        // 同日締切なら中3(c3)を優先
+        if (a.raw.grade_code === 'c3' && b.raw.grade_code !== 'c3') return -1;
+        if (b.raw.grade_code === 'c3' && a.raw.grade_code !== 'c3') return 1;
+        return 0;
+      });
+
+    if (valid.length > 0) {
+      const top = valid[0];
+      const venues = Array.isArray(json.flat.venues) ? json.flat.venues : [];
+      const examDates = venues
+        .filter(v => v.schedule_id === top.raw.id && String(v.venue_type || '').indexOf('自宅') === -1)
+        .map(v => ({
+          venue: normalizeVenueKey_(v.venue_type),
+          date: parseDateToYmdJst_(v.exam_date_start, fallbackYear)
+        }))
+        .filter(v => v.date);
+
+      return {
+        targetExamMonth: top.raw.issue_name || `${top.monthNum}月号`,
+        monthNum: top.monthNum || 12,
+        cardDeadline: top.cardDeadline,
+        examDates: examDates,
+        source: 'api'
+      };
+    }
+  }
+
+  // grades 階層レスポンスフォールバック
+  if (json.grades && json.grades.c3 && Array.isArray(json.grades.c3.rounds)) {
+    const validRounds = json.grades.c3.rounds
+      .map(r => ({
+        raw: r,
+        cardDeadline: parseDateToYmdJst_(r.applyDeadlineRaw || r.deadline, fallbackYear),
+        monthNum: r.monthNum || normalizeExamMonthNum_(r.monthName)
+      }))
+      .filter(item => item.cardDeadline && item.cardDeadline >= refDateStr)
+      .sort((a, b) => a.cardDeadline.localeCompare(b.cardDeadline));
+
+    if (validRounds.length > 0) {
+      const top = validRounds[0];
+      return {
+        targetExamMonth: top.raw.monthName || `${top.monthNum}月号`,
+        monthNum: top.monthNum || 12,
+        cardDeadline: top.cardDeadline,
+        examDates: [],
+        source: 'api'
+      };
+    }
+  }
+
+  return null;
+}
+
+function extractExamFromSpreadsheet_(ss, refDateStr, fallbackYear) {
+  const sheet =
+    ss.getSheetByName('模試基本情報') ||
+    ss.getSheetByName('schedules') ||
+    ss.getSheetByName('模試日程・基本情報') ||
+    ss.getSheetByName('模試マスター');
+  if (!sheet) return null;
+
+  const data = sheet.getDataRange().getValues();
+  if (!data || data.length < 2) return null;
+
+  const hMap = buildHeaderIndexMap_(data[0]);
+  const colGrade = findColIndex_(hMap, ['学年', 'grade', 'grade_code'], 0);
+  const colMonth = findColIndex_(hMap, ['月号', '対象回', '対象模試', '回', 'issue_name'], 1);
+  const colDeadline = findColIndex_(hMap, ['申込締切日時', '申込締切日', '申込締切', '締切日時', '締切日', '締切', 'apply_deadline'], -1);
+  if (colDeadline === -1) return null;
+
+  const candidates = [];
+  for (let i = 1; i < data.length; i++) {
+    const row = data[i];
+    const deadlineYmd = parseDateToYmdJst_(row[colDeadline], fallbackYear);
+    if (!deadlineYmd || deadlineYmd < refDateStr) continue;
+    const monthRaw = String(row[colMonth] || '').trim();
+    const monthNum = normalizeExamMonthNum_(monthRaw);
+    if (!monthNum) continue;
+    const gradeKey = normalizeGradeKey_(row[colGrade]);
+    candidates.push({
+      monthNum: monthNum,
+      targetExamMonth: monthRaw.indexOf('号') !== -1 ? monthRaw : `${monthNum}月号`,
+      cardDeadline: deadlineYmd,
+      isC3: gradeKey === '中3'
+    });
+  }
+
+  if (candidates.length === 0) return null;
+  candidates.sort((a, b) => {
+    const cmp = a.cardDeadline.localeCompare(b.cardDeadline);
+    if (cmp !== 0) return cmp;
+    if (a.isC3 && !b.isC3) return -1;
+    if (!a.isC3 && b.isC3) return 1;
+    return 0;
+  });
+
+  const chosen = candidates[0];
+  const examDates = [];
+  const venueSheet = ss.getSheetByName('会場・日程') || ss.getSheetByName('venues') || ss.getSheetByName('会場日程');
+  if (venueSheet) {
+    const vData = venueSheet.getDataRange().getValues();
+    if (vData && vData.length > 1) {
+      const vMap = buildHeaderIndexMap_(vData[0]);
+      const vColGrade = findColIndex_(vMap, ['学年', 'grade_code'], 0);
+      const vColMonth = findColIndex_(vMap, ['月号', '対象回'], 1);
+      const vColType = findColIndex_(vMap, ['会場区分', 'venue_type', '会場'], 2);
+      const vColStart = findColIndex_(vMap, ['実施日', '試験日', '開始日', 'exam_date_start', '日程'], -1);
+      if (vColStart !== -1) {
+        const seenVenues = {};
+        for (let i = 1; i < vData.length; i++) {
+          const vRow = vData[i];
+          if (normalizeExamMonthNum_(vRow[vColMonth]) !== chosen.monthNum) continue;
+          const vGrade = normalizeGradeKey_(vRow[vColGrade]);
+          if (chosen.isC3 && vGrade !== '中3') continue;
+          const vType = normalizeVenueKey_(vRow[vColType]);
+          if (vType === '自宅') continue;
+          const dateYmd = parseDateToYmdJst_(vRow[vColStart], fallbackYear);
+          if (dateYmd && !seenVenues[vType]) {
+            seenVenues[vType] = true;
+            examDates.push({ venue: vType, date: dateYmd });
+          }
+        }
       }
     }
   }
 
   return {
-    targetExamMonth: targetExamMonth,
-    deadline: deadlineStr,
-    daysLeft: daysLeft,
-    currentExamPaid: currentExamPaid,
-    gradeCounts: gradeCounts,
-    yesterdayCount: yesterdayNewCount,
-    yesterdayPaid: yesterdayPaidCount,
+    targetExamMonth: chosen.targetExamMonth,
+    monthNum: chosen.monthNum,
+    cardDeadline: chosen.cardDeadline,
+    examDates: examDates,
+    source: 'sheet'
+  };
+}
+
+// -------------------------------------------------------------
+// 台帳（main + 過去受験者）の高密度集計
+// -------------------------------------------------------------
+function getNextExamAndOrderSummary(mainSheetName, targetDateStr, props) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const examInfo = resolveTargetExamInfo_(ss, targetDateStr, props);
+
+  const resolvedMainName = mainSheetName || (props && props.SHEET_NAME) || REPORT_DEFAULTS.MAIN_SHEET_NAME;
+  const mainSheet = ss.getSheetByName(resolvedMainName);
+  if (!mainSheet) {
+    throw new Error(`シート「${resolvedMainName}」が見つかりません。`);
+  }
+
+  const mainValues = mainSheet.getDataRange().getValues();
+  const currentAgg = aggregateCurrentLedgerRows_(mainValues, targetDateStr, examInfo.monthNum);
+
+  // 過去受験者シートから昨年同号・同時期比較を集計
+  const pastSheetName = (props && props.PAST_SHEET_NAME) || REPORT_DEFAULTS.PAST_SHEET_NAME;
+  const pastSheet = ss.getSheetByName(pastSheetName);
+  const pastValues = pastSheet ? pastSheet.getDataRange().getValues() : null;
+  const lastYearAgg = aggregateLastYearSameTiming_(
+    pastValues,
+    targetDateStr,
+    examInfo.cardDeadline,
+    examInfo.monthNum
+  );
+
+  // 学年別の今年 vs 昨年同時期比較
+  const yoyByGrade = {};
+  ['中3', '中2', '中1', '小6'].forEach(g => {
+    const cur = currentAgg.gradeCounts[g] || 0;
+    const lySame = lastYearAgg.available ? (lastYearAgg.sameTimingByGrade[g] || 0) : null;
+    const lyFinal = lastYearAgg.available ? (lastYearAgg.finalByGrade[g] || 0) : null;
+    yoyByGrade[g] = {
+      current: cur,
+      unpaid: currentAgg.gradeUnpaidCounts[g] || 0,
+      lastYearSameTiming: lySame,
+      diff: lySame !== null ? cur - lySame : null,
+      yoyPct: lySame !== null ? calcYoyPct_(cur, lySame) : null,
+      lastYearFinal: lyFinal,
+      benchmark: REPORT_DEFAULTS.BENCHMARK_TARGETS[g]
+    };
+  });
+
+  const lastYearSameTimingTotal = lastYearAgg.available ? lastYearAgg.sameTimingTotal : null;
+  const lastYearFinalTotal = lastYearAgg.available && lastYearAgg.finalTotal > 0 ? lastYearAgg.finalTotal : null;
+  const fallbackBenchmarkTotal =
+    REPORT_DEFAULTS.BENCHMARK_TARGETS['中3'] +
+    REPORT_DEFAULTS.BENCHMARK_TARGETS['中2'] +
+    REPORT_DEFAULTS.BENCHMARK_TARGETS['中1'];
+  const targetTotal = lastYearFinalTotal || fallbackBenchmarkTotal;
+  const gapToTarget = Math.max(0, targetTotal - currentAgg.currentExamPaid);
+  const requiredDailyPace =
+    examInfo.daysLeftCard > 0 ? round1_(gapToTarget / examInfo.daysLeftCard) : gapToTarget;
+
+  return {
+    targetExamMonth: examInfo.targetExamMonth,
+    monthNum: examInfo.monthNum,
+    deadline: examInfo.cardDeadline,
+    cardDeadline: examInfo.cardDeadline,
+    konbiniDeadline: examInfo.konbiniDeadline,
+    daysLeft: examInfo.daysLeftCard,
+    daysLeftCard: examInfo.daysLeftCard,
+    daysLeftKonbini: examInfo.daysLeftKonbini,
+    examDates: examInfo.examDates,
+    earliestExamDate: examInfo.earliestExamDate,
+    daysLeftExam: examInfo.daysLeftExam,
+    deadlineSource: examInfo.deadlineSource,
+
+    // 当日・累積実績
+    yesterdayCount: currentAgg.yesterdayCount,
+    yesterdayPaid: currentAgg.yesterdayPaid,
+    yesterdayUnpaid: currentAgg.yesterdayUnpaid,
+    currentExamPaid: currentAgg.currentExamPaid,
+    currentExamUnpaid: currentAgg.currentExamUnpaid,
+    currentExamCanceled: currentAgg.currentExamCanceled,
+
+    // 学年別・会場別内訳
+    gradeCounts: currentAgg.gradeCounts,
+    gradeUnpaidCounts: currentAgg.gradeUnpaidCounts,
+    venueCounts: currentAgg.venueCounts,
+    venueUnpaidCounts: currentAgg.venueUnpaidCounts,
+
+    // 直近7日ペース・目標比較
+    recent7dWindow: {
+      startDate: currentAgg.recent7dStart,
+      endDate: targetDateStr
+    },
+    recent7dAll: currentAgg.recent7dAll,
+    recent7dPaid: currentAgg.recent7dPaid,
+    recent7dByGrade: currentAgg.recent7dByGrade,
+    dailyPace7d: currentAgg.dailyPace7d,
+    targetTotal: targetTotal,
+    targetTotalSource: lastYearFinalTotal ? '昨年同号最終実績' : '昨年度参考ベンチマーク',
+    gapToTarget: gapToTarget,
+    requiredDailyPace: requiredDailyPace,
+
+    // 昨年同時期比較
+    lastYearComparison: {
+      available: lastYearAgg.available,
+      cutoffDate: lastYearAgg.cutoffDate,
+      matchedRows: lastYearAgg.matchedRows,
+      sameTimingPaidTotal: lastYearSameTimingTotal,
+      finalPaidTotal: lastYearFinalTotal,
+      diffFromLastYear: lastYearSameTimingTotal !== null ? currentAgg.currentExamPaid - lastYearSameTimingTotal : null,
+      yoyPct: lastYearSameTimingTotal !== null ? calcYoyPct_(currentAgg.currentExamPaid, lastYearSameTimingTotal) : null,
+      byGrade: yoyByGrade
+    },
+
     benchmarks: {
       '中3': '昨年度最終実績: 約250件超（11月下旬〜締切1週間前にかけて急増する傾向）',
       '中2': '昨年度最終実績: 55件',
@@ -300,79 +819,575 @@ function getNextExamAndOrderSummary(mainSheetName, targetDateStr) {
   };
 }
 
-// -------------------------------------------------------------
-// GA4 集計
-// -------------------------------------------------------------
-function getGA4Summary(propertyId, targetDateStr) {
-  try {
-    const request = {
-      dateRanges: [{ startDate: targetDateStr, endDate: targetDateStr }],
-      metrics: [
-        { name: 'activeUsers' },
-        { name: 'sessions' },
-        { name: 'screenPageViews' }
-      ]
-    };
+function aggregateCurrentLedgerRows_(values, targetDateStr, targetMonthNum) {
+  const recent7dStart = addDaysYmd_(targetDateStr, -6);
+  const gradeCounts = createCounterMap_(GRADE_KEYS);
+  const gradeUnpaidCounts = createCounterMap_(GRADE_KEYS);
+  const venueCounts = createCounterMap_(VENUE_KEYS);
+  const venueUnpaidCounts = createCounterMap_(VENUE_KEYS);
+  const recent7dByGrade = createCounterMap_(GRADE_KEYS);
 
-    const response = AnalyticsData.Properties.runReport(request, 'properties/' + propertyId);
-    if (!response.rows || response.rows.length === 0) {
-      return { users: 0, sessions: 0, pageViews: 0 };
+  let yesterdayCount = 0;
+  let yesterdayPaid = 0;
+  let yesterdayUnpaid = 0;
+  let currentExamPaid = 0;
+  let currentExamUnpaid = 0;
+  let currentExamCanceled = 0;
+  let recent7dAll = 0;
+  let recent7dPaid = 0;
+
+  if (!values || values.length < 2) {
+    return {
+      recent7dStart,
+      yesterdayCount,
+      yesterdayPaid,
+      yesterdayUnpaid,
+      currentExamPaid,
+      currentExamUnpaid,
+      currentExamCanceled,
+      gradeCounts,
+      gradeUnpaidCounts,
+      venueCounts,
+      venueUnpaidCounts,
+      recent7dAll,
+      recent7dPaid,
+      recent7dByGrade,
+      dailyPace7d: 0
+    };
+  }
+
+  const hMap = buildHeaderIndexMap_(values[0]);
+  const colDate = findColIndex_(hMap, ['受付日時', '登録日時'], 0);
+  const colExam = findColIndex_(hMap, ['対象模試', '受験回', '模試'], 2);
+  const colVenue = findColIndex_(hMap, ['受験会場', '会場'], 3);
+  const colStatus = findColIndex_(hMap, ['決済ステータス', 'ステータス', '入金'], 5);
+  const colGrade = findColIndex_(hMap, ['学年'], 12);
+
+  for (let i = 1; i < values.length; i++) {
+    const row = values[i];
+    const rowDateYmd = parseDateToYmdJst_(row[colDate]);
+    const rowMonthNum = normalizeExamMonthNum_(row[colExam]);
+    const statusKind = classifyPaymentStatus_(row[colStatus]);
+    const gradeKey = normalizeGradeKey_(row[colGrade]);
+    const venueKey = normalizeVenueKey_(row[colVenue]);
+
+    const isTargetExam = targetMonthNum ? rowMonthNum === targetMonthNum : true;
+
+    // 昨日単日のカウント
+    if (rowDateYmd === targetDateStr) {
+      yesterdayCount++;
+      if (statusKind === 'paid') yesterdayPaid++;
+      else if (statusKind === 'unpaid') yesterdayUnpaid++;
     }
 
-    const metricValues = response.rows[0].metricValues;
-    return {
-      users: metricValues[0].value,
-      sessions: metricValues[1].value,
-      pageViews: metricValues[2].value
-    };
-  } catch (e) {
-    console.error('GA4取得エラー: ' + e.message);
-    return { error: e.message };
+    if (!isTargetExam) continue;
+
+    // 直近7日間（対象模試）
+    if (rowDateYmd && rowDateYmd >= recent7dStart && rowDateYmd <= targetDateStr) {
+      if (statusKind !== 'canceled') {
+        recent7dAll++;
+      }
+      if (statusKind === 'paid') {
+        recent7dPaid++;
+        recent7dByGrade[gradeKey]++;
+      }
+    }
+
+    if (statusKind === 'paid') {
+      currentExamPaid++;
+      gradeCounts[gradeKey]++;
+      venueCounts[venueKey]++;
+    } else if (statusKind === 'unpaid') {
+      currentExamUnpaid++;
+      gradeUnpaidCounts[gradeKey]++;
+      venueUnpaidCounts[venueKey]++;
+    } else if (statusKind === 'canceled') {
+      currentExamCanceled++;
+    }
   }
+
+  return {
+    recent7dStart,
+    yesterdayCount,
+    yesterdayPaid,
+    yesterdayUnpaid,
+    currentExamPaid,
+    currentExamUnpaid,
+    currentExamCanceled,
+    gradeCounts,
+    gradeUnpaidCounts,
+    venueCounts,
+    venueUnpaidCounts,
+    recent7dAll,
+    recent7dPaid,
+    recent7dByGrade,
+    dailyPace7d: round1_(recent7dPaid / 7)
+  };
+}
+
+function aggregateLastYearSameTiming_(pastValues, targetDateStr, cardDeadlineStr, targetMonthNum) {
+  const cutoffDate = shiftYearYmd_(targetDateStr, -1);
+  const lastYearDeadline = shiftYearYmd_(cardDeadlineStr, -1);
+  const windowStart = addDaysYmd_(lastYearDeadline, -180);
+  const windowEnd = addDaysYmd_(lastYearDeadline, 40);
+
+  const emptyResult = {
+    available: false,
+    cutoffDate: cutoffDate,
+    matchedRows: 0,
+    sameTimingTotal: 0,
+    finalTotal: 0,
+    sameTimingByGrade: createCounterMap_(GRADE_KEYS),
+    finalByGrade: createCounterMap_(GRADE_KEYS)
+  };
+
+  if (!pastValues || pastValues.length < 2) {
+    return emptyResult;
+  }
+
+  const hMap = buildHeaderIndexMap_(pastValues[0]);
+  // alignPastExamineesSheet 変換後（31列）および旧フォーマット（25列）の両方に動的対応
+  const colDate = findColIndex_(hMap, ['受付日時', '登録日時'], 0);
+  const colExam = findColIndex_(hMap, ['対象模試', '受験回', '模試'], 2);
+  const colStatus = findColIndex_(hMap, ['決済ステータス', '入金', 'ステータス'], 5);
+  const colGrade = findColIndex_(hMap, ['学年'], 12);
+
+  const sameTimingByGrade = createCounterMap_(GRADE_KEYS);
+  const finalByGrade = createCounterMap_(GRADE_KEYS);
+  let sameTimingTotal = 0;
+  let finalTotal = 0;
+  let matchedRows = 0;
+
+  for (let i = 1; i < pastValues.length; i++) {
+    const row = pastValues[i];
+    const rowMonthNum = normalizeExamMonthNum_(row[colExam]);
+    if (targetMonthNum && rowMonthNum !== targetMonthNum) continue;
+
+    const statusKind = classifyPaymentStatus_(row[colStatus]);
+    if (statusKind !== 'paid') continue;
+
+    const rowDateYmd = parseDateToYmdJst_(row[colDate]);
+    if (!rowDateYmd) continue;
+
+    // 昨年度シーズン（前年締切 -180日〜+40日）のみを対象にして他年度混在を防止
+    if (windowStart && windowEnd && (rowDateYmd < windowStart || rowDateYmd > windowEnd)) {
+      continue;
+    }
+
+    const gradeKey = normalizeGradeKey_(row[colGrade]);
+    matchedRows++;
+    finalTotal++;
+    finalByGrade[gradeKey]++;
+
+    if (rowDateYmd <= cutoffDate) {
+      sameTimingTotal++;
+      sameTimingByGrade[gradeKey]++;
+    }
+  }
+
+  return {
+    available: matchedRows > 0,
+    cutoffDate: cutoffDate,
+    matchedRows: matchedRows,
+    sameTimingTotal: sameTimingTotal,
+    finalTotal: finalTotal,
+    sameTimingByGrade: sameTimingByGrade,
+    finalByGrade: finalByGrade
+  };
 }
 
 // -------------------------------------------------------------
-// Search Console 集計（REST API経由）
+// GA4 マルチ期間・ページ別・ファネル・チャネル集計
+// -------------------------------------------------------------
+function getGA4Summary(propertyId, targetDateStr, examSummary) {
+  if (!propertyId) {
+    return { available: false, error: 'GA4_PROPERTY_ID 未設定' };
+  }
+
+  const propPath = 'properties/' + propertyId;
+  const last7Start = addDaysYmd_(targetDateStr, -6);
+  const prev7End = addDaysYmd_(last7Start, -1);
+  const prev7Start = addDaysYmd_(prev7End, -6);
+
+  const last28Start = addDaysYmd_(targetDateStr, -27);
+  const prev28End = addDaysYmd_(last28Start, -1);
+  const prev28Start = addDaysYmd_(prev28End, -27);
+
+  const yoy28Start = shiftYearYmd_(last28Start, -1);
+  const yoy28End = shiftYearYmd_(targetDateStr, -1);
+
+  const errors = [];
+  const result = {
+    available: true,
+    users: 0,
+    sessions: 0,
+    pageViews: 0,
+    periods: {
+      yesterday: { startDate: targetDateStr, endDate: targetDateStr, users: 0, sessions: 0, pageViews: 0 },
+      last7d: { startDate: last7Start, endDate: targetDateStr, users: 0, sessions: 0, pageViews: 0, avgDailyUsers: 0, avgDailyPageViews: 0, usersWowPct: null, sessionsWowPct: null, pvWowPct: null },
+      prev7d: { startDate: prev7Start, endDate: prev7End, users: 0, sessions: 0, pageViews: 0 },
+      last28d: { startDate: last28Start, endDate: targetDateStr, users: 0, sessions: 0, pageViews: 0, usersMomPct: null, sessionsMomPct: null, pvMomPct: null, yoyAvailable: false, usersYoyPct: null, sessionsYoyPct: null, pvYoyPct: null },
+      prev28d: { startDate: prev28Start, endDate: prev28End, users: 0, sessions: 0, pageViews: 0 },
+      yoy28d: { startDate: yoy28Start, endDate: yoy28End, users: 0, sessions: 0, pageViews: 0 }
+    },
+    topPages: [],
+    applyFunnel: {
+      applyPageUsers7d: 0,
+      applyPageViews7d: 0,
+      recent7dAllOrders: examSummary ? Number(examSummary.recent7dAll || 0) : 0,
+      recent7dPaidOrders: examSummary ? Number(examSummary.recent7dPaid || 0) : 0,
+      cvrAllPct: null,
+      cvrPaidPct: null
+    },
+    channels: [],
+    errors: errors
+  };
+
+  const extractMetrics = (row) => {
+    const vals = (row && row.metricValues) || [];
+    return {
+      users: Number(vals[0] && vals[0].value ? vals[0].value : 0),
+      sessions: Number(vals[1] && vals[1].value ? vals[1].value : 0),
+      pageViews: Number(vals[2] && vals[2].value ? vals[2].value : 0)
+    };
+  };
+
+  // 1A. マルチ期間（昨日 / 直近7日 / 前週7日 / 直近28日）
+  try {
+    const res1a = AnalyticsData.Properties.runReport(
+      {
+        dateRanges: [
+          { name: 'yesterday', startDate: targetDateStr, endDate: targetDateStr },
+          { name: 'last7d', startDate: last7Start, endDate: targetDateStr },
+          { name: 'prev7d', startDate: prev7Start, endDate: prev7End },
+          { name: 'last28d', startDate: last28Start, endDate: targetDateStr }
+        ],
+        metrics: [
+          { name: 'activeUsers' },
+          { name: 'sessions' },
+          { name: 'screenPageViews' }
+        ]
+      },
+      propPath
+    );
+
+    const byRange = {};
+    (res1a.rows || []).forEach(r => {
+      const rangeName = (r.dimensionValues && r.dimensionValues[0] && r.dimensionValues[0].value) || '';
+      if (rangeName) byRange[rangeName] = extractMetrics(r);
+    });
+    // 単一rangeフォールバック（dimensionValuesが無いケース）
+    if (Object.keys(byRange).length === 0 && res1a.rows && res1a.rows[0]) {
+      byRange.yesterday = extractMetrics(res1a.rows[0]);
+    }
+
+    if (byRange.yesterday) {
+      Object.assign(result.periods.yesterday, byRange.yesterday);
+      result.users = byRange.yesterday.users;
+      result.sessions = byRange.yesterday.sessions;
+      result.pageViews = byRange.yesterday.pageViews;
+    }
+    if (byRange.prev7d) Object.assign(result.periods.prev7d, byRange.prev7d);
+    if (byRange.last7d) {
+      Object.assign(result.periods.last7d, byRange.last7d);
+      result.periods.last7d.avgDailyUsers = round1_(byRange.last7d.users / 7);
+      result.periods.last7d.avgDailyPageViews = round1_(byRange.last7d.pageViews / 7);
+      result.periods.last7d.usersWowPct = calcPctChange_(byRange.last7d.users, result.periods.prev7d.users);
+      result.periods.last7d.sessionsWowPct = calcPctChange_(byRange.last7d.sessions, result.periods.prev7d.sessions);
+      result.periods.last7d.pvWowPct = calcPctChange_(byRange.last7d.pageViews, result.periods.prev7d.pageViews);
+    }
+    if (byRange.last28d) Object.assign(result.periods.last28d, byRange.last28d);
+  } catch (e) {
+    errors.push('periods_main: ' + e.message);
+    console.warn('GA4 マルチ期間(1A)取得エラー: ' + e.message);
+  }
+
+  // 1B. 前28日 ＆ 昨年同期28日
+  try {
+    const res1b = AnalyticsData.Properties.runReport(
+      {
+        dateRanges: [
+          { name: 'prev28d', startDate: prev28Start, endDate: prev28End },
+          { name: 'yoy28d', startDate: yoy28Start, endDate: yoy28End }
+        ],
+        metrics: [
+          { name: 'activeUsers' },
+          { name: 'sessions' },
+          { name: 'screenPageViews' }
+        ]
+      },
+      propPath
+    );
+
+    const byRangeB = {};
+    (res1b.rows || []).forEach(r => {
+      const rangeName = (r.dimensionValues && r.dimensionValues[0] && r.dimensionValues[0].value) || '';
+      if (rangeName) byRangeB[rangeName] = extractMetrics(r);
+    });
+
+    if (byRangeB.prev28d) {
+      Object.assign(result.periods.prev28d, byRangeB.prev28d);
+      result.periods.last28d.usersMomPct = calcPctChange_(result.periods.last28d.users, byRangeB.prev28d.users);
+      result.periods.last28d.sessionsMomPct = calcPctChange_(result.periods.last28d.sessions, byRangeB.prev28d.sessions);
+      result.periods.last28d.pvMomPct = calcPctChange_(result.periods.last28d.pageViews, byRangeB.prev28d.pageViews);
+    }
+
+    if (byRangeB.yoy28d && byRangeB.yoy28d.sessions > 0) {
+      Object.assign(result.periods.yoy28d, byRangeB.yoy28d);
+      result.periods.last28d.yoyAvailable = true;
+      result.periods.last28d.usersYoyPct = calcPctChange_(result.periods.last28d.users, byRangeB.yoy28d.users);
+      result.periods.last28d.sessionsYoyPct = calcPctChange_(result.periods.last28d.sessions, byRangeB.yoy28d.sessions);
+      result.periods.last28d.pvYoyPct = calcPctChange_(result.periods.last28d.pageViews, byRangeB.yoy28d.pageViews);
+    }
+  } catch (e) {
+    errors.push('periods_compare: ' + e.message);
+    console.warn('GA4 28日比較(1B)取得エラー: ' + e.message);
+  }
+
+  // 2. ページ別閲覧状況（直近7日・トップページ除外TOP5 ＋ /apply/ 通過率）
+  try {
+    const resPages = AnalyticsData.Properties.runReport(
+      {
+        dateRanges: [{ startDate: last7Start, endDate: targetDateStr }],
+        dimensions: [{ name: 'pagePath' }],
+        metrics: [
+          { name: 'screenPageViews' },
+          { name: 'activeUsers' },
+          { name: 'userEngagementDuration' }
+        ],
+        orderBys: [{ metric: { metricName: 'screenPageViews' }, desc: true }],
+        limit: 30
+      },
+      propPath
+    );
+
+    const mergedPages = {};
+    (resPages.rows || []).forEach(r => {
+      const rawPath = (r.dimensionValues && r.dimensionValues[0] && r.dimensionValues[0].value) || '/';
+      const normPath = normalizeGa4PagePath_(rawPath);
+      const pv = Number(r.metricValues?.[0]?.value || 0);
+      const users = Number(r.metricValues?.[1]?.value || 0);
+      const engSec = Number(r.metricValues?.[2]?.value || 0);
+      if (!mergedPages[normPath]) {
+        mergedPages[normPath] = { path: normPath, pageViews: 0, users: 0, engagementSec: 0 };
+      }
+      mergedPages[normPath].pageViews += pv;
+      mergedPages[normPath].users += users;
+      mergedPages[normPath].engagementSec += engSec;
+    });
+
+    const pageList = Object.values(mergedPages);
+    const applyRow = pageList.find(p => p.path === '/apply/');
+    if (applyRow) {
+      result.applyFunnel.applyPageUsers7d = applyRow.users;
+      result.applyFunnel.applyPageViews7d = applyRow.pageViews;
+      if (applyRow.users > 0) {
+        result.applyFunnel.cvrAllPct = round1_((result.applyFunnel.recent7dAllOrders / applyRow.users) * 100);
+        result.applyFunnel.cvrPaidPct = round1_((result.applyFunnel.recent7dPaidOrders / applyRow.users) * 100);
+      }
+    }
+
+    result.topPages = pageList
+      .filter(p => p.path !== '/' && p.path !== '/index.html')
+      .sort((a, b) => b.pageViews - a.pageViews)
+      .slice(0, 5)
+      .map(p => ({
+        path: p.path,
+        pageViews: p.pageViews,
+        users: p.users,
+        avgEngagementSec: p.users > 0 ? Math.round(p.engagementSec / p.users) : 0
+      }));
+  } catch (e) {
+    errors.push('pages: ' + e.message);
+    console.warn('GA4 ページ別集計エラー: ' + e.message);
+  }
+
+  // 3. 流入チャネル別内訳（直近7日 vs 前週7日）
+  try {
+    const resCh = AnalyticsData.Properties.runReport(
+      {
+        dateRanges: [
+          { name: 'last7d', startDate: last7Start, endDate: targetDateStr },
+          { name: 'prev7d', startDate: prev7Start, endDate: prev7End }
+        ],
+        dimensions: [{ name: 'sessionDefaultChannelGroup' }],
+        metrics: [
+          { name: 'sessions' },
+          { name: 'activeUsers' }
+        ],
+        orderBys: [{ metric: { metricName: 'sessions' }, desc: true }],
+        limit: 20
+      },
+      propPath
+    );
+
+    const chMap = {};
+    (resCh.rows || []).forEach(r => {
+      const ch = (r.dimensionValues && r.dimensionValues[0] && r.dimensionValues[0].value) || '(other)';
+      const rangeName = (r.dimensionValues && r.dimensionValues[1] && r.dimensionValues[1].value) || 'last7d';
+      const sessions = Number(r.metricValues?.[0]?.value || 0);
+      const users = Number(r.metricValues?.[1]?.value || 0);
+      if (!chMap[ch]) {
+        chMap[ch] = { channel: ch, sessions: 0, users: 0, prevSessions: 0, prevUsers: 0 };
+      }
+      if (rangeName === 'prev7d') {
+        chMap[ch].prevSessions += sessions;
+        chMap[ch].prevUsers += users;
+      } else {
+        chMap[ch].sessions += sessions;
+        chMap[ch].users += users;
+      }
+    });
+
+    const totalSessions7d = Object.values(chMap).reduce((sum, item) => sum + item.sessions, 0);
+    result.channels = Object.values(chMap)
+      .filter(c => c.sessions > 0)
+      .sort((a, b) => b.sessions - a.sessions)
+      .slice(0, 5)
+      .map(c => ({
+        channel: c.channel,
+        sessions: c.sessions,
+        users: c.users,
+        sharePct: totalSessions7d > 0 ? round1_((c.sessions / totalSessions7d) * 100) : 0,
+        prevSessions: c.prevSessions,
+        wowPct: calcPctChange_(c.sessions, c.prevSessions)
+      }));
+  } catch (e) {
+    errors.push('channels: ' + e.message);
+    console.warn('GA4 チャネル集計エラー: ' + e.message);
+  }
+
+  return result;
+}
+
+function normalizeGa4PagePath_(rawPath) {
+  let clean = String(rawPath || '/').split('?')[0].split('#')[0].trim();
+  if (!clean) return '/';
+  if (clean === '/index.html') return '/';
+  if (clean.length > 1 && clean.endsWith('/index.html')) {
+    clean = clean.slice(0, -'index.html'.length);
+  }
+  if (clean === '/apply' || clean === '/apply.html') return '/apply/';
+  if (clean === '/contact' || clean === '/contact.html') return '/contact/';
+  if (clean === '/schools' || clean === '/schools.html') return '/schools.html';
+  if (clean !== '/' && !/\.[a-z0-9]+$/i.test(clean) && !clean.endsWith('/')) {
+    clean += '/';
+  }
+  return clean;
+}
+
+// -------------------------------------------------------------
+// Search Console 集計（直近7日 TOP5 ＆ 前週比伸長クエリ）
 // -------------------------------------------------------------
 function getSearchConsoleSummary(siteUrl, targetDateStr) {
-  try {
-    const scDate = new Date();
-    scDate.setDate(scDate.getDate() - 3);
-    const scDateStr = Utilities.formatDate(scDate, 'Asia/Tokyo', 'yyyy-MM-dd');
+  const refYmd = parseDateToYmdJst_(targetDateStr) || getYesterdayYmdJst_();
+  // GSC は確定反映まで約2日遅延するため (targetDateStr - 2日) を期末とする7日間を取得
+  const endDate = addDaysYmd_(refYmd, -2);
+  const startDate = addDaysYmd_(endDate, -6);
+  const prevEndDate = addDaysYmd_(startDate, -1);
+  const prevStartDate = addDaysYmd_(prevEndDate, -6);
 
+  const fallback = {
+    available: false,
+    period: { startDate: startDate, endDate: endDate },
+    prevPeriod: { startDate: prevStartDate, endDate: prevEndDate },
+    topQueries: [],
+    risingQueries: [],
+    error: null
+  };
+
+  if (!siteUrl) {
+    fallback.error = 'SEARCH_CONSOLE_SITE_URL 未設定';
+    return fallback;
+  }
+
+  try {
     const token = ScriptApp.getOAuthToken();
     const endpoint = `https://www.googleapis.com/webmasters/v3/sites/${encodeURIComponent(siteUrl)}/searchAnalytics/query`;
 
-    const payload = {
-      startDate: scDateStr,
-      endDate: scDateStr,
-      dimensions: ['query'],
-      rowLimit: 5
+    const fetchRange = (sDate, eDate, limit) => {
+      const response = UrlFetchApp.fetch(endpoint, {
+        method: 'post',
+        contentType: 'application/json',
+        headers: { Authorization: 'Bearer ' + token },
+        payload: JSON.stringify({
+          startDate: sDate,
+          endDate: eDate,
+          dimensions: ['query'],
+          rowLimit: limit
+        }),
+        muteHttpExceptions: true
+      });
+      const code = response.getResponseCode();
+      if (code !== 200) {
+        throw new Error(`HTTP ${code}: ${response.getContentText().slice(0, 150)}`);
+      }
+      const parsed = JSON.parse(response.getContentText() || '{}');
+      return Array.isArray(parsed.rows) ? parsed.rows : [];
     };
 
-    const response = UrlFetchApp.fetch(endpoint, {
-      method: 'post',
-      contentType: 'application/json',
-      headers: {
-        'Authorization': 'Bearer ' + token
-      },
-      payload: JSON.stringify(payload),
-      muteHttpExceptions: true
+    const currentRows = fetchRange(startDate, endDate, 25);
+    let prevRows = [];
+    try {
+      prevRows = fetchRange(prevStartDate, prevEndDate, 50);
+    } catch (prevErr) {
+      console.warn('GSC 前週比較データ取得スキップ: ' + prevErr.message);
+    }
+
+    const prevMap = {};
+    prevRows.forEach(r => {
+      const q = r.keys && r.keys[0];
+      if (q) {
+        prevMap[q] = {
+          clicks: Number(r.clicks || 0),
+          impressions: Number(r.impressions || 0)
+        };
+      }
     });
 
-    const json = JSON.parse(response.getContentText());
-    if (!json.rows) return [];
+    const merged = currentRows.map(r => {
+      const q = (r.keys && r.keys[0]) || '';
+      const clicks = Number(r.clicks || 0);
+      const impressions = Number(r.impressions || 0);
+      const prev = prevMap[q] || { clicks: 0, impressions: 0 };
+      const clicksDiff = clicks - prev.clicks;
+      const impDiff = impressions - prev.impressions;
+      return {
+        query: q,
+        clicks: clicks,
+        impressions: impressions,
+        ctr: (Number(r.ctr || 0) * 100).toFixed(1) + '%',
+        position: Number(r.position || 0).toFixed(1),
+        prevClicks: prev.clicks,
+        prevImpressions: prev.impressions,
+        clicksDiff: clicksDiff,
+        impressionsDiff: impDiff,
+        clicksWowPct: calcPctChange_(clicks, prev.clicks)
+      };
+    });
 
-    return json.rows.map(r => ({
-      query: r.keys[0],
-      clicks: r.clicks,
-      impressions: r.impressions,
-      ctr: (r.ctr * 100).toFixed(1) + '%',
-      position: r.position.toFixed(1)
-    }));
+    const topQueries = merged
+      .slice()
+      .sort((a, b) => b.clicks - a.clicks || b.impressions - a.impressions)
+      .slice(0, 5);
+
+    const risingQueries = merged
+      .filter(q => q.clicksDiff > 0 || (q.prevClicks === 0 && q.impressionsDiff >= 10))
+      .sort((a, b) => b.clicksDiff - a.clicksDiff || b.impressionsDiff - a.impressionsDiff)
+      .slice(0, 3);
+
+    return {
+      available: true,
+      period: { startDate: startDate, endDate: endDate },
+      prevPeriod: { startDate: prevStartDate, endDate: prevEndDate },
+      topQueries: topQueries,
+      risingQueries: risingQueries,
+      error: null
+    };
   } catch (e) {
     console.error('Search Console取得エラー: ' + e.message);
-    return [];
+    fallback.error = e.message;
+    return fallback;
   }
 }
 
@@ -535,60 +1550,119 @@ function parseClarityMetrics_(rawMetrics) {
 }
 
 // -------------------------------------------------------------
-// Gemini 分析・推論（Gemini 3系・思考レベル制御・ヘッダー認証）
+// Gemini 分析・推論（ポエム排除・実数高密度・30〜35行コンパクト版）
 // -------------------------------------------------------------
-function generateGeminiAnalysis(apiKey, rawData) {
-  const prompt = `
-あなたは岡山県統一模擬試験（おかもし）の専任マーケティングアナリストです。
-昨日の実績データおよび次回模試の進捗に基づき、事務局運営メンバー（非エンジニア）が直感的に理解できる「日次マーケティング速報」を作成してください。
+function buildGeminiPrompt_(rawData) {
+  const ex = rawData.exam || {};
+  const ly = ex.lastYearComparison || {};
+  const lyGrade = ly.byGrade || {};
+  const ga = rawData.ga4 || {};
+  const periods = ga.periods || {};
+  const yDay = periods.yesterday || {};
+  const l7 = periods.last7d || {};
+  const l28 = periods.last28d || {};
+  const funnel = ga.applyFunnel || {};
+  const sc = rawData.searchConsole || {};
 
-【対象日】: ${rawData.targetDate}
+  const examDatesText = (ex.examDates || []).length > 0
+    ? ex.examDates.map(d => `${d.venue}:${formatShortMd_(d.date)}`).join(' / ')
+    : '未取得';
 
-【次回模試の受付状況】:
-- 対象回: ${rawData.exam.targetExamMonth}
-- 申込締切日: ${rawData.exam.deadline}（締切まで残り ${rawData.exam.daysLeft} 日）
-- 現在の確定件数（paid）: 合計 ${rawData.exam.currentExamPaid} 件
-- 中3: ${rawData.exam.gradeCounts['中3']} 件
-- 中2: ${rawData.exam.gradeCounts['中2']} 件
-- 中1: ${rawData.exam.gradeCounts['中1']} 件
-- 昨年実績ベンチマーク（参考）:
-- 中3: ${rawData.exam.benchmarks['中3']}
-- 中2: ${rawData.exam.benchmarks['中2']}
-- 中1: ${rawData.exam.benchmarks['中1']}
+  const gradeComparisonLines = ['中3', '中2', '中1', '小6'].map(g => {
+    const item = lyGrade[g] || {};
+    const cur = item.current ?? (ex.gradeCounts ? ex.gradeCounts[g] : 0) ?? 0;
+    const unpaid = item.unpaid ?? (ex.gradeUnpaidCounts ? ex.gradeUnpaidCounts[g] : 0) ?? 0;
+    const lySame = item.lastYearSameTiming !== null && item.lastYearSameTiming !== undefined
+      ? `${item.lastYearSameTiming}件（差${formatSignedInt_(item.diff)} / 前年比${item.yoyPct !== null ? item.yoyPct + '%' : '—'}）`
+      : `昨年同時期データなし（昨年度最終目安:${item.benchmark ?? '-'}件）`;
+    return `  - ${g}: 今年paid ${cur}件（未入金${unpaid}件） vs 昨年同時期 ${lySame}`;
+  }).join('\n');
 
-【昨日の単日実績】:
-- 新規申込: ${rawData.exam.yesterdayCount} 件（うち即時入金完了: ${rawData.exam.yesterdayPaid} 件）
+  const venueLines = VENUE_KEYS.map(v => {
+    const p = ex.venueCounts ? (ex.venueCounts[v] || 0) : 0;
+    const u = ex.venueUnpaidCounts ? (ex.venueUnpaidCounts[v] || 0) : 0;
+    return `${v}:${p}件(未入${u})`;
+  }).join(' / ');
 
-【GA4アクセス】:
-${JSON.stringify(rawData.ga4, null, 2)}
+  const topPagesText = (ga.topPages || []).length > 0
+    ? ga.topPages.map((p, idx) => `  ${idx + 1}. ${p.path}: ${p.pageViews}PV / ${p.users}人 / 平均滞在${p.avgEngagementSec}秒`).join('\n')
+    : '  - データなし';
 
-【検索流入トップ（Search Console）】:
-${JSON.stringify(rawData.searchConsole, null, 2)}
+  const channelsText = (ga.channels || []).length > 0
+    ? ga.channels.map(c => `  - ${c.channel}: ${c.sessions}回(${c.sharePct}% / 前週比${formatSignedPct_(c.wowPct)})`).join('\n')
+    : '  - データなし';
 
-【サイト内の行動・操作つまずき検知（Microsoft Clarity・直近24時間）】:
-※deadClicks=押せない場所のタップ回数、rageClicks=イライラ連打回数、quickbacks=開いてすぐ戻った回数、scriptErrors=画面エラー回数
-${JSON.stringify(rawData.clarity, null, 2)}
+  const scTopText = (sc.topQueries || []).length > 0
+    ? sc.topQueries.map((q, idx) => `  ${idx + 1}. "${q.query}": ${q.clicks}clk / ${q.impressions}imp / CTR ${q.ctr} / 順位${q.position}（前週差${formatSignedInt_(q.clicksDiff)}）`).join('\n')
+    : '  - データなし';
 
-【出力ルール（Google Chat用）】:
-1. Markdownの見出し記号（# や ###）は絶対に使わないでください。セクションの区切りは「■ タイトル」のように記述してください。
-2. 太字は二重アスタリスク（**）ではなく、Google Chat仕様の単一アスタリスク（*テキスト*）で囲んでください。
-3. 箇条書きは「・」を使用してください。
-4. 専門用語（デッドクリック、レイジクリック等）はそのまま使わず、「押せない場所のタップ」「ボタンの連打」「申込画面でのつまずき」など非エンジニアの運営担当者が直感的にわかる表現に噛み砕いてください。問題が0件・軽微な場合は「画面操作のつまずきはなくスムーズです」と安心感を伝えてください。
+  const scRisingText = (sc.risingQueries || []).length > 0
+    ? sc.risingQueries.map(q => `  - "${q.query}": クリック${formatSignedInt_(q.clicksDiff)} / 表示${formatSignedInt_(q.impressionsDiff)}`).join('\n')
+    : '  - 顕著な急伸クエリなし';
 
-【構成案】
+  return `あなたは岡山県統一模擬試験（おかもし）の専任マーケティングアナリストです。
+以下の実測数値のみを根拠に、運営担当者がGoogle Chatで30秒で把握できる「高密度・数値ベースの日次速報」を作成してください。
+
+【厳禁事項（絶対に守ること）】
+- 「徐々に動き出しています」「偏りなく安定して情報収集されています」「今後の推移に注目です」などの*抽象的な感想文・ポエム・一般論は全面禁止*。
+- すべての記述に具体的な実数（件数、±差分、前年比%、前週比%、PV、クリック数、順位、通過率%）を必ず引用すること。
+- 全体で *30〜35行以内* に引き締めること（冗長な前置き・挨拶不要）。
+- Google Chat 書式厳守: 見出しは「■ タイトル」（# 禁止）、太字は単一アスタリスク *テキスト*（** 禁止）、箇条書きは「・」。
+- Clarityの専門用語（deadClicks等）は使わず、「押せない場所のタップ」「ボタンの連打」「画面エラー」と平易に書く。
+
+【1. 対象回・締切・実施日（基準日: ${rawData.targetDate}）】
+- 対象回: ${ex.targetExamMonth}（解決元: ${ex.deadlineSource}）
+- クレカ締切: ${ex.cardDeadline}（残り *${ex.daysLeftCard}日*）
+- コンビニ締切: ${ex.konbiniDeadline}（残り *${ex.daysLeftKonbini}日*）
+- 会場実施日: ${examDatesText}${ex.earliestExamDate ? `（最短実施まで残り${ex.daysLeftExam}日）` : ''}
+
+【2. 申込台帳実績 ＆ 昨年同時期比較（基準カットオフ: ${ly.cutoffDate || '前年同日'}）】
+- 昨日単日: 新規 ${ex.yesterdayCount}件（paid ${ex.yesterdayPaid}件 / 未入金 ${ex.yesterdayUnpaid}件）
+- 当月累積: paid *${ex.currentExamPaid}件* / 未入金 *${ex.currentExamUnpaid}件* / キャンセル・期限切れ ${ex.currentExamCanceled}件
+- 昨年同時期合計: ${ly.sameTimingPaidTotal !== null && ly.sameTimingPaidTotal !== undefined ? `${ly.sameTimingPaidTotal}件（差${formatSignedInt_(ly.diffFromLastYear)}件 / 前年比${ly.yoyPct !== null ? ly.yoyPct + '%' : '—'}）` : '過去シート一致データなし'}
+- 直近7日ペース: paid ${ex.recent7dPaid}件（日平均 *${ex.dailyPace7d}件/日*） vs 目標(${ex.targetTotal}件 / ${ex.targetTotalSource})までの残${ex.gapToTarget}件・必要ペース *${ex.requiredDailyPace}件/日*
+- 学年別比較:
+${gradeComparisonLines}
+- 会場別内訳: ${venueLines}
+
+【3. GA4 トラフィック＆ファネル】
+- 昨日単日: ${yDay.users ?? ga.users ?? 0}人 / ${yDay.sessions ?? ga.sessions ?? 0}セッション / ${yDay.pageViews ?? ga.pageViews ?? 0}PV
+- 直近7日: ${l7.users ?? 0}人（日平均${l7.avgDailyUsers ?? 0}人・前週比${formatSignedPct_(l7.usersWowPct)}） / ${l7.pageViews ?? 0}PV（前週比${formatSignedPct_(l7.pvWowPct)}）
+- 直近28日: ${l28.users ?? 0}人（前28日比${formatSignedPct_(l28.usersMomPct)}${l28.yoyAvailable ? `・前年比${formatSignedPct_(l28.usersYoyPct)}` : '・前年同期データなし'}） / ${l28.pageViews ?? 0}PV（前28日比${formatSignedPct_(l28.pvMomPct)}）
+- 申込フォーム(/apply/)通過率(7日): 到達 ${funnel.applyPageUsers7d ?? 0}人 → 申込送信 ${funnel.recent7dAllOrders ?? 0}件（CVR ${funnel.cvrAllPct !== null && funnel.cvrAllPct !== undefined ? funnel.cvrAllPct + '%' : '—'} / paid ${funnel.recent7dPaidOrders ?? 0}件・CVR ${funnel.cvrPaidPct !== null && funnel.cvrPaidPct !== undefined ? funnel.cvrPaidPct + '%' : '—'}）
+- 人気ページTOP5（トップ除外・7日）:
+${topPagesText}
+- 流入チャネルTOP5（7日）:
+${channelsText}
+
+【4. Search Console（${sc.period ? `${sc.period.startDate}〜${sc.period.endDate}` : '直近7日'}）】
+- 上位検索クエリTOP5:
+${scTopText}
+- 前週比伸長クエリ:
+${scRisingText}
+
+【5. Clarity 操作診断（直近24時間）】
+${JSON.stringify(rawData.clarity)}
+
+【出力テンプレート（このままの骨格で30〜35行以内に収めること）】
 📊 *おかもし日次マーケティング速報（${rawData.targetDate}）*
+■ 締切＆申込進捗（${ex.targetExamMonth}）
+・クレカ締切 ${formatShortMd_(ex.cardDeadline)}(残${ex.daysLeftCard}日) / コンビニ ${formatShortMd_(ex.konbiniDeadline)}(残${ex.daysLeftKonbini}日) / 実施 ${examDatesText}
+・昨日・累積・直近7日ペース vs 必要ペースの数値サマリー
+・学年別（中3・中2・中1・小6）の今年 vs 昨年同時期比較（±件・前年比%）＋未入金件数
+・会場別内訳（岡山・倉敷・津山・自宅）と最もギャップが大きい箇所
+■ サイト流入・注目ページ・検索ワード（GA4 / GSC）
+・昨日 / 7日平均(前週比) / 28日(前28日比・前年比) と主要チャネル構成
+・よく見られているページTOP5（パス・PV・滞在秒数）と /apply/ 通過率(CVR)
+・検索上位クエリ＆前週比伸長ワード（クリック・表示・順位）
+■ 操作のつまずき診断（Clarity）
+・スマホ/PC別のスクロール率と、押せない場所タップ/連打/エラーが出ているURL（問題ゼロならその旨を数値付きで1行）
+■ 今日の打ち手（数値ギャップ直結の具体策1〜2選）
+・どの学年・会場・検索ワード・画面に対して今日何を行うかを1行ずつ簡潔に`;
+}
 
-■ 昨日の主要ハイライト
-■ 次回「${rawData.exam.targetExamMonth}」申込進捗と着地予測
-・現在の確定状況（学年別内訳）
-・昨年実績推移との比較
-・締切（残り${rawData.exam.daysLeft}日）時点での最終着地予測（現ペースから何件程度に達する見込みか）
-■ サイト流入とページ内の動き（GA4・検索・Clarity診断）
-・アクセス数と検索キーワードの傾向
-・スマホ/PCでの読まれ方（スクロール率）や、トップページ・申込画面（/apply）で操作に迷っている兆候がないか
-■ 今日の推奨アクション（非エンジニア担当者が今日打つべき具体策1〜2選）
-`;
-
+function generateGeminiAnalysis(apiKey, rawData) {
+  const prompt = buildGeminiPrompt_(rawData);
   return callGeminiRobust_(apiKey, prompt);
 }
 
@@ -693,38 +1767,92 @@ function callGeminiRobust_(apiKey, prompt) {
 }
 
 function buildFallbackReport_(rawData) {
-  const topQueries = (rawData.searchConsole || [])
-    .slice(0, 3)
-    .map(q => `・${q.query}（${q.clicks}クリック / 表示${q.impressions}回）`)
-    .join('\n') || '・データなし';
+  const ex = rawData.exam || {};
+  const ly = ex.lastYearComparison || {};
+  const lyByGrade = ly.byGrade || {};
+  const ga = rawData.ga4 || {};
+  const periods = ga.periods || {};
+  const yDay = periods.yesterday || {};
+  const l7 = periods.last7d || {};
+  const l28 = periods.last28d || {};
+  const funnel = ga.applyFunnel || {};
+  const sc = rawData.searchConsole || {};
 
-  let clarityLine = '・データ未取得';
-  let uiDiagnosis = '・画面操作の大きな異常は検知されていません。';
+  const examDatesStr = (ex.examDates || []).length > 0
+    ? ex.examDates.map(d => `${d.venue}${formatShortMd_(d.date)}`).join(' / ')
+    : '日程未取得';
+
+  const yoySummary = ly.sameTimingPaidTotal !== null && ly.sameTimingPaidTotal !== undefined
+    ? `昨年同時期 ${ly.sameTimingPaidTotal}件（*${formatSignedInt_(ly.diffFromLastYear)}件* / 前年比${ly.yoyPct !== null ? ly.yoyPct + '%' : '—'}）`
+    : '昨年同時期データなし';
+
+  const gradeLines = ['中3', '中2', '中1', '小6'].map(g => {
+    const item = lyByGrade[g] || {};
+    const cur = item.current ?? (ex.gradeCounts ? ex.gradeCounts[g] : 0) ?? 0;
+    const unpaid = item.unpaid ?? (ex.gradeUnpaidCounts ? ex.gradeUnpaidCounts[g] : 0) ?? 0;
+    const vsText = item.lastYearSameTiming !== null && item.lastYearSameTiming !== undefined
+      ? `昨年${item.lastYearSameTiming}件(差${formatSignedInt_(item.diff)} / ${item.yoyPct !== null ? item.yoyPct + '%' : '—'})`
+      : `昨年目安${item.benchmark ?? '-'}件`;
+    return `${g}:${cur}件(未${unpaid})[${vsText}]`;
+  });
+
+  const venueStr = ['岡山', '倉敷', '津山', '自宅'].map(v => {
+    const p = ex.venueCounts ? (ex.venueCounts[v] || 0) : 0;
+    const u = ex.venueUnpaidCounts ? (ex.venueUnpaidCounts[v] || 0) : 0;
+    return `${v}${p}(未${u})`;
+  }).join(' / ');
+
+  const topPagesStr = (ga.topPages || []).slice(0, 5)
+    .map((p, i) => `・${i + 1}. ${p.path}：${p.pageViews}PV（${p.users}人 / ${p.avgEngagementSec}秒）`)
+    .join('\n') || '・ページ別データなし';
+
+  const channelStr = (ga.channels || []).slice(0, 3)
+    .map(c => `${c.channel} ${c.sharePct}%(${formatSignedPct_(c.wowPct)})`)
+    .join(' / ') || 'データなし';
+
+  const scTopStr = (sc.topQueries || []).slice(0, 5)
+    .map((q, i) => `・${i + 1}. ${q.query}：${q.clicks}clk / ${q.impressions}imp（CTR${q.ctr} / ${q.position}位 / 前週差${formatSignedInt_(q.clicksDiff)}）`)
+    .join('\n') || '・検索クエリデータなし';
+
+  const scRiseStr = (sc.risingQueries || []).slice(0, 2)
+    .map(q => `${q.query}(${formatSignedInt_(q.clicksDiff)}clk/${formatSignedInt_(q.impressionsDiff)}imp)`)
+    .join(' / ') || '該当なし';
+
+  let clarityLine = '・Clarity未取得';
+  let clarityWarnLine = '・特記エラーなし';
   if (rawData.clarity && rawData.clarity.byDevice) {
     const mobile = rawData.clarity.byDevice['Mobile'] || {};
-    const rage = mobile.rageClicks ?? 0;
-    const dead = mobile.deadClicks ?? 0;
-    clarityLine = `・スマホ平均スクロール: ${mobile.avgScrollDepth || '-'} / 連打: ${rage}回 / 空タップ: ${dead}回`;
-    if (rage > 3 || dead > 5) {
-      uiDiagnosis = '・スマホ画面でボタン連打や空タップがやや見られます。申込導線のタップ反応をご確認ください。';
+    const pc = rawData.clarity.byDevice['PC'] || {};
+    clarityLine = `・スマホ: スクロール${mobile.avgScrollDepth || '-'} / 連打${mobile.rageClicks ?? 0} / 空タップ${mobile.deadClicks ?? 0} | PC: スクロール${pc.avgScrollDepth || '-'}`;
+    const errPages = (rawData.clarity.keyPagesAndFriction || []).filter(p => p.scriptErrors > 0 || p.rageClicks > 2);
+    if (errPages.length > 0) {
+      clarityWarnLine = '・要注意URL: ' + errPages.slice(0, 2).map(p => `${p.path}(エラー${p.scriptErrors}/連打${p.rageClicks})`).join(', ');
     } else {
-      uiDiagnosis = '・スマホ画面での操作のつまずきは少なく、スムーズに閲覧されています。';
+      clarityWarnLine = '・主要導線(/, /apply/)の操作エラー・連打は許容範囲内';
     }
   }
 
-  return `📊 *おかもし日次マーケティング速報（${rawData.targetDate}）*\n` +
-    `※現在GoogleのAIサーバーが広域で高負荷のため、自動集計データと数値診断をお届けします。\n\n` +
-    `■ 昨日の申込実績\n` +
-    `・新規申込: *${rawData.exam.yesterdayCount} 件*（うち入金完了: ${rawData.exam.yesterdayPaid} 件）\n\n` +
-    `■ 次回「${rawData.exam.targetExamMonth}」確定件数（締切 ${rawData.exam.deadline} / 残り${rawData.exam.daysLeft}日）\n` +
-    `・合計（paid）: *${rawData.exam.currentExamPaid} 件*\n` +
-    `・内訳: 中3 ${rawData.exam.gradeCounts['中3']}件 / 中2 ${rawData.exam.gradeCounts['中2']}件 / 中1 ${rawData.exam.gradeCounts['中1']}件\n\n` +
-    `■ 昨日のサイトアクセス・行動（GA4 / Clarity）\n` +
-    `・ユーザー数: ${rawData.ga4.users ?? '-'} / セッション: ${rawData.ga4.sessions ?? '-'} / PV: ${rawData.ga4.pageViews ?? '-'}\n` +
-    `${clarityLine}\n` +
-    `${uiDiagnosis}\n\n` +
-    `■ 検索流入上位（Search Console）\n` +
-    `${topQueries}`;
+  return [
+    `📊 *おかもし日次マーケティング速報（${rawData.targetDate}）*`,
+    `■ 次回「${ex.targetExamMonth}」締切＆申込進捗`,
+    `・締切: クレカ ${formatShortMd_(ex.cardDeadline)}(*残${ex.daysLeftCard}日*) / コンビニ ${formatShortMd_(ex.konbiniDeadline)}(*残${ex.daysLeftKonbini}日*) | 実施 ${examDatesStr}`,
+    `・昨日: 新規${ex.yesterdayCount}件(paid ${ex.yesterdayPaid} / 未入金${ex.yesterdayUnpaid}) | 累積: paid *${ex.currentExamPaid}件*(未入金${ex.currentExamUnpaid}) vs ${yoySummary}`,
+    `・ペース: 直近7日 ${ex.recent7dPaid}件(*${ex.dailyPace7d}件/日*) vs 目標${ex.targetTotal}件まで残${ex.gapToTarget}件(必要 *${ex.requiredDailyPace}件/日*)`,
+    `・学年別: ${gradeLines.slice(0, 2).join(' / ')}`,
+    `・学年別: ${gradeLines.slice(2, 4).join(' / ')}`,
+    `・会場別(paid/未入): ${venueStr}`,
+    `■ サイト流入・人気ページ・検索トレンド（GA4 / GSC）`,
+    `・昨日: ${yDay.users ?? ga.users ?? 0}人/${yDay.pageViews ?? ga.pageViews ?? 0}PV | 7日: ${l7.users ?? 0}人(日平均${l7.avgDailyUsers ?? 0}人・前週比${formatSignedPct_(l7.usersWowPct)}) / ${l7.pageViews ?? 0}PV(${formatSignedPct_(l7.pvWowPct)})`,
+    `・28日: ${l28.users ?? 0}人(前28日比${formatSignedPct_(l28.usersMomPct)}${l28.yoyAvailable ? `・前年比${formatSignedPct_(l28.usersYoyPct)}` : ''}) | チャネル: ${channelStr}`,
+    `・/apply/通過率(7日): 到達${funnel.applyPageUsers7d ?? 0}人 → 送信${funnel.recent7dAllOrders ?? 0}件(CVR ${funnel.cvrAllPct !== null && funnel.cvrAllPct !== undefined ? funnel.cvrAllPct + '%' : '—'}) / paid ${funnel.recent7dPaidOrders ?? 0}件`,
+    `・人気ページTOP5（トップ除外・7日）:`,
+    topPagesStr,
+    `・検索TOP5（${sc.period ? `${formatShortMd_(sc.period.startDate)}〜${formatShortMd_(sc.period.endDate)}` : '7日'}）｜伸長: ${scRiseStr}`,
+    scTopStr,
+    `■ 操作つまずき診断（Clarity）`,
+    clarityLine,
+    clarityWarnLine
+  ].join('\n');
 }
 
 function scheduleRetryTrigger_(minutes) {

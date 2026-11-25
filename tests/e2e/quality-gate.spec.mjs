@@ -963,6 +963,21 @@ test('旧サイトURLの301リダイレクト＆未定義URLからトップペ�
     expect(res.headers()['location'], `${oldPath} の Location ヘッダーが / であること`).toBe('/');
   }
 
+  // 1-2. 旧お問い合わせパスが現行のお問い合わせ窓口へ 301 リダイレクトされ、現役の /contact/individual/ は 200 を返すこと
+  const legacyContactRedirects = [
+    { from: '/contact/juku/', to: '/contact/organization' },
+    { from: '/contact/school/', to: '/contact/organization' },
+    { from: '/contact/individual/confirm', to: '/contact/individual' },
+    { from: '/inquiry/', to: '/contact/' },
+  ];
+  for (const rule of legacyContactRedirects) {
+    const res = await request.get(rule.from, { maxRedirects: 0 });
+    expect(res.status(), `${rule.from} が 301 リダイレクトを返すこと`).toBe(301);
+    expect(res.headers()['location'], `${rule.from} の Location が ${rule.to} であること`).toBe(rule.to);
+  }
+  const activeIndivRes = await request.get('/contact/individual/', { maxRedirects: 0 });
+  expect(activeIndivRes.status(), '現役の /contact/individual/ がリダイレクトされず 200 を返すこと').toBe(200);
+
   // 2. 404.html の中身に meta refresh・window.location.replace('/')・リニューアル案内文言が含まれていること
   const notFoundRes = await request.get('/non-existent-legacy-page-xyz', { maxRedirects: 0 });
   expect(notFoundRes.status(), '未定義URLのHTTPステータスは404であること').toBe(404);

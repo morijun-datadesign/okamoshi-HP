@@ -786,9 +786,49 @@ test(
     await expect(page.locator('#formErrorMessage')).toBeVisible();
     await expect(page.locator('#formErrorMessageText')).toContainText('郵便番号が正しくないか、ご住所と一致していません');
 
-    // 正しい住所に戻して送信を実行
+    // 正しい住所に戻して送信前の学校名ガード・住所重複クレンジングを実ブラウザ検証
     await postalInput.fill('7000822');
     await addr1Input.fill('岡山県岡山市北区表町');
+
+    // (e) 在籍校欄のオートフィル誤認防止属性とバリデーション・誤爆復元ガード検証
+    await expect(schoolInput).toHaveAttribute('autocomplete', 'off');
+    await expect(schoolInput).toHaveAttribute('data-1p-ignore', 'true');
+    await expect(schoolInput).toHaveAttribute('data-lpignore', 'true');
+    await expect(schoolInput).toHaveAttribute('data-bwignore', 'true');
+    await expect(schoolInput).toHaveAttribute('data-form-type', 'other');
+
+    // 保護者名と一致する文字列でブロックされること
+    await schoolInput.fill('花子');
+    await submitBtn.click();
+    await expect(page.locator('#formErrorMessage')).toBeVisible();
+    await expect(page.locator('#formErrorMessageText')).toContainText('在籍校欄にお名前が入力されています。在籍されている小・中学校名をご入力ください。');
+    await expect(page.locator('#currentSchoolError')).toBeVisible();
+
+    // 学校形式でない文字列でブロックされること
+    await schoolInput.fill('あああ');
+    await submitBtn.click();
+    await expect(page.locator('#formErrorMessage')).toBeVisible();
+    await expect(page.locator('#formErrorMessageText')).toContainText('正しい学校名（〇〇中学校・〇〇小学校など）をご入力ください。');
+
+    // 有効な学校名を入力後、オートフィルによる無断上書きが起きた場合に元の学校名へ復元されること
+    await schoolInput.fill('岡山市立操南中学校');
+    await schoolInput.blur();
+    await expect(page.locator('#currentSchoolError')).toBeHidden();
+    await page.evaluate(() => {
+      const s = document.getElementById('currentSchool');
+      const p = document.getElementById('parentFirstName');
+      if (s && p) {
+        s.value = '花子';
+        p.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    });
+    await expect(schoolInput, 'オートフィル誤爆時は直前の有効な学校名へ自動復元されること').toHaveValue('岡山市立操南中学校');
+
+    // (f) 「丁目・番地・号」欄への重複町名入力が blur 時に整理され、送信ペイロードの addr1 に重複が残らないこと
+    const addr2Input = page.locator('#addressLine2');
+    await addr2Input.fill('表町1丁目5-1');
+    await addr2Input.blur();
+    await expect(addr2Input, '重複していた先頭町名が自動で整理されること').toHaveValue('1丁目5-1');
 
     await Promise.all([
       page.waitForURL(/\/apply\/success/, { waitUntil: 'domcontentloaded', timeout: 15000 }),
@@ -821,6 +861,8 @@ test(
     expect(checkoutRequests[0].grade).toBe('中学3年生');
     expect(checkoutRequests[0].payment_method).toBe('card');
     expect(checkoutRequests[0].venue_name).toContain('岡山会場');
+    expect(checkoutRequests[0].addr1).toBe('表町 1丁目5-1');
+    expect(checkoutRequests[0].addr1).not.toContain('表町 表町');
     await expect.poll(() => applyRequests.length, { timeout: 5000 }).toBe(1);
     expect(applyRequests[0].session_id).toBe('cs_test_e2e_apply_001');
 

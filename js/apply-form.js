@@ -1288,6 +1288,251 @@
     let addressAbortController = null;
     let lastSearchedZip = '';
     let _postalSuccessTimer = null;
+    const DEFAULT_ADDR2_PLACEHOLDER = '例: 1丁目5-1 または 1-5-1';
+    const DEFAULT_ADDR2_HINT = '※ 町名より後の丁目・番地・号をご入力ください（町名が重複しても自動で整理されます）。';
+    let lastFoundAddress = null;
+
+    function normalizeCompactText(str) {
+      return String(str || '')
+        .normalize('NFKC')
+        .replace(/[\s\u3000]+/g, '')
+        .trim();
+    }
+
+    function stripPrefCityPrefix(raw, pref = '', city = '') {
+      let s = String(raw || '').trim();
+      if (!s) return '';
+      const cleanPref = String(pref || '').trim();
+      if (cleanPref && s.startsWith(cleanPref)) {
+        const rest = s.slice(cleanPref.length).replace(/^[\s\u3000]+/, '');
+        if (rest.replace(/[\s\u3000]+/g, '')) {
+          s = rest;
+        }
+      }
+      const cleanCity = String(city || '').trim();
+      if (cleanCity) {
+        if (s.startsWith(cleanCity)) {
+          const rest = s.slice(cleanCity.length).replace(/^[\s\u3000]+/, '');
+          if (rest.replace(/[\s\u3000]+/g, '')) {
+            s = rest;
+          }
+        } else {
+          const subMatch = cleanCity.match(/^(.+郡)(.+[町村])$/) || cleanCity.match(/^(.+市)(.+区)$/);
+          if (subMatch && subMatch[2] && s.startsWith(subMatch[2])) {
+            const rest = s.slice(subMatch[2].length).replace(/^[\s\u3000]+/, '');
+            if (rest.replace(/[\s\u3000]+/g, '')) {
+              s = rest;
+            }
+          }
+        }
+      }
+      return s.trim();
+    }
+
+    function findDuplicateTownSuffix(town, street) {
+      const cleanTown = String(town || '').trim();
+      const cleanStreet = String(street || '').trim();
+      const lenTown = cleanTown.length;
+      if (lenTown < 3 || !cleanStreet) return '';
+      for (let len = lenTown - 1; len >= 2; len--) {
+        const suffix = cleanTown.slice(lenTown - len);
+        if (/[0-9０-９]/.test(suffix)) continue;
+        if (cleanStreet.startsWith(suffix)) {
+          const after = cleanStreet.slice(suffix.length);
+          if (/^(?:[\s\u3000]+)?[0-9０-９〇一二三四五六七八九十]/.test(after)) {
+            return suffix;
+          }
+        }
+      }
+      return '';
+    }
+
+    function dedupeSingleAddressLine(rawAddr1, pref = '', city = '') {
+      let s = stripPrefCityPrefix(String(rawAddr1 || '').trim(), pref, city);
+      if (!s) return '';
+      for (let i = 0; i < 4; i++) {
+        const m = s.match(/^([^\s\u3000]+)[\s\u3000]+(.+)$/);
+        if (!m) break;
+        const head = stripPrefCityPrefix(m[1].trim(), pref, city);
+        const tail = stripPrefCityPrefix(m[2].trim(), pref, city);
+        if (head && !/[0-9０-９]/.test(head)) {
+          if (tail.startsWith(head)) {
+            s = tail;
+            continue;
+          }
+          const dupSuffix = findDuplicateTownSuffix(head, tail);
+          if (dupSuffix) {
+            const rest = tail.slice(dupSuffix.length).replace(/^[\s\u3000]+/, '');
+            s = rest ? `${head} ${rest}` : head;
+            break;
+          }
+        }
+        const normalizedPair = `${head} ${tail}`.trim();
+        if (normalizedPair !== s) {
+          s = normalizedPair;
+          break;
+        }
+        break;
+      }
+      return s.trim();
+    }
+
+    function stripTownPrefixFromStreet(rawStreet, town = '', pref = '', city = '') {
+      let s = stripPrefCityPrefix(String(rawStreet || '').trim(), pref, city);
+      s = dedupeSingleAddressLine(s, pref, city);
+      const cleanTown = stripPrefCityPrefix(String(town || '').trim(), pref, city);
+      if (!cleanTown || !s) return s;
+      if (s.startsWith(cleanTown)) {
+        const rest = s.slice(cleanTown.length).replace(/^[\s\u3000]+/, '').trim();
+        if (rest) {
+          return dedupeSingleAddressLine(rest, pref, city);
+        }
+      }
+      const dupSuffix = findDuplicateTownSuffix(cleanTown, s);
+      if (dupSuffix) {
+        const rest = s.slice(dupSuffix.length).replace(/^[\s\u3000]+/, '').trim();
+        if (rest) {
+          return dedupeSingleAddressLine(rest, pref, city);
+        }
+      }
+      return s;
+    }
+
+    function combineTownAndStreet(pref, city, town, street) {
+      const cleanTown = stripPrefCityPrefix(String(town || '').trim(), pref, city);
+      const cleanStreet = stripPrefCityPrefix(String(street || '').trim(), pref, city);
+      if (!cleanTown) return dedupeSingleAddressLine(cleanStreet, pref, city);
+      if (!cleanStreet) return dedupeSingleAddressLine(cleanTown, pref, city);
+      if (cleanStreet.startsWith(cleanTown)) {
+        return dedupeSingleAddressLine(cleanStreet, pref, city);
+      }
+      const dupSuffix = findDuplicateTownSuffix(cleanTown, cleanStreet);
+      if (dupSuffix) {
+        const rest = cleanStreet.slice(dupSuffix.length).replace(/^[\s\u3000]+/, '');
+        return rest ? `${cleanTown} ${rest}` : cleanTown;
+      }
+      return dedupeSingleAddressLine(`${cleanTown} ${cleanStreet}`, pref, city);
+    }
+
+    function extractAddressPartsFromLine1(prefInput, addressLine1) {
+      let raw1 = String(addressLine1 || '').trim();
+      if (lastFoundAddress) {
+        const expectedFull = `${lastFoundAddress.prefecture || ''}${lastFoundAddress.city || ''}${lastFoundAddress.town || ''}`;
+        if (expectedFull && normalizeCompactText(raw1) === normalizeCompactText(expectedFull)) {
+          return {
+            pref: lastFoundAddress.prefecture || String(prefInput || '').trim() || '岡山県',
+            city: lastFoundAddress.city || '',
+            town: lastFoundAddress.town || '',
+          };
+        }
+      }
+      let pref = '';
+      const prefMatch = raw1.match(/^(東京都|北海道|(?:京都|大阪)府|.{2,3}県)/);
+      if (prefMatch) {
+        pref = prefMatch[1];
+        raw1 = raw1.slice(pref.length).trim();
+      } else if (prefInput) {
+        pref = String(prefInput).trim();
+        if (raw1.startsWith(pref)) {
+          raw1 = raw1.slice(pref.length).trim();
+        }
+      }
+      if (!pref) pref = '岡山県';
+      let city = '';
+      let town = '';
+      const countyMatch = raw1.match(/^([^0-9]+?郡[^0-9]+?[町村])(.*)$/);
+      const ordinanceCityMatch = raw1.match(/^([^0-9]+?市[^0-9]+?区)(.*)$/);
+      const generalMatch = raw1.match(/^([^0-9]+?[市区町村])(.*)$/);
+      if (countyMatch) {
+        city = countyMatch[1].trim();
+        town = countyMatch[2].trim();
+      } else if (ordinanceCityMatch) {
+        city = ordinanceCityMatch[1].trim();
+        town = ordinanceCityMatch[2].trim();
+      } else if (generalMatch) {
+        city = generalMatch[1].trim();
+        town = generalMatch[2].trim();
+      } else {
+        city = raw1;
+        town = '';
+      }
+      return { pref, city, town };
+    }
+
+    function updateAddressLine2Guidance(town = '', customMessage = null) {
+      const addr2Input = document.getElementById('addressLine2');
+      const hintElem = document.getElementById('addressLine2Hint');
+      const cleanTown = String(town || '').trim();
+      if (addr2Input) {
+        if (cleanTown) {
+          addr2Input.placeholder =
+            cleanTown.length <= 5
+              ? `例: 1丁目5-1（${cleanTown}の後の番地）`
+              : '例: 1丁目5-1（町名の後の番地）';
+        } else {
+          addr2Input.placeholder = DEFAULT_ADDR2_PLACEHOLDER;
+        }
+      }
+      if (hintElem) {
+        if (customMessage) {
+          hintElem.textContent = customMessage;
+          hintElem.className = 'text-[11px] sm:text-xs font-medium text-emerald-800';
+        } else if (cleanTown) {
+          hintElem.textContent = `「${cleanTown}」は上の欄に入力済みです。その後の丁目・番地・号からご入力ください。`;
+          hintElem.className = 'text-[11px] sm:text-xs font-medium text-emerald-800';
+        } else {
+          hintElem.textContent = DEFAULT_ADDR2_HINT;
+          hintElem.className = 'text-[11px] sm:text-xs text-slate-500';
+        }
+      }
+    }
+
+    function cleanAddressLine2Input(showNotice = true) {
+      const addr2Input = document.getElementById('addressLine2');
+      const addr1Input = document.getElementById('addressLine1');
+      const prefElem = document.getElementById('prefecture');
+      if (!addr2Input) return false;
+      const before = addr2Input.value;
+      const parts = extractAddressPartsFromLine1(prefElem?.value || '', addr1Input?.value || '');
+      const cleaned = stripTownPrefixFromStreet(before, parts.town, parts.pref, parts.city);
+      if (cleaned !== before.trim()) {
+        addr2Input.value = cleaned;
+        if (showNotice) {
+          updateAddressLine2Guidance(
+            parts.town,
+            parts.town
+              ? `※ 上の欄と重複していた「${parts.town}」・地域名を自動で整理しました。`
+              : '※ 重複していた地域名・町名を自動で整理しました。'
+          );
+        }
+        return true;
+      }
+      return false;
+    }
+
+    function initAddressLine2Guard() {
+      const addr2Input = document.getElementById('addressLine2');
+      const addr1Input = document.getElementById('addressLine1');
+      if (!addr2Input) return;
+      addr2Input.addEventListener('blur', function() {
+        if (isRestoringProfile || isClearingProfile) return;
+        cleanAddressLine2Input(true);
+      });
+      if (addr1Input) {
+        addr1Input.addEventListener('input', function() {
+          if (isRestoringProfile || isClearingProfile) return;
+          if (lastFoundAddress) {
+            const expectedFull = `${lastFoundAddress.prefecture || ''}${lastFoundAddress.city || ''}${lastFoundAddress.town || ''}`;
+            if (normalizeCompactText(this.value) !== normalizeCompactText(expectedFull)) {
+              const parts = extractAddressPartsFromLine1(document.getElementById('prefecture')?.value || '', this.value);
+              updateAddressLine2Guidance(parts.town);
+            } else {
+              updateAddressLine2Guidance(lastFoundAddress.town);
+            }
+          }
+        });
+      }
+    }
     function normalizeZipCode(raw) {
       if (!raw) return '';
       return String(raw)
@@ -1367,9 +1612,18 @@
       const addr2Input = document.getElementById('addressLine2');
       zipInput.value = cleanZip;
       lastSearchedZip = cleanZip;
+      lastFoundAddress = {
+        prefecture: data.prefecture || '',
+        city: data.city || '',
+        town: data.town || '',
+      };
       addr1Input.value = `${data.prefecture || ''}${data.city || ''}${data.town || ''}`;
       addr1Input.dispatchEvent(new Event('input', { bubbles: true }));
       if (prefSelect) prefSelect.value = data.prefecture || '';
+      updateAddressLine2Guidance(lastFoundAddress.town);
+      if (addr2Input && addr2Input.value.trim()) {
+        cleanAddressLine2Input(false);
+      }
       addr1Input.classList.remove('animate-address-filled');
       void addr1Input.offsetWidth; // Reflowをトリガーしてアニメーションをリセット
       addr1Input.classList.add('animate-address-filled');
@@ -1474,6 +1728,8 @@
           searchAddressByPostalCode(false);
         } else {
           lastSearchedZip = '';
+          lastFoundAddress = null;
+          updateAddressLine2Guidance('');
           if (addressAbortController) {
             addressAbortController.abort();
             addressAbortController = null;
@@ -1666,6 +1922,8 @@
         input.value = item.name;
         input.dataset.selectedSchool = item.name;
         input.dataset.prefecture = item.prefecture || '';
+        lastValidSchoolName = item.name;
+        clearSchoolInlineMessage();
         if (item.prefecture && item.prefecture !== '岡山県') {
           isNationalSchoolSearch = true;
           updateSchoolScopeButtonsUI(true);
@@ -1675,6 +1933,184 @@
         saveProfileToStorage();
       }
       hideSchoolSuggestions();
+    }
+    const SCHOOL_NAME_KEYWORD_RE =
+      /(小|中|高|学|校|園|義務|教育|支援|附属|付属|中等|分校|インター|ホームスクール|フリースクール|school|academy|elementary|junior|high)/i;
+    const PERSON_NAME_FIELD_IDS = [
+      'studentLastName', 'studentFirstName',
+      'studentKanaLastName', 'studentKanaFirstName',
+      'parentLastName', 'parentFirstName',
+      'parentKanaLastName', 'parentKanaFirstName'
+    ];
+    let lastValidSchoolName = '';
+
+    function toKatakanaText(str) {
+      return String(str || '').replace(/[\u3041-\u3096]/g, ch => String.fromCharCode(ch.charCodeAt(0) + 0x60));
+    }
+
+    function getCurrentPersonNameTokens() {
+      const tokens = new Set();
+      const addToken = (raw) => {
+        const compact = normalizeCompactText(raw);
+        if (!compact) return;
+        tokens.add(compact);
+        tokens.add(toKatakanaText(compact));
+      };
+      for (const id of PERSON_NAME_FIELD_IDS) {
+        const val = document.getElementById(id)?.value || '';
+        addToken(val);
+        const parts = String(val).trim().split(/[\s\u3000]+/).filter(Boolean);
+        for (const p of parts) addToken(p);
+      }
+      const pairs = [
+        ['studentLastName', 'studentFirstName'],
+        ['studentKanaLastName', 'studentKanaFirstName'],
+        ['parentLastName', 'parentFirstName'],
+        ['parentKanaLastName', 'parentKanaFirstName']
+      ];
+      for (const [lId, fId] of pairs) {
+        const lVal = document.getElementById(lId)?.value || '';
+        const fVal = document.getElementById(fId)?.value || '';
+        if (lVal || fVal) addToken(`${lVal}${fVal}`);
+      }
+      return tokens;
+    }
+
+    function validateSchoolNameValue(rawSchool) {
+      const compact = normalizeCompactText(rawSchool);
+      if (!compact) {
+        return {
+          valid: false,
+          code: 'empty',
+          message: '在籍小中学校名を入力してください。'
+        };
+      }
+      const personTokens = getCurrentPersonNameTokens();
+      if (personTokens.has(compact) || personTokens.has(toKatakanaText(compact))) {
+        return {
+          valid: false,
+          code: 'matches_person_name',
+          message: '在籍校欄にお名前が入力されています。在籍されている小・中学校名をご入力ください。'
+        };
+      }
+      if (!SCHOOL_NAME_KEYWORD_RE.test(compact)) {
+        return {
+          valid: false,
+          code: 'invalid_school_format',
+          message: '正しい学校名（〇〇中学校・〇〇小学校など）をご入力ください。'
+        };
+      }
+      return { valid: true };
+    }
+
+    function setSchoolInlineMessage(message, isError = true) {
+      const schoolInput = document.getElementById('currentSchool');
+      const errElem = document.getElementById('currentSchoolError');
+      if (schoolInput) {
+        if (isError) {
+          schoolInput.classList.add('apply-input-error', '!border-red-500', '!ring-2', '!ring-red-200');
+        } else {
+          schoolInput.classList.remove('apply-input-error', '!border-red-500', '!ring-2', '!ring-red-200');
+        }
+      }
+      if (errElem) {
+        errElem.textContent = message ? `※ ${String(message).replace(/^※\s*/, '')}` : '';
+        errElem.className = isError
+          ? 'text-xs font-bold text-rose-600'
+          : 'text-xs font-medium text-amber-800';
+        if (message) {
+          errElem.classList.remove('hidden');
+        } else {
+          errElem.classList.add('hidden');
+        }
+      }
+    }
+
+    function clearSchoolInlineMessage() {
+      setSchoolInlineMessage('', false);
+    }
+
+    function guardSchoolAgainstPersonAutofill() {
+      if (isRestoringProfile || isClearingProfile) return false;
+      const schoolInput = document.getElementById('currentSchool');
+      if (!schoolInput) return false;
+      const currentVal = schoolInput.value.trim();
+      if (!currentVal) return false;
+
+      const compact = normalizeCompactText(currentVal);
+      const personTokens = getCurrentPersonNameTokens();
+      if (!personTokens.has(compact) && !personTokens.has(toKatakanaText(compact))) {
+        return false;
+      }
+
+      if (lastValidSchoolName && validateSchoolNameValue(lastValidSchoolName).valid) {
+        schoolInput.value = lastValidSchoolName;
+        setSchoolInlineMessage('自動入力により在籍校欄へお名前が入力されかけたため、元の学校名へ戻しました。', false);
+      } else {
+        schoolInput.value = '';
+        delete schoolInput.dataset.selectedSchool;
+        setSchoolInlineMessage('自動入力により在籍校欄へお名前が入力されかけたためクリアしました。在籍されている小・中学校名をご入力ください。', false);
+      }
+      hideSchoolSuggestions();
+      return true;
+    }
+
+    function initSchoolValidationAndAutofillGuard() {
+      const schoolInput = document.getElementById('currentSchool');
+      if (!schoolInput) return;
+
+      const initialVal = schoolInput.value.trim();
+      if (initialVal && validateSchoolNameValue(initialVal).valid) {
+        lastValidSchoolName = initialVal;
+      }
+
+      const scheduleAutofillCheck = () => {
+        if (isRestoringProfile || isClearingProfile) return;
+        guardSchoolAgainstPersonAutofill();
+        setTimeout(guardSchoolAgainstPersonAutofill, 0);
+        setTimeout(guardSchoolAgainstPersonAutofill, 80);
+      };
+
+      for (const fieldId of PERSON_NAME_FIELD_IDS) {
+        const el = document.getElementById(fieldId);
+        if (!el) continue;
+        el.addEventListener('input', scheduleAutofillCheck);
+        el.addEventListener('change', scheduleAutofillCheck);
+      }
+
+      schoolInput.addEventListener('input', function() {
+        if (isRestoringProfile || isClearingProfile) return;
+        const val = this.value.trim();
+        if (!val) {
+          lastValidSchoolName = '';
+          clearSchoolInlineMessage();
+          return;
+        }
+        const res = validateSchoolNameValue(val);
+        if (res.valid) {
+          lastValidSchoolName = val;
+          clearSchoolInlineMessage();
+        }
+      });
+
+      schoolInput.addEventListener('blur', function() {
+        if (isRestoringProfile || isClearingProfile) return;
+        setTimeout(() => {
+          if (isRestoringProfile || isClearingProfile) return;
+          const val = schoolInput.value.trim();
+          if (!val) {
+            clearSchoolInlineMessage();
+            return;
+          }
+          const res = validateSchoolNameValue(val);
+          if (!res.valid) {
+            setSchoolInlineMessage(res.message, true);
+          } else {
+            lastValidSchoolName = val;
+            clearSchoolInlineMessage();
+          }
+        }, 150);
+      });
     }
     function updateSchoolInputPlaceholder(gradeKey) {
       const input = document.getElementById('currentSchool');
@@ -1843,6 +2279,8 @@
       try {
         if (typeof window.localStorage === 'undefined') return;
         const selectedGender = document.querySelector('input[name="gender"]:checked')?.value || '';
+        const rawSchoolVal = document.getElementById('currentSchool')?.value.trim() || '';
+        const safeSchoolVal = validateSchoolNameValue(rawSchoolVal).valid ? rawSchoolVal : '';
         const profileData = {
           student_last_name: document.getElementById('studentLastName')?.value.trim() || '',
           student_first_name: document.getElementById('studentFirstName')?.value.trim() || '',
@@ -1850,10 +2288,10 @@
           student_kana_first_name: document.getElementById('studentKanaFirstName')?.value.trim() || '',
           student_gender: selectedGender,
           gender: selectedGender,
-          current_school: document.getElementById('currentSchool')?.value.trim() || '',
+          current_school: safeSchoolVal,
           school_is_national: !!isNationalSchoolSearch,
           school_scope: isNationalSchoolSearch ? 'national' : 'pref',
-          school_prefecture: document.getElementById('currentSchool')?.dataset?.prefecture || '',
+          school_prefecture: safeSchoolVal ? (document.getElementById('currentSchool')?.dataset?.prefecture || '') : '',
           parent_last_name: document.getElementById('parentLastName')?.value.trim() || '',
           parent_first_name: document.getElementById('parentFirstName')?.value.trim() || '',
           parent_kana_last_name: document.getElementById('parentKanaLastName')?.value.trim() || '',
@@ -1933,7 +2371,6 @@
             }
           }
         }
-        applyValue('currentSchool', data.current_school);
         let isNational = false;
         if (typeof data.school_is_national === 'boolean') {
           isNational = data.school_is_national;
@@ -1965,6 +2402,11 @@
         applyValue('parentFirstName', data.parent_first_name);
         applyValue('parentKanaLastName', data.parent_kana_last_name);
         applyValue('parentKanaFirstName', data.parent_kana_first_name);
+        // 氏名・フリガナを先に反映した上で、在籍校の誤保存データをガードして復元
+        if (data.current_school && validateSchoolNameValue(data.current_school).valid) {
+          applyValue('currentSchool', data.current_school);
+          lastValidSchoolName = String(data.current_school).trim();
+        }
         applyValue('parentEmail', data.parent_email);
         if (data.parent_email) {
           applyValue('parentEmailConfirm', data.parent_email);
@@ -1974,6 +2416,13 @@
         applyValue('addressLine1', data.address_line1);
         applyValue('addressLine2', data.address_line2);
         applyValue('addressLine3', data.address_line3);
+        if (data.address_line1) {
+          const restoredParts = extractAddressPartsFromLine1('', data.address_line1);
+          updateAddressLine2Guidance(restoredParts.town);
+          if (data.address_line2) {
+            cleanAddressLine2Input(false);
+          }
+        }
         if (restoredCount > 0) {
           const banner = document.getElementById('autofillNoticeBanner');
           if (banner) {
@@ -2036,6 +2485,10 @@
           }
         });
         dismissAutofillBanner();
+        lastValidSchoolName = '';
+        lastFoundAddress = null;
+        clearSchoolInlineMessage();
+        updateAddressLine2Guidance('');
         const msgElem = document.getElementById('storageClearSuccessMsg');
         if (msgElem) {
           msgElem.classList.remove('hidden');
@@ -2054,44 +2507,13 @@
     window.dismissAutofillBanner = dismissAutofillBanner;
     window.clearSavedProfile = clearSavedProfile;
     function parseJapaneseAddress(prefInput, addressLine1, addressLine2, addressLine3) {
-      let raw1 = (addressLine1 || '').trim();
-      let raw2 = (addressLine2 || '').trim();
-      let raw3 = (addressLine3 || '').trim();
-      let pref = '';
-      const prefMatch = raw1.match(/^(東京都|北海道|(?:京都|大阪)府|.{2,3}県)/);
-      if (prefMatch) {
-        pref = prefMatch[1];
-        raw1 = raw1.slice(pref.length).trim();
-      } else if (prefInput) {
-        pref = String(prefInput).trim();
-        if (raw1.startsWith(pref)) {
-          raw1 = raw1.slice(pref.length).trim();
-        }
-      }
-      if (!pref) pref = '岡山県';
-      // 2. 市区町村（郡町村を含む）の抽出
-      let city = '';
-      let town = '';
-      const countyMatch = raw1.match(/^([^0-9]+?郡[^0-9]+?[町村])(.*)$/);
-      const ordinanceCityMatch = raw1.match(/^([^0-9]+?市[^0-9]+?区)(.*)$/);
-      const generalMatch = raw1.match(/^([^0-9]+?[市区町村])(.*)$/);
-      if (countyMatch) {
-        city = countyMatch[1].trim();
-        town = countyMatch[2].trim();
-      } else if (ordinanceCityMatch) {
-        city = ordinanceCityMatch[1].trim();
-        town = ordinanceCityMatch[2].trim();
-      } else if (generalMatch) {
-        city = generalMatch[1].trim();
-        town = generalMatch[2].trim();
-      } else {
-        city = raw1;
-        town = '';
-      }
-      const addr1 = [town, raw2].filter(Boolean).join(' ').trim();
+      const { pref, city, town } = extractAddressPartsFromLine1(prefInput, addressLine1);
+      const raw2 = String(addressLine2 || '').trim();
+      const raw3 = String(addressLine3 || '').trim();
+      const addr1 = combineTownAndStreet(pref, city, town, raw2);
       // 4. 建物名・部屋番号
       const addr2 = raw3;
-      return { pref, city, addr1, addr2 };
+      return { pref, city, addr1, addr2, town };
     }
     let isSubmitting = false;
     let _originalSubmitBtnHtml = '';
@@ -2200,6 +2622,7 @@
       const addr2Elem = document.getElementById('addressLine2');
       if (addr2Elem) {
         addr2Elem.value = normalizeToHalfWidth(addr2Elem.value);
+        cleanAddressLine2Input(false);
       }
       const addr3Elem = document.getElementById('addressLine3');
       if (addr3Elem) {
@@ -2273,9 +2696,20 @@
       if (!currentSchool) {
         resetSubmitBtn();
         const target = document.getElementById('currentSchool');
+        setSchoolInlineMessage('在籍小中学校名を入力してください。', true);
         showFormError('在籍小中学校名を入力してください。', target);
         return;
       }
+      const schoolValidation = validateSchoolNameValue(currentSchool);
+      if (!schoolValidation.valid) {
+        resetSubmitBtn();
+        const target = document.getElementById('currentSchool');
+        setSchoolInlineMessage(schoolValidation.message, true);
+        showFormError(schoolValidation.message, target);
+        return;
+      }
+      lastValidSchoolName = currentSchool;
+      clearSchoolInlineMessage();
       if (!parentLastName || !parentFirstName) {
         resetSubmitBtn();
         const target = !parentLastName ? document.getElementById('parentLastName') : document.getElementById('parentFirstName');
@@ -2448,7 +2882,7 @@ if (!parentKanaLastName || !parentKanaFirstName) {
         const hasTekisei = selectedExams.some(exam => String(exam.title || '').includes('適性') || String(exam.id || '').includes('tekisei') || String(exam.grade || currentSelectedGrade) === 'sho6');
         const hasTouitsu = selectedExams.some(exam => (String(exam.title || '').includes('統一') || String(exam.title || '').includes('おかもし')) && !String(exam.title || '').includes('適性'));
         const examType = (hasTekisei && hasTouitsu) ? 'both' : (hasTekisei ? 'tekisei' : 'touitsu');
-        const { pref, city, addr1, addr2 } = parseJapaneseAddress(prefecture, addressLine1, addressLine2, addressLine3);
+        const { pref, city, addr1, addr2, town } = parseJapaneseAddress(prefecture, addressLine1, addressLine2, addressLine3);
         const fullAddressString = [pref, city, addr1, addr2].filter(Boolean).join(' ');
         const firstVenueName = selectedExams[0]?.venueLabel || selectedExams[0]?.venue || '会場未指定';
         const firstVenueType = selectedExams[0]?.venueType || extractVenueTypeShort(firstVenueName, selectedExams[0]?.venue) || '';
@@ -2512,15 +2946,24 @@ if (!parentKanaLastName || !parentKanaFirstName) {
           payment_status: isKonbini ? 'unpaid' : 'paid',
           payment_method: selectedPaymentMethod,
           student_name: `${studentLastName} ${studentFirstName}`,
+          student_last_name: studentLastName,
+          student_first_name: studentFirstName,
           student_kana: `${studentKanaLastName} ${studentKanaFirstName}`,
+          student_kana_last_name: studentKanaLastName,
+          student_kana_first_name: studentKanaFirstName,
           grade: gradeText,
           school_name: currentSchool || '',
           parent_name: `${parentLastName} ${parentFirstName}`,
+          parent_last_name: parentLastName,
+          parent_first_name: parentFirstName,
+          parent_kana_last_name: parentKanaLastName,
+          parent_kana_first_name: parentKanaFirstName,
           email: parentEmail,
           phone: parentTel,
           postal_code: postalCode,
           pref: pref,
           city: city,
+          town: town || '',
           addr1: addr1,
           addr2: addr2,
           remarks: remarks,
@@ -2730,7 +3173,9 @@ if (!parentKanaLastName || !parentKanaFirstName) {
       const checkedMethod = document.querySelector('input[name="payment_method"]:checked')?.value || null;
       updatePaymentMethodSummary(checkedMethod);
       initPostalCodeAutoSearch();
+      initAddressLine2Guard();
       initSchoolAutoSuggest();
+      initSchoolValidationAndAutofillGuard();
       initAgreementListeners();
       initGenderStorageListeners();
       restoreSavedProfile();

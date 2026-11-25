@@ -26,6 +26,7 @@ import {
 import { fetchPaymentIntent } from "./stripe";
 import { sendResendEmail } from "./resend";
 import { extractKonbiniInfo, KonbiniInfo, EMPTY_KONBINI, formatJst } from "./konbini";
+import { cleanAddressLine1 } from "./form-guards";
 
 export type InitialMailSource = "apply_api" | "stripe_webhook";
 
@@ -291,9 +292,15 @@ const buildNormalizedPayload = async (input: DispatchInitialMailInput) => {
     }
   }
 
-  const fullAddress = String(
-    meta.address || body.address || [prefVal, cityVal, addr1Val, addr2Val].filter(Boolean).join(" ")
-  ).trim();
+  addr1Val = cleanAddressLine1({
+    pref: prefVal,
+    city: cityVal,
+    town: String(meta.town || body.town || "").trim(),
+    addr1: addr1Val,
+  });
+  const fullAddress =
+    [prefVal, cityVal, addr1Val, addr2Val].filter(Boolean).join(" ").trim() ||
+    String(meta.address || body.address || "").trim();
   const remarksVal = String(meta.remarks || body.remarks || "").trim().slice(0, 300);
 
   const paymentMethodVal = String(

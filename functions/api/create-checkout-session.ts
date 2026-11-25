@@ -2,6 +2,7 @@ import { Env, readEnv } from "../_shared/env";
 import { jsonResponse } from "../_shared/http";
 import { verifyTurnstile } from "../_shared/turnstile";
 import { formatExamLabel, detectExamType, normalizeVenueShortName, normalizeIssueShortName } from "../_shared/exam";
+import { validateSchoolName, cleanAddressLine1 } from "../_shared/form-guards";
 
 /** 国内電話番号（例: 090-1234-5678）を E.164 形式（+819012345678）へ変換する。変換できない場合は空文字。 */
 const toE164JP = (raw: string): string => {
@@ -136,6 +137,33 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const schoolName = String(body.school_name || body.student_school || body.school || existingMeta.school_name || existingMeta.school || "").trim();
     const parentName = String(body.parent_name || body.guardian_name || existingMeta.parent_name || "").trim();
     const parentKana = String(body.parent_kana || existingMeta.parent_kana || "").trim();
+
+    // 3-0. 在籍小中学校名のサーバーサイド厳格バリデーション（オートフィル誤爆・人名一致・不正書式ブロック）
+    const schoolValidation = validateSchoolName(schoolName, {
+      studentName,
+      studentLastName: typeof body.student_last_name === "string" ? body.student_last_name : undefined,
+      studentFirstName: typeof body.student_first_name === "string" ? body.student_first_name : undefined,
+      studentKana,
+      studentKanaLastName: typeof body.student_kana_last_name === "string" ? body.student_kana_last_name : undefined,
+      studentKanaFirstName: typeof body.student_kana_first_name === "string" ? body.student_kana_first_name : undefined,
+      parentName,
+      parentLastName: typeof body.parent_last_name === "string" ? body.parent_last_name : undefined,
+      parentFirstName: typeof body.parent_first_name === "string" ? body.parent_first_name : undefined,
+      parentKana,
+      parentKanaLastName: typeof body.parent_kana_last_name === "string" ? body.parent_kana_last_name : undefined,
+      parentKanaFirstName: typeof body.parent_kana_first_name === "string" ? body.parent_kana_first_name : undefined,
+    });
+    if (!schoolValidation.valid) {
+      console.warn("[functions/api/create-checkout-session] School name rejected:", schoolValidation.code, schoolName);
+      return jsonResponse(
+        {
+          success: false,
+          code: schoolValidation.code,
+          message: schoolValidation.message || "正しい学校名（〇〇中学校・〇〇小学校など）をご入力ください。",
+        },
+        400
+      );
+    }
     const venueName =
       normalizeVenueShortName(
         String(
@@ -158,9 +186,21 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const postalCode = String(body.postal_code || existingMeta.postal_code || "").trim();
     const pref = String(body.pref || body.prefecture || existingMeta.pref || existingMeta.prefecture || "").trim();
     const city = String(body.city || existingMeta.city || "").trim();
-    const addr1 = String(body.addr1 || body.address1 || body.address_line2 || existingMeta.addr1 || existingMeta.address1 || "").trim();
+    const town = String(body.town || existingMeta.town || "").trim();
+    const rawAddr1 = String(
+      body.addr1 ||
+        body.address1 ||
+        body.address_line1 ||
+        (!body.addr2 && !body.address2 && !body.address_line3 ? body.address_line2 : "") ||
+        existingMeta.addr1 ||
+        existingMeta.address1 ||
+        ""
+    ).trim();
+    const addr1 = cleanAddressLine1({ pref, city, town, addr1: rawAddr1 });
     const addr2 = String(body.addr2 || body.address2 || body.address_line3 || existingMeta.addr2 || existingMeta.address2 || "").trim();
-    const address = String(body.address || existingMeta.address || [pref, city, addr1, addr2].filter(Boolean).join(" ")).trim();
+    const address =
+      [pref, city, addr1, addr2].filter(Boolean).join(" ").trim() ||
+      String(body.address || existingMeta.address || "").trim();
     const remarks = String(body.remarks || existingMeta.remarks || "").trim().slice(0, 300);
     const examName = String(body.exam_name || (Array.isArray(body.exams) && body.exams[0]?.title) || existingMeta.exam_name || "岡山県統一模擬試験").trim();
     const paymentMethod = String(body.payment_method || body.selected_payment_method || (body.raw_payment_method === "convenience_store" ? "konbini" : "card")).trim();

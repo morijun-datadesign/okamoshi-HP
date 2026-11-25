@@ -7,6 +7,8 @@
  *   - records（模試ごとの配列）をループし、1模試＝1行で追記する
  *   - C列（対象模試）は月号のみ（例: 12月号）、D列（受験会場）は会場区分名のみ（例: 倉敷会場 / 自宅受験）へ
  *     stripParens_() により全角・半角括弧とその中身を除去して書き込む（二重ガード）
+ *   - V列（町名・丁目・番地）は cleanAddressLine1_() により都道府県・市区町村・重複町名
+ *     （例: 長尾 長尾1441-1 → 長尾1441-1、福田町福田 福田2413-6 → 福田町福田 2413-6）を自動正規化する
  *   - 電話番号は MemberIdManager.gs の formatJapanesePhone_() があれば自動整形して先頭0落ちを防止する
  *   - 行追記直後に MemberIdManager.gs の assignMemberIdsForRows_(sheet, addedRowNumbers) を
  *     存在チェック＆try-catch 安全ガード付きで呼び出し、Z〜AB列（会員No・採番ステータス・AI判定メモ）を自動採番する
@@ -156,6 +158,94 @@ function stripParens_(value) {
   return s.replace(/[（(][^）)]*$/, '').trim();
 }
 
+/** 先頭の都道府県名・市区町村名プレフィックスを安全に除去する（ES5互換） */
+function stripPrefCityPrefix_(raw, pref, city) {
+  var s = str_(raw);
+  if (!s) return '';
+  var cleanPref = str_(pref);
+  var cleanCity = str_(city);
+  var rest = '';
+
+  if (cleanPref && s.indexOf(cleanPref) === 0) {
+    rest = s.slice(cleanPref.length).replace(/^[\s\u3000]+/, '');
+    if (rest.replace(/[\s\u3000]+/g, '')) {
+      s = rest;
+    }
+  }
+
+  if (cleanCity) {
+    if (s.indexOf(cleanCity) === 0) {
+      rest = s.slice(cleanCity.length).replace(/^[\s\u3000]+/, '');
+      if (rest.replace(/[\s\u3000]+/g, '')) {
+        s = rest;
+      }
+    } else {
+      var subMatch = cleanCity.match(/^(.+郡)(.+[町村])$/) || cleanCity.match(/^(.+市)(.+区)$/);
+      if (subMatch && subMatch[2] && s.indexOf(subMatch[2]) === 0) {
+        rest = s.slice(subMatch[2].length).replace(/^[\s\u3000]+/, '');
+        if (rest.replace(/[\s\u3000]+/g, '')) {
+          s = rest;
+        }
+      }
+    }
+  }
+  return s.trim();
+}
+
+/** 先頭町名の末尾サフィックス重複（例: 福田町福田 福田2413-6 の "福田"）を検出する */
+function findDuplicateTownSuffix_(town, street) {
+  var cleanTown = str_(town);
+  var cleanStreet = str_(street);
+  var lenTown = cleanTown.length;
+  if (lenTown < 3 || !cleanStreet) return '';
+  for (var len = lenTown - 1; len >= 2; len--) {
+    var suffix = cleanTown.slice(lenTown - len);
+    if (/[0-9０-９]/.test(suffix)) continue;
+    if (cleanStreet.indexOf(suffix) === 0) {
+      var after = cleanStreet.slice(suffix.length);
+      if (/^(?:[\s\u3000]+)?[0-9０-９〇一二三四五六七八九十]/.test(after)) {
+        return suffix;
+      }
+    }
+  }
+  return '';
+}
+
+/** V列（町名・丁目・番地）から重複した都道府県・市区町村・町名を自動クレンジングする */
+function cleanAddressLine1_(pref, city, addr1) {
+  var s = stripPrefCityPrefix_(addr1, pref, city);
+  if (!s) return '';
+
+  for (var i = 0; i < 4; i++) {
+    var m = s.match(/^([^\s\u3000]+)[\s\u3000]+(.+)$/);
+    if (!m) break;
+
+    var head = stripPrefCityPrefix_(m[1].trim(), pref, city);
+    var tail = stripPrefCityPrefix_(m[2].trim(), pref, city);
+
+    if (head && !/[0-9０-９]/.test(head)) {
+      if (tail.indexOf(head) === 0) {
+        s = tail;
+        continue;
+      }
+      var dupSuffix = findDuplicateTownSuffix_(head, tail);
+      if (dupSuffix) {
+        var rest = tail.slice(dupSuffix.length).replace(/^[\s\u3000]+/, '');
+        s = rest ? (head + ' ' + rest) : head;
+        break;
+      }
+    }
+
+    var normalizedPair = (head + ' ' + tail).trim();
+    if (normalizedPair !== s) {
+      s = normalizedPair;
+      break;
+    }
+    break;
+  }
+  return s.trim();
+}
+
 function buildRow_(data, record) {
   var row = new Array(NUM_COLS);
   for (var i = 0; i < NUM_COLS; i++) row[i] = '';
@@ -205,6 +295,8 @@ function buildRow_(data, record) {
       city = rawAddr;
     }
   }
+
+  addr1 = cleanAddressLine1_(pref, city, addr1);
 
   row[COL.PREFECTURE - 1] = pref;
   row[COL.CITY - 1] = city;

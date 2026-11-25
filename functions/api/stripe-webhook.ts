@@ -22,6 +22,7 @@ import { fetchCheckoutSession, fetchPaymentIntent, verifyStripeWebhookSignature,
 import { sendResendEmail } from "../_shared/resend";
 import { extractKonbiniInfo, KonbiniInfo, EMPTY_KONBINI, formatJst } from "../_shared/konbini";
 import { dispatchInitialApplicationEmails } from "../_shared/apply-initial-mail";
+import { cleanAddressLine1 } from "../_shared/form-guards";
 
 const LOG = "[functions/api/stripe-webhook]";
 
@@ -219,7 +220,15 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       }
     }
 
-    const fullAddress = String(metadata.address || [prefVal, cityVal, addr1Val, addr2Val].filter(Boolean).join(" ")).trim();
+    addr1Val = cleanAddressLine1({
+      pref: prefVal,
+      city: cityVal,
+      town: String(metadata.town || "").trim(),
+      addr1: addr1Val,
+    });
+    const fullAddress =
+      [prefVal, cityVal, addr1Val, addr2Val].filter(Boolean).join(" ").trim() ||
+      String(metadata.address || "").trim();
     const examNameVal = String(metadata.exam_name || "岡山県統一模擬試験").trim();
     const remarksVal = String(metadata.remarks || "").trim().slice(0, 300);
 

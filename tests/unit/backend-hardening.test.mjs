@@ -907,6 +907,7 @@ test('create-checkout-session.ts ＆ stripe-webhook.ts: 短縮名メタデータ
       body: JSON.stringify({
         student_name: '岡山 太郎',
         grade: '中学3年生',
+        school_name: '倉敷市立倉敷南中学校',
         parent_name: '岡山 花子',
         email: 'parent@example.com',
         phone: '09012345678',
@@ -1010,4 +1011,381 @@ test('create-checkout-session.ts ＆ stripe-webhook.ts: 短縮名メタデータ
   } finally {
     globalThis.fetch = originalFetch;
   }
+});
+
+test('form-guards.ts & create-checkout-session.ts: 在籍校名オートフィル誤爆防止・人名一致ブロック・形式検証', async () => {
+  const guardsMod = await bundleAndImportTs('functions/_shared/form-guards.ts', tmpDir, 'form_guards');
+  const checkoutMod = await bundleAndImportTs('functions/api/create-checkout-session.ts', tmpDir, 'checkout_school_guard');
+
+  // 1. 人名一致ブロック（保護者名・生徒名・フリガナ・ひらがな・フルネーム・学校キーワード含有の名前）
+  const names = {
+    studentLastName: '岡山',
+    studentFirstName: '太郎',
+    studentKanaLastName: 'オカヤマ',
+    studentKanaFirstName: 'タロウ',
+    parentLastName: '岡山',
+    parentFirstName: '久美',
+    parentKanaLastName: 'オカヤマ',
+    parentKanaFirstName: 'クミ',
+  };
+  for (const wrongSchool of ['久美', 'クミ', 'くみ', '岡山久美', '岡山 久美', '太郎', 'タロウ', 'オカヤマ']) {
+    const res = guardsMod.validateSchoolName(wrongSchool, names);
+    assert.equal(res.valid, false, `${wrongSchool} はブロックされること`);
+    assert.equal(res.code, 'matches_person_name');
+    assert.equal(res.message, '在籍校欄にお名前が入力されています。在籍されている小・中学校名をご入力ください。');
+  }
+  // 保護者名「エリナ」「幸代」「小百合」等（小百合は「小」を含むが人名優先でブロック）
+  for (const parentFirst of ['エリナ', '幸代', '小百合']) {
+    const res = guardsMod.validateSchoolName(parentFirst, { parentName: `山田 ${parentFirst}` });
+    assert.equal(res.valid, false);
+    assert.equal(res.code, 'matches_person_name');
+    assert.equal(res.message, '在籍校欄にお名前が入力されています。在籍されている小・中学校名をご入力ください。');
+  }
+
+  // 2. 学校名形式チェック（人名と別文字でも学校キーワードを含まない文字列を拒否）
+  for (const invalidFormat of ['エリナ', '久美', 'あああ', 'テスト文字列']) {
+    const res = guardsMod.validateSchoolName(invalidFormat, { studentName: '佐藤 健', parentName: '佐藤 陽子' });
+    assert.equal(res.valid, false, `${invalidFormat} は形式エラーでブロックされること`);
+    assert.equal(res.code, 'invalid_school_format');
+    assert.equal(res.message, '正しい学校名（〇〇中学校・〇〇小学校など）をご入力ください。');
+  }
+
+  // 3. 正当な学校名の許可
+  for (const okSchool of [
+    '岡山市立操山中学校',
+    '奈義町立奈義中学校',
+    '美咲町立柵原学園',
+    '岡山大学教育学部附属小学校',
+    '岡山県立岡山操山中学校',
+    'Okayama International School',
+  ]) {
+    const res = guardsMod.validateSchoolName(okSchool, names);
+    assert.equal(res.valid, true, `${okSchool} は許可されること`);
+  }
+
+  // 4. create-checkout-session.ts エンドポイント HTTP 400 ガード確認
+  const originalFetch = globalThis.fetch;
+  try {
+    let stripeCalled = 0;
+    globalThis.fetch = async (url) => {
+      const u = String(url);
+      if (u.includes('turnstile/v0/siteverify')) {
+        return new Response(JSON.stringify({ success: true }), { status: 200 });
+      }
+      if (u === 'https://api.stripe.com/v1/customers') {
+        stripeCalled++;
+        return new Response(JSON.stringify({ id: 'cus_guard_01' }), { status: 200 });
+      }
+      if (u === 'https://api.stripe.com/v1/checkout/sessions') {
+        stripeCalled++;
+        return new Response(JSON.stringify({ id: 'cs_guard_ok', url: 'https://checkout.stripe.com/test/cs_guard_ok' }), { status: 200 });
+      }
+      throw new Error(`Unexpected fetch: ${u}`);
+    };
+
+    const makeReq = (schoolName, parentName = '岡山 久美') =>
+      new Request('https://okayama-moshi.com/api/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          student_name: '岡山 太郎',
+          student_kana: 'オカヤマ タロウ',
+          grade: '中学3年生',
+          school_name: schoolName,
+          parent_name: parentName,
+          parent_kana: 'オカヤマ クミ',
+          email: 'parent@example.com',
+          phone: '09012345678',
+          venue_type: '岡山会場',
+          payment_method: 'card',
+          'cf-turnstile-response': 'mock-token',
+          exams: [{ id: 'c3_12', title: '岡山県統一模擬試験', issue_name: '12月号', venue_type: '岡山会場', price: 5500 }],
+        }),
+      });
+
+    // 保護者名「久美」で送信 -> 400 + Stripe API 未呼出
+    const resNameMatch = await checkoutMod.onRequestPost({
+      request: makeReq('久美', '岡山 久美'),
+      env: { STRIPE_SECRET_KEY: 'test-stripe-secret', TURNSTILE_SECRET_KEY: 'test-turnstile-secret' },
+    });
+    assert.equal(resNameMatch.status, 400);
+    const jsonNameMatch = await resNameMatch.json();
+    assert.equal(jsonNameMatch.success, false);
+    assert.equal(jsonNameMatch.code, 'matches_person_name');
+    assert.equal(jsonNameMatch.message, '在籍校欄にお名前が入力されています。在籍されている小・中学校名をご入力ください。');
+
+    // 不正文字列「あああ」で送信 -> 400 + Stripe API 未呼出
+    const resBadFormat = await checkoutMod.onRequestPost({
+      request: makeReq('あああ', '岡山 幸代'),
+      env: { STRIPE_SECRET_KEY: 'test-stripe-secret', TURNSTILE_SECRET_KEY: 'test-turnstile-secret' },
+    });
+    assert.equal(resBadFormat.status, 400);
+    const jsonBadFormat = await resBadFormat.json();
+    assert.equal(jsonBadFormat.success, false);
+    assert.equal(jsonBadFormat.code, 'invalid_school_format');
+    assert.equal(jsonBadFormat.message, '正しい学校名（〇〇中学校・〇〇小学校など）をご入力ください。');
+    assert.equal(stripeCalled, 0, '不正な学校名では Stripe API を呼ばないこと');
+
+    // 正当な学校名「美咲町立柵原学園」-> 200
+    const resValid = await checkoutMod.onRequestPost({
+      request: makeReq('美咲町立柵原学園', '岡山 幸代'),
+      env: { STRIPE_SECRET_KEY: 'test-stripe-secret', TURNSTILE_SECRET_KEY: 'test-turnstile-secret' },
+    });
+    assert.equal(resValid.status, 200);
+    assert.ok(stripeCalled > 0);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test('form-guards.ts / create-checkout-session.ts / stripe-webhook.ts / GAS: 住所の町名重複・地域名重複の多層自動クレンジング', async () => {
+  const guardsMod = await bundleAndImportTs('functions/_shared/form-guards.ts', tmpDir, 'form_guards_addr');
+  const checkoutMod = await bundleAndImportTs('functions/api/create-checkout-session.ts', tmpDir, 'checkout_addr');
+  const webhookMod = await bundleAndImportTs('functions/api/stripe-webhook.ts', tmpDir, 'webhook_addr');
+
+  // 1. パターン1（town + 番地結合）
+  assert.equal(
+    guardsMod.cleanAddressLine1({ pref: '岡山県', city: '英田郡西粟倉村', town: '長尾', addr1: '長尾1441-1' }),
+    '長尾1441-1'
+  );
+  assert.equal(
+    guardsMod.cleanAddressLine1({ pref: '岡山県', city: '英田郡西粟倉村', town: '長尾', addr1: '長尾 1441-1' }),
+    '長尾 1441-1'
+  );
+  assert.equal(
+    guardsMod.cleanAddressLine1({ pref: '岡山県', city: '岡山市中区', town: '海吉', addr1: '海吉1971-8' }),
+    '海吉1971-8'
+  );
+  assert.equal(
+    guardsMod.cleanAddressLine1({ pref: '岡山県', city: '岡山市中区', town: '東川原', addr1: '東川原368-1' }),
+    '東川原368-1'
+  );
+  assert.equal(
+    guardsMod.cleanAddressLine1({ pref: '岡山県', city: '岡山市南区', town: '福田町福田', addr1: '福田2413-6' }),
+    '福田町福田 2413-6'
+  );
+  assert.equal(
+    guardsMod.cleanAddressLine1({ pref: '岡山県', city: '岡山市北区', town: '表町', addr1: '1丁目5-1' }),
+    '表町 1丁目5-1'
+  );
+
+  // 2. パターン2（単一文字列の空白重複）
+  assert.equal(guardsMod.cleanAddressLine1({ addr1: '長尾 長尾1441-1' }), '長尾1441-1');
+  assert.equal(guardsMod.cleanAddressLine1({ addr1: '長尾　長尾1441-1' }), '長尾1441-1');
+  assert.equal(guardsMod.cleanAddressLine1({ addr1: '海吉 海吉1971-8' }), '海吉1971-8');
+  assert.equal(guardsMod.cleanAddressLine1({ addr1: '東川原 東川原368-1' }), '東川原368-1');
+  assert.equal(guardsMod.cleanAddressLine1({ addr1: '福田町福田 福田2413-6' }), '福田町福田 2413-6');
+  assert.equal(guardsMod.cleanAddressLine1({ addr1: '表町 1丁目5-1' }), '表町 1丁目5-1');
+
+  // 3. パターン3（都道府県・市区町村丸ごとオートフィル時のプレフィックス除去）
+  assert.equal(
+    guardsMod.cleanAddressLine1({
+      pref: '岡山県',
+      city: '英田郡西粟倉村',
+      addr1: '岡山県英田郡西粟倉村長尾1441-1',
+    }),
+    '長尾1441-1'
+  );
+  assert.equal(
+    guardsMod.cleanAddressLine1({
+      pref: '岡山県',
+      city: '英田郡西粟倉村',
+      addr1: '英田郡西粟倉村長尾1441-1',
+    }),
+    '長尾1441-1'
+  );
+  assert.equal(
+    guardsMod.cleanAddressLine1({
+      pref: '岡山県',
+      city: '英田郡西粟倉村',
+      addr1: '西粟倉村長尾1441-1',
+    }),
+    '長尾1441-1'
+  );
+  assert.equal(
+    guardsMod.cleanAddressLine1({
+      pref: '岡山県',
+      city: '英田郡西粟倉村',
+      town: '長尾',
+      addr1: '岡山県英田郡西粟倉村長尾1441-1',
+    }),
+    '長尾1441-1'
+  );
+  assert.equal(
+    guardsMod.cleanAddressLine1({
+      pref: '岡山県',
+      city: '英田郡西粟倉村',
+      addr1: '長尾 岡山県英田郡西粟倉村長尾1441-1',
+    }),
+    '長尾1441-1'
+  );
+
+  // 4. create-checkout-session.ts ＆ stripe-webhook.ts 経由でクレンジングされた住所が metadata と GAS へ渡ること
+  const originalFetch = globalThis.fetch;
+  try {
+    let capturedCheckoutParams = null;
+    globalThis.fetch = async (url, init = {}) => {
+      const u = String(url);
+      if (u.includes('turnstile/v0/siteverify')) {
+        return new Response(JSON.stringify({ success: true }), { status: 200 });
+      }
+      if (u === 'https://api.stripe.com/v1/customers') {
+        return new Response(JSON.stringify({ id: 'cus_addr_01' }), { status: 200 });
+      }
+      if (u === 'https://api.stripe.com/v1/checkout/sessions') {
+        capturedCheckoutParams = new URLSearchParams(String(init.body || ''));
+        return new Response(
+          JSON.stringify({ id: 'cs_addr_unit_01', url: 'https://checkout.stripe.com/test/cs_addr_unit_01' }),
+          { status: 200 }
+        );
+      }
+      throw new Error(`Unexpected fetch: ${u}`);
+    };
+
+    const checkoutReq = new Request('https://okayama-moshi.com/api/create-checkout-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        student_name: '岡山 太郎',
+        grade: '中学3年生',
+        school_name: '奈義町立奈義中学校',
+        parent_name: '岡山 花子',
+        email: 'parent@example.com',
+        phone: '09012345678',
+        pref: '岡山県',
+        city: '英田郡西粟倉村',
+        town: '長尾',
+        addr1: '岡山県英田郡西粟倉村長尾1441-1',
+        venue_type: '岡山会場',
+        payment_method: 'card',
+        'cf-turnstile-response': 'mock-token',
+        exams: [{ id: 'c3_12', title: '岡山県統一模擬試験', issue_name: '12月号', venue_type: '岡山会場', price: 5500 }],
+      }),
+    });
+    const checkoutRes = await checkoutMod.onRequestPost({
+      request: checkoutReq,
+      env: { STRIPE_SECRET_KEY: 'test-stripe-secret', TURNSTILE_SECRET_KEY: 'test-turnstile-secret' },
+    });
+    assert.equal(checkoutRes.status, 200);
+    assert.equal(capturedCheckoutParams.get('metadata[addr1]'), '長尾1441-1');
+    assert.equal(capturedCheckoutParams.get('metadata[address1]'), '長尾1441-1');
+    assert.equal(capturedCheckoutParams.get('metadata[address]'), '岡山県 英田郡西粟倉村 長尾1441-1');
+
+    // stripe-webhook.ts（レガシー/二重町名入りメタデータ受領時もクレンジングしてGASへ渡す）
+    const db = createMockD1();
+    const gasCalls = [];
+    const resendCalls = [];
+    const dupAddrSession = buildStripeSession('cs_unit_dup_addr_006', {
+      metadata: {
+        ...buildStripeSession('cs_unit_dup_addr_006').metadata,
+        pref: '岡山県',
+        city: '岡山市中区',
+        addr1: '海吉 海吉1971-8',
+        address1: '海吉 海吉1971-8',
+        address: '岡山県 岡山市中区 海吉 海吉1971-8',
+      },
+    });
+    globalThis.fetch = async (url, init = {}) => {
+      const u = String(url);
+      if (u.startsWith('https://api.stripe.com/v1/checkout/sessions/')) {
+        return new Response(JSON.stringify(dupAddrSession), { status: 200 });
+      }
+      if (u === 'https://api.resend.com/emails') {
+        resendCalls.push(JSON.parse(init.body));
+        return new Response(JSON.stringify({ id: `mail_addr_${resendCalls.length}` }), { status: 200 });
+      }
+      if (u.includes('script.google.com')) {
+        gasCalls.push(JSON.parse(init.body));
+        return new Response(JSON.stringify({ status: 'success', created: 1 }), { status: 200 });
+      }
+      throw new Error(`Unexpected fetch: ${u}`);
+    };
+    const webhookReq = new Request('https://okayama-moshi.com/api/stripe-webhook', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: 'evt_unit_dup_addr_006',
+        type: 'checkout.session.completed',
+        data: { object: { id: 'cs_unit_dup_addr_006' } },
+      }),
+    });
+    const webhookRes = await webhookMod.onRequestPost({
+      request: webhookReq,
+      env: {
+        DB: db,
+        STRIPE_SECRET_KEY: 'test-stripe-secret',
+        RESEND_API_KEY: 'test-resend-secret',
+        GAS_APPLY_URL: 'https://script.google.com/macros/s/test/exec',
+        GAS_SHARED_SECRET: 'test-gas-secret',
+      },
+    });
+    assert.equal(webhookRes.status, 200);
+    assert.equal(gasCalls.length, 1);
+    assert.equal(gasCalls[0].address_line1, '海吉1971-8');
+    assert.equal(gasCalls[0].address, '岡山県 岡山市中区 海吉1971-8 ビル3F');
+    for (const mail of resendCalls) {
+      assert.match(mail.text, /海吉1971-8/, '通知メール内の住所も重複クレンジングされていること');
+      assert.doesNotMatch(mail.text, /海吉\s+海吉/, '通知メール内の住所に重複町名がないこと');
+    }
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+
+  // 5. gas/apply-ledger.gs buildRow_ / cleanAddressLine1_ でも V列（index 21）が重複除去されること
+  const gsCode = fs.readFileSync(path.join(ROOT, 'gas/apply-ledger.gs'), 'utf8');
+  const gasCtx = vm.createContext({
+    console: { log: () => {}, warn: () => {}, error: () => {} },
+    PropertiesService: { getScriptProperties: () => ({ getProperty: () => null }) },
+    LockService: { getScriptLock: () => ({ waitLock() {}, releaseLock() {} }) },
+    ContentService: { createTextOutput: (t) => ({ setMimeType: () => t }), MimeType: { JSON: 'JSON' } },
+  });
+  vm.runInContext(gsCode, gasCtx);
+
+  const gasRow1 = gasCtx.buildRow_(
+    {
+      session_id: 'cs_gas_addr_1',
+      payment_status: 'paid',
+      prefecture: '岡山県',
+      city: '英田郡西粟倉村',
+      address_line1: '長尾 長尾1441-1',
+    },
+    { issue_name: '12月号', venue_name: '岡山会場', price: 5500 }
+  );
+  assert.equal(gasRow1[21], "'長尾1441-1");
+
+  const gasRow2 = gasCtx.buildRow_(
+    {
+      session_id: 'cs_gas_addr_2',
+      payment_status: 'paid',
+      prefecture: '岡山県',
+      city: '岡山市中区',
+      address_line1: '東川原 東川原368-1',
+    },
+    { issue_name: '12月号', venue_name: '岡山会場', price: 5500 }
+  );
+  assert.equal(gasRow2[21], "'東川原368-1");
+
+  const gasRow3 = gasCtx.buildRow_(
+    {
+      session_id: 'cs_gas_addr_3',
+      payment_status: 'paid',
+      prefecture: '岡山県',
+      city: '岡山市南区',
+      address_line1: '福田町福田 福田2413-6',
+    },
+    { issue_name: '12月号', venue_name: '岡山会場', price: 5500 }
+  );
+  assert.equal(gasRow3[21], "'福田町福田 2413-6");
+
+  const gasRow4 = gasCtx.buildRow_(
+    {
+      session_id: 'cs_gas_addr_4',
+      payment_status: 'paid',
+      prefecture: '岡山県',
+      city: '英田郡西粟倉村',
+      address_line1: '岡山県英田郡西粟倉村長尾1441-1',
+    },
+    { issue_name: '12月号', venue_name: '岡山会場', price: 5500 }
+  );
+  assert.equal(gasRow4[21], "'長尾1441-1");
 });

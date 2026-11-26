@@ -91,38 +91,7 @@
   "webUrls": [
     "https://okayama-moshi.com/"
   ],
-  "archived_notebooks": [
-    {
-      "notebook_id": "notebooks/bc57ff9e-1def-4863-9ef1-cddfa7713536",
-      "archived_at": "2026-11-25T06:06:24.059Z",
-      "original_display_name": "[本番運用] 岡山県統一模擬試験（okayama-moshi）",
-      "archived_as": "🗄️ [ARCHIVE 2026-11-25] [本番運用] 岡山県統一模擬試験（okayama-moshi）"
-    },
-    {
-      "notebook_id": "notebooks/fa28e236-162c-43e8-a624-e73049fab067",
-      "archived_at": "2026-11-25T06:23:29.998Z",
-      "original_display_name": "[本番運用] 岡山県統一模擬試験（okayama-moshi）",
-      "archived_as": "🗄️ [ARCHIVE 2026-11-25] [本番運用] 岡山県統一模擬試験（okayama-moshi）"
-    },
-    {
-      "notebook_id": "notebooks/f91ac792-c6ed-4d57-b5b5-9ff179c11c5f",
-      "archived_at": "2026-11-25T07:39:38.865Z",
-      "original_display_name": "[本番運用] 岡山県統一模擬試験（okayama-moshi）",
-      "archived_as": "🗄️ [ARCHIVE 2026-11-25] [本番運用] 岡山県統一模擬試験（okayama-moshi）"
-    },
-    {
-      "notebook_id": "notebooks/2ee0aeb8-0873-4703-8488-53b69778babc",
-      "archived_at": "2026-11-25T08:37:02.125Z",
-      "original_display_name": "[本番運用] 岡山県統一模擬試験（okayama-moshi）",
-      "archived_as": "🗄️ [ARCHIVE 2026-11-25] [本番運用] 岡山県統一模擬試験（okayama-moshi）"
-    },
-    {
-      "notebook_id": "notebooks/3f24936f-2f3f-4a1c-87fd-94bdb56de424",
-      "archived_at": "2026-11-26T07:43:51.104Z",
-      "original_display_name": "[本番運用] 岡山県統一模擬試験（okayama-moshi）",
-      "archived_as": "🗄️ [ARCHIVE 2026-11-26] [本番運用] 岡山県統一模擬試験（okayama-moshi）"
-    }
-  ],
+  "archived_notebooks": [],
   "projectKey": "okayama-moshi",
   "clientName": "岡山県統一模擬試験",
   "displayPrefix": "[本番運用]",

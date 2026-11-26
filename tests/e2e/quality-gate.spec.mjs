@@ -1087,3 +1087,81 @@ test('GA4計測タグ即時ロード＆1秒以内の/g/collect送信検証（CSP
   expect(collectRequests[0].url, 'GA4 /g/collect に不要な ep.transport_type が含まれないこと').not.toContain('ep.transport_type');
   expect([200, 204]).toContain(collectResponses[0].status);
 });
+
+// ---- モバイル(4x CPUスロットリング) 初期描画LCP/TBTハードゲート＆GA4 /g/collect送信検証
+test('モバイル(4x CPUスロットリング) 初期描画LCP/TBTハードゲート＆GA4 /g/collect送信検証', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'sp-375', 'SPプロジェクトのみで実行');
+
+  const cdp = await page.context().newCDPSession(page);
+  await cdp.send('Emulation.setCPUThrottlingRate', { rate: 4 });
+
+  await page.addInitScript(() => {
+    window.__perf = { lcp: 0, lcpSrc: '', longTasks: [] };
+    try {
+      new PerformanceObserver((list) => {
+        for (const e of list.getEntries()) {
+          window.__perf.lcp = e.startTime;
+          window.__perf.lcpSrc = e.element ? (e.element.currentSrc || e.element.getAttribute('src') || '') : '';
+        }
+      }).observe({ type: 'largest-contentful-paint', buffered: true });
+    } catch {}
+    try {
+      new PerformanceObserver((list) => {
+        for (const e of list.getEntries()) {
+          window.__perf.longTasks.push({ start: Math.round(e.startTime), duration: Math.round(e.duration) });
+        }
+      }).observe({ type: 'longtask', buffered: true });
+    } catch {}
+  });
+
+  const GA_ALLOW_HOSTS = new Set([...ALLOW_HOSTS, 'www.googletagmanager.com', 'www.google-analytics.com', 'analytics.google.com']);
+  await page.route('**/*', async (route) => {
+    const url = new URL(route.request().url());
+    const local = url.hostname === '127.0.0.1' || (process.env.QG_BASE_URL && url.origin === new URL(process.env.QG_BASE_URL).origin);
+    if (local && url.pathname.startsWith('/api/') && !process.env.QG_BASE_URL) {
+      if (url.pathname.startsWith('/api/exam-guides')) return route.fulfill({ json: examGuidesFixture });
+      if (url.pathname.startsWith('/api/cram-schools')) return route.fulfill({ json: cramSchoolsFixture });
+      return route.fulfill({ json: { success: true, results: [], schools: [] } });
+    }
+    if (local || GA_ALLOW_HOSTS.has(url.hostname) || url.protocol === 'data:') return route.continue();
+    return route.abort('blockedbyclient');
+  });
+
+  const collectRequests = [];
+  const collectResponses = [];
+  page.on('request', (req) => {
+    if (/google-analytics\.com\/g\/collect|analytics\.google\.com\/g\/collect/.test(req.url())) {
+      collectRequests.push({ url: req.url() });
+    }
+  });
+  page.on('response', (res) => {
+    if (/google-analytics\.com\/g\/collect|analytics\.google\.com\/g\/collect/.test(res.url())) {
+      collectResponses.push({ url: res.url(), status: res.status() });
+    }
+  });
+
+  await page.goto('/', { waitUntil: 'load' });
+  await expect
+    .poll(() => collectResponses.length, { timeout: 5000, message: '4x CPUスロットリング下でGA4 /g/collectレスポンスを受信すること' })
+    .toBeGreaterThan(0);
+  await page.waitForTimeout(800);
+
+  const perf = await page.evaluate(() => {
+    const tbt = (window.__perf.longTasks || []).reduce((sum, t) => sum + Math.max(0, t.duration - 50), 0);
+    return {
+      lcp: Math.round(window.__perf.lcp || 0),
+      lcpSrc: window.__perf.lcpSrc || '',
+      tbt: Math.round(tbt),
+      longTasks: window.__perf.longTasks || [],
+    };
+  });
+
+  expect(perf.lcp, 'LCP が計測されていること').toBeGreaterThan(0);
+  expect(perf.lcp, `4x CPUスロットリング下のモバイルLCPが2500ms以下であること (${perf.lcp}ms)`).toBeLessThanOrEqual(2500);
+  expect(perf.lcpSrc, `LCP要素がスマホ用ヒーロー画像(hero-main-sp)であること (${perf.lcpSrc})`).toContain('hero-main-sp');
+  expect(perf.tbt, `4x CPUスロットリング下のTBTが250ms以下であること (${perf.tbt}ms)`).toBeLessThanOrEqual(250);
+  expect(collectRequests[0].url).toContain('tid=G-QCFQWJHMQD');
+  expect(collectRequests[0].url).toContain('en=page_view');
+  expect(collectRequests[0].url).not.toContain('ep.transport_type');
+  expect([200, 204]).toContain(collectResponses[0].status);
+});

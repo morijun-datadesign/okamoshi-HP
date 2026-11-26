@@ -10,6 +10,9 @@
    - `security/forbidden-file`: `.env*`, `.dev.vars`, `*.pem`, `*.key` 等が Git 管理/公開対象に含まれていないこと。
    - `security/exposed-file`: 公開不要ファイルが `_redirects` で `/404.html 200` 遮断されていること（`/docs/*`, `/functions/*`, `/scripts/*`, `/gas/*`, `/migrations/*`, `/db/*`, `/tests/*` 等）。
    - `perf/tailwind-cdn`: 全 HTML ファイルに Tailwind Play CDN（`cdn.tailwindcss.com`）が残存していないこと（`/css/style.min.css` 統一強制）。
+   - `perf/preconnect-budget`: 各 HTML 内の `<link rel="preconnect">`（上限2個以下）と `_headers` 内の `rel="preconnect"` の合計が 4 個未満であること。
+   - `perf/lcp-preload`: `index.html` と `lp/index.html` に `hero-main-sp.avif` の `<link rel="preload" as="image" ... fetchpriority="high">` が必ず存在すること。
+   - `perf/no-head-sync-gtag`: `404.html` 以外の HTML `<head>` 内に遅延制御なしの `gtag/js` 直書き（`<script ... src="...googletagmanager.com/gtag/js...">`）が存在しないこと。
    - `garbage/placeholder` & `garbage/visible-text`: 未置換プレースホルダー、`undefined` / `null` / `NaN` / `[object Object]` / `TODO` 等の表示露出ゼロ。
    - `design/forbidden-color` & `design/unregistered-hex`: `blue-*` 等禁止 12 系統および `ALLOWED_HEX` 未登録色の混入ゼロ。
 2. **AI 常駐ルール同期検査 (`scripts/sync-ai-rules.mjs --check`)**:
@@ -22,7 +25,10 @@
    - `cram_schools.csv` 登録済み公式サイト URL の疎通・ソフト404・サイト内容整合性・HTTPS 化可能性を全件検証。
 6. **Playwright 実ブラウザ検査 (`tests/e2e/quality-gate.spec.mjs`)**:
    - ローカル静的エミュレータ (`scripts/quality-gate/server.mjs`: `_redirects` / 308 / 404 再現) ＋ PC `1280×900` (`pc-1280`) / iPhone `375×812` (`sp-375`) の 2 環境。
-   - `pageerror`・`console.error` ゼロ、Tailwind Play CDN（`cdn.tailwindcss.com`）ゼロ、横スクロールゼロ、主要要素コントラスト比 `>= 3.0`、画像描画・`alt`・単一 `<h1>`・見出し階層、会場名省略禁止＆`※`注釈分離、旧サイト 301・404 即時転送を検査。
+   - `pageerror`・`console.error` ゼロ、Tailwind Play CDN（`cdn.tailwindcss.com`）ゼロ、横スクロールゼロ、主要要素コントラスト比 `>= 3.0`、画像描画・`alt`・単一 `<h1>`・見出し階層、会場名省略禁止＆`※`注釈分離、旧サイト 301・404 計測後遷移（`/?from_404=`）を検査。
+   - **パフォーマンス ＆ 計測ハードゲート**:
+     - `pc-1280`: 操作なし・ページ表示開始 1000ms 以内に `/g/collect`（`tid=G-QCFQWJHMQD`, `en=page_view`, `ep.transport_type` なし）が送信され HTTP 200/204 が返ること、かつ CSP 違反ゼロであること。
+     - `sp-375`: CDP `Emulation.setCPUThrottlingRate({ rate: 4 })` 適用下でトップページ（`/`）を実測し、LCP `<= 2500ms`（対象 `hero-main-sp`）・TBT `<= 250ms`、かつ操作なしで `/g/collect`（`tid=G-QCFQWJHMQD`）が送信され HTTP 200/204 が返ること。
    - **`@critical-forms` 死活監視（毎回100%実行）**:
      - `/contact/`（個人・団体両タブの送信完了画面視認性・学年選択肢表記）
      - `/apply/`（操作解説動画アコーディオン遅延読込・学年表記・在籍小中学校名レイアウト・必須バリデーション・郵便番号 7 桁バリデーション＆住所自動補完・会場受験×カード決済＆小6自宅受験×コンビニ決済での `/apply/success` 遷移とコントラスト検査）

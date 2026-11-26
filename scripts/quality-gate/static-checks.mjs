@@ -87,9 +87,44 @@ const GARBAGE = [
   { re: /\b(TODO|FIXME|XXX)\b/, msg: 'TODO / FIXME の露出' },
   { re: /YOUR_(API_KEY|SERVICE_DOMAIN)|lorem ipsum/i, msg: 'ダミー文字列の露出' },
 ];
+const headersRaw = fs.existsSync('_headers') ? read('_headers') : '';
+const headerPreconnectCount = (headersRaw.match(/rel=["']?preconnect["']?/gi) || []).length;
+const lcpPreloadTargets = new Set(['index.html', 'lp/index.html']);
+
 for (const f of htmlFiles) {
   const raw = read(f);
   if (/cdn\.tailwindcss\.com/i.test(raw)) fail('perf/tailwind-cdn', f, 'Tailwind Play CDN（cdn.tailwindcss.com）が残存しています。/css/style.min.css を使用してください');
+
+  // perf/preconnect-budget: HTML 内 preconnect と _headers 内 preconnect の合計が4個以上、または HTML 内が3個以上なら FAIL
+  const htmlPreconnectCount = (raw.match(/<link\b[^>]*\brel=["']preconnect["'][^>]*>/gi) || []).length;
+  const totalPreconnect = htmlPreconnectCount + headerPreconnectCount;
+  if (totalPreconnect >= 4 || htmlPreconnectCount > 2) {
+    fail('perf/preconnect-budget', f, `preconnect が過剰です（HTML=${htmlPreconnectCount}, _headers=${headerPreconnectCount}, 合計=${totalPreconnect} / 上限: HTML<=2, 合計<4）`);
+  }
+
+  // perf/lcp-preload: index.html / lp/index.html に hero-main-sp.avif の <link rel="preload" as="image" ... fetchpriority="high"> が必須
+  if (lcpPreloadTargets.has(f)) {
+    const linkTags = raw.match(/<link\b[^>]*>/gi) || [];
+    const hasSpPreload = linkTags.some((tag) =>
+      /\brel=["']preload["']/i.test(tag) &&
+      /\bas=["']image["']/i.test(tag) &&
+      /\bhref=["']\/images\/hero-main-sp\.avif["']/i.test(tag) &&
+      /\bfetchpriority=["']high["']/i.test(tag)
+    );
+    if (!hasSpPreload) {
+      fail('perf/lcp-preload', f, 'LCP 画像（/images/hero-main-sp.avif）の <link rel="preload" as="image" ... fetchpriority="high"> が欠落しています');
+    }
+  }
+
+  // perf/no-head-sync-gtag: 404.html 以外の <head> 内に遅延制御なしの gtag/js 直書きがあれば FAIL
+  if (f !== '404.html') {
+    const headMatch = raw.match(/<head\b[^>]*>([\s\S]*?)<\/head>/i);
+    const headHtml = headMatch ? headMatch[1] : '';
+    if (/<script\b[^>]*\bsrc=["'][^"']*googletagmanager\.com\/gtag\/js[^"']*["'][^>]*>/i.test(headHtml)) {
+      fail('perf/no-head-sync-gtag', f, '<head> 内に遅延制御なしの gtag/js スクリプトタグが直書きされています（LCP/TBT悪化防止のため load後+700msフォールバック挿入を使用してください）');
+    }
+  }
+
   if (/【★画像挿入/.test(raw)) fail('garbage/placeholder', f, '未置換の画像プレースホルダー（HTMLソース内）');
   const text = visibleText(raw);
   for (const g of GARBAGE) {
@@ -123,7 +158,11 @@ for (const f of designFiles) {
 // ---------------------------------------------------------------- レポート
 const byCheck = {};
 for (const r of results) (byCheck[r.check] ||= []).push(r);
-const CHECKS = ['security/secret', 'security/forbidden-file', 'security/exposed-file', 'perf/tailwind-cdn', 'garbage/placeholder', 'garbage/visible-text', 'design/forbidden-color', 'design/unregistered-hex'];
+const CHECKS = [
+  'security/secret', 'security/forbidden-file', 'security/exposed-file',
+  'perf/tailwind-cdn', 'perf/preconnect-budget', 'perf/lcp-preload', 'perf/no-head-sync-gtag',
+  'garbage/placeholder', 'garbage/visible-text', 'design/forbidden-color', 'design/unregistered-hex',
+];
 console.log(`\n[静的検査] 対象ファイル ${allFiles.length} 件（テキスト ${textFiles.length} / HTML ${htmlFiles.length}）`);
 for (const c of CHECKS) {
   const list = byCheck[c] || [];

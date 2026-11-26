@@ -105,7 +105,7 @@ npm run quality-gate:smart                # スマート品質ゲート（変更
 |---|---|---|
 | 1 | セキュリティ | APIキー・シークレットの直書き（分割難読化含む）、`.env` / `.dev.vars` 混入、非公開ファイルの公開露出（`_redirects` 未遮断） |
 | 2 | ゴミ・リンク切れ | `undefined` `null` `NaN` `[object Object]` `【★画像挿入` `TODO` `読み込み中…` の表示、内部リンク切れ |
-| 3 | 実ブラウザ描画 | Playwright で PC 1280px / iPhone 375px。`pageerror`・`console.error` ゼロ、会場一覧・記事本文・画像の描画、横スクロールなし、会場名の省略なし＆`※`注釈スタイル |
+| 3 | 実ブラウザ描画・速度 | Playwright で PC 1280px / iPhone 375px。`pageerror`・`console.error` ゼロ、会場一覧・記事本文・画像の描画、横スクロールなし、会場名の省略なし＆`※`注釈スタイル。加えてパフォーマンス・ハードゲート（`perf/preconnect-budget`・`perf/lcp-preload`・`perf/no-head-sync-gtag`、モバイル 4x CPU スロットリング下 LCP `<=2500ms`/TBT `<=250ms` ＆ GA4 1秒以内 `/g/collect` 送信） |
 | 4 | SEO・一貫性 | `<title>`、description、OGP、`alt`、`<h1>`は1つ、見出し階層の飛びなし、許可外カラーなし、コントラスト比（>=3.0）、TypeScript型チェック |
 | 5 | **フォーム死活監視（`@critical-forms`）** | **いかなる軽微な修正時でも毎回100%実行**：① `/contact/`（個人・団体両タブの送信完了画面視認性・学年選択肢表記）、② `/apply/`（必須バリデーション、会場受験×カード決済、自宅受験×コンビニ決済の送信完了画面 `/apply/success` 視認性・コントラスト比） |
 

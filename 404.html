@@ -28,12 +28,10 @@
       }
       gtag('config', 'GT-NBJ63L9J', {
         page_path: fullMissing,
-        page_title: '404 Not Found',
-        transport_type: 'beacon'
+        page_title: '404 Not Found'
       });
       gtag('event', 'page_not_found', {
-        missing_path: fullMissing,
-        transport_type: 'beacon'
+        missing_path: fullMissing
       });
       if (missingPath !== '/' && missingPath !== '/index.html') {
         setTimeout(redirectToHome, 1200);

@@ -1020,13 +1020,14 @@ test('旧サイトURLの適正301リダイレクト＆未定義URLからGA4計�
 test('GA4計測タグ即時ロード＆1秒以内の/g/collect送信検証（CSPブロックなし）', async ({ page, request }, testInfo) => {
   test.skip(testInfo.project.name !== 'pc-1280', 'PCプロジェクトのみで実行');
 
-  // 1. 主要HTMLすべてに <script async src="...GT-NBJ63L9J"> と beacon 設定があり、旧遅延ロード関数が残っていないこと
+  // 1. 主要HTMLすべてに <script async src="...GT-NBJ63L9J"> と標準 config があり、不要な transport_type や旧遅延ロード関数が残っていないこと
   for (const p of ['/', '/apply', '/schools.html', '/news.html', '/contact/']) {
     const res = await request.get(p);
     expect(res.status(), `${p} が 200 を返すこと`).toBe(200);
     const html = await res.text();
     expect(html, `${p} に gtag.js 直接asyncタグがあること`).toContain('<script async src="https://www.googletagmanager.com/gtag/js?id=GT-NBJ63L9J"></script>');
-    expect(html, `${p} に transport_type: 'beacon' があること`).toContain("transport_type: 'beacon'");
+    expect(html, `${p} に標準 gtag('config', 'GT-NBJ63L9J') があること`).toContain("gtag('config', 'GT-NBJ63L9J');");
+    expect(html, `${p} に不要な transport_type 指定が残っていないこと`).not.toContain('transport_type');
     expect(html, `${p} に旧遅延 loadGtag/loadAnalytics が残っていないこと`).not.toMatch(/function\s+(loadGtag|loadAnalytics)\s*\(/);
   }
 
@@ -1079,5 +1080,6 @@ test('GA4計測タグ即時ロード＆1秒以内の/g/collect送信検証（CSP
   expect(collectRequests[0].ms, `GA4 /g/collect がページ表示開始から1秒以内に送信されること (${collectRequests[0].ms}ms)`).toBeLessThanOrEqual(1000);
   expect(collectRequests[0].url).toContain('tid=G-QCFQWJHMQD');
   expect(collectRequests[0].url).toContain('en=page_view');
+  expect(collectRequests[0].url, 'GA4 /g/collect に不要な ep.transport_type が含まれないこと').not.toContain('ep.transport_type');
   expect([200, 204]).toContain(collectResponses[0].status);
 });

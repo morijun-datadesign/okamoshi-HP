@@ -1020,13 +1020,17 @@ test('旧サイトURLの適正301リダイレクト＆未定義URLからGA4計�
 test('GA4計測タグ即時ロード＆1秒以内の/g/collect送信検証（CSPブロックなし）', async ({ page, request }, testInfo) => {
   test.skip(testInfo.project.name !== 'pc-1280', 'PCプロジェクトのみで実行');
 
-  // 1. 主要HTMLすべてに <script async src="...GT-NBJ63L9J"> と標準 config があり、不要な transport_type や旧遅延ロード関数が残っていないこと
+  // 1. 主要HTMLすべてに標準 gtag('config', 'GT-NBJ63L9J') 即時キュー＋FV描画直後ロードがあり、preconnect厳選・不要パラメータ/旧遅延ロードが残っていないこと
   for (const p of ['/', '/apply', '/schools.html', '/news.html', '/contact/']) {
     const res = await request.get(p);
     expect(res.status(), `${p} が 200 を返すこと`).toBe(200);
     const html = await res.text();
-    expect(html, `${p} に gtag.js 直接asyncタグがあること`).toContain('<script async src="https://www.googletagmanager.com/gtag/js?id=GT-NBJ63L9J"></script>');
-    expect(html, `${p} に標準 gtag('config', 'GT-NBJ63L9J') があること`).toContain("gtag('config', 'GT-NBJ63L9J');");
+    expect(html, `${p} に標準 gtag('config', 'GT-NBJ63L9J') の即時キュー登録があること`).toContain("gtag('config', 'GT-NBJ63L9J');");
+    expect(html, `${p} に FV描画直後ロード関数 injectGtagScript があること`).toContain('function injectGtagScript()');
+    expect(html, `${p} に GT-NBJ63L9J スクリプトURL設定があること`).toContain('https://www.googletagmanager.com/gtag/js?id=GT-NBJ63L9J');
+    expect(html, `${p} にLCP競合する直接async scriptタグがないこと`).not.toContain('<script async src="https://www.googletagmanager.com/gtag/js?id=GT-NBJ63L9J"></script>');
+    expect(html, `${p} に不要な googletagmanager/google-analytics preconnect が残っていないこと`).not.toMatch(/rel="preconnect"[^>]*google(tagmanager|analytics)/);
+    expect((html.match(/rel="preconnect"/g) || []).length, `${p} の preconnect が 2 個以下であること`).toBeLessThanOrEqual(2);
     expect(html, `${p} に不要な transport_type 指定が残っていないこと`).not.toContain('transport_type');
     expect(html, `${p} に旧遅延 loadGtag/loadAnalytics が残っていないこと`).not.toMatch(/function\s+(loadGtag|loadAnalytics)\s*\(/);
   }

@@ -19,10 +19,10 @@
   <meta property="og:image" content="https://okayama-moshi.com/og-image.jpg">
   <meta property="og:site_name" content="岡山県統一模擬試験（おかもし）">
   <meta name="twitter:card" content="summary_large_image">
-  <!-- Google tag (gtag.js) 即時非同期ロード（0.5秒以内計測・beacon送信） & Microsoft Clarity・非クリティカルフォント遅延ロード（TBT 0ms維持） -->
-  <link rel="preconnect" href="https://www.googletagmanager.com">
-  <link rel="preconnect" href="https://www.google-analytics.com">
-  <script async src="https://www.googletagmanager.com/gtag/js?id=GT-NBJ63L9J"></script>
+  <!-- LCP 最適化: ファーストビュー最重要画像（ヒーロー画像 AVIF）の事前読み込み -->
+  <link rel="preload" as="image" href="/images/hero-main-sp.avif" type="image/avif" media="(max-width: 767px)" fetchpriority="high">
+  <link rel="preload" as="image" href="/images/hero-main-pc.avif" type="image/avif" media="(min-width: 768px)" fetchpriority="high">
+  <!-- Google tag (gtag.js) 即時キュー登録＋FV描画直後ロード（LCP/TBT非競合・1秒以内計測） & Microsoft Clarity・非クリティカルフォント遅延ロード -->
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
@@ -30,9 +30,25 @@
     gtag('config', 'GT-NBJ63L9J');
     window.clarity = window.clarity || function(){(window.clarity.q = window.clarity.q || []).push(arguments);};
     (function() {
+      var gtagLoaded = false;
       var clarityLoaded = false;
       var fontsLoaded = false;
       var ric = window.requestIdleCallback || function(cb) { return setTimeout(cb, 0); };
+      var raf = window.requestAnimationFrame || function(cb) { return setTimeout(cb, 16); };
+      function injectGtagScript() {
+        if (gtagLoaded) return;
+        gtagLoaded = true;
+        var g = document.createElement('script');
+        g.async = true;
+        g.src = 'https://www.googletagmanager.com/gtag/js?id=GT-NBJ63L9J';
+        document.head.appendChild(g);
+      }
+      function scheduleGtagAfterPaint() {
+        raf(function() {
+          setTimeout(injectGtagScript, 120);
+        });
+      }
+      setTimeout(injectGtagScript, 700);
       function loadFonts() {
         if (fontsLoaded) return;
         fontsLoaded = true;
@@ -41,8 +57,7 @@
           f.setAttribute('href', f.getAttribute('data-href'));
         }
       }
-      function loadDeferredAssets() {
-        loadFonts();
+      function loadClarity() {
         if (clarityLoaded) return;
         clarityLoaded = true;
         var c = document.createElement('script');
@@ -50,9 +65,13 @@
         c.src = 'https://www.clarity.ms/tag/z5nnqjwyks';
         document.head.appendChild(c);
       }
+      function loadDeferredAssets() {
+        loadFonts();
+        loadClarity();
+      }
       function scheduleDeferredLoad() {
         setTimeout(function() {
-          ric(loadDeferredAssets, { timeout: 2000 });
+          ric(loadClarity, { timeout: 2000 });
         }, 5500);
       }
       ['scroll', 'pointerdown', 'keydown', 'touchstart'].forEach(function(ev) {
@@ -61,16 +80,16 @@
         }, { once: true, passive: true });
       });
       if (document.readyState === 'complete') {
+        scheduleGtagAfterPaint();
         scheduleDeferredLoad();
       } else {
-        window.addEventListener('load', scheduleDeferredLoad, { once: true });
+        window.addEventListener('load', function() {
+          scheduleGtagAfterPaint();
+          scheduleDeferredLoad();
+        }, { once: true });
       }
     })();
   </script>
-
-  <!-- LCP 最適化: ファーストビュー最重要画像（ヒーロー画像 AVIF）の事前読み込み -->
-  <link rel="preload" as="image" href="/images/hero-main-sp.avif" type="image/avif" media="(max-width: 767px)" fetchpriority="high">
-  <link rel="preload" as="image" href="/images/hero-main-pc.avif" type="image/avif" media="(min-width: 768px)" fetchpriority="high">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -257,8 +276,9 @@
       <!-- 背景写真コンテナ -->
       <div class="w-full h-full absolute inset-0 overflow-hidden bg-transparent">
         <picture>
-          <source type="image/avif" srcset="/images/hero-main-pc.avif">
-          <source type="image/webp" srcset="/images/hero-main-pc.webp">
+          <source media="(max-width: 767px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+          <source media="(min-width: 768px)" type="image/avif" srcset="/images/hero-main-pc.avif">
+          <source media="(min-width: 768px)" type="image/webp" srcset="/images/hero-main-pc.webp">
           <img 
             src="/images/hero-main-pc.webp" 
             alt="岡山県統一模擬試験に挑む澄み渡る青空を見上げる女子生徒" 
@@ -329,8 +349,9 @@
       <!-- 全幅背景写真エリア（ヘッダー直下・左右横幅いっぱい・青空グラデーション＋左側人物） -->
       <div class="w-full h-[270px] sm:h-[300px] relative overflow-hidden bg-white">
         <picture>
-          <source type="image/avif" srcset="/images/hero-main-sp.avif">
-          <source type="image/webp" srcset="/images/hero-main-sp.webp">
+          <source media="(min-width: 768px)" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+          <source media="(max-width: 767px)" type="image/avif" srcset="/images/hero-main-sp.avif">
+          <source media="(max-width: 767px)" type="image/webp" srcset="/images/hero-main-sp.webp">
           <img 
             src="/images/hero-main-sp.webp" 
             alt="岡山県統一模擬試験に挑む澄み渡る青空を見上げる女子生徒" 
@@ -474,6 +495,7 @@
                   width="529"
                   height="568"
                   decoding="async"
+                  fetchpriority="low"
                 />
               </picture>
             </div>
@@ -533,6 +555,7 @@
                   width="1024"
                   height="768"
                   decoding="async"
+                  fetchpriority="low"
                 />
               </picture>
               <span id="card2-preview-badge" class="absolute bottom-3.5 right-3.5 sm:bottom-4 sm:right-4 inline-flex items-center gap-1.5 py-2 sm:py-2.5 px-3.5 sm:px-4 rounded-full bg-orange-700 hover:bg-orange-800 text-white font-bold text-xs sm:text-sm shadow-lg shadow-orange-700/30 group-hover:scale-105 group-hover:shadow-xl transition-transform duration-200 cursor-pointer select-none">

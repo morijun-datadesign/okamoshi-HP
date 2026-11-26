@@ -18,10 +18,7 @@
   <meta property="og:image" content="https://okayama-moshi.com/og-image.jpg">
   <meta property="og:site_name" content="岡山県統一模擬試験（おかもし）">
   <meta name="twitter:card" content="summary_large_image">
-  <!-- Google tag (gtag.js) 即時非同期ロード（0.5秒以内計測・beacon送信） & Microsoft Clarity・非クリティカルフォント遅延ロード（TBT 0ms維持） -->
-  <link rel="preconnect" href="https://www.googletagmanager.com">
-  <link rel="preconnect" href="https://www.google-analytics.com">
-  <script async src="https://www.googletagmanager.com/gtag/js?id=GT-NBJ63L9J"></script>
+  <!-- Google tag (gtag.js) 即時キュー登録＋FV描画直後ロード（LCP/TBT非競合・1秒以内計測） & Microsoft Clarity・非クリティカルフォント遅延ロード -->
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
@@ -29,9 +26,25 @@
     gtag('config', 'GT-NBJ63L9J');
     window.clarity = window.clarity || function(){(window.clarity.q = window.clarity.q || []).push(arguments);};
     (function() {
+      var gtagLoaded = false;
       var clarityLoaded = false;
       var fontsLoaded = false;
       var ric = window.requestIdleCallback || function(cb) { return setTimeout(cb, 0); };
+      var raf = window.requestAnimationFrame || function(cb) { return setTimeout(cb, 16); };
+      function injectGtagScript() {
+        if (gtagLoaded) return;
+        gtagLoaded = true;
+        var g = document.createElement('script');
+        g.async = true;
+        g.src = 'https://www.googletagmanager.com/gtag/js?id=GT-NBJ63L9J';
+        document.head.appendChild(g);
+      }
+      function scheduleGtagAfterPaint() {
+        raf(function() {
+          setTimeout(injectGtagScript, 120);
+        });
+      }
+      setTimeout(injectGtagScript, 700);
       function loadFonts() {
         if (fontsLoaded) return;
         fontsLoaded = true;
@@ -40,8 +53,7 @@
           f.setAttribute('href', f.getAttribute('data-href'));
         }
       }
-      function loadDeferredAssets() {
-        loadFonts();
+      function loadClarity() {
         if (clarityLoaded) return;
         clarityLoaded = true;
         var c = document.createElement('script');
@@ -49,9 +61,13 @@
         c.src = 'https://www.clarity.ms/tag/z5nnqjwyks';
         document.head.appendChild(c);
       }
+      function loadDeferredAssets() {
+        loadFonts();
+        loadClarity();
+      }
       function scheduleDeferredLoad() {
         setTimeout(function() {
-          ric(loadDeferredAssets, { timeout: 2000 });
+          ric(loadClarity, { timeout: 2000 });
         }, 3500);
       }
       ['scroll', 'pointerdown', 'keydown', 'touchstart'].forEach(function(ev) {
@@ -60,9 +76,13 @@
         }, { once: true, passive: true });
       });
       if (document.readyState === 'complete') {
+        scheduleGtagAfterPaint();
         scheduleDeferredLoad();
       } else {
-        window.addEventListener('load', scheduleDeferredLoad, { once: true });
+        window.addEventListener('load', function() {
+          scheduleGtagAfterPaint();
+          scheduleDeferredLoad();
+        }, { once: true });
       }
     })();
   </script>

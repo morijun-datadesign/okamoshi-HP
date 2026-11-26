@@ -4,73 +4,48 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
-  <meta http-equiv="refresh" content="0; url=/">
   <title>公式サイトをリニューアルしました | 岡山県統一模擬試験（おかもし）</title>
-  <script>
-    if (window.location.pathname !== '/') {
-      window.location.replace('/');
-    }
-  </script>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-  <!-- Google tag (gtag.js) & Microsoft Clarity 遅延ロード（TBT 0ms・初期メインスレッド負荷ゼロ化） -->
+  <!-- Google tag (gtag.js) 即時計測後にトップページへ引き継ぎ遷移（404計測消失の防止） -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=GT-NBJ63L9J"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', 'GT-NBJ63L9J');
-    window.clarity = window.clarity || function(){(window.clarity.q = window.clarity.q || []).push(arguments);};
     (function() {
-      var analyticsLoaded = false;
-      var fontsLoaded = false;
-      function loadFonts() {
-        if (fontsLoaded) return;
-        fontsLoaded = true;
-        var f = document.getElementById('google-fonts-sans');
-        if (f && f.getAttribute('data-href') && !f.getAttribute('href')) {
-          f.setAttribute('href', f.getAttribute('data-href'));
+      var missingPath = window.location.pathname || '/404.html';
+      var searchStr = window.location.search || '';
+      var fullMissing = missingPath + searchStr;
+      var redirected = false;
+      function redirectToHome() {
+        if (redirected) return;
+        redirected = true;
+        if (missingPath !== '/' && missingPath !== '/index.html') {
+          window.location.replace('/?from_404=' + encodeURIComponent(fullMissing));
         }
       }
-      function loadAnalytics() {
-        loadFonts();
-        if (analyticsLoaded) return;
-        analyticsLoaded = true;
-        var g = document.createElement('script');
-        g.async = true;
-        g.src = 'https://www.googletagmanager.com/gtag/js?id=GT-NBJ63L9J';
-        document.head.appendChild(g);
-        var c = document.createElement('script');
-        c.async = true;
-        c.src = 'https://www.clarity.ms/tag/z5nnqjwyks';
-        document.head.appendChild(c);
-      }
-      function scheduleIdleLoad() {
-        var ric = window.requestIdleCallback || function(cb) { return setTimeout(cb, 1); };
-        setTimeout(function() {
-          ric(loadAnalytics, { timeout: 2000 });
-        }, 3500);
-      }
-      ['scroll', 'pointerdown', 'keydown', 'touchstart'].forEach(function(ev) {
-        window.addEventListener(ev, function() {
-          var ric = window.requestIdleCallback || function(cb) { return setTimeout(cb, 1); };
-          ric(loadAnalytics, { timeout: 1000 });
-        }, { once: true, passive: true });
+      gtag('config', 'GT-NBJ63L9J', {
+        page_path: fullMissing,
+        page_title: '404 Not Found',
+        transport_type: 'beacon'
       });
-      if (document.readyState === 'complete') {
-        scheduleIdleLoad();
-      } else {
-        window.addEventListener('DOMContentLoaded', function() {
-          window.addEventListener('load', scheduleIdleLoad, { once: true });
-        }, { once: true });
+      gtag('event', 'page_not_found', {
+        missing_path: fullMissing,
+        transport_type: 'beacon'
+      });
+      if (missingPath !== '/' && missingPath !== '/index.html') {
+        setTimeout(redirectToHome, 1200);
       }
     })();
   </script>
   <!-- Tailwind CSS (ビルド済み静的CSS) -->
   <link rel="stylesheet" href="/css/style.min.css">
-  <link id="google-fonts-sans" data-href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <link id="google-fonts-sans" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=home&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
   <noscript>
+    <meta http-equiv="refresh" content="2; url=/">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=home&display=swap" rel="stylesheet">
   </noscript>

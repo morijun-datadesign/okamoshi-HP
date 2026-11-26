@@ -22,6 +22,7 @@ const REPORT_DEFAULTS = {
   EXAM_GUIDES_API_URL: 'https://okayama-moshi.com/api/exam-guides?flat=1',
   MAIN_SHEET_NAME: 'main',
   PAST_SHEET_NAME: '過去受験者',
+  HISTORY_SHEET_NAME: 'マーケティング履歴',
   KONBINI_OFFSET_DAYS: 3,
   // API・模試マスターの双方が取得不能な場合の最終フォールバック日程表
   FALLBACK_SCHEDULES: [
@@ -111,6 +112,7 @@ function clearClarityCache() {
   cache.remove('CLARITY_SUMMARY_' + targetDateStr);
   cache.remove('FULL_RAW_DATA_' + targetDateStr);
   cache.remove('FULL_RAW_DATA_V2_' + targetDateStr);
+  cache.remove('FULL_RAW_DATA_V3_' + targetDateStr);
   PropertiesService.getScriptProperties().deleteProperty(RETRY_SETTINGS.PROP_LAST_SENT);
   console.log('キャッシュと本日送信済みフラグをクリアしました。');
 }
@@ -157,7 +159,7 @@ function executeMarketingReport_(isScheduledRetry) {
 
     // キャッシュ済み集計データがあれば復元（リトライ時や連続テスト時の高速化＆API枠保護）
     const cache = CacheService.getScriptCache();
-    const fullCacheKey = 'FULL_RAW_DATA_V2_' + targetDateStr;
+    const fullCacheKey = 'FULL_RAW_DATA_V3_' + targetDateStr;
     let rawData = null;
 
     const cachedRaw = cache.get(fullCacheKey);
@@ -207,6 +209,12 @@ function executeMarketingReport_(isScheduledRetry) {
       console.log('▶ 7. Google Chat へ投稿中...');
       postToGoogleChat(chatWebhookUrl, analysisReport);
 
+      try {
+        appendDailyMarketingHistory_(rawData, analysisReport, props);
+      } catch (histErr) {
+        console.warn('マーケティング履歴シート追記スキップ: ' + histErr.message);
+      }
+
       scriptProps.setProperty(RETRY_SETTINGS.PROP_LAST_SENT, targetDateStr);
       scriptProps.deleteProperty(RETRY_SETTINGS.PROP_RETRY_COUNT);
       console.log('✅ 日次マーケティング速報の全処理が完了しました！');
@@ -225,6 +233,12 @@ function executeMarketingReport_(isScheduledRetry) {
 
       const fallbackMessage = buildFallbackReport_(rawData);
       postToGoogleChat(chatWebhookUrl, fallbackMessage);
+
+      try {
+        appendDailyMarketingHistory_(rawData, fallbackMessage, props);
+      } catch (histErr) {
+        console.warn('マーケティング履歴シート追記スキップ: ' + histErr.message);
+      }
 
       scriptProps.setProperty(RETRY_SETTINGS.PROP_LAST_SENT, targetDateStr);
       scriptProps.deleteProperty(RETRY_SETTINGS.PROP_RETRY_COUNT);
@@ -552,37 +566,109 @@ function resolveTargetExamInfo_(ss, targetDateStr, props) {
   };
 }
 
+function getScheduleGradePriority_(schedule) {
+  if (!schedule) return 3;
+  const code = String(schedule.grade_code || '').replace(/[\s\u3000]+/g, '').toLowerCase();
+  const idStr = String(schedule.id || '').replace(/[\s\u3000]+/g, '').toLowerCase();
+  const nameText = [schedule.grade_name, schedule.issue_name, schedule.title]
+    .filter(Boolean)
+    .join(' ')
+    .replace(/[\s\u3000]+/g, '')
+    .toLowerCase();
+
+  if (code === 'c3' || code === 'chu3' || /^c3_/i.test(idStr) || /中3|中学3/.test(nameText)) {
+    return 0;
+  }
+  if (code === 'c2' || code === 'chu2' || /^c2_/i.test(idStr) || /中2|中学2/.test(nameText)) {
+    return 1;
+  }
+  if (code === 'c1' || code === 'chu1' || /^c1_/i.test(idStr) || /中1|中学1/.test(nameText)) {
+    return 2;
+  }
+  if (
+    code === 'p6' ||
+    code === 'e6' ||
+    code === 'sho6' ||
+    code === 's6' ||
+    /^(p6|e6)_/i.test(idStr) ||
+    /小6|小学6|適性/.test(nameText)
+  ) {
+    return 4;
+  }
+  return 3;
+}
+
 function extractExamFromApiPayload_(json, refDateStr, fallbackYear) {
   if (!json || !json.success) return null;
 
   // flat=1 レスポンス優先
   if (json.flat && Array.isArray(json.flat.schedules) && json.flat.schedules.length > 0) {
+    const venues = Array.isArray(json.flat.venues) ? json.flat.venues : [];
+    const nonHomeVenueCountMap = {};
+    venues.forEach(v => {
+      if (v && v.schedule_id && String(v.venue_type || '').indexOf('自宅') === -1) {
+        nonHomeVenueCountMap[v.schedule_id] = (nonHomeVenueCountMap[v.schedule_id] || 0) + 1;
+      }
+    });
+
     const valid = json.flat.schedules
       .map(s => {
         const ymd = parseDateToYmdJst_(s.apply_deadline, fallbackYear);
         const monthNum = normalizeExamMonthNum_(s.issue_name || s.id);
-        return { raw: s, cardDeadline: ymd, monthNum: monthNum };
+        return {
+          raw: s,
+          cardDeadline: ymd,
+          monthNum: monthNum,
+          priority: getScheduleGradePriority_(s),
+          nonHomeVenueCount: nonHomeVenueCountMap[s.id] || 0
+        };
       })
       .filter(item => item.cardDeadline && item.cardDeadline >= refDateStr)
       .sort((a, b) => {
         const cmp = a.cardDeadline.localeCompare(b.cardDeadline);
         if (cmp !== 0) return cmp;
-        // 同日締切なら中3(c3)を優先
-        if (a.raw.grade_code === 'c3' && b.raw.grade_code !== 'c3') return -1;
-        if (b.raw.grade_code === 'c3' && a.raw.grade_code !== 'c3') return 1;
-        return 0;
+        // 同日締切なら中3(priority=0)を最優先、小6適性検査(priority=4)を後回し
+        if (a.priority !== b.priority) return a.priority - b.priority;
+        return b.nonHomeVenueCount - a.nonHomeVenueCount;
       });
 
     if (valid.length > 0) {
       const top = valid[0];
-      const venues = Array.isArray(json.flat.venues) ? json.flat.venues : [];
-      const examDates = venues
+      const seenVenues = {};
+      const examDates = [];
+      venues
         .filter(v => v.schedule_id === top.raw.id && String(v.venue_type || '').indexOf('自宅') === -1)
         .map(v => ({
           venue: normalizeVenueKey_(v.venue_type),
           date: parseDateToYmdJst_(v.exam_date_start, fallbackYear)
         }))
-        .filter(v => v.date);
+        .filter(v => v.date)
+        .sort((a, b) => a.date.localeCompare(b.date))
+        .forEach(v => {
+          if (!seenVenues[v.venue]) {
+            seenVenues[v.venue] = true;
+            examDates.push(v);
+          }
+        });
+
+      // flat.venues から取得できなかった場合のみ grades.c3.rounds から補完
+      if (examDates.length === 0 && json.grades && json.grades.c3 && Array.isArray(json.grades.c3.rounds)) {
+        const matchingRound = json.grades.c3.rounds.find(
+          r => (r.monthNum || normalizeExamMonthNum_(r.monthName)) === top.monthNum
+        );
+        if (matchingRound) {
+          const fallbackList = Array.isArray(matchingRound.venuesList) ? matchingRound.venuesList : [];
+          fallbackList.forEach(item => {
+            const vName = normalizeVenueKey_(item.badge || item.name);
+            const vDate = parseDateToYmdJst_(item.date, fallbackYear);
+            if (vName !== '自宅' && vDate && !seenVenues[vName]) {
+              seenVenues[vName] = true;
+              examDates.push({ venue: vName, date: vDate });
+            }
+          });
+          examDates.sort((a, b) => a.date.localeCompare(b.date));
+        }
+      }
 
       return {
         targetExamMonth: top.raw.issue_name || `${top.monthNum}月号`,
@@ -607,11 +693,23 @@ function extractExamFromApiPayload_(json, refDateStr, fallbackYear) {
 
     if (validRounds.length > 0) {
       const top = validRounds[0];
+      const examDates = [];
+      const seenVenues = {};
+      const list = Array.isArray(top.raw.venuesList) ? top.raw.venuesList : [];
+      list.forEach(item => {
+        const vName = normalizeVenueKey_(item.badge || item.name);
+        const vDate = parseDateToYmdJst_(item.date, fallbackYear);
+        if (vName !== '自宅' && vDate && !seenVenues[vName]) {
+          seenVenues[vName] = true;
+          examDates.push({ venue: vName, date: vDate });
+        }
+      });
+      examDates.sort((a, b) => a.date.localeCompare(b.date));
       return {
         targetExamMonth: top.raw.monthName || `${top.monthNum}月号`,
         monthNum: top.monthNum || 12,
         cardDeadline: top.cardDeadline,
-        examDates: [],
+        examDates: examDates,
         source: 'api'
       };
     }
@@ -645,12 +743,14 @@ function extractExamFromSpreadsheet_(ss, refDateStr, fallbackYear) {
     const monthRaw = String(row[colMonth] || '').trim();
     const monthNum = normalizeExamMonthNum_(monthRaw);
     if (!monthNum) continue;
-    const gradeKey = normalizeGradeKey_(row[colGrade]);
+    const gradeRaw = row[colGrade];
+    const priority = getScheduleGradePriority_({ grade_name: gradeRaw, issue_name: monthRaw });
     candidates.push({
       monthNum: monthNum,
       targetExamMonth: monthRaw.indexOf('号') !== -1 ? monthRaw : `${monthNum}月号`,
       cardDeadline: deadlineYmd,
-      isC3: gradeKey === '中3'
+      priority: priority,
+      isC3: priority === 0
     });
   }
 
@@ -658,9 +758,7 @@ function extractExamFromSpreadsheet_(ss, refDateStr, fallbackYear) {
   candidates.sort((a, b) => {
     const cmp = a.cardDeadline.localeCompare(b.cardDeadline);
     if (cmp !== 0) return cmp;
-    if (a.isC3 && !b.isC3) return -1;
-    if (!a.isC3 && b.isC3) return 1;
-    return 0;
+    return a.priority - b.priority;
   });
 
   const chosen = candidates[0];
@@ -729,11 +827,11 @@ function getNextExamAndOrderSummary(mainSheetName, targetDateStr, props) {
     examInfo.monthNum
   );
 
-  // 学年別の今年 vs 昨年同時期比較
+  // 学年別の今年 vs 昨年同時期／昨年最終実績比較
   const yoyByGrade = {};
   ['中3', '中2', '中1', '小6'].forEach(g => {
     const cur = currentAgg.gradeCounts[g] || 0;
-    const lySame = lastYearAgg.available ? (lastYearAgg.sameTimingByGrade[g] || 0) : null;
+    const lySame = lastYearAgg.sameTimingAvailable ? (lastYearAgg.sameTimingByGrade[g] || 0) : null;
     const lyFinal = lastYearAgg.available ? (lastYearAgg.finalByGrade[g] || 0) : null;
     yoyByGrade[g] = {
       current: cur,
@@ -742,12 +840,14 @@ function getNextExamAndOrderSummary(mainSheetName, targetDateStr, props) {
       diff: lySame !== null ? cur - lySame : null,
       yoyPct: lySame !== null ? calcYoyPct_(cur, lySame) : null,
       lastYearFinal: lyFinal,
+      finalAchievementPct: lyFinal && lyFinal > 0 ? calcYoyPct_(cur, lyFinal) : null,
       benchmark: REPORT_DEFAULTS.BENCHMARK_TARGETS[g]
     };
   });
 
-  const lastYearSameTimingTotal = lastYearAgg.available ? lastYearAgg.sameTimingTotal : null;
+  const lastYearSameTimingTotal = lastYearAgg.sameTimingAvailable ? lastYearAgg.sameTimingTotal : null;
   const lastYearFinalTotal = lastYearAgg.available && lastYearAgg.finalTotal > 0 ? lastYearAgg.finalTotal : null;
+  const finalAchievementPct = lastYearFinalTotal ? calcYoyPct_(currentAgg.currentExamPaid, lastYearFinalTotal) : null;
   const fallbackBenchmarkTotal =
     REPORT_DEFAULTS.BENCHMARK_TARGETS['中3'] +
     REPORT_DEFAULTS.BENCHMARK_TARGETS['中2'] +
@@ -799,13 +899,17 @@ function getNextExamAndOrderSummary(mainSheetName, targetDateStr, props) {
     gapToTarget: gapToTarget,
     requiredDailyPace: requiredDailyPace,
 
-    // 昨年同時期比較
+    // 昨年同時期／最終実績比較
     lastYearComparison: {
       available: lastYearAgg.available,
+      sameTimingAvailable: lastYearAgg.sameTimingAvailable,
       cutoffDate: lastYearAgg.cutoffDate,
       matchedRows: lastYearAgg.matchedRows,
+      datedMatchedRows: lastYearAgg.datedMatchedRows,
+      undatedMatchedRows: lastYearAgg.undatedMatchedRows,
       sameTimingPaidTotal: lastYearSameTimingTotal,
       finalPaidTotal: lastYearFinalTotal,
+      finalAchievementPct: finalAchievementPct,
       diffFromLastYear: lastYearSameTimingTotal !== null ? currentAgg.currentExamPaid - lastYearSameTimingTotal : null,
       yoyPct: lastYearSameTimingTotal !== null ? calcYoyPct_(currentAgg.currentExamPaid, lastYearSameTimingTotal) : null,
       byGrade: yoyByGrade
@@ -933,9 +1037,12 @@ function aggregateLastYearSameTiming_(pastValues, targetDateStr, cardDeadlineStr
 
   const emptyResult = {
     available: false,
+    sameTimingAvailable: false,
     cutoffDate: cutoffDate,
     matchedRows: 0,
-    sameTimingTotal: 0,
+    datedMatchedRows: 0,
+    undatedMatchedRows: 0,
+    sameTimingTotal: null,
     finalTotal: 0,
     sameTimingByGrade: createCounterMap_(GRADE_KEYS),
     finalByGrade: createCounterMap_(GRADE_KEYS)
@@ -956,7 +1063,8 @@ function aggregateLastYearSameTiming_(pastValues, targetDateStr, cardDeadlineStr
   const finalByGrade = createCounterMap_(GRADE_KEYS);
   let sameTimingTotal = 0;
   let finalTotal = 0;
-  let matchedRows = 0;
+  let datedMatchedRows = 0;
+  let undatedMatchedRows = 0;
 
   for (let i = 1; i < pastValues.length; i++) {
     const row = pastValues[i];
@@ -966,16 +1074,23 @@ function aggregateLastYearSameTiming_(pastValues, targetDateStr, cardDeadlineStr
     const statusKind = classifyPaymentStatus_(row[colStatus]);
     if (statusKind !== 'paid') continue;
 
+    const gradeKey = normalizeGradeKey_(row[colGrade]);
     const rowDateYmd = parseDateToYmdJst_(row[colDate]);
-    if (!rowDateYmd) continue;
+
+    if (!rowDateYmd) {
+      // 受付日時（A列）欠損行も昨年同号最終実績（finalTotal / finalByGrade）として集計
+      undatedMatchedRows++;
+      finalTotal++;
+      finalByGrade[gradeKey]++;
+      continue;
+    }
 
     // 昨年度シーズン（前年締切 -180日〜+40日）のみを対象にして他年度混在を防止
     if (windowStart && windowEnd && (rowDateYmd < windowStart || rowDateYmd > windowEnd)) {
       continue;
     }
 
-    const gradeKey = normalizeGradeKey_(row[colGrade]);
-    matchedRows++;
+    datedMatchedRows++;
     finalTotal++;
     finalByGrade[gradeKey]++;
 
@@ -985,11 +1100,17 @@ function aggregateLastYearSameTiming_(pastValues, targetDateStr, cardDeadlineStr
     }
   }
 
+  const matchedRows = datedMatchedRows + undatedMatchedRows;
+  const sameTimingAvailable = datedMatchedRows > 0;
+
   return {
     available: matchedRows > 0,
+    sameTimingAvailable: sameTimingAvailable,
     cutoffDate: cutoffDate,
     matchedRows: matchedRows,
-    sameTimingTotal: sameTimingTotal,
+    datedMatchedRows: datedMatchedRows,
+    undatedMatchedRows: undatedMatchedRows,
+    sameTimingTotal: sameTimingAvailable ? sameTimingTotal : null,
     finalTotal: finalTotal,
     sameTimingByGrade: sameTimingByGrade,
     finalByGrade: finalByGrade
@@ -1277,7 +1398,7 @@ function normalizeGa4PagePath_(rawPath) {
 }
 
 // -------------------------------------------------------------
-// Search Console 集計（直近7日 TOP5 ＆ 前週比伸長クエリ）
+// Search Console 集計（直近7日 TOP5 ＆ 前週比伸長クエリ ＆ 機会損失TOP3）
 // -------------------------------------------------------------
 function getSearchConsoleSummary(siteUrl, targetDateStr) {
   const refYmd = parseDateToYmdJst_(targetDateStr) || getYesterdayYmdJst_();
@@ -1293,6 +1414,7 @@ function getSearchConsoleSummary(siteUrl, targetDateStr) {
     prevPeriod: { startDate: prevStartDate, endDate: prevEndDate },
     topQueries: [],
     risingQueries: [],
+    missedOpportunityQueries: [],
     error: null
   };
 
@@ -1326,7 +1448,7 @@ function getSearchConsoleSummary(siteUrl, targetDateStr) {
       return Array.isArray(parsed.rows) ? parsed.rows : [];
     };
 
-    const currentRows = fetchRange(startDate, endDate, 25);
+    const currentRows = fetchRange(startDate, endDate, 50);
     let prevRows = [];
     try {
       prevRows = fetchRange(prevStartDate, prevEndDate, 50);
@@ -1349,6 +1471,8 @@ function getSearchConsoleSummary(siteUrl, targetDateStr) {
       const q = (r.keys && r.keys[0]) || '';
       const clicks = Number(r.clicks || 0);
       const impressions = Number(r.impressions || 0);
+      const ctrPct = round1_(Number(r.ctr || 0) * 100);
+      const posNum = round1_(Number(r.position || 0));
       const prev = prevMap[q] || { clicks: 0, impressions: 0 };
       const clicksDiff = clicks - prev.clicks;
       const impDiff = impressions - prev.impressions;
@@ -1356,8 +1480,10 @@ function getSearchConsoleSummary(siteUrl, targetDateStr) {
         query: q,
         clicks: clicks,
         impressions: impressions,
-        ctr: (Number(r.ctr || 0) * 100).toFixed(1) + '%',
-        position: Number(r.position || 0).toFixed(1),
+        ctr: ctrPct.toFixed(1) + '%',
+        ctrNum: ctrPct,
+        position: posNum.toFixed(1),
+        positionNum: posNum,
         prevClicks: prev.clicks,
         prevImpressions: prev.impressions,
         clicksDiff: clicksDiff,
@@ -1376,12 +1502,47 @@ function getSearchConsoleSummary(siteUrl, targetDateStr) {
       .sort((a, b) => b.clicksDiff - a.clicksDiff || b.impressionsDiff - a.impressionsDiff)
       .slice(0, 3);
 
+    // 第1層（来なかった人）: 表示回数が多いのにCTRが低い、または順位3〜20位で伸びしろが大きいクエリ
+    let oppCandidates = merged.filter(
+      q => q.impressions >= 20 && (q.ctrNum < 5.0 || (q.positionNum >= 3.0 && q.positionNum <= 20.0))
+    );
+    if (oppCandidates.length === 0) {
+      oppCandidates = merged.filter(
+        q => q.impressions >= 5 && (q.ctrNum < 8.0 || (q.positionNum >= 3.0 && q.positionNum <= 20.0))
+      );
+    }
+
+    const missedOpportunityQueries = oppCandidates
+      .map(q => {
+        const opportunityScore = Math.round(q.impressions * (1 - Math.min(1, q.ctrNum / 100)));
+        let reason = '順位伸びしろ(3〜20位)';
+        if (q.ctrNum < 5.0 && q.positionNum >= 8.0) {
+          reason = '高表示・低CTR＆順位8〜20位';
+        } else if (q.ctrNum < 5.0) {
+          reason = '高表示・低CTR(スルー)';
+        }
+        return {
+          query: q.query,
+          clicks: q.clicks,
+          impressions: q.impressions,
+          ctr: q.ctr,
+          ctrNum: q.ctrNum,
+          position: q.position,
+          positionNum: q.positionNum,
+          opportunityScore: opportunityScore,
+          reason: reason
+        };
+      })
+      .sort((a, b) => b.opportunityScore - a.opportunityScore || b.impressions - a.impressions)
+      .slice(0, 3);
+
     return {
       available: true,
       period: { startDate: startDate, endDate: endDate },
       prevPeriod: { startDate: prevStartDate, endDate: prevEndDate },
       topQueries: topQueries,
       risingQueries: risingQueries,
+      missedOpportunityQueries: missedOpportunityQueries,
       error: null
     };
   } catch (e) {
@@ -1550,7 +1711,7 @@ function parseClarityMetrics_(rawMetrics) {
 }
 
 // -------------------------------------------------------------
-// Gemini 分析・推論（ポエム排除・実数高密度・30〜35行コンパクト版）
+// Gemini 分析・推論（マーケティング憲法準拠・実数高密度・30〜35行コンパクト版）
 // -------------------------------------------------------------
 function buildGeminiPrompt_(rawData) {
   const ex = rawData.exam || {};
@@ -1572,11 +1733,22 @@ function buildGeminiPrompt_(rawData) {
     const item = lyGrade[g] || {};
     const cur = item.current ?? (ex.gradeCounts ? ex.gradeCounts[g] : 0) ?? 0;
     const unpaid = item.unpaid ?? (ex.gradeUnpaidCounts ? ex.gradeUnpaidCounts[g] : 0) ?? 0;
-    const lySame = item.lastYearSameTiming !== null && item.lastYearSameTiming !== undefined
-      ? `${item.lastYearSameTiming}件（差${formatSignedInt_(item.diff)} / 前年比${item.yoyPct !== null ? item.yoyPct + '%' : '—'}）`
-      : `昨年同時期データなし（昨年度最終目安:${item.benchmark ?? '-'}件）`;
-    return `  - ${g}: 今年paid ${cur}件（未入金${unpaid}件） vs 昨年同時期 ${lySame}`;
+    let lyText;
+    if (item.lastYearSameTiming !== null && item.lastYearSameTiming !== undefined) {
+      lyText = `昨年同時期 ${item.lastYearSameTiming}件（差${formatSignedInt_(item.diff)} / 前年比${item.yoyPct !== null ? item.yoyPct + '%' : '—'}）`;
+    } else if (item.lastYearFinal !== null && item.lastYearFinal !== undefined && item.lastYearFinal > 0) {
+      lyText = `昨年最終実績 ${item.lastYearFinal}件（現在達成率${item.finalAchievementPct !== null && item.finalAchievementPct !== undefined ? item.finalAchievementPct + '%' : '—'}）`;
+    } else {
+      lyText = `昨年同時期データなし（昨年度最終目安:${item.benchmark ?? '-'}件）`;
+    }
+    return `  - ${g}: 今年paid ${cur}件（未入金${unpaid}件） vs ${lyText}`;
   }).join('\n');
+
+  const lyTotalText = ly.sameTimingPaidTotal !== null && ly.sameTimingPaidTotal !== undefined
+    ? `${ly.sameTimingPaidTotal}件（差${formatSignedInt_(ly.diffFromLastYear)}件 / 前年比${ly.yoyPct !== null ? ly.yoyPct + '%' : '—'}）`
+    : ly.finalPaidTotal
+      ? `昨年同時期日付なし → 昨年最終実績 ${ly.finalPaidTotal}件（現在達成率${ly.finalAchievementPct !== null && ly.finalAchievementPct !== undefined ? ly.finalAchievementPct + '%' : '—'}）`
+      : '過去シート一致データなし';
 
   const venueLines = VENUE_KEYS.map(v => {
     const p = ex.venueCounts ? (ex.venueCounts[v] || 0) : 0;
@@ -1600,15 +1772,32 @@ function buildGeminiPrompt_(rawData) {
     ? sc.risingQueries.map(q => `  - "${q.query}": クリック${formatSignedInt_(q.clicksDiff)} / 表示${formatSignedInt_(q.impressionsDiff)}`).join('\n')
     : '  - 顕著な急伸クエリなし';
 
+  const scMissedText = (sc.missedOpportunityQueries || []).length > 0
+    ? sc.missedOpportunityQueries.map((q, idx) => `  ${idx + 1}. "${q.query}": ${q.impressions}imp / ${q.clicks}clk / CTR ${q.ctr} / 順位${q.position}（${q.reason}）`).join('\n')
+    : '  - 顕著な機会損失クエリなし';
+
+  const dropOffPct = funnel.cvrAllPct !== null && funnel.cvrAllPct !== undefined
+    ? round1_(Math.max(0, 100 - Number(funnel.cvrAllPct)))
+    : null;
+
   return `あなたは岡山県統一模擬試験（おかもし）の専任マーケティングアナリストです。
 以下の実測数値のみを根拠に、運営担当者がGoogle Chatで30秒で把握できる「高密度・数値ベースの日次速報」を作成してください。
+
+【マーケティング憲法（最上位原則）】
+- 最上位目的（ドラッカー原則）: 顧客が本当に買いたいものは紙の模試ではなく『志望校合格への現在地の確信と具体的な処方箋・安心』である。顧客の不安と求める答えを先回りして提示し、売り込みを不要にすること。
+- 買った人の痕跡: 熟読ページ（滞在秒数）・伸長クエリ・好調学年/会場から「何が決め手になっているか」を特定する。
+- 買わなかった4層の炙り出し:
+  ①第1層(来なかった人): GSCの機会損失クエリ（表示多・低CTR / 順位3〜20位）＝検索看板(title/description)と不安のミスマッチ
+  ②第2層(すぐ帰った人): Clarityの即戻り(Quickback)・押せない場所タップ・連打・GA4短時間滞在＝ファーストビュー/日程確認時の期待外れ
+  ③第3層(/apply/で諦めた人): フォーム離脱率(${dropOffPct !== null ? dropOffPct + '%' : '—'})・コンビニ未入金＝入力負担や決済・日程の躊躇
+  ④第4層(前回受けて今回未申込): 昨年同号比で遅れている学年・会場＝自宅受験振替・フォロー対象
 
 【厳禁事項（絶対に守ること）】
 - 「徐々に動き出しています」「偏りなく安定して情報収集されています」「今後の推移に注目です」などの*抽象的な感想文・ポエム・一般論は全面禁止*。
 - すべての記述に具体的な実数（件数、±差分、前年比%、前週比%、PV、クリック数、順位、通過率%）を必ず引用すること。
 - 全体で *30〜35行以内* に引き締めること（冗長な前置き・挨拶不要）。
 - Google Chat 書式厳守: 見出しは「■ タイトル」（# 禁止）、太字は単一アスタリスク *テキスト*（** 禁止）、箇条書きは「・」。
-- Clarityの専門用語（deadClicks等）は使わず、「押せない場所のタップ」「ボタンの連打」「画面エラー」と平易に書く。
+- Clarityの専門用語（deadClicks等）は使わず、「押せない場所のタップ」「ボタンの連打」「画面エラー」「即戻り」と平易に書く。
 
 【1. 対象回・締切・実施日（基準日: ${rawData.targetDate}）】
 - 対象回: ${ex.targetExamMonth}（解決元: ${ex.deadlineSource}）
@@ -1616,10 +1805,10 @@ function buildGeminiPrompt_(rawData) {
 - コンビニ締切: ${ex.konbiniDeadline}（残り *${ex.daysLeftKonbini}日*）
 - 会場実施日: ${examDatesText}${ex.earliestExamDate ? `（最短実施まで残り${ex.daysLeftExam}日）` : ''}
 
-【2. 申込台帳実績 ＆ 昨年同時期比較（基準カットオフ: ${ly.cutoffDate || '前年同日'}）】
+【2. 申込台帳実績 ＆ 昨年比較（基準カットオフ: ${ly.cutoffDate || '前年同日'}）】
 - 昨日単日: 新規 ${ex.yesterdayCount}件（paid ${ex.yesterdayPaid}件 / 未入金 ${ex.yesterdayUnpaid}件）
 - 当月累積: paid *${ex.currentExamPaid}件* / 未入金 *${ex.currentExamUnpaid}件* / キャンセル・期限切れ ${ex.currentExamCanceled}件
-- 昨年同時期合計: ${ly.sameTimingPaidTotal !== null && ly.sameTimingPaidTotal !== undefined ? `${ly.sameTimingPaidTotal}件（差${formatSignedInt_(ly.diffFromLastYear)}件 / 前年比${ly.yoyPct !== null ? ly.yoyPct + '%' : '—'}）` : '過去シート一致データなし'}
+- 昨年比較合計: ${lyTotalText}
 - 直近7日ペース: paid ${ex.recent7dPaid}件（日平均 *${ex.dailyPace7d}件/日*） vs 目標(${ex.targetTotal}件 / ${ex.targetTotalSource})までの残${ex.gapToTarget}件・必要ペース *${ex.requiredDailyPace}件/日*
 - 学年別比較:
 ${gradeComparisonLines}
@@ -1629,7 +1818,7 @@ ${gradeComparisonLines}
 - 昨日単日: ${yDay.users ?? ga.users ?? 0}人 / ${yDay.sessions ?? ga.sessions ?? 0}セッション / ${yDay.pageViews ?? ga.pageViews ?? 0}PV
 - 直近7日: ${l7.users ?? 0}人（日平均${l7.avgDailyUsers ?? 0}人・前週比${formatSignedPct_(l7.usersWowPct)}） / ${l7.pageViews ?? 0}PV（前週比${formatSignedPct_(l7.pvWowPct)}）
 - 直近28日: ${l28.users ?? 0}人（前28日比${formatSignedPct_(l28.usersMomPct)}${l28.yoyAvailable ? `・前年比${formatSignedPct_(l28.usersYoyPct)}` : '・前年同期データなし'}） / ${l28.pageViews ?? 0}PV（前28日比${formatSignedPct_(l28.pvMomPct)}）
-- 申込フォーム(/apply/)通過率(7日): 到達 ${funnel.applyPageUsers7d ?? 0}人 → 申込送信 ${funnel.recent7dAllOrders ?? 0}件（CVR ${funnel.cvrAllPct !== null && funnel.cvrAllPct !== undefined ? funnel.cvrAllPct + '%' : '—'} / paid ${funnel.recent7dPaidOrders ?? 0}件・CVR ${funnel.cvrPaidPct !== null && funnel.cvrPaidPct !== undefined ? funnel.cvrPaidPct + '%' : '—'}）
+- 申込フォーム(/apply/)通過率(7日): 到達 ${funnel.applyPageUsers7d ?? 0}人 → 申込送信 ${funnel.recent7dAllOrders ?? 0}件（CVR ${funnel.cvrAllPct !== null && funnel.cvrAllPct !== undefined ? funnel.cvrAllPct + '%' : '—'} / 離脱率 ${dropOffPct !== null ? dropOffPct + '%' : '—'} / paid ${funnel.recent7dPaidOrders ?? 0}件・CVR ${funnel.cvrPaidPct !== null && funnel.cvrPaidPct !== undefined ? funnel.cvrPaidPct + '%' : '—'}）
 - 人気ページTOP5（トップ除外・7日）:
 ${topPagesText}
 - 流入チャネルTOP5（7日）:
@@ -1640,6 +1829,8 @@ ${channelsText}
 ${scTopText}
 - 前週比伸長クエリ:
 ${scRisingText}
+- 見送り・機会損失クエリTOP3（第1層：表示多・低CTR / 順位3〜20位）:
+${scMissedText}
 
 【5. Clarity 操作診断（直近24時間）】
 ${JSON.stringify(rawData.clarity)}
@@ -1649,16 +1840,18 @@ ${JSON.stringify(rawData.clarity)}
 ■ 締切＆申込進捗（${ex.targetExamMonth}）
 ・クレカ締切 ${formatShortMd_(ex.cardDeadline)}(残${ex.daysLeftCard}日) / コンビニ ${formatShortMd_(ex.konbiniDeadline)}(残${ex.daysLeftKonbini}日) / 実施 ${examDatesText}
 ・昨日・累積・直近7日ペース vs 必要ペースの数値サマリー
-・学年別（中3・中2・中1・小6）の今年 vs 昨年同時期比較（±件・前年比%）＋未入金件数
+・学年別（中3・中2・中1・小6）の今年 vs 昨年比較（±件・前年比%または最終達成率%）＋未入金件数
 ・会場別内訳（岡山・倉敷・津山・自宅）と最もギャップが大きい箇所
 ■ サイト流入・注目ページ・検索ワード（GA4 / GSC）
 ・昨日 / 7日平均(前週比) / 28日(前28日比・前年比) と主要チャネル構成
-・よく見られているページTOP5（パス・PV・滞在秒数）と /apply/ 通過率(CVR)
-・検索上位クエリ＆前週比伸長ワード（クリック・表示・順位）
+・よく見られているページTOP5（パス・PV・滞在秒数）と /apply/ 通過率(CVR)・離脱率
+・検索上位クエリ＆前週比伸長ワード＆第1層機会損失ワード（クリック・表示・CTR・順位）
 ■ 操作のつまずき診断（Clarity）
-・スマホ/PC別のスクロール率と、押せない場所タップ/連打/エラーが出ているURL（問題ゼロならその旨を数値付きで1行）
-■ 今日の打ち手（数値ギャップ直結の具体策1〜2選）
-・どの学年・会場・検索ワード・画面に対して今日何を行うかを1行ずつ簡潔に`;
+・スマホ/PC別のスクロール率と、即戻り/押せない場所タップ/連打/エラーが出ているURL（問題ゼロならその旨を数値付きで1行）
+■ 顧客インサイト診断（買う理由・買わない壁・売り込み不要化の打ち手）
+・[買う理由]: 熟読ページ・伸長クエリ・好調学年/会場の実数から見える「今保護者が求めている価値」
+・[買わない壁]: 4層（①検索スルーワード / ②トップ即戻り・空タップ / ③/apply/離脱率 / ④昨年比遅れ学年・会場）のうち今日最大のボトルネックと実数
+・[転換の打ち手]: 売り込まずにその壁を消す具体的な1手（どのURL/タイトル/案内文/メルマガに何を提示するか）`;
 }
 
 function generateGeminiAnalysis(apiKey, rawData) {
@@ -1784,15 +1977,22 @@ function buildFallbackReport_(rawData) {
 
   const yoySummary = ly.sameTimingPaidTotal !== null && ly.sameTimingPaidTotal !== undefined
     ? `昨年同時期 ${ly.sameTimingPaidTotal}件（*${formatSignedInt_(ly.diffFromLastYear)}件* / 前年比${ly.yoyPct !== null ? ly.yoyPct + '%' : '—'}）`
-    : '昨年同時期データなし';
+    : ly.finalPaidTotal
+      ? `昨年最終実績 ${ly.finalPaidTotal}件（達成率 *${ly.finalAchievementPct !== null && ly.finalAchievementPct !== undefined ? ly.finalAchievementPct + '%' : '—'}*）`
+      : '昨年比較データなし';
 
   const gradeLines = ['中3', '中2', '中1', '小6'].map(g => {
     const item = lyByGrade[g] || {};
     const cur = item.current ?? (ex.gradeCounts ? ex.gradeCounts[g] : 0) ?? 0;
     const unpaid = item.unpaid ?? (ex.gradeUnpaidCounts ? ex.gradeUnpaidCounts[g] : 0) ?? 0;
-    const vsText = item.lastYearSameTiming !== null && item.lastYearSameTiming !== undefined
-      ? `昨年${item.lastYearSameTiming}件(差${formatSignedInt_(item.diff)} / ${item.yoyPct !== null ? item.yoyPct + '%' : '—'})`
-      : `昨年目安${item.benchmark ?? '-'}件`;
+    let vsText;
+    if (item.lastYearSameTiming !== null && item.lastYearSameTiming !== undefined) {
+      vsText = `昨年${item.lastYearSameTiming}件(差${formatSignedInt_(item.diff)} / ${item.yoyPct !== null ? item.yoyPct + '%' : '—'})`;
+    } else if (item.lastYearFinal !== null && item.lastYearFinal !== undefined && item.lastYearFinal > 0) {
+      vsText = `昨年最終${item.lastYearFinal}件(達成率${item.finalAchievementPct !== null && item.finalAchievementPct !== undefined ? item.finalAchievementPct + '%' : '—'})`;
+    } else {
+      vsText = `昨年目安${item.benchmark ?? '-'}件`;
+    }
     return `${g}:${cur}件(未${unpaid})[${vsText}]`;
   });
 
@@ -1818,18 +2018,42 @@ function buildFallbackReport_(rawData) {
     .map(q => `${q.query}(${formatSignedInt_(q.clicksDiff)}clk/${formatSignedInt_(q.impressionsDiff)}imp)`)
     .join(' / ') || '該当なし';
 
+  const scMissedStr = (sc.missedOpportunityQueries || []).slice(0, 2)
+    .map(q => `"${q.query}"(${q.impressions}imp/CTR${q.ctr}/${q.position}位)`)
+    .join(' / ') || '顕著な機会損失なし';
+
   let clarityLine = '・Clarity未取得';
   let clarityWarnLine = '・特記エラーなし';
   if (rawData.clarity && rawData.clarity.byDevice) {
     const mobile = rawData.clarity.byDevice['Mobile'] || {};
     const pc = rawData.clarity.byDevice['PC'] || {};
     clarityLine = `・スマホ: スクロール${mobile.avgScrollDepth || '-'} / 連打${mobile.rageClicks ?? 0} / 空タップ${mobile.deadClicks ?? 0} | PC: スクロール${pc.avgScrollDepth || '-'}`;
-    const errPages = (rawData.clarity.keyPagesAndFriction || []).filter(p => p.scriptErrors > 0 || p.rageClicks > 2);
+    const errPages = (rawData.clarity.keyPagesAndFriction || []).filter(p => p.scriptErrors > 0 || p.rageClicks > 2 || p.quickbacks > 0);
     if (errPages.length > 0) {
-      clarityWarnLine = '・要注意URL: ' + errPages.slice(0, 2).map(p => `${p.path}(エラー${p.scriptErrors}/連打${p.rageClicks})`).join(', ');
+      clarityWarnLine = '・要注意URL: ' + errPages.slice(0, 2).map(p => `${p.path}(エラー${p.scriptErrors}/連打${p.rageClicks}/即戻り${p.quickbacks})`).join(', ');
     } else {
       clarityWarnLine = '・主要導線(/, /apply/)の操作エラー・連打は許容範囲内';
     }
+  }
+
+  // マーケティング憲法に基づくデータ自動要約（AIスキップ時の3行インサイト）
+  const topEngaged = (ga.topPages || []).slice().sort((a, b) => (b.avgEngagementSec || 0) - (a.avgEngagementSec || 0))[0];
+  const buyReasonLine = topEngaged
+    ? `・[買う理由]: ${topEngaged.path}(平均滞在${topEngaged.avgEngagementSec}秒/${topEngaged.pageViews}PV)熟読＆検索伸長(${scRiseStr})から詳細確認後の成約が軸`
+    : `・[買う理由]: 検索(${scRiseStr})と直近7日paid ${ex.recent7dPaid ?? 0}件の需要が牽引`;
+
+  const dropOffPct = funnel.cvrAllPct !== null && funnel.cvrAllPct !== undefined
+    ? round1_(Math.max(0, 100 - Number(funnel.cvrAllPct)))
+    : null;
+  const topMissed = (sc.missedOpportunityQueries || [])[0];
+  let barrierLine = `・[買わない壁]: /apply/到達${funnel.applyPageUsers7d ?? 0}人に対し送信${funnel.recent7dAllOrders ?? 0}件(離脱率${dropOffPct !== null ? dropOffPct + '%' : '—'})・未入金${ex.currentExamUnpaid ?? 0}件`;
+  if (topMissed && (dropOffPct === null || dropOffPct < 60)) {
+    barrierLine = `・[買わない壁]: 第1層 "${topMissed.query}"(${topMissed.impressions}imp/CTR${topMissed.ctr}/${topMissed.position}位)の検索見送り＋未入金${ex.currentExamUnpaid ?? 0}件`;
+  }
+
+  let actionLine = `・[転換の打ち手]: /apply/導線と未入金${ex.currentExamUnpaid ?? 0}件フォローでコンビニ締切(${formatShortMd_(ex.konbiniDeadline)})前の離脱を解消`;
+  if (topMissed) {
+    actionLine = `・[転換の打ち手]: "${topMissed.query}"(${topMissed.position}位/CTR${topMissed.ctr})向けにタイトル・冒頭へ実施日と合格判定の答えを先回り提示`;
   }
 
   return [
@@ -1849,10 +2073,197 @@ function buildFallbackReport_(rawData) {
     topPagesStr,
     `・検索TOP5（${sc.period ? `${formatShortMd_(sc.period.startDate)}〜${formatShortMd_(sc.period.endDate)}` : '7日'}）｜伸長: ${scRiseStr}`,
     scTopStr,
+    `・機会損失(第1層): ${scMissedStr}`,
     `■ 操作つまずき診断（Clarity）`,
     clarityLine,
-    clarityWarnLine
+    clarityWarnLine,
+    `■ 顧客インサイト診断（買う理由・買わない壁・売り込み不要化の打ち手）`,
+    buyReasonLine,
+    barrierLine,
+    actionLine
   ].join('\n');
+}
+
+// -------------------------------------------------------------
+// マーケティング履歴シートへの日次自動蓄積（upsert）
+// -------------------------------------------------------------
+const MARKETING_HISTORY_HEADERS = [
+  '基準日',
+  '対象回',
+  'クレカ残日数',
+  'コンビニ残日数',
+  '累積paid',
+  '累積未入金',
+  '昨年比',
+  '直近7日ペース',
+  '必要ペース',
+  'GA4_7日UU',
+  'GA4_7日PV',
+  'apply到達UU(7日)',
+  'apply_CVR(%)',
+  'GSC上位クエリ',
+  'GSC機会損失クエリ',
+  '買う理由',
+  '買わない壁',
+  '転換の打ち手',
+  '記録日時'
+];
+
+function formatDateTimeJst_(dateObj) {
+  if (typeof Utilities !== 'undefined' && Utilities && typeof Utilities.formatDate === 'function') {
+    const formatted = Utilities.formatDate(dateObj, 'Asia/Tokyo', 'yyyy-MM-dd HH:mm:ss');
+    if (/^\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}$/.test(formatted)) {
+      return formatted;
+    }
+  }
+  const jst = new Date(dateObj.getTime() + 9 * 60 * 60 * 1000);
+  const y = jst.getUTCFullYear();
+  const m = String(jst.getUTCMonth() + 1).padStart(2, '0');
+  const d = String(jst.getUTCDate()).padStart(2, '0');
+  const hh = String(jst.getUTCHours()).padStart(2, '0');
+  const mm = String(jst.getUTCMinutes()).padStart(2, '0');
+  const ss = String(jst.getUTCSeconds()).padStart(2, '0');
+  return `${y}-${m}-${d} ${hh}:${mm}:${ss}`;
+}
+
+function extractInsightSummariesFromReport_(reportText) {
+  const result = {
+    buyReason: '',
+    barrier: '',
+    action: ''
+  };
+  if (!reportText) return result;
+
+  const lines = String(reportText).split(/\r?\n/);
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (!line) continue;
+    const cleanMatch = (regex) => {
+      const m = line.match(regex);
+      return m ? m[1].trim() : '';
+    };
+    if (!result.buyReason) {
+      const v = cleanMatch(/^(?:[・\-\*]\s*)?\*?\[買う理由\]\*?\s*[:：]\s*(.+)$/);
+      if (v) {
+        result.buyReason = v;
+        continue;
+      }
+    }
+    if (!result.barrier) {
+      const v = cleanMatch(/^(?:[・\-\*]\s*)?\*?\[買わない壁\]\*?\s*[:：]\s*(.+)$/);
+      if (v) {
+        result.barrier = v;
+        continue;
+      }
+    }
+    if (!result.action) {
+      const v = cleanMatch(/^(?:[・\-\*]\s*)?\*?\[転換の打ち手\]\*?\s*[:：]\s*(.+)$/);
+      if (v) {
+        result.action = v;
+        continue;
+      }
+    }
+  }
+  return result;
+}
+
+function appendDailyMarketingHistory_(rawData, reportText, props) {
+  if (!rawData || !rawData.targetDate) return null;
+  if (typeof SpreadsheetApp === 'undefined' || !SpreadsheetApp) return null;
+
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  if (!ss) return null;
+
+  const historySheetName = (props && props.HISTORY_SHEET_NAME) || REPORT_DEFAULTS.HISTORY_SHEET_NAME;
+  let sheet = ss.getSheetByName(historySheetName);
+  if (!sheet && typeof ss.insertSheet === 'function') {
+    sheet = ss.insertSheet(historySheetName);
+  }
+  if (!sheet) return null;
+
+  const existingValues = sheet.getDataRange ? sheet.getDataRange().getValues() : [];
+  if (!existingValues || existingValues.length === 0 || !existingValues[0] || !existingValues[0][0]) {
+    if (typeof sheet.getRange === 'function') {
+      sheet.getRange(1, 1, 1, MARKETING_HISTORY_HEADERS.length).setValues([MARKETING_HISTORY_HEADERS]);
+    } else if (typeof sheet.appendRow === 'function') {
+      sheet.appendRow(MARKETING_HISTORY_HEADERS);
+    }
+    if (typeof sheet.setFrozenRows === 'function') {
+      sheet.setFrozenRows(1);
+    }
+  }
+
+  const ex = rawData.exam || {};
+  const ly = ex.lastYearComparison || {};
+  const ga = rawData.ga4 || {};
+  const l7 = (ga.periods && ga.periods.last7d) || {};
+  const funnel = ga.applyFunnel || {};
+  const sc = rawData.searchConsole || {};
+  const insights = extractInsightSummariesFromReport_(reportText);
+
+  let yoyLabel = '—';
+  if (ly.yoyPct !== null && ly.yoyPct !== undefined) {
+    yoyLabel = `${ly.yoyPct}%`;
+  } else if (ly.finalAchievementPct !== null && ly.finalAchievementPct !== undefined) {
+    yoyLabel = `最終比${ly.finalAchievementPct}%`;
+  }
+
+  const topQueriesStr = (sc.topQueries || [])
+    .slice(0, 3)
+    .map(q => `${q.query}(${q.clicks}clk)`)
+    .join(' / ');
+  const missedQueriesStr = (sc.missedOpportunityQueries || [])
+    .slice(0, 3)
+    .map(q => `${q.query}(${q.impressions}imp/${q.ctr})`)
+    .join(' / ');
+
+  const rowValues = [
+    rawData.targetDate,
+    ex.targetExamMonth || '',
+    ex.daysLeftCard ?? '',
+    ex.daysLeftKonbini ?? '',
+    ex.currentExamPaid ?? 0,
+    ex.currentExamUnpaid ?? 0,
+    yoyLabel,
+    ex.dailyPace7d ?? 0,
+    ex.requiredDailyPace ?? 0,
+    l7.users ?? 0,
+    l7.pageViews ?? 0,
+    funnel.applyPageUsers7d ?? 0,
+    funnel.cvrAllPct !== null && funnel.cvrAllPct !== undefined ? funnel.cvrAllPct : '',
+    topQueriesStr,
+    missedQueriesStr,
+    insights.buyReason,
+    insights.barrier,
+    insights.action,
+    formatDateTimeJst_(new Date())
+  ];
+
+  const currentData = sheet.getDataRange ? sheet.getDataRange().getValues() : [];
+  let targetRowNumber = -1;
+  for (let i = 1; i < currentData.length; i++) {
+    const rowDate = parseDateToYmdJst_(currentData[i][0]);
+    if (rowDate === rawData.targetDate) {
+      targetRowNumber = i + 1;
+      break;
+    }
+  }
+
+  if (targetRowNumber > 1 && typeof sheet.getRange === 'function') {
+    sheet.getRange(targetRowNumber, 1, 1, rowValues.length).setValues([rowValues]);
+    console.log(`📝 マーケティング履歴を更新しました (行: ${targetRowNumber}, 基準日: ${rawData.targetDate})`);
+    return { action: 'updated', rowNumber: targetRowNumber, sheetName: historySheetName };
+  }
+
+  if (typeof sheet.appendRow === 'function') {
+    sheet.appendRow(rowValues);
+  } else if (typeof sheet.getRange === 'function') {
+    const nextRow = Math.max(2, currentData.length + 1);
+    sheet.getRange(nextRow, 1, 1, rowValues.length).setValues([rowValues]);
+  }
+  const appendedRowNumber = Math.max(2, (currentData.length || 1) + 1);
+  console.log(`📝 マーケティング履歴を追記しました (行: ${appendedRowNumber}, 基準日: ${rawData.targetDate})`);
+  return { action: 'appended', rowNumber: appendedRowNumber, sheetName: historySheetName };
 }
 
 function scheduleRetryTrigger_(minutes) {

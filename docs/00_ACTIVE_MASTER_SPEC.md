@@ -38,7 +38,7 @@
 | **ボット対策** | Cloudflare Turnstile (`https://challenges.cloudflare.com/turnstile/v0/siteverify`) | `cf-turnstile`（`data-size="flexible"`, `data-appearance="interaction-only"`）を申込フォーム・お問い合わせフォームに組込み、サーバー側 `verifyTurnstile()` で検証 |
 | **CMS / 台帳連携** | microCMS (`okamoshi-blog`) ＆ Google Apps Script (`gas/`) | Google スプレッドシートから D1 への洗い替え同期（模試案内・実施塾一覧）、Stripe Webhook からの受付台帳スプレッドシート 25 列自動追記/更新（`apply-ledger.gs`）、および台帳上の運用 GAS 4本（`MailSender.gs`: Resend Batch一斉/スケジュール配信＆オプトアウト、`MemberIdManager.gs`: Gemini AI名寄せ自動採番＆電話番号整形、`alignPastExamineesSheet.gs`: 過去受験者31列整形、`MarketingReport.gs`: GA4/GSC/Clarity/台帳集計＋Gemini 3系分析の日次Google Chat速報） |
 | **動画・メディア** | Cloudflare R2 (`pub-ba61870bbe1442af87f84c258e756736.r2.dev`) ＆ `scripts/optimize_images.py` | 申込手順解説動画 `apply-guide.mp4` の遅延ロード再生、PIL + macOS `sips` による AVIF/WebP 最適化 |
-| **計測** | Google Analytics 4 (`GT-NBJ63L9J` / `G-QCFQWJHMQD`) ＆ Microsoft Clarity (`z5nnqjwyks`) | `requestIdleCallback` ＋初回操作イベントによる完全遅延ロード（初期メインスレッド TBT 0ms 化） |
+| **計測** | Google Analytics 4 (`GT-NBJ63L9J` / `G-QCFQWJHMQD`) ＆ Microsoft Clarity (`z5nnqjwyks`) | GA4 は `DOMContentLoaded` 直後の `requestIdleCallback(timeout: 400ms)`（または初回操作時即時）で非同期ロードし短時間離脱・即遷移の計測漏れをゼロ化。Microsoft Clarity（`z5nnqjwyks`）と非クリティカル Web フォントのみ初回操作または `3500ms`（トップ `5500ms`）遅延ロードを維持して TBT 0ms・PSI 97+ を両立（`404.html` は GA4 ビーコン送信後に `/?from_404=` へ遷移） |
 | **品質ゲート / CI** | Playwright E2E ＋ 静的検査 ＋ TypeScript ＋ GitHub Actions | `scripts/smart-quality-gate.mjs`（PREVIEW / FAST / FULL 3モード）、Git `pre-push` フック物理ロック、`.github/workflows/ci.yml` |
 
 ---
@@ -117,7 +117,7 @@
 | `gas/MarketingReport.gs` | `CLARITY_API_TOKEN` | Microsoft Clarity Data Export API v1 トークン（任意・未設定時スキップ、6時間キャッシュ） |
 | `gas/MarketingReport.gs` | `GEMINI_API_KEY` | 日次マーケティング分析用 Gemini API キー（`x-goog-api-key` ヘッダー送信、3系カスケード） |
 | `gas/MarketingReport.gs` | `GOOGLE_CHAT_WEBHOOK_URL` | 日次速報の Google Chat 投稿先 Incoming Webhook URL |
-| `gas/MarketingReport.gs` | `SHEET_NAME` / `DAILY_REPORT_LAST_SENT_DATE` / `DAILY_REPORT_RETRY_COUNT` | 台帳シート名（既定 `main`）および二重送信ガード・503リトライ回数管理（自動更新） |
+| `gas/MarketingReport.gs` | `SHEET_NAME` / `HISTORY_SHEET_NAME` / `DAILY_REPORT_LAST_SENT_DATE` / `DAILY_REPORT_RETRY_COUNT` | 台帳シート名（既定 `main`）・日次履歴蓄積シート名（既定 `マーケティング履歴`）・二重送信ガード・503リトライ回数管理（自動更新） |
 
 ---
 
@@ -176,7 +176,7 @@ flowchart LR
 | `gas/MailSender.gs` | メール一斉・スケジュール配信 ＆ 配信停止 | メニュー `📧 おかもしメール配信`、`processScheduledEmailsCron`（毎朝9時台定時）、Resend Batch API（`BATCH_SIZE=80`）、`未申込:〇〇` 横断抽出、`handleUnsubscribeGet_(e)` ワンクリック停止。シート: `メール配信作成`, `メールテンプレート保管庫`, `配信スケジュール`, `配信ログ`, `配信停止リスト`, `過去受験者` |
 | `gas/MemberIdManager.gs` | 会員No（受験番号）名寄せ・採番 ＆ 電話整形 | メニュー `🔢 受験番号・データ統合`（`onOpenTriggerForMember`）、`今年度_旧シート` 統合、Z〜AE 列（31列拡張）への Gemini 名寄せ＆MAX+1 採番、電話番号先頭0補完・ハイフン整形 |
 | `gas/alignPastExamineesSheet.gs` | 過去受験者タブ 31 列整形 | 旧 25 列の `過去受験者` タブを `過去受験者_旧バックアップ`（非表示）へ退避後に `main` と同一 31 列構成へ変換 |
-| `gas/MarketingReport.gs` | 日次マーケティング速報（Google Chat） | `runDailyMarketingReport`（`setupDailyMorningTrigger` により毎朝 6:37 JST、503時は12分間隔×最大3回自動リトライ）、`testRunDailyMarketingReportNow`。`main` + `模試基本情報`/`模試マスター` + GA4 + Search Console + Clarity（6hキャッシュ）を Gemini 3系（`gemini-3.5-flash-lite` 等）で分析し Google Chat へ投稿 |
+| `gas/MarketingReport.gs` | 日次マーケティング速報（Google Chat）＆日次履歴蓄積 | `runDailyMarketingReport`（`setupDailyMorningTrigger` により毎朝 6:37 JST、503時は12分間隔×最大3回自動リトライ）、`testRunDailyMarketingReportNow`。`main` + `過去受験者`（受付日時欠損時は最終実績フォールバック対応）+ `模試基本情報`/`模試マスター`（同日締切時は中3最優先取得）+ GA4 + Search Console（上位・伸長・見送り機会損失クエリTOP3）+ Clarity（6hキャッシュ）を、マーケティング憲法（第7章）に基づき Gemini 3系（`gemini-3.5-flash-lite` 等）で分析し Google Chat へ投稿。配信成功時に `マーケティング履歴` シートへ主要KPI・AI抽出インサイトを1行自動記録（upsert：`appendDailyMarketingHistory_`） |
 
 - **運用・保守上の留意点**:
   1. `doGet(e)` の `?action=unsubscribe` 委譲（`MailSender.gs` `handleUnsubscribeGet_(e)`）および `createRows_` の `assignMemberIdsForRows_` / `formatJapanesePhone_` 連携は `gas/apply-ledger.gs` へ統合済み。本番スプレッドシートの `コード.gs` 反映時は Web アプリ URL 維持のため必ず既存デプロイの「新バージョン」編集で更新すること。
@@ -184,7 +184,50 @@ flowchart LR
 
 ---
 
-## 7. デザインシステム ＆ 運用絶対ルール（`GEMINI.md` 準拠要約）
+## 第7章：マーケティング憲法（顧客インサイト抽出・売り込み不要化アーキテクチャ）
+
+> 本章は、AI（Gemini / Antigravity / GAS 分析）および計測・サイト改善に関わる全施策が「何のためにデータを集め、何を分析すべきか」という最上位目的を決して忘却しないための永久原則（単一正本）である。
+
+### 7.1 最上位目的（ドラッカー原則：売り込みの不要化）
+- マーケティングの目的は、**「顧客が何を買いたいか」を徹底的に理解し、顧客が求める答えを先回りして提示することで「売り込み（販売）を不要にすること」**である。
+- 当サイトにおける「顧客が本当に買いたいもの」は、紙のテスト用紙そのものではなく、**『志望校合格への現在地の確信と、次に何をすべきかの具体的な処方箋・安心』**である。
+- すべてのデータ収集（GA4 / Search Console / Microsoft Clarity / 申込台帳 / 過去受験者データ / 将来のVOC）・分析レポート・UI/SEO改善は、この最上位目的に奉仕する。
+
+### 7.2 買った人の痕跡（成約インサイト）の抽出
+成約に至った保護者・受験生が「何が決め手になって申し込んだか（今求めている価値）」を、以下の実数データの掛け合わせで特定する。
+- **Search Console（流入クエリ・伸長クエリ）**: `topQueries` および前週比で急伸している `risingQueries` から、検索時点で顕在化している関心・不安テーマを把握する。
+- **GA4（熟読ページ・滞在秒数・ファネル）**: トップ除外の人気ページ `topPages`（PV・ユニークユーザー数・平均滞在秒数）から、どの情報（実施塾一覧・コラム・日程・よくある質問等）が熟読され `/apply/` へ送客しているかを特定する。
+- **申込台帳（学年別・会場別・昨年比較）**: `main` シートの直近7日ペース・累積 `paid`・学年別（中3/中2/中1/小6）・会場別（岡山/倉敷/津山/自宅）の推移と昨年同時期比／昨年最終実績達成率を照合し、伸びているセグメントと動機を特定する。
+
+### 7.3 買わなかった4層（失注インサイト）の炙り出し
+未申込・離脱の要因を曖昧な推測で片付けず、顧客接点の上流から下流まで以下の **4層** に分解してボトルネックを実数で炙り出す。
+
+1. **第1層：サイトに来なかった人（検索結果での見送り）**
+   - **指標**: Search Console の「表示回数が多いのに CTR が低い（スルーされた）検索クエリ」および「順位が 8〜20 位（または 3〜15 位の伸びしろ帯）で埋もれているクエリ」（`missedOpportunityQueries`）。
+   - **意味する壁**: 検索結果の看板（`<title>`・`meta description`）と、保護者・受験生が抱えている不安や求める答えとのミスマッチ。
+2. **第2層：来てすぐ帰った人（ファーストビュー・導線での期待外れ）**
+   - **指標**: GA4 の短時間離脱（`gtag.js` の 3.5 秒遅延ロード解除により 100% 計測）＋ Microsoft Clarity の即戻り（Quickback）・押せない場所タップ（DeadClick）・ボタン連打（RageClick）・スクロール深度。
+   - **意味する壁**: ファーストビューや日程・会場確認時の期待外れ、情報発見の難しさ、旧URLからの不適切リダイレクト（トップ一括転送によるソフト404／404計測消失を含む）。旧URLの適正301マッピングと `404.html` のビーコン送信後遷移（`?from_404=`）によりこの層の欠損を根絶する。
+3. **第3層：フォーム `/apply/` で諦めた人（申込直前の躊躇）**
+   - **指標**: `/apply/` 到達ユーザー数（`applyPageUsers7d`）と申込送信数（`recent7dAllOrders`）のギャップ（フォーム離脱率 `100 - CVR%`）、およびコンビニ決済の未入金・期限切れキャンセル件数。
+   - **意味する壁**: 入力項目の負担・不明点、決済手段の制約、日程都合による迷い。
+4. **第4層：前回受けて今回まだ買っていない人（休眠・見送り層）**
+   - **指標**: `過去受験者` シートの昨年同号実績（同時期比較および受付日時欠損行を含む昨年最終実績達成率）と今年の学年別・会場別ギャップ。
+   - **意味する壁**: 受験案内の未認知・スケジュール不整合。自宅受験への振替案内や未申込フォローメール（`MailSender.gs` `未申込:〇〇` 抽出）の最重要ターゲット。
+
+### 7.4 定期アウトプットの原則（ポエム禁止・実数と転換策の義務化）
+AI（Gemini / Antigravity / GAS 分析）は、単なる数値の羅列や抽象的な感想文（「徐々に動き出しています」「今後の推移に注目です」等）を出力してはならない。必ず実数に基づき、以下の3点を導き出すこと。
+1. **① `[買う理由]`（成約インサイト）**: 熟読ページ・伸長クエリ・好調学年/会場から見える「今保護者が求めている価値」。
+2. **② `[買わない壁]`（失注インサイト）**: 上記4層（①検索スルーワード / ②トップ即戻り・空タップ / ③`/apply/` 離脱率・未入金 / ④昨年比遅れ学年・会場）のうち、今日最大のボトルネックと実数。
+3. **③ `[転換の打ち手]`（売り込み不要化の具体策）**: 売り込まずにその壁を消す具体的な1手（どの URL・検索看板タイトル・導線・案内文・メルマガに、顧客が求めるどの答えを先回り提示するか）。
+
+### 7.5 日次履歴蓄積と将来のCRM拡張統合（VOC還流アーキテクチャ）
+- **日次履歴の自動蓄積**: `gas/MarketingReport.gs` は毎朝の配信成功時、同一スプレッドシート内の `マーケティング履歴` シート（未作成時はヘッダー19列付きで自動生成）へ基準日 `targetDate` の主要KPIおよび AI 抽出インサイト（買う理由・買わない壁・転換の打ち手）を重複なし（upsert）で1行自動蓄積し、施策前後の変化を時系列で追跡可能にする。
+- **将来の CRM・VOC 統合**: 今後構築する **Supabase 顧客管理 × 050電話 AI 文字起こし × メール問い合わせ × サンクス画面／未申込メールの1タップアンケート** から得られる「生の声（VOC：Voice of Customer）」もすべて本憲法の4層・成約インサイト分類の下に統合し、定量KPIと定性VOCを本 Notebook（単一正本）へ継続還流させる。
+
+---
+
+## 8. デザインシステム ＆ 運用絶対ルール（`GEMINI.md` 準拠要約）
 
 1. **カラー規約**: メイン `#134230` (`brand-green`)・見出し濃色 `#064e3b` / `#1E3A2F`・CTA 専用バーントオレンジ `bg-orange-700 hover:bg-orange-800`・背景 `#F1F5F9`・カード `bg-white`・テキスト `slate-*`。Tailwind 標準 `blue-*` `indigo-*` `violet-*` `purple-*` `fuchsia-*` `pink-*` `cyan-*` `lime-*` `yellow-*` `stone-*` `neutral-*` `green-*` および `ALLOWED_HEX` 外の新規任意 HEX 追加を禁止。
 2. **形状・可読性規約**: 角丸上限 **8px**（ピルのみ `rounded-full`）。重要テキスト（会場名・注釈・日程・注意事項）への `truncate` / `line-clamp-*` 禁止。セル内改行は `whitespace-pre-line break-words`、`※` 注釈は `0.85em` + `text-slate-500` で別要素分離、外部文字列の `innerHTML` 挿入時は必ず `js/venue-format.js` の `escapeHtml()` を通す。
@@ -192,7 +235,7 @@ flowchart LR
 
 ---
 
-## 8. 意思決定・仕様変更ログ（ADR）
+## 9. 意思決定・仕様変更ログ（ADR）
 
 - **[ADR-001] 2026-10-10 | D1 マスター配信基盤の構築**: 郵便番号（日本郵便 `utf_ken_all`）と全国学校コード（文科省）を Cloudflare D1 (`okamoshi-master`) へ格納し、`/api/address`・`/api/schools` の低遅延検索 API を確立（`migrations/0001`）。
 - **[ADR-002] 2026-10-14 | 決済・通知・ボット防御セキュリティハードニング**: シークレット類のコード直書き撤廃、Stripe Checkout サーバー側正規定価 5,500 円強制、Webhook HMAC-SHA256 署名検証、`/api/apply` の `session_id` 検証、Turnstile 検証を必須化。
@@ -208,3 +251,4 @@ flowchart LR
 - **[ADR-012] 2026-11-25 | 受付台帳スプレッドシート追加 GAS 4ファイルのリポジトリ一元管理 ＆ Gemini Notebook 完全同期**: `gas/MailSender.gs`, `gas/MemberIdManager.gs`, `gas/alignPastExamineesSheet.gs`, `gas/MarketingReport.gs` を Git 管理下へ取り込み、`00_ACTIVE_MASTER_SPEC.md` および `06_実装コードバンドル_FullStack_HTML_JS_Functions.md` に全文収録してゼロ矛盾ローテーション同期を実施。
 - **[ADR-013] 2026-11-25 | 受付台帳C/D列短縮正規化（3層ガード）・GAS自動採番＆配信停止統合・外部塾URL一時タイムアウト耐性強化**: `functions/_shared/exam.ts`（`normalizeVenueShortName` / `normalizeIssueShortName`）・`js/apply-form.js`・`create-checkout-session.ts`・`stripe-webhook.ts`・`gas/apply-ledger.gs`（`stripParens_`）の多層ガードで台帳 C列＝月号のみ・D列＝会場区分名のみへ統一（メール本文 `r.label` は維持）。あわせて `gas/apply-ledger.gs` へ `doGet(e)` の `handleUnsubscribeGet_(e)` 委譲と `createRows_` からの `assignMemberIdsForRows_` 安全呼び出し（`try-catch`＋`SpreadsheetApp.flush`）・`formatJapanesePhone_` 連携を統合。また `scripts/check-juku-urls.mjs` で外部サーバー一時タイムアウト/502〜504のみ WARN 扱い（404/DNS失効/パーキング化等の明確なリンク切れ NG 検知は厳格維持）へ強化。
 - **[ADR-014] 2026-11-25 | 在籍校名オートフィル誤爆防止・人名一致ブロック（自由入力・略称完全許容）＆ 住所町名重複クレンジング四層防御**: `apply/index.html` の `#currentSchool` にオートフィル誤認防止属性（`autocomplete="off"` + `data-1p-ignore="true"` / `data-lpignore="true"` / `data-bwignore="true"` / `data-form-type="other"`）を付与し、`js/apply-form.js` の氏名・フリガナ 8 欄連動による自動復元/クリアと `localStorage` 汚染防止を実装。フロント（`js/apply-form.js`）およびサーバー（`functions/_shared/form-guards.ts` 経由 `create-checkout-session.ts`）での学校名検証は「空欄」および「生徒・保護者の氏名・フリガナ一致」のみをブロックし、略称（例：`操山`）や候補外の自由入力はすべて許容。あわせて住所 V列（町名・丁目・番地）の町名重複・サフィックス重複（`福田町福田 福田2413-6` 等）・都道府県/市区町村重複オートフィルを `js/apply-form.js`・`create-checkout-session.ts`・`stripe-webhook.ts` / `apply-initial-mail.ts`・`gas/apply-ledger.gs`（`cleanAddressLine1_`）の四層で自動正規化（単体テスト・E2E 検証追加）。
+- **[ADR-015] 2026-11-26 | マーケティング憲法（第7章）刻印 ＆ `MarketingReport.gs` 進化・GA4 計測漏れ解消・旧 URL 適正 301・`404.html` 計測後遷移**: `00_ACTIVE_MASTER_SPEC.md` に第7章「マーケティング憲法（買う理由・買わない4層の失注インサイト抽出・売り込み不要化）」を永続刻印。`gas/MarketingReport.gs` に①同日締切時の中3実施日最優先取得、②`過去受験者` A列欠損時の昨年最終実績フォールバック、③Search Console 高表示・低CTR/順位伸びしろクエリ TOP3（`missedOpportunityQueries`）抽出、④Gemini プロンプトへの憲法3行診断組み込み、⑤`マーケティング履歴` シートへの日次 upsert 蓄積（`appendDailyMarketingHistory_`）を実装。全 HTML で `gtag.js`（`GT-NBJ63L9J`）を `DOMContentLoaded` 直後 `requestIdleCallback(timeout: 400ms)` へ分離し（Clarity・非クリティカルフォント遅延は維持して TBT 0ms 両立）、`_redirects` の旧 URL を意味一致の下層ページ（`/schools.html`, `/news.html`, `/#schedule-selector`, `/#faq`）へ再マッピングし、`404.html` を GA4 ビーコン送信後リダイレクト（`/?from_404=`）へ改修。

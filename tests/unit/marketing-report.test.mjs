@@ -105,9 +105,42 @@ function makeSheet(values) {
   };
 }
 
+function makeMutableSheet(initialRows = []) {
+  const rows = initialRows.map((r) => [...r]);
+  let frozenRows = 0;
+  return {
+    rows,
+    getFrozenRows: () => frozenRows,
+    setFrozenRows: (n) => { frozenRows = n; },
+    getLastRow: () => rows.length,
+    getDataRange: () => ({
+      getValues: () => rows.map((r) => [...r]),
+    }),
+    appendRow: (row) => {
+      rows.push([...row]);
+    },
+    getRange: (startRow, startCol, numRows, numCols) => ({
+      setValues: (vals) => {
+        for (let r = 0; r < numRows; r++) {
+          const idx = startRow - 1 + r;
+          while (rows.length <= idx) rows.push([]);
+          for (let c = 0; c < numCols; c++) {
+            rows[idx][startCol - 1 + c] = vals[r][c];
+          }
+        }
+      },
+    }),
+  };
+}
+
 function makeSpreadsheet(sheetMap) {
   return {
     getSheetByName: (name) => sheetMap[name] || null,
+    insertSheet: (name) => {
+      const sh = makeMutableSheet([]);
+      sheetMap[name] = sh;
+      return sh;
+    },
   };
 }
 
@@ -120,6 +153,7 @@ test('GAS MarketingReport.gs: 構文エラーなし & 全主要関数定義チ�
     'setupDailyMorningTrigger',
     'clearClarityCache',
     'executeMarketingReport_',
+    'getScheduleGradePriority_',
     'resolveTargetExamInfo_',
     'getNextExamAndOrderSummary',
     'aggregateCurrentLedgerRows_',
@@ -130,6 +164,8 @@ test('GAS MarketingReport.gs: 構文エラーなし & 全主要関数定義チ�
     'buildGeminiPrompt_',
     'generateGeminiAnalysis',
     'buildFallbackReport_',
+    'extractInsightSummariesFromReport_',
+    'appendDailyMarketingHistory_',
   ];
   for (const fn of requiredFns) {
     assert.equal(typeof ctx[fn], 'function', `${fn} が関数として定義されていること`);
@@ -579,6 +615,10 @@ test('Geminiプロンプト禁止表現＆buildFallbackReport_コンパクト出
         { query: '岡山 模試 中3', clicksDiff: 14, impressionsDiff: 240 },
         { query: 'おかもし', clicksDiff: 10, impressionsDiff: 30 },
       ],
+      missedOpportunityQueries: [
+        { query: '岡山 高校入試 模試 偏差値', clicks: 4, impressions: 320, ctr: '1.3%', position: '9.4', reason: '高表示・低CTR＆順位8〜20位' },
+        { query: 'おかもし 過去問', clicks: 3, impressions: 180, ctr: '1.7%', position: '6.2', reason: '高表示・低CTR(スルー)' },
+      ],
     },
     clarity: {
       enabled: true,
@@ -592,10 +632,17 @@ test('Geminiプロンプト禁止表現＆buildFallbackReport_コンパクト出
 
   const prompt = ctx.buildGeminiPrompt_(sampleRaw);
   assert.ok(prompt.includes('抽象的な感想文・ポエム・一般論は全面禁止'));
+  assert.ok(prompt.includes('マーケティング憲法'));
   assert.ok(prompt.includes('残り *20日*'));
   assert.ok(prompt.includes('残り *17日*'));
   assert.ok(prompt.includes('CVR 50%'));
+  assert.ok(prompt.includes('離脱率 50%'));
   assert.ok(prompt.includes('岡山 模試 中3'));
+  assert.ok(prompt.includes('岡山 高校入試 模試 偏差値'));
+  assert.ok(prompt.includes('■ 顧客インサイト診断'));
+  assert.ok(prompt.includes('[買う理由]'));
+  assert.ok(prompt.includes('[買わない壁]'));
+  assert.ok(prompt.includes('[転換の打ち手]'));
 
   const fallback = ctx.buildFallbackReport_(sampleRaw);
   const lineCount = fallback.split('\n').length;
@@ -605,4 +652,205 @@ test('Geminiプロンプト禁止表現＆buildFallbackReport_コンパクト出
   assert.ok(fallback.includes('CVR 50%'));
   assert.ok(fallback.includes('/apply/'));
   assert.ok(fallback.includes('岡山 模試 中3'));
+  assert.ok(fallback.includes('岡山 高校入試 模試 偏差値'));
+  assert.ok(fallback.includes('[買う理由]:'));
+  assert.ok(fallback.includes('[買わない壁]:'));
+  assert.ok(fallback.includes('[転換の打ち手]:'));
+});
+
+test('同日締切(12/14)で小6適性検査と中3が混在する場合でも中3実施日(倉敷12/26・岡山12/27・津山1/9)を最優先選択すること', () => {
+  const mainHeaders = ['受付日時', 'セッションID', '対象模試', '受験会場', '単価', '決済ステータス', '決済手段', 'H', 'I', 'J', '生徒氏名', 'フリガナ', '学年'];
+  const mainSheet = makeSheet([mainHeaders]);
+
+  // 小6適性検査が先に並んでいるペイロード（締切は同じ 2026-12-14）
+  const apiPayload = {
+    success: true,
+    flat: {
+      schedules: [
+        { id: 'p6_12', grade_code: 'p6', grade_name: '小6', issue_name: '12月号適性検査', apply_deadline: '2026-12-14 23:59' },
+        { id: 'c2_12', grade_code: 'c2', grade_name: '中2', issue_name: '12月号', apply_deadline: '2026-12-14 23:59' },
+        { id: 'c3_12', grade_code: '', grade_name: '中学3年', issue_name: '12月号', apply_deadline: '2026-12-14 23:59' },
+      ],
+      venues: [
+        { schedule_id: 'p6_12', venue_type: '岡山会場', exam_date_start: '2027-01-10' },
+        { schedule_id: 'c3_12', venue_type: '津山会場', exam_date_start: '2027-01-09' },
+        { schedule_id: 'c3_12', venue_type: '倉敷会場', exam_date_start: '2026-12-26' },
+        { schedule_id: 'c3_12', venue_type: '岡山会場', exam_date_start: '2026-12-27' },
+        { schedule_id: 'c3_12', venue_type: '自宅受験', exam_date_start: '2026-12-26' },
+      ],
+    },
+  };
+
+  const { ctx } = loadMarketingReportGas({
+    SpreadsheetApp: { getActiveSpreadsheet: () => makeSpreadsheet({ main: mainSheet }) },
+    UrlFetchApp: {
+      fetch: () => ({
+        getResponseCode: () => 200,
+        getContentText: () => JSON.stringify(apiPayload),
+      }),
+    },
+  });
+
+  const summary = ctx.getNextExamAndOrderSummary('main', '2026-11-25', {});
+  assert.equal(summary.targetExamMonth, '12月号');
+  assert.deepEqual(JSON.parse(JSON.stringify(summary.examDates)), [
+    { venue: '倉敷', date: '2026-12-26' },
+    { venue: '岡山', date: '2026-12-27' },
+    { venue: '津山', date: '2027-01-09' },
+  ]);
+});
+
+test('過去受験者シートの受付日時(A列)欠損行フォールバック: 昨年最終実績件数と現在達成率を算出すること', () => {
+  const headers = ['受付日時', 'セッションID', '対象模試', '受験会場', '単価', '決済ステータス', '決済手段', 'H', 'I', 'J', '生徒氏名', 'フリガナ', '学年'];
+  const row = (date, exam, venue, status, grade) => [date, 'cs_1', exam, venue, 5500, status, 'card', '', '', '', 'テスト', 'テスト', grade];
+
+  const mainRows = [
+    headers,
+    row('2026-11-20 10:00', '12月号', '岡山会場', 'paid', '中3'),
+    row('2026-11-21 10:00', '12月号', '倉敷会場', 'paid', '中3'),
+    row('2026-11-22 10:00', '12月号', '津山会場', 'paid', '中2'),
+  ];
+  // A列の受付日時が空欄のみの過去受験者シート（計6件: 中3=4, 中2=2）
+  const pastRowsUndated = [
+    headers,
+    row('', '12月号', '岡山会場', 'paid', '中3'),
+    row('', '12月号', '岡山会場', 'paid', '中3'),
+    row('', '12月号', '倉敷会場', 'paid', '中3'),
+    row('', '12月号', '津山会場', 'paid', '中3'),
+    row('', '12月号', '岡山会場', 'paid', '中2'),
+    row('', '12月号', '自宅受験', 'paid', '中2'),
+    row('', '12月号', '岡山会場', 'キャンセル', '中3'),
+    row('', '10月号', '岡山会場', 'paid', '中3'),
+  ];
+
+  const { ctx } = loadMarketingReportGas({
+    SpreadsheetApp: {
+      getActiveSpreadsheet: () =>
+        makeSpreadsheet({ main: makeSheet(mainRows), 過去受験者: makeSheet(pastRowsUndated) }),
+    },
+  });
+
+  const summary = ctx.getNextExamAndOrderSummary('main', '2026-11-25', {});
+  assert.equal(summary.lastYearComparison.available, true);
+  assert.equal(summary.lastYearComparison.sameTimingAvailable, false);
+  assert.equal(summary.lastYearComparison.sameTimingPaidTotal, null);
+  assert.equal(summary.lastYearComparison.undatedMatchedRows, 6);
+  assert.equal(summary.lastYearComparison.finalPaidTotal, 6);
+  assert.equal(summary.lastYearComparison.finalAchievementPct, 50.0); // 3 / 6
+  assert.equal(summary.lastYearComparison.byGrade['中3'].lastYearFinal, 4);
+  assert.equal(summary.lastYearComparison.byGrade['中3'].finalAchievementPct, 50.0); // 2 / 4
+  assert.equal(summary.lastYearComparison.byGrade['中2'].lastYearFinal, 2);
+  assert.equal(summary.lastYearComparison.byGrade['中2'].finalAchievementPct, 50.0); // 1 / 2
+
+  const rawData = { targetDate: '2026-11-25', exam: summary, ga4: { periods: {}, topPages: [], channels: [], applyFunnel: {} }, searchConsole: {}, clarity: {} };
+  const prompt = ctx.buildGeminiPrompt_(rawData);
+  assert.ok(prompt.includes('昨年最終実績 6件（現在達成率50%）'));
+  const fallback = ctx.buildFallbackReport_(rawData);
+  assert.ok(fallback.includes('昨年最終実績 6件（達成率 *50%*）'));
+});
+
+test('Search Console 第1層(見送り・機会損失クエリ TOP3)を正しく抽出すること', () => {
+  const { ctx } = loadMarketingReportGas({
+    UrlFetchApp: {
+      fetch: (_url, opts) => {
+        const body = JSON.parse(opts.payload);
+        if (body.startDate === '2026-11-16') {
+          return {
+            getResponseCode: () => 200,
+            getContentText: () => JSON.stringify({
+              rows: [
+                { keys: ['おかもし'], clicks: 60, impressions: 200, ctr: 0.30, position: 1.1 },
+                { keys: ['岡山 高校入試 模試'], clicks: 8, impressions: 600, ctr: 0.0133, position: 9.2 },
+                { keys: ['岡山 模試 中3 日程'], clicks: 12, impressions: 350, ctr: 0.0342, position: 4.5 },
+                { keys: ['岡山 統一模試 過去問'], clicks: 3, impressions: 250, ctr: 0.012, position: 11.4 },
+                { keys: ['おかもし 申し込み'], clicks: 40, impressions: 150, ctr: 0.266, position: 1.4 },
+              ],
+            }),
+          };
+        }
+        return { getResponseCode: () => 200, getContentText: () => JSON.stringify({ rows: [] }) };
+      },
+    },
+  });
+
+  const sc = ctx.getSearchConsoleSummary('https://okayama-moshi.com/', '2026-11-24');
+  assert.equal(sc.missedOpportunityQueries.length, 3);
+  assert.equal(sc.missedOpportunityQueries[0].query, '岡山 高校入試 模試');
+  assert.equal(sc.missedOpportunityQueries[0].reason, '高表示・低CTR＆順位8〜20位');
+  assert.equal(sc.missedOpportunityQueries[1].query, '岡山 模試 中3 日程');
+  assert.equal(sc.missedOpportunityQueries[2].query, '岡山 統一模試 過去問');
+});
+
+test('マーケティング履歴シートへの日次自動蓄積（シート自動作成・ヘッダー・追記・同一日upsert）', () => {
+  const sheetMap = {};
+  const { ctx } = loadMarketingReportGas({
+    SpreadsheetApp: { getActiveSpreadsheet: () => makeSpreadsheet(sheetMap) },
+  });
+
+  const reportText = [
+    '📊 *おかもし日次マーケティング速報（2026-11-25）*',
+    '■ 顧客インサイト診断（買う理由・買わない壁・売り込み不要化の打ち手）',
+    '・[買う理由]: /schools.html(平均滞在82秒)熟読後に中3が前週比+14件',
+    '・[買わない壁]: 第1層 "岡山 模試"(480imp/CTR1.8%/9.5位)で検索スルー',
+    '・[転換の打ち手]: 検索title先頭へ「12/26・27開催＆合格判定データ」を明記',
+  ].join('\n');
+
+  const insights = ctx.extractInsightSummariesFromReport_(reportText);
+  assert.equal(insights.buyReason, '/schools.html(平均滞在82秒)熟読後に中3が前週比+14件');
+  assert.equal(insights.barrier, '第1層 "岡山 模試"(480imp/CTR1.8%/9.5位)で検索スルー');
+  assert.equal(insights.action, '検索title先頭へ「12/26・27開催＆合格判定データ」を明記');
+
+  const baseRaw = {
+    targetDate: '2026-11-25',
+    exam: {
+      targetExamMonth: '12月号',
+      daysLeftCard: 19,
+      daysLeftKonbini: 16,
+      currentExamPaid: 145,
+      currentExamUnpaid: 8,
+      dailyPace7d: 6.4,
+      requiredDailyPace: 9.8,
+      lastYearComparison: { yoyPct: 112.5, finalAchievementPct: 42.1 },
+    },
+    ga4: {
+      periods: { last7d: { users: 360, pageViews: 1020 } },
+      applyFunnel: { applyPageUsers7d: 100, cvrAllPct: 48.0 },
+    },
+    searchConsole: {
+      topQueries: [{ query: 'おかもし', clicks: 55 }],
+      missedOpportunityQueries: [{ query: '岡山 模試', impressions: 480, ctr: '1.8%' }],
+    },
+  };
+
+  // 1回目: シート新規作成 ＋ ヘッダー19列 ＋ 1行追記
+  const res1 = ctx.appendDailyMarketingHistory_(baseRaw, reportText, {});
+  assert.equal(res1.action, 'appended');
+  const histSheet = sheetMap['マーケティング履歴'];
+  assert.ok(histSheet, 'マーケティング履歴シートが自動作成されること');
+  assert.equal(histSheet.getFrozenRows(), 1);
+  assert.equal(histSheet.rows.length, 2);
+  assert.equal(histSheet.rows[0][0], '基準日');
+  assert.equal(histSheet.rows[0].length, 19);
+  assert.equal(histSheet.rows[1][0], '2026-11-25');
+  assert.equal(histSheet.rows[1][4], 145);
+  assert.equal(histSheet.rows[1][6], '112.5%');
+  assert.equal(histSheet.rows[1][15], insights.buyReason);
+  assert.equal(histSheet.rows[1][16], insights.barrier);
+  assert.equal(histSheet.rows[1][17], insights.action);
+
+  // 2回目: 同じ targetDate で再実行すると重複追記せず同じ行を上書き更新（upsert）
+  const updatedRaw = JSON.parse(JSON.stringify(baseRaw));
+  updatedRaw.exam.currentExamPaid = 152;
+  const res2 = ctx.appendDailyMarketingHistory_(updatedRaw, reportText, {});
+  assert.equal(res2.action, 'updated');
+  assert.equal(histSheet.rows.length, 2, '同一基準日は重複追記されず2行(ヘッダー+1データ行)のままであること');
+  assert.equal(histSheet.rows[1][4], 152);
+
+  // 3回目: 別日なら新規追記
+  const nextDayRaw = JSON.parse(JSON.stringify(updatedRaw));
+  nextDayRaw.targetDate = '2026-11-26';
+  const res3 = ctx.appendDailyMarketingHistory_(nextDayRaw, reportText, {});
+  assert.equal(res3.action, 'appended');
+  assert.equal(histSheet.rows.length, 3);
+  assert.equal(histSheet.rows[2][0], '2026-11-26');
 });

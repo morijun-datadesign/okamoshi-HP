@@ -938,32 +938,48 @@ test('内部リンク切れゼロ', async ({ request }, testInfo) => {
   expect(brokenLinks, `リンク切れ（全 ${targets.size} 件中）`).toEqual([]);
 });
 
-// ---- 旧サイト（旧WordPress等）URLの301リダイレクト＆404.htmlからトップページ(/)への即時自動転送検査
-test('旧サイトURLの301リダイレクト＆未定義URLからトップページ(/)への自動転送', async ({ page, request }, testInfo) => {
+// ---- 旧サイト（旧WordPress等）URLの意味一致301リダイレクト＆404.html GA4計測後トップページ(/)遷移検査
+test('旧サイトURLの適正301リダイレクト＆未定義URLからGA4計測後のトップページ(/)遷移', async ({ page, request }, testInfo) => {
   test.skip(testInfo.project.name !== 'pc-1280', 'PCプロジェクトのみで実行');
 
-  // 1. _redirects に定義された旧WordPress等のパターンが 301 で / へリダイレクトされること
-  const legacyRedirectPaths = [
-    '/2024/05/old-post/',
-    '/category/news/',
-    '/tag/exam/',
-    '/wp-admin/',
-    '/wp-login.php',
-    '/feed/',
-    '/school-list/try-hirajima',
-    '/touitsu-moshi/',
-    '/tekisei-moshi/',
-    '/test-touitsu/',
-    '/touitsu_tag/junior-3/',
-    '/touitsu_tag/junior-2/',
+  // 1. _redirects に定義された旧URLが意味の一致する現行ページへ 301 リダイレクトされること
+  const semanticRedirectRules = [
+    { from: '/school-list', to: '/schools.html' },
+    { from: '/school-list/try-hirajima', to: '/schools.html' },
+    { from: '/topics', to: '/news.html' },
+    { from: '/topics/spring-info', to: '/news.html' },
+    { from: '/information', to: '/news.html' },
+    { from: '/information/detail', to: '/news.html' },
+    { from: '/archives/123', to: '/news.html' },
+    { from: '/archive/123', to: '/news.html' },
+    { from: '/category/news/', to: '/news.html' },
+    { from: '/tag/exam/', to: '/news.html' },
+    { from: '/2018/04/legacy/', to: '/news.html' },
+    { from: '/2024/05/old-post/', to: '/news.html' },
+    { from: '/2026/01/post/', to: '/news.html' },
+    { from: '/guideline', to: '/#schedule-selector' },
+    { from: '/guideline/c3', to: '/#schedule-selector' },
+    { from: '/outline/', to: '/#schedule-selector' },
+    { from: '/venue', to: '/#schedule-selector' },
+    { from: '/venue/okayama', to: '/#schedule-selector' },
+    { from: '/faq', to: '/#faq' },
+    { from: '/faq/exam', to: '/#faq' },
+    { from: '/wp-admin/', to: '/' },
+    { from: '/wp-login.php', to: '/' },
+    { from: '/feed/', to: '/' },
+    { from: '/touitsu-moshi/', to: '/' },
+    { from: '/tekisei-moshi/', to: '/' },
+    { from: '/test-touitsu/', to: '/' },
+    { from: '/touitsu_tag/junior-3/', to: '/' },
+    { from: '/touitsu_tag/junior-2/', to: '/' },
   ];
-  for (const oldPath of legacyRedirectPaths) {
-    const res = await request.get(oldPath, { maxRedirects: 0 });
-    expect(res.status(), `${oldPath} が 301 リダイレクトを返すこと`).toBe(301);
-    expect(res.headers()['location'], `${oldPath} の Location ヘッダーが / であること`).toBe('/');
+  for (const rule of semanticRedirectRules) {
+    const res = await request.get(rule.from, { maxRedirects: 0 });
+    expect(res.status(), `${rule.from} が 301 リダイレクトを返すこと`).toBe(301);
+    expect(res.headers()['location'], `${rule.from} の Location ヘッダーが ${rule.to} であること`).toBe(rule.to);
   }
 
-  // 1-2. 旧お問い合わせパスが現行のお問い合わせ窓口へ 301 リダイレクトされ、現役の /contact/individual/ は 200 を返すこと
+  // 1-2. 旧お問い合わせパスが現行のお問い合わせ窓口へ 301 リダイレクトされ、現役ルートは 200 を返すこと
   const legacyContactRedirects = [
     { from: '/contact/juku/', to: '/contact/organization' },
     { from: '/contact/school/', to: '/contact/organization' },
@@ -977,18 +993,25 @@ test('旧サイトURLの301リダイレクト＆未定義URLからトップペ�
   }
   const activeIndivRes = await request.get('/contact/individual/', { maxRedirects: 0 });
   expect(activeIndivRes.status(), '現役の /contact/individual/ がリダイレクトされず 200 を返すこと').toBe(200);
+  const activeNewsRes = await request.get('/news/', { maxRedirects: 0 });
+  expect(activeNewsRes.status(), '現役の /news/ がリダイレクトされず 200 を返すこと').toBe(200);
+  const activeColumnRes = await request.get('/news/column/', { maxRedirects: 0 });
+  expect(activeColumnRes.status(), '現役の /news/column/ がリダイレクトされず 200 を返すこと').toBe(200);
 
-  // 2. 404.html の中身に meta refresh・window.location.replace('/')・リニューアル案内文言が含まれていること
+  // 2. 404.html の中身に 0秒即時転送がなく、GA4ビーコン計測＆ ?from_404= 引き継ぎ遷移が含まれていること
   const notFoundRes = await request.get('/non-existent-legacy-page-xyz', { maxRedirects: 0 });
   expect(notFoundRes.status(), '未定義URLのHTTPステータスは404であること').toBe(404);
   const notFoundHtml = await notFoundRes.text();
-  expect(notFoundHtml).toContain('<meta http-equiv="refresh" content="0; url=/">');
-  expect(notFoundHtml).toContain("window.location.replace('/')");
+  expect(notFoundHtml).not.toContain('<meta http-equiv="refresh" content="0; url=/">');
+  expect(notFoundHtml).toContain('GT-NBJ63L9J');
+  expect(notFoundHtml).toContain('from_404=');
   expect(notFoundHtml).toContain('公式サイトをリニューアルしました。トップページへ移動します…');
 
-  // 3. 実ブラウザで存在しない旧URLにアクセスした際、即座にトップページ (/) へ自動転送されること
+  // 3. 実ブラウザで存在しない旧URLにアクセスした際、GA4送信待機(~1.2秒)後に /?from_404=... へ自動遷移すること
   await setupPage(page);
   await page.goto('/old-unknown-bookmark-url-12345', { waitUntil: 'domcontentloaded' });
-  await page.waitForURL((u) => u.pathname === '/' || u.pathname === '/index.html', { timeout: 5000 });
-  expect(new URL(page.url()).pathname).toBe('/');
+  await page.waitForURL((u) => u.pathname === '/' && u.searchParams.get('from_404') === '/old-unknown-bookmark-url-12345', { timeout: 5000 });
+  const finalUrl = new URL(page.url());
+  expect(finalUrl.pathname).toBe('/');
+  expect(finalUrl.searchParams.get('from_404')).toBe('/old-unknown-bookmark-url-12345');
 });

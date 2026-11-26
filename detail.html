@@ -27,26 +27,20 @@
   <meta id="og-image" property="og:image" content="https://okayama-moshi.com/og-image.jpg">
   <meta property="og:site_name" content="岡山県統一模擬試験（おかもし）">
   <meta name="twitter:card" content="summary_large_image">
-  <!-- Google tag (gtag.js) 早期非同期ロード（短時間離脱の計測漏れ解消） & Microsoft Clarity・非クリティカルフォント遅延ロード（TBT 0ms維持） -->
+  <!-- Google tag (gtag.js) 即時非同期ロード（0.5秒以内計測・beacon送信） & Microsoft Clarity・非クリティカルフォント遅延ロード（TBT 0ms維持） -->
+  <link rel="preconnect" href="https://www.googletagmanager.com">
+  <link rel="preconnect" href="https://www.google-analytics.com">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=GT-NBJ63L9J"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', 'GT-NBJ63L9J');
+    gtag('config', 'GT-NBJ63L9J', { transport_type: 'beacon' });
     window.clarity = window.clarity || function(){(window.clarity.q = window.clarity.q || []).push(arguments);};
     (function() {
-      var gtagLoaded = false;
       var clarityLoaded = false;
       var fontsLoaded = false;
       var ric = window.requestIdleCallback || function(cb) { return setTimeout(cb, 0); };
-      function loadGtag() {
-        if (gtagLoaded) return;
-        gtagLoaded = true;
-        var g = document.createElement('script');
-        g.async = true;
-        g.src = 'https://www.googletagmanager.com/gtag/js?id=GT-NBJ63L9J';
-        document.head.appendChild(g);
-      }
       function loadFonts() {
         if (fontsLoaded) return;
         fontsLoaded = true;
@@ -64,9 +58,6 @@
         c.src = 'https://www.clarity.ms/tag/z5nnqjwyks';
         document.head.appendChild(c);
       }
-      function scheduleGtagLoad() {
-        ric(loadGtag, { timeout: 400 });
-      }
       function scheduleDeferredLoad() {
         setTimeout(function() {
           ric(loadDeferredAssets, { timeout: 2000 });
@@ -74,15 +65,9 @@
       }
       ['scroll', 'pointerdown', 'keydown', 'touchstart'].forEach(function(ev) {
         window.addEventListener(ev, function() {
-          loadGtag();
           ric(loadDeferredAssets, { timeout: 1000 });
         }, { once: true, passive: true });
       });
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', scheduleGtagLoad, { once: true });
-      } else {
-        scheduleGtagLoad();
-      }
       if (document.readyState === 'complete') {
         scheduleDeferredLoad();
       } else {

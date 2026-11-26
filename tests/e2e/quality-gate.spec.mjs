@@ -1015,3 +1015,69 @@ test('旧サイトURLの適正301リダイレクト＆未定義URLからGA4計�
   expect(finalUrl.pathname).toBe('/');
   expect(finalUrl.searchParams.get('from_404')).toBe('/old-unknown-bookmark-url-12345');
 });
+
+// ---- GA4計測タグ即時asyncロード＆ページ表示から1秒以内の /g/collect ビーコン送信検証
+test('GA4計測タグ即時ロード＆1秒以内の/g/collect送信検証（CSPブロックなし）', async ({ page, request }, testInfo) => {
+  test.skip(testInfo.project.name !== 'pc-1280', 'PCプロジェクトのみで実行');
+
+  // 1. 主要HTMLすべてに <script async src="...GT-NBJ63L9J"> と beacon 設定があり、旧遅延ロード関数が残っていないこと
+  for (const p of ['/', '/apply', '/schools.html', '/news.html', '/contact/']) {
+    const res = await request.get(p);
+    expect(res.status(), `${p} が 200 を返すこと`).toBe(200);
+    const html = await res.text();
+    expect(html, `${p} に gtag.js 直接asyncタグがあること`).toContain('<script async src="https://www.googletagmanager.com/gtag/js?id=GT-NBJ63L9J"></script>');
+    expect(html, `${p} に transport_type: 'beacon' があること`).toContain("transport_type: 'beacon'");
+    expect(html, `${p} に旧遅延 loadGtag/loadAnalytics が残っていないこと`).not.toMatch(/function\s+(loadGtag|loadAnalytics)\s*\(/);
+  }
+
+  // 2. 本番同等CSPヘッダー下でページを開き、操作なしで1秒以内に /g/collect が送信され HTTP 200/204 が返ること
+  const GA_ALLOW_HOSTS = new Set([...ALLOW_HOSTS, 'www.googletagmanager.com', 'www.google-analytics.com', 'analytics.google.com']);
+  const cspViolations = [];
+  await page.addInitScript(() => {
+    window.__cspViolations = [];
+    document.addEventListener('securitypolicyviolation', (e) => {
+      window.__cspViolations.push({ directive: e.violatedDirective, blockedURI: e.blockedURI });
+    });
+  });
+
+  await page.route('**/*', async (route) => {
+    const url = new URL(route.request().url());
+    const local = url.hostname === '127.0.0.1' || (process.env.QG_BASE_URL && url.origin === new URL(process.env.QG_BASE_URL).origin);
+    if (local && url.pathname.startsWith('/api/') && !process.env.QG_BASE_URL) {
+      if (url.pathname.startsWith('/api/exam-guides')) return route.fulfill({ json: examGuidesFixture });
+      if (url.pathname.startsWith('/api/cram-schools')) return route.fulfill({ json: cramSchoolsFixture });
+      return route.fulfill({ json: { success: true, results: [], schools: [] } });
+    }
+    if (local || GA_ALLOW_HOSTS.has(url.hostname) || url.protocol === 'data:') return route.continue();
+    return route.abort('blockedbyclient');
+  });
+
+  const collectRequests = [];
+  const collectResponses = [];
+  const navStart = Date.now();
+
+  page.on('request', (req) => {
+    if (/google-analytics\.com\/g\/collect|analytics\.google\.com\/g\/collect/.test(req.url())) {
+      collectRequests.push({ url: req.url(), ms: Date.now() - navStart });
+    }
+  });
+  page.on('response', (res) => {
+    if (/google-analytics\.com\/g\/collect|analytics\.google\.com\/g\/collect/.test(res.url())) {
+      collectResponses.push({ url: res.url(), status: res.status(), ms: Date.now() - navStart });
+    }
+  });
+
+  await page.goto('/', { waitUntil: 'domcontentloaded' });
+  await expect
+    .poll(() => collectResponses.length, { timeout: 4000, message: 'GA4 /g/collect レスポンスを受信すること' })
+    .toBeGreaterThan(0);
+
+  const violations = await page.evaluate(() => window.__cspViolations || []);
+  cspViolations.push(...violations);
+
+  expect(cspViolations, 'CSP違反が発生していないこと').toEqual([]);
+  expect(collectRequests[0].ms, `GA4 /g/collect がページ表示開始から1秒以内に送信されること (${collectRequests[0].ms}ms)`).toBeLessThanOrEqual(1000);
+  expect(collectRequests[0].url).toContain('tid=G-QCFQWJHMQD');
+  expect(collectRequests[0].url).toContain('en=page_view');
+  expect([200, 204]).toContain(collectResponses[0].status);
+});

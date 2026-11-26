@@ -24,6 +24,30 @@ function loadRedirects(root) {
     .map((l) => { const [from, to, status = '302'] = l.split(/\s+/); return { from, to, status: Number(status) }; });
 }
 
+function loadGlobalHeaders(root) {
+  const file = path.join(root, '_headers');
+  if (!fs.existsSync(file)) return {};
+  const headers = {};
+  let inGlobal = false;
+  for (const rawLine of fs.readFileSync(file, 'utf8').split(/\r?\n/)) {
+    const line = rawLine.trimEnd();
+    if (!line.trim() || line.trim().startsWith('#')) continue;
+    if (!/^\s/.test(line)) {
+      inGlobal = line.trim() === '/*';
+      continue;
+    }
+    if (!inGlobal) continue;
+    const idx = line.indexOf(':');
+    if (idx === -1) continue;
+    const key = line.slice(0, idx).trim();
+    const val = line.slice(idx + 1).trim();
+    if (key && val && key.toLowerCase() !== 'strict-transport-security') {
+      headers[key] = val;
+    }
+  }
+  return headers;
+}
+
 function matchRule(rules, pathname) {
   for (const r of rules) {
     if (r.from.endsWith('*')) {
@@ -47,6 +71,7 @@ function resolveFile(root, pathname) {
 
 export function startServer(root, port = 0) {
   const rules = loadRedirects(root);
+  const globalHeaders = loadGlobalHeaders(root);
   const server = http.createServer((req, res) => {
     const url = new URL(req.url, 'http://localhost');
     let pathname = url.pathname;
@@ -76,12 +101,12 @@ export function startServer(root, port = 0) {
     const file = resolveFile(root, pathname);
     if (!file) {
       const notFound = path.join(root, '404.html');
-      res.writeHead(404, { 'Content-Type': MIME['.html'] });
+      res.writeHead(404, { ...globalHeaders, 'Content-Type': MIME['.html'] });
       return res.end(fs.existsSync(notFound) ? fs.readFileSync(notFound) : 'Not Found');
     }
     // ブロック対象（_redirects で 404.html へリライト）の場合はステータスも 404 として扱う
     const status = rule && rule.status === 200 && rule.to.includes('404') ? 404 : 200;
-    res.writeHead(status, { 'Content-Type': MIME[path.extname(file).toLowerCase()] || 'application/octet-stream' });
+    res.writeHead(status, { ...globalHeaders, 'Content-Type': MIME[path.extname(file).toLowerCase()] || 'application/octet-stream' });
     fs.createReadStream(file).pipe(res);
   });
   return new Promise((resolve) => server.listen(port, '127.0.0.1', () => resolve(server)));

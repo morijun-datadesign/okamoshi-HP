@@ -1,8 +1,8 @@
 {
   "schemaVersion": "1.0",
   "displayName": "[本番運用] 岡山県統一模擬試験（okayama-moshi）",
-  "notebookId": "notebooks/266c5f0e-aeb8-49c8-8843-e950a86d9c79",
-  "notebook_id": "notebooks/266c5f0e-aeb8-49c8-8843-e950a86d9c79",
+  "notebookId": "notebooks/3d8c79dc-3bb7-4074-be99-2022a9d21554",
+  "notebook_id": "notebooks/3d8c79dc-3bb7-4074-be99-2022a9d21554",
   "availableMcpTools": [
     "create_notebook",
     "get_notebook",
@@ -13,87 +13,87 @@
     "list_sources"
   ],
   "syncMethod": "zero_contradiction_rotate+create_source",
-  "lastSyncAt": "2026-11-27T05:49:41.093Z",
+  "lastSyncAt": "2026-11-27T06:21:26.111Z",
   "sources": {
     "00_ACTIVE_MASTER_SPEC.md": {
       "title": "00_ACTIVE_MASTER_SPEC.md",
-      "sourceName": "notebooks/266c5f0e-aeb8-49c8-8843-e950a86d9c79/sources/4cad10d3-3d48-4a16-befe-e0c21970915e",
-      "sourceId": "4cad10d3-3d48-4a16-befe-e0c21970915e",
+      "sourceName": "notebooks/3d8c79dc-3bb7-4074-be99-2022a9d21554/sources/55ea6b26-4628-48ea-a6ff-fea1abd839f5",
+      "sourceId": "55ea6b26-4628-48ea-a6ff-fea1abd839f5",
       "state": "ACTIVE",
-      "bytes": 50363,
-      "sha256": "6a239940d689122b2f6578f655b4af93c73e106fdd0e2b074d80f54a6857a1fa",
+      "bytes": 53235,
+      "sha256": "8e9e8a69c40037bb580b6286581ae3d2b6931e79ac28c64f194b9133e5f9d599",
       "url": null,
-      "createTime": "2026-11-27T05:49:05.776618Z"
+      "createTime": "2026-11-27T06:20:50.724478Z"
     },
     "01_Phase0_市場競合ディープリサーチ.md": {
       "title": "01_Phase0_市場競合ディープリサーチ.md",
-      "sourceName": "notebooks/266c5f0e-aeb8-49c8-8843-e950a86d9c79/sources/1c900e3d-a0bf-414f-84f1-135d2f719e18",
-      "sourceId": "1c900e3d-a0bf-414f-84f1-135d2f719e18",
+      "sourceName": "notebooks/3d8c79dc-3bb7-4074-be99-2022a9d21554/sources/1f506b5d-9d86-4e84-af86-1bab41e25691",
+      "sourceId": "1f506b5d-9d86-4e84-af86-1bab41e25691",
       "state": "ACTIVE",
       "bytes": 4933,
       "sha256": "c3507eabd861b91d8a1db0105cb4849bbec4abae76847eeed7bd0d022875f803",
       "url": null,
-      "createTime": "2026-11-27T05:49:10.234473Z"
+      "createTime": "2026-11-27T06:20:55.589265Z"
     },
     "02_Stage1_現行サイト技術診断_SWOT_AISAS.md": {
       "title": "02_Stage1_現行サイト技術診断_SWOT_AISAS.md",
-      "sourceName": "notebooks/266c5f0e-aeb8-49c8-8843-e950a86d9c79/sources/cdbe4f8f-e06b-4647-bead-556127fe29d3",
-      "sourceId": "cdbe4f8f-e06b-4647-bead-556127fe29d3",
+      "sourceName": "notebooks/3d8c79dc-3bb7-4074-be99-2022a9d21554/sources/360c9523-dae5-4942-b84d-3c893672cebd",
+      "sourceId": "360c9523-dae5-4942-b84d-3c893672cebd",
       "state": "ACTIVE",
       "bytes": 11005,
       "sha256": "e5f345d3a2cf7cd7cd8e86b6d7a227bd4067d241017ec8ab0a29d2190294540c",
       "url": null,
-      "createTime": "2026-11-27T05:49:14.714594Z"
+      "createTime": "2026-11-27T06:20:59.931333Z"
     },
     "03_確定サイト設計書_デザインDNA_光学プロファイル.md": {
       "title": "03_確定サイト設計書_デザインDNA_光学プロファイル.md",
-      "sourceName": "notebooks/266c5f0e-aeb8-49c8-8843-e950a86d9c79/sources/77f5a822-4ccd-474f-8009-d8598a42fdac",
-      "sourceId": "77f5a822-4ccd-474f-8009-d8598a42fdac",
+      "sourceName": "notebooks/3d8c79dc-3bb7-4074-be99-2022a9d21554/sources/404d6385-aa64-4e42-868c-b988d2c4eac0",
+      "sourceId": "404d6385-aa64-4e42-868c-b988d2c4eac0",
       "state": "ACTIVE",
       "bytes": 14171,
       "sha256": "30fe03f7ce0c5e6a6f2a213c19d38e2d0e0a75fed2a9e684043446dececc0526",
       "url": null,
-      "createTime": "2026-11-27T05:49:19.301955Z"
+      "createTime": "2026-11-27T06:21:04.234426Z"
     },
     "04_画像スロット台帳_生成プロンプト一覧.md": {
       "title": "04_画像スロット台帳_生成プロンプト一覧.md",
-      "sourceName": "notebooks/266c5f0e-aeb8-49c8-8843-e950a86d9c79/sources/3ea81e7d-537a-4d20-b99b-754ed50d649a",
-      "sourceId": "3ea81e7d-537a-4d20-b99b-754ed50d649a",
+      "sourceName": "notebooks/3d8c79dc-3bb7-4074-be99-2022a9d21554/sources/900a80b5-8ebc-4e25-b0f9-7a9d88c0421c",
+      "sourceId": "900a80b5-8ebc-4e25-b0f9-7a9d88c0421c",
       "state": "ACTIVE",
       "bytes": 8219,
       "sha256": "21b5c2a48be42f5359ae0881cbe326e692344886d7de749336ec90319993e8f6",
       "url": null,
-      "createTime": "2026-11-27T05:49:23.954533Z"
+      "createTime": "2026-11-27T06:21:08.579008Z"
     },
     "05_最終品質監査_本番URL_提案書サマリー.md": {
       "title": "05_最終品質監査_本番URL_提案書サマリー.md",
-      "sourceName": "notebooks/266c5f0e-aeb8-49c8-8843-e950a86d9c79/sources/d9461898-576b-4be1-b431-4f0756e940d2",
-      "sourceId": "d9461898-576b-4be1-b431-4f0756e940d2",
+      "sourceName": "notebooks/3d8c79dc-3bb7-4074-be99-2022a9d21554/sources/b638937b-ffd1-46ec-aa60-ca05165536db",
+      "sourceId": "b638937b-ffd1-46ec-aa60-ca05165536db",
       "state": "ACTIVE",
       "bytes": 11192,
       "sha256": "21a314ed3eb239d2498f5b5fa4ddd9e2eaed3415ca0b9e49fe3301be5374e1ff",
       "url": null,
-      "createTime": "2026-11-27T05:49:28.912810Z"
+      "createTime": "2026-11-27T06:21:13.184038Z"
     },
     "06_実装コードバンドル_FullStack_HTML_JS_Functions.md": {
       "title": "06_実装コードバンドル_FullStack_HTML_JS_Functions.md",
-      "sourceName": "notebooks/266c5f0e-aeb8-49c8-8843-e950a86d9c79/sources/626438f6-f49b-4b6a-9203-8512c76ca299",
-      "sourceId": "626438f6-f49b-4b6a-9203-8512c76ca299",
+      "sourceName": "notebooks/3d8c79dc-3bb7-4074-be99-2022a9d21554/sources/5feb468d-22d1-4154-98aa-555c30e84bd0",
+      "sourceId": "5feb468d-22d1-4154-98aa-555c30e84bd0",
       "state": "ACTIVE",
-      "bytes": 946799,
-      "sha256": "15e0a46d458afcc54b73d849905fd980773504a28639217f9daa0bff2c03877f",
+      "bytes": 945333,
+      "sha256": "f9b424c92af1346c43ffa08239fc86a689bf03a08533abe7421a970cfb7f4f61",
       "url": null,
-      "createTime": "2026-11-27T05:49:35.850230Z"
+      "createTime": "2026-11-27T06:21:20.721450Z"
     },
     "WEB_okayama-moshi.com": {
       "title": "WEB_okayama-moshi.com",
-      "sourceName": "notebooks/266c5f0e-aeb8-49c8-8843-e950a86d9c79/sources/827c557f-6dac-47b9-88f4-08f0c3542ac6",
-      "sourceId": "827c557f-6dac-47b9-88f4-08f0c3542ac6",
+      "sourceName": "notebooks/3d8c79dc-3bb7-4074-be99-2022a9d21554/sources/d67cd383-5fc6-49ec-9c40-632d0a2ea56b",
+      "sourceId": "d67cd383-5fc6-49ec-9c40-632d0a2ea56b",
       "state": "ACTIVE",
       "bytes": 0,
       "sha256": "72082e66ab1293800697c7b711884753f66a94a2f62fcacd804a659bac2ed316",
       "url": "https://okayama-moshi.com/",
-      "createTime": "2026-11-27T05:49:37.298157Z"
+      "createTime": "2026-11-27T06:21:22.389601Z"
     }
   },
   "webUrls": [

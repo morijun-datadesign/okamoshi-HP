@@ -3,75 +3,106 @@ import random
 import shutil
 import subprocess
 import tempfile
-from PIL import Image, ImageChops, ImageFilter
+from PIL import Image, ImageChops, ImageDraw, ImageMath
 
 
-def build_deterministic_dither_pair(size, sigma=0.95, seed=20260919):
+def build_float_dither_maps(size, sigma=0.75, seed=20260919):
     """
-    NumPy 不要・決定論的（毎回同一出力）の極微小ガウシアンディザリング (+noise / -noise) 画像を生成する。
-    8bit量子化および非可逆YUV変換による青空グラデーションのカラーバンディング（波模様）を分散消去するため、
-    値域は [-3, +3] にクランプし、自然なグラデーション階調を保つ。
+    NumPy 不要・決定論的（毎回同一出力）の極微小ガウシアンディザリングマップを
+    RGB 各チャンネルの L 画像（128 + v * 40 スケール、値域 [-2.5, +2.5]）として生成する。
+    バイラテラル平滑化後の float 累積値へ直接加算して1回だけ 8bit 量子化することで、
+    量子化誤差・色帯（バンディング）を再発させずに滑らかな青空階調を保つ。
     """
     tile_w, tile_h = 256, 256
     rng = random.Random(seed)
-    pos_buf = bytearray(tile_w * tile_h * 3)
-    neg_buf = bytearray(tile_w * tile_h * 3)
+    bufs = [bytearray(tile_w * tile_h), bytearray(tile_w * tile_h), bytearray(tile_w * tile_h)]
 
-    idx = 0
-    for _ in range(tile_w * tile_h):
-        # 輝度相関のある極微小ディザ＋色チャンネル間の微差で色帯を消す
-        base_n = rng.gauss(0.0, sigma * 0.85)
-        for _c in range(3):
-            val = int(round(max(-3.0, min(3.0, base_n + rng.gauss(0.0, sigma * 0.45)))))
-            if val >= 0:
-                pos_buf[idx] = val
-                neg_buf[idx] = 0
-            else:
-                pos_buf[idx] = 0
-                neg_buf[idx] = -val
-            idx += 1
-
-    pos_tile = Image.frombytes("RGB", (tile_w, tile_h), bytes(pos_buf))
-    neg_tile = Image.frombytes("RGB", (tile_w, tile_h), bytes(neg_buf))
+    for idx in range(tile_w * tile_h):
+        # 輝度相関のある極微小ディザ＋色チャンネル間の微差で色帯を分散消去
+        base_n = rng.gauss(0.0, sigma * 0.80)
+        for c in range(3):
+            val = max(-2.5, min(2.5, base_n + rng.gauss(0.0, sigma * 0.45)))
+            bufs[c][idx] = max(0, min(255, int(round(128.0 + val * 40.0))))
 
     w, h = size
-    pos_full = Image.new("RGB", (w, h))
-    neg_full = Image.new("RGB", (w, h))
-    for y in range(0, h, tile_h):
-        for x in range(0, w, tile_w):
-            pos_full.paste(pos_tile, (x, y))
-            neg_full.paste(neg_tile, (x, y))
-    return pos_full, neg_full
+    outs = []
+    for c in range(3):
+        tile = Image.frombytes("L", (tile_w, tile_h), bytes(bufs[c]))
+        full = Image.new("L", (w, h))
+        for y in range(0, h, tile_h):
+            for x in range(0, w, tile_w):
+                full.paste(tile, (x, y))
+        outs.append(full)
+    return outs
 
 
-def deband_sky_gradient(im, sigma=0.95):
+def deband_sky_gradient(im, radii=(3, 7, 13), color_thresh=6, sigma=0.75, seed=20260919):
     """
-    空・霞など平坦グラデーション領域のみを局所エッジ保護付きで広域デバンディング＋ディザリングする。
-    人物の輪郭・髪・顔・制服など高周波エッジ領域はマスクで完全保護する。
+    空間膨張型のエッジ保護マスクおよび広域ガウシアンブラー（ハロー／二重輪郭の原因）を廃止し、
+    「色差ゲート付きバイラテラル平均（RGB各チャンネル差 <= color_thresh の近傍のみ平均化）」＋
+    「ピクセル単位の空・白フェード判定」＋「float累積後の一括マイクロディザ量子化」を行う。
+    人物の髪・顔・制服と空の境界では色差が大きいため1pxも混ざらず、輪郭外側のハローを完全ゼロ化する。
     """
     rgb = im.convert("RGB")
-    # 1. エッジ保護マスク（人物や髪の微細エッジ周辺は広く保護、完全平坦部のみ 255）
-    edges = (
-        rgb.convert("L")
-        .filter(ImageFilter.FIND_EDGES)
-        .filter(ImageFilter.MaxFilter(7))
-        .filter(ImageFilter.GaussianBlur(5))
+    w, h = rgb.size
+    r0, g0, b0 = rgb.split()
+
+    acc_r = ImageMath.unsafe_eval("float(a) * 2.0", a=r0)
+    acc_g = ImageMath.unsafe_eval("float(a) * 2.0", a=g0)
+    acc_b = ImageMath.unsafe_eval("float(a) * 2.0", a=b0)
+    acc_w = ImageMath.unsafe_eval("float(a) * 0.0 + 2.0", a=r0)
+
+    offsets = []
+    for rad in radii:
+        offsets.extend([
+            (rad, 0), (-rad, 0), (0, rad), (0, -rad),
+            (rad, rad), (-rad, -rad), (rad, -rad), (-rad, rad),
+        ])
+
+    for dx, dy in offsets:
+        shifted = ImageChops.offset(rgb, dx, dy)
+        diff = ImageChops.difference(rgb, shifted)
+        dr, dg, db = diff.split()
+        mr = dr.point(lambda v: 255 if v <= color_thresh else 0)
+        mg = dg.point(lambda v: 255 if v <= color_thresh else 0)
+        mb = db.point(lambda v: 255 if v <= color_thresh else 0)
+        gate = ImageChops.darker(ImageChops.darker(mr, mg), mb)
+
+        # ImageChops.offset の端ラップアラウンド領域を重み 0 にマスクアウト
+        draw = ImageDraw.Draw(gate)
+        if dx > 0:
+            draw.rectangle([0, 0, dx - 1, h - 1], fill=0)
+        elif dx < 0:
+            draw.rectangle([w + dx, 0, w - 1, h - 1], fill=0)
+        if dy > 0:
+            draw.rectangle([0, 0, w - 1, dy - 1], fill=0)
+        elif dy < 0:
+            draw.rectangle([0, h + dy, w - 1, h - 1], fill=0)
+
+        sr, sg, sb = shifted.split()
+        wf = ImageMath.unsafe_eval("float(m) / 255.0", m=gate)
+        acc_r = ImageMath.unsafe_eval("a + float(s) * w", a=acc_r, s=sr, w=wf)
+        acc_g = ImageMath.unsafe_eval("a + float(s) * w", a=acc_g, s=sg, w=wf)
+        acc_b = ImageMath.unsafe_eval("a + float(s) * w", a=acc_b, s=sb, w=wf)
+        acc_w = ImageMath.unsafe_eval("a + w", a=acc_w, w=wf)
+
+    nr, ng, nb = build_float_dither_maps((w, h), sigma=sigma, seed=seed)
+    expr = "convert(min(max(a / w + (float(n) - 128.0) / 40.0 + 0.5, 0.0), 255.0), 'L')"
+    out_r = ImageMath.unsafe_eval(expr, a=acc_r, w=acc_w, n=nr)
+    out_g = ImageMath.unsafe_eval(expr, a=acc_g, w=acc_w, n=ng)
+    out_b = ImageMath.unsafe_eval(expr, a=acc_b, w=acc_w, n=nb)
+    debanded = Image.merge("RGB", (out_r, out_g, out_b))
+
+    # 空間ブラーを一切使わないピクセル単位の空・下部白フェード判定（1pxキワまで均一）
+    b_ge_155 = b0.point(lambda v: 255 if v >= 155 else 0)
+    b_minus_r_ge_15 = ImageChops.subtract(b0, r0).point(lambda v: 255 if v >= 15 else 0)
+    white_fade = ImageChops.darker(
+        r0.point(lambda v: 255 if v >= 210 else 0),
+        g0.point(lambda v: 255 if v >= 215 else 0),
     )
-    flat_mask = edges.point(lambda e: 255 if e <= 4 else (0 if e >= 18 else int((18 - e) * 255 / 14)))
+    is_sky_mask = ImageChops.darker(b_ge_155, ImageChops.lighter(b_minus_r_ge_15, white_fade))
 
-    # 2. 青空・下部白フェード領域マスク（Bチャンネル >= 150 の領域を滑らかに抽出）
-    _, _, b_chan = rgb.split()
-    sky_mask = b_chan.point(lambda b: 255 if b >= 165 else (0 if b <= 135 else int((b - 135) * 255 / 30)))
-    sky_mask = sky_mask.filter(ImageFilter.GaussianBlur(8))
-
-    apply_mask = ImageChops.multiply(flat_mask, sky_mask)
-
-    # 3. 広域の色帯ムラを消す平滑化（radius=14）＋ 固定シード極微小ノイズディザリング
-    smoothed = rgb.filter(ImageFilter.GaussianBlur(radius=14.0))
-    pos_noise, neg_noise = build_deterministic_dither_pair(rgb.size, sigma=sigma)
-    dithered = ImageChops.subtract(ImageChops.add(smoothed, pos_noise), neg_noise)
-
-    return Image.composite(dithered, rgb, apply_mask)
+    return Image.composite(debanded, rgb, is_sky_mask)
 
 
 def encode_avif_via_png(im, avif_path, quality, tmp_dir, tag):
@@ -138,7 +169,7 @@ def optimize():
                 pc_w = 1920
                 pc_h = int(h * (pc_w / w))
                 resized_pc = master_rgb.resize((pc_w, pc_h), Image.Resampling.LANCZOS)
-                debanded_pc = deband_sky_gradient(resized_pc, sigma=0.95)
+                debanded_pc = deband_sky_gradient(resized_pc, sigma=0.75)
 
                 save_webp_and_avif(
                     debanded_pc,
@@ -156,7 +187,7 @@ def optimize():
                 sp_w = 800
                 sp_h = int(h * (sp_w / w))
                 resized_sp = master_rgb.resize((sp_w, sp_h), Image.Resampling.LANCZOS)
-                debanded_sp = deband_sky_gradient(resized_sp, sigma=0.95)
+                debanded_sp = deband_sky_gradient(resized_sp, sigma=0.75)
 
                 save_webp_and_avif(
                     debanded_sp,

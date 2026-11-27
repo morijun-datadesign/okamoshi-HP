@@ -47,7 +47,8 @@ var COL_IDX = (typeof COL !== 'undefined') ? COL : {
   MEMBER_NO: 26
 };
 
-var LOG_HEADERS = ['送信日時', '配信ID', 'メールアドレス', '保護者氏名', '生徒氏名', '対象模試', '送信結果'];
+var LOG_HEADERS = ['送信日時', '配信ID', 'メールアドレス', '保護者氏名', '生徒氏名', '対象模試', '送信結果', '送信件名', '本文抜粋'];
+var BODY_EXCERPT_MAX_LEN = 80;
 
 var SCHEDULE_HEADERS = [
   '有効(ON/OFF)',
@@ -81,6 +82,7 @@ function onOpen() {
     .addItem('⏹️ 自動配信タイマーをOFFにする', 'disableDailyScheduleTrigger')
     .addSeparator()
     .addItem('0. 配信用シート（作成・テンプレ・スケジュール・ログ・停止リスト）を初期作成・更新', 'setupMailSheets')
+    .addItem('📝 過去ログの件名を一括補完（H・I列）', 'backfillDeliveryLogSubjects')
     .addItem('🔧 【初回のみ】「過去受験者」タブをmainと同じ31列に揃える', 'alignPastExamineesSheet')
     .addToUi();
 
@@ -359,16 +361,58 @@ function diffDays_(targetDate, baseDate) {
   return Math.round((targetDate.getTime() - baseDate.getTime()) / msPerDay);
 }
 
-/** 配信ログシートの取得＆見出し行の自動保証 */
+/** メール本文から改行・連続空白を除去した先頭N文字（既定80文字）の抜粋を生成 */
+function buildBodyExcerpt_(bodyText, maxLen) {
+  var limit = (typeof maxLen === 'number' && maxLen > 0) ? maxLen : BODY_EXCERPT_MAX_LEN;
+  var normalized = String(bodyText || '')
+    .replace(/[\r\n\t]+/g, ' ')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+  if (normalized.length <= limit) return normalized;
+  return normalized.slice(0, limit);
+}
+
+/** 配信ログシートの取得＆見出し行（9列）の自動保証 */
 function ensureLogSheet_(ss) {
   var logSheet = ss.getSheetByName(MAIL_CONFIG.SHEET_LOG);
   if (!logSheet) {
     logSheet = ss.insertSheet(MAIL_CONFIG.SHEET_LOG);
     logSheet.getRange(1, 1, 1, LOG_HEADERS.length).setValues([LOG_HEADERS]).setFontWeight('bold').setBackground('#0f4c3a').setFontColor('#ffffff');
+    if (logSheet.setColumnWidth) {
+      logSheet.setColumnWidth(8, 340);
+      logSheet.setColumnWidth(9, 420);
+    }
     return logSheet;
+  }
+  var maxCols = logSheet.getMaxColumns ? logSheet.getMaxColumns() : LOG_HEADERS.length;
+  if (maxCols < LOG_HEADERS.length && logSheet.insertColumnsAfter) {
+    logSheet.insertColumnsAfter(maxCols, LOG_HEADERS.length - maxCols);
   }
   if (logSheet.getLastRow() === 0) {
     logSheet.getRange(1, 1, 1, LOG_HEADERS.length).setValues([LOG_HEADERS]).setFontWeight('bold').setBackground('#0f4c3a').setFontColor('#ffffff');
+    if (logSheet.setColumnWidth) {
+      logSheet.setColumnWidth(8, 340);
+      logSheet.setColumnWidth(9, 420);
+    }
+    return logSheet;
+  }
+  var headerRow = logSheet.getRange(1, 1, 1, LOG_HEADERS.length).getValues()[0];
+  if (String(headerRow[7] || '').trim() !== LOG_HEADERS[7] || String(headerRow[8] || '').trim() !== LOG_HEADERS[8]) {
+    var a1 = logSheet.getRange(1, 1);
+    var bg = (a1.getBackground && a1.getBackground()) || '#0f4c3a';
+    if (!bg || String(bg).toLowerCase() === '#ffffff' || String(bg).toLowerCase() === 'white') {
+      bg = '#0f4c3a';
+    }
+    var fg = (a1.getFontColor && a1.getFontColor()) || '#ffffff';
+    if (!fg || (bg === '#0f4c3a' && String(fg).toLowerCase() === '#000000')) {
+      fg = '#ffffff';
+    }
+    var fw = (a1.getFontWeight && a1.getFontWeight()) || 'bold';
+    logSheet.getRange(1, 8, 1, 2).setValues([[LOG_HEADERS[7], LOG_HEADERS[8]]]).setFontWeight(fw).setBackground(bg).setFontColor(fg);
+    if (logSheet.setColumnWidth) {
+      logSheet.setColumnWidth(8, 340);
+      logSheet.setColumnWidth(9, 420);
+    }
   }
   return logSheet;
 }
@@ -942,8 +986,19 @@ function executeScheduledQueue_(queue, statusOnlyRows) {
       var batchIds = sendBatchViaResend_(batchPayloads, apiKey);
       for (var k = 0; k < chunk.length; k++) {
         var item = chunk[k];
+        var sentPayload = batchPayloads[k] || {};
         var msgId = (batchIds && batchIds[k]) ? batchIds[k] : 'batch_sent';
-        logRowsToAppend.push([nowStr, item.ruleId, item.email, item.parentName, item.studentName, item.exam, 'OK (' + msgId + ')']);
+        logRowsToAppend.push([
+          nowStr,
+          item.ruleId,
+          item.email,
+          item.parentName,
+          item.studentName,
+          item.exam,
+          'OK (' + msgId + ')',
+          sentPayload.subject || '',
+          buildBodyExcerpt_(sentPayload.text || '')
+        ]);
         successCount++;
 
         if (item.sourceSheet === 'main' && item.updateAction === '期限切れに更新' && item.currentStatus === '未入金') {
@@ -958,10 +1013,20 @@ function executeScheduledQueue_(queue, statusOnlyRows) {
     } catch (batchErr) {
       for (var f = 0; f < chunk.length; f++) {
         var fq = chunk[f];
-        var fPayload = batchPayloads[f];
+        var fPayload = batchPayloads[f] || {};
         try {
           var singleId = sendViaResend_(fq.email, fPayload.subject, fPayload.text, fq.unsubscribeUrl, props);
-          logRowsToAppend.push([nowStr, fq.ruleId, fq.email, fq.parentName, fq.studentName, fq.exam, 'OK (' + singleId + ')']);
+          logRowsToAppend.push([
+            nowStr,
+            fq.ruleId,
+            fq.email,
+            fq.parentName,
+            fq.studentName,
+            fq.exam,
+            'OK (' + singleId + ')',
+            fPayload.subject || '',
+            buildBodyExcerpt_(fPayload.text || '')
+          ]);
           successCount++;
           if (fq.sourceSheet === 'main' && fq.updateAction === '期限切れに更新' && fq.currentStatus === '未入金') {
             var cVal = String(ledgerSheet.getRange(fq.rowNumber, COL_IDX.STATUS).getValue()).trim();
@@ -972,7 +1037,17 @@ function executeScheduledQueue_(queue, statusOnlyRows) {
           }
           Utilities.sleep(150);
         } catch (singleErr) {
-          logRowsToAppend.push([nowStr, fq.ruleId, fq.email, fq.parentName, fq.studentName, fq.exam, 'ERROR: ' + singleErr.message]);
+          logRowsToAppend.push([
+            nowStr,
+            fq.ruleId,
+            fq.email,
+            fq.parentName,
+            fq.studentName,
+            fq.exam,
+            'ERROR: ' + singleErr.message,
+            fPayload.subject || '',
+            buildBodyExcerpt_(fPayload.text || '')
+          ]);
           errorCount++;
         }
       }
@@ -987,7 +1062,17 @@ function executeScheduledQueue_(queue, statusOnlyRows) {
       if (cellVal === '未入金') {
         ledgerSheet.getRange(sr.rowNumber, COL_IDX.STATUS).setValue('期限切れ');
         statusUpdatedCount++;
-        logRowsToAppend.push([nowLog, sr.ruleId, sr.email, sr.parentName, sr.studentName, sr.exam, 'SKIP_AFTER_DEADLINE (配信終了日後のためメール送らず期限切れ更新のみ)']);
+        logRowsToAppend.push([
+          nowLog,
+          sr.ruleId,
+          sr.email,
+          sr.parentName,
+          sr.studentName,
+          sr.exam,
+          'SKIP_AFTER_DEADLINE (配信終了日後のためメール送らず期限切れ更新のみ)',
+          '（未送信：期限切れステータス更新のみ）',
+          ''
+        ]);
       }
     }
   }
@@ -1349,22 +1434,53 @@ function sendBulkEmails() {
       var batchIds = sendBatchViaResend_(batchPayloads, apiKey);
       for (var k = 0; k < chunk.length; k++) {
         var item = chunk[k];
+        var sentPayload = batchPayloads[k] || {};
         var msgId = (batchIds && batchIds[k]) ? batchIds[k] : 'batch_sent';
-        logRowsToAppend.push([nowStr, info.campaignId, item.email, item.parentName, item.studentName, item.exam, 'OK (' + msgId + ')']);
+        logRowsToAppend.push([
+          nowStr,
+          info.campaignId,
+          item.email,
+          item.parentName,
+          item.studentName,
+          item.exam,
+          'OK (' + msgId + ')',
+          sentPayload.subject || '',
+          buildBodyExcerpt_(sentPayload.text || '')
+        ]);
         successCount++;
       }
       if (start + batchSize < info.targets.length) Utilities.sleep(400);
     } catch (batchErr) {
       for (var f = 0; f < chunk.length; f++) {
         var ft = chunk[f];
-        var fPayload = batchPayloads[f];
+        var fPayload = batchPayloads[f] || {};
         try {
           var singleId = sendViaResend_(ft.email, fPayload.subject, fPayload.text, ft.unsubscribeUrl, props);
-          logRowsToAppend.push([nowStr, info.campaignId, ft.email, ft.parentName, ft.studentName, ft.exam, 'OK (' + singleId + ')']);
+          logRowsToAppend.push([
+            nowStr,
+            info.campaignId,
+            ft.email,
+            ft.parentName,
+            ft.studentName,
+            ft.exam,
+            'OK (' + singleId + ')',
+            fPayload.subject || '',
+            buildBodyExcerpt_(fPayload.text || '')
+          ]);
           successCount++;
           Utilities.sleep(150);
         } catch (singleErr) {
-          logRowsToAppend.push([nowStr, info.campaignId, ft.email, ft.parentName, ft.studentName, ft.exam, 'ERROR: ' + singleErr.message]);
+          logRowsToAppend.push([
+            nowStr,
+            info.campaignId,
+            ft.email,
+            ft.parentName,
+            ft.studentName,
+            ft.exam,
+            'ERROR: ' + singleErr.message,
+            fPayload.subject || '',
+            buildBodyExcerpt_(fPayload.text || '')
+          ]);
           errorCount++;
         }
       }
@@ -1614,4 +1730,276 @@ function getPersonDedupeKey_(row, campaignId, targetExamLabel, isUnappliedMode) 
     return [campaignId, 'MEMBER_ID_' + memberId, targetExamLabel].join('|');
   }
   return [campaignId, email, studentName, targetExamLabel].join('|');
+}
+
+// ============================================================================
+// ▼ 過去『配信ログ』への送信件名（H列）・本文抜粋（I列）一括バックフィル機能
+// ============================================================================
+
+/**
+ * 過去ログの配信IDからテンプレート件名・本文を逆引きするための辞書を構築
+ */
+function buildBackfillLookupIndex_(ss) {
+  var tplMap = getTemplateMap_(ss);
+  var prefixEntries = [];
+  var tplNames = Object.keys(tplMap);
+
+  for (var i = 0; i < tplNames.length; i++) {
+    var tName = tplNames[i];
+    var tpl = tplMap[tName];
+    if (!tpl || !tpl.subject) continue;
+    var pfx = String(tpl.prefix || '').trim();
+    if (pfx) {
+      prefixEntries.push({ prefix: pfx, prefixUpper: pfx.toUpperCase(), subject: tpl.subject, body: tpl.body || '' });
+      var stripped = pfx.replace(/_+$/, '');
+      if (stripped && stripped !== pfx) {
+        prefixEntries.push({ prefix: stripped, prefixUpper: stripped.toUpperCase(), subject: tpl.subject, body: tpl.body || '' });
+      }
+    }
+  }
+  // 長いプレフィックスを優先するため降順ソート
+  prefixEntries.sort(function(a, b) {
+    return b.prefixUpper.length - a.prefixUpper.length;
+  });
+
+  var scheduleExact = {};
+  var scheduleFirstToken = {};
+  var schSheet = ss.getSheetByName(MAIL_CONFIG.SHEET_SCHEDULE);
+  if (schSheet && schSheet.getLastRow() >= 2) {
+    var schVals = schSheet.getDataRange().getValues();
+    for (var s = 1; s < schVals.length; s++) {
+      var sr = schVals[s];
+      var ruleId = String(sr[1] || '').trim();
+      var tplName = String(sr[11] || '').trim();
+      if (!ruleId || !tplName) continue;
+      var schTpl = tplMap[tplName];
+      if (!schTpl || !schTpl.subject) continue;
+
+      var entry = { subject: schTpl.subject, body: schTpl.body || '' };
+      var ruleUpper = ruleId.toUpperCase();
+      var baseRule = ruleId.replace(/_20\d{6}$/, '');
+      var baseUpper = baseRule.toUpperCase();
+      var firstTok = ruleId.split(/[\s\u3000]+/)[0];
+      var firstTokUpper = firstTok.toUpperCase();
+      var firstTokNoDate = baseRule.split(/[\s\u3000]+/)[0];
+      var firstTokNoDateUpper = firstTokNoDate.toUpperCase();
+
+      scheduleExact[ruleId] = entry;
+      scheduleExact[ruleUpper] = entry;
+      if (baseRule) {
+        scheduleExact[baseRule] = scheduleExact[baseRule] || entry;
+        scheduleExact[baseUpper] = scheduleExact[baseUpper] || entry;
+      }
+      if (firstTok) {
+        scheduleFirstToken[firstTok] = scheduleFirstToken[firstTok] || entry;
+        scheduleFirstToken[firstTokUpper] = scheduleFirstToken[firstTokUpper] || entry;
+      }
+      if (firstTokNoDate) {
+        scheduleFirstToken[firstTokNoDate] = scheduleFirstToken[firstTokNoDate] || entry;
+        scheduleFirstToken[firstTokNoDateUpper] = scheduleFirstToken[firstTokNoDateUpper] || entry;
+      }
+    }
+  }
+
+  var composeExact = {};
+  var composeFirstToken = {};
+  var compSheet = ss.getSheetByName(MAIL_CONFIG.SHEET_COMPOSE);
+  if (compSheet && compSheet.getLastRow() >= 10) {
+    var cfg = compSheet.getRange('B2:B10').getValues();
+    var compId = String(cfg[5][0] || '').trim();
+    var compSubject = String(cfg[7][0] || '').trim();
+    var compBody = String(cfg[8][0] || '').trim();
+    if (compId && compSubject) {
+      var compEntry = { subject: compSubject, body: compBody };
+      var compBase = compId.replace(/_20\d{6}$/, '');
+      var compTok = compId.split(/[\s\u3000]+/)[0];
+      composeExact[compId] = compEntry;
+      composeExact[compId.toUpperCase()] = compEntry;
+      if (compBase) {
+        composeExact[compBase] = composeExact[compBase] || compEntry;
+        composeExact[compBase.toUpperCase()] = composeExact[compBase.toUpperCase()] || compEntry;
+      }
+      if (compTok) {
+        composeFirstToken[compTok] = compEntry;
+        composeFirstToken[compTok.toUpperCase()] = compEntry;
+      }
+    }
+  }
+
+  return {
+    tplMap: tplMap,
+    prefixEntries: prefixEntries,
+    scheduleExact: scheduleExact,
+    scheduleFirstToken: scheduleFirstToken,
+    composeExact: composeExact,
+    composeFirstToken: composeFirstToken
+  };
+}
+
+/**
+ * 配信ID文字列から該当テンプレート/件名エントリを解決
+ */
+function resolveBackfillEntry_(campaignId, index) {
+  var raw = String(campaignId || '').trim();
+  if (!raw || !index) return null;
+
+  var rawUpper = raw.toUpperCase();
+  var noDate = raw.replace(/_20\d{6}$/, '').trim();
+  var noDateUpper = noDate.toUpperCase();
+  var firstToken = raw.split(/[\s\u3000]+/)[0];
+  var firstTokenUpper = firstToken.toUpperCase();
+  var firstTokenNoDate = noDate.split(/[\s\u3000]+/)[0];
+  var firstTokenNoDateUpper = firstTokenNoDate.toUpperCase();
+
+  var candidates = [
+    raw,
+    rawUpper,
+    noDate,
+    noDateUpper,
+    firstToken,
+    firstTokenUpper,
+    firstTokenNoDate,
+    firstTokenNoDateUpper
+  ];
+
+  var i;
+  for (i = 0; i < candidates.length; i++) {
+    if (candidates[i] && index.scheduleExact[candidates[i]]) {
+      return index.scheduleExact[candidates[i]];
+    }
+  }
+  for (i = 0; i < candidates.length; i++) {
+    if (candidates[i] && index.scheduleFirstToken[candidates[i]]) {
+      return index.scheduleFirstToken[candidates[i]];
+    }
+  }
+  for (i = 0; i < candidates.length; i++) {
+    if (candidates[i] && index.composeExact[candidates[i]]) {
+      return index.composeExact[candidates[i]];
+    }
+  }
+  for (i = 0; i < candidates.length; i++) {
+    if (candidates[i] && index.composeFirstToken[candidates[i]]) {
+      return index.composeFirstToken[candidates[i]];
+    }
+  }
+
+  for (i = 0; i < index.prefixEntries.length; i++) {
+    var p = index.prefixEntries[i];
+    if (rawUpper.indexOf(p.prefixUpper) === 0 || firstTokenUpper.indexOf(p.prefixUpper) === 0) {
+      return { subject: p.subject, body: p.body };
+    }
+  }
+
+  if (index.tplMap[raw]) {
+    return { subject: index.tplMap[raw].subject, body: index.tplMap[raw].body || '' };
+  }
+  return null;
+}
+
+/**
+ * 📝 既存の過去『配信ログ』で H列（送信件名）が空欄の行を一括補完（setValues 1回バッチ更新）
+ */
+function backfillDeliveryLogSubjects() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var logSheet = ensureLogSheet_(ss);
+  var lastRow = logSheet.getLastRow();
+
+  if (lastRow < 2) {
+    try {
+      SpreadsheetApp.getUi().alert('補完対象のログ行がありません。');
+    } catch (e) {}
+    return {
+      totalRows: 0,
+      updatedCount: 0,
+      skippedExistingCount: 0,
+      unmatchedCount: 0,
+      unmatchedSampleIds: []
+    };
+  }
+
+  var numRows = lastRow - 1;
+  var values = logSheet.getRange(2, 1, numRows, LOG_HEADERS.length).getValues();
+  var index = buildBackfillLookupIndex_(ss);
+  var emptyUnsubCtx = { secret: '', baseUrl: '' };
+
+  var hiValues = [];
+  var updatedCount = 0;
+  var skippedExistingCount = 0;
+  var unmatchedCount = 0;
+  var unmatchedMap = {};
+  var unmatchedSamples = [];
+
+  for (var i = 0; i < values.length; i++) {
+    var row = values[i];
+    var existingH = String(row[7] || '').trim();
+    var existingI = String(row[8] || '').trim();
+
+    if (existingH) {
+      skippedExistingCount++;
+      hiValues.push([row[7], row[8]]);
+      continue;
+    }
+
+    var resultStr = String(row[6] || '').trim();
+    if (resultStr.indexOf('SKIP_AFTER_DEADLINE') === 0) {
+      hiValues.push(['（未送信：期限切れステータス更新のみ）', '']);
+      updatedCount++;
+      continue;
+    }
+
+    var campaignId = String(row[1] || '').trim();
+    var entry = resolveBackfillEntry_(campaignId, index);
+    if (!entry || !entry.subject) {
+      hiValues.push([row[7] || '', row[8] || '']);
+      unmatchedCount++;
+      if (campaignId && !unmatchedMap[campaignId] && unmatchedSamples.length < 5) {
+        unmatchedMap[campaignId] = true;
+        unmatchedSamples.push(campaignId);
+      }
+      continue;
+    }
+
+    var item = {
+      email: String(row[2] || '').trim(),
+      parentName: String(row[3] || '').trim(),
+      studentName: String(row[4] || '').trim(),
+      grade: '',
+      exam: String(row[5] || '').trim(),
+      venue: '',
+      expiresAt: '期限日',
+      voucherUrl: '',
+      unsubscribeUrl: '（配信停止URL）'
+    };
+
+    var renderedSubject = renderTemplate_(entry.subject, item, emptyUnsubCtx);
+    var renderedExcerpt = existingI || buildBodyExcerpt_(renderTemplate_(entry.body || '', item, emptyUnsubCtx));
+
+    hiValues.push([renderedSubject, renderedExcerpt]);
+    updatedCount++;
+  }
+
+  if (updatedCount > 0) {
+    logSheet.getRange(2, 8, hiValues.length, 2).setValues(hiValues);
+  }
+
+  var summaryMsg = '✅ 「配信ログ」過去行の件名・本文抜粋（H・I列）一括補完が完了しました！\n\n'
+    + '・対象ログ総数：' + numRows + ' 行\n'
+    + '・今回補完した行数：' + updatedCount + ' 行\n'
+    + '・既に入力済み（スキップ）：' + skippedExistingCount + ' 行\n'
+    + '・テンプレート照合不可：' + unmatchedCount + ' 行';
+  if (unmatchedSamples.length > 0) {
+    summaryMsg += '\n  （照合不可ID例: ' + unmatchedSamples.join(', ') + '）';
+  }
+  try {
+    SpreadsheetApp.getUi().alert(summaryMsg);
+  } catch (e2) {}
+
+  return {
+    totalRows: numRows,
+    updatedCount: updatedCount,
+    skippedExistingCount: skippedExistingCount,
+    unmatchedCount: unmatchedCount,
+    unmatchedSampleIds: unmatchedSamples
+  };
 }

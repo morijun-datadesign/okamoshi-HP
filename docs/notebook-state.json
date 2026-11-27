@@ -1,8 +1,8 @@
 {
   "schemaVersion": "1.0",
   "displayName": "[本番運用] 岡山県統一模擬試験（okayama-moshi）",
-  "notebookId": "notebooks/6214ac43-0dd0-4934-87d5-b3f499e6e215",
-  "notebook_id": "notebooks/6214ac43-0dd0-4934-87d5-b3f499e6e215",
+  "notebookId": "notebooks/266c5f0e-aeb8-49c8-8843-e950a86d9c79",
+  "notebook_id": "notebooks/266c5f0e-aeb8-49c8-8843-e950a86d9c79",
   "availableMcpTools": [
     "create_notebook",
     "get_notebook",
@@ -13,79 +13,87 @@
     "list_sources"
   ],
   "syncMethod": "zero_contradiction_rotate+create_source",
-  "lastSyncAt": "2026-11-26T07:44:29.111Z",
+  "lastSyncAt": "2026-11-27T05:49:41.093Z",
   "sources": {
     "00_ACTIVE_MASTER_SPEC.md": {
       "title": "00_ACTIVE_MASTER_SPEC.md",
-      "sourceName": "notebooks/6214ac43-0dd0-4934-87d5-b3f499e6e215/sources/cf156225-0afc-455d-b839-8112a7e00cf2",
-      "sourceId": "cf156225-0afc-455d-b839-8112a7e00cf2",
+      "sourceName": "notebooks/266c5f0e-aeb8-49c8-8843-e950a86d9c79/sources/4cad10d3-3d48-4a16-befe-e0c21970915e",
+      "sourceId": "4cad10d3-3d48-4a16-befe-e0c21970915e",
       "state": "ACTIVE",
       "bytes": 50363,
       "sha256": "6a239940d689122b2f6578f655b4af93c73e106fdd0e2b074d80f54a6857a1fa",
-      "url": null
+      "url": null,
+      "createTime": "2026-11-27T05:49:05.776618Z"
     },
     "01_Phase0_市場競合ディープリサーチ.md": {
       "title": "01_Phase0_市場競合ディープリサーチ.md",
-      "sourceName": "notebooks/6214ac43-0dd0-4934-87d5-b3f499e6e215/sources/35a1cea2-c074-4e72-8178-e45cb5678811",
-      "sourceId": "35a1cea2-c074-4e72-8178-e45cb5678811",
+      "sourceName": "notebooks/266c5f0e-aeb8-49c8-8843-e950a86d9c79/sources/1c900e3d-a0bf-414f-84f1-135d2f719e18",
+      "sourceId": "1c900e3d-a0bf-414f-84f1-135d2f719e18",
       "state": "ACTIVE",
       "bytes": 4933,
       "sha256": "c3507eabd861b91d8a1db0105cb4849bbec4abae76847eeed7bd0d022875f803",
-      "url": null
+      "url": null,
+      "createTime": "2026-11-27T05:49:10.234473Z"
     },
     "02_Stage1_現行サイト技術診断_SWOT_AISAS.md": {
       "title": "02_Stage1_現行サイト技術診断_SWOT_AISAS.md",
-      "sourceName": "notebooks/6214ac43-0dd0-4934-87d5-b3f499e6e215/sources/3030cc86-9973-4341-b21e-82a255289ff0",
-      "sourceId": "3030cc86-9973-4341-b21e-82a255289ff0",
+      "sourceName": "notebooks/266c5f0e-aeb8-49c8-8843-e950a86d9c79/sources/cdbe4f8f-e06b-4647-bead-556127fe29d3",
+      "sourceId": "cdbe4f8f-e06b-4647-bead-556127fe29d3",
       "state": "ACTIVE",
       "bytes": 11005,
       "sha256": "e5f345d3a2cf7cd7cd8e86b6d7a227bd4067d241017ec8ab0a29d2190294540c",
-      "url": null
+      "url": null,
+      "createTime": "2026-11-27T05:49:14.714594Z"
     },
     "03_確定サイト設計書_デザインDNA_光学プロファイル.md": {
       "title": "03_確定サイト設計書_デザインDNA_光学プロファイル.md",
-      "sourceName": "notebooks/6214ac43-0dd0-4934-87d5-b3f499e6e215/sources/855da5b5-3a3f-45f2-8033-65491effb4be",
-      "sourceId": "855da5b5-3a3f-45f2-8033-65491effb4be",
+      "sourceName": "notebooks/266c5f0e-aeb8-49c8-8843-e950a86d9c79/sources/77f5a822-4ccd-474f-8009-d8598a42fdac",
+      "sourceId": "77f5a822-4ccd-474f-8009-d8598a42fdac",
       "state": "ACTIVE",
       "bytes": 14171,
       "sha256": "30fe03f7ce0c5e6a6f2a213c19d38e2d0e0a75fed2a9e684043446dececc0526",
-      "url": null
+      "url": null,
+      "createTime": "2026-11-27T05:49:19.301955Z"
     },
     "04_画像スロット台帳_生成プロンプト一覧.md": {
       "title": "04_画像スロット台帳_生成プロンプト一覧.md",
-      "sourceName": "notebooks/6214ac43-0dd0-4934-87d5-b3f499e6e215/sources/e3a55b29-aa8c-490a-824b-20289c63b76c",
-      "sourceId": "e3a55b29-aa8c-490a-824b-20289c63b76c",
+      "sourceName": "notebooks/266c5f0e-aeb8-49c8-8843-e950a86d9c79/sources/3ea81e7d-537a-4d20-b99b-754ed50d649a",
+      "sourceId": "3ea81e7d-537a-4d20-b99b-754ed50d649a",
       "state": "ACTIVE",
       "bytes": 8219,
       "sha256": "21b5c2a48be42f5359ae0881cbe326e692344886d7de749336ec90319993e8f6",
-      "url": null
+      "url": null,
+      "createTime": "2026-11-27T05:49:23.954533Z"
     },
     "05_最終品質監査_本番URL_提案書サマリー.md": {
       "title": "05_最終品質監査_本番URL_提案書サマリー.md",
-      "sourceName": "notebooks/6214ac43-0dd0-4934-87d5-b3f499e6e215/sources/f53c03d5-18ac-49c8-aff0-49757145c32e",
-      "sourceId": "f53c03d5-18ac-49c8-aff0-49757145c32e",
+      "sourceName": "notebooks/266c5f0e-aeb8-49c8-8843-e950a86d9c79/sources/d9461898-576b-4be1-b431-4f0756e940d2",
+      "sourceId": "d9461898-576b-4be1-b431-4f0756e940d2",
       "state": "ACTIVE",
       "bytes": 11192,
       "sha256": "21a314ed3eb239d2498f5b5fa4ddd9e2eaed3415ca0b9e49fe3301be5374e1ff",
-      "url": null
+      "url": null,
+      "createTime": "2026-11-27T05:49:28.912810Z"
     },
     "06_実装コードバンドル_FullStack_HTML_JS_Functions.md": {
       "title": "06_実装コードバンドル_FullStack_HTML_JS_Functions.md",
-      "sourceName": "notebooks/6214ac43-0dd0-4934-87d5-b3f499e6e215/sources/a7407fc4-aa19-45e7-b2b0-50aca8cd7d27",
-      "sourceId": "a7407fc4-aa19-45e7-b2b0-50aca8cd7d27",
+      "sourceName": "notebooks/266c5f0e-aeb8-49c8-8843-e950a86d9c79/sources/626438f6-f49b-4b6a-9203-8512c76ca299",
+      "sourceId": "626438f6-f49b-4b6a-9203-8512c76ca299",
       "state": "ACTIVE",
-      "bytes": 939094,
-      "sha256": "9be70a1a70461a3592bb347f503b4cfdd007d9bcbf7cd52a917167ff1356010a",
-      "url": null
+      "bytes": 946799,
+      "sha256": "15e0a46d458afcc54b73d849905fd980773504a28639217f9daa0bff2c03877f",
+      "url": null,
+      "createTime": "2026-11-27T05:49:35.850230Z"
     },
     "WEB_okayama-moshi.com": {
       "title": "WEB_okayama-moshi.com",
-      "sourceName": "notebooks/6214ac43-0dd0-4934-87d5-b3f499e6e215/sources/8cc793ac-cdd2-4055-aeb8-74920717202b",
-      "sourceId": "8cc793ac-cdd2-4055-aeb8-74920717202b",
+      "sourceName": "notebooks/266c5f0e-aeb8-49c8-8843-e950a86d9c79/sources/827c557f-6dac-47b9-88f4-08f0c3542ac6",
+      "sourceId": "827c557f-6dac-47b9-88f4-08f0c3542ac6",
       "state": "ACTIVE",
       "bytes": 0,
       "sha256": "72082e66ab1293800697c7b711884753f66a94a2f62fcacd804a659bac2ed316",
-      "url": "https://okayama-moshi.com/"
+      "url": "https://okayama-moshi.com/",
+      "createTime": "2026-11-27T05:49:37.298157Z"
     }
   },
   "webUrls": [
